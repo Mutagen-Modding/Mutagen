@@ -7632,12 +7632,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
             stream.Position += 0xC + package.Meta.MajorConstants.TypeAndLengthLength;
             ret.CustomCtor(stream, offset);
-            UtilityTranslation.FillSubrecordTypesForWrapper(
+            ret.FillSubrecordTypes(
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
                 recordTypeConverter: recordTypeConverter,
-                meta: ret._package.Meta,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -7705,7 +7704,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         package: _package,
                         recordTypeConverter: null,
                         getter: (s, p, recConv) => WeatherSoundBinaryWrapper.WeatherSoundFactory(new BinaryMemoryReadStream(s), p, recConv),
-                        locs: UtilityTranslation.ParseRecordLocations(
+                        locs: ParseRecordLocations(
                             stream: stream,
                             trigger: type,
                             constants: _package.Meta.SubConstants,

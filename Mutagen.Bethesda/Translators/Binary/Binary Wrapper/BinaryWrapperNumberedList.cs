@@ -24,7 +24,7 @@ namespace Mutagen.Bethesda.Binary
             int length,
             BinaryWrapperFactoryPackage package,
             RecordTypeConverter recordTypeConverter,
-            UtilityTranslation.BinaryWrapperConverterFactory<T> getter)
+            BinaryWrapper.ConverterFactory<T> getter)
         {
             return new NumberedLoquiList<T>(mem, amount, length, package, recordTypeConverter, getter);
         }
@@ -36,7 +36,7 @@ namespace Mutagen.Bethesda.Binary
         public ReadOnlyMemorySlice<byte> Memory { get; }
         public int Length { get; }
         public BinaryWrapperFactoryPackage Package { get; }
-        public UtilityTranslation.BinaryWrapperConverterFactory<T> Getter { get; }
+        public BinaryWrapper.ConverterFactory<T> Getter { get; }
         public RecordTypeConverter RecordTypeConverter { get; }
 
         public NumberedLoquiList(
@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda.Binary
             int length,
             BinaryWrapperFactoryPackage package,
             RecordTypeConverter recordTypeConverter,
-            UtilityTranslation.BinaryWrapperConverterFactory<T> getter)
+            BinaryWrapper.ConverterFactory<T> getter)
         {
             this.Amount = amount;
             this.Memory = mem;

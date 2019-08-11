@@ -466,10 +466,9 @@ namespace Mutagen.Bethesda.Generation
                         if (loqui.TargetObjectGeneration.IsTypelessStruct())
                         {
                             using (var args = new ArgsWrapper(fg,
-                                $"this.{typeGen.Name} = {nameof(UtilityTranslation)}.{nameof(UtilityTranslation.ParseRepeatedTypelessSubrecord)}<{typeName}>"))
+                                $"this.{typeGen.Name} = this.{nameof(BinaryWrapper.ParseRepeatedTypelessSubrecord)}<{typeName}>"))
                             {
                                 args.AddPassArg("stream");
-                                args.Add("package: _package");
                                 args.Add($"recordTypeConverter: {converterAccessor}");
                                 args.Add($"trigger: {subData.TriggeringRecordSetAccessor}");
                                 if (subGenTypes.Count <= 1)
@@ -521,7 +520,7 @@ namespace Mutagen.Bethesda.Generation
                                 args.Add(subFg =>
                                 {
                                     using (var subArgs = new FunctionWrapper(subFg,
-                                        $"locs: UtilityTranslation.ParseRecordLocations"))
+                                        $"locs: {nameof(BinaryWrapper.ParseRecordLocations)}"))
                                     {
                                         subArgs.AddPassArg("stream");
                                         subArgs.Add("trigger: type");
@@ -558,7 +557,7 @@ namespace Mutagen.Bethesda.Generation
                             args.Add(subFg =>
                             {
                                 using (var subArgs = new FunctionWrapper(subFg,
-                                    $"locs: UtilityTranslation.ParseRecordLocations"))
+                                    $"locs: {nameof(BinaryWrapper.ParseRecordLocations)}"))
                                 {
                                     subArgs.AddPassArg("stream");
                                     subArgs.Add($"constants: _package.Meta.{nameof(MetaDataConstants.SubConstants)}");

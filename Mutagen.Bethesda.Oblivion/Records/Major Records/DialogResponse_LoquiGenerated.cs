@@ -2811,11 +2811,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 package: package);
             int offset = stream.Position;
             ret.CustomCtor(stream, offset: 0);
-            UtilityTranslation.FillTypelessSubrecordTypesForWrapper(
+            ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 offset: offset,
                 recordTypeConverter: recordTypeConverter,
-                meta: ret._package.Meta,
                 fill: ret.FillRecordType);
             return ret;
         }

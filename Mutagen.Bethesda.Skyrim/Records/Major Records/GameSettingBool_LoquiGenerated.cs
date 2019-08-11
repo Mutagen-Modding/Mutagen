@@ -1957,12 +1957,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
             stream.Position += 0x10 + package.Meta.MajorConstants.TypeAndLengthLength;
             ret.CustomCtor(stream, offset);
-            UtilityTranslation.FillSubrecordTypesForWrapper(
+            ret.FillSubrecordTypes(
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
                 recordTypeConverter: recordTypeConverter,
-                meta: ret._package.Meta,
                 fill: ret.FillRecordType);
             return ret;
         }

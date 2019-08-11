@@ -3559,12 +3559,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
             stream.Position += 0xC + package.Meta.MajorConstants.TypeAndLengthLength;
             ret.CustomCtor(stream, offset);
-            UtilityTranslation.FillSubrecordTypesForWrapper(
+            ret.FillSubrecordTypes(
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
                 recordTypeConverter: recordTypeConverter,
-                meta: ret._package.Meta,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -3606,7 +3605,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         package: _package,
                         recordTypeConverter: null,
                         getter: (s, p, recConv) => ConditionBinaryWrapper.ConditionFactory(new BinaryMemoryReadStream(s), p, recConv),
-                        locs: UtilityTranslation.ParseRecordLocations(
+                        locs: ParseRecordLocations(
                             stream: stream,
                             trigger: type,
                             constants: _package.Meta.SubConstants,
@@ -3615,9 +3614,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x58444E49: // INDX
                 {
-                    this.Stages = UtilityTranslation.ParseRepeatedTypelessSubrecord<QuestStageBinaryWrapper>(
+                    this.Stages = this.ParseRepeatedTypelessSubrecord<QuestStageBinaryWrapper>(
                         stream: stream,
-                        package: _package,
                         recordTypeConverter: null,
                         trigger: Quest_Registration.INDX_HEADER,
                         factory:  QuestStageBinaryWrapper.QuestStageFactory);
@@ -3625,9 +3623,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x41545351: // QSTA
                 {
-                    this.Targets = UtilityTranslation.ParseRepeatedTypelessSubrecord<QuestTargetBinaryWrapper>(
+                    this.Targets = this.ParseRepeatedTypelessSubrecord<QuestTargetBinaryWrapper>(
                         stream: stream,
-                        package: _package,
                         recordTypeConverter: null,
                         trigger: Quest_Registration.QSTA_HEADER,
                         factory:  QuestTargetBinaryWrapper.QuestTargetFactory);

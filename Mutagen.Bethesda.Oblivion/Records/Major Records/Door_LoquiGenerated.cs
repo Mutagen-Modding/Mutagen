@@ -3173,12 +3173,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
             stream.Position += 0xC + package.Meta.MajorConstants.TypeAndLengthLength;
             ret.CustomCtor(stream, offset);
-            UtilityTranslation.FillSubrecordTypesForWrapper(
+            ret.FillSubrecordTypes(
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
                 recordTypeConverter: recordTypeConverter,
-                meta: ret._package.Meta,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -3235,7 +3234,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormIDLink<IPlaceInternalGetter>(FormKey.Factory(p.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(s))),
-                        locs: UtilityTranslation.ParseRecordLocations(
+                        locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.Meta.SubConstants,
                             trigger: type,

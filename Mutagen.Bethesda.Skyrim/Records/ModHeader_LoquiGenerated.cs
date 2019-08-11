@@ -4169,12 +4169,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
             stream.Position += 0x10 + package.Meta.MajorConstants.TypeAndLengthLength;
             ret.CustomCtor(stream, offset);
-            UtilityTranslation.FillSubrecordTypesForWrapper(
+            ret.FillSubrecordTypes(
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
                 recordTypeConverter: recordTypeConverter,
-                meta: ret._package.Meta,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -4217,9 +4216,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x5453414D: // MAST
                 {
-                    this.MasterReferences = UtilityTranslation.ParseRepeatedTypelessSubrecord<MasterReferenceBinaryWrapper>(
+                    this.MasterReferences = this.ParseRepeatedTypelessSubrecord<MasterReferenceBinaryWrapper>(
                         stream: stream,
-                        package: _package,
                         recordTypeConverter: null,
                         trigger: ModHeader_Registration.MAST_HEADER,
                         factory:  MasterReferenceBinaryWrapper.MasterReferenceFactory);

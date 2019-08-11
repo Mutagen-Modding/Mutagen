@@ -3465,12 +3465,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
             stream.Position += 0xC + package.Meta.MajorConstants.TypeAndLengthLength;
             ret.CustomCtor(stream, offset);
-            UtilityTranslation.FillSubrecordTypesForWrapper(
+            ret.FillSubrecordTypes(
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
                 recordTypeConverter: recordTypeConverter,
-                meta: ret._package.Meta,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -3519,9 +3518,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x44494645: // EFID
                 {
-                    this.Effects = UtilityTranslation.ParseRepeatedTypelessSubrecord<EffectBinaryWrapper>(
+                    this.Effects = this.ParseRepeatedTypelessSubrecord<EffectBinaryWrapper>(
                         stream: stream,
-                        package: _package,
                         recordTypeConverter: null,
                         trigger: Ingredient_Registration.EFID_HEADER,
                         factory:  EffectBinaryWrapper.EffectFactory);

@@ -2119,11 +2119,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 package: package);
             int offset = stream.Position;
             ret.CustomCtor(stream, offset: 0);
-            UtilityTranslation.FillTypelessSubrecordTypesForWrapper(
+            ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 offset: offset,
                 recordTypeConverter: recordTypeConverter,
-                meta: ret._package.Meta,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -2149,9 +2148,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4E4F4349: // ICON
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)BodyData_FieldIndex.BodyParts) return TryGet<int?>.Failure;
-                    this.BodyParts = UtilityTranslation.ParseRepeatedTypelessSubrecord<BodyPartBinaryWrapper>(
+                    this.BodyParts = this.ParseRepeatedTypelessSubrecord<BodyPartBinaryWrapper>(
                         stream: stream,
-                        package: _package,
                         recordTypeConverter: null,
                         trigger: BodyPart_Registration.TriggeringRecordTypes,
                         factory:  BodyPartBinaryWrapper.BodyPartFactory);

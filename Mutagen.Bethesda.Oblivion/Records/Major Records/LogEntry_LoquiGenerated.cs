@@ -2547,11 +2547,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 package: package);
             int offset = stream.Position;
             ret.CustomCtor(stream, offset: 0);
-            UtilityTranslation.FillTypelessSubrecordTypesForWrapper(
+            ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 offset: offset,
                 recordTypeConverter: recordTypeConverter,
-                meta: ret._package.Meta,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -2579,7 +2578,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         package: _package,
                         recordTypeConverter: null,
                         getter: (s, p, recConv) => ConditionBinaryWrapper.ConditionFactory(new BinaryMemoryReadStream(s), p, recConv),
-                        locs: UtilityTranslation.ParseRecordLocations(
+                        locs: ParseRecordLocations(
                             stream: stream,
                             trigger: type,
                             constants: _package.Meta.SubConstants,

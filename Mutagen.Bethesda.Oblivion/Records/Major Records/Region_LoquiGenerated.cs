@@ -3674,12 +3674,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
             stream.Position += 0xC + package.Meta.MajorConstants.TypeAndLengthLength;
             ret.CustomCtor(stream, offset);
-            UtilityTranslation.FillSubrecordTypesForWrapper(
+            ret.FillSubrecordTypes(
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
                 recordTypeConverter: recordTypeConverter,
-                meta: ret._package.Meta,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -3705,9 +3704,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x494C5052: // RPLI
                 case 0x444C5052: // RPLD
                 {
-                    this.Areas = UtilityTranslation.ParseRepeatedTypelessSubrecord<RegionAreaBinaryWrapper>(
+                    this.Areas = this.ParseRepeatedTypelessSubrecord<RegionAreaBinaryWrapper>(
                         stream: stream,
-                        package: _package,
                         recordTypeConverter: null,
                         trigger: RegionArea_Registration.TriggeringRecordTypes,
                         factory:  RegionAreaBinaryWrapper.RegionAreaFactory);

@@ -3056,12 +3056,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
             stream.Position += 0xC + package.Meta.MajorConstants.TypeAndLengthLength;
             ret.CustomCtor(stream, offset);
-            UtilityTranslation.FillSubrecordTypesForWrapper(
+            ret.FillSubrecordTypes(
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
                 recordTypeConverter: recordTypeConverter,
-                meta: ret._package.Meta,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -3097,9 +3096,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x54585442: // BTXT
                 case 0x54585441: // ATXT
                 {
-                    this.Layers = UtilityTranslation.ParseRepeatedTypelessSubrecord<BaseLayerBinaryWrapper>(
+                    this.Layers = this.ParseRepeatedTypelessSubrecord<BaseLayerBinaryWrapper>(
                         stream: stream,
-                        package: _package,
                         recordTypeConverter: null,
                         trigger: BaseLayer_Registration.TriggeringRecordTypes,
                         factory: (s, r, p, recConv) =>

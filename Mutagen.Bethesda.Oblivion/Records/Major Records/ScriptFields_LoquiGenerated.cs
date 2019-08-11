@@ -2850,11 +2850,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 package: package);
             int offset = stream.Position;
             ret.CustomCtor(stream, offset: 0);
-            UtilityTranslation.FillTypelessSubrecordTypesForWrapper(
+            ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 offset: offset,
                 recordTypeConverter: recordTypeConverter,
-                meta: ret._package.Meta,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -2896,9 +2895,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x44534C53: // SLSD
                 {
-                    this.LocalVariables = UtilityTranslation.ParseRepeatedTypelessSubrecord<LocalVariableBinaryWrapper>(
+                    this.LocalVariables = this.ParseRepeatedTypelessSubrecord<LocalVariableBinaryWrapper>(
                         stream: stream,
-                        package: _package,
                         recordTypeConverter: null,
                         trigger: ScriptFields_Registration.SLSD_HEADER,
                         factory:  LocalVariableBinaryWrapper.LocalVariableFactory);
@@ -2907,9 +2905,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x56524353: // SCRV
                 case 0x4F524353: // SCRO
                 {
-                    this.References = UtilityTranslation.ParseRepeatedTypelessSubrecord<ScriptReferenceBinaryWrapper>(
+                    this.References = this.ParseRepeatedTypelessSubrecord<ScriptReferenceBinaryWrapper>(
                         stream: stream,
-                        package: _package,
                         recordTypeConverter: null,
                         trigger: ScriptReference_Registration.TriggeringRecordTypes,
                         factory: (s, r, p, recConv) =>

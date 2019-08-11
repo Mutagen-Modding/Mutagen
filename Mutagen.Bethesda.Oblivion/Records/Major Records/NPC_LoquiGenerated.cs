@@ -12284,12 +12284,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
             stream.Position += 0xC + package.Meta.MajorConstants.TypeAndLengthLength;
             ret.CustomCtor(stream, offset);
-            UtilityTranslation.FillSubrecordTypesForWrapper(
+            ret.FillSubrecordTypes(
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
                 recordTypeConverter: recordTypeConverter,
-                meta: ret._package.Meta,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -12328,7 +12327,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         package: _package,
                         recordTypeConverter: null,
                         getter: (s, p, recConv) => RankPlacementBinaryWrapper.RankPlacementFactory(new BinaryMemoryReadStream(s), p, recConv),
-                        locs: UtilityTranslation.ParseRecordLocations(
+                        locs: ParseRecordLocations(
                             stream: stream,
                             trigger: type,
                             constants: _package.Meta.SubConstants,
@@ -12351,7 +12350,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormIDLink<ISpellAbstractInternalGetter>(FormKey.Factory(p.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(s))),
-                        locs: UtilityTranslation.ParseRecordLocations(
+                        locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.Meta.SubConstants,
                             trigger: type,
@@ -12370,7 +12369,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         package: _package,
                         recordTypeConverter: null,
                         getter: (s, p, recConv) => ItemEntryBinaryWrapper.ItemEntryFactory(new BinaryMemoryReadStream(s), p, recConv),
-                        locs: UtilityTranslation.ParseRecordLocations(
+                        locs: ParseRecordLocations(
                             stream: stream,
                             trigger: type,
                             constants: _package.Meta.SubConstants,
@@ -12389,7 +12388,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormIDLink<IAIPackageInternalGetter>(FormKey.Factory(p.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(s))),
-                        locs: UtilityTranslation.ParseRecordLocations(
+                        locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.Meta.SubConstants,
                             trigger: type,

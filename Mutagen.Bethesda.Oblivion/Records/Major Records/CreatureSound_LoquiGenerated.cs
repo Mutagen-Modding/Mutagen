@@ -2094,11 +2094,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 package: package);
             int offset = stream.Position;
             ret.CustomCtor(stream, offset: 0);
-            UtilityTranslation.FillTypelessSubrecordTypesForWrapper(
+            ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 offset: offset,
                 recordTypeConverter: recordTypeConverter,
-                meta: ret._package.Meta,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -2121,9 +2120,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x43445343: // CSDC
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)CreatureSound_FieldIndex.Sounds) return TryGet<int?>.Failure;
-                    this.Sounds = UtilityTranslation.ParseRepeatedTypelessSubrecord<SoundItemBinaryWrapper>(
+                    this.Sounds = this.ParseRepeatedTypelessSubrecord<SoundItemBinaryWrapper>(
                         stream: stream,
-                        package: _package,
                         recordTypeConverter: null,
                         trigger: SoundItem_Registration.TriggeringRecordTypes,
                         factory:  SoundItemBinaryWrapper.SoundItemFactory);

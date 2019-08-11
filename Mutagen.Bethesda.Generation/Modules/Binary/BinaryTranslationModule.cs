@@ -1756,31 +1756,31 @@ namespace Mutagen.Bethesda.Generation
                                 case ObjectType.Record:
                                     if (obj.IsTypelessStruct())
                                     {
-                                        call = $"{nameof(UtilityTranslation.FillTypelessSubrecordTypesForWrapper)}";
+                                        call = $"{nameof(BinaryWrapper.FillTypelessSubrecordTypes)}";
                                     }
                                     else
                                     {
-                                        call = $"{nameof(UtilityTranslation.FillSubrecordTypesForWrapper)}";
+                                        call = $"{nameof(BinaryWrapper.FillSubrecordTypes)}";
                                     }
                                     break;
                                 case ObjectType.Group:
                                     if (obj.IsTopLevelGroup())
                                     {
-                                        call = $"{nameof(UtilityTranslation.FillMajorRecordsForWrapper)}";
+                                        call = $"{nameof(BinaryWrapper.FillMajorRecords)}";
                                     }
                                     else
                                     {
-                                        call = $"{nameof(UtilityTranslation.FillGroupRecordsForWrapper)}";
+                                        call = $"{nameof(BinaryWrapper.FillGroupRecordsForWrapper)}";
                                     }
                                     break;
                                 case ObjectType.Mod:
-                                    call = $"{nameof(UtilityTranslation.FillModTypesForWrapper)}";
+                                    call = $"{nameof(BinaryWrapper.FillModTypes)}";
                                     break;
                                 default:
                                     throw new NotImplementedException();
                             }
                             using (var args = new ArgsWrapper(fg,
-                                $"UtilityTranslation.{call}"))
+                                $"ret.{call}"))
                             {
                                 args.Add($"stream: stream");
                                 if (obj.GetObjectType() != ObjectType.Mod)
@@ -1792,7 +1792,6 @@ namespace Mutagen.Bethesda.Generation
                                     args.Add($"offset: offset");
                                     args.AddPassArg($"recordTypeConverter");
                                 }
-                                args.Add($"meta: ret.{metaAccessor}");
                                 args.Add($"fill: ret.FillRecordType");
                             }
                         }

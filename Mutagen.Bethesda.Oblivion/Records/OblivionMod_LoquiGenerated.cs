@@ -14777,9 +14777,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 modKey: modKey);
             var stream = new BinaryMemoryReadStream(bytes);
             ret.CustomCtor(stream, offset: 0);
-            UtilityTranslation.FillModTypesForWrapper(
+            ret.FillModTypes(
                 stream: stream,
-                meta: ret._package.Meta,
                 fill: ret.FillRecordType);
             UtilityTranslation.FillEdidLinkCache<IMagicEffectInternalGetter>(
                 mod: ret,

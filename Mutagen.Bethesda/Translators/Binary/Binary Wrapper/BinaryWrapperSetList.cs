@@ -11,7 +11,7 @@ namespace Mutagen.Bethesda.Binary
         public static IReadOnlySetList<T> FactoryByArray(
             ReadOnlyMemorySlice<byte> mem,
             BinaryWrapperFactoryPackage package,
-            UtilityTranslation.BinaryWrapperSpanFactory<T> getter,
+            BinaryWrapper.SpanFactory<T> getter,
             int[] locs)
         {
             return new BinaryWrapperListByLocationArray(
@@ -25,7 +25,7 @@ namespace Mutagen.Bethesda.Binary
             ReadOnlyMemorySlice<byte> mem,
             BinaryWrapperFactoryPackage package,
             RecordTypeConverter recordTypeConverter,
-            UtilityTranslation.BinaryWrapperSpanRecordFactory<T> getter,
+            BinaryWrapper.SpanRecordFactory<T> getter,
             int[] locs)
         {
             return new BinaryWrapperRecordListByLocationArray(
@@ -40,7 +40,7 @@ namespace Mutagen.Bethesda.Binary
             ReadOnlyMemorySlice<byte> mem,
             BinaryWrapperFactoryPackage package,
             int itemLength,
-            UtilityTranslation.BinaryWrapperSpanFactory<T> getter)
+            BinaryWrapper.SpanFactory<T> getter)
         {
             return new BinaryWrapperListByStartIndex(
                 mem,
@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Binary
         public static IReadOnlySetList<T> FactoryByLazyParse(
             ReadOnlyMemorySlice<byte> mem,
             BinaryWrapperFactoryPackage package,
-            UtilityTranslation.BinaryWrapperFactory<T> getter)
+            BinaryWrapper.Factory<T> getter)
         {
             return new BinaryWrapperLazyList(
                 mem,
@@ -65,12 +65,12 @@ namespace Mutagen.Bethesda.Binary
             private int[] _locations;
             BinaryWrapperFactoryPackage _package;
             private ReadOnlyMemorySlice<byte> _mem;
-            private UtilityTranslation.BinaryWrapperSpanFactory<T> _getter;
+            private BinaryWrapper.SpanFactory<T> _getter;
 
             public BinaryWrapperListByLocationArray(
                 ReadOnlyMemorySlice<byte> mem,
                 BinaryWrapperFactoryPackage package,
-                UtilityTranslation.BinaryWrapperSpanFactory<T> getter,
+                BinaryWrapper.SpanFactory<T> getter,
                 int[] locs)
             {
                 this._mem = mem;
@@ -101,14 +101,14 @@ namespace Mutagen.Bethesda.Binary
             private int[] _locations;
             private BinaryWrapperFactoryPackage _package;
             private ReadOnlyMemorySlice<byte> _mem;
-            private UtilityTranslation.BinaryWrapperSpanRecordFactory<T> _getter;
+            private BinaryWrapper.SpanRecordFactory<T> _getter;
             private RecordTypeConverter _recordTypeConverter;
 
             public BinaryWrapperRecordListByLocationArray(
                 ReadOnlyMemorySlice<byte> mem,
                 BinaryWrapperFactoryPackage package,
                 RecordTypeConverter recordTypeConverter,
-                UtilityTranslation.BinaryWrapperSpanRecordFactory<T> getter,
+                BinaryWrapper.SpanRecordFactory<T> getter,
                 int[] locs)
             {
                 this._mem = mem;
@@ -140,12 +140,12 @@ namespace Mutagen.Bethesda.Binary
             private int _itemLength;
             BinaryWrapperFactoryPackage _package;
             private ReadOnlyMemorySlice<byte> _mem;
-            private UtilityTranslation.BinaryWrapperSpanFactory<T> _getter;
+            private BinaryWrapper.SpanFactory<T> _getter;
 
             public BinaryWrapperListByStartIndex(
                 ReadOnlyMemorySlice<byte> mem,
                 BinaryWrapperFactoryPackage package,
-                UtilityTranslation.BinaryWrapperSpanFactory<T> getter,
+                BinaryWrapper.SpanFactory<T> getter,
                 int itemLength)
             {
                 this._mem = mem;
@@ -183,12 +183,12 @@ namespace Mutagen.Bethesda.Binary
             private readonly Lazy<IReadOnlyList<T>> _list;
             private ReadOnlyMemorySlice<byte> _mem;
             private BinaryWrapperFactoryPackage _package;
-            private UtilityTranslation.BinaryWrapperFactory<T> _getter;
+            private BinaryWrapper.Factory<T> _getter;
 
             public BinaryWrapperLazyList(
                 ReadOnlyMemorySlice<byte> mem,
                 BinaryWrapperFactoryPackage package,
-                UtilityTranslation.BinaryWrapperFactory<T> getter)
+                BinaryWrapper.Factory<T> getter)
             {
                 this._mem = mem;
                 this._getter = getter;
