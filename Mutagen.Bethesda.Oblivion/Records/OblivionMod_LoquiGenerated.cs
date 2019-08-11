@@ -14496,7 +14496,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    public partial class OblivionModBinaryWrapper : IOblivionModGetter
+    public partial class OblivionModBinaryWrapper :
+        BinaryWrapper,
+        IOblivionModGetter
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => OblivionMod_Registration.Instance;
@@ -14522,8 +14524,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IReadOnlyCache<IMajorRecordInternalGetter, FormKey> IModGetter.MajorRecords => throw new NotImplementedException();
         protected object XmlWriteTranslator => OblivionModXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
-        protected ReadOnlyMemorySlice<byte> _data;
-        protected BinaryWrapperFactoryPackage _package;
         public ModKey ModKey { get; }
 
         #region ModHeader
@@ -14760,13 +14760,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected OblivionModBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
             ModKey modKey)
+            : base(
+                bytes: bytes,
+                package: new BinaryWrapperFactoryPackage(GameMode.Oblivion))
         {
             this._data = bytes;
-            this._package = new BinaryWrapperFactoryPackage()
-            {
-                Meta = MetaDataConstants.Get(this.GameMode),
-                Mod = this
-            };
             this.ModKey = modKey;
         }
 

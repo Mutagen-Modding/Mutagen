@@ -2779,7 +2779,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    public partial class EffectBinaryWrapper : IEffectInternalGetter
+    public partial class EffectBinaryWrapper :
+        BinaryWrapper,
+        IEffectInternalGetter
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Effect_Registration.Instance;
@@ -2795,8 +2797,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         protected object BinaryWriteTranslator => EffectBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
-        protected ReadOnlyMemorySlice<byte> _data;
-        protected BinaryWrapperFactoryPackage _package;
 
         #region EffectInitial
         partial void EffectInitialCustomParse(
@@ -2845,9 +2845,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected EffectBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
         {
             this._data = bytes;
-            this._package = package;
         }
 
         public static EffectBinaryWrapper EffectFactory(

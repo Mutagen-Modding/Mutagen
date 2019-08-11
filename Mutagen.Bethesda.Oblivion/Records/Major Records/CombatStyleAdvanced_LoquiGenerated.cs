@@ -4321,7 +4321,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    public partial class CombatStyleAdvancedBinaryWrapper : ICombatStyleAdvancedGetter
+    public partial class CombatStyleAdvancedBinaryWrapper :
+        BinaryWrapper,
+        ICombatStyleAdvancedGetter
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CombatStyleAdvanced_Registration.Instance;
@@ -4337,8 +4339,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         protected object BinaryWriteTranslator => CombatStyleAdvancedBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
-        protected ReadOnlyMemorySlice<byte> _data;
-        protected BinaryWrapperFactoryPackage _package;
 
         public Single DodgeFatigueModMult => SpanExt.GetFloat(_data.Span.Slice(0, 4));
         public Single DodgeFatigueModBase => SpanExt.GetFloat(_data.Span.Slice(4, 4));
@@ -4366,9 +4366,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected CombatStyleAdvancedBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
         {
             this._data = bytes;
-            this._package = package;
         }
 
         public static CombatStyleAdvancedBinaryWrapper CombatStyleAdvancedFactory(

@@ -2146,7 +2146,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    public partial class AIPackageScheduleBinaryWrapper : IAIPackageScheduleGetter
+    public partial class AIPackageScheduleBinaryWrapper :
+        BinaryWrapper,
+        IAIPackageScheduleGetter
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AIPackageSchedule_Registration.Instance;
@@ -2162,8 +2164,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         protected object BinaryWriteTranslator => AIPackageScheduleBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
-        protected ReadOnlyMemorySlice<byte> _data;
-        protected BinaryWrapperFactoryPackage _package;
 
         public Month Month => (Month)_data.Span.Slice(0, 1)[0];
         public Weekday DayOfWeek => (Weekday)_data.Span.Slice(1, 1)[0];
@@ -2175,9 +2175,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected AIPackageScheduleBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
         {
             this._data = bytes;
-            this._package = package;
         }
 
         public static AIPackageScheduleBinaryWrapper AIPackageScheduleFactory(

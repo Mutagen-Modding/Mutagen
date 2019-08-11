@@ -8,7 +8,11 @@ namespace Mutagen.Bethesda.Binary
     {
         public MasterReferences MasterReferences;
         public MetaDataConstants Meta;
-        public IModGetter Mod;
         public Dictionary<RecordType, Dictionary<RecordType, object>> EdidLinkCache = new Dictionary<RecordType, Dictionary<RecordType, object>>();
+
+        public BinaryWrapperFactoryPackage(GameMode gameMode)
+        {
+            this.Meta = MetaDataConstants.Get(gameMode);
+        }
     }
 }

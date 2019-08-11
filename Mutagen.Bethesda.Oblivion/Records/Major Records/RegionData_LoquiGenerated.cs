@@ -2012,7 +2012,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    public partial class RegionDataBinaryWrapper : IRegionDataInternalGetter
+    public partial class RegionDataBinaryWrapper :
+        BinaryWrapper,
+        IRegionDataInternalGetter
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RegionData_Registration.Instance;
@@ -2028,8 +2030,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         protected virtual object BinaryWriteTranslator => RegionDataBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
-        protected ReadOnlyMemorySlice<byte> _data;
-        protected BinaryWrapperFactoryPackage _package;
 
         private int? _RDATLocation;
         public RegionData.RDATDataType RDATDataTypeState { get; private set; }
@@ -2049,9 +2049,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected RegionDataBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
         {
             this._data = bytes;
-            this._package = package;
         }
 
         public virtual TryGet<int?> FillRecordType(

@@ -1841,7 +1841,9 @@ namespace Mutagen.Bethesda.Internals
     }
     #endregion
 
-    public partial class MasterReferenceBinaryWrapper : IMasterReferenceGetter
+    public partial class MasterReferenceBinaryWrapper :
+        BinaryWrapper,
+        IMasterReferenceGetter
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MasterReference_Registration.Instance;
@@ -1857,8 +1859,6 @@ namespace Mutagen.Bethesda.Internals
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         protected object BinaryWriteTranslator => MasterReferenceBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
-        protected ReadOnlyMemorySlice<byte> _data;
-        protected BinaryWrapperFactoryPackage _package;
 
         #region Master
         private int? _MasterLocation;
@@ -1874,9 +1874,11 @@ namespace Mutagen.Bethesda.Internals
         protected MasterReferenceBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
         {
             this._data = bytes;
-            this._package = package;
         }
 
         public static MasterReferenceBinaryWrapper MasterReferenceFactory(

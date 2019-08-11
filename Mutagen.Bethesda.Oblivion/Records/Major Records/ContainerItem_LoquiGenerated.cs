@@ -1759,7 +1759,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    public partial class ContainerItemBinaryWrapper : IContainerItemGetter
+    public partial class ContainerItemBinaryWrapper :
+        BinaryWrapper,
+        IContainerItemGetter
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ContainerItem_Registration.Instance;
@@ -1775,8 +1777,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         protected object BinaryWriteTranslator => ContainerItemBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
-        protected ReadOnlyMemorySlice<byte> _data;
-        protected BinaryWrapperFactoryPackage _package;
 
         #region Item
         public IFormIDLinkGetter<IItemAbstractInternalGetter> Item_Property => new FormIDLink<IItemAbstractInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
@@ -1788,9 +1788,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected ContainerItemBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
         {
             this._data = bytes;
-            this._package = package;
         }
 
         public static ContainerItemBinaryWrapper ContainerItemFactory(

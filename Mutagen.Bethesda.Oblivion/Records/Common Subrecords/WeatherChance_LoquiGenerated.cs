@@ -1747,7 +1747,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    public partial class WeatherChanceBinaryWrapper : IWeatherChanceGetter
+    public partial class WeatherChanceBinaryWrapper :
+        BinaryWrapper,
+        IWeatherChanceGetter
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeatherChance_Registration.Instance;
@@ -1763,8 +1765,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         protected object BinaryWriteTranslator => WeatherChanceBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
-        protected ReadOnlyMemorySlice<byte> _data;
-        protected BinaryWrapperFactoryPackage _package;
 
         #region Weather
         public IFormIDLinkGetter<IWeatherInternalGetter> Weather_Property => new FormIDLink<IWeatherInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
@@ -1776,9 +1776,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected WeatherChanceBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
         {
             this._data = bytes;
-            this._package = package;
         }
 
         public static WeatherChanceBinaryWrapper WeatherChanceFactory(

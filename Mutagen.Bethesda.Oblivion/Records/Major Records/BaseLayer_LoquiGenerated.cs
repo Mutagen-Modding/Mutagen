@@ -2091,7 +2091,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    public partial class BaseLayerBinaryWrapper : IBaseLayerInternalGetter
+    public partial class BaseLayerBinaryWrapper :
+        BinaryWrapper,
+        IBaseLayerInternalGetter
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BaseLayer_Registration.Instance;
@@ -2107,8 +2109,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         protected virtual object BinaryWriteTranslator => BaseLayerBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
-        protected ReadOnlyMemorySlice<byte> _data;
-        protected BinaryWrapperFactoryPackage _package;
 
         private int? _BTXTLocation;
         public BaseLayer.BTXTDataType BTXTDataTypeState { get; private set; }
@@ -2133,9 +2133,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected BaseLayerBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
         {
             this._data = bytes;
-            this._package = package;
         }
 
         public static BaseLayerBinaryWrapper BaseLayerFactory(

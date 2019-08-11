@@ -1737,7 +1737,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    public partial class RaceVoicesBinaryWrapper : IRaceVoicesGetter
+    public partial class RaceVoicesBinaryWrapper :
+        BinaryWrapper,
+        IRaceVoicesGetter
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RaceVoices_Registration.Instance;
@@ -1753,8 +1755,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         protected object BinaryWriteTranslator => RaceVoicesBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
-        protected ReadOnlyMemorySlice<byte> _data;
-        protected BinaryWrapperFactoryPackage _package;
 
         #region Male
         public IFormIDLinkGetter<IRaceInternalGetter> Male_Property => new FormIDLink<IRaceInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
@@ -1769,9 +1769,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected RaceVoicesBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
         {
             this._data = bytes;
-            this._package = package;
         }
 
         public static RaceVoicesBinaryWrapper RaceVoicesFactory(

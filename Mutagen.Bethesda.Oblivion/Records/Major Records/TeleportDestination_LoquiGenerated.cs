@@ -1904,7 +1904,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    public partial class TeleportDestinationBinaryWrapper : ITeleportDestinationGetter
+    public partial class TeleportDestinationBinaryWrapper :
+        BinaryWrapper,
+        ITeleportDestinationGetter
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TeleportDestination_Registration.Instance;
@@ -1920,8 +1922,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         protected object BinaryWriteTranslator => TeleportDestinationBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
-        protected ReadOnlyMemorySlice<byte> _data;
-        protected BinaryWrapperFactoryPackage _package;
 
         #region Destination
         public IFormIDLinkGetter<IPlacedGetter> Destination_Property => new FormIDLink<IPlacedGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
@@ -1934,9 +1934,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected TeleportDestinationBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
         {
             this._data = bytes;
-            this._package = package;
         }
 
         public static TeleportDestinationBinaryWrapper TeleportDestinationFactory(

@@ -2737,7 +2737,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    public partial class DialogResponseBinaryWrapper : IDialogResponseInternalGetter
+    public partial class DialogResponseBinaryWrapper :
+        BinaryWrapper,
+        IDialogResponseInternalGetter
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DialogResponse_Registration.Instance;
@@ -2753,8 +2755,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         protected object BinaryWriteTranslator => DialogResponseBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
-        protected ReadOnlyMemorySlice<byte> _data;
-        protected BinaryWrapperFactoryPackage _package;
 
         private int? _TRDTLocation;
         public DialogResponse.TRDTDataType TRDTDataTypeState { get; private set; }
@@ -2794,9 +2794,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected DialogResponseBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
         {
             this._data = bytes;
-            this._package = package;
         }
 
         public static DialogResponseBinaryWrapper DialogResponseFactory(

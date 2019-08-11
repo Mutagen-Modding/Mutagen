@@ -4084,7 +4084,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     }
     #endregion
 
-    public partial class ModHeaderBinaryWrapper : IModHeaderGetter
+    public partial class ModHeaderBinaryWrapper :
+        BinaryWrapper,
+        IModHeaderGetter
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ModHeader_Registration.Instance;
@@ -4100,8 +4102,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         protected object BinaryWriteTranslator => ModHeaderBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
-        protected ReadOnlyMemorySlice<byte> _data;
-        protected BinaryWrapperFactoryPackage _package;
 
         public ModHeader.HeaderFlag Flags => (ModHeader.HeaderFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0, 4));
         public UInt32 FormID => BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(4, 4));
@@ -4149,9 +4149,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected ModHeaderBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
         {
             this._data = bytes;
-            this._package = package;
         }
 
         public static ModHeaderBinaryWrapper ModHeaderFactory(

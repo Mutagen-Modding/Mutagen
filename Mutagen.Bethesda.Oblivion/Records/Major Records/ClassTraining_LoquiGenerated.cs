@@ -1896,7 +1896,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    public partial class ClassTrainingBinaryWrapper : IClassTrainingGetter
+    public partial class ClassTrainingBinaryWrapper :
+        BinaryWrapper,
+        IClassTrainingGetter
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ClassTraining_Registration.Instance;
@@ -1912,8 +1914,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         protected object BinaryWriteTranslator => ClassTrainingBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
-        protected ReadOnlyMemorySlice<byte> _data;
-        protected BinaryWrapperFactoryPackage _package;
 
         public Skill TrainedSkill => (Skill)_data.Span.Slice(0, 1)[0];
         public Byte MaximumTrainingLevel => _data.Span[1];
@@ -1923,9 +1923,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected ClassTrainingBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
         {
             this._data = bytes;
-            this._package = package;
         }
 
         public static ClassTrainingBinaryWrapper ClassTrainingFactory(

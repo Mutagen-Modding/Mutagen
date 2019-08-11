@@ -1909,7 +1909,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    public partial class DistantLODDataBinaryWrapper : IDistantLODDataGetter
+    public partial class DistantLODDataBinaryWrapper :
+        BinaryWrapper,
+        IDistantLODDataGetter
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DistantLODData_Registration.Instance;
@@ -1925,8 +1927,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         protected object BinaryWriteTranslator => DistantLODDataBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
-        protected ReadOnlyMemorySlice<byte> _data;
-        protected BinaryWrapperFactoryPackage _package;
 
         public Single Unknown0 => SpanExt.GetFloat(_data.Span.Slice(0, 4));
         public Single Unknown1 => SpanExt.GetFloat(_data.Span.Slice(4, 4));
@@ -1936,9 +1936,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected DistantLODDataBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
         {
             this._data = bytes;
-            this._package = package;
         }
 
         public static DistantLODDataBinaryWrapper DistantLODDataFactory(

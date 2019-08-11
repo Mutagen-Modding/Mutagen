@@ -1987,7 +1987,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    public partial class QuestStageBinaryWrapper : IQuestStageGetter
+    public partial class QuestStageBinaryWrapper :
+        BinaryWrapper,
+        IQuestStageGetter
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => QuestStage_Registration.Instance;
@@ -2003,8 +2005,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         protected object BinaryWriteTranslator => QuestStageBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
-        protected ReadOnlyMemorySlice<byte> _data;
-        protected BinaryWrapperFactoryPackage _package;
 
         #region Stage
         private int? _StageLocation;
@@ -2016,9 +2016,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected QuestStageBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
         {
             this._data = bytes;
-            this._package = package;
         }
 
         public static QuestStageBinaryWrapper QuestStageFactory(

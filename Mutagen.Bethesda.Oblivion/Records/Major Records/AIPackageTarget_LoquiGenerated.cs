@@ -1888,7 +1888,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    public partial class AIPackageTargetBinaryWrapper : IAIPackageTargetGetter
+    public partial class AIPackageTargetBinaryWrapper :
+        BinaryWrapper,
+        IAIPackageTargetGetter
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AIPackageTarget_Registration.Instance;
@@ -1904,8 +1906,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         protected object BinaryWriteTranslator => AIPackageTargetBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
-        protected ReadOnlyMemorySlice<byte> _data;
-        protected BinaryWrapperFactoryPackage _package;
 
         public AIPackageTarget.ObjectTypeEnum ObjectType => (AIPackageTarget.ObjectTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0, 4));
         public Int32 Object => BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(4, 4));
@@ -1915,9 +1915,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected AIPackageTargetBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
         {
             this._data = bytes;
-            this._package = package;
         }
 
         public static AIPackageTargetBinaryWrapper AIPackageTargetFactory(

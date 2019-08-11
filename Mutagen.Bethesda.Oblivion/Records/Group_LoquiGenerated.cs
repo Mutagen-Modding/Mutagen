@@ -2214,7 +2214,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    public partial class GroupBinaryWrapper<T> : IGroupGetter<T>
+    public partial class GroupBinaryWrapper<T> :
+        BinaryWrapper,
+        IGroupGetter<T>
         where T : IOblivionMajorRecordInternalGetter, IXmlItem, IBinaryItem
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2231,8 +2233,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         protected object BinaryWriteTranslator => GroupBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
-        protected ReadOnlyMemorySlice<byte> _data;
-        protected BinaryWrapperFactoryPackage _package;
 
         #region ContainedRecordTypeParse
         partial void ContainedRecordTypeParseCustomParse(
@@ -2246,9 +2246,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected GroupBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
         {
             this._data = bytes;
-            this._package = package;
         }
 
         public static GroupBinaryWrapper<T> GroupFactory(

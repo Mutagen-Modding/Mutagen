@@ -1887,7 +1887,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    public partial class ModStatsBinaryWrapper : IModStatsGetter
+    public partial class ModStatsBinaryWrapper :
+        BinaryWrapper,
+        IModStatsGetter
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ModStats_Registration.Instance;
@@ -1903,8 +1905,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         protected object BinaryWriteTranslator => ModStatsBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
-        protected ReadOnlyMemorySlice<byte> _data;
-        protected BinaryWrapperFactoryPackage _package;
 
         public Single Version => SpanExt.GetFloat(_data.Span.Slice(0, 4));
         public Int32 NumRecords => BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(4, 4));
@@ -1914,9 +1914,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected ModStatsBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
         {
             this._data = bytes;
-            this._package = package;
         }
 
         public static ModStatsBinaryWrapper ModStatsFactory(

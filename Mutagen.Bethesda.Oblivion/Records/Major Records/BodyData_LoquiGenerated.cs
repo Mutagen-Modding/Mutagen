@@ -2073,7 +2073,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    public partial class BodyDataBinaryWrapper : IBodyDataGetter
+    public partial class BodyDataBinaryWrapper :
+        BinaryWrapper,
+        IBodyDataGetter
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BodyData_Registration.Instance;
@@ -2089,8 +2091,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         protected object BinaryWriteTranslator => BodyDataBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
-        protected ReadOnlyMemorySlice<byte> _data;
-        protected BinaryWrapperFactoryPackage _package;
 
         #region Model
         public IModelGetter Model { get; private set; }
@@ -2102,9 +2102,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected BodyDataBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
         {
             this._data = bytes;
-            this._package = package;
         }
 
         public static BodyDataBinaryWrapper BodyDataFactory(

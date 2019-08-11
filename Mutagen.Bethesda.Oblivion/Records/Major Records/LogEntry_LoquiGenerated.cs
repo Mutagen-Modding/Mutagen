@@ -2491,7 +2491,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    public partial class LogEntryBinaryWrapper : ILogEntryGetter
+    public partial class LogEntryBinaryWrapper :
+        BinaryWrapper,
+        ILogEntryGetter
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LogEntry_Registration.Instance;
@@ -2507,8 +2509,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         protected object BinaryWriteTranslator => LogEntryBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
-        protected ReadOnlyMemorySlice<byte> _data;
-        protected BinaryWrapperFactoryPackage _package;
 
         #region Flags
         private int? _FlagsLocation;
@@ -2530,9 +2530,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected LogEntryBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
         {
             this._data = bytes;
-            this._package = package;
         }
 
         public static LogEntryBinaryWrapper LogEntryFactory(

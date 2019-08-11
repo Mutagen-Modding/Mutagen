@@ -1960,7 +1960,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    public partial class RegionAreaBinaryWrapper : IRegionAreaGetter
+    public partial class RegionAreaBinaryWrapper :
+        BinaryWrapper,
+        IRegionAreaGetter
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RegionArea_Registration.Instance;
@@ -1976,8 +1978,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         protected object BinaryWriteTranslator => RegionAreaBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
-        protected ReadOnlyMemorySlice<byte> _data;
-        protected BinaryWrapperFactoryPackage _package;
 
         #region EdgeFallOff
         private int? _EdgeFallOffLocation;
@@ -1990,9 +1990,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected RegionAreaBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
         {
             this._data = bytes;
-            this._package = package;
         }
 
         public static RegionAreaBinaryWrapper RegionAreaFactory(

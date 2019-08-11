@@ -33,6 +33,7 @@
     <Compile Include="Translators\Binary\Binary Wrapper\BinaryWrapperNumberedList.cs" />
     <Compile Include="Translators\Binary\Binary Wrapper\ReadOnlySetList.cs" />
     <Compile Include="Records\GroupAbstract.cs" />
+    <Compile Include="Translators\Binary\BinaryWrapper.cs" />
     <Compile Include="Translators\Binary\Custom Utility\GlobalCustomParsing.cs" /> 
     <Compile Include="Translators\Binary\LoquiBinaryWrapperTranslation.cs" />
     <Compile Include="Translators\Binary\MetaData.cs" />

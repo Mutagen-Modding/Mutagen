@@ -2251,7 +2251,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    public partial class QuestTargetBinaryWrapper : IQuestTargetInternalGetter
+    public partial class QuestTargetBinaryWrapper :
+        BinaryWrapper,
+        IQuestTargetInternalGetter
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => QuestTarget_Registration.Instance;
@@ -2267,8 +2269,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         protected object BinaryWriteTranslator => QuestTargetBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
-        protected ReadOnlyMemorySlice<byte> _data;
-        protected BinaryWrapperFactoryPackage _package;
 
         private int? _QSTALocation;
         public QuestTarget.QSTADataType QSTADataTypeState { get; private set; }
@@ -2289,9 +2289,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected QuestTargetBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
         {
             this._data = bytes;
-            this._package = package;
         }
 
         public static QuestTargetBinaryWrapper QuestTargetFactory(

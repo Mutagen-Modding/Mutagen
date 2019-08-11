@@ -2229,7 +2229,9 @@ namespace Mutagen.Bethesda.Internals
     }
     #endregion
 
-    public partial class MajorRecordBinaryWrapper : IMajorRecordInternalGetter
+    public partial class MajorRecordBinaryWrapper :
+        BinaryWrapper,
+        IMajorRecordInternalGetter
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MajorRecord_Registration.Instance;
@@ -2245,8 +2247,6 @@ namespace Mutagen.Bethesda.Internals
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         protected virtual object BinaryWriteTranslator => MajorRecordBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
-        protected ReadOnlyMemorySlice<byte> _data;
-        protected BinaryWrapperFactoryPackage _package;
 
         public Int32 MajorRecordFlagsRaw => BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0, 4));
         public FormKey FormKey => FormKeyBinaryTranslation.Parse(_data.Span.Slice(4, 4), this._package.MasterReferences);
@@ -2261,9 +2261,11 @@ namespace Mutagen.Bethesda.Internals
         protected MajorRecordBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
         {
             this._data = bytes;
-            this._package = package;
         }
 
         public virtual TryGet<int?> FillRecordType(

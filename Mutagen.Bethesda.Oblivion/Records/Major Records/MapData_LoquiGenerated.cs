@@ -1909,7 +1909,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    public partial class MapDataBinaryWrapper : IMapDataGetter
+    public partial class MapDataBinaryWrapper :
+        BinaryWrapper,
+        IMapDataGetter
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MapData_Registration.Instance;
@@ -1925,8 +1927,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         protected object BinaryWriteTranslator => MapDataBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
-        protected ReadOnlyMemorySlice<byte> _data;
-        protected BinaryWrapperFactoryPackage _package;
 
         public P2Int UsableDimensions => P2IntBinaryTranslation.Read(_data.Span.Slice(0, 8));
         public P2Int16 CellCoordinatesNWCell => P2Int16BinaryTranslation.Read(_data.Span.Slice(8, 4));
@@ -1936,9 +1936,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected MapDataBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
         {
             this._data = bytes;
-            this._package = package;
         }
 
         public static MapDataBinaryWrapper MapDataFactory(

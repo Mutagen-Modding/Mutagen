@@ -1888,7 +1888,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    public partial class HavokDataBinaryWrapper : IHavokDataGetter
+    public partial class HavokDataBinaryWrapper :
+        BinaryWrapper,
+        IHavokDataGetter
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => HavokData_Registration.Instance;
@@ -1904,8 +1906,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         protected object BinaryWriteTranslator => HavokDataBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
-        protected ReadOnlyMemorySlice<byte> _data;
-        protected BinaryWrapperFactoryPackage _package;
 
         public HavokData.MaterialType Material => (HavokData.MaterialType)_data.Span.Slice(0, 1)[0];
         public Byte Friction => _data.Span[1];
@@ -1915,9 +1915,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected HavokDataBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
         {
             this._data = bytes;
-            this._package = package;
         }
 
         public static HavokDataBinaryWrapper HavokDataFactory(

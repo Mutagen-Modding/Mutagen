@@ -2174,7 +2174,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    public partial class MapMarkerBinaryWrapper : IMapMarkerGetter
+    public partial class MapMarkerBinaryWrapper :
+        BinaryWrapper,
+        IMapMarkerGetter
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MapMarker_Registration.Instance;
@@ -2190,8 +2192,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         protected object BinaryWriteTranslator => MapMarkerBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
-        protected ReadOnlyMemorySlice<byte> _data;
-        protected BinaryWrapperFactoryPackage _package;
 
         #region Flags
         private int? _FlagsLocation;
@@ -2209,9 +2209,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected MapMarkerBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
         {
             this._data = bytes;
-            this._package = package;
         }
 
         public static MapMarkerBinaryWrapper MapMarkerFactory(

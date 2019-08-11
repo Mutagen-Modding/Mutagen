@@ -2335,7 +2335,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    public partial class LeveledEntryBinaryWrapper<T> : ILeveledEntryGetter<T>
+    public partial class LeveledEntryBinaryWrapper<T> :
+        BinaryWrapper,
+        ILeveledEntryGetter<T>
         where T : class, IOblivionMajorRecordInternalGetter, IXmlItem, IBinaryItem
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2352,8 +2354,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         protected object BinaryWriteTranslator => LeveledEntryBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
-        protected ReadOnlyMemorySlice<byte> _data;
-        protected BinaryWrapperFactoryPackage _package;
 
         public Int16 Level => BinaryPrimitives.ReadInt16LittleEndian(_data.Span.Slice(0, 2));
         public ReadOnlySpan<Byte> Fluff => _data.Span.Slice(2, 2).ToArray();
@@ -2374,9 +2374,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected LeveledEntryBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
         {
             this._data = bytes;
-            this._package = package;
         }
 
         public static LeveledEntryBinaryWrapper<T> LeveledEntryFactory(

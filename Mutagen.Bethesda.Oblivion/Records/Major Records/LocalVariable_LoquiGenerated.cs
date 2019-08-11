@@ -2420,7 +2420,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    public partial class LocalVariableBinaryWrapper : ILocalVariableInternalGetter
+    public partial class LocalVariableBinaryWrapper :
+        BinaryWrapper,
+        ILocalVariableInternalGetter
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocalVariable_Registration.Instance;
@@ -2436,8 +2438,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         protected object BinaryWriteTranslator => LocalVariableBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
-        protected ReadOnlyMemorySlice<byte> _data;
-        protected BinaryWrapperFactoryPackage _package;
 
         private int? _SLSDLocation;
         public LocalVariable.SLSDDataType SLSDDataTypeState { get; private set; }
@@ -2471,9 +2471,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected LocalVariableBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
         {
             this._data = bytes;
-            this._package = package;
         }
 
         public static LocalVariableBinaryWrapper LocalVariableFactory(

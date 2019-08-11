@@ -1882,7 +1882,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    public partial class RaceStatsGenderedBinaryWrapper : IRaceStatsGenderedGetter
+    public partial class RaceStatsGenderedBinaryWrapper :
+        BinaryWrapper,
+        IRaceStatsGenderedGetter
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RaceStatsGendered_Registration.Instance;
@@ -1898,8 +1900,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         protected object BinaryWriteTranslator => RaceStatsGenderedBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
-        protected ReadOnlyMemorySlice<byte> _data;
-        protected BinaryWrapperFactoryPackage _package;
 
         public IRaceStatsGetter Male => RaceStatsBinaryWrapper.RaceStatsFactory(new BinaryMemoryReadStream(_data.Slice(0)), _package);
         public IRaceStatsGetter Female => RaceStatsBinaryWrapper.RaceStatsFactory(new BinaryMemoryReadStream(_data.Slice(8)), _package);
@@ -1908,9 +1908,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected RaceStatsGenderedBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
         {
             this._data = bytes;
-            this._package = package;
         }
 
         public static RaceStatsGenderedBinaryWrapper RaceStatsGenderedFactory(

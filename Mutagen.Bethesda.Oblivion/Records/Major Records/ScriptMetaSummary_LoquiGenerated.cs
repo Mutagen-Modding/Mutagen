@@ -2162,7 +2162,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    public partial class ScriptMetaSummaryBinaryWrapper : IScriptMetaSummaryGetter
+    public partial class ScriptMetaSummaryBinaryWrapper :
+        BinaryWrapper,
+        IScriptMetaSummaryGetter
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScriptMetaSummary_Registration.Instance;
@@ -2178,8 +2180,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         protected object BinaryWriteTranslator => ScriptMetaSummaryBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
-        protected ReadOnlyMemorySlice<byte> _data;
-        protected BinaryWrapperFactoryPackage _package;
 
         public ReadOnlySpan<Byte> Fluff => _data.Span.Slice(0, 4).ToArray();
         public UInt32 RefCount => BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(4, 4));
@@ -2191,9 +2191,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected ScriptMetaSummaryBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
         {
             this._data = bytes;
-            this._package = package;
         }
 
         public static ScriptMetaSummaryBinaryWrapper ScriptMetaSummaryFactory(

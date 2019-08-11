@@ -1862,7 +1862,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    public partial class SoundItemBinaryWrapper : ISoundItemGetter
+    public partial class SoundItemBinaryWrapper :
+        BinaryWrapper,
+        ISoundItemGetter
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoundItem_Registration.Instance;
@@ -1878,8 +1880,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         protected object BinaryWriteTranslator => SoundItemBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
-        protected ReadOnlyMemorySlice<byte> _data;
-        protected BinaryWrapperFactoryPackage _package;
 
         #region Sound
         private int? _SoundLocation;
@@ -1897,9 +1897,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected SoundItemBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
         {
             this._data = bytes;
-            this._package = package;
         }
 
         public static SoundItemBinaryWrapper SoundItemFactory(
