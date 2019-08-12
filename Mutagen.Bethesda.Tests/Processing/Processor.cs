@@ -176,5 +176,26 @@ namespace Mutagen.Bethesda.Tests
                 loc: loc + Constants.HEADER_LENGTH,
                 sub: lenData);
         }
+        
+        public void ProcessZeroFloat(IMutagenReadStream stream)
+        {
+            var f = stream.ReadFloat();
+            if (f == float.Epsilon)
+            {
+                this._Instructions.SetSubstitution(
+                    stream.Position - 4,
+                    new byte[4]);
+                return;
+            }
+            stream.Position -= 4;
+            uint floatInt = stream.ReadUInt32();
+            if (floatInt == 0x80000000)
+            {
+                this._Instructions.SetSubstitution(
+                    stream.Position - 4,
+                    new byte[4]);
+                return;
+            }
+        }
     }
 }
