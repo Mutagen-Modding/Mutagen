@@ -1802,8 +1802,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override object XmlWriteTranslator => SkyrimMajorRecordXmlWriteTranslation.Instance;
         protected override object BinaryWriteTranslator => SkyrimMajorRecordBinaryWriteTranslation.Instance;
 
-        public UInt16 FormVersion => BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(0, 2));
-        public UInt16 Version2 => BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(2, 2));
+        public UInt16 FormVersion => BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(12, 2));
+        public UInt16 Version2 => BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(14, 2));
         partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
 
         protected SkyrimMajorRecordBinaryWrapper(

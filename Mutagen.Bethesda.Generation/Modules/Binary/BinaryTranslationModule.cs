@@ -1503,7 +1503,6 @@ namespace Mutagen.Bethesda.Generation
                         nonIntegrated: true,
                         includeBaseClass: true))
                     {
-                        if (await field.ObjectGen.IsMajorRecord()) continue;
                         if (!this.TryGetTypeGeneration(field.GetType(), out var typeGen)) continue;
                         var data = field.GetFieldData();
                         switch (data.BinaryWrapperFallback)
