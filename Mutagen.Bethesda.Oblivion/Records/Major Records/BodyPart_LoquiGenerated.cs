@@ -1929,7 +1929,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Index
         private int? _IndexLocation;
         public bool Index_IsSet => _IndexLocation.HasValue;
-        public Race.BodyIndex Index => (Race.BodyIndex)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data.Slice(0), _IndexLocation.Value, _package.Meta));
+        public Race.BodyIndex Index => (Race.BodyIndex)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _IndexLocation.Value, _package.Meta));
         #endregion
         #region Icon
         private int? _IconLocation;

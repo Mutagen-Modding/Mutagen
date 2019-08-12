@@ -3811,7 +3811,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Skill
         private int? _SkillLocation;
         public bool Skill_IsSet => _SkillLocation.HasValue;
-        public ActorValue Skill => (ActorValue)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data.Slice(0), _SkillLocation.Value, _package.Meta));
+        public ActorValue Skill => (ActorValue)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _SkillLocation.Value, _package.Meta));
         #endregion
         #region Description
         private int? _DescriptionLocation;

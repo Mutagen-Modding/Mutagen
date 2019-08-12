@@ -2845,7 +2845,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Flags
         private int? _FlagsLocation;
         public bool Flags_IsSet => _FlagsLocation.HasValue;
-        public Faction.FactionFlag Flags => (Faction.FactionFlag)HeaderTranslation.ExtractSubrecordSpan(_data.Slice(0), _FlagsLocation.Value, _package.Meta)[0];
+        public Faction.FactionFlag Flags => (Faction.FactionFlag)HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation.Value, _package.Meta)[0];
         #endregion
         #region CrimeGoldMultiplier
         private int? _CrimeGoldMultiplierLocation;

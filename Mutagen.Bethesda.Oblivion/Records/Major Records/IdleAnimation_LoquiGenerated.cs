@@ -2663,7 +2663,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region AnimationGroupSection
         private int? _AnimationGroupSectionLocation;
         public bool AnimationGroupSection_IsSet => _AnimationGroupSectionLocation.HasValue;
-        public IdleAnimation.AnimationGroupSectionEnum AnimationGroupSection => (IdleAnimation.AnimationGroupSectionEnum)HeaderTranslation.ExtractSubrecordSpan(_data.Slice(0), _AnimationGroupSectionLocation.Value, _package.Meta)[0];
+        public IdleAnimation.AnimationGroupSectionEnum AnimationGroupSection => (IdleAnimation.AnimationGroupSectionEnum)HeaderTranslation.ExtractSubrecordSpan(_data, _AnimationGroupSectionLocation.Value, _package.Meta)[0];
         #endregion
         public IReadOnlySetList<IFormIDLinkGetter<IIdleAnimationInternalGetter>> RelatedIdleAnimations { get; private set; } = EmptySetList<IFormIDLinkGetter<IIdleAnimationInternalGetter>>.Instance;
         partial void CustomCtor(BinaryMemoryReadStream stream, int offset);

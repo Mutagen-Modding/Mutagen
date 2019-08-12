@@ -156,7 +156,7 @@ namespace Mutagen.Bethesda.Generation
             string slice;
             if (data.RecordType.HasValue)
             {
-                slice = $"{nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordSpan)}({dataAccessor}.Slice({posStr}), _{typeGen.Name}Location.Value, _package.Meta)";
+                slice = $"{nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordSpan)}({dataAccessor}, _{typeGen.Name}Location.Value, _package.Meta)";
             }
             else
             {

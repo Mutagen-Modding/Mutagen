@@ -2409,7 +2409,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Flags
         private int? _FlagsLocation;
         public bool Flags_IsSet => _FlagsLocation.HasValue;
-        public LeveledFlag Flags => (LeveledFlag)HeaderTranslation.ExtractSubrecordSpan(_data.Slice(0), _FlagsLocation.Value, _package.Meta)[0];
+        public LeveledFlag Flags => (LeveledFlag)HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation.Value, _package.Meta)[0];
         #endregion
         public IReadOnlySetList<ILeveledEntryGetter<ISpellAbstractInternalGetter>> Entries { get; private set; } = EmptySetList<LeveledEntryBinaryWrapper<ISpellAbstractInternalGetter>>.Instance;
         partial void CustomCtor(BinaryMemoryReadStream stream, int offset);

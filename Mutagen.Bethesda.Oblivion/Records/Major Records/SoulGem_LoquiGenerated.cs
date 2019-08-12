@@ -3319,12 +3319,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region ContainedSoul
         private int? _ContainedSoulLocation;
         public bool ContainedSoul_IsSet => _ContainedSoulLocation.HasValue;
-        public SoulLevel ContainedSoul => (SoulLevel)HeaderTranslation.ExtractSubrecordSpan(_data.Slice(0), _ContainedSoulLocation.Value, _package.Meta)[0];
+        public SoulLevel ContainedSoul => (SoulLevel)HeaderTranslation.ExtractSubrecordSpan(_data, _ContainedSoulLocation.Value, _package.Meta)[0];
         #endregion
         #region MaximumCapacity
         private int? _MaximumCapacityLocation;
         public bool MaximumCapacity_IsSet => _MaximumCapacityLocation.HasValue;
-        public SoulLevel MaximumCapacity => (SoulLevel)HeaderTranslation.ExtractSubrecordSpan(_data.Slice(0), _MaximumCapacityLocation.Value, _package.Meta)[0];
+        public SoulLevel MaximumCapacity => (SoulLevel)HeaderTranslation.ExtractSubrecordSpan(_data, _MaximumCapacityLocation.Value, _package.Meta)[0];
         #endregion
         partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
 

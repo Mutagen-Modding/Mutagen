@@ -3146,7 +3146,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Flags
         private int? _FlagsLocation;
         public bool Flags_IsSet => _FlagsLocation.HasValue;
-        public Door.DoorFlag Flags => (Door.DoorFlag)HeaderTranslation.ExtractSubrecordSpan(_data.Slice(0), _FlagsLocation.Value, _package.Meta)[0];
+        public Door.DoorFlag Flags => (Door.DoorFlag)HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation.Value, _package.Meta)[0];
         #endregion
         public IReadOnlySetList<IFormIDLinkGetter<IPlaceInternalGetter>> RandomTeleportDestinations { get; private set; } = EmptySetList<IFormIDLinkGetter<IPlaceInternalGetter>>.Instance;
         partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
