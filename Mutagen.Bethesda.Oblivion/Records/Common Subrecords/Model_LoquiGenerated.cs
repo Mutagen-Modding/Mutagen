@@ -2028,7 +2028,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Hashes_IsSet => _HashesLocation.HasValue;
         public ReadOnlySpan<Byte> Hashes => _HashesLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _HashesLocation.Value, _package.Meta).ToArray() : default;
         #endregion
-        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+        partial void CustomCtor(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset);
 
         protected ModelBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
@@ -2049,9 +2052,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 bytes: stream.RemainingMemory,
                 package: package);
             int offset = stream.Position;
-            ret.CustomCtor(stream, offset: 0);
+            ret.CustomCtor(
+                stream: stream,
+                finalPos: stream.Length,
+                offset: 0);
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
+                finalPos: stream.Length,
                 offset: offset,
                 recordTypeConverter: recordTypeConverter,
                 fill: ret.FillRecordType);
@@ -2060,6 +2067,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public TryGet<int?> FillRecordType(
             BinaryMemoryReadStream stream,
+            long finalPos,
             int offset,
             RecordType type,
             int? lastParsed)

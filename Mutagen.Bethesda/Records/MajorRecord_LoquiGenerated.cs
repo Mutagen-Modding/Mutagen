@@ -2256,7 +2256,10 @@ namespace Mutagen.Bethesda.Internals
         public bool EditorID_IsSet => _EditorIDLocation.HasValue;
         public String EditorID => _EditorIDLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _EditorIDLocation.Value, _package.Meta)) : default;
         #endregion
-        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+        partial void CustomCtor(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset);
 
         protected MajorRecordBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
@@ -2270,6 +2273,7 @@ namespace Mutagen.Bethesda.Internals
 
         public virtual TryGet<int?> FillRecordType(
             BinaryMemoryReadStream stream,
+            long finalPos,
             int offset,
             RecordType type,
             int? lastParsed)

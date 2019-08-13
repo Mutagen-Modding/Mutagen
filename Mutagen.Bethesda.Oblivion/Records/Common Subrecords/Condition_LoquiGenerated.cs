@@ -2631,7 +2631,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Int32 FirstParameter => BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(12, 4));
         public Int32 SecondParameter => BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(16, 4));
         public Int32 ThirdParameter => BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(20, 4));
-        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+        partial void CustomCtor(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset);
 
         protected ConditionBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
@@ -2654,7 +2657,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var finalPos = stream.Position + package.Meta.SubRecord(stream.RemainingSpan).TotalLength;
             int offset = stream.Position + package.Meta.SubConstants.TypeAndLengthLength;
             stream.Position += 0x18 + package.Meta.SubConstants.HeaderLength;
-            ret.CustomCtor(stream, offset);
+            ret.CustomCtor(
+                stream: stream,
+                finalPos: stream.Length,
+                offset: offset);
             return ret;
         }
 

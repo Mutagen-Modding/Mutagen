@@ -1,5 +1,6 @@
 using Loqui.Internal;
 using Loqui.Xml;
+using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Noggog;
 using System;
@@ -40,6 +41,26 @@ namespace Mutagen.Bethesda.Oblivion
             ret.CopyFieldsFrom(this, duplicateMask);
             ret.Items.SetTo(this.Items.Select(i => (Cell)i.Duplicate(getNextFormKey, duplicatedRecordTracker)));
             return ret;
+        }
+    }
+
+    namespace Internals
+    {
+        partial class CellSubBlockBinaryWrapper
+        {
+            public IReadOnlySetList<ICellInternalGetter> Items { get; private set; } = EmptySetList<CellBinaryWrapper>.Instance;
+
+            partial void ItemsCustomParse(BinaryMemoryReadStream stream, int offset, RecordType type, int? lastParsed)
+            {
+                this.Items = BinaryWrapperSetList<CellBinaryWrapper>.FactoryByArray(
+                    mem: stream.RemainingMemory,
+                    package: _package,
+                    recordTypeConverter: null,
+                    getter: (s, p, recConv) => CellBinaryWrapper.CellFactory(new BinaryMemoryReadStream(s), p, recConv),
+                    locs: CellBinaryWrapper.ParseRecordLocations(
+                        stream: stream,
+                        package: _package));
+            }
         }
     }
 }

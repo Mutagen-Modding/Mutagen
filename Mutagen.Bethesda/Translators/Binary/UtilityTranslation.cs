@@ -15,6 +15,9 @@ namespace Mutagen.Bethesda
 {
     public static class UtilityTranslation
     {
+        private static readonly byte[] _Zeros = new byte[8];
+        public static ReadOnlyMemorySlice<byte> Zeros => new ReadOnlyMemorySlice<byte>(_Zeros);
+
         public delegate void RecordStructFill<R>(
             R record,
             MutagenFrame frame,

@@ -2393,7 +2393,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         public Single ConstantEffectEnchantmentFactor => SpanExt.GetFloat(_data.Span.Slice(20, 4));
         public Single ConstantEffectBarterFactor => SpanExt.GetFloat(_data.Span.Slice(24, 4));
-        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+        partial void CustomCtor(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset);
 
         protected MagicEffectSubDataBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
@@ -2414,7 +2417,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 bytes: stream.RemainingMemory.Slice(0, 28),
                 package: package);
             int offset = stream.Position;
-            ret.CustomCtor(stream, offset);
+            ret.CustomCtor(
+                stream: stream,
+                finalPos: stream.Length,
+                offset: offset);
             return ret;
         }
 

@@ -1764,7 +1764,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IFormIDLinkGetter<IHairInternalGetter> Female_Property => new FormIDLink<IHairInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(4, 4))));
         public IHairInternalGetter Female => default;
         #endregion
-        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+        partial void CustomCtor(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset);
 
         protected RaceHairBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
@@ -1787,7 +1790,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var finalPos = stream.Position + package.Meta.SubRecord(stream.RemainingSpan).TotalLength;
             int offset = stream.Position + package.Meta.SubConstants.TypeAndLengthLength;
             stream.Position += 0x8 + package.Meta.SubConstants.HeaderLength;
-            ret.CustomCtor(stream, offset);
+            ret.CustomCtor(
+                stream: stream,
+                finalPos: stream.Length,
+                offset: offset);
             return ret;
         }
 

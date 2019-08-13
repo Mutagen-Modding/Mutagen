@@ -234,7 +234,10 @@ namespace Mutagen.Bethesda.Generation
             if (fieldData.HasTrigger)
             {
                 fg.AppendLine($"private int? _{typeGen.Name}Location;");
-                fg.AppendLine($"public bool {typeGen.Name}_IsSet => Get{typeGen.Name}IsSetCustom();");
+                if (typeGen.HasBeenSet)
+                {
+                    fg.AppendLine($"public bool {typeGen.Name}_IsSet => Get{typeGen.Name}IsSetCustom();");
+                }
                 loc = $"_{typeGen.Name}Location.Value";
             }
             else if (!fieldData.Length.HasValue

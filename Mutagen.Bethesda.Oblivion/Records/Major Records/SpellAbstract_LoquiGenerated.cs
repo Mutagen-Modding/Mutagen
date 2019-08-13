@@ -1479,7 +1479,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object XmlWriteTranslator => SpellAbstractXmlWriteTranslation.Instance;
         protected override object BinaryWriteTranslator => SpellAbstractBinaryWriteTranslation.Instance;
 
-        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+        partial void CustomCtor(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset);
 
         protected SpellAbstractBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,

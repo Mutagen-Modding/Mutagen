@@ -1749,6 +1749,60 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class InterCellPointBinaryWrapper :
+        BinaryWrapper,
+        IInterCellPointGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => InterCellPoint_Registration.Instance;
+        public static InterCellPoint_Registration Registration => InterCellPoint_Registration.Instance;
+        protected object CommonInstance => InterCellPointCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IInterCellPointGetter)rhs, include);
+
+        protected object XmlWriteTranslator => InterCellPointXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected object BinaryWriteTranslator => InterCellPointBinaryWriteTranslation.Instance;
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+
+        public Int32 PointID => BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0, 4));
+        public P3Float Point => P3FloatBinaryTranslation.Read(_data.Span.Slice(4, 12));
+        partial void CustomCtor(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset);
+
+        protected InterCellPointBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
+        {
+            this._data = bytes;
+        }
+
+        public static InterCellPointBinaryWrapper InterCellPointFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            var ret = new InterCellPointBinaryWrapper(
+                bytes: stream.RemainingMemory.Slice(0, 16),
+                package: package);
+            int offset = stream.Position;
+            ret.CustomCtor(
+                stream: stream,
+                finalPos: stream.Length,
+                offset: offset);
+            return ret;
+        }
+
+    }
+
     #endregion
 
     #endregion

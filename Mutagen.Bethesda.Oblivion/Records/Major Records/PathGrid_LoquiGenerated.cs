@@ -2728,6 +2728,130 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class PathGridBinaryWrapper :
+        OblivionMajorRecordBinaryWrapper,
+        IPathGridInternalGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => PathGrid_Registration.Instance;
+        public new static PathGrid_Registration Registration => PathGrid_Registration.Instance;
+        protected override object CommonInstance => PathGridCommon.Instance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPathGridInternalGetter)rhs, include);
+
+        protected override object XmlWriteTranslator => PathGridXmlWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => PathGridBinaryWriteTranslation.Instance;
+
+        #region PointToPointConnections
+        partial void PointToPointConnectionsCustomParse(
+            BinaryMemoryReadStream stream,
+            int offset,
+            RecordType type,
+            int? lastParsed);
+        #endregion
+        public IReadOnlySetList<IInterCellPointGetter> InterCellConnections { get; private set; } = EmptySetList<InterCellPointBinaryWrapper>.Instance;
+        public IReadOnlySetList<IPointToReferenceMappingGetter> PointToReferenceMappings { get; private set; } = EmptySetList<PointToReferenceMappingBinaryWrapper>.Instance;
+        partial void CustomCtor(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset);
+
+        protected PathGridBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
+        {
+        }
+
+        public static PathGridBinaryWrapper PathGridFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            stream = UtilityTranslation.DecompressStream(stream, package.Meta);
+            var ret = new PathGridBinaryWrapper(
+                bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
+            stream.Position += 0xC + package.Meta.MajorConstants.TypeAndLengthLength;
+            ret.CustomCtor(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset);
+            ret.FillSubrecordTypes(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset,
+                recordTypeConverter: recordTypeConverter,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x41544144: // DATA
+                {
+                    PointToPointConnectionsCustomParse(
+                        stream: stream,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+                    return TryGet<int?>.Succeed((int)PathGrid_FieldIndex.PointToPointConnections);
+                }
+                case 0x47414750: // PGAG
+                {
+                    return TryGet<int?>.Succeed((int)PathGrid_FieldIndex.Unknown);
+                }
+                case 0x49524750: // PGRI
+                {
+                    var subMeta = _package.Meta.ReadSubRecord(stream);
+                    var subLen = subMeta.RecordLength;
+                    this.InterCellConnections = BinaryWrapperSetList<InterCellPointBinaryWrapper>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 16,
+                        getter: (s, p) => InterCellPointBinaryWrapper.InterCellPointFactory(new BinaryMemoryReadStream(s), p));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)PathGrid_FieldIndex.InterCellConnections);
+                }
+                case 0x4C524750: // PGRL
+                {
+                    this.PointToReferenceMappings = BinaryWrapperSetList<PointToReferenceMappingBinaryWrapper>.FactoryByArray(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        recordTypeConverter: null,
+                        getter: (s, p, recConv) => PointToReferenceMappingBinaryWrapper.PointToReferenceMappingFactory(new BinaryMemoryReadStream(s), p, recConv),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            finalPos: finalPos,
+                            trigger: type,
+                            constants: _package.Meta.SubConstants,
+                            skipHeader: false));
+                    return TryGet<int?>.Succeed((int)PathGrid_FieldIndex.PointToReferenceMappings);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+            }
+        }
+    }
+
     #endregion
 
     #endregion

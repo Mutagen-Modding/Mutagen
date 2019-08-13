@@ -1878,8 +1878,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IFormIDLinkGetter<IPlacedGetter> Reference_Property => new FormIDLink<IPlacedGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
         public IPlacedGetter Reference => default;
         #endregion
-        public IReadOnlyList<Int16> Points { get; private set; } = EmptySetList<Int16>.Instance;
-        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+        public IReadOnlyList<Int16> Points => BinaryWrapperSetList<Int16>.FactoryByStartIndex(_data.Slice(4), _package, 2, (s, p) => BinaryPrimitives.ReadInt16LittleEndian(s));
+        partial void CustomCtor(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset);
 
         protected PointToReferenceMappingBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
@@ -1902,7 +1905,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var finalPos = stream.Position + package.Meta.SubRecord(stream.RemainingSpan).TotalLength;
             int offset = stream.Position + package.Meta.SubConstants.TypeAndLengthLength;
             stream.Position += 0x4 + package.Meta.SubConstants.HeaderLength;
-            ret.CustomCtor(stream, offset);
+            ret.CustomCtor(
+                stream: stream,
+                finalPos: stream.Length,
+                offset: offset);
             return ret;
         }
 

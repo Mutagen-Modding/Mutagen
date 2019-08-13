@@ -373,6 +373,27 @@ namespace Mutagen.Bethesda.Generation
         {
             ListType list = typeGen as ListType;
             var data = list.GetFieldData();
+            switch (data.BinaryWrapperFallback)
+            {
+                case BinaryGenerationType.Normal:
+                    break;
+                case BinaryGenerationType.DoNothing:
+                case BinaryGenerationType.NoGeneration:
+                    return;
+                case BinaryGenerationType.Custom:
+                    using (var args = new ArgsWrapper(fg,
+                        $"partial void {typeGen.Name}CustomParse"))
+                    {
+                        args.Add($"{nameof(BinaryMemoryReadStream)} stream");
+                        args.Add($"int offset");
+                        args.Add($"{nameof(RecordType)} type");
+                        args.Add($"int? lastParsed");
+                    }
+                    return;
+                default:
+                    throw new NotImplementedException();
+            }
+            var subGen = this.Module.GetTypeGeneration(list.SubTypeGeneration.GetType());
             if (list.MaxValue.HasValue)
             {
                 var posStr = $"_{dataType.GetFieldData().RecordType}Location.Value + {currentPosition}";
@@ -401,9 +422,13 @@ namespace Mutagen.Bethesda.Generation
                 var typeName = this.Module.BinaryWrapperClassName(loqui);
                 fg.AppendLine($"public IReadOnly{(list.HasBeenSet ? "Set" : null)}List<{loqui.TypeName(getter: true)}> {typeGen.Name} {{ get; private set; }} = EmptySetList<{typeName}>.Instance;");
             }
-            else
+            else if (data.HasTrigger)
             {
                 fg.AppendLine($"public IReadOnly{(list.HasBeenSet ? "Set" : null)}List<{list.SubTypeGeneration.TypeName(getter: true)}> {typeGen.Name} {{ get; private set; }} = EmptySetList<{list.SubTypeGeneration.TypeName(getter: true)}>.Instance;");
+            }
+            else
+            {
+                fg.AppendLine($"public IReadOnly{(list.HasBeenSet ? "Set" : null)}List<{list.SubTypeGeneration.TypeName(getter: true)}> {typeGen.Name} => BinaryWrapperSetList<{list.SubTypeGeneration.TypeName(getter: true)}>.FactoryByStartIndex({dataAccessor}.Slice({currentPosition}), _package, {subGen.ExpectedLength(objGen, list.SubTypeGeneration)}, (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, "s", "p")});");
             }
         }
 
@@ -440,6 +465,27 @@ namespace Mutagen.Bethesda.Generation
         {
             ListType list = typeGen as ListType;
             var data = list.GetFieldData();
+            switch (data.BinaryWrapperFallback)
+            {
+                case BinaryGenerationType.Normal:
+                    break;
+                case BinaryGenerationType.DoNothing:
+                case BinaryGenerationType.NoGeneration:
+                    return;
+                case BinaryGenerationType.Custom:
+                    using (var args = new ArgsWrapper(fg,
+                        $"{typeGen.Name}CustomParse"))
+                    {
+                        args.AddPassArg($"stream");
+                        args.AddPassArg($"offset");
+                        args.AddPassArg($"type");
+                        args.AddPassArg($"lastParsed");
+                    }
+                    return;
+                default:
+                    throw new NotImplementedException();
+            }
+
             if (data.MarkerType.HasValue)
             {
                 fg.AppendLine($"stream.Position += {packageAccessor}.Meta.SubConstants.HeaderLength; // Skip marker");
@@ -523,6 +569,7 @@ namespace Mutagen.Bethesda.Generation
                                         $"locs: {nameof(BinaryWrapper.ParseRecordLocations)}"))
                                     {
                                         subArgs.AddPassArg("stream");
+                                        subArgs.AddPassArg("finalPos");
                                         subArgs.Add("trigger: type");
                                         switch (loqui.TargetObjectGeneration.GetObjectType())
                                         {
@@ -560,6 +607,7 @@ namespace Mutagen.Bethesda.Generation
                                     $"locs: {nameof(BinaryWrapper.ParseRecordLocations)}"))
                                 {
                                     subArgs.AddPassArg("stream");
+                                    subArgs.AddPassArg("finalPos");
                                     subArgs.Add($"constants: _package.Meta.{nameof(MetaDataConstants.SubConstants)}");
                                     subArgs.Add("trigger: type");
                                     subArgs.Add("skipHeader: true");

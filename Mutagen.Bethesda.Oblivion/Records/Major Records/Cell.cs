@@ -406,5 +406,194 @@ namespace Mutagen.Bethesda.Oblivion
                 }
             }
         }
+
+        public partial class CellBinaryWrapper
+        {
+            static readonly HashSet<RecordType> TypicalPlacedTypes = new HashSet<RecordType>()
+            {
+                Cell_Registration.ACHR_HEADER,
+                Cell_Registration.ACRE_HEADER,
+                Cell_Registration.REFR_HEADER
+            };
+
+            private ReadOnlyMemorySlice<byte>? _grupData;
+
+            private int? _pathgridLocation;
+            public bool PathGrid_IsSet => _pathgridLocation.HasValue;
+            public IPathGridInternalGetter PathGrid => PathGridBinaryWrapper.PathGridFactory(new BinaryMemoryReadStream(_grupData.Value.Slice(_pathgridLocation.Value)), _package);
+
+            private int? _landscapeLocation;
+            public bool Landscape_IsSet => _landscapeLocation.HasValue;
+            public ILandscapeInternalGetter Landscape => LandscapeBinaryWrapper.LandscapeFactory(new BinaryMemoryReadStream(_grupData.Value.Slice(_landscapeLocation.Value)), _package);
+
+            public ReadOnlySpan<byte> Timestamp => _grupData != null ? _package.Meta.Group(_grupData.Value).LastModifiedSpan : UtilityTranslation.Zeros.Slice(0, 4);
+
+            private int? _persistentLocation;
+            public ReadOnlySpan<byte> PersistentTimestamp => _persistentLocation.HasValue ? _package.Meta.Group(_grupData.Value.Slice(_persistentLocation.Value)).LastModifiedSpan : UtilityTranslation.Zeros.Slice(0, 4);
+            public IReadOnlySetList<IPlacedGetter> Persistent { get; private set; } = EmptySetList<IPlacedGetter>.Instance;
+
+            private int? _temporaryLocation;
+            public ReadOnlySpan<byte> TemporaryTimestamp => _temporaryLocation.HasValue ? _package.Meta.Group(_grupData.Value.Slice(_temporaryLocation.Value)).LastModifiedSpan : UtilityTranslation.Zeros.Slice(0, 4);
+            public IReadOnlySetList<IPlacedGetter> Temporary { get; private set; } = EmptySetList<IPlacedGetter>.Instance;
+
+            private int? _visibleWhenDistantLocation;
+            public ReadOnlySpan<byte> VisibleWhenDistantTimestamp => _visibleWhenDistantLocation.HasValue ? _package.Meta.Group(_grupData.Value.Slice(_visibleWhenDistantLocation.Value)).LastModifiedSpan : UtilityTranslation.Zeros.Slice(0, 4);
+            public IReadOnlySetList<IPlacedGetter> VisibleWhenDistant { get; private set; } = EmptySetList<IPlacedGetter>.Instance;
+
+            public static int[] ParseRecordLocations(BinaryMemoryReadStream stream, BinaryWrapperFactoryPackage package)
+            {
+                List<int> ret = new List<int>();
+                var startingPos = stream.Position;
+                while (!stream.Complete)
+                {
+                    var cellMeta = package.Meta.GetMajorRecord(stream);
+                    if (cellMeta.RecordType != Cell_Registration.CELL_HEADER) break;
+                    ret.Add(stream.Position - startingPos);
+                    stream.Position += (int)cellMeta.TotalLength;
+                    if (stream.Complete) break;
+                    var grupMeta = package.Meta.GetGroup(stream);
+                    if (grupMeta.IsGroup && (grupMeta.GroupType == (int)GroupTypeEnum.CellChildren))
+                    {
+                        stream.Position += (int)grupMeta.TotalLength;
+                    }
+                }
+                return ret.ToArray();
+            }
+
+            partial void CustomEnd(BinaryMemoryReadStream stream, long finalPos, int _)
+            {
+                if (stream.Complete) return;
+                var startPos = stream.Position;
+                var groupMeta = this._package.Meta.GetGroup(stream);
+                if (!groupMeta.IsGroup) return;
+                var formKey = FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeSpan));
+                if (groupMeta.GroupType == (int)GroupTypeEnum.CellChildren)
+                {
+                    if (formKey != this.FormKey)
+                    {
+                        throw new ArgumentException("Cell children group did not match the FormID of the parent cell.");
+                    }
+                }
+                else
+                {
+                    return;
+                }
+                this._grupData = stream.ReadMemory(checked((int)groupMeta.TotalLength));
+                stream = new BinaryMemoryReadStream(this._grupData.Value);
+                stream.Position += groupMeta.HeaderLength;
+                while (!stream.Complete)
+                {
+                    var subGroupLocation = stream.Position;
+                    var subGroupMeta = this._package.Meta.ReadGroup(stream);
+                    if (!subGroupMeta.IsGroup)
+                    {
+                        throw new ArgumentException();
+                    }
+
+                    IPlacedGetter TypicalGetter(
+                        ReadOnlyMemorySlice<byte> span,
+                        BinaryWrapperFactoryPackage package)
+                    {
+                        var majorMeta = package.Meta.MajorRecord(span);
+                        switch (majorMeta.RecordType.TypeInt)
+                        {
+                            case 0x45524341: // "ACRE":
+                                return PlacedCreatureBinaryWrapper.PlacedCreatureFactory(new BinaryMemoryReadStream(span), package);
+                            case 0x52484341: // "ACHR":
+                                return PlacedNPCBinaryWrapper.PlacedNPCFactory(new BinaryMemoryReadStream(span), package);
+                            case 0x52464552: // "REFR":
+                                return PlacedObjectBinaryWrapper.PlacedObjectFactory(new BinaryMemoryReadStream(span), package);
+                            default:
+                                throw new NotImplementedException();
+                        }
+                    }
+
+                    GroupTypeEnum type = (GroupTypeEnum)subGroupMeta.GroupType;
+                    switch (type)
+                    {
+                        case GroupTypeEnum.CellPersistentChildren:
+                            {
+                                this._persistentLocation = subGroupLocation;
+                                var contentSpan = stream.ReadMemory(checked((int)subGroupMeta.ContentLength));
+                                this.Persistent = BinaryWrapperSetList<IPlacedGetter>.FactoryByArray(
+                                    contentSpan,
+                                    _package,
+                                    getter: TypicalGetter,
+                                    locs: ParseRecordLocations(
+                                        stream: new BinaryMemoryReadStream(contentSpan),
+                                        finalPos: subGroupLocation + subGroupMeta.TotalLength,
+                                        triggers: TypicalPlacedTypes,
+                                        constants: MetaDataConstants.Oblivion.MajorConstants,
+                                        skipHeader: false));
+                                break;
+                            }
+                        case GroupTypeEnum.CellTemporaryChildren:
+                            {
+                                this._temporaryLocation = subGroupLocation;
+                                List<int> ret = new List<int>();
+                                var subStartPos = stream.Position;
+                                var endPos = stream.Position + subGroupMeta.ContentLength;
+                                var contentSpan = stream.GetMemory(checked((int)subGroupMeta.ContentLength));
+                                while (stream.Position < endPos)
+                                {
+                                    var majorMeta = _package.Meta.GetMajorRecord(stream);
+                                    var recType = majorMeta.RecordType;
+                                    if (TypicalPlacedTypes.Contains(recType))
+                                    {
+                                        ret.Add(stream.Position - subStartPos);
+                                    }
+                                    else
+                                    {
+                                        switch (recType.TypeInt)
+                                        {
+                                            case 0x44524750: // PGRD
+                                                if (_pathgridLocation.HasValue)
+                                                {
+                                                    throw new ArgumentException("Second pathgrid parsed.");
+                                                }
+                                                _pathgridLocation = stream.Position;
+                                                break;
+                                            case 0x444e414c: // LAND
+                                                if (_landscapeLocation.HasValue)
+                                                {
+                                                    throw new ArgumentException("Second landscape parsed.");
+                                                }
+                                                _landscapeLocation = stream.Position;
+                                                break;
+                                            default:
+                                                break;
+                                        }
+                                    }
+                                    stream.Position += (int)majorMeta.TotalLength;
+                                }
+                                this.Temporary = BinaryWrapperSetList<IPlacedGetter>.FactoryByArray(
+                                    contentSpan,
+                                    _package,
+                                    getter: TypicalGetter,
+                                    locs: ret.ToArray());
+                                break;
+                            }
+                        case GroupTypeEnum.CellVisibleDistantChildren:
+                            {
+                                this._visibleWhenDistantLocation = subGroupLocation;
+                                var contentSpan = stream.ReadMemory(checked((int)subGroupMeta.ContentLength));
+                                this.VisibleWhenDistant = BinaryWrapperSetList<IPlacedGetter>.FactoryByArray(
+                                    contentSpan,
+                                    _package,
+                                    getter: TypicalGetter,
+                                    locs: ParseRecordLocations(
+                                        stream: new BinaryMemoryReadStream(contentSpan),
+                                        finalPos: subGroupLocation + subGroupMeta.TotalLength,
+                                        triggers: TypicalPlacedTypes,
+                                        constants: MetaDataConstants.Oblivion.MajorConstants,
+                                        skipHeader: false));
+                                break;
+                            }
+                        default:
+                            throw new NotImplementedException();
+                    }
+                }
+            }
+        }
     }
 }

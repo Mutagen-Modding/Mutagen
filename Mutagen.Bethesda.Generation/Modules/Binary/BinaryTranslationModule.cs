@@ -1423,11 +1423,8 @@ namespace Mutagen.Bethesda.Generation
 
         protected async Task GenerateImportWrapper(ObjectGeneration obj, FileGeneration fg)
         {
-            if (obj.Name.Contains("Cell")
-                || obj.Name.Contains("World")
-                || obj.Name.Contains("ListGroup")
+            if (obj.Name.Contains("World")
                 || obj.Name.Contains("Road")
-                || obj.Name.Contains("PathGrid")
                 || obj.Name.Contains("SkyrimMod")
                 || obj.Name.Contains("DialogTopic")
                 ) return;
@@ -1565,7 +1562,23 @@ namespace Mutagen.Bethesda.Generation
                     passedLength += typeGen.GetPassedAmount(obj, field);
                 }
 
-                fg.AppendLine($"partial void CustomCtor({nameof(BinaryMemoryReadStream)} stream, int offset);");
+                using (var args = new ArgsWrapper(fg,
+                    $"partial void CustomCtor"))
+                {
+                    args.Add($"{nameof(BinaryMemoryReadStream)} stream");
+                    args.Add($"long finalPos");
+                    args.Add($"int offset");
+                }
+                if (objData.CustomBinaryEnd != CustomEnd.Off)
+                {
+                    using (var args = new ArgsWrapper(fg,
+                        $"partial void CustomEnd"))
+                    {
+                        args.Add($"{nameof(BinaryMemoryReadStream)} stream");
+                        args.Add($"long finalPos");
+                        args.Add($"int offset");
+                    }
+                }
                 fg.AppendLine();
 
                 using (var args = new FunctionWrapper(fg,
@@ -1743,11 +1756,23 @@ namespace Mutagen.Bethesda.Generation
                                     default:
                                         throw new NotImplementedException();
                                 }
-                                fg.AppendLine($"ret.CustomCtor(stream, offset);");
+                                using (var args = new ArgsWrapper(fg,
+                                    $"ret.CustomCtor"))
+                                {
+                                    args.AddPassArg($"stream");
+                                    args.AddPassArg($"finalPos");
+                                    args.AddPassArg($"offset");
+                                }
                             }
                             else
                             {
-                                fg.AppendLine($"ret.CustomCtor(stream, offset: 0);");
+                                using (var args = new ArgsWrapper(fg,
+                                    $"ret.CustomCtor"))
+                                {
+                                    args.AddPassArg($"stream");
+                                    args.Add($"finalPos: stream.Length");
+                                    args.Add($"offset: 0");
+                                }
                             }
                             string call;
                             switch (obj.GetObjectType())
@@ -1764,7 +1789,8 @@ namespace Mutagen.Bethesda.Generation
                                     }
                                     break;
                                 case ObjectType.Group:
-                                    if (obj.IsTopLevelGroup())
+                                    var grupLoqui = await obj.GetGroupLoquiType();
+                                    if (grupLoqui.TargetObjectGeneration != null && await grupLoqui.TargetObjectGeneration.IsMajorRecord())
                                     {
                                         call = $"{nameof(BinaryWrapper.FillMajorRecords)}";
                                     }
@@ -1785,9 +1811,13 @@ namespace Mutagen.Bethesda.Generation
                                 args.Add($"stream: stream");
                                 if (obj.GetObjectType() != ObjectType.Mod)
                                 {
-                                    if (!obj.IsTypelessStruct())
+                                    if (obj.IsTypelessStruct())
                                     {
-                                        args.Add($"finalPos: finalPos");
+                                        args.Add($"finalPos: stream.Length");
+                                    }
+                                    else
+                                    {
+                                        args.AddPassArg($"finalPos");
                                     }
                                     args.Add($"offset: offset");
                                     args.AddPassArg($"recordTypeConverter");
@@ -1818,7 +1848,13 @@ namespace Mutagen.Bethesda.Generation
                                 }
                                 fg.AppendLine($"stream.Position += 0x{(passedLength).ToString("X")}{headerAddition};");
                             }
-                            fg.AppendLine($"ret.CustomCtor(stream, offset);");
+                            using (var args = new ArgsWrapper(fg,
+                                $"ret.CustomCtor"))
+                            {
+                                args.AddPassArg($"stream");
+                                args.Add($"finalPos: stream.Length");
+                                args.AddPassArg($"offset");
+                            }
                         }
                         if (obj.GetObjectType() == ObjectType.Mod)
                         {
@@ -1835,6 +1871,16 @@ namespace Mutagen.Bethesda.Generation
                                 }
                             }
                         }
+                        if (objData.CustomBinaryEnd != CustomEnd.Off)
+                        {
+                            using (var args = new ArgsWrapper(fg,
+                                "ret.CustomEnd"))
+                            {
+                                args.AddPassArg("stream");
+                                args.AddPassArg("finalPos");
+                                args.AddPassArg("offset");
+                            }
+                        }
                         fg.AppendLine("return ret;");
                     }
                     fg.AppendLine();
@@ -1846,6 +1892,7 @@ namespace Mutagen.Bethesda.Generation
                         $"public{await obj.FunctionOverride(async b => HasRecordTypeFields(b))}TryGet<int?> FillRecordType"))
                     {
                         args.Add($"{nameof(BinaryMemoryReadStream)} stream");
+                        args.Add($"long finalPos");
                         args.Add($"int offset");
                         args.Add("RecordType type");
                         args.Add("int? lastParsed");
@@ -1861,7 +1908,7 @@ namespace Mutagen.Bethesda.Generation
                             {
                                 // ToDo
                                 // Remove
-                                if (obj.GetObjectType() == ObjectType.Mod && field.Field.Name == "Cells")
+                                if (obj.GetObjectType() == ObjectType.Mod && field.Field.Name == "Worldspaces")
                                     break;
 
                                 if (!field.Field.TryGetFieldData(out var fieldData)
@@ -1946,6 +1993,7 @@ namespace Mutagen.Bethesda.Generation
                                         "return base.FillRecordType"))
                                     {
                                         args.AddPassArg("stream");
+                                        args.AddPassArg("finalPos");
                                         args.AddPassArg("offset");
                                         args.AddPassArg("type");
                                         args.AddPassArg("lastParsed");

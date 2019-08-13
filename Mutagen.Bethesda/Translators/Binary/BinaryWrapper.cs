@@ -9,6 +9,7 @@ namespace Mutagen.Bethesda.Binary
     {
         public delegate TryGet<int?> RecordTypeFillWrapper(
             BinaryMemoryReadStream stream,
+            long finalPos,
             int offset,
             RecordType type,
             int? lastParsed);
@@ -32,6 +33,7 @@ namespace Mutagen.Bethesda.Binary
             ModHeaderMeta headerMeta = _package.Meta.Header(stream.RemainingSpan);
             fill(
                 stream: stream,
+                finalPos: stream.Length,
                 offset: 0,
                 type: headerMeta.RecordType,
                 lastParsed: lastParsed);
@@ -45,6 +47,7 @@ namespace Mutagen.Bethesda.Binary
                 var minimumFinalPos = stream.Position + groupMeta.TotalLength;
                 var parsed = fill(
                     stream: stream,
+                    finalPos: minimumFinalPos,
                     offset: 0,
                     type: groupMeta.ContainedRecordType,
                     lastParsed: lastParsed);
@@ -65,12 +68,13 @@ namespace Mutagen.Bethesda.Binary
             RecordTypeFillWrapper fill)
         {
             int? lastParsed = null;
-            while (stream.Position < finalPos)
+            while (!stream.Complete && stream.Position < finalPos)
             {
                 MajorRecordMeta majorMeta = _package.Meta.MajorRecord(stream.RemainingSpan);
                 var minimumFinalPos = stream.Position + majorMeta.TotalLength;
                 var parsed = fill(
                     stream: stream,
+                    finalPos: finalPos,
                     offset: offset,
                     type: recordTypeConverter.ConvertToStandard(majorMeta.RecordType),
                     lastParsed: lastParsed);
@@ -91,7 +95,7 @@ namespace Mutagen.Bethesda.Binary
             RecordTypeFillWrapper fill)
         {
             int? lastParsed = null;
-            while (stream.Position < finalPos)
+            while (!stream.Complete && stream.Position < finalPos)
             {
                 GroupRecordMeta groupMeta = _package.Meta.Group(stream.RemainingSpan);
                 if (!groupMeta.IsGroup)
@@ -101,6 +105,7 @@ namespace Mutagen.Bethesda.Binary
                 var minimumFinalPos = stream.Position + groupMeta.TotalLength;
                 var parsed = fill(
                     stream: stream,
+                    finalPos: finalPos,
                     offset: offset,
                     type: recordTypeConverter.ConvertToStandard(groupMeta.RecordType),
                     lastParsed: lastParsed);
@@ -121,12 +126,13 @@ namespace Mutagen.Bethesda.Binary
             RecordTypeFillWrapper fill)
         {
             int? lastParsed = null;
-            while (stream.Position < finalPos)
+            while (!stream.Complete && stream.Position < finalPos)
             {
                 SubRecordMeta subMeta = _package.Meta.SubRecord(stream.RemainingSpan);
                 var minimumFinalPos = stream.Position + subMeta.TotalLength;
                 var parsed = fill(
                     stream: stream,
+                    finalPos: finalPos,
                     offset: offset,
                     type: recordTypeConverter.ConvertToStandard(subMeta.RecordType),
                     lastParsed: lastParsed);
@@ -141,17 +147,19 @@ namespace Mutagen.Bethesda.Binary
 
         public void FillTypelessSubrecordTypes(
             BinaryMemoryReadStream stream,
+            long finalPos,
             int offset,
             RecordTypeConverter recordTypeConverter,
             RecordTypeFillWrapper fill)
         {
             int? lastParsed = null;
-            while (!stream.Complete)
+            while (!stream.Complete && stream.Position < finalPos)
             {
                 SubRecordMeta subMeta = _package.Meta.SubRecord(stream.RemainingSpan);
                 var minimumFinalPos = stream.Position + subMeta.TotalLength;
                 var parsed = fill(
                     stream: stream,
+                    finalPos: finalPos,
                     offset: offset,
                     type: recordTypeConverter.ConvertToStandard(subMeta.RecordType),
                     lastParsed: lastParsed);
@@ -166,16 +174,45 @@ namespace Mutagen.Bethesda.Binary
 
         public static int[] ParseRecordLocations(
             BinaryMemoryReadStream stream,
+            long finalPos,
             RecordType trigger,
             RecordConstants constants,
             bool skipHeader)
         {
             List<int> ret = new List<int>();
             var startingPos = stream.Position;
-            while (!stream.Complete)
+            while (!stream.Complete && stream.Position < finalPos)
             {
                 var varMeta = constants.GetVariableMeta(stream);
                 if (varMeta.RecordType != trigger) break;
+                if (skipHeader)
+                {
+                    stream.Position += varMeta.HeaderLength;
+                    ret.Add(stream.Position - startingPos);
+                    stream.Position += (int)varMeta.RecordLength;
+                }
+                else
+                {
+                    ret.Add(stream.Position - startingPos);
+                    stream.Position += (int)varMeta.TotalLength;
+                }
+            }
+            return ret.ToArray();
+        }
+
+        public static int[] ParseRecordLocations(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            ICollection<RecordType> triggers,
+            RecordConstants constants,
+            bool skipHeader)
+        {
+            List<int> ret = new List<int>();
+            var startingPos = stream.Position;
+            while (!stream.Complete && stream.Position < finalPos)
+            {
+                var varMeta = constants.GetVariableMeta(stream);
+                if (!triggers.Contains(varMeta.RecordType)) break;
                 if (skipHeader)
                 {
                     stream.Position += varMeta.HeaderLength;

@@ -1771,7 +1771,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public ActorValue Skill => (ActorValue)_data.Span.Slice(0, 1)[0];
         public SByte Boost => (sbyte)_data.Span.Slice(1, 1)[0];
-        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+        partial void CustomCtor(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset);
 
         protected SkillBoostBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
@@ -1792,7 +1795,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 bytes: stream.RemainingMemory.Slice(0, 2),
                 package: package);
             int offset = stream.Position;
-            ret.CustomCtor(stream, offset);
+            ret.CustomCtor(
+                stream: stream,
+                finalPos: stream.Length,
+                offset: offset);
             return ret;
         }
 

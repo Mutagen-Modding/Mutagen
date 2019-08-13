@@ -3758,7 +3758,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Single SizeVariance => SpanExt.GetFloat(_data.Span.Slice(36, 4));
         public P3UInt16 AngleVariance => P3UInt16BinaryTranslation.Read(_data.Span.Slice(40, 6));
         public ReadOnlySpan<Byte> Unknown2 => _data.Span.Slice(46, 6).ToArray();
-        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+        partial void CustomCtor(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset);
 
         protected RegionDataObjectBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
@@ -3779,7 +3782,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 bytes: stream.RemainingMemory.Slice(0, 52),
                 package: package);
             int offset = stream.Position;
-            ret.CustomCtor(stream, offset);
+            ret.CustomCtor(
+                stream: stream,
+                finalPos: stream.Length,
+                offset: offset);
             return ret;
         }
 

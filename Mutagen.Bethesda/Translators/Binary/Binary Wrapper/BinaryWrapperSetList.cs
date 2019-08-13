@@ -57,6 +57,28 @@ namespace Mutagen.Bethesda.Binary
             return new BinaryWrapperLazyList(
                 mem,
                 package,
+                (m, p) =>
+                {
+                    var ret = new List<T>();
+                    using (var stream = new BinaryMemoryReadStream(m))
+                    {
+                        while (!stream.Complete)
+                        {
+                            ret.Add(getter(stream, p));
+                        }
+                    }
+                    return ret;
+                });
+        }
+
+        public static IReadOnlySetList<T> FactoryByLazyParse(
+            ReadOnlyMemorySlice<byte> mem,
+            BinaryWrapperFactoryPackage package,
+            Func<ReadOnlyMemorySlice<byte>, BinaryWrapperFactoryPackage, IReadOnlyList<T>> getter)
+        {
+            return new BinaryWrapperLazyList(
+                mem,
+                package,
                 getter);
         }
 
@@ -159,7 +181,7 @@ namespace Mutagen.Bethesda.Binary
                 get
                 {
                     var startIndex = index * _itemLength;
-                    return _getter(_mem.Slice(startIndex, startIndex + _itemLength), _package);
+                    return _getter(_mem.Slice(startIndex, _itemLength), _package);
                 }
             }
 
@@ -181,14 +203,14 @@ namespace Mutagen.Bethesda.Binary
         public class BinaryWrapperLazyList : IReadOnlySetList<T>
         {
             private readonly Lazy<IReadOnlyList<T>> _list;
-            private ReadOnlyMemorySlice<byte> _mem;
-            private BinaryWrapperFactoryPackage _package;
-            private BinaryWrapper.Factory<T> _getter;
+            private readonly ReadOnlyMemorySlice<byte> _mem;
+            private readonly BinaryWrapperFactoryPackage _package;
+            private readonly Func<ReadOnlyMemorySlice<byte>, BinaryWrapperFactoryPackage, IReadOnlyList<T>> _getter;
 
             public BinaryWrapperLazyList(
                 ReadOnlyMemorySlice<byte> mem,
                 BinaryWrapperFactoryPackage package,
-                BinaryWrapper.Factory<T> getter)
+                Func<ReadOnlyMemorySlice<byte>, BinaryWrapperFactoryPackage, IReadOnlyList<T>> getter)
             {
                 this._mem = mem;
                 this._getter = getter;
@@ -198,15 +220,7 @@ namespace Mutagen.Bethesda.Binary
 
             private IReadOnlyList<T> ConstructList()
             {
-                var ret = new List<T>();
-                using (var stream = new BinaryMemoryReadStream(_mem))
-                {
-                    while (!stream.Complete)
-                    {
-                        ret.Add(_getter(stream, _package));
-                    }
-                }
-                return ret;
+                return this._getter(_mem, _package);
             }
 
             public T this[int index] => this._list.Value[index];

@@ -2284,7 +2284,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public QuestTarget.Flag Flags => _Flags_IsSet ? (QuestTarget.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 4)) : default;
         #endregion
         public IReadOnlySetList<IConditionGetter> Conditions { get; private set; } = EmptySetList<ConditionBinaryWrapper>.Instance;
-        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+        partial void CustomCtor(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset);
 
         protected QuestTargetBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
@@ -2305,9 +2308,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 bytes: stream.RemainingMemory,
                 package: package);
             int offset = stream.Position;
-            ret.CustomCtor(stream, offset: 0);
+            ret.CustomCtor(
+                stream: stream,
+                finalPos: stream.Length,
+                offset: 0);
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
+                finalPos: stream.Length,
                 offset: offset,
                 recordTypeConverter: recordTypeConverter,
                 fill: ret.FillRecordType);
@@ -2316,6 +2323,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public TryGet<int?> FillRecordType(
             BinaryMemoryReadStream stream,
+            long finalPos,
             int offset,
             RecordType type,
             int? lastParsed)
@@ -2339,6 +2347,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         getter: (s, p, recConv) => ConditionBinaryWrapper.ConditionFactory(new BinaryMemoryReadStream(s), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
+                            finalPos: finalPos,
                             trigger: type,
                             constants: _package.Meta.SubConstants,
                             skipHeader: false));

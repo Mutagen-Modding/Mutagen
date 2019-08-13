@@ -1929,7 +1929,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         public P3Float Position => P3FloatBinaryTranslation.Read(_data.Span.Slice(4, 12));
         public P3Float Rotation => P3FloatBinaryTranslation.Read(_data.Span.Slice(16, 12));
-        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+        partial void CustomCtor(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset);
 
         protected TeleportDestinationBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
@@ -1952,7 +1955,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var finalPos = stream.Position + package.Meta.SubRecord(stream.RemainingSpan).TotalLength;
             int offset = stream.Position + package.Meta.SubConstants.TypeAndLengthLength;
             stream.Position += 0x1C + package.Meta.SubConstants.HeaderLength;
-            ret.CustomCtor(stream, offset);
+            ret.CustomCtor(
+                stream: stream,
+                finalPos: stream.Length,
+                offset: offset);
             return ret;
         }
 

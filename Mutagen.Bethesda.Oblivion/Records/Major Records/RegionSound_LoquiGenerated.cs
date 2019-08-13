@@ -1922,7 +1922,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         public RegionSound.Flag Flags => (RegionSound.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(4, 4));
         public Single Chance => SpanExt.GetFloat(_data.Span.Slice(8, 4));
-        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+        partial void CustomCtor(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset);
 
         protected RegionSoundBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
@@ -1943,7 +1946,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 bytes: stream.RemainingMemory.Slice(0, 12),
                 package: package);
             int offset = stream.Position;
-            ret.CustomCtor(stream, offset);
+            ret.CustomCtor(
+                stream: stream,
+                finalPos: stream.Length,
+                offset: offset);
             return ret;
         }
 

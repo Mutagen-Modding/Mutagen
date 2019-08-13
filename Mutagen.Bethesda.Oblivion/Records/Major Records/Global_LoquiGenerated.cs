@@ -1548,7 +1548,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             BinaryMemoryReadStream stream,
             int offset);
         #endregion
-        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+        partial void CustomCtor(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset);
 
         protected GlobalBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
@@ -1561,6 +1564,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public override TryGet<int?> FillRecordType(
             BinaryMemoryReadStream stream,
+            long finalPos,
             int offset,
             RecordType type,
             int? lastParsed)
@@ -1577,6 +1581,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 default:
                     return base.FillRecordType(
                         stream: stream,
+                        finalPos: finalPos,
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed);

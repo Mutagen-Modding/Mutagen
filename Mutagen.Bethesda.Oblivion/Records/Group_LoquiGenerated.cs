@@ -2241,7 +2241,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         public GroupTypeEnum GroupType => (GroupTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(4, 4));
         public Int32 LastModified => BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(8, 4));
-        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+        partial void CustomCtor(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset);
 
         protected GroupBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
@@ -2264,7 +2267,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var finalPos = stream.Position + package.Meta.Group(stream.RemainingSpan).TotalLength;
             int offset = stream.Position + package.Meta.GroupConstants.TypeAndLengthLength;
             stream.Position += 0xC + package.Meta.GroupConstants.TypeAndLengthLength;
-            ret.CustomCtor(stream, offset);
+            ret.CustomCtor(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset);
             ret.FillMajorRecords(
                 stream: stream,
                 finalPos: finalPos,
@@ -2276,6 +2282,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public TryGet<int?> FillRecordType(
             BinaryMemoryReadStream stream,
+            long finalPos,
             int offset,
             RecordType type,
             int? lastParsed)

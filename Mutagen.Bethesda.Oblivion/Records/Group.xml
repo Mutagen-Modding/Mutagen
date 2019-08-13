@@ -8,7 +8,7 @@
       <CustomLogic byteLength="4" name="ContainedRecordTypeParse" />
       <Enum name="GroupType" enumName="GroupTypeEnum" byteLength="4" />
       <Int32 name="LastModified" />
-      <Dict name="Items" lengthLength="4" asyncItems="true" hasBeenSet="False">
+      <Dict name="Items" lengthLength="4" asyncItems="true" hasBeenSet="False" binaryWrapper="NoGeneration">
         <KeyedValue keyAccessor="FormKey" keyType="FormKey">
           <Ref>
             <Generic>T</Generic>
@@ -20,10 +20,10 @@
   <Object name="ListGroup" objType="Group" recordType="GRUP" GUID="d6349d4b-0de2-4c44-bd06-d005ee62aa00" ID="171">
     <Generic name="T" isLoqui="true" getterVariance="Out" />
     <Fields>
-      <String name="ContainedRecordType" derivative="true" binary="Custom" />
+      <CustomLogic byteLength="4" name="ContainedRecordType" />
       <Enum name="GroupType" enumName="GroupTypeEnum" byteLength="4" />
       <ByteArray name="LastModified" byteLength="4" nullable="NotNull" />
-      <List name="Items" lengthLength="4" hasBeenSet="False" asyncItems="true" thread="true">
+      <List name="Items" lengthLength="4" hasBeenSet="False" asyncItems="true" thread="true" binaryWrapper="NoGeneration">
         <Ref>
           <Generic>T</Generic>
         </Ref>

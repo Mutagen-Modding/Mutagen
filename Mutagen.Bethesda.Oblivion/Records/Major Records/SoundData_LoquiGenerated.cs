@@ -2149,7 +2149,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public UInt16 MaximumAttenuationDistance => GetMaximumAttenuationDistanceCustom(location: 1);
         public SByte FrequencyAdjustment => (sbyte)_data.Span.Slice(2, 1)[0];
         public SoundData.Flag Flags => (SoundData.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(4, 4));
-        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+        partial void CustomCtor(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset);
 
         protected SoundDataBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
@@ -2172,7 +2175,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var finalPos = stream.Position + package.Meta.SubRecord(stream.RemainingSpan).TotalLength;
             int offset = stream.Position + package.Meta.SubConstants.TypeAndLengthLength;
             stream.Position += 0x8 + package.Meta.SubConstants.HeaderLength;
-            ret.CustomCtor(stream, offset);
+            ret.CustomCtor(
+                stream: stream,
+                finalPos: stream.Length,
+                offset: offset);
             return ret;
         }
 

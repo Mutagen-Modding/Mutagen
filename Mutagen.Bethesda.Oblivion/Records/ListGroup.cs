@@ -1,3 +1,4 @@
+using DynamicData;
 using Loqui;
 using Loqui.Internal;
 using Loqui.Xml;
@@ -168,6 +169,25 @@ namespace Mutagen.Bethesda.Oblivion
                 Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
                     writer,
                     GroupRecordTypeGetter<T>.GRUP_RECORD_TYPE.TypeInt);
+            }
+        }
+
+        public partial class ListGroupBinaryWrapper<T>
+        {
+            private ListGroupAbstract.GroupListWrapper<T> _Items;
+            public IReadOnlyList<T> Items => _Items;
+
+            partial void CustomCtor(
+                BinaryMemoryReadStream stream,
+                long finalPos,
+                int offset)
+            {
+                _Items = ListGroupAbstract.GroupListWrapper<T>.Factory(
+                    stream,
+                    _data,
+                    _package,
+                    offset: offset,
+                    objectType: ObjectType.Group);
             }
         }
     }

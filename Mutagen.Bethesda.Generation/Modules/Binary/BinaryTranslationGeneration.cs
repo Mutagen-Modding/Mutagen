@@ -98,6 +98,16 @@ namespace Mutagen.Bethesda.Generation
             Accessor packageAccessor,
             Accessor converterAccessor)
         {
+            switch (typeGen.GetFieldData().Binary)
+            {
+                case BinaryGenerationType.Normal:
+                case BinaryGenerationType.Custom:
+                    break;
+                case BinaryGenerationType.DoNothing:
+                case BinaryGenerationType.NoGeneration:
+                default:
+                    return;
+            }
             fg.AppendLine($"_{typeGen.Name}Location = (ushort){locationAccessor};");
         }
 

@@ -4361,7 +4361,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Single AttackDuringBlockMult => SpanExt.GetFloat(_data.Span.Slice(72, 4));
         public Single PowerAttackFatigueModBase => SpanExt.GetFloat(_data.Span.Slice(76, 4));
         public Single PowerAttackFatigueModMult => SpanExt.GetFloat(_data.Span.Slice(80, 4));
-        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+        partial void CustomCtor(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset);
 
         protected CombatStyleAdvancedBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
@@ -4384,7 +4387,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var finalPos = stream.Position + package.Meta.SubRecord(stream.RemainingSpan).TotalLength;
             int offset = stream.Position + package.Meta.SubConstants.TypeAndLengthLength;
             stream.Position += 0x54 + package.Meta.SubConstants.HeaderLength;
-            ret.CustomCtor(stream, offset);
+            ret.CustomCtor(
+                stream: stream,
+                finalPos: stream.Length,
+                offset: offset);
             return ret;
         }
 

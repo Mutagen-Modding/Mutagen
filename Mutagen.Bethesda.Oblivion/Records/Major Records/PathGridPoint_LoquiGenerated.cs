@@ -2001,6 +2001,61 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class PathGridPointBinaryWrapper :
+        BinaryWrapper,
+        IPathGridPointGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => PathGridPoint_Registration.Instance;
+        public static PathGridPoint_Registration Registration => PathGridPoint_Registration.Instance;
+        protected object CommonInstance => PathGridPointCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPathGridPointGetter)rhs, include);
+
+        protected object XmlWriteTranslator => PathGridPointXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected object BinaryWriteTranslator => PathGridPointBinaryWriteTranslation.Instance;
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+
+        public P3Float Point => P3FloatBinaryTranslation.Read(_data.Span.Slice(0, 12));
+        public ReadOnlySpan<Byte> NumConnectionsFluffBytes => _data.Span.Slice(12, 3).ToArray();
+        public IReadOnlyList<Int16> Connections => BinaryWrapperSetList<Int16>.FactoryByStartIndex(_data.Slice(15), _package, 2, (s, p) => BinaryPrimitives.ReadInt16LittleEndian(s));
+        partial void CustomCtor(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset);
+
+        protected PathGridPointBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
+        {
+            this._data = bytes;
+        }
+
+        public static PathGridPointBinaryWrapper PathGridPointFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            var ret = new PathGridPointBinaryWrapper(
+                bytes: stream.RemainingMemory.Slice(0, 15),
+                package: package);
+            int offset = stream.Position;
+            ret.CustomCtor(
+                stream: stream,
+                finalPos: stream.Length,
+                offset: offset);
+            return ret;
+        }
+
+    }
+
     #endregion
 
     #endregion

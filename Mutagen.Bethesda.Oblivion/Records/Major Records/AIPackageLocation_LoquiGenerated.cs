@@ -1930,7 +1930,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IPlacedGetter LocationReference => default;
         #endregion
         public Single Radius => SpanExt.GetFloat(_data.Span.Slice(8, 4));
-        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+        partial void CustomCtor(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset);
 
         protected AIPackageLocationBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
@@ -1953,7 +1956,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var finalPos = stream.Position + package.Meta.SubRecord(stream.RemainingSpan).TotalLength;
             int offset = stream.Position + package.Meta.SubConstants.TypeAndLengthLength;
             stream.Position += 0xC + package.Meta.SubConstants.HeaderLength;
-            ret.CustomCtor(stream, offset);
+            ret.CustomCtor(
+                stream: stream,
+                finalPos: stream.Length,
+                offset: offset);
             return ret;
         }
 

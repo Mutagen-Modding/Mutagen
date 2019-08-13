@@ -14755,7 +14755,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private IGroupGetter<IEffectShaderInternalGetter> _EffectShaders;
         public IGroupGetter<IEffectShaderInternalGetter> EffectShaders => _EffectShaders ?? new Group<EffectShader>(this);
         #endregion
-        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+        partial void CustomCtor(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset);
 
         protected OblivionModBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
@@ -14776,7 +14779,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 bytes: bytes,
                 modKey: modKey);
             var stream = new BinaryMemoryReadStream(bytes);
-            ret.CustomCtor(stream, offset: 0);
+            ret.CustomCtor(
+                stream: stream,
+                finalPos: stream.Length,
+                offset: 0);
             ret.FillModTypes(
                 stream: stream,
                 fill: ret.FillRecordType);
@@ -14789,6 +14795,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public TryGet<int?> FillRecordType(
             BinaryMemoryReadStream stream,
+            long finalPos,
             int offset,
             RecordType type,
             int? lastParsed)
@@ -15164,6 +15171,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         package: _package,
                         recordTypeConverter: null);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Regions);
+                }
+                case 0x4C4C4543: // CELL
+                {
+                    this._Cells = ListGroupBinaryWrapper<ICellBlockGetter>.ListGroupFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Cells);
                 }
                 default:
                     return TryGet<int?>.Succeed(null);

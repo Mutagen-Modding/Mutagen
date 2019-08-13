@@ -2503,7 +2503,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Byte Endurance => _data.Span[5];
         public Byte Personality => _data.Span[6];
         public Byte Luck => _data.Span[7];
-        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+        partial void CustomCtor(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset);
 
         protected RaceStatsBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
@@ -2524,7 +2527,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 bytes: stream.RemainingMemory.Slice(0, 8),
                 package: package);
             int offset = stream.Position;
-            ret.CustomCtor(stream, offset);
+            ret.CustomCtor(
+                stream: stream,
+                finalPos: stream.Length,
+                offset: offset);
             return ret;
         }
 

@@ -1,4 +1,4 @@
-using Loqui.Generation;
+﻿using Loqui.Generation;
 using Noggog;
 using System;
 using System.Collections.Generic;
@@ -197,7 +197,7 @@ namespace Mutagen.Bethesda.Generation
                 if (field is ContainerType cont)
                 {
                     if (cont.SubTypeGeneration is LoquiType loqui
-                        && await loqui.TargetObjectGeneration.GetNeedsMasters())
+                        && (loqui.TargetObjectGeneration == null || await loqui.TargetObjectGeneration.GetNeedsMasters()))
                     {
                         return true;
                     }
@@ -205,7 +205,7 @@ namespace Mutagen.Bethesda.Generation
                 if (field is DictType dict)
                 {
                     if (dict.ValueTypeGen is LoquiType loqui
-                        && await loqui.TargetObjectGeneration.GetNeedsMasters())
+                        && (loqui.TargetObjectGeneration == null || await loqui.TargetObjectGeneration.GetNeedsMasters()))
                     {
                         return true;
                     }

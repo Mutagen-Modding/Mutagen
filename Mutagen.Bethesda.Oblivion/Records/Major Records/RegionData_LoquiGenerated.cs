@@ -2044,7 +2044,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public RegionData.RegionDataFlag Flags => _Flags_IsSet ? (RegionData.RegionDataFlag)_data.Span.Slice(_FlagsLocation, 1)[0] : default;
         #endregion
         public Byte Priority => _RDATLocation.HasValue ? _data.Span[_RDATLocation.Value + 5] : default;
-        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+        partial void CustomCtor(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset);
 
         protected RegionDataBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
@@ -2058,6 +2061,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public virtual TryGet<int?> FillRecordType(
             BinaryMemoryReadStream stream,
+            long finalPos,
             int offset,
             RecordType type,
             int? lastParsed)

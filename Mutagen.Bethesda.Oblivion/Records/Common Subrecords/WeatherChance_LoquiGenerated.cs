@@ -1771,7 +1771,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IWeatherInternalGetter Weather => default;
         #endregion
         public Int32 Chance => BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(4, 4));
-        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+        partial void CustomCtor(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset);
 
         protected WeatherChanceBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
@@ -1792,7 +1795,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 bytes: stream.RemainingMemory.Slice(0, 8),
                 package: package);
             int offset = stream.Position;
-            ret.CustomCtor(stream, offset);
+            ret.CustomCtor(
+                stream: stream,
+                finalPos: stream.Length,
+                offset: offset);
             return ret;
         }
 

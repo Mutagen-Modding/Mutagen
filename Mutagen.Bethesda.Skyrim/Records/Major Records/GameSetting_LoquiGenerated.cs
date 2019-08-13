@@ -1457,7 +1457,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override object XmlWriteTranslator => GameSettingXmlWriteTranslation.Instance;
         protected override object BinaryWriteTranslator => GameSettingBinaryWriteTranslation.Instance;
 
-        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+        partial void CustomCtor(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset);
 
         protected GameSettingBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,

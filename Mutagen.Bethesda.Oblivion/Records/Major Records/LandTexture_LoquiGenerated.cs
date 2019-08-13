@@ -2554,7 +2554,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Byte TextureSpecularExponent => _TextureSpecularExponentLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _TextureSpecularExponentLocation.Value, _package.Meta)[0] : default;
         #endregion
         public IReadOnlySetList<IFormIDLinkGetter<IGrassInternalGetter>> PotentialGrass { get; private set; } = EmptySetList<IFormIDLinkGetter<IGrassInternalGetter>>.Instance;
-        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+        partial void CustomCtor(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset);
 
         protected LandTextureBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
@@ -2577,7 +2580,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var finalPos = stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength;
             int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
             stream.Position += 0xC + package.Meta.MajorConstants.TypeAndLengthLength;
-            ret.CustomCtor(stream, offset);
+            ret.CustomCtor(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset);
             ret.FillSubrecordTypes(
                 stream: stream,
                 finalPos: finalPos,
@@ -2589,6 +2595,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public override TryGet<int?> FillRecordType(
             BinaryMemoryReadStream stream,
+            long finalPos,
             int offset,
             RecordType type,
             int? lastParsed)
@@ -2621,6 +2628,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         getter: (s, p) => new FormIDLink<IGrassInternalGetter>(FormKey.Factory(p.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(s))),
                         locs: ParseRecordLocations(
                             stream: stream,
+                            finalPos: finalPos,
                             constants: _package.Meta.SubConstants,
                             trigger: type,
                             skipHeader: true));
@@ -2629,6 +2637,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 default:
                     return base.FillRecordType(
                         stream: stream,
+                        finalPos: finalPos,
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed);

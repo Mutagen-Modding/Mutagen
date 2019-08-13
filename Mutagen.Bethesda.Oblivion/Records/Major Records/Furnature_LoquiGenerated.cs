@@ -2439,7 +2439,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool MarkerFlags_IsSet => _MarkerFlagsLocation.HasValue;
         public ReadOnlySpan<Byte> MarkerFlags => _MarkerFlagsLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _MarkerFlagsLocation.Value, _package.Meta).ToArray() : default;
         #endregion
-        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+        partial void CustomCtor(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset);
 
         protected FurnatureBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
@@ -2462,7 +2465,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var finalPos = stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength;
             int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
             stream.Position += 0xC + package.Meta.MajorConstants.TypeAndLengthLength;
-            ret.CustomCtor(stream, offset);
+            ret.CustomCtor(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset);
             ret.FillSubrecordTypes(
                 stream: stream,
                 finalPos: finalPos,
@@ -2474,6 +2480,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public override TryGet<int?> FillRecordType(
             BinaryMemoryReadStream stream,
+            long finalPos,
             int offset,
             RecordType type,
             int? lastParsed)
@@ -2506,6 +2513,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 default:
                     return base.FillRecordType(
                         stream: stream,
+                        finalPos: finalPos,
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed);

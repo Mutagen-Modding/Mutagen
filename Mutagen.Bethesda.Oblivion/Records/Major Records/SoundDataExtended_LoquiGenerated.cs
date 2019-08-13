@@ -2005,7 +2005,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Single StaticAttenuation => GetStaticAttenuationCustom(location: 8);
         public Single StopTime => GetStopTimeCustom(location: 10);
         public Single StartTime => GetStartTimeCustom(location: 11);
-        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+        partial void CustomCtor(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset);
 
         protected SoundDataExtendedBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
@@ -2027,7 +2030,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var finalPos = stream.Position + package.Meta.SubRecord(stream.RemainingSpan).TotalLength;
             int offset = stream.Position + package.Meta.SubConstants.TypeAndLengthLength;
             stream.Position += 0xC + package.Meta.SubConstants.HeaderLength;
-            ret.CustomCtor(stream, offset);
+            ret.CustomCtor(
+                stream: stream,
+                finalPos: stream.Length,
+                offset: offset);
             return ret;
         }
 

@@ -2699,6 +2699,69 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class CellLightingBinaryWrapper :
+        BinaryWrapper,
+        ICellLightingGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => CellLighting_Registration.Instance;
+        public static CellLighting_Registration Registration => CellLighting_Registration.Instance;
+        protected object CommonInstance => CellLightingCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICellLightingGetter)rhs, include);
+
+        protected object XmlWriteTranslator => CellLightingXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected object BinaryWriteTranslator => CellLightingBinaryWriteTranslation.Instance;
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+
+        public Color AmbientColor => _data.Span.Slice(0, 4).ReadColor();
+        public Color DirectionalColor => _data.Span.Slice(4, 4).ReadColor();
+        public Color FogColor => _data.Span.Slice(8, 4).ReadColor();
+        public Single FogNear => SpanExt.GetFloat(_data.Span.Slice(12, 4));
+        public Single FogFar => SpanExt.GetFloat(_data.Span.Slice(16, 4));
+        public Int32 DirectionalRotationXY => BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(20, 4));
+        public Int32 DirectionalRotationZ => BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(24, 4));
+        public Single DirectionalFade => SpanExt.GetFloat(_data.Span.Slice(28, 4));
+        public Single FogClipDistance => SpanExt.GetFloat(_data.Span.Slice(32, 4));
+        partial void CustomCtor(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset);
+
+        protected CellLightingBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
+        {
+            this._data = bytes;
+        }
+
+        public static CellLightingBinaryWrapper CellLightingFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            var ret = new CellLightingBinaryWrapper(
+                bytes: HeaderTranslation.ExtractSubrecordWrapperMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = stream.Position + package.Meta.SubRecord(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + package.Meta.SubConstants.TypeAndLengthLength;
+            stream.Position += 0x24 + package.Meta.SubConstants.HeaderLength;
+            ret.CustomCtor(
+                stream: stream,
+                finalPos: stream.Length,
+                offset: offset);
+            return ret;
+        }
+
+    }
+
     #endregion
 
     #endregion

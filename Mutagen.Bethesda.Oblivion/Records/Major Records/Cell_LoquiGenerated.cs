@@ -5713,6 +5713,218 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class CellBinaryWrapper :
+        PlaceBinaryWrapper,
+        ICellInternalGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Cell_Registration.Instance;
+        public new static Cell_Registration Registration => Cell_Registration.Instance;
+        protected override object CommonInstance => CellCommon.Instance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICellInternalGetter)rhs, include);
+
+        protected override object XmlWriteTranslator => CellXmlWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => CellBinaryWriteTranslation.Instance;
+
+        #region Name
+        private int? _NameLocation;
+        public bool Name_IsSet => _NameLocation.HasValue;
+        public String Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _NameLocation.Value, _package.Meta)) : default;
+        #endregion
+        #region Flags
+        private int? _FlagsLocation;
+        public bool Flags_IsSet => _FlagsLocation.HasValue;
+        public Cell.Flag Flags => (Cell.Flag)HeaderTranslation.ExtractSubrecordSpan(_data.Slice(0), _FlagsLocation.Value, _package.Meta)[0];
+        #endregion
+        #region Grid
+        private int? _GridLocation;
+        public bool Grid_IsSet => _GridLocation.HasValue;
+        public P2Int Grid => _GridLocation.HasValue ? P2IntBinaryTranslation.Read(HeaderTranslation.ExtractSubrecordSpan(_data, _GridLocation.Value, _package.Meta)) : default;
+        #endregion
+        #region Lighting
+        public ICellLightingGetter Lighting { get; private set; }
+        public bool Lighting_IsSet => Lighting != null;
+        #endregion
+        public IReadOnlySetList<IFormIDLinkGetter<IRegionInternalGetter>> Regions { get; private set; } = EmptySetList<IFormIDLinkGetter<IRegionInternalGetter>>.Instance;
+        #region MusicType
+        private int? _MusicTypeLocation;
+        public bool MusicType_IsSet => _MusicTypeLocation.HasValue;
+        public MusicType MusicType => (MusicType)HeaderTranslation.ExtractSubrecordSpan(_data.Slice(0), _MusicTypeLocation.Value, _package.Meta)[0];
+        #endregion
+        #region WaterHeight
+        private int? _WaterHeightLocation;
+        public bool WaterHeight_IsSet => _WaterHeightLocation.HasValue;
+        public Single WaterHeight => _WaterHeightLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordSpan(_data, _WaterHeightLocation.Value, _package.Meta)) : default;
+        #endregion
+        #region Climate
+        private int? _ClimateLocation;
+        public bool Climate_IsSet => _ClimateLocation.HasValue;
+        public IFormIDSetLinkGetter<IClimateInternalGetter> Climate_Property => _ClimateLocation.HasValue ? new FormIDSetLink<IClimateInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ClimateLocation.Value, _package.Meta)))) : FormIDSetLink<IClimateInternalGetter>.Empty;
+        public IClimateInternalGetter Climate => default;
+        #endregion
+        #region Water
+        private int? _WaterLocation;
+        public bool Water_IsSet => _WaterLocation.HasValue;
+        public IFormIDSetLinkGetter<IWaterInternalGetter> Water_Property => _WaterLocation.HasValue ? new FormIDSetLink<IWaterInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _WaterLocation.Value, _package.Meta)))) : FormIDSetLink<IWaterInternalGetter>.Empty;
+        public IWaterInternalGetter Water => default;
+        #endregion
+        #region Owner
+        private int? _OwnerLocation;
+        public bool Owner_IsSet => _OwnerLocation.HasValue;
+        public IFormIDSetLinkGetter<IFactionInternalGetter> Owner_Property => _OwnerLocation.HasValue ? new FormIDSetLink<IFactionInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _OwnerLocation.Value, _package.Meta)))) : FormIDSetLink<IFactionInternalGetter>.Empty;
+        public IFactionInternalGetter Owner => default;
+        #endregion
+        #region FactionRank
+        private int? _FactionRankLocation;
+        public bool FactionRank_IsSet => _FactionRankLocation.HasValue;
+        public Int32 FactionRank => _FactionRankLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _FactionRankLocation.Value, _package.Meta)) : default;
+        #endregion
+        #region GlobalVariable
+        private int? _GlobalVariableLocation;
+        public bool GlobalVariable_IsSet => _GlobalVariableLocation.HasValue;
+        public IFormIDSetLinkGetter<IGlobalInternalGetter> GlobalVariable_Property => _GlobalVariableLocation.HasValue ? new FormIDSetLink<IGlobalInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _GlobalVariableLocation.Value, _package.Meta)))) : FormIDSetLink<IGlobalInternalGetter>.Empty;
+        public IGlobalInternalGetter GlobalVariable => default;
+        #endregion
+        partial void CustomCtor(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset);
+        partial void CustomEnd(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset);
+
+        protected CellBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
+        {
+        }
+
+        public static CellBinaryWrapper CellFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            stream = UtilityTranslation.DecompressStream(stream, package.Meta);
+            var ret = new CellBinaryWrapper(
+                bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
+            stream.Position += 0xC + package.Meta.MajorConstants.TypeAndLengthLength;
+            ret.CustomCtor(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset);
+            ret.FillSubrecordTypes(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset,
+                recordTypeConverter: recordTypeConverter,
+                fill: ret.FillRecordType);
+            ret.CustomEnd(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset);
+            return ret;
+        }
+
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset,
+            RecordType type,
+            int? lastParsed)
+        {
+            switch (type.TypeInt)
+            {
+                case 0x4C4C5546: // FULL
+                {
+                    _NameLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.Name);
+                }
+                case 0x41544144: // DATA
+                {
+                    _FlagsLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.Flags);
+                }
+                case 0x434C4358: // XCLC
+                {
+                    _GridLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.Grid);
+                }
+                case 0x4C4C4358: // XCLL
+                {
+                    this.Lighting = CellLightingBinaryWrapper.CellLightingFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.Lighting);
+                }
+                case 0x524C4358: // XCLR
+                {
+                    var subMeta = _package.Meta.ReadSubRecord(stream);
+                    var subLen = subMeta.RecordLength;
+                    this.Regions = BinaryWrapperSetList<IFormIDLinkGetter<IRegionInternalGetter>>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 4,
+                        getter: (s, p) => new FormIDLink<IRegionInternalGetter>(FormKey.Factory(p.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.Regions);
+                }
+                case 0x544D4358: // XCMT
+                {
+                    _MusicTypeLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.MusicType);
+                }
+                case 0x574C4358: // XCLW
+                {
+                    _WaterHeightLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.WaterHeight);
+                }
+                case 0x4D434358: // XCCM
+                {
+                    _ClimateLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.Climate);
+                }
+                case 0x54574358: // XCWT
+                {
+                    _WaterLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.Water);
+                }
+                case 0x4E574F58: // XOWN
+                {
+                    _OwnerLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.Owner);
+                }
+                case 0x4B4E5258: // XRNK
+                {
+                    _FactionRankLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.FactionRank);
+                }
+                case 0x424C4758: // XGLB
+                {
+                    _GlobalVariableLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.GlobalVariable);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+            }
+        }
+    }
+
     #endregion
 
     #endregion

@@ -178,7 +178,7 @@ namespace Mutagen.Bethesda.Oblivion
             private GroupMajorRecordCacheWrapper<T> _Items;
             public IReadOnlyCache<T, FormKey> Items => _Items;
 
-            partial void CustomCtor(BinaryMemoryReadStream stream, int offset)
+            partial void CustomCtor(BinaryMemoryReadStream stream, long finalPos, int offset)
             {
                 _Items = GroupMajorRecordCacheWrapper<T>.Factory(
                     stream,

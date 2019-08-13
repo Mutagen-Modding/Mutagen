@@ -96,7 +96,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        private static PathGridPoint ReadPathGridPoint(ReadOnlySpan<byte> reader, out byte numConn)
+        public static PathGridPoint ReadPathGridPoint(ReadOnlySpan<byte> reader, out byte numConn)
         {
             var pt = new PathGridPoint();
             pt.Point = new Noggog.P3Float(
@@ -153,6 +153,81 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer.Write(conn);
                     }
                 }
+            }
+        }
+    }
+
+    public partial class PathGridBinaryWrapper
+    {
+        public IReadOnlySetList<IPathGridPointGetter> PointToPointConnections { get; private set; } = EmptySetList<IPathGridPointGetter>.Instance;
+
+        private int? _UnknownLocation;
+        public bool Unknown_IsSet => this._UnknownLocation.HasValue;
+        public ReadOnlySpan<byte> Unknown => HeaderTranslation.ExtractSubrecordSpan(_data, _UnknownLocation.Value, _package.Meta);
+
+        partial void PointToPointConnectionsCustomParse(BinaryMemoryReadStream stream, int offset, RecordType type, int? lastParsed)
+        {
+            var dataFrame = _package.Meta.ReadSubRecordFrame(stream);
+            uint ptCount = BinaryPrimitives.ReadUInt16LittleEndian(dataFrame.ContentSpan);
+
+            var pgrpMeta = _package.Meta.GetSubRecord(stream);
+            if (pgrpMeta.RecordType != PathGridBinaryCreateTranslation.PGRP) return;
+            stream.Position += pgrpMeta.HeaderLength;
+            var pointData = stream.ReadMemory(pgrpMeta.RecordLength);
+            var bytePointsNum = pgrpMeta.RecordLength / PathGridBinaryCreateTranslation.POINT_LEN;
+            if (bytePointsNum != ptCount)
+            {
+                throw new ArgumentException($"Unexpected point byte length, when compared to expected point count. {pgrpMeta.RecordLength} bytes: {bytePointsNum} != {ptCount} points.");
+            }
+
+            bool readPGRR = false;
+            for (int recAttempt = 0; recAttempt < 2; recAttempt++)
+            {
+                if (stream.Complete) break;
+                var subMeta = _package.Meta.GetSubRecord(stream);
+                switch (subMeta.RecordType.TypeInt)
+                {
+                    case 0x47414750: //"PGAG":
+                        this._UnknownLocation = stream.Position - offset;
+                        stream.Position += subMeta.TotalLength;
+                        break;
+                    case 0x52524750: // "PGRR":
+                        stream.Position += subMeta.HeaderLength;
+                        var connectionPtData = stream.ReadMemory(subMeta.RecordLength);
+                        this.PointToPointConnections = BinaryWrapperSetList<IPathGridPointGetter>.FactoryByLazyParse(
+                            pointData,
+                            _package,
+                            getter: (s, p) =>
+                            {
+                                var connectionInts = connectionPtData.Span.AsInt16Span();
+                                PathGridPoint[] pathGridPoints = new PathGridPoint[bytePointsNum];
+                                for (int i = 0; i < bytePointsNum; i++)
+                                {
+                                    var pt = PathGridBinaryCreateTranslation.ReadPathGridPoint(s, out var numConn);
+                                    pt.Connections.AddRange(connectionInts.Slice(0, numConn).ToArray());
+                                    pathGridPoints[i] = pt;
+                                    s = s.Slice(16);
+                                    connectionInts = connectionInts.Slice(numConn);
+                                }
+                                return pathGridPoints;
+                            });
+                        readPGRR = true;
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            if (!readPGRR)
+            {
+                this.PointToPointConnections = BinaryWrapperSetList<IPathGridPointGetter>.FactoryByStartIndex(
+                    pointData,
+                    this._package,
+                    itemLength: 16,
+                    getter: (s, p) =>
+                    {
+                        return PathGridBinaryCreateTranslation.ReadPathGridPoint(s, out var numConn);
+                    });
             }
         }
     }

@@ -1882,7 +1882,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IFormIDLinkGetter<IWaterInternalGetter> RelatedWaterUnderwater_Property => new FormIDLink<IWaterInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(8, 4))));
         public IWaterInternalGetter RelatedWaterUnderwater => default;
         #endregion
-        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+        partial void CustomCtor(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset);
 
         protected RelatedWatersBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
@@ -1905,7 +1908,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var finalPos = stream.Position + package.Meta.SubRecord(stream.RemainingSpan).TotalLength;
             int offset = stream.Position + package.Meta.SubConstants.TypeAndLengthLength;
             stream.Position += 0xC + package.Meta.SubConstants.HeaderLength;
-            ret.CustomCtor(stream, offset);
+            ret.CustomCtor(
+                stream: stream,
+                finalPos: stream.Length,
+                offset: offset);
             return ret;
         }
 

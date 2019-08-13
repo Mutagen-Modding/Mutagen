@@ -2369,7 +2369,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Fluff2_IsSet => _data.Length >= 12;
         public ReadOnlySpan<Byte> Fluff2 => _data.Span.Slice(10, 2).ToArray();
         #endregion
-        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+        partial void CustomCtor(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset);
 
         protected LeveledEntryBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
@@ -2392,7 +2395,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var finalPos = stream.Position + package.Meta.SubRecord(stream.RemainingSpan).TotalLength;
             int offset = stream.Position + package.Meta.SubConstants.TypeAndLengthLength;
             stream.Position += 0xC + package.Meta.SubConstants.HeaderLength;
-            ret.CustomCtor(stream, offset);
+            ret.CustomCtor(
+                stream: stream,
+                finalPos: stream.Length,
+                offset: offset);
             return ret;
         }
 

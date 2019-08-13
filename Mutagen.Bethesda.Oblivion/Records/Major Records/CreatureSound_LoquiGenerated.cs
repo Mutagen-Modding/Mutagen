@@ -2072,7 +2072,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public CreatureSound.CreatureSoundType SoundType => (CreatureSound.CreatureSoundType)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data.Slice(0), _SoundTypeLocation.Value, _package.Meta));
         #endregion
         public IReadOnlySetList<ISoundItemGetter> Sounds { get; private set; } = EmptySetList<SoundItemBinaryWrapper>.Instance;
-        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+        partial void CustomCtor(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset);
 
         protected CreatureSoundBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
@@ -2093,9 +2096,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 bytes: stream.RemainingMemory,
                 package: package);
             int offset = stream.Position;
-            ret.CustomCtor(stream, offset: 0);
+            ret.CustomCtor(
+                stream: stream,
+                finalPos: stream.Length,
+                offset: 0);
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
+                finalPos: stream.Length,
                 offset: offset,
                 recordTypeConverter: recordTypeConverter,
                 fill: ret.FillRecordType);
@@ -2104,6 +2111,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public TryGet<int?> FillRecordType(
             BinaryMemoryReadStream stream,
+            long finalPos,
             int offset,
             RecordType type,
             int? lastParsed)

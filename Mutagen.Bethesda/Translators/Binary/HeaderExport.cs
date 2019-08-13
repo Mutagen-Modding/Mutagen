@@ -13,7 +13,6 @@ namespace Mutagen.Bethesda.Binary
         public readonly MutagenWriter Writer;
         public readonly long SizePosition;
         public readonly RecordConstants RecordConstants;
-        private static readonly byte[] Zeros = new byte[8];
 
         private HeaderExport(
             MutagenWriter writer,
@@ -32,7 +31,7 @@ namespace Mutagen.Bethesda.Binary
         {
             writer.Write(record.TypeInt);
             var sizePosition = writer.Position;
-            writer.Write(Zeros.AsSpan(0, writer.Meta.Constants(type).LengthLength));
+            writer.Write(UtilityTranslation.Zeros.Slice(0, writer.Meta.Constants(type).LengthLength));
             return new HeaderExport(writer, sizePosition, writer.Meta.Constants(type));
         }
 

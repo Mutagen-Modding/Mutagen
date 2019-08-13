@@ -1918,7 +1918,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Skill TrainedSkill => (Skill)_data.Span.Slice(0, 1)[0];
         public Byte MaximumTrainingLevel => _data.Span[1];
         public ReadOnlySpan<Byte> Fluff => _data.Span.Slice(2, 2).ToArray();
-        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+        partial void CustomCtor(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset);
 
         protected ClassTrainingBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
@@ -1939,7 +1942,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 bytes: stream.RemainingMemory.Slice(0, 4),
                 package: package);
             int offset = stream.Position;
-            ret.CustomCtor(stream, offset);
+            ret.CustomCtor(
+                stream: stream,
+                finalPos: stream.Length,
+                offset: offset);
             return ret;
         }
 

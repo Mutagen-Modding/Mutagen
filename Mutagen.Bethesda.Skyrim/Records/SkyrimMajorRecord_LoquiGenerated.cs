@@ -1804,7 +1804,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public UInt16 FormVersion => BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(0, 2));
         public UInt16 Version2 => BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(2, 2));
-        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+        partial void CustomCtor(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset);
 
         protected SkyrimMajorRecordBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,

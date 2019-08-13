@@ -4144,7 +4144,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public bool INCC_IsSet => _INCCLocation.HasValue;
         public Int32 INCC => _INCCLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _INCCLocation.Value, _package.Meta)) : default;
         #endregion
-        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+        partial void CustomCtor(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset);
 
         protected ModHeaderBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
@@ -4168,7 +4171,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var finalPos = stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength;
             int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
             stream.Position += 0x10 + package.Meta.MajorConstants.TypeAndLengthLength;
-            ret.CustomCtor(stream, offset);
+            ret.CustomCtor(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset);
             ret.FillSubrecordTypes(
                 stream: stream,
                 finalPos: finalPos,
@@ -4180,6 +4186,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public TryGet<int?> FillRecordType(
             BinaryMemoryReadStream stream,
+            long finalPos,
             int offset,
             RecordType type,
             int? lastParsed)

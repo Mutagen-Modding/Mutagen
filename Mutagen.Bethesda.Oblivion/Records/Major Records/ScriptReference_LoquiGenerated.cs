@@ -1409,7 +1409,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected virtual object BinaryWriteTranslator => ScriptReferenceBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
 
-        partial void CustomCtor(BinaryMemoryReadStream stream, int offset);
+        partial void CustomCtor(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset);
 
         protected ScriptReferenceBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,

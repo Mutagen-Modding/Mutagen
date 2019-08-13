@@ -45,10 +45,10 @@ namespace Mutagen.Bethesda.Binary
 
         public MajorRecordConstants(
             GameMode gameMode,
-            ObjectType type, 
+            ObjectType type,
             sbyte headerLength,
             sbyte lengthLength,
-            sbyte flagsLoc) 
+            sbyte flagsLoc)
             : base(gameMode, type, headerLength, lengthLength)
         {
             this.FlagLocation = flagsLoc;
@@ -116,16 +116,44 @@ namespace Mutagen.Bethesda.Binary
         public ModHeaderMeta ReadHeader(IBinaryReadStream stream) => new ModHeaderMeta(this, stream.ReadSpan(this.ModHeaderLength));
 
         public GroupRecordMeta Group(ReadOnlySpan<byte> span) => new GroupRecordMeta(this, span);
+        public GroupRecordFrame GroupRecordFrame(ReadOnlySpan<byte> span) => new GroupRecordFrame(this, span);
+        public GroupRecordMemoryFrame GroupRecordMemoryFrame(ReadOnlyMemorySlice<byte> span) => new GroupRecordMemoryFrame(this, span);
         public GroupRecordMeta GetGroup(IBinaryReadStream stream, int offset = 0) => new GroupRecordMeta(this, stream.GetSpan(this.GroupConstants.HeaderLength, offset));
+        public GroupRecordFrame GetGroupRecordFrame(IBinaryReadStream stream, int offset = 0)
+        {
+            var meta = GetGroup(stream, offset);
+            return new GroupRecordFrame(meta, stream.GetSpan(checked((int)meta.RecordLength), offset: offset + meta.HeaderLength));
+        }
+        public GroupRecordMemoryFrame GetGroupRecordMemoryFrame(BinaryMemoryReadStream stream, int offset = 0)
+        {
+            var meta = GetGroup(stream, offset);
+            return new GroupRecordMemoryFrame(meta, stream.GetMemory(checked((int)meta.RecordLength), offset: offset + meta.HeaderLength));
+        }
         public GroupRecordMeta ReadGroup(IBinaryReadStream stream, int offset = 0) => new GroupRecordMeta(this, stream.ReadSpan(this.GroupConstants.HeaderLength, offset));
+        public GroupRecordFrame ReadGroupRecordFrame(IBinaryReadStream stream)
+        {
+            var meta = ReadGroup(stream);
+            return new GroupRecordFrame(meta, stream.ReadSpan(checked((int)meta.RecordLength)));
+        }
+        public GroupRecordMemoryFrame ReadGroupRecordMemoryFrame(BinaryMemoryReadStream stream)
+        {
+            var meta = ReadGroup(stream);
+            return new GroupRecordMemoryFrame(meta, stream.ReadMemory(checked((int)meta.RecordLength)));
+        }
 
         public MajorRecordMeta MajorRecord(ReadOnlySpan<byte> span) => new MajorRecordMeta(this, span);
         public MajorRecordFrame MajorRecordFrame(ReadOnlySpan<byte> span) => new MajorRecordFrame(this, span);
+        public MajorRecordMemoryFrame MajorRecordMemoryFrame(ReadOnlyMemorySlice<byte> span) => new MajorRecordMemoryFrame(this, span);
         public MajorRecordMeta GetMajorRecord(IBinaryReadStream stream, int offset = 0) => new MajorRecordMeta(this, stream.GetSpan(this.MajorConstants.HeaderLength, offset));
         public MajorRecordFrame GetMajorRecordFrame(IBinaryReadStream stream, int offset = 0)
         {
             var meta = GetMajorRecord(stream, offset);
             return new MajorRecordFrame(meta, stream.GetSpan(checked((int)meta.RecordLength), offset: offset + meta.HeaderLength));
+        }
+        public MajorRecordMemoryFrame GetMajorRecordMemoryFrame(BinaryMemoryReadStream stream, int offset = 0)
+        {
+            var meta = GetMajorRecord(stream, offset);
+            return new MajorRecordMemoryFrame(meta, stream.GetMemory(checked((int)meta.RecordLength), offset: offset + meta.HeaderLength));
         }
         public MajorRecordMeta ReadMajorRecord(IBinaryReadStream stream) => new MajorRecordMeta(this, stream.ReadSpan(this.MajorConstants.HeaderLength));
         public MajorRecordFrame ReadMajorRecordFrame(IBinaryReadStream stream)
@@ -133,14 +161,25 @@ namespace Mutagen.Bethesda.Binary
             var meta = ReadMajorRecord(stream);
             return new MajorRecordFrame(meta, stream.ReadSpan(checked((int)meta.RecordLength)));
         }
+        public MajorRecordMemoryFrame ReadMajorRecordMemoryFrame(BinaryMemoryReadStream stream)
+        {
+            var meta = ReadMajorRecord(stream);
+            return new MajorRecordMemoryFrame(meta, stream.ReadMemory(checked((int)meta.RecordLength)));
+        }
 
         public SubRecordMeta SubRecord(ReadOnlySpan<byte> span) => new SubRecordMeta(this, span);
         public SubRecordFrame SubRecordFrame(ReadOnlySpan<byte> span) => new SubRecordFrame(this, span);
+        public SubRecordMemoryFrame SubRecordMemoryFrame(ReadOnlyMemorySlice<byte> span) => new SubRecordMemoryFrame(this, span);
         public SubRecordMeta GetSubRecord(IBinaryReadStream stream, int offset = 0) => new SubRecordMeta(this, stream.GetSpan(this.SubConstants.HeaderLength, offset));
         public SubRecordFrame GetSubRecordFrame(IBinaryReadStream stream, int offset = 0)
         {
             var meta = GetSubRecord(stream, offset);
             return new SubRecordFrame(meta, stream.GetSpan(meta.RecordLength, offset: offset + meta.HeaderLength));
+        }
+        public SubRecordMemoryFrame GetSubRecordMemoryFrame(BinaryMemoryReadStream stream, int offset = 0)
+        {
+            var meta = GetSubRecord(stream, offset);
+            return new SubRecordMemoryFrame(meta, stream.GetMemory(meta.RecordLength, offset: offset + meta.HeaderLength));
         }
         public SubRecordMeta ReadSubRecord(IBinaryReadStream stream) => new SubRecordMeta(this, stream.ReadSpan(this.SubConstants.HeaderLength));
         public SubRecordFrame ReadSubRecordFrame(IBinaryReadStream stream)
@@ -148,7 +187,12 @@ namespace Mutagen.Bethesda.Binary
             var meta = ReadSubRecord(stream);
             return new SubRecordFrame(meta, stream.ReadSpan(meta.RecordLength));
         }
-        
+        public SubRecordMemoryFrame ReadSubRecordMemoryFrame(BinaryMemoryReadStream stream)
+        {
+            var meta = ReadSubRecord(stream);
+            return new SubRecordMemoryFrame(meta, stream.ReadMemory(meta.RecordLength));
+        }
+
         public RecordConstants Constants(ObjectType type)
         {
             switch (type)
@@ -262,6 +306,42 @@ namespace Mutagen.Bethesda.Binary
         public int TypeAndLengthLength => Meta.GroupConstants.TypeAndLengthLength;
     }
 
+    public ref struct GroupRecordFrame
+    {
+        public GroupRecordMeta Header { get; }
+        public ReadOnlySpan<byte> ContentSpan { get; }
+
+        public GroupRecordFrame(MetaDataConstants meta, ReadOnlySpan<byte> span)
+        {
+            this.Header = meta.Group(span);
+            this.ContentSpan = span.Slice(this.Header.HeaderLength, checked((int)this.Header.RecordLength));
+        }
+
+        public GroupRecordFrame(GroupRecordMeta meta, ReadOnlySpan<byte> span)
+        {
+            this.Header = meta;
+            this.ContentSpan = span;
+        }
+    }
+
+    public ref struct GroupRecordMemoryFrame
+    {
+        public GroupRecordMeta Header { get; }
+        public ReadOnlyMemorySlice<byte> ContentSpan { get; }
+
+        public GroupRecordMemoryFrame(MetaDataConstants meta, ReadOnlyMemorySlice<byte> span)
+        {
+            this.Header = meta.Group(span);
+            this.ContentSpan = span.Slice(this.Header.HeaderLength, checked((int)this.Header.RecordLength));
+        }
+
+        public GroupRecordMemoryFrame(GroupRecordMeta meta, ReadOnlyMemorySlice<byte> span)
+        {
+            this.Header = meta;
+            this.ContentSpan = span;
+        }
+    }
+
     public ref struct MajorRecordMeta
     {
         public MetaDataConstants Meta { get; }
@@ -301,6 +381,24 @@ namespace Mutagen.Bethesda.Binary
         }
     }
 
+    public ref struct MajorRecordMemoryFrame
+    {
+        public MajorRecordMeta Header { get; }
+        public ReadOnlyMemorySlice<byte> ContentSpan { get; }
+
+        public MajorRecordMemoryFrame(MetaDataConstants meta, ReadOnlyMemorySlice<byte> span)
+        {
+            this.Header = meta.MajorRecord(span);
+            this.ContentSpan = span.Slice(this.Header.HeaderLength, checked((int)this.Header.RecordLength));
+        }
+
+        public MajorRecordMemoryFrame(MajorRecordMeta meta, ReadOnlyMemorySlice<byte> span)
+        {
+            this.Header = meta;
+            this.ContentSpan = span;
+        }
+    }
+
     public ref struct SubRecordMeta
     {
         public MetaDataConstants Meta { get; }
@@ -331,6 +429,24 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public SubRecordFrame(SubRecordMeta meta, ReadOnlySpan<byte> span)
+        {
+            this.Header = meta;
+            this.ContentSpan = span;
+        }
+    }
+
+    public ref struct SubRecordMemoryFrame
+    {
+        public SubRecordMeta Header { get; }
+        public ReadOnlyMemorySlice<byte> ContentSpan { get; }
+
+        public SubRecordMemoryFrame(MetaDataConstants meta, ReadOnlyMemorySlice<byte> span)
+        {
+            this.Header = meta.SubRecord(span);
+            this.ContentSpan = span.Slice(this.Header.HeaderLength, this.Header.RecordLength);
+        }
+
+        public SubRecordMemoryFrame(SubRecordMeta meta, ReadOnlyMemorySlice<byte> span)
         {
             this.Header = meta;
             this.ContentSpan = span;
