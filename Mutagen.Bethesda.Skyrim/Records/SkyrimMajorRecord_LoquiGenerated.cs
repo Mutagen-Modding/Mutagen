@@ -758,6 +758,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType GMST_HEADER = new RecordType("GMST");
         public static readonly RecordType GLOB_HEADER = new RecordType("GLOB");
         public static readonly RecordType KYWD_HEADER = new RecordType("KYWD");
+        public static readonly RecordType LCRT_HEADER = new RecordType("LCRT");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -767,7 +768,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         GMST_HEADER,
                         GLOB_HEADER,
-                        KYWD_HEADER
+                        KYWD_HEADER,
+                        LCRT_HEADER
                     })
             );
         });
