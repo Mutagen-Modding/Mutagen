@@ -51,17 +51,27 @@ namespace Mutagen.Bethesda.Binary
 
         public override void WriteValue(MutagenWriter writer, Color item)
         {
-            writer.Write(item);
+            writer.Write(item, false);
         }
 
         protected Action<MutagenWriter, Color?> GetWriter(bool extraByte)
         {
-            if (!extraByte) return WriteValue;
-            return (w, c) =>
+            if (extraByte)
             {
-                WriteValue(w, c);
-                w.WriteZeros(1);
-            };
+                return (w, c) =>
+                {
+                    if (!c.HasValue) return;
+                    w.Write(c.Value, true);
+                };
+            }
+            else
+            {
+                return (w, c) =>
+                {
+                    if (!c.HasValue) return;
+                    w.Write(c.Value, false);
+                };
+            }
         }
 
         public void Write(
