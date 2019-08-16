@@ -23,19 +23,29 @@ namespace Mutagen.Bethesda.Tests
             return new ModRecordAligner.AlignmentRules();
         }
 
-        protected override async Task<IModGetter> ImportBinaryWrapper(FilePath path, ModKey modKey)
+        protected override async Task<IModGetter> ImportBinaryWrapper(FilePath path)
         {
             var bytes = File.ReadAllBytes(this.FilePath.Path);
             return SkyrimModBinaryWrapper.SkyrimModFactory(
                 new MemorySlice<byte>(bytes),
-                modKey);
+                this.ModKey);
         }
 
-        protected override async Task<IMod> ImportBinary(FilePath path, ModKey modKey)
+        protected override async Task<IMod> ImportBinary(FilePath path)
         {
-            return await SkyrimMod.CreateFromBinary(path.Path, modKey);
+            return await SkyrimMod.CreateFromBinary(path.Path, this.ModKey);
         }
 
         protected override Processor ProcessorFactory() => new SkyrimProcessor();
+
+        protected override async Task<IMod> ImportXmlFolder(DirectoryPath dir)
+        {
+            return await SkyrimMod.CreateFromXmlFolder(dir, this.ModKey);
+        }
+
+        protected override Task WriteXmlFolder(IModGetter mod, DirectoryPath dir)
+        {
+            return ((SkyrimMod)mod).WriteToXmlFolder(dir);
+        }
     }
 }
