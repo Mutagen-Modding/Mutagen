@@ -2001,6 +2001,61 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class RoadPointBinaryWrapper :
+        BinaryWrapper,
+        IRoadPointGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => RoadPoint_Registration.Instance;
+        public static RoadPoint_Registration Registration => RoadPoint_Registration.Instance;
+        protected object CommonInstance => RoadPointCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRoadPointGetter)rhs, include);
+
+        protected object XmlWriteTranslator => RoadPointXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected object BinaryWriteTranslator => RoadPointBinaryWriteTranslation.Instance;
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+
+        public P3Float Point => P3FloatBinaryTranslation.Read(_data.Span.Slice(0, 12));
+        public ReadOnlySpan<Byte> NumConnectionsFluffBytes => _data.Span.Slice(12, 3).ToArray();
+        public IReadOnlyList<P3Float> Connections => BinaryWrapperSetList<P3Float>.FactoryByStartIndex(_data.Slice(15), _package, 12, (s, p) => P3FloatBinaryTranslation.Read(s));
+        partial void CustomCtor(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset);
+
+        protected RoadPointBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
+        {
+            this._data = bytes;
+        }
+
+        public static RoadPointBinaryWrapper RoadPointFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            var ret = new RoadPointBinaryWrapper(
+                bytes: stream.RemainingMemory.Slice(0, 15),
+                package: package);
+            int offset = stream.Position;
+            ret.CustomCtor(
+                stream: stream,
+                finalPos: stream.Length,
+                offset: offset);
+            return ret;
+        }
+
+    }
+
     #endregion
 
     #endregion

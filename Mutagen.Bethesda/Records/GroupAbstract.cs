@@ -127,16 +127,31 @@ namespace Mutagen.Bethesda
                 var groupMeta = package.Meta.Group(stream.Data.Span.Slice(stream.Position - package.Meta.GroupConstants.HeaderLength));
                 var finalPos = stream.Position + groupMeta.ContentLength;
                 // Parse MajorRecord locations
+                ObjectType? lastParsed = default;
                 while (stream.Position < finalPos)
                 {
-                    MajorRecordMeta majorMeta = package.Meta.MajorRecord(stream.RemainingSpan);
-                    if (majorMeta.RecordType != GroupRecordTypeGetter<T>.GRUP_RECORD_TYPE)
+                    VariableHeaderMeta varMeta = package.Meta.NextRecordVariableMeta(stream.RemainingSpan);
+                    if (varMeta.IsGroup)
                     {
-                        throw new DataMisalignedException("Unexpected type encountered when parsing MajorRecord locations: " + majorMeta.RecordType);
+                        if (lastParsed != ObjectType.Record)
+                        {
+                            throw new DataMisalignedException("Unexpected Group encountered which was not after a major record: " + GroupRecordTypeGetter<T>.GRUP_RECORD_TYPE);
+                        }
+                        stream.Position += checked((int)varMeta.TotalLength);
+                        lastParsed = ObjectType.Group;
                     }
-                    var formKey = FormKey.Factory(package.MasterReferences, majorMeta.FormID.Raw);
-                    locationDict.Add(formKey, stream.Position - offset);
-                    stream.Position += checked((int)majorMeta.TotalLength);
+                    else
+                    {
+                        MajorRecordMeta majorMeta = package.Meta.MajorRecord(stream.RemainingSpan);
+                        if (majorMeta.RecordType != GroupRecordTypeGetter<T>.GRUP_RECORD_TYPE)
+                        {
+                            throw new DataMisalignedException("Unexpected type encountered when parsing MajorRecord locations: " + majorMeta.RecordType);
+                        }
+                        var formKey = FormKey.Factory(package.MasterReferences, majorMeta.FormID.Raw);
+                        locationDict.Add(formKey, stream.Position - offset);
+                        stream.Position += checked((int)majorMeta.TotalLength);
+                        lastParsed = ObjectType.Record;
+                    }
                 }
 
                 return new GroupMajorRecordCacheWrapper<T>(

@@ -1917,6 +1917,102 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class RoadBinaryWrapper :
+        OblivionMajorRecordBinaryWrapper,
+        IRoadInternalGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Road_Registration.Instance;
+        public new static Road_Registration Registration => Road_Registration.Instance;
+        protected override object CommonInstance => RoadCommon.Instance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRoadInternalGetter)rhs, include);
+
+        protected override object XmlWriteTranslator => RoadXmlWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => RoadBinaryWriteTranslation.Instance;
+
+        #region Points
+        partial void PointsCustomParse(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset,
+            RecordType type,
+            int? lastParsed);
+        #endregion
+        partial void CustomCtor(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset);
+
+        protected RoadBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
+        {
+        }
+
+        public static RoadBinaryWrapper RoadFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            stream = UtilityTranslation.DecompressStream(stream, package.Meta);
+            var ret = new RoadBinaryWrapper(
+                bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
+            stream.Position += 0xC + package.Meta.MajorConstants.TypeAndLengthLength;
+            ret.CustomCtor(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset);
+            ret.FillSubrecordTypes(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset,
+                recordTypeConverter: recordTypeConverter,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset,
+            RecordType type,
+            int? lastParsed,
+            RecordTypeConverter recordTypeConverter)
+        {
+            type = recordTypeConverter.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case 0x50524750: // PGRP
+                {
+                    PointsCustomParse(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+                    return TryGet<int?>.Succeed((int)Road_FieldIndex.Points);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
+    }
+
     #endregion
 
     #endregion

@@ -1,4 +1,5 @@
 using System;
+using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -345,15 +346,17 @@ namespace Mutagen.Bethesda.Oblivion
             static partial void FillBinaryOffsetLengthCustom(MutagenFrame frame, Worldspace item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
                 item.UsingOffsetLength = true;
-                if (!HeaderTranslation.ReadNextSubRecordType(frame.Reader, out var xLen).Equals(Worldspace_Registration.XXXX_HEADER)
-                    || xLen != 4)
+                var xxxxMeta = frame.MetaData.ReadSubRecord(frame);
+                if (xxxxMeta.RecordType != Worldspace_Registration.XXXX_HEADER
+                    || xxxxMeta.RecordLength != 4)
                 {
                     errorMask.ReportExceptionOrThrow(new ArgumentException());
                     return;
                 }
                 var contentLen = frame.Reader.ReadInt32();
-                if (!HeaderTranslation.ReadNextSubRecordType(frame.Reader, out var oLen).Equals(Worldspace_Registration.OFST_HEADER)
-                    || oLen != 0)
+                var ofstMeta = frame.MetaData.ReadSubRecord(frame);
+                if (ofstMeta.RecordType != Worldspace_Registration.OFST_HEADER
+                    || ofstMeta.RecordLength != 0)
                 {
                     errorMask.ReportExceptionOrThrow(new ArgumentException());
                     return;
@@ -453,6 +456,115 @@ namespace Mutagen.Bethesda.Oblivion
                             break;
                         default:
                             return;
+                    }
+                }
+            }
+        }
+
+        public partial class WorldspaceBinaryWrapper
+        {
+            private ReadOnlyMemorySlice<byte>? _grupData;
+
+            private int? _RoadLocation;
+            public bool Road_IsSet => this._RoadLocation.HasValue;
+            public IRoadInternalGetter Road => RoadBinaryWrapper.RoadFactory(new BinaryMemoryReadStream(_grupData.Value.Slice(_RoadLocation.Value)), _package);
+
+            private int? _TopCellLocation;
+            public bool TopCell_IsSet => this._TopCellLocation.HasValue;
+            public ICellInternalGetter TopCell => CellBinaryWrapper.CellFactory(new BinaryMemoryReadStream(_grupData.Value.Slice(_TopCellLocation.Value)), _package);
+
+            public ReadOnlySpan<byte> SubCellsTimestamp => _grupData != null ? _package.Meta.Group(_grupData.Value).LastModifiedSpan : UtilityTranslation.Zeros.Slice(0, 4);
+
+            public IReadOnlySetList<IWorldspaceBlockGetter> SubCells { get; private set; } = EmptySetList<IWorldspaceBlockGetter>.Instance;
+
+            private int? _OffsetLengthLocation;
+            public bool UsingOffsetLength => this._OffsetLengthLocation.HasValue;
+
+            private int? _OffsetDataLocation;
+            bool GetOffsetDataIsSetCustom() => this._OffsetDataLocation.HasValue;
+
+            partial void OffsetDataCustomParse(BinaryMemoryReadStream stream, long finalPos, int offset)
+            {
+                _OffsetDataLocation = (ushort)(stream.Position - offset);
+                if (this.UsingOffsetLength)
+                {
+                    var offsetLenFrame = _package.Meta.SubRecordFrame(_data.Slice(_OffsetLengthLocation.Value));
+                    stream.Position += checked((int)(_package.Meta.SubConstants.HeaderLength + BinaryPrimitives.ReadUInt32LittleEndian(offsetLenFrame.ContentSpan)));
+                }
+            }
+
+            ReadOnlySpan<byte> GetOffsetDataCustom()
+            {
+                if (this.UsingOffsetLength)
+                {
+                    var lenFrame = this._package.Meta.SubRecordFrame(_data.Slice(_OffsetLengthLocation.Value));
+                    var len = BinaryPrimitives.ReadInt32LittleEndian(lenFrame.ContentSpan);
+                    return _data.Slice(_OffsetDataLocation.Value + this._package.Meta.SubConstants.HeaderLength, len);
+                }
+                else
+                {
+                    var spanFrame = this._package.Meta.SubRecordFrame(this._data.Slice(_OffsetDataLocation.Value));
+                    return spanFrame.ContentSpan;
+                }
+            }
+
+            partial void OffsetLengthCustomParse(BinaryMemoryReadStream stream, int offset)
+            {
+                this._OffsetLengthLocation = stream.Position - offset;
+            }
+
+            partial void CustomEnd(BinaryMemoryReadStream stream, long finalPos, int offset)
+            {
+                if (stream.Complete) return;
+                var groupMeta = this._package.Meta.GetGroup(stream);
+                if (!groupMeta.IsGroup || groupMeta.GroupType != (int)GroupTypeEnum.WorldChildren) return;
+
+                if (this.FormKey != FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeSpan)))
+                {
+                    throw new ArgumentException("Cell children group did not match the FormID of the parent cell.");
+                }
+
+                this._grupData = stream.ReadMemory(checked((int)groupMeta.TotalLength));
+                stream = new BinaryMemoryReadStream(this._grupData.Value);
+                stream.Position += groupMeta.HeaderLength;
+
+                for (int i = 0; i < 3; i++)
+                {
+                    if (stream.Complete) return;
+                    var varMeta = _package.Meta.GetNextRecordVariableMeta(stream);
+                    switch (varMeta.RecordTypeInt)
+                    {
+                        case 0x44414F52: // "ROAD":
+                            this._RoadLocation = stream.Position;
+                            stream.Position += checked((int)varMeta.TotalLength);
+                            break;
+                        case 0x4C4C4543: // "CELL":
+                            this._TopCellLocation = stream.Position;
+                            stream.Position += checked((int)varMeta.TotalLength);
+                            if (!stream.Complete)
+                            {
+                                var subCellGroup = this._package.Meta.GetGroup(stream);
+                                if (subCellGroup.IsGroup && subCellGroup.GroupType == (int)GroupTypeEnum.CellChildren)
+                                {
+                                    stream.Position += checked((int)subCellGroup.TotalLength);
+                                }
+                            }
+                            break;
+                        case 0x50555247: // "GRUP":
+                            this.SubCells = BinaryWrapperSetList<IWorldspaceBlockGetter>.FactoryByArray(
+                                stream.RemainingMemory,
+                                _package,
+                                getter: (s, p) => WorldspaceBlockBinaryWrapper.WorldspaceBlockFactory(new BinaryMemoryReadStream(s), p),
+                                locs: ParseRecordLocations(
+                                    stream: new BinaryMemoryReadStream(stream.RemainingMemory),
+                                    finalPos: stream.Length,
+                                    trigger: WorldspaceBlock_Registration.TRIGGERING_RECORD_TYPE,
+                                    constants: MetaDataConstants.Oblivion.GroupConstants,
+                                    skipHeader: false));
+                            break;
+                        default:
+                            i = 3; // Break out
+                            break;
                     }
                 }
             }

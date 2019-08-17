@@ -165,7 +165,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Unknown_IsSet => this._UnknownLocation.HasValue;
         public ReadOnlySpan<byte> Unknown => HeaderTranslation.ExtractSubrecordSpan(_data, _UnknownLocation.Value, _package.Meta);
 
-        partial void PointToPointConnectionsCustomParse(BinaryMemoryReadStream stream, int offset, RecordType type, int? lastParsed)
+        partial void PointToPointConnectionsCustomParse(BinaryMemoryReadStream stream, long finalPos, int offset, RecordType type, int? lastParsed)
         {
             var dataFrame = _package.Meta.ReadSubRecordFrame(stream);
             uint ptCount = BinaryPrimitives.ReadUInt16LittleEndian(dataFrame.ContentSpan);

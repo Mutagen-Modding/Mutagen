@@ -2284,6 +2284,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Items
         partial void ItemsCustomParse(
             BinaryMemoryReadStream stream,
+            long finalPos,
             int offset,
             RecordType type,
             int? lastParsed);
@@ -2342,6 +2343,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     ItemsCustomParse(
                         stream: stream,
+                        finalPos: finalPos,
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed);

@@ -1423,9 +1423,7 @@ namespace Mutagen.Bethesda.Generation
 
         protected async Task GenerateImportWrapper(ObjectGeneration obj, FileGeneration fg)
         {
-            if (obj.Name.Contains("World")
-                || obj.Name.Contains("Road")
-                || obj.Name.Contains("SkyrimMod")
+            if (obj.Name.Contains("SkyrimMod")
                 || obj.Name.Contains("DialogTopic")
                 ) return;
 
@@ -1910,7 +1908,7 @@ namespace Mutagen.Bethesda.Generation
                             {
                                 // ToDo
                                 // Remove
-                                if (obj.GetObjectType() == ObjectType.Mod && field.Field.Name == "Worldspaces")
+                                if (obj.GetObjectType() == ObjectType.Mod && field.Field.Name == "DialogTopics")
                                     break;
 
                                 if (!field.Field.TryGetFieldData(out var fieldData)

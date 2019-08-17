@@ -271,7 +271,12 @@ namespace Mutagen.Bethesda.Binary
                 var subMeta = _package.Meta.GetSubRecord(stream);
                 var recType = subMeta.RecordType;
                 if (!trigger.Contains(recType)) break;
+                var minimumFinalPos = stream.Position + subMeta.TotalLength;
                 ret.Add(factory(stream, recType, _package, recordTypeConverter));
+                if (stream.Position < minimumFinalPos)
+                {
+                    stream.Position = minimumFinalPos;
+                }
             }
             return ret;
         }
@@ -301,7 +306,12 @@ namespace Mutagen.Bethesda.Binary
                 var subMeta = _package.Meta.GetSubRecord(stream);
                 var recType = subMeta.RecordType;
                 if (trigger != recType) break;
+                var minimumFinalPos = stream.Position + subMeta.TotalLength;
                 ret.Add(factory(stream, recType, _package, recordTypeConverter));
+                if (stream.Position < minimumFinalPos)
+                {
+                    stream.Position = minimumFinalPos;
+                }
             }
             return ret;
         }

@@ -15182,6 +15182,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         recordTypeConverter: null);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Cells);
                 }
+                case 0x444C5257: // WRLD
+                {
+                    this._Worldspaces = GroupBinaryWrapper<IWorldspaceInternalGetter>.GroupFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Worldspaces);
+                }
                 default:
                     return TryGet<int?>.Succeed(null);
             }

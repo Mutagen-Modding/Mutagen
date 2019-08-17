@@ -2747,6 +2747,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region PointToPointConnections
         partial void PointToPointConnectionsCustomParse(
             BinaryMemoryReadStream stream,
+            long finalPos,
             int offset,
             RecordType type,
             int? lastParsed);
@@ -2807,6 +2808,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     PointToPointConnectionsCustomParse(
                         stream: stream,
+                        finalPos: finalPos,
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed);

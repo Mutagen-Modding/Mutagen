@@ -50,7 +50,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             public IReadOnlySetList<ICellInternalGetter> Items { get; private set; } = EmptySetList<CellBinaryWrapper>.Instance;
 
-            partial void ItemsCustomParse(BinaryMemoryReadStream stream, int offset, RecordType type, int? lastParsed)
+            partial void ItemsCustomParse(BinaryMemoryReadStream stream, long finalPos, int offset, RecordType type, int? lastParsed)
             {
                 this.Items = BinaryWrapperSetList<CellBinaryWrapper>.FactoryByArray(
                     mem: stream.RemainingMemory,

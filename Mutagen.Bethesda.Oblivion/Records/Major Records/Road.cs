@@ -15,9 +15,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType PGRP = new RecordType("PGRP");
         public static readonly RecordType PGRR = new RecordType("PGRR");
         public const int POINT_LEN = 16;
-
-        //ToDo
-        //Upgrade to spans
+        
         static partial void FillBinaryPointsCustom(MutagenFrame frame, Road item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
             var subMeta = frame.MetaData.ReadSubRecord(frame);
@@ -70,7 +68,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        private static RoadPoint ReadPathGridPoint(ReadOnlySpan<byte> reader, out byte numConn)
+        public static RoadPoint ReadPathGridPoint(ReadOnlySpan<byte> reader, out byte numConn)
         {
             var pt = new RoadPoint();
             pt.Point = new Noggog.P3Float(
@@ -116,6 +114,61 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer.Write(conn.Z);
                     }
                 }
+            }
+        }
+    }
+
+    public partial class RoadBinaryWrapper
+    {
+        public IReadOnlySetList<IRoadPointGetter> Points { get; private set; } = EmptySetList<IRoadPointGetter>.Instance;
+
+        partial void PointsCustomParse(BinaryMemoryReadStream stream, long finalPos, int offset, RecordType type, int? lastParsed)
+        {
+            if (stream.Complete) return;
+            var subMeta = _package.Meta.GetSubRecord(stream);
+            if (subMeta.RecordType != Road_Registration.PGRP_HEADER) return;
+            stream.Position += subMeta.HeaderLength;
+            var pointBytes = stream.ReadMemory(subMeta.RecordLength);
+            subMeta = _package.Meta.GetSubRecord(stream);
+            switch (subMeta.RecordTypeInt)
+            {
+                case 0x52524750: // "PGRR":
+                    stream.Position += subMeta.HeaderLength;
+                    var connBytes = stream.ReadMemory(subMeta.RecordLength);
+                    this.Points = BinaryWrapperSetList<IRoadPointGetter>.FactoryByLazyParse(
+                        pointBytes,
+                        _package,
+                        getter: (s, p) =>
+                        {
+                            int numPts = pointBytes.Length / RoadBinaryCreateTranslation.POINT_LEN;
+                            RoadPoint[] points = new RoadPoint[numPts];
+                            var connFloats = connBytes.Span.AsFloatSpan();
+                            for (int i = 0; i < numPts; i++)
+                            {
+                                var pt = RoadBinaryCreateTranslation.ReadPathGridPoint(s, out var numConn);
+                                s = s.Slice(RoadBinaryCreateTranslation.POINT_LEN);
+                                P3Float[] conns = new P3Float[numConn];
+                                for (int j = 0; j < numConn; j++)
+                                {
+                                    conns[j] = new P3Float(
+                                            x: connFloats[0],
+                                            y: connFloats[1],
+                                            z: connFloats[2]);
+                                    connFloats = connFloats.Slice(3);
+                                }
+                                pt.Connections.AddRange(conns);
+                                points[i] = pt;
+                            }
+                            return points;
+                        });
+                    break;
+                default:
+                    this.Points = BinaryWrapperSetList<IRoadPointGetter>.FactoryByStartIndex(
+                        pointBytes,
+                        _package,
+                        itemLength: RoadBinaryCreateTranslation.POINT_LEN,
+                        getter: (s, p) => RoadBinaryCreateTranslation.ReadPathGridPoint(s, out var numConn));
+                    break;
             }
         }
     }

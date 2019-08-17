@@ -4787,6 +4787,225 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class WorldspaceBinaryWrapper :
+        PlaceBinaryWrapper,
+        IWorldspaceInternalGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Worldspace_Registration.Instance;
+        public new static Worldspace_Registration Registration => Worldspace_Registration.Instance;
+        protected override object CommonInstance => WorldspaceCommon.Instance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWorldspaceInternalGetter)rhs, include);
+
+        protected override object XmlWriteTranslator => WorldspaceXmlWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => WorldspaceBinaryWriteTranslation.Instance;
+
+        #region Name
+        private int? _NameLocation;
+        public bool Name_IsSet => _NameLocation.HasValue;
+        public String Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _NameLocation.Value, _package.Meta)) : default;
+        #endregion
+        #region Parent
+        private int? _ParentLocation;
+        public bool Parent_IsSet => _ParentLocation.HasValue;
+        public IFormIDSetLinkGetter<IWorldspaceInternalGetter> Parent_Property => _ParentLocation.HasValue ? new FormIDSetLink<IWorldspaceInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ParentLocation.Value, _package.Meta)))) : FormIDSetLink<IWorldspaceInternalGetter>.Empty;
+        public IWorldspaceInternalGetter Parent => default;
+        #endregion
+        #region Climate
+        private int? _ClimateLocation;
+        public bool Climate_IsSet => _ClimateLocation.HasValue;
+        public IFormIDSetLinkGetter<IClimateInternalGetter> Climate_Property => _ClimateLocation.HasValue ? new FormIDSetLink<IClimateInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ClimateLocation.Value, _package.Meta)))) : FormIDSetLink<IClimateInternalGetter>.Empty;
+        public IClimateInternalGetter Climate => default;
+        #endregion
+        #region Water
+        private int? _WaterLocation;
+        public bool Water_IsSet => _WaterLocation.HasValue;
+        public IFormIDSetLinkGetter<IWaterInternalGetter> Water_Property => _WaterLocation.HasValue ? new FormIDSetLink<IWaterInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _WaterLocation.Value, _package.Meta)))) : FormIDSetLink<IWaterInternalGetter>.Empty;
+        public IWaterInternalGetter Water => default;
+        #endregion
+        #region Icon
+        private int? _IconLocation;
+        public bool Icon_IsSet => _IconLocation.HasValue;
+        public String Icon => _IconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _IconLocation.Value, _package.Meta)) : default;
+        #endregion
+        #region MapData
+        public IMapDataGetter MapData { get; private set; }
+        public bool MapData_IsSet => MapData != null;
+        #endregion
+        #region Flags
+        private int? _FlagsLocation;
+        public bool Flags_IsSet => _FlagsLocation.HasValue;
+        public Worldspace.Flag Flags => (Worldspace.Flag)HeaderTranslation.ExtractSubrecordSpan(_data.Slice(0), _FlagsLocation.Value, _package.Meta)[0];
+        #endregion
+        #region ObjectBoundsMin
+        private int? _ObjectBoundsMinLocation;
+        public bool ObjectBoundsMin_IsSet => _ObjectBoundsMinLocation.HasValue;
+        public P2Float ObjectBoundsMin => _ObjectBoundsMinLocation.HasValue ? P2FloatBinaryTranslation.Read(HeaderTranslation.ExtractSubrecordSpan(_data, _ObjectBoundsMinLocation.Value, _package.Meta)) : default;
+        #endregion
+        #region ObjectBoundsMax
+        private int? _ObjectBoundsMaxLocation;
+        public bool ObjectBoundsMax_IsSet => _ObjectBoundsMaxLocation.HasValue;
+        public P2Float ObjectBoundsMax => _ObjectBoundsMaxLocation.HasValue ? P2FloatBinaryTranslation.Read(HeaderTranslation.ExtractSubrecordSpan(_data, _ObjectBoundsMaxLocation.Value, _package.Meta)) : default;
+        #endregion
+        #region Music
+        private int? _MusicLocation;
+        public bool Music_IsSet => _MusicLocation.HasValue;
+        public MusicType Music => (MusicType)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data.Slice(0), _MusicLocation.Value, _package.Meta));
+        #endregion
+        #region OffsetLength
+        partial void OffsetLengthCustomParse(
+            BinaryMemoryReadStream stream,
+            int offset);
+        #endregion
+        #region OffsetData
+        partial void OffsetDataCustomParse(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset);
+        public bool OffsetData_IsSet => GetOffsetDataIsSetCustom();
+        public ReadOnlySpan<Byte> OffsetData => GetOffsetDataCustom();
+        #endregion
+        partial void CustomCtor(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset);
+        partial void CustomEnd(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset);
+
+        protected WorldspaceBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
+        {
+        }
+
+        public static WorldspaceBinaryWrapper WorldspaceFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            stream = UtilityTranslation.DecompressStream(stream, package.Meta);
+            var ret = new WorldspaceBinaryWrapper(
+                bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
+            stream.Position += 0xC + package.Meta.MajorConstants.TypeAndLengthLength;
+            ret.CustomCtor(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset);
+            ret.FillSubrecordTypes(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset,
+                recordTypeConverter: recordTypeConverter,
+                fill: ret.FillRecordType);
+            ret.CustomEnd(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset);
+            return ret;
+        }
+
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset,
+            RecordType type,
+            int? lastParsed,
+            RecordTypeConverter recordTypeConverter)
+        {
+            type = recordTypeConverter.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case 0x4C4C5546: // FULL
+                {
+                    _NameLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Name);
+                }
+                case 0x4D414E57: // WNAM
+                {
+                    _ParentLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Parent);
+                }
+                case 0x4D414E43: // CNAM
+                {
+                    _ClimateLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Climate);
+                }
+                case 0x324D414E: // NAM2
+                {
+                    _WaterLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Water);
+                }
+                case 0x4E4F4349: // ICON
+                {
+                    _IconLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Icon);
+                }
+                case 0x4D414E4D: // MNAM
+                {
+                    this.MapData = MapDataBinaryWrapper.MapDataFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.MapData);
+                }
+                case 0x41544144: // DATA
+                {
+                    _FlagsLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Flags);
+                }
+                case 0x304D414E: // NAM0
+                {
+                    _ObjectBoundsMinLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.ObjectBoundsMin);
+                }
+                case 0x394D414E: // NAM9
+                {
+                    _ObjectBoundsMaxLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.ObjectBoundsMax);
+                }
+                case 0x4D414E53: // SNAM
+                {
+                    _MusicLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Music);
+                }
+                case 0x58585858: // XXXX
+                {
+                    OffsetLengthCustomParse(
+                        stream,
+                        offset);
+                    return TryGet<int?>.Succeed(null);
+                }
+                case 0x5453464F: // OFST
+                {
+                    OffsetDataCustomParse(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset);
+                    return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.OffsetData);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
+    }
+
     #endregion
 
     #endregion

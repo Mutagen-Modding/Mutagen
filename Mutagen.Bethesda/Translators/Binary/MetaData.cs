@@ -193,6 +193,43 @@ namespace Mutagen.Bethesda.Binary
             return new SubRecordMemoryFrame(meta, stream.ReadMemory(meta.RecordLength));
         }
 
+        public VariableHeaderMeta NextRecordVariableMeta(ReadOnlySpan<byte> span)
+        {
+            RecordType rec = new RecordType(BinaryPrimitives.ReadInt32LittleEndian(span));
+            if (rec == Mutagen.Bethesda.Constants.GRUP)
+            {
+                return this.GroupConstants.VariableMeta(span);
+            }
+            else
+            {
+                return this.MajorConstants.VariableMeta(span);
+            }
+        }
+        public VariableHeaderMeta GetNextRecordVariableMeta(IBinaryReadStream stream)
+        {
+            RecordType rec = new RecordType(stream.GetInt32());
+            if (rec == Mutagen.Bethesda.Constants.GRUP)
+            {
+                return this.GroupConstants.VariableMeta(stream.GetSpan(this.GroupConstants.HeaderLength));
+            }
+            else
+            {
+                return this.MajorConstants.VariableMeta(stream.GetSpan(this.MajorConstants.HeaderLength));
+            }
+        }
+        public VariableHeaderMeta ReadNextRecordVariableMeta(IBinaryReadStream stream)
+        {
+            RecordType rec = new RecordType(stream.GetInt32());
+            if (rec == Mutagen.Bethesda.Constants.GRUP)
+            {
+                return this.GroupConstants.VariableMeta(stream.ReadSpan(this.GroupConstants.HeaderLength));
+            }
+            else
+            {
+                return this.MajorConstants.VariableMeta(stream.ReadSpan(this.MajorConstants.HeaderLength));
+            }
+        }
+
         public RecordConstants Constants(ObjectType type)
         {
             switch (type)
@@ -259,7 +296,8 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public sbyte HeaderLength => this.Constants.HeaderLength;
-        public RecordType RecordType => new RecordType(BinaryPrimitives.ReadInt32LittleEndian(this.Span.Slice(0, 4)));
+        public int RecordTypeInt => BinaryPrimitives.ReadInt32LittleEndian(this.Span.Slice(0, 4));
+        public RecordType RecordType => new RecordType(this.RecordTypeInt);
         public uint RecordLength
         {
             get
@@ -279,6 +317,8 @@ namespace Mutagen.Bethesda.Binary
         }
         public int TypeAndLengthLength => this.Constants.TypeAndLengthLength;
         public long TotalLength => this.Constants.HeaderIncludedInLength ? this.RecordLength : (this.HeaderLength + this.RecordLength);
+        public bool IsGroup => this.Constants.ObjectType == ObjectType.Group;
+        public long ContentLength => this.Constants.HeaderIncludedInLength ? this.RecordLength - this.HeaderLength : this.RecordLength;
     }
 
     public ref struct GroupRecordMeta
@@ -412,7 +452,8 @@ namespace Mutagen.Bethesda.Binary
 
         public GameMode GameMode => Meta.GameMode;
         public sbyte HeaderLength => Meta.SubConstants.HeaderLength;
-        public RecordType RecordType => new RecordType(BinaryPrimitives.ReadInt32LittleEndian(this.Span.Slice(0, 4)));
+        public RecordType RecordType => new RecordType(this.RecordTypeInt);
+        public int RecordTypeInt => BinaryPrimitives.ReadInt32LittleEndian(this.Span.Slice(0, 4));
         public ushort RecordLength => BinaryPrimitives.ReadUInt16LittleEndian(this.Span.Slice(4, 2));
         public int TotalLength => this.HeaderLength + this.RecordLength;
     }

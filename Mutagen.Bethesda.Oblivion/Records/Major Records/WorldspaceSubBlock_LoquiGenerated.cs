@@ -2382,6 +2382,103 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class WorldspaceSubBlockBinaryWrapper :
+        BinaryWrapper,
+        IWorldspaceSubBlockGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => WorldspaceSubBlock_Registration.Instance;
+        public static WorldspaceSubBlock_Registration Registration => WorldspaceSubBlock_Registration.Instance;
+        protected object CommonInstance => WorldspaceSubBlockCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWorldspaceSubBlockGetter)rhs, include);
+
+        protected object XmlWriteTranslator => WorldspaceSubBlockXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected object BinaryWriteTranslator => WorldspaceSubBlockBinaryWriteTranslation.Instance;
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+
+        public Int16 BlockNumberY => BinaryPrimitives.ReadInt16LittleEndian(_data.Span.Slice(0, 2));
+        public Int16 BlockNumberX => BinaryPrimitives.ReadInt16LittleEndian(_data.Span.Slice(2, 2));
+        public GroupTypeEnum GroupType => (GroupTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(4, 4));
+        public ReadOnlySpan<Byte> LastModified => _data.Span.Slice(8, 4).ToArray();
+        #region Items
+        partial void ItemsCustomParse(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset,
+            RecordType type,
+            int? lastParsed);
+        #endregion
+        partial void CustomCtor(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset);
+
+        protected WorldspaceSubBlockBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
+        {
+            this._data = bytes;
+        }
+
+        public static WorldspaceSubBlockBinaryWrapper WorldspaceSubBlockFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            var ret = new WorldspaceSubBlockBinaryWrapper(
+                bytes: HeaderTranslation.ExtractGroupWrapperMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = stream.Position + package.Meta.Group(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + package.Meta.GroupConstants.TypeAndLengthLength;
+            stream.Position += 0xC + package.Meta.GroupConstants.TypeAndLengthLength;
+            ret.CustomCtor(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset);
+            ret.FillMajorRecords(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset,
+                recordTypeConverter: recordTypeConverter,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset,
+            RecordType type,
+            int? lastParsed,
+            RecordTypeConverter recordTypeConverter)
+        {
+            type = recordTypeConverter.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case 0x4C4C4543: // CELL
+                {
+                    ItemsCustomParse(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+                    return TryGet<int?>.Succeed((int)WorldspaceSubBlock_FieldIndex.Items);
+                }
+                default:
+                    return TryGet<int?>.Succeed(null);
+            }
+        }
+    }
+
     #endregion
 
     #endregion

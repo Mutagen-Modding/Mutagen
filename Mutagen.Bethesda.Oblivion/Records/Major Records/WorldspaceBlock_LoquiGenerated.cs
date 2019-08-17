@@ -2382,6 +2382,101 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class WorldspaceBlockBinaryWrapper :
+        BinaryWrapper,
+        IWorldspaceBlockGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => WorldspaceBlock_Registration.Instance;
+        public static WorldspaceBlock_Registration Registration => WorldspaceBlock_Registration.Instance;
+        protected object CommonInstance => WorldspaceBlockCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWorldspaceBlockGetter)rhs, include);
+
+        protected object XmlWriteTranslator => WorldspaceBlockXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected object BinaryWriteTranslator => WorldspaceBlockBinaryWriteTranslation.Instance;
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+
+        public Int16 BlockNumberY => BinaryPrimitives.ReadInt16LittleEndian(_data.Span.Slice(0, 2));
+        public Int16 BlockNumberX => BinaryPrimitives.ReadInt16LittleEndian(_data.Span.Slice(2, 2));
+        public GroupTypeEnum GroupType => (GroupTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(4, 4));
+        public ReadOnlySpan<Byte> LastModified => _data.Span.Slice(8, 4).ToArray();
+        public IReadOnlySetList<IWorldspaceSubBlockGetter> Items { get; private set; } = EmptySetList<WorldspaceSubBlockBinaryWrapper>.Instance;
+        partial void CustomCtor(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset);
+
+        protected WorldspaceBlockBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
+        {
+            this._data = bytes;
+        }
+
+        public static WorldspaceBlockBinaryWrapper WorldspaceBlockFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            var ret = new WorldspaceBlockBinaryWrapper(
+                bytes: HeaderTranslation.ExtractGroupWrapperMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = stream.Position + package.Meta.Group(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + package.Meta.GroupConstants.TypeAndLengthLength;
+            stream.Position += 0xC + package.Meta.GroupConstants.TypeAndLengthLength;
+            ret.CustomCtor(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset);
+            ret.FillGroupRecordsForWrapper(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset,
+                recordTypeConverter: recordTypeConverter,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset,
+            RecordType type,
+            int? lastParsed,
+            RecordTypeConverter recordTypeConverter)
+        {
+            type = recordTypeConverter.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case 0x50555247: // GRUP
+                {
+                    this.Items = BinaryWrapperSetList<WorldspaceSubBlockBinaryWrapper>.FactoryByArray(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        recordTypeConverter: null,
+                        getter: (s, p, recConv) => WorldspaceSubBlockBinaryWrapper.WorldspaceSubBlockFactory(new BinaryMemoryReadStream(s), p, recConv),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            finalPos: finalPos,
+                            trigger: type,
+                            constants: _package.Meta.GroupConstants,
+                            skipHeader: false));
+                    return TryGet<int?>.Succeed((int)WorldspaceBlock_FieldIndex.Items);
+                }
+                default:
+                    return TryGet<int?>.Succeed(null);
+            }
+        }
+    }
+
     #endregion
 
     #endregion

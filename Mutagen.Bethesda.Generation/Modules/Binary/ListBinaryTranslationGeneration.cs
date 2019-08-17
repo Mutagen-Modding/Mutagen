@@ -385,6 +385,7 @@ namespace Mutagen.Bethesda.Generation
                         $"partial void {typeGen.Name}CustomParse"))
                     {
                         args.Add($"{nameof(BinaryMemoryReadStream)} stream");
+                        args.Add($"long finalPos");
                         args.Add($"int offset");
                         args.Add($"{nameof(RecordType)} type");
                         args.Add($"int? lastParsed");
@@ -477,6 +478,7 @@ namespace Mutagen.Bethesda.Generation
                         $"{typeGen.Name}CustomParse"))
                     {
                         args.AddPassArg($"stream");
+                        args.AddPassArg($"finalPos");
                         args.AddPassArg($"offset");
                         args.AddPassArg($"type");
                         args.AddPassArg($"lastParsed");
