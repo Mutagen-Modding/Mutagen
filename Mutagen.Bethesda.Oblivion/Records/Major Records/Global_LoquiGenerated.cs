@@ -1567,8 +1567,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             long finalPos,
             int offset,
             RecordType type,
-            int? lastParsed)
+            int? lastParsed,
+            RecordTypeConverter recordTypeConverter)
         {
+            type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case 0x4D414E46: // FNAM
@@ -1584,7 +1586,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         finalPos: finalPos,
                         offset: offset,
                         type: type,
-                        lastParsed: lastParsed);
+                        lastParsed: lastParsed,
+                        recordTypeConverter: recordTypeConverter);
             }
         }
     }

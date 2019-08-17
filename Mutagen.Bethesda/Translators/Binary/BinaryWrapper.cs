@@ -12,7 +12,8 @@ namespace Mutagen.Bethesda.Binary
             long finalPos,
             int offset,
             RecordType type,
-            int? lastParsed);
+            int? lastParsed,
+            RecordTypeConverter recordTypeConverter);
 
         protected ReadOnlyMemorySlice<byte> _data;
         protected BinaryWrapperFactoryPackage _package;
@@ -36,7 +37,8 @@ namespace Mutagen.Bethesda.Binary
                 finalPos: stream.Length,
                 offset: 0,
                 type: headerMeta.RecordType,
-                lastParsed: lastParsed);
+                lastParsed: lastParsed,
+                recordTypeConverter: null);
             while (!stream.Complete)
             {
                 GroupRecordMeta groupMeta = _package.Meta.Group(stream.RemainingSpan);
@@ -50,7 +52,8 @@ namespace Mutagen.Bethesda.Binary
                     finalPos: minimumFinalPos,
                     offset: 0,
                     type: groupMeta.ContainedRecordType,
-                    lastParsed: lastParsed);
+                    lastParsed: lastParsed,
+                    recordTypeConverter: null);
                 if (parsed.Failed) break;
                 if (minimumFinalPos > stream.Position)
                 {
@@ -76,8 +79,9 @@ namespace Mutagen.Bethesda.Binary
                     stream: stream,
                     finalPos: finalPos,
                     offset: offset,
-                    type: recordTypeConverter.ConvertToStandard(majorMeta.RecordType),
-                    lastParsed: lastParsed);
+                    type: majorMeta.RecordType,
+                    lastParsed: lastParsed,
+                    recordTypeConverter: recordTypeConverter);
                 if (parsed.Failed) break;
                 if (minimumFinalPos > stream.Position)
                 {
@@ -107,8 +111,9 @@ namespace Mutagen.Bethesda.Binary
                     stream: stream,
                     finalPos: finalPos,
                     offset: offset,
-                    type: recordTypeConverter.ConvertToStandard(groupMeta.RecordType),
-                    lastParsed: lastParsed);
+                    type: groupMeta.RecordType,
+                    lastParsed: lastParsed,
+                    recordTypeConverter: recordTypeConverter);
                 if (parsed.Failed) break;
                 if (minimumFinalPos > stream.Position)
                 {
@@ -134,8 +139,9 @@ namespace Mutagen.Bethesda.Binary
                     stream: stream,
                     finalPos: finalPos,
                     offset: offset,
-                    type: recordTypeConverter.ConvertToStandard(subMeta.RecordType),
-                    lastParsed: lastParsed);
+                    type: subMeta.RecordType,
+                    lastParsed: lastParsed,
+                    recordTypeConverter: recordTypeConverter);
                 if (parsed.Failed) break;
                 if (minimumFinalPos > stream.Position)
                 {
@@ -161,8 +167,9 @@ namespace Mutagen.Bethesda.Binary
                     stream: stream,
                     finalPos: finalPos,
                     offset: offset,
-                    type: recordTypeConverter.ConvertToStandard(subMeta.RecordType),
-                    lastParsed: lastParsed);
+                    type: subMeta.RecordType,
+                    lastParsed: lastParsed,
+                    recordTypeConverter: recordTypeConverter);
                 if (parsed.Failed) break;
                 if (minimumFinalPos > stream.Position)
                 {

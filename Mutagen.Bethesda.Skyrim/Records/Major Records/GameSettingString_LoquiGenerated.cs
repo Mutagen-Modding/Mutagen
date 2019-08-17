@@ -1949,8 +1949,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             long finalPos,
             int offset,
             RecordType type,
-            int? lastParsed)
+            int? lastParsed,
+            RecordTypeConverter recordTypeConverter)
         {
+            type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case 0x41544144: // DATA
@@ -1964,7 +1966,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         finalPos: finalPos,
                         offset: offset,
                         type: type,
-                        lastParsed: lastParsed);
+                        lastParsed: lastParsed,
+                        recordTypeConverter: recordTypeConverter);
             }
         }
     }
