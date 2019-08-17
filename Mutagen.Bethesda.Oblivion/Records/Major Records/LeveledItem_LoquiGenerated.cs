@@ -2438,7 +2438,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Byte ChanceNone => _ChanceNoneLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _ChanceNoneLocation.Value, _package.Meta)[0] : default;
         #endregion
         #region Flags
-        private int? _FlagsLocation;
+        partial void FlagsCustomParse(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset);
         public bool Flags_IsSet => GetFlagsIsSetCustom();
         public LeveledFlag Flags => GetFlagsCustom();
         #endregion
@@ -2498,7 +2501,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x464C564C: // LVLF
                 {
-                    _FlagsLocation = (ushort)(stream.Position - offset);
+                    FlagsCustomParse(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset);
                     return TryGet<int?>.Succeed((int)LeveledItem_FieldIndex.Flags);
                 }
                 case 0x4F4C564C: // LVLO

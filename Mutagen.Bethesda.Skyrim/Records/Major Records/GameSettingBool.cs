@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
+using Noggog;
 
 namespace Mutagen.Bethesda.Skyrim
 {
@@ -32,8 +33,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class GameSettingBoolBinaryWrapper
         {
+            private int? _DataLocation;
             bool GetDataIsSetCustom() => _DataLocation.HasValue;
             bool GetDataCustom() => _DataLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _DataLocation.Value, _package.Meta)) != 0 : default;
+            partial void DataCustomParse(BinaryMemoryReadStream stream, long finalPos, int offset)
+            {
+                _DataLocation = (ushort)(stream.Position - offset);
+            }
         }
     }
 }

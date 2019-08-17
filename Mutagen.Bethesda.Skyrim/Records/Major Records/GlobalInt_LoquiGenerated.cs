@@ -1929,7 +1929,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override object BinaryWriteTranslator => GlobalIntBinaryWriteTranslation.Instance;
 
         #region Data
-        private int? _DataLocation;
+        partial void DataCustomParse(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset);
         public bool Data_IsSet => GetDataIsSetCustom();
         public Int32 Data => GetDataCustom();
         #endregion
@@ -1983,7 +1986,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case 0x56544C46: // FLTV
                 {
-                    _DataLocation = (ushort)(stream.Position - offset);
+                    DataCustomParse(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset);
                     return TryGet<int?>.Succeed((int)GlobalInt_FieldIndex.Data);
                 }
                 default:

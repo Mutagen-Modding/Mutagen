@@ -79,7 +79,7 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration typeGen)
         {
         }
-        
+
         public virtual int GetPassedAmount(ObjectGeneration objGen, TypeGeneration typeGen)
         {
             var data = typeGen.GetFieldData();
@@ -98,17 +98,25 @@ namespace Mutagen.Bethesda.Generation
             Accessor packageAccessor,
             Accessor converterAccessor)
         {
-            switch (typeGen.GetFieldData().Binary)
+            switch (typeGen.GetFieldData().BinaryWrapperFallback)
             {
                 case BinaryGenerationType.Normal:
+                    fg.AppendLine($"_{typeGen.Name}Location = (ushort){locationAccessor};");
+                    break;
                 case BinaryGenerationType.Custom:
+                    using (var args = new ArgsWrapper(fg,
+                        $"{typeGen.Name}CustomParse"))
+                    {
+                        args.AddPassArg($"stream");
+                        args.AddPassArg($"finalPos");
+                        args.AddPassArg($"offset");
+                    }
                     break;
                 case BinaryGenerationType.DoNothing:
                 case BinaryGenerationType.NoGeneration:
                 default:
                     return;
             }
-            fg.AppendLine($"_{typeGen.Name}Location = (ushort){locationAccessor};");
         }
 
         public virtual string GenerateForTypicalWrapper(

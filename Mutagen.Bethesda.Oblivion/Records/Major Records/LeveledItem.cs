@@ -37,8 +37,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             private bool _vestigialMarker;
 
+            private int? _FlagsLocation;
             bool GetFlagsIsSetCustom() => _FlagsLocation.HasValue || _vestigialMarker;
-
             public LeveledFlag GetFlagsCustom()
             {
                 var ret = _FlagsLocation.HasValue ? (LeveledFlag)HeaderTranslation.ExtractSubrecordSpan(_data.Span, _FlagsLocation.Value, _package.Meta)[0] : default;
@@ -47,6 +47,10 @@ namespace Mutagen.Bethesda.Oblivion
                     ret |= LeveledFlag.CalculateForEachItemInCount;
                 }
                 return ret;
+            }
+            partial void FlagsCustomParse(BinaryMemoryReadStream stream, long finalPos, int offset)
+            {
+                _FlagsLocation = (ushort)(stream.Position - offset);
             }
 
             public void VestigialSpecialParse(

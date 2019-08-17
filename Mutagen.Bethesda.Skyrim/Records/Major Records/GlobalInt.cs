@@ -81,11 +81,15 @@ namespace Mutagen.Bethesda.Skyrim
             public override char TypeChar => GlobalInt.TRIGGER_CHAR;
             public override float RawFloat => (float)this.Data;
 
+            private int? _DataLocation;
             public bool GetDataIsSetCustom() => _DataLocation.HasValue;
-
             public int GetDataCustom()
             {
                 return (int)HeaderTranslation.ExtractSubrecordSpan(_data.Span, _DataLocation.Value, _package.Meta).GetFloat();
+            }
+            partial void DataCustomParse(BinaryMemoryReadStream stream, long finalPos, int offset)
+            {
+                _DataLocation = (ushort)(stream.Position - offset);
             }
         }
     }

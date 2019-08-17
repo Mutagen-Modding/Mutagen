@@ -1919,7 +1919,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object BinaryWriteTranslator => GlobalShortBinaryWriteTranslation.Instance;
 
         #region Data
-        private int? _DataLocation;
+        partial void DataCustomParse(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset);
         public bool Data_IsSet => GetDataIsSetCustom();
         public Int16 Data => GetDataCustom();
         #endregion
@@ -1973,7 +1976,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case 0x56544C46: // FLTV
                 {
-                    _DataLocation = (ushort)(stream.Position - offset);
+                    DataCustomParse(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset);
                     return TryGet<int?>.Succeed((int)GlobalShort_FieldIndex.Data);
                 }
                 default:

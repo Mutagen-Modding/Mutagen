@@ -233,7 +233,13 @@ namespace Mutagen.Bethesda.Generation
             string loc;
             if (fieldData.HasTrigger)
             {
-                fg.AppendLine($"private int? _{typeGen.Name}Location;");
+                using (var args = new ArgsWrapper(fg,
+                    $"partial void {typeGen.Name}CustomParse"))
+                {
+                    args.Add($"{nameof(BinaryMemoryReadStream)} stream");
+                    args.Add($"long finalPos");
+                    args.Add($"int offset");
+                }
                 if (typeGen.HasBeenSet)
                 {
                     fg.AppendLine($"public bool {typeGen.Name}_IsSet => Get{typeGen.Name}IsSetCustom();");

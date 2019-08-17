@@ -6492,7 +6492,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool MapMarker_IsSet => MapMarker != null;
         #endregion
         #region OpenByDefault
-        private int? _OpenByDefaultLocation;
+        partial void OpenByDefaultCustomParse(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset);
         public Boolean OpenByDefault => GetOpenByDefaultCustom();
         #endregion
         #region RagdollData
@@ -6684,7 +6687,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4D414E4F: // ONAM
                 {
-                    _OpenByDefaultLocation = (ushort)(stream.Position - offset);
+                    OpenByDefaultCustomParse(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset);
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.OpenByDefault);
                 }
                 case 0x44475258: // XRGD

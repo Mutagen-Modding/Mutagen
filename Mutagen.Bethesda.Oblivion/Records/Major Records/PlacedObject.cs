@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Oblivion.Internals;
+using Noggog;
 
 namespace Mutagen.Bethesda.Oblivion
 {
@@ -47,7 +48,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         public partial class PlacedObjectBinaryWrapper
         {
+            private int? _OpenByDefaultLocation;
             public bool GetOpenByDefaultCustom() => _OpenByDefaultLocation.HasValue;
+            partial void OpenByDefaultCustomParse(BinaryMemoryReadStream stream, long finalPos, int offset)
+            {
+                _OpenByDefaultLocation = (ushort)(stream.Position - offset);
+            }
         }
     }
 }

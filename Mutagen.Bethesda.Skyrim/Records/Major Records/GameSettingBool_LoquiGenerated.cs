@@ -1929,7 +1929,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override object BinaryWriteTranslator => GameSettingBoolBinaryWriteTranslation.Instance;
 
         #region Data
-        private int? _DataLocation;
+        partial void DataCustomParse(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset);
         public bool Data_IsSet => GetDataIsSetCustom();
         public Boolean Data => GetDataCustom();
         #endregion
@@ -1983,7 +1986,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case 0x41544144: // DATA
                 {
-                    _DataLocation = (ushort)(stream.Position - offset);
+                    DataCustomParse(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset);
                     return TryGet<int?>.Succeed((int)GameSettingBool_FieldIndex.Data);
                 }
                 default:
