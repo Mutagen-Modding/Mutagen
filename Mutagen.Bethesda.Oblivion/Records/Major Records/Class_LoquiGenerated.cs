@@ -3582,7 +3582,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     _DATALocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
                     this.DATADataTypeState = Class.DATADataType.Has;
                     var subLen = _package.Meta.SubRecord(_data.Slice((stream.Position - offset))).RecordLength;
-                    if (subLen <= 48)
+                    if (subLen <= 0x30)
                     {
                         this.DATADataTypeState |= Class.DATADataType.Break0;
                     }

@@ -4087,7 +4087,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     _DATALocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
                     this.DATADataTypeState = DialogItem.DATADataType.Has;
                     var subLen = _package.Meta.SubRecord(_data.Slice((stream.Position - offset))).RecordLength;
-                    if (subLen <= 2)
+                    if (subLen <= 0x2)
                     {
                         this.DATADataTypeState |= DialogItem.DATADataType.Break0;
                     }

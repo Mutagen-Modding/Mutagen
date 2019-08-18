@@ -7212,23 +7212,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     _CSTDLocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
                     this.CSTDDataTypeState = CombatStyle.CSTDDataType.Has;
                     var subLen = _package.Meta.SubRecord(_data.Slice((stream.Position - offset))).RecordLength;
-                    if (subLen <= 84)
+                    if (subLen <= 0x54)
                     {
                         this.CSTDDataTypeState |= CombatStyle.CSTDDataType.Break0;
                     }
-                    if (subLen <= 92)
+                    if (subLen <= 0x5C)
                     {
                         this.CSTDDataTypeState |= CombatStyle.CSTDDataType.Break1;
                     }
-                    if (subLen <= 104)
+                    if (subLen <= 0x68)
                     {
                         this.CSTDDataTypeState |= CombatStyle.CSTDDataType.Break2;
                     }
-                    if (subLen <= 112)
+                    if (subLen <= 0x70)
                     {
                         this.CSTDDataTypeState |= CombatStyle.CSTDDataType.Break3;
                     }
-                    if (subLen <= 120)
+                    if (subLen <= 0x78)
                     {
                         this.CSTDDataTypeState |= CombatStyle.CSTDDataType.Break4;
                     }

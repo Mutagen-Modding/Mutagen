@@ -7096,19 +7096,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     _DATALocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
                     this.DATADataTypeState = Water.DATADataType.Has;
                     var subLen = _package.Meta.SubRecord(_data.Slice((stream.Position - offset))).RecordLength;
-                    if (subLen <= 0)
+                    if (subLen <= 0x0)
                     {
                         this.DATADataTypeState |= Water.DATADataType.Break0;
                     }
-                    if (subLen <= 40)
+                    if (subLen <= 0x28)
                     {
                         this.DATADataTypeState |= Water.DATADataType.Break1;
                     }
-                    if (subLen <= 60)
+                    if (subLen <= 0x3C)
                     {
                         this.DATADataTypeState |= Water.DATADataType.Break2;
                     }
-                    if (subLen <= 84)
+                    if (subLen <= 0x54)
                     {
                         this.DATADataTypeState |= Water.DATADataType.Break3;
                     }

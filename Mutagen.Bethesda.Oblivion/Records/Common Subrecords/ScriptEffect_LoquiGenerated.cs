@@ -2532,11 +2532,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     _SCITLocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
                     this.SCITDataTypeState = ScriptEffect.SCITDataType.Has;
                     var subLen = _package.Meta.SubRecord(_data.Slice((stream.Position - offset))).RecordLength;
-                    if (subLen <= 4)
+                    if (subLen <= 0x4)
                     {
                         this.SCITDataTypeState |= ScriptEffect.SCITDataType.Break0;
                     }
-                    if (subLen <= 12)
+                    if (subLen <= 0xC)
                     {
                         this.SCITDataTypeState |= ScriptEffect.SCITDataType.Break1;
                     }

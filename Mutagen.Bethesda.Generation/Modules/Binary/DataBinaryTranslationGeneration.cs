@@ -112,7 +112,7 @@ namespace Mutagen.Bethesda.Generation
                         generatedStart = true;
                         fg.AppendLine($"var subLen = _package.Meta.SubRecord(_data.Slice({locationAccessor})).RecordLength;");
                     }
-                    fg.AppendLine($"if (subLen <= {passedLen})");
+                    fg.AppendLine($"if (subLen <= 0x{passedLen.ToString("X")})");
                     using (new BraceWrapper(fg))
                     {
                         fg.AppendLine($"this.{dataType.StateName} |= {objGen.ObjectName}.{dataType.EnumName}.Break{item.BreakIndex};");
