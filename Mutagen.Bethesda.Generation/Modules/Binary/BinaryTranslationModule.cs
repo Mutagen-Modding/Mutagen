@@ -1934,7 +1934,7 @@ namespace Mutagen.Bethesda.Generation
                             {
                                 // ToDo
                                 // Remove
-                                if (obj.GetObjectType() == ObjectType.Mod && field.Field.Name == "AIPackages")
+                                if (obj.GetObjectType() == ObjectType.Mod && field.Field.Name == "CombatStyles")
                                     break;
 
                                 if (!field.Field.TryGetFieldData(out var fieldData)

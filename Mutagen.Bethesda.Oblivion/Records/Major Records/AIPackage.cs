@@ -102,28 +102,28 @@ namespace Mutagen.Bethesda.Oblivion
             public bool GetFlagsIsSetCustom() => _PKDTLocation.HasValue;
             public AIPackage.Flag GetFlagsCustom()
             {
-                var span = _data.Span.Slice(_PKDTLocation.Value);
-                if (span.Length > 4)
+                var subFrame = _package.Meta.SubRecordFrame(_data.Slice(_PKDTLocation.Value - _package.Meta.SubConstants.HeaderLength));
+                if (subFrame.ContentSpan.Length > 4)
                 {
-                    return EnumExt<AIPackage.Flag>.Convert(BinaryPrimitives.ReadUInt32LittleEndian(span));
+                    return EnumExt<AIPackage.Flag>.Convert(BinaryPrimitives.ReadUInt32LittleEndian(subFrame.ContentSpan));
                 }
                 else
                 {
-                    return EnumExt<AIPackage.Flag>.Convert(BinaryPrimitives.ReadUInt16LittleEndian(span));
+                    return EnumExt<AIPackage.Flag>.Convert(BinaryPrimitives.ReadUInt16LittleEndian(subFrame.ContentSpan));
                 }
             }
 
             public bool GetGeneralTypeIsSetCustom() => _PKDTLocation.HasValue;
             public AIPackage.GeneralTypeEnum GetGeneralTypeCustom()
             {
-                var span = _data.Span.Slice(_PKDTLocation.Value);
-                if (span.Length > 4)
+                var subFrame = _package.Meta.SubRecordFrame(_data.Slice(_PKDTLocation.Value - _package.Meta.SubConstants.HeaderLength));
+                if (subFrame.ContentSpan.Length > 4)
                 {
-                    return EnumExt<AIPackage.GeneralTypeEnum>.Convert(BinaryPrimitives.ReadUInt32LittleEndian(span.Slice(4)));
+                    return EnumExt<AIPackage.GeneralTypeEnum>.Convert(BinaryPrimitives.ReadUInt32LittleEndian(subFrame.ContentSpan.Slice(4)));
                 }
                 else
                 {
-                    return EnumExt<AIPackage.GeneralTypeEnum>.Convert(BinaryPrimitives.ReadUInt16LittleEndian(span.Slice(2)));
+                    return EnumExt<AIPackage.GeneralTypeEnum>.Convert(subFrame.ContentSpan[2]);
                 }
             }
         }

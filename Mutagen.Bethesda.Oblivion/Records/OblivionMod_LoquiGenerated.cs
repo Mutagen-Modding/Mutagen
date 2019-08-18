@@ -15214,6 +15214,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         recordTypeConverter: null);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.IdleAnimations);
                 }
+                case 0x4B434150: // PACK
+                {
+                    this._AIPackages = GroupBinaryWrapper<IAIPackageInternalGetter>.GroupFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.AIPackages);
+                }
                 default:
                     return TryGet<int?>.Succeed(null);
             }
