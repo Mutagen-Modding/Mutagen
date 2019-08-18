@@ -2756,6 +2756,127 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+    public partial class DialogTopicBinaryWrapper :
+        OblivionMajorRecordBinaryWrapper,
+        IDialogTopicInternalGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => DialogTopic_Registration.Instance;
+        public new static DialogTopic_Registration Registration => DialogTopic_Registration.Instance;
+        protected override object CommonInstance => DialogTopicCommon.Instance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDialogTopicInternalGetter)rhs, include);
+
+        protected override object XmlWriteTranslator => DialogTopicXmlWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => DialogTopicBinaryWriteTranslation.Instance;
+
+        public IReadOnlySetList<IFormIDLinkGetter<IQuestInternalGetter>> Quests { get; private set; } = EmptySetList<IFormIDLinkGetter<IQuestInternalGetter>>.Instance;
+        #region Name
+        private int? _NameLocation;
+        public bool Name_IsSet => _NameLocation.HasValue;
+        public String Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _NameLocation.Value, _package.Meta)) : default;
+        #endregion
+        #region DialogType
+        private int? _DialogTypeLocation;
+        public bool DialogType_IsSet => _DialogTypeLocation.HasValue;
+        public DialogType DialogType => (DialogType)HeaderTranslation.ExtractSubrecordSpan(_data.Slice(0), _DialogTypeLocation.Value, _package.Meta)[0];
+        #endregion
+        partial void CustomCtor(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset);
+        partial void CustomEnd(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset);
+
+        protected DialogTopicBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            BinaryWrapperFactoryPackage package)
+            : base(
+                bytes: bytes,
+                package: package)
+        {
+        }
+
+        public static DialogTopicBinaryWrapper DialogTopicFactory(
+            BinaryMemoryReadStream stream,
+            BinaryWrapperFactoryPackage package,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            stream = UtilityTranslation.DecompressStream(stream, package.Meta);
+            var ret = new DialogTopicBinaryWrapper(
+                bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength;
+            int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
+            stream.Position += 0xC + package.Meta.MajorConstants.TypeAndLengthLength;
+            ret.CustomCtor(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset);
+            ret.FillSubrecordTypes(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset,
+                recordTypeConverter: recordTypeConverter,
+                fill: ret.FillRecordType);
+            ret.CustomEnd(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset);
+            return ret;
+        }
+
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset,
+            RecordType type,
+            int? lastParsed,
+            RecordTypeConverter recordTypeConverter)
+        {
+            type = recordTypeConverter.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case 0x49545351: // QSTI
+                {
+                    this.Quests = BinaryWrapperSetList<IFormIDLinkGetter<IQuestInternalGetter>>.FactoryByArray(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        getter: (s, p) => new FormIDLink<IQuestInternalGetter>(FormKey.Factory(p.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            finalPos: finalPos,
+                            constants: _package.Meta.SubConstants,
+                            trigger: type,
+                            skipHeader: true));
+                    return TryGet<int?>.Succeed((int)DialogTopic_FieldIndex.Quests);
+                }
+                case 0x4C4C5546: // FULL
+                {
+                    _NameLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)DialogTopic_FieldIndex.Name);
+                }
+                case 0x41544144: // DATA
+                {
+                    _DialogTypeLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)DialogTopic_FieldIndex.DialogType);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
+    }
+
     #endregion
 
     #endregion

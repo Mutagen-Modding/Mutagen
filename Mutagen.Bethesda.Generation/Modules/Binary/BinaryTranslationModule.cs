@@ -1423,9 +1423,7 @@ namespace Mutagen.Bethesda.Generation
 
         protected async Task GenerateImportWrapper(ObjectGeneration obj, FileGeneration fg)
         {
-            if (obj.Name.Contains("SkyrimMod")
-                || obj.Name.Contains("DialogTopic")
-                ) return;
+            if (obj.Name.Contains("SkyrimMod")) return;
 
             var dataAccessor = new Accessor("_data");
             var packageAccessor = new Accessor("_package");
@@ -1659,6 +1657,34 @@ namespace Mutagen.Bethesda.Generation
                         if (obj.GetObjectType() == ObjectType.Record)
                         {
                             fg.AppendLine($"stream = {nameof(UtilityTranslation)}.{nameof(UtilityTranslation.DecompressStream)}(stream, package.Meta);");
+                        }
+                        if (obj.TryGetCustomRecordTypeTriggers(out var customLogicTriggers))
+                        {
+                            fg.AppendLine($"var nextRecord = recordTypeConverter.ConvertToCustom(package.Meta.Get{(obj.GetObjectType() == ObjectType.Subrecord ? "SubRecord" : "MajorRecord")}(stream).RecordType);");
+                            fg.AppendLine($"switch (nextRecord.TypeInt)");
+                            using (new BraceWrapper(fg))
+                            {
+                                foreach (var item in customLogicTriggers)
+                                {
+                                    fg.AppendLine($"case {item.TypeInt}: // {item.Type}");
+                                }
+                                using (new DepthWrapper(fg))
+                                {
+                                    using (var args = new ArgsWrapper(fg,
+                                        "return CustomRecordTypeTrigger"))
+                                    {
+                                        args.AddPassArg($"stream");
+                                        args.Add("recordType: nextRecord");
+                                        args.AddPassArg("package");
+                                        args.AddPassArg("recordTypeConverter");
+                                    }
+                                }
+                                fg.AppendLine("default:");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendLine("break;");
+                                }
+                            }
                         }
                         using (var args = new ArgsWrapper(fg,
                             $"var ret = new {BinaryWrapperClassName(obj)}{obj.GetGenericTypes(MaskType.Normal)}"))
@@ -1908,7 +1934,7 @@ namespace Mutagen.Bethesda.Generation
                             {
                                 // ToDo
                                 // Remove
-                                if (obj.GetObjectType() == ObjectType.Mod && field.Field.Name == "DialogTopics")
+                                if (obj.GetObjectType() == ObjectType.Mod && field.Field.Name == "AIPackages")
                                     break;
 
                                 if (!field.Field.TryGetFieldData(out var fieldData)

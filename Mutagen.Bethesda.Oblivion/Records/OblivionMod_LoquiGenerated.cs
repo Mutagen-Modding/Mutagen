@@ -15190,6 +15190,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         recordTypeConverter: null);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Worldspaces);
                 }
+                case 0x4C414944: // DIAL
+                {
+                    this._DialogTopics = GroupBinaryWrapper<IDialogTopicInternalGetter>.GroupFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.DialogTopics);
+                }
+                case 0x54535551: // QUST
+                {
+                    this._Quests = GroupBinaryWrapper<IQuestInternalGetter>.GroupFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Quests);
+                }
+                case 0x454C4449: // IDLE
+                {
+                    this._IdleAnimations = GroupBinaryWrapper<IIdleAnimationInternalGetter>.GroupFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.IdleAnimations);
+                }
                 default:
                     return TryGet<int?>.Succeed(null);
             }

@@ -9,6 +9,7 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
+using Noggog;
 
 namespace Mutagen.Bethesda.Oblivion
 {
@@ -23,7 +24,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public partial class DialogTopicBinaryCreateTranslation
-        { 
+        {
             static partial void CustomBinaryEndImport(MutagenFrame frame, DialogTopic obj, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
                 if (frame.Reader.Complete) return;
@@ -87,7 +88,41 @@ namespace Mutagen.Bethesda.Oblivion
                         });
                 }
             }
+        }
 
+        public partial class DialogTopicBinaryWrapper
+        {
+            private ReadOnlyMemorySlice<byte>? _grupData;
+
+            public ReadOnlySpan<byte> Timestamp => _grupData != null ? _package.Meta.Group(_grupData.Value).LastModifiedSpan : UtilityTranslation.Zeros.Slice(0, 4);
+
+            public IReadOnlySetList<IDialogItemInternalGetter> Items { get; private set; } = EmptySetList<IDialogItemInternalGetter>.Instance;
+
+            partial void CustomEnd(BinaryMemoryReadStream stream, long finalPos, int offset)
+            {
+                if (stream.Complete) return;
+                var startPos = stream.Position;
+                var groupMeta = this._package.Meta.GetGroup(stream);
+                if (!groupMeta.IsGroup) return;
+                if (groupMeta.GroupType != (int)GroupTypeEnum.TopicChildren) return;
+                this._grupData = stream.ReadMemory(checked((int)groupMeta.TotalLength));
+                var formKey = FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeSpan));
+                if (formKey != this.FormKey)
+                {
+                    throw new ArgumentException("Dialog children group did not match the FormID of the parent.");
+                }
+                var contentSpan = this._grupData.Value.Slice(_package.Meta.GroupConstants.HeaderLength);
+                this.Items = BinaryWrapperSetList<IDialogItemInternalGetter>.FactoryByArray(
+                    contentSpan,
+                    _package,
+                    getter: (s, p) => DialogItemBinaryWrapper.DialogItemFactory(new BinaryMemoryReadStream(s), p),
+                    locs: ParseRecordLocations(
+                        stream: new BinaryMemoryReadStream(contentSpan),
+                        finalPos: contentSpan.Length,
+                        trigger: DialogItem_Registration.TRIGGERING_RECORD_TYPE,
+                        constants: MetaDataConstants.Oblivion.MajorConstants,
+                        skipHeader: false));
+            }
         }
     }
 }

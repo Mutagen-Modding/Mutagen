@@ -27,11 +27,11 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var pos = frame.PositionWithOffset;
-            byte[] bytes = frame.ReadBytes(0x1A);
-            bytes[4] = 0x18;
-            byte[] newBytes = new byte[bytes.Length + 4];
-            bytes[3] = (byte)'A';
-            Array.Copy(bytes, newBytes, bytes.Length);
+            var span = frame.ReadSpan(0x1A);
+            byte[] newBytes = new byte[span.Length + 4];
+            span.CopyTo(newBytes.AsSpan());
+            newBytes[4] = 0x18;
+            newBytes[3] = (byte)'A';
             LoquiBinaryTranslation<Condition>.Instance.Parse(
                 frame: new MutagenFrame(new MutagenMemoryReadStream(newBytes, frame.MetaData, offsetReference: pos)),
                 item: out var item,
@@ -80,6 +80,23 @@ namespace Mutagen.Bethesda.Oblivion
         {
             public Condition.Flag Flags => ConditionBinaryCreateTranslation.GetFlag(_data.Span[0]);
             public CompareOperator CompareOperator => ConditionBinaryCreateTranslation.GetCompareOperator(_data.Span[0]);
+
+            static ConditionBinaryWrapper CustomRecordTypeTrigger(
+                BinaryMemoryReadStream stream,
+                RecordType recordType,
+                BinaryWrapperFactoryPackage package,
+                RecordTypeConverter recordTypeConverter)
+            {
+                var rawBytes = stream.ReadSpan(0x1A);
+                byte[] newBytes = new byte[rawBytes.Length + 4];
+                rawBytes.CopyTo(newBytes.AsSpan());
+                newBytes[4] = 0x18;
+                newBytes[3] = (byte)'A';
+                return ConditionBinaryWrapper.ConditionFactory(
+                    stream: new BinaryMemoryReadStream(newBytes),
+                    package: package,
+                    recordTypeConverter: recordTypeConverter);
+            }
         }
     }
 }

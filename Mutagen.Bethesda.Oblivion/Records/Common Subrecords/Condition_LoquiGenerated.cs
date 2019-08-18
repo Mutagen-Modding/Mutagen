@@ -2651,6 +2651,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             BinaryWrapperFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
+            var nextRecord = recordTypeConverter.ConvertToCustom(package.Meta.GetSubRecord(stream).RecordType);
+            switch (nextRecord.TypeInt)
+            {
+                case 1413764163: // CTDT
+                    return CustomRecordTypeTrigger(
+                        stream: stream,
+                        recordType: nextRecord,
+                        package: package,
+                        recordTypeConverter: recordTypeConverter);
+                default:
+                    break;
+            }
             var ret = new ConditionBinaryWrapper(
                 bytes: HeaderTranslation.ExtractSubrecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
