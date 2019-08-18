@@ -15222,6 +15222,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         recordTypeConverter: null);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.AIPackages);
                 }
+                case 0x59545343: // CSTY
+                {
+                    this._CombatStyles = GroupBinaryWrapper<ICombatStyleInternalGetter>.GroupFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.CombatStyles);
+                }
                 default:
                     return TryGet<int?>.Succeed(null);
             }

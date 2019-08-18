@@ -7103,8 +7103,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region Flags
         private int _FlagsLocation => _CSTDLocation.Value + 0x50;
-        private bool _Flags_IsSet => _CSTDLocation.HasValue;
-        public CombatStyle.Flag Flags => _Flags_IsSet ? (CombatStyle.Flag)_data.Span.Slice(_FlagsLocation, 1)[0] : default;
+        private bool _Flags_IsSet => GetFlagsIsSetCustom();
+        public CombatStyle.Flag Flags => GetFlagsCustom();
         #endregion
         public Byte AcrobaticDodgePercentChance => _CSTDLocation.HasValue ? _data.Span[_CSTDLocation.Value + 81] : default;
         #region RangeMultOptimal

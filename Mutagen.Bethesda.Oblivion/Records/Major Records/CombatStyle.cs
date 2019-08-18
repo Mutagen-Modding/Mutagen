@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -89,6 +90,23 @@ namespace Mutagen.Bethesda.Oblivion
                 int flags = (int)item.Flags;
                 flags = flags >> 8;
                 writer.Write(flags);
+            }
+        }
+
+        public partial class CombatStyleBinaryWrapper
+        {
+            private bool GetFlagsIsSetCustom() => _CSTDLocation.HasValue;
+            private CombatStyle.Flag GetFlagsCustom()
+            {
+                if (!_Flags_IsSet) return default;
+                var ret = (CombatStyle.Flag)_data.Span.Slice(_FlagsLocation, 1)[0];
+                if (!this.CSTDDataTypeState.HasFlag(CombatStyle.CSTDDataType.Break4))
+                {
+                    int flags = BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_CSTDLocation.Value + 0x78));
+                    var otherFlag = (CombatStyle.Flag)(flags << 8);
+                    ret |= otherFlag;
+                }
+                return ret;
             }
         }
     }
