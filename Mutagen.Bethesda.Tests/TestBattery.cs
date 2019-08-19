@@ -26,7 +26,8 @@ namespace Mutagen.Bethesda.Tests
                 Path = "Oblivion.esm"
             };
             var passthroughTests = (settings.PassthroughSettings?.TestNormal ?? false)
-                || (settings.PassthroughSettings?.TestBinaryWrapper ?? false);
+                || (settings.PassthroughSettings?.TestBinaryWrapper ?? false)
+                || (settings.PassthroughSettings?.TestFolder ?? false);
             foreach (var targetGroup in settings.TargetGroups)
             {
                 if (!targetGroup.Do) continue;
@@ -53,11 +54,6 @@ namespace Mutagen.Bethesda.Tests
             {
                 yield return OtherTests.OblivionESM_GroupMask_Import(settings, oblivPassthrough);
                 yield return OtherTests.OblivionESM_GroupMask_Export(settings, oblivPassthrough);
-            }
-            var oblivPassthroughTest = new OblivionPassthroughTest(settings, oblivPassthrough);
-            if (settings.PassthroughSettings?.TestFolder ?? false)
-            {
-                yield return OtherTests.OblivionESM_Folder_Reimport(settings.PassthroughSettings, oblivPassthrough, oblivPassthroughTest);
             }
             if (settings.TestModList)
             {

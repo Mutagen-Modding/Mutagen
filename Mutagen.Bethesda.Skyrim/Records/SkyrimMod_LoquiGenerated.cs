@@ -55,10 +55,12 @@ namespace Mutagen.Bethesda.Skyrim
             _hasBeenSetTracker = new BitArray(((ILoquiObject)this).Registration.FieldCount);
             _hasBeenSetTracker[(int)SkyrimMod_FieldIndex.ModHeader] = true;
             _GameSettings_Object = new Group<GameSetting>(this);
-            _Globals_Object = new Group<Global>(this);
+            _Keywords_Object = new Group<Keyword>(this);
+            _LocationReferenceTypes_Object = new Group<LocationReferenceType>(this);
             Observable.Merge(
                 _GameSettings_Object.Items.Connect().Transform<IMajorRecord, GameSetting, FormKey>((i) => i),
-                _Globals_Object.Items.Connect().Transform<IMajorRecord, Global, FormKey>((i) => i))
+                _Keywords_Object.Items.Connect().Transform<IMajorRecord, Keyword, FormKey>((i) => i),
+                _LocationReferenceTypes_Object.Items.Connect().Transform<IMajorRecord, LocationReferenceType, FormKey>((i) => i))
                 .PopulateInto(_majorRecords);
             CustomCtor();
         }
@@ -80,11 +82,17 @@ namespace Mutagen.Bethesda.Skyrim
         public Group<GameSetting> GameSettings => _GameSettings_Object;
         IGroupGetter<IGameSettingInternalGetter> ISkyrimModGetter.GameSettings => _GameSettings_Object;
         #endregion
-        #region Globals
+        #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly Group<Global> _Globals_Object;
-        public Group<Global> Globals => _Globals_Object;
-        IGroupGetter<IGlobalInternalGetter> ISkyrimModGetter.Globals => _Globals_Object;
+        private readonly Group<Keyword> _Keywords_Object;
+        public Group<Keyword> Keywords => _Keywords_Object;
+        IGroupGetter<IKeywordInternalGetter> ISkyrimModGetter.Keywords => _Keywords_Object;
+        #endregion
+        #region LocationReferenceTypes
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private readonly Group<LocationReferenceType> _LocationReferenceTypes_Object;
+        public Group<LocationReferenceType> LocationReferenceTypes => _LocationReferenceTypes_Object;
+        IGroupGetter<ILocationReferenceTypeInternalGetter> ISkyrimModGetter.LocationReferenceTypes => _LocationReferenceTypes_Object;
         #endregion
 
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISkyrimModGetter)rhs, include);
@@ -329,7 +337,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case SkyrimMod_FieldIndex.ModHeader:
                     return _hasBeenSetTracker[index];
                 case SkyrimMod_FieldIndex.GameSettings:
-                case SkyrimMod_FieldIndex.Globals:
+                case SkyrimMod_FieldIndex.Keywords:
+                case SkyrimMod_FieldIndex.LocationReferenceTypes:
                     return true;
                 default:
                     throw new ArgumentException($"Unknown field index: {index}");
@@ -356,8 +365,11 @@ namespace Mutagen.Bethesda.Skyrim
                 case GameSetting gamesettings:
                     _GameSettings_Object.Items.Set(gamesettings);
                     break;
-                case Global globals:
-                    _Globals_Object.Items.Set(globals);
+                case Keyword keywords:
+                    _Keywords_Object.Items.Set(keywords);
+                    break;
+                case LocationReferenceType locationreferencetypes:
+                    _LocationReferenceTypes_Object.Items.Set(locationreferencetypes);
                     break;
                 default:
                     throw new ArgumentException($"Unknown settable MajorRecord type: {record?.GetType()}");
@@ -372,9 +384,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.GameSettings.Items.Set(rhsMod.GameSettings.Items.Items);
             }
-            if (mask?.Globals ?? true)
+            if (mask?.Keywords ?? true)
             {
-                this.Globals.Items.Set(rhsMod.Globals.Items.Items);
+                this.Keywords.Items.Set(rhsMod.Keywords.Items.Items);
+            }
+            if (mask?.LocationReferenceTypes ?? true)
+            {
+                this.LocationReferenceTypes.Items.Set(rhsMod.LocationReferenceTypes.Items.Items);
             }
         }
 
@@ -390,12 +406,19 @@ namespace Mutagen.Bethesda.Skyrim
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<GameSetting>());
             }
-            if (mask?.Globals ?? true)
+            if (mask?.Keywords ?? true)
             {
-                this.Globals.Items.Set(
-                    rhs.Globals.Items.Items
+                this.Keywords.Items.Set(
+                    rhs.Keywords.Items.Items
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<Global>());
+                        .Cast<Keyword>());
+            }
+            if (mask?.LocationReferenceTypes ?? true)
+            {
+                this.LocationReferenceTypes.Items.Set(
+                    rhs.LocationReferenceTypes.Items.Items
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<LocationReferenceType>());
             }
             Dictionary<FormKey, IMajorRecordCommon> router = new Dictionary<FormKey, IMajorRecordCommon>();
             router.Set(duppedRecords.Select(dup => new KeyValuePair<FormKey, IMajorRecordCommon>(dup.OriginalFormKey, dup.Record)));
@@ -429,7 +452,8 @@ namespace Mutagen.Bethesda.Skyrim
         {
             int count = this.MajorRecords.Count;
             count += GameSettings.Items.Count > 0 ? 1 : 0;
-            count += Globals.Items.Count > 0 ? 1 : 0;
+            count += Keywords.Items.Count > 0 ? 1 : 0;
+            count += LocationReferenceTypes.Items.Count > 0 ? 1 : 0;
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -485,11 +509,16 @@ namespace Mutagen.Bethesda.Skyrim
                 name: nameof(GameSettings),
                 errorMask: errorMask,
                 index: (int)SkyrimMod_FieldIndex.GameSettings)));
-            tasks.Add(Task.Run(() => ret.Globals.CreateFromXmlFolder<Global>(
+            tasks.Add(Task.Run(() => ret.Keywords.CreateFromXmlFolder<Keyword>(
                 dir: dir,
-                name: nameof(Globals),
+                name: nameof(Keywords),
                 errorMask: errorMask,
-                index: (int)SkyrimMod_FieldIndex.Globals)));
+                index: (int)SkyrimMod_FieldIndex.Keywords)));
+            tasks.Add(Task.Run(() => ret.LocationReferenceTypes.CreateFromXmlFolder<LocationReferenceType>(
+                dir: dir,
+                name: nameof(LocationReferenceTypes),
+                errorMask: errorMask,
+                index: (int)SkyrimMod_FieldIndex.LocationReferenceTypes)));
             await Task.WhenAll(tasks);
             foreach (var link in ret.Links)
             {
@@ -517,11 +546,16 @@ namespace Mutagen.Bethesda.Skyrim
                     name: nameof(GameSettings),
                     errorMask: errorMaskBuilder,
                     index: (int)SkyrimMod_FieldIndex.GameSettings)));
-                tasks.Add(Task.Run(() => Globals.WriteToXmlFolder<Global, Global_ErrorMask>(
+                tasks.Add(Task.Run(() => Keywords.WriteToXmlFolder<Keyword, Keyword_ErrorMask>(
                     dir: dir.Path,
-                    name: nameof(Globals),
+                    name: nameof(Keywords),
                     errorMask: errorMaskBuilder,
-                    index: (int)SkyrimMod_FieldIndex.Globals)));
+                    index: (int)SkyrimMod_FieldIndex.Keywords)));
+                tasks.Add(Task.Run(() => LocationReferenceTypes.WriteToXmlFolder<LocationReferenceType, LocationReferenceType_ErrorMask>(
+                    dir: dir.Path,
+                    name: nameof(LocationReferenceTypes),
+                    errorMask: errorMaskBuilder,
+                    index: (int)SkyrimMod_FieldIndex.LocationReferenceTypes)));
                 await Task.WhenAll(tasks);
             }
             return null;
@@ -767,20 +801,20 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.GameSettings);
                 }
-                case 0x424F4C47: // GLOB
+                case 0x4457594B: // KYWD
                 {
-                    if (importMask?.Globals ?? true)
+                    if (importMask?.Keywords ?? true)
                     {
                         try
                         {
-                            errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Globals);
-                            var tmpGlobals = await Group<Global>.CreateFromBinary(
+                            errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Keywords);
+                            var tmpKeywords = await Group<Keyword>.CreateFromBinary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
                                 masterReferences: masterReferences);
-                            item.Globals.CopyFieldsFrom<Global_CopyMask>(
-                                rhs: tmpGlobals,
+                            item.Keywords.CopyFieldsFrom<Keyword_CopyMask>(
+                                rhs: tmpKeywords,
                                 def: null,
                                 copyMask: null,
                                 errorMask: errorMask);
@@ -799,7 +833,41 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Globals);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Keywords);
+                }
+                case 0x5452434C: // LCRT
+                {
+                    if (importMask?.LocationReferenceTypes ?? true)
+                    {
+                        try
+                        {
+                            errorMask?.PushIndex((int)SkyrimMod_FieldIndex.LocationReferenceTypes);
+                            var tmpLocationReferenceTypes = await Group<LocationReferenceType>.CreateFromBinary(
+                                frame: frame,
+                                errorMask: errorMask,
+                                recordTypeConverter: null,
+                                masterReferences: masterReferences);
+                            item.LocationReferenceTypes.CopyFieldsFrom<LocationReferenceType_CopyMask>(
+                                rhs: tmpLocationReferenceTypes,
+                                def: null,
+                                copyMask: null,
+                                errorMask: errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
+                        }
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.LocationReferenceTypes);
                 }
                 default:
                     errorMask?.ReportWarning($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
@@ -927,8 +995,11 @@ namespace Mutagen.Bethesda.Skyrim
                 case SkyrimMod_FieldIndex.GameSettings:
                     this._GameSettings_Object.CopyFieldsFrom<GameSetting_CopyMask>(rhs: (Group<GameSetting>)obj);
                     break;
-                case SkyrimMod_FieldIndex.Globals:
-                    this._Globals_Object.CopyFieldsFrom<Global_CopyMask>(rhs: (Group<Global>)obj);
+                case SkyrimMod_FieldIndex.Keywords:
+                    this._Keywords_Object.CopyFieldsFrom<Keyword_CopyMask>(rhs: (Group<Keyword>)obj);
+                    break;
+                case SkyrimMod_FieldIndex.LocationReferenceTypes:
+                    this._LocationReferenceTypes_Object.CopyFieldsFrom<LocationReferenceType_CopyMask>(rhs: (Group<LocationReferenceType>)obj);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -964,8 +1035,11 @@ namespace Mutagen.Bethesda.Skyrim
                 case SkyrimMod_FieldIndex.GameSettings:
                     obj._GameSettings_Object.CopyFieldsFrom<GameSetting_CopyMask>(rhs: (Group<GameSetting>)pair.Value);
                     break;
-                case SkyrimMod_FieldIndex.Globals:
-                    obj._Globals_Object.CopyFieldsFrom<Global_CopyMask>(rhs: (Group<Global>)pair.Value);
+                case SkyrimMod_FieldIndex.Keywords:
+                    obj._Keywords_Object.CopyFieldsFrom<Keyword_CopyMask>(rhs: (Group<Keyword>)pair.Value);
+                    break;
+                case SkyrimMod_FieldIndex.LocationReferenceTypes:
+                    obj._LocationReferenceTypes_Object.CopyFieldsFrom<LocationReferenceType_CopyMask>(rhs: (Group<LocationReferenceType>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -981,7 +1055,8 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new ModHeader ModHeader { get; }
         new Group<GameSetting> GameSettings { get; }
-        new Group<Global> Globals { get; }
+        new Group<Keyword> Keywords { get; }
+        new Group<LocationReferenceType> LocationReferenceTypes { get; }
         void CopyFieldsFrom(
             SkyrimMod rhs,
             ErrorMaskBuilder errorMask = null,
@@ -1002,8 +1077,11 @@ namespace Mutagen.Bethesda.Skyrim
         #region GameSettings
         IGroupGetter<IGameSettingInternalGetter> GameSettings { get; }
         #endregion
-        #region Globals
-        IGroupGetter<IGlobalInternalGetter> Globals { get; }
+        #region Keywords
+        IGroupGetter<IKeywordInternalGetter> Keywords { get; }
+        #endregion
+        #region LocationReferenceTypes
+        IGroupGetter<ILocationReferenceTypeInternalGetter> LocationReferenceTypes { get; }
         #endregion
 
     }
@@ -1106,7 +1184,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         ModHeader = 0,
         GameSettings = 1,
-        Globals = 2,
+        Keywords = 2,
+        LocationReferenceTypes = 3,
     }
     #endregion
 
@@ -1124,9 +1203,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "61f5127d-406d-41a1-897e-6d17188258ea";
 
-        public const ushort AdditionalFieldCount = 3;
+        public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 3;
+        public const ushort FieldCount = 4;
 
         public static readonly Type MaskType = typeof(SkyrimMod_Mask<>);
 
@@ -1162,8 +1241,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)SkyrimMod_FieldIndex.ModHeader;
                 case "GAMESETTINGS":
                     return (ushort)SkyrimMod_FieldIndex.GameSettings;
-                case "GLOBALS":
-                    return (ushort)SkyrimMod_FieldIndex.Globals;
+                case "KEYWORDS":
+                    return (ushort)SkyrimMod_FieldIndex.Keywords;
+                case "LOCATIONREFERENCETYPES":
+                    return (ushort)SkyrimMod_FieldIndex.LocationReferenceTypes;
                 default:
                     return null;
             }
@@ -1176,7 +1257,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case SkyrimMod_FieldIndex.ModHeader:
                 case SkyrimMod_FieldIndex.GameSettings:
-                case SkyrimMod_FieldIndex.Globals:
+                case SkyrimMod_FieldIndex.Keywords:
+                case SkyrimMod_FieldIndex.LocationReferenceTypes:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1190,7 +1272,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case SkyrimMod_FieldIndex.ModHeader:
                 case SkyrimMod_FieldIndex.GameSettings:
-                case SkyrimMod_FieldIndex.Globals:
+                case SkyrimMod_FieldIndex.Keywords:
+                case SkyrimMod_FieldIndex.LocationReferenceTypes:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1204,7 +1287,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case SkyrimMod_FieldIndex.ModHeader:
                 case SkyrimMod_FieldIndex.GameSettings:
-                case SkyrimMod_FieldIndex.Globals:
+                case SkyrimMod_FieldIndex.Keywords:
+                case SkyrimMod_FieldIndex.LocationReferenceTypes:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1220,8 +1304,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "ModHeader";
                 case SkyrimMod_FieldIndex.GameSettings:
                     return "GameSettings";
-                case SkyrimMod_FieldIndex.Globals:
-                    return "Globals";
+                case SkyrimMod_FieldIndex.Keywords:
+                    return "Keywords";
+                case SkyrimMod_FieldIndex.LocationReferenceTypes:
+                    return "LocationReferenceTypes";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1234,7 +1320,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case SkyrimMod_FieldIndex.ModHeader:
                 case SkyrimMod_FieldIndex.GameSettings:
-                case SkyrimMod_FieldIndex.Globals:
+                case SkyrimMod_FieldIndex.Keywords:
+                case SkyrimMod_FieldIndex.LocationReferenceTypes:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1249,7 +1336,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.ModHeader:
                     return true;
                 case SkyrimMod_FieldIndex.GameSettings:
-                case SkyrimMod_FieldIndex.Globals:
+                case SkyrimMod_FieldIndex.Keywords:
+                case SkyrimMod_FieldIndex.LocationReferenceTypes:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1265,8 +1353,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(ModHeader);
                 case SkyrimMod_FieldIndex.GameSettings:
                     return typeof(Group<GameSetting>);
-                case SkyrimMod_FieldIndex.Globals:
-                    return typeof(Group<Global>);
+                case SkyrimMod_FieldIndex.Keywords:
+                    return typeof(Group<Keyword>);
+                case SkyrimMod_FieldIndex.LocationReferenceTypes:
+                    return typeof(Group<LocationReferenceType>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1275,7 +1365,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(SkyrimModXmlWriteTranslation);
         public static readonly RecordType TES4_HEADER = new RecordType("TES4");
         public static readonly RecordType GMST_HEADER = new RecordType("GMST");
-        public static readonly RecordType GLOB_HEADER = new RecordType("GLOB");
+        public static readonly RecordType KYWD_HEADER = new RecordType("KYWD");
+        public static readonly RecordType LCRT_HEADER = new RecordType("LCRT");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -1289,7 +1380,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             );
         });
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 3;
+        public const int NumTypedFields = 4;
         public static readonly Type BinaryWriteTranslation = typeof(SkyrimModBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1380,17 +1471,39 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Globals.Overall ?? true)
+            if (copyMask?.Keywords.Overall ?? true)
             {
-                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Globals);
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Keywords);
                 try
                 {
-                    GroupCommon.CopyFieldsFrom<Global, Global_CopyMask>(
-                        item: item.Globals,
-                        rhs: rhs.Globals,
-                        def: def?.Globals,
+                    GroupCommon.CopyFieldsFrom<Keyword, Keyword_CopyMask>(
+                        item: item.Keywords,
+                        rhs: rhs.Keywords,
+                        def: def?.Keywords,
                         errorMask: errorMask,
-                        copyMask: copyMask?.Globals.Specific);
+                        copyMask: copyMask?.Keywords.Specific);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.LocationReferenceTypes.Overall ?? true)
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.LocationReferenceTypes);
+                try
+                {
+                    GroupCommon.CopyFieldsFrom<LocationReferenceType, LocationReferenceType_CopyMask>(
+                        item: item.LocationReferenceTypes,
+                        rhs: rhs.LocationReferenceTypes,
+                        def: def?.LocationReferenceTypes,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.LocationReferenceTypes.Specific);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1442,7 +1555,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
                 include);
             ret.GameSettings = MaskItemExt.Factory(item.GameSettings.GetEqualsMask(rhs.GameSettings, include), include);
-            ret.Globals = MaskItemExt.Factory(item.Globals.GetEqualsMask(rhs.Globals, include), include);
+            ret.Keywords = MaskItemExt.Factory(item.Keywords.GetEqualsMask(rhs.Keywords, include), include);
+            ret.LocationReferenceTypes = MaskItemExt.Factory(item.LocationReferenceTypes.GetEqualsMask(rhs.LocationReferenceTypes, include), include);
         }
 
         public string ToString(
@@ -1497,9 +1611,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.GameSettings?.ToString(fg, "GameSettings");
             }
-            if (printMask?.Globals?.Overall ?? true)
+            if (printMask?.Keywords?.Overall ?? true)
             {
-                item.Globals?.ToString(fg, "Globals");
+                item.Keywords?.ToString(fg, "Keywords");
+            }
+            if (printMask?.LocationReferenceTypes?.Overall ?? true)
+            {
+                item.LocationReferenceTypes?.ToString(fg, "LocationReferenceTypes");
             }
         }
 
@@ -1518,7 +1636,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             mask.ModHeader = new MaskItem<bool, ModHeader_Mask<bool>>(item.ModHeader_IsSet, item.ModHeader.GetHasBeenSetMask());
             mask.GameSettings = new MaskItem<bool, Group_Mask<bool>>(true, item.GameSettings.GetHasBeenSetMask());
-            mask.Globals = new MaskItem<bool, Group_Mask<bool>>(true, item.Globals.GetHasBeenSetMask());
+            mask.Keywords = new MaskItem<bool, Group_Mask<bool>>(true, item.Keywords.GetHasBeenSetMask());
+            mask.LocationReferenceTypes = new MaskItem<bool, Group_Mask<bool>>(true, item.LocationReferenceTypes.GetHasBeenSetMask());
         }
 
         #region Equals and Hash
@@ -1534,7 +1653,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 if (!object.Equals(lhs.ModHeader, rhs.ModHeader)) return false;
             }
             if (!object.Equals(lhs.GameSettings, rhs.GameSettings)) return false;
-            if (!object.Equals(lhs.Globals, rhs.Globals)) return false;
+            if (!object.Equals(lhs.Keywords, rhs.Keywords)) return false;
+            if (!object.Equals(lhs.LocationReferenceTypes, rhs.LocationReferenceTypes)) return false;
             return true;
         }
 
@@ -1546,7 +1666,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 ret = HashHelper.GetHashCode(item.ModHeader).CombineHashCode(ret);
             }
             ret = HashHelper.GetHashCode(item.GameSettings).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Globals).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Keywords).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.LocationReferenceTypes).CombineHashCode(ret);
             return ret;
         }
 
@@ -1563,10 +1684,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IGameSettingInternalGetter":
                 case "IGameSettingInternal":
                     return obj.GameSettings.Items;
-                case "Global":
-                case "IGlobalInternalGetter":
-                case "IGlobalInternal":
-                    return obj.Globals.Items;
+                case "Keyword":
+                case "IKeywordInternalGetter":
+                case "IKeywordInternal":
+                    return obj.Keywords.Items;
+                case "LocationReferenceType":
+                case "ILocationReferenceTypeInternalGetter":
+                case "ILocationReferenceTypeInternal":
+                    return obj.LocationReferenceTypes.Items;
                 default:
                     throw new ArgumentException($"Unknown group type: {typeof(T)}");
             }
@@ -1612,16 +1737,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.GameSettings));
             }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Globals) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Keywords) ?? true))
             {
-                var loquiItem = item.Globals;
-                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<IGlobalInternalGetter>(
+                var loquiItem = item.Keywords;
+                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<IKeywordInternalGetter>(
                     item: loquiItem,
                     node: node,
-                    name: nameof(item.Globals),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.Globals,
+                    name: nameof(item.Keywords),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.Keywords,
                     errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Globals));
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Keywords));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.LocationReferenceTypes) ?? true))
+            {
+                var loquiItem = item.LocationReferenceTypes;
+                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<ILocationReferenceTypeInternalGetter>(
+                    item: loquiItem,
+                    node: node,
+                    name: nameof(item.LocationReferenceTypes),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.LocationReferenceTypes,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.LocationReferenceTypes));
             }
         }
 
@@ -1752,12 +1888,35 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Globals":
+                case "Keywords":
                     try
                     {
-                        errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Globals);
-                        item.Globals.CopyFieldsFrom<Global_CopyMask>(
-                            rhs: Group<Global>.CreateFromXml(
+                        errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Keywords);
+                        item.Keywords.CopyFieldsFrom<Keyword_CopyMask>(
+                            rhs: Group<Keyword>.CreateFromXml(
+                                node: node,
+                                errorMask: errorMask,
+                                translationMask: translationMask),
+                            def: null,
+                            copyMask: null,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "LocationReferenceTypes":
+                    try
+                    {
+                        errorMask?.PushIndex((int)SkyrimMod_FieldIndex.LocationReferenceTypes);
+                        item.LocationReferenceTypes.CopyFieldsFrom<LocationReferenceType_CopyMask>(
+                            rhs: Group<LocationReferenceType>.CreateFromXml(
                                 node: node,
                                 errorMask: errorMask,
                                 translationMask: translationMask),
@@ -1953,14 +2112,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             this.ModHeader = new MaskItem<T, ModHeader_Mask<T>>(initialValue, new ModHeader_Mask<T>(initialValue));
             this.GameSettings = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
-            this.Globals = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
+            this.Keywords = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
+            this.LocationReferenceTypes = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
         }
         #endregion
 
         #region Members
         public MaskItem<T, ModHeader_Mask<T>> ModHeader { get; set; }
         public MaskItem<T, Group_Mask<T>> GameSettings { get; set; }
-        public MaskItem<T, Group_Mask<T>> Globals { get; set; }
+        public MaskItem<T, Group_Mask<T>> Keywords { get; set; }
+        public MaskItem<T, Group_Mask<T>> LocationReferenceTypes { get; set; }
         #endregion
 
         #region Equals
@@ -1975,7 +2136,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (rhs == null) return false;
             if (!object.Equals(this.ModHeader, rhs.ModHeader)) return false;
             if (!object.Equals(this.GameSettings, rhs.GameSettings)) return false;
-            if (!object.Equals(this.Globals, rhs.Globals)) return false;
+            if (!object.Equals(this.Keywords, rhs.Keywords)) return false;
+            if (!object.Equals(this.LocationReferenceTypes, rhs.LocationReferenceTypes)) return false;
             return true;
         }
         public override int GetHashCode()
@@ -1983,7 +2145,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int ret = 0;
             ret = ret.CombineHashCode(this.ModHeader?.GetHashCode());
             ret = ret.CombineHashCode(this.GameSettings?.GetHashCode());
-            ret = ret.CombineHashCode(this.Globals?.GetHashCode());
+            ret = ret.CombineHashCode(this.Keywords?.GetHashCode());
+            ret = ret.CombineHashCode(this.LocationReferenceTypes?.GetHashCode());
             return ret;
         }
 
@@ -2002,10 +2165,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 if (!eval(this.GameSettings.Overall)) return false;
                 if (this.GameSettings.Specific != null && !this.GameSettings.Specific.AllEqual(eval)) return false;
             }
-            if (Globals != null)
+            if (Keywords != null)
             {
-                if (!eval(this.Globals.Overall)) return false;
-                if (this.Globals.Specific != null && !this.Globals.Specific.AllEqual(eval)) return false;
+                if (!eval(this.Keywords.Overall)) return false;
+                if (this.Keywords.Specific != null && !this.Keywords.Specific.AllEqual(eval)) return false;
+            }
+            if (LocationReferenceTypes != null)
+            {
+                if (!eval(this.LocationReferenceTypes.Overall)) return false;
+                if (this.LocationReferenceTypes.Specific != null && !this.LocationReferenceTypes.Specific.AllEqual(eval)) return false;
             }
             return true;
         }
@@ -2039,13 +2207,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     obj.GameSettings.Specific = this.GameSettings.Specific.Translate(eval);
                 }
             }
-            if (this.Globals != null)
+            if (this.Keywords != null)
             {
-                obj.Globals = new MaskItem<R, Group_Mask<R>>();
-                obj.Globals.Overall = eval(this.Globals.Overall);
-                if (this.Globals.Specific != null)
+                obj.Keywords = new MaskItem<R, Group_Mask<R>>();
+                obj.Keywords.Overall = eval(this.Keywords.Overall);
+                if (this.Keywords.Specific != null)
                 {
-                    obj.Globals.Specific = this.Globals.Specific.Translate(eval);
+                    obj.Keywords.Specific = this.Keywords.Specific.Translate(eval);
+                }
+            }
+            if (this.LocationReferenceTypes != null)
+            {
+                obj.LocationReferenceTypes = new MaskItem<R, Group_Mask<R>>();
+                obj.LocationReferenceTypes.Overall = eval(this.LocationReferenceTypes.Overall);
+                if (this.LocationReferenceTypes.Specific != null)
+                {
+                    obj.LocationReferenceTypes.Specific = this.LocationReferenceTypes.Specific.Translate(eval);
                 }
             }
         }
@@ -2084,9 +2261,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     GameSettings?.ToString(fg);
                 }
-                if (printMask?.Globals?.Overall ?? true)
+                if (printMask?.Keywords?.Overall ?? true)
                 {
-                    Globals?.ToString(fg);
+                    Keywords?.ToString(fg);
+                }
+                if (printMask?.LocationReferenceTypes?.Overall ?? true)
+                {
+                    LocationReferenceTypes?.ToString(fg);
                 }
             }
             fg.AppendLine("]");
@@ -2113,7 +2294,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         public MaskItem<Exception, ModHeader_ErrorMask> ModHeader;
         public MaskItem<Exception, Group_ErrorMask<GameSetting_ErrorMask>> GameSettings;
-        public MaskItem<Exception, Group_ErrorMask<Global_ErrorMask>> Globals;
+        public MaskItem<Exception, Group_ErrorMask<Keyword_ErrorMask>> Keywords;
+        public MaskItem<Exception, Group_ErrorMask<LocationReferenceType_ErrorMask>> LocationReferenceTypes;
         #endregion
 
         #region IErrorMask
@@ -2126,8 +2308,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return ModHeader;
                 case SkyrimMod_FieldIndex.GameSettings:
                     return GameSettings;
-                case SkyrimMod_FieldIndex.Globals:
-                    return Globals;
+                case SkyrimMod_FieldIndex.Keywords:
+                    return Keywords;
+                case SkyrimMod_FieldIndex.LocationReferenceTypes:
+                    return LocationReferenceTypes;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -2144,8 +2328,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.GameSettings:
                     this.GameSettings = new MaskItem<Exception, Group_ErrorMask<GameSetting_ErrorMask>>(ex, null);
                     break;
-                case SkyrimMod_FieldIndex.Globals:
-                    this.Globals = new MaskItem<Exception, Group_ErrorMask<Global_ErrorMask>>(ex, null);
+                case SkyrimMod_FieldIndex.Keywords:
+                    this.Keywords = new MaskItem<Exception, Group_ErrorMask<Keyword_ErrorMask>>(ex, null);
+                    break;
+                case SkyrimMod_FieldIndex.LocationReferenceTypes:
+                    this.LocationReferenceTypes = new MaskItem<Exception, Group_ErrorMask<LocationReferenceType_ErrorMask>>(ex, null);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2163,8 +2350,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.GameSettings:
                     this.GameSettings = (MaskItem<Exception, Group_ErrorMask<GameSetting_ErrorMask>>)obj;
                     break;
-                case SkyrimMod_FieldIndex.Globals:
-                    this.Globals = (MaskItem<Exception, Group_ErrorMask<Global_ErrorMask>>)obj;
+                case SkyrimMod_FieldIndex.Keywords:
+                    this.Keywords = (MaskItem<Exception, Group_ErrorMask<Keyword_ErrorMask>>)obj;
+                    break;
+                case SkyrimMod_FieldIndex.LocationReferenceTypes:
+                    this.LocationReferenceTypes = (MaskItem<Exception, Group_ErrorMask<LocationReferenceType_ErrorMask>>)obj;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2176,7 +2366,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (Overall != null) return true;
             if (ModHeader != null) return true;
             if (GameSettings != null) return true;
-            if (Globals != null) return true;
+            if (Keywords != null) return true;
+            if (LocationReferenceTypes != null) return true;
             return false;
         }
         #endregion
@@ -2213,7 +2404,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ModHeader?.ToString(fg);
             GameSettings?.ToString(fg);
-            Globals?.ToString(fg);
+            Keywords?.ToString(fg);
+            LocationReferenceTypes?.ToString(fg);
         }
         #endregion
 
@@ -2223,7 +2415,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var ret = new SkyrimMod_ErrorMask();
             ret.ModHeader = new MaskItem<Exception, ModHeader_ErrorMask>(this.ModHeader.Overall.Combine(rhs.ModHeader.Overall), ((IErrorMask<ModHeader_ErrorMask>)this.ModHeader.Specific).Combine(rhs.ModHeader.Specific));
             ret.GameSettings = new MaskItem<Exception, Group_ErrorMask<GameSetting_ErrorMask>>(this.GameSettings.Overall.Combine(rhs.GameSettings.Overall), ((IErrorMask<Group_ErrorMask<GameSetting_ErrorMask>>)this.GameSettings.Specific).Combine(rhs.GameSettings.Specific));
-            ret.Globals = new MaskItem<Exception, Group_ErrorMask<Global_ErrorMask>>(this.Globals.Overall.Combine(rhs.Globals.Overall), ((IErrorMask<Group_ErrorMask<Global_ErrorMask>>)this.Globals.Specific).Combine(rhs.Globals.Specific));
+            ret.Keywords = new MaskItem<Exception, Group_ErrorMask<Keyword_ErrorMask>>(this.Keywords.Overall.Combine(rhs.Keywords.Overall), ((IErrorMask<Group_ErrorMask<Keyword_ErrorMask>>)this.Keywords.Specific).Combine(rhs.Keywords.Specific));
+            ret.LocationReferenceTypes = new MaskItem<Exception, Group_ErrorMask<LocationReferenceType_ErrorMask>>(this.LocationReferenceTypes.Overall.Combine(rhs.LocationReferenceTypes.Overall), ((IErrorMask<Group_ErrorMask<LocationReferenceType_ErrorMask>>)this.LocationReferenceTypes.Specific).Combine(rhs.LocationReferenceTypes.Specific));
             return ret;
         }
         public static SkyrimMod_ErrorMask Combine(SkyrimMod_ErrorMask lhs, SkyrimMod_ErrorMask rhs)
@@ -2252,13 +2445,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             this.ModHeader = new MaskItem<bool, ModHeader_CopyMask>(defaultOn, default);
             this.GameSettings = new MaskItem<bool, Group_CopyMask<GameSetting_CopyMask>>(defaultOn, default);
-            this.Globals = new MaskItem<bool, Group_CopyMask<Global_CopyMask>>(defaultOn, default);
+            this.Keywords = new MaskItem<bool, Group_CopyMask<Keyword_CopyMask>>(defaultOn, default);
+            this.LocationReferenceTypes = new MaskItem<bool, Group_CopyMask<LocationReferenceType_CopyMask>>(defaultOn, default);
         }
 
         #region Members
         public MaskItem<bool, ModHeader_CopyMask> ModHeader;
         public MaskItem<bool, Group_CopyMask<GameSetting_CopyMask>> GameSettings;
-        public MaskItem<bool, Group_CopyMask<Global_CopyMask>> Globals;
+        public MaskItem<bool, Group_CopyMask<Keyword_CopyMask>> Keywords;
+        public MaskItem<bool, Group_CopyMask<LocationReferenceType_CopyMask>> LocationReferenceTypes;
         #endregion
 
     }
@@ -2269,7 +2464,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private TranslationCrystal _crystal;
         public MaskItem<bool, ModHeader_TranslationMask> ModHeader;
         public MaskItem<bool, Group_TranslationMask<GameSetting_TranslationMask>> GameSettings;
-        public MaskItem<bool, Group_TranslationMask<Global_TranslationMask>> Globals;
+        public MaskItem<bool, Group_TranslationMask<Keyword_TranslationMask>> Keywords;
+        public MaskItem<bool, Group_TranslationMask<LocationReferenceType_TranslationMask>> LocationReferenceTypes;
         #endregion
 
         #region Ctors
@@ -2281,7 +2477,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             this.ModHeader = new MaskItem<bool, ModHeader_TranslationMask>(defaultOn, null);
             this.GameSettings = new MaskItem<bool, Group_TranslationMask<GameSetting_TranslationMask>>(defaultOn, null);
-            this.Globals = new MaskItem<bool, Group_TranslationMask<Global_TranslationMask>>(defaultOn, null);
+            this.Keywords = new MaskItem<bool, Group_TranslationMask<Keyword_TranslationMask>>(defaultOn, null);
+            this.LocationReferenceTypes = new MaskItem<bool, Group_TranslationMask<LocationReferenceType_TranslationMask>>(defaultOn, null);
         }
 
         #endregion
@@ -2302,7 +2499,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ret.Add((ModHeader?.Overall ?? true, ModHeader?.Specific?.GetCrystal()));
             ret.Add((GameSettings?.Overall ?? true, GameSettings?.Specific?.GetCrystal()));
-            ret.Add((Globals?.Overall ?? true, Globals?.Specific?.GetCrystal()));
+            ret.Add((Keywords?.Overall ?? true, Keywords?.Specific?.GetCrystal()));
+            ret.Add((LocationReferenceTypes?.Overall ?? true, LocationReferenceTypes?.Specific?.GetCrystal()));
         }
     }
     #endregion
@@ -2311,14 +2509,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public class GroupMask
     {
         public bool GameSettings;
-        public bool Globals;
+        public bool Keywords;
+        public bool LocationReferenceTypes;
         public GroupMask()
         {
         }
         public GroupMask(bool defaultValue)
         {
             GameSettings = defaultValue;
-            Globals = defaultValue;
+            Keywords = defaultValue;
+            LocationReferenceTypes = defaultValue;
         }
     }
     #endregion
@@ -2360,12 +2560,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: null);
                 }
             }
-            if (importMask?.Globals ?? true)
+            if (importMask?.Keywords ?? true)
             {
-                if (item.Globals.Items.Count > 0)
+                if (item.Keywords.Items.Count > 0)
                 {
-                    var loquiItem = item.Globals;
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IGlobalInternalGetter>(
+                    var loquiItem = item.Keywords;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IKeywordInternalGetter>(
+                        item: loquiItem,
+                        writer: writer,
+                        errorMask: errorMask,
+                        masterReferences: masterReferences,
+                        recordTypeConverter: null);
+                }
+            }
+            if (importMask?.LocationReferenceTypes ?? true)
+            {
+                if (item.LocationReferenceTypes.Items.Count > 0)
+                {
+                    var loquiItem = item.LocationReferenceTypes;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<ILocationReferenceTypeInternalGetter>(
                         item: loquiItem,
                         writer: writer,
                         errorMask: errorMask,
@@ -2610,6 +2823,146 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
     #endregion
+
+    public partial class SkyrimModBinaryWrapper :
+        BinaryWrapper,
+        ISkyrimModGetter
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => SkyrimMod_Registration.Instance;
+        public static SkyrimMod_Registration Registration => SkyrimMod_Registration.Instance;
+        protected object CommonInstance => SkyrimModCommon.Instance;
+        object ILoquiObject.CommonInstance => this.CommonInstance;
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISkyrimModGetter)rhs, include);
+
+        public GameMode GameMode => GameMode.Skyrim;
+        IReadOnlyCache<T, FormKey> IModGetter.GetGroupGetter<T>() => this.GetGroupGetter<T>();
+        void IModGetter.WriteToBinary(
+            string path,
+            ModKey modKey)
+        {
+            this.WriteToBinary(
+                path: path,
+                modKey: modKey);
+        }
+        IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;
+        IReadOnlyCache<IMajorRecordInternalGetter, FormKey> IModGetter.MajorRecords => throw new NotImplementedException();
+        protected object XmlWriteTranslator => SkyrimModXmlWriteTranslation.Instance;
+        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        public ModKey ModKey { get; }
+
+        #region ModHeader
+        private IModHeaderGetter _ModHeader;
+        public IModHeaderGetter ModHeader => _ModHeader ?? new ModHeader();
+        public bool ModHeader_IsSet => ModHeader != null;
+        #endregion
+        #region GameSettings
+        private IGroupGetter<IGameSettingInternalGetter> _GameSettings;
+        public IGroupGetter<IGameSettingInternalGetter> GameSettings => _GameSettings ?? new Group<GameSetting>(this);
+        #endregion
+        #region Keywords
+        private IGroupGetter<IKeywordInternalGetter> _Keywords;
+        public IGroupGetter<IKeywordInternalGetter> Keywords => _Keywords ?? new Group<Keyword>(this);
+        #endregion
+        #region LocationReferenceTypes
+        private IGroupGetter<ILocationReferenceTypeInternalGetter> _LocationReferenceTypes;
+        public IGroupGetter<ILocationReferenceTypeInternalGetter> LocationReferenceTypes => _LocationReferenceTypes ?? new Group<LocationReferenceType>(this);
+        #endregion
+        partial void CustomCtor(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset);
+
+        protected SkyrimModBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            ModKey modKey)
+            : base(
+                bytes: bytes,
+                package: new BinaryWrapperFactoryPackage(GameMode.Skyrim))
+        {
+            this._data = bytes;
+            this.ModKey = modKey;
+        }
+
+        public static SkyrimModBinaryWrapper SkyrimModFactory(
+            ReadOnlyMemorySlice<byte> bytes,
+            ModKey modKey)
+        {
+            var ret = new SkyrimModBinaryWrapper(
+                bytes: bytes,
+                modKey: modKey);
+            var stream = new BinaryMemoryReadStream(bytes);
+            ret.CustomCtor(
+                stream: stream,
+                finalPos: stream.Length,
+                offset: 0);
+            ret.FillModTypes(
+                stream: stream,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset,
+            RecordType type,
+            int? lastParsed,
+            RecordTypeConverter recordTypeConverter)
+        {
+            type = recordTypeConverter.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case 0x34534554: // TES4
+                {
+                    this._ModHeader = ModHeaderBinaryWrapper.ModHeaderFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    _package.MasterReferences = new MasterReferences(
+                        this.ModHeader.MasterReferences.Select(
+                            master => new MasterReference()
+                            {
+                                Master = master.Master,
+                                FileSize = master.FileSize,
+                                 FileSize_IsSet = master.FileSize_IsSet
+                            })
+                            .ToList(),
+                        this.ModKey);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.ModHeader);
+                }
+                case 0x54534D47: // GMST
+                {
+                    this._GameSettings = GroupBinaryWrapper<IGameSettingInternalGetter>.GroupFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.GameSettings);
+                }
+                case 0x4457594B: // KYWD
+                {
+                    this._Keywords = GroupBinaryWrapper<IKeywordInternalGetter>.GroupFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Keywords);
+                }
+                case 0x5452434C: // LCRT
+                {
+                    this._LocationReferenceTypes = GroupBinaryWrapper<ILocationReferenceTypeInternalGetter>.GroupFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.LocationReferenceTypes);
+                }
+                default:
+                    return TryGet<int?>.Succeed(null);
+            }
+        }
+    }
 
     #endregion
 

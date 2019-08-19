@@ -98,12 +98,14 @@ namespace Mutagen.Bethesda.Tests
             FormID formID,
             RecordType recType)
         {
+            var loc = this._AlignedFileLocs[formID];
+            ProcessEDID(stream, loc);
+            ProcessFormIDOverflow(stream, loc);
         }
 
         public void ProcessEDID(
             IMutagenReadStream stream,
-            RangeInt64 loc,
-            BinaryFileProcessor.Config instr)
+            RangeInt64 loc)
         {
             stream.Position = loc.Min;
             var majorFrame = this.Meta.ReadMajorRecordFrame(stream);
@@ -113,6 +115,20 @@ namespace Mutagen.Bethesda.Tests
                 stream,
                 loc.Min + majorFrame.Header.HeaderLength + edidLoc,
                 majorFrame.Header.FormID);
+        }
+
+        public void ProcessFormIDOverflow(
+            IMutagenReadStream stream,
+            RangeInt64 loc)
+        {
+            stream.Position = loc.Min;
+            var majorMeta = this.Meta.GetMajorRecord(stream);
+            var formID = majorMeta.FormID;
+            if (formID.ModID.ID < this._NumMasters) return;
+            // Need to zero out master
+            this._Instructions.SetSubstitution(
+                loc.Min + this.Meta.MajorConstants.FormIDLocationOffset + 3,
+                0);
         }
 
         public void ProcessStringTermination(
@@ -159,6 +175,27 @@ namespace Mutagen.Bethesda.Tests
             this._Instructions.SetSubstitution(
                 loc: loc + Constants.HEADER_LENGTH,
                 sub: lenData);
+        }
+        
+        public void ProcessZeroFloat(IMutagenReadStream stream)
+        {
+            var f = stream.ReadFloat();
+            if (f == float.Epsilon)
+            {
+                this._Instructions.SetSubstitution(
+                    stream.Position - 4,
+                    new byte[4]);
+                return;
+            }
+            stream.Position -= 4;
+            uint floatInt = stream.ReadUInt32();
+            if (floatInt == 0x80000000)
+            {
+                this._Instructions.SetSubstitution(
+                    stream.Position - 4,
+                    new byte[4]);
+                return;
+            }
         }
     }
 }

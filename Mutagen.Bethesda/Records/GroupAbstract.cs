@@ -110,6 +110,25 @@ namespace Mutagen.Bethesda
 
             private T ConstructWrapper(int pos)
             {
+                ReadOnlyMemorySlice<byte> slice = this._data.Slice(pos);
+                var majorMeta = _package.Meta.MajorRecord(slice);
+                if (majorMeta.IsCompressed)
+                {
+                    uint uncompressedLength = BinaryPrimitives.ReadUInt32LittleEndian(slice.Slice(majorMeta.HeaderLength));
+                    byte[] buf = new byte[majorMeta.HeaderLength + checked((int)uncompressedLength)];
+                    // Copy major meta bytes over
+                    slice.Span.Slice(0, majorMeta.HeaderLength).CopyTo(buf.AsSpan());
+                    // Set length bytes
+                    BinaryPrimitives.WriteUInt32LittleEndian(buf.AsSpan().Slice(Constants.HEADER_LENGTH), uncompressedLength);
+                    // Remove compression flag
+                    BinaryPrimitives.WriteInt32LittleEndian(buf.AsSpan().Slice(_package.Meta.MajorConstants.FlagLocationOffset), majorMeta.MajorRecordFlags & ~Constants.CompressedFlag);
+                    // Copy uncompressed data over
+                    using (var stream = new ZlibStream(new ByteMemorySliceStream(slice.Slice(majorMeta.HeaderLength + 4)), CompressionMode.Decompress))
+                    {
+                        stream.Read(buf, majorMeta.HeaderLength, checked((int)uncompressedLength));
+                    }
+                    slice = new MemorySlice<byte>(buf);
+                }
                 return LoquiBinaryWrapperTranslation<T>.Create(
                    stream: new BinaryMemoryReadStream(this._data.Slice(pos)),
                    package: _package,

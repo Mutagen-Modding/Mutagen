@@ -1,6 +1,4 @@
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Oblivion;
-using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Preprocessing;
 using Noggog;
 using Noggog.Streams.Binary;
@@ -29,6 +27,7 @@ namespace Mutagen.Bethesda.Tests
         public string AlignedFileName(TempFolder tmp) => Path.Combine(tmp.Dir.Path, $"{this.Nickname}_Aligned");
         public string OrderedFileName(TempFolder tmp) => Path.Combine(tmp.Dir.Path, $"{this.Nickname}_Ordered");
         public string ProcessedPath(TempFolder tmp) => Path.Combine(tmp.Dir.Path, $"{this.Nickname}_Processed");
+        public ModKey ModKey => ModKey.Factory(this.FilePath.Name);
 
         public abstract GameMode GameMode { get; }
         public readonly MetaDataConstants Meta;
@@ -142,7 +141,10 @@ namespace Mutagen.Bethesda.Tests
             return tmp;
         }
 
-        protected abstract Task<IMod> ImportBinary(FilePath path, ModKey modKey);
+        protected abstract Task<IMod> ImportBinary(FilePath path);
+        protected abstract Task<IModGetter> ImportBinaryWrapper(FilePath path);
+        protected abstract Task<IMod> ImportXmlFolder(DirectoryPath dir);
+        protected abstract Task WriteXmlFolder(IModGetter mod, DirectoryPath dir);
 
         public async Task BinaryPassthroughTest()
         {
@@ -152,16 +154,15 @@ namespace Mutagen.Bethesda.Tests
                 var processedPath = ProcessedPath(tmp);
                 var orderedPath = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_Ordered");
                 var binaryWrapper = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_BinaryWrapper");
-                ModKey modKey = ModKey.Factory(this.FilePath.Name);
 
                 List<Exception> delayedExceptions = new List<Exception>();
 
                 // Do normal
                 if (Settings.TestNormal)
                 {
-                    var mod = await ImportBinary(this.FilePath.Path, modKey);
+                    var mod = await ImportBinary(this.FilePath.Path);
 
-                    foreach (var record in mod.MajorRecords.Items)
+                    foreach (var record in mod.MajorRecords.Values)
                     {
                         record.IsCompressed = false;
                     }
@@ -192,10 +193,7 @@ namespace Mutagen.Bethesda.Tests
 
                 if (Settings.TestBinaryWrapper)
                 {
-                    var bytes = File.ReadAllBytes(this.FilePath.Path);
-                    var wrapper = OblivionModBinaryWrapper.OblivionModFactory(
-                        new MemorySlice<byte>(bytes),
-                        modKey);
+                    var wrapper = await ImportBinaryWrapper(this.FilePath.Path);
 
                     wrapper.WriteToBinary(
                         binaryWrapper,
@@ -221,6 +219,22 @@ namespace Mutagen.Bethesda.Tests
                     }
                 }
 
+                if (Settings.TestFolder)
+                {
+                    var ret = await XmlFolderPassthroughTest();
+                    if (ret.Exception != null)
+                    {
+                        if (ret.HadMore)
+                        {
+                            delayedExceptions.Add(ret.Exception);
+                        }
+                        else
+                        {
+                            throw ret.Exception;
+                        }
+                    }
+                }
+
                 if (delayedExceptions.Count > 0)
                 {
                     throw new AggregateException(delayedExceptions);
@@ -228,10 +242,43 @@ namespace Mutagen.Bethesda.Tests
             }
         }
 
+        public async Task<(Exception Exception, IEnumerable<RangeInt64> Sections, bool HadMore)> XmlFolderPassthroughTest()
+        {
+            async Task CreateXmlFolder(string sourcePath, DirectoryPath dir)
+            {
+                var mod = await ImportBinary(sourcePath);
+                await WriteXmlFolder(mod, dir);
+            }
+
+            using (var processedTmp = await this.SetupProcessedFiles())
+            {
+                using (var tmp = new TempFolder($"Mutagen_{this.Nickname}_XmlFolder", deleteAfter: false))
+                {
+                    ModKey modKey = ModKey.Factory(this.FilePath.Name);
+                    var sourcePath = this.ProcessedPath(processedTmp);
+                    await CreateXmlFolder(sourcePath, tmp.Dir);
+                    GC.Collect();
+                    var reimport = await ImportXmlFolder(
+                        dir: tmp.Dir);
+                    GC.Collect();
+                    var reexportPath = Path.Combine(tmp.Dir.Path, "Reexport");
+                    reimport.WriteToBinary(
+                        reexportPath,
+                        modKey: this.ModKey);
+                    using (var stream = new BinaryReadStream(sourcePath))
+                    {
+                        return PassthroughTest.AssertFilesEqual(
+                            stream,
+                            reexportPath,
+                            amountToReport: 15);
+                    }
+                }
+            }
+        }
+
         public async Task TestImport()
         {
-            ModKey modKey = ModKey.Factory(this.FilePath.Name);
-            await ImportBinary(this.FilePath.Path, modKey);
+            await ImportBinary(this.FilePath.Path);
         }
 
         public static PassthroughTest Factory(TestingSettings settings, Target target)

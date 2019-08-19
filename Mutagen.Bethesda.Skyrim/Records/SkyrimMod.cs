@@ -21,7 +21,11 @@ using Mutagen.Bethesda.Skyrim.Internals;
 
 namespace Mutagen.Bethesda.Skyrim
 {
-    partial interface ISkyrimModGetter : IMod, ILinkContainer
+    partial interface ISkyrimMod : IMod
+    {
+    }
+
+    partial interface ISkyrimModGetter : IModGetter
     {
     }
 

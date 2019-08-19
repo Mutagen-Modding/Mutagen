@@ -145,11 +145,15 @@ namespace Mutagen.Bethesda.Binary
             this.Writer.Write(bytes);
         }
 
-        public void Write(Color color)
+        public void Write(Color color, bool extraByte)
         {
             this.Writer.Write(color.R);
             this.Writer.Write(color.G);
             this.Writer.Write(color.B);
+            if (extraByte)
+            {
+                this.Writer.Write(color.A);
+            }
         }
 
         public void Dispose()

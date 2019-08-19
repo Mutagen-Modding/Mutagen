@@ -4838,7 +4838,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Flags
         private int? _FlagsLocation;
         public bool Flags_IsSet => _FlagsLocation.HasValue;
-        public Worldspace.Flag Flags => (Worldspace.Flag)HeaderTranslation.ExtractSubrecordSpan(_data.Slice(0), _FlagsLocation.Value, _package.Meta)[0];
+        public Worldspace.Flag Flags => (Worldspace.Flag)HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation.Value, _package.Meta)[0];
         #endregion
         #region ObjectBoundsMin
         private int? _ObjectBoundsMinLocation;
@@ -4853,7 +4853,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Music
         private int? _MusicLocation;
         public bool Music_IsSet => _MusicLocation.HasValue;
-        public MusicType Music => (MusicType)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data.Slice(0), _MusicLocation.Value, _package.Meta));
+        public MusicType Music => (MusicType)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _MusicLocation.Value, _package.Meta));
         #endregion
         #region OffsetLength
         partial void OffsetLengthCustomParse(

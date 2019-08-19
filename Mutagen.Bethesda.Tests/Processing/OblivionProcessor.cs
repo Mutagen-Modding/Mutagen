@@ -24,6 +24,7 @@ namespace Mutagen.Bethesda.Tests
             FormID formID,
             RecordType recType)
         {
+            base.AddDynamicProcessorInstructions(stream, formID, recType);
             var loc = this._AlignedFileLocs[formID];
             ProcessNPC(stream, recType,loc);
             ProcessCreature(stream, recType, loc);
@@ -833,27 +834,6 @@ namespace Mutagen.Bethesda.Tests
                 ProcessZeroFloat(stream);
                 stream.Position += 4;
                 ProcessZeroFloat(stream);
-            }
-        }
-
-        private void ProcessZeroFloat(IMutagenReadStream stream)
-        {
-            var f = stream.ReadFloat();
-            if (f == float.Epsilon)
-            {
-                this._Instructions.SetSubstitution(
-                    stream.Position - 4,
-                    new byte[4]);
-                return;
-            }
-            stream.Position -= 4;
-            uint floatInt = stream.ReadUInt32();
-            if (floatInt == 0x80000000)
-            {
-                this._Instructions.SetSubstitution(
-                    stream.Position - 4,
-                    new byte[4]);
-                return;
             }
         }
 

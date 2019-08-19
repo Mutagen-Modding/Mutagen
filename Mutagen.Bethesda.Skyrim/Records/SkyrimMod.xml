@@ -4,7 +4,9 @@
     <Fields>
       <RefDirect name="ModHeader" refName="ModHeader" nullable="Singleton" />
       <Group name="GameSettings" refName="GameSetting" />
-      <Group name="Globals" refName="Global" />
+      <Group name="Keywords" refName="Keyword" />
+      <Group name="LocationReferenceTypes" refName="LocationReferenceType" />
+      <!--<Group name="Globals" refName="Global" />-->
     </Fields>
   </Object>
 </Loqui>

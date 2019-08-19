@@ -84,58 +84,7 @@ namespace Mutagen.Bethesda.Tests
                 }
             }
         }
-
-        public static async Task OblivionESM_Folder_Reimport(PassthroughSettings settings, Target target, OblivionPassthroughTest oblivPassthrough)
-        {
-            Task<OblivionMod> ImportModBinary(string sourcePath)
-            {
-                return OblivionMod.CreateFromBinary(
-                    sourcePath,
-                    modKey: Mutagen.Bethesda.Oblivion.Constants.Oblivion);
-            }
-
-            async Task WriteMod(OblivionMod mod, DirectoryPath dir)
-            {
-                var exportMask = await mod.WriteToXmlFolder(dir);
-                Assert.False(exportMask?.IsInError() ?? false);
-            }
-
-            async Task CreateFromXmlFolder(string sourcePath, DirectoryPath dir)
-            {
-                var mod = await ImportModBinary(sourcePath);
-                await WriteMod(mod, dir);
-            }
-
-            using (var processedTmp = await oblivPassthrough.SetupProcessedFiles())
-            {
-                using (var tmp = new TempFolder("Mutagen_Oblivion_XmlFolder", deleteAfter: false))
-                {
-                    var sourcePath = oblivPassthrough.ProcessedPath(processedTmp);
-                    await CreateFromXmlFolder(sourcePath, tmp.Dir);
-                    GC.Collect();
-                    var reimport = await OblivionMod.CreateFromXmlFolder(
-                        dir: tmp.Dir,
-                        modKey: Mutagen.Bethesda.Oblivion.Constants.Oblivion);
-                    GC.Collect();
-                    var reexportPath = Path.Combine(tmp.Dir.Path, "Reexport");
-                    reimport.WriteToBinary(
-                        reexportPath,
-                        modKey: Mutagen.Bethesda.Oblivion.Constants.Oblivion);
-                    using (var stream = new BinaryReadStream(sourcePath))
-                    {
-                        var eqException = PassthroughTest.AssertFilesEqual(
-                            stream,
-                            reexportPath,
-                            amountToReport: 15);
-                        if (eqException.Exception != null)
-                        {
-                            throw eqException.Exception;
-                        }
-                    }
-                }
-            }
-        }
-
+        
         public static async Task BaseGroupIterator(Target settings, DataFolderLocations locs)
         {
             if (!settings.ExpectedBaseGroupCount_IsSet) return;

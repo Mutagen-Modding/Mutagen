@@ -2196,7 +2196,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Flags
         private int? _FlagsLocation;
         public bool Flags_IsSet => _FlagsLocation.HasValue;
-        public MapMarker.Flag Flags => (MapMarker.Flag)HeaderTranslation.ExtractSubrecordSpan(_data.Slice(0), _FlagsLocation.Value, _package.Meta)[0];
+        public MapMarker.Flag Flags => (MapMarker.Flag)HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation.Value, _package.Meta)[0];
         #endregion
         #region Name
         private int? _NameLocation;

@@ -5737,7 +5737,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Flags
         private int? _FlagsLocation;
         public bool Flags_IsSet => _FlagsLocation.HasValue;
-        public Cell.Flag Flags => (Cell.Flag)HeaderTranslation.ExtractSubrecordSpan(_data.Slice(0), _FlagsLocation.Value, _package.Meta)[0];
+        public Cell.Flag Flags => (Cell.Flag)HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation.Value, _package.Meta)[0];
         #endregion
         #region Grid
         private int? _GridLocation;
@@ -5752,7 +5752,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region MusicType
         private int? _MusicTypeLocation;
         public bool MusicType_IsSet => _MusicTypeLocation.HasValue;
-        public MusicType MusicType => (MusicType)HeaderTranslation.ExtractSubrecordSpan(_data.Slice(0), _MusicTypeLocation.Value, _package.Meta)[0];
+        public MusicType MusicType => (MusicType)HeaderTranslation.ExtractSubrecordSpan(_data, _MusicTypeLocation.Value, _package.Meta)[0];
         #endregion
         #region WaterHeight
         private int? _WaterHeightLocation;

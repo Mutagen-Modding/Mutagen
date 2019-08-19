@@ -2,18 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>077f46cb2116aff2597e9a6e5f449faa67b55687</Sha>
+         <Sha>fe85b28c9b1c31266cf78f6e39ac1ea3468dc8e1</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>07-24-2019 23:14:54</CommitDate>
-         <Description>BinaryReadStream.GetSpan /w offset</Description>
+         <CommitDate>08-18-2019 23:55:36</CommitDate>
+         <Description>BinaryMemoryReadStream.UnderlyingPosition</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>a0045659eecea130ce8cb2aa79dcd6553677e14e</Sha>
+         <Sha>67be090307024d885ccd6ead3fea3bb3d07b00e5</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>08-01-2019 18:41:05</CommitDate>
-         <Description>Interface upgrade to allow specification of where it should be implemented</Description>
+         <CommitDate>08-18-2019 22:08:03</CommitDate>
+         <Description>Merge remote-tracking branch 'origin/laptop'</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

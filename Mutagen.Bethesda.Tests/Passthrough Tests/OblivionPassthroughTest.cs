@@ -25,11 +25,29 @@ namespace Mutagen.Bethesda.Tests
         {
         }
 
-        protected override async Task<IMod> ImportBinary(FilePath path, ModKey modKey)
+        protected override async Task<IModGetter> ImportBinaryWrapper(FilePath path)
+        {
+            var bytes = File.ReadAllBytes(this.FilePath.Path);
+            return OblivionModBinaryWrapper.OblivionModFactory(
+                new MemorySlice<byte>(bytes),
+                this.ModKey);
+        }
+
+        protected override async Task<IMod> ImportBinary(FilePath path)
         {
             return await OblivionMod.CreateFromBinary(
                 path.Path,
-                modKey);
+                this.ModKey);
+        }
+
+        protected override async Task<IMod> ImportXmlFolder(DirectoryPath dir)
+        {
+            return await OblivionMod.CreateFromXmlFolder(dir, this.ModKey);
+        }
+
+        protected override Task WriteXmlFolder(IModGetter mod, DirectoryPath dir)
+        {
+            return ((OblivionMod)mod).WriteToXmlFolder(dir);
         }
 
         public override ModRecordAligner.AlignmentRules GetAlignmentRules()

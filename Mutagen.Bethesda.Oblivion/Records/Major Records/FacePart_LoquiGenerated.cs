@@ -2176,7 +2176,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Index
         private int? _IndexLocation;
         public bool Index_IsSet => _IndexLocation.HasValue;
-        public Race.FaceIndex Index => (Race.FaceIndex)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data.Slice(0), _IndexLocation.Value, _package.Meta));
+        public Race.FaceIndex Index => (Race.FaceIndex)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _IndexLocation.Value, _package.Meta));
         #endregion
         #region Model
         public IModelGetter Model { get; private set; }

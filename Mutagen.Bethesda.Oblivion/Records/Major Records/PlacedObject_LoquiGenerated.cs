@@ -6480,7 +6480,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region ActionFlags
         private int? _ActionFlagsLocation;
         public bool ActionFlags_IsSet => _ActionFlagsLocation.HasValue;
-        public PlacedObject.ActionFlag ActionFlags => (PlacedObject.ActionFlag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data.Slice(0), _ActionFlagsLocation.Value, _package.Meta));
+        public PlacedObject.ActionFlag ActionFlags => (PlacedObject.ActionFlag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ActionFlagsLocation.Value, _package.Meta));
         #endregion
         #region Count
         private int? _CountLocation;

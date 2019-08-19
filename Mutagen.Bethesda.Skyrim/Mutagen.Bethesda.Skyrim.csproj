@@ -103,5 +103,11 @@
     <Compile Include="Records\Major Records\GameSettingBool_LoquiGenerated.cs">
       <DependentUpon>GameSetting.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Keyword_LoquiGenerated.cs">
+      <DependentUpon>Keyword.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LocationReferenceType_LoquiGenerated.cs">
+      <DependentUpon>LocationReferenceType.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

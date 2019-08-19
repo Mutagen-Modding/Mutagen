@@ -1423,8 +1423,6 @@ namespace Mutagen.Bethesda.Generation
 
         protected async Task GenerateImportWrapper(ObjectGeneration obj, FileGeneration fg)
         {
-            if (obj.Name.Contains("SkyrimMod")) return;
-
             var dataAccessor = new Accessor("_data");
             var packageAccessor = new Accessor("_package");
             var metaAccessor = new Accessor("_package.Meta");
@@ -1491,7 +1489,6 @@ namespace Mutagen.Bethesda.Generation
                         nonIntegrated: true,
                         includeBaseClass: true))
                     {
-                        if (await field.ObjectGen.IsMajorRecord()) continue;
                         if (!this.TryGetTypeGeneration(field.GetType(), out var typeGen)) continue;
                         var data = field.GetFieldData();
                         switch (data.BinaryWrapperFallback)
