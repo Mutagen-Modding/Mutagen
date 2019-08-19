@@ -402,6 +402,13 @@
       <xs:element name="Fields" type="DataTypeFields" minOccurs="0" maxOccurs="1" />
     </xs:choice>
     <xs:attribute name="recordType" />
+    <xs:attribute name="binaryWrapper" type="MutagenBinaryType" >
+      <xs:annotation>
+        <xs:documentation>
+          How to generate binary wrapper translations.  Defaults to "normal" setting if missing
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
   </xs:complexType>
 
   <xs:complexType name="RecordTypeMappingsType" >

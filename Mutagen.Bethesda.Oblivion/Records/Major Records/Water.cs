@@ -56,5 +56,31 @@ namespace Mutagen.Bethesda.Oblivion
                 }
             }
         }
+
+        public partial class WaterBinaryWrapper
+        {
+            partial void DATACustomParse(BinaryMemoryReadStream stream, int offset)
+            {
+                this._DATALocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
+                this.DATADataTypeState = Water.DATADataType.Has;
+                var subLen = _package.Meta.SubRecord(_data.Slice((stream.Position - offset))).RecordLength;
+                if (subLen <= 0x2)
+                {
+                    this.DATADataTypeState |= Water.DATADataType.Break0;
+                }
+                if (subLen <= 0x2A)
+                {
+                    this.DATADataTypeState |= Water.DATADataType.Break1;
+                }
+                if (subLen <= 0x3E)
+                {
+                    this.DATADataTypeState |= Water.DATADataType.Break2;
+                }
+                if (subLen <= 0x56)
+                {
+                    this.DATADataTypeState |= Water.DATADataType.Break3;
+                }
+            }
+        }
     }
 }

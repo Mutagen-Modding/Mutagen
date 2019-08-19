@@ -1932,11 +1932,6 @@ namespace Mutagen.Bethesda.Generation
                                 expandSets: SetMarkerType.ExpandSets.FalseAndInclude,
                                 nonIntegrated: true))
                             {
-                                // ToDo
-                                // Remove
-                                if (obj.GetObjectType() == ObjectType.Mod && field.Field.Name == "LoadScreens")
-                                    break;
-
                                 if (!field.Field.TryGetFieldData(out var fieldData)
                                     || !fieldData.HasTrigger
                                     || fieldData.TriggeringRecordTypes.Count == 0) continue;

@@ -7,7 +7,7 @@
       <Enum name="Flags" enumName="Water.Flag" byteLength="1" recordType="FNAM" />
       <String name="MaterialID" recordType="MNAM" />
       <FormIDLink name="Sound" refName="Sound" recordType="SNAM" />
-      <Data>
+      <Data binaryWrapper="Custom" >
         <Fields>
           <CustomLogic name="NothingCustomLogic" />
           <Break />

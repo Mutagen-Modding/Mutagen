@@ -6866,6 +6866,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         private int? _DATALocation;
         public Water.DATADataType DATADataTypeState { get; private set; }
+        partial void DATACustomParse(
+            BinaryMemoryReadStream stream,
+            int offset);
         #region NothingCustomLogic
         partial void NothingCustomLogicCustomParse(
             BinaryMemoryReadStream stream,
@@ -7093,25 +7096,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x41544144: // DATA
                 {
-                    _DATALocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
-                    this.DATADataTypeState = Water.DATADataType.Has;
-                    var subLen = _package.Meta.SubRecord(_data.Slice((stream.Position - offset))).RecordLength;
-                    if (subLen <= 0x0)
-                    {
-                        this.DATADataTypeState |= Water.DATADataType.Break0;
-                    }
-                    if (subLen <= 0x28)
-                    {
-                        this.DATADataTypeState |= Water.DATADataType.Break1;
-                    }
-                    if (subLen <= 0x3C)
-                    {
-                        this.DATADataTypeState |= Water.DATADataType.Break2;
-                    }
-                    if (subLen <= 0x54)
-                    {
-                        this.DATADataTypeState |= Water.DATADataType.Break3;
-                    }
+                    DATACustomParse(
+                        stream,
+                        offset);
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.Damage);
                 }
                 case 0x4D414E47: // GNAM

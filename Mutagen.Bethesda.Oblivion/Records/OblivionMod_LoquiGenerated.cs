@@ -15230,6 +15230,46 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         recordTypeConverter: null);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.CombatStyles);
                 }
+                case 0x5243534C: // LSCR
+                {
+                    this._LoadScreens = GroupBinaryWrapper<ILoadScreenInternalGetter>.GroupFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.LoadScreens);
+                }
+                case 0x5053564C: // LVSP
+                {
+                    this._LeveledSpells = GroupBinaryWrapper<ILeveledSpellInternalGetter>.GroupFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.LeveledSpells);
+                }
+                case 0x4F494E41: // ANIO
+                {
+                    this._AnimatedObjects = GroupBinaryWrapper<IAnimatedObjectInternalGetter>.GroupFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.AnimatedObjects);
+                }
+                case 0x52544157: // WATR
+                {
+                    this._Waters = GroupBinaryWrapper<IWaterInternalGetter>.GroupFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Waters);
+                }
+                case 0x48534645: // EFSH
+                {
+                    this._EffectShaders = GroupBinaryWrapper<IEffectShaderInternalGetter>.GroupFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.EffectShaders);
+                }
                 default:
                     return TryGet<int?>.Succeed(null);
             }

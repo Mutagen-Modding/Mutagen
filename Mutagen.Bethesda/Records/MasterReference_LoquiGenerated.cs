@@ -1862,7 +1862,7 @@ namespace Mutagen.Bethesda.Internals
 
         #region Master
         private int? _MasterLocation;
-        public ModKey Master => _MasterLocation.HasValue ? ModKey.Factory(BinaryStringUtility.ToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _MasterLocation.Value, _package.Meta))) : default;
+        public ModKey Master => _MasterLocation.HasValue ? ModKey.Factory(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _MasterLocation.Value, _package.Meta))) : default;
         #endregion
         #region FileSize
         private int? _FileSizeLocation;

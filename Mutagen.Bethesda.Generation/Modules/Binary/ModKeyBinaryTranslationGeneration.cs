@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Loqui.Generation;
 using Mutagen.Bethesda.Binary;
+using Noggog;
 
 namespace Mutagen.Bethesda.Generation
 {
@@ -22,7 +23,7 @@ namespace Mutagen.Bethesda.Generation
             Accessor dataAccessor,
             Accessor packageAccessor)
         {
-            return $"ModKey.Factory(BinaryStringUtility.ToZString({dataAccessor}))";
+            return $"ModKey.Factory({nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ProcessWholeToZString)}({dataAccessor}))";
         }
     }
 }

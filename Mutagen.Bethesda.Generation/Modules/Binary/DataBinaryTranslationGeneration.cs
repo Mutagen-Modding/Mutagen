@@ -66,6 +66,19 @@ namespace Mutagen.Bethesda.Generation
             
             fg.AppendLine($"private int? _{dataType.GetFieldData().RecordType}Location;");
             fg.AppendLine($"public {objGen.ObjectName}.{dataType.EnumName} {dataType.StateName} {{ get; private set; }}");
+            switch (typeGen.GetFieldData().BinaryWrapperFallback)
+            {
+                case BinaryGenerationType.Custom:
+                    this.Module.CustomLogic.GenerateWrapperFields(
+                        fg,
+                        objGen,
+                        typeGen,
+                        dataAccessor,
+                        passedLength);
+                    break;
+                default:
+                    break;
+            }
 
             var dataPassedLength = 0;
             foreach (var field in dataType.IterateFieldsWithMeta())
@@ -98,6 +111,25 @@ namespace Mutagen.Bethesda.Generation
             Accessor converterAccessor)
         {
             DataType dataType = field as DataType;
+            switch (field.GetFieldData().BinaryWrapperFallback)
+            {
+                case BinaryGenerationType.Normal:
+                    break;
+                case BinaryGenerationType.DoNothing:
+                case BinaryGenerationType.NoGeneration:
+                    return;
+                case BinaryGenerationType.Custom:
+                    await this.Module.CustomLogic.GenerateWrapperRecordTypeParse(
+                        fg,
+                        objGen,
+                        field,
+                        locationAccessor,
+                        packageAccessor,
+                        converterAccessor);
+                    return;
+                default:
+                    break;
+            }
             fg.AppendLine($"_{dataType.GetFieldData().RecordType}Location = (ushort){locationAccessor} + _package.Meta.SubConstants.TypeAndLengthLength;");
             fg.AppendLine($"this.{dataType.StateName} = {objGen.ObjectName}.{dataType.EnumName}.Has;");
             bool generatedStart = false;
