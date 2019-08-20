@@ -51,11 +51,34 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
         }
 
         [Benchmark]
-        public void CreateBinary()
+        public async Task CreateBinary()
         {
-            OblivionMod.CreateFromBinary(
+            await OblivionMod.CreateFromBinary(
                 DataPath,
-                ModKey).Wait();
+                ModKey);
+        }
+
+        [Benchmark]
+        public async Task CreateAndWriteBinary()
+        {
+            var mod = await OblivionMod.CreateFromBinary(
+                DataPath,
+                ModKey);
+            mod.WriteToBinary(
+                BinaryPath,
+                ModKey);
+        }
+
+        [Benchmark]
+        public void CreateAndWriteBinaryWrapper()
+        {
+            var bytes = File.ReadAllBytes(DataPath);
+            var mod = OblivionModBinaryWrapper.OblivionModFactory(
+                new MemorySlice<byte>(bytes),
+                ModKey);
+            mod.WriteToBinary(
+                BinaryPath,
+                ModKey);
         }
 
         [Benchmark]
