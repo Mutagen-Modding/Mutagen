@@ -25,7 +25,7 @@ namespace Mutagen.Bethesda
     {
         new ISourceList<MasterReference> MasterReferences { get; }
         new IObservableCache<IMajorRecord, FormKey> MajorRecords { get; }
-        new ISourceCache<T, FormKey> GetGroup<T>() where T : IMajorRecordInternal;
+        ISourceCache<T, FormKey> GetGroup<T>() where T : IMajorRecordInternal;
         FormKey GetNextFormKey();
         void SyncRecordCount();
     }

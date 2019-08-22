@@ -22,7 +22,7 @@
     <Fields>
       <CustomLogic byteLength="4" name="ContainedRecordType" />
       <Enum name="GroupType" enumName="GroupTypeEnum" byteLength="4" />
-      <ByteArray name="LastModified" byteLength="4" nullable="NotNull" />
+      <Int32 name="LastModified" />
       <List name="Items" lengthLength="4" hasBeenSet="False" asyncItems="true" thread="true" binaryWrapper="NoGeneration">
         <Ref>
           <Generic>T</Generic>
