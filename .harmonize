@@ -2,18 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>d5d70f5af5ef594a7e02844f5be9611316099c75</Sha>
+         <Sha>54a8dd00ad0c98e02ed5f4ebba88d9f09f81307d</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>08-20-2019 21:16:49</CommitDate>
-         <Description>Some MemoryTributary improvements</Description>
+         <CommitDate>08-25-2019 15:59:59</CommitDate>
+         <Description>Noggog.WPF:  Basic theming.  Some snippets</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>67be090307024d885ccd6ead3fea3bb3d07b00e5</Sha>
+         <Sha>b53404817acca81632d3c930de844248ac1bc7e3</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>08-18-2019 22:08:03</CommitDate>
-         <Description>Merge remote-tracking branch 'origin/laptop'</Description>
+         <CommitDate>08-25-2019 16:00:17</CommitDate>
+         <Description>Nuget updates</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

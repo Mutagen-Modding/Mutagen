@@ -262,9 +262,9 @@ namespace Mutagen.Bethesda.Generation
             if (obj.GetObjectType() != ObjectType.Mod)
             {
                 using (var args = new FunctionWrapper(fg,
-                    $"public{await obj.FunctionOverride(async (o) => (await HasLinks(o, includeBaseClass: false)) != LinkCase.No)}void Link<M>",
-                    wheres: ((await obj.GetFunctionOverrideType(async (o) => (await HasLinks(o, includeBaseClass: false)) != LinkCase.No) != OverrideType.HasBase) ? "where M : IMod" : null)))
+                    $"public{await obj.FunctionOverride(async (o) => (await HasLinks(o, includeBaseClass: false)) != LinkCase.No)}void Link<M>"))
                 {
+                    args.Wheres.Add(((await obj.GetFunctionOverrideType(async (o) => (await HasLinks(o, includeBaseClass: false)) != LinkCase.No) != OverrideType.HasBase) ? "where M : IMod" : null));
                     args.Add("ModList<M> modList");
                     args.Add("M sourceMod");
                 }

@@ -137,12 +137,10 @@ namespace Mutagen.Bethesda.Generation
             bool isAsync)
         {
             using (var args = new FunctionWrapper(fg,
-                $"static partial void WriteBinary{field.Name}Custom{obj.GetGenericTypes(MaskType.Normal)}",
-                    obj.GenerateWhereClauses(LoquiInterfaceType.IGetter, defs: obj.Generics).ToArray())
+                $"static partial void WriteBinary{field.Name}Custom{obj.GetGenericTypes(MaskType.Normal)}"))
             {
-                SemiColon = true
-            })
-            {
+                args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.IGetter, defs: obj.Generics));
+                args.SemiColon = true;
                 args.Add($"{nameof(MutagenWriter)} writer");
                 args.Add($"{obj.Interface(getter: true, internalInterface: obj.HasInternalInterface)} item");
                 args.Add($"MasterReferences masterReferences");
@@ -153,9 +151,9 @@ namespace Mutagen.Bethesda.Generation
             }
             fg.AppendLine();
             using (var args = new FunctionWrapper(fg,
-                $"public static void WriteBinary{field.Name}{obj.GetGenericTypes(MaskType.Normal)}",
-                obj.GenerateWhereClauses(LoquiInterfaceType.IGetter, defs: obj.Generics).ToArray()))
+                $"public static void WriteBinary{field.Name}{obj.GetGenericTypes(MaskType.Normal)}"))
             {
+                args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.IGetter, defs: obj.Generics));
                 args.Add($"{nameof(MutagenWriter)} writer");
                 args.Add($"{obj.Interface(getter: true, internalInterface: obj.HasInternalInterface)} item");
                 args.Add($"MasterReferences masterReferences");

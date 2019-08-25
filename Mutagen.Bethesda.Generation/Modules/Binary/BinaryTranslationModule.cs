@@ -1171,9 +1171,9 @@ namespace Mutagen.Bethesda.Generation
             if (HasEmbeddedFields(obj))
             {
                 using (var args = new FunctionWrapper(fg,
-                    $"public static void Write_Embedded{obj.GetGenericTypes(MaskType.Normal)}",
-                    obj.GenerateWhereClauses(LoquiInterfaceType.IGetter, defs: obj.Generics).ToArray()))
+                    $"public static void Write_Embedded{obj.GetGenericTypes(MaskType.Normal)}"))
                 {
+                    args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.IGetter, defs: obj.Generics));
                     args.Add($"{obj.Interface(internalInterface: obj.HasInternalInterface, getter: true)} item");
                     args.Add("MutagenWriter writer");
                     args.Add($"ErrorMaskBuilder errorMask");
@@ -1251,9 +1251,9 @@ namespace Mutagen.Bethesda.Generation
             if (HasRecordTypeFields(obj))
             {
                 using (var args = new FunctionWrapper(fg,
-                    $"public static void Write_RecordTypes{obj.GetGenericTypes(MaskType.Normal)}",
-                    obj.GenerateWhereClauses(LoquiInterfaceType.IGetter, defs: obj.Generics).ToArray()))
+                    $"public static void Write_RecordTypes{obj.GetGenericTypes(MaskType.Normal)}"))
                 {
+                    args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.IGetter, defs: obj.Generics));
                     args.Add($"{obj.Interface(internalInterface: obj.HasInternalInterface, getter: true)} item");
                     args.Add("MutagenWriter writer");
                     if (obj.GetObjectType() == ObjectType.Mod)

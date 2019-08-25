@@ -272,9 +272,9 @@ namespace Mutagen.Bethesda.Generation
 
             if (obj.GetObjectType() != ObjectType.Mod) return;
             using (var args = new FunctionWrapper(fg,
-                "public static IReadOnlyCache<T, FormKey> GetGroupGetter<T>",
-                wheres: $"where T : {nameof(IMajorRecordInternalGetter)}"))
+                "public static IReadOnlyCache<T, FormKey> GetGroupGetter<T>"))
             {
+                args.Wheres.Add($"where T : {nameof(IMajorRecordInternalGetter)}");
                 args.Add($"this {obj.Interface(getter: true)} obj");
             }
             using (new BraceWrapper(fg))
@@ -288,9 +288,9 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine();
 
             using (var args = new FunctionWrapper(fg,
-                "public static ISourceCache<T, FormKey> GetGroup<T>",
-                wheres: $"where T : {nameof(IMajorRecordInternal)}"))
+                "public static ISourceCache<T, FormKey> GetGroup<T>"))
             {
+                args.Wheres.Add($"where T : {nameof(IMajorRecordInternal)}");
                 args.Add($"this {obj.Interface(getter: false)} obj");
             }
             using (new BraceWrapper(fg))
@@ -309,9 +309,9 @@ namespace Mutagen.Bethesda.Generation
 
             if (obj.GetObjectType() != ObjectType.Mod) return;
             using (var args = new FunctionWrapper(fg,
-                "public object GetGroup<T>",
-                wheres: $"where T : {nameof(IMajorRecordInternalGetter)}"))
+                "public object GetGroup<T>"))
             {
+                args.Wheres.Add($"where T : {nameof(IMajorRecordInternalGetter)}");
                 args.Add($"{obj.Interface(getter: true)} obj");
             }
             using (new BraceWrapper(fg))

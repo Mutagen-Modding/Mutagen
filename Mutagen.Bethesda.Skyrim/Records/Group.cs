@@ -1,4 +1,4 @@
-﻿using DynamicData;
+using DynamicData;
 using Loqui;
 using Loqui.Internal;
 using Loqui.Xml;
