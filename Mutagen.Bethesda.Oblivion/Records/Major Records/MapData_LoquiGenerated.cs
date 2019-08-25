@@ -34,17 +34,11 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class MapData :
         LoquiNotifyingObject,
-        IMapData,
+        IMapDataInternal,
         ILoquiObjectSetter<MapData>,
         IEquatable<MapData>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => MapData_Registration.Instance;
-        public static MapData_Registration Registration => MapData_Registration.Instance;
-        protected object CommonInstance => MapDataCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
-
         #region Ctor
         public MapData()
         {
@@ -79,7 +73,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMapDataGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMapDataInternalGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -97,22 +91,35 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is IMapDataGetter rhs)) return false;
-            return ((MapDataCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            if (!(obj is IMapDataInternalGetter rhs)) return false;
+            return ((MapDataCommon)((IMapDataInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(MapData obj)
         {
-            return ((MapDataCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((MapDataCommon)((IMapDataInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((MapDataCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((MapDataCommon)((IMapDataInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected object XmlWriteTranslator => MapDataXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((MapDataXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static MapData CreateFromXml(
@@ -286,6 +293,19 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Translation
         protected object BinaryWriteTranslator => MapDataBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((MapDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
         #region Binary Create
         [DebuggerStepThrough]
         public static MapData CreateFromBinary(
@@ -462,7 +482,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            MapDataCommon.CopyFieldsFrom(
+            MapDataSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -477,7 +497,7 @@ namespace Mutagen.Bethesda.Oblivion
             MapData_CopyMask copyMask = null,
             MapData def = null)
         {
-            MapDataCommon.CopyFieldsFrom(
+            MapDataSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -506,7 +526,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void Clear()
         {
-            MapDataCommon.Instance.Clear(this);
+            MapDataSetterCommon.Instance.Clear(this);
         }
 
         public static MapData Create(IEnumerable<KeyValuePair<ushort, object>> fields)
@@ -545,8 +565,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IMapData :
-        IMapDataGetter,
-        ILoquiObjectSetter<IMapData>
+        IMapDataInternalGetter,
+        ILoquiObjectSetter<IMapDataInternal>
     {
         new P2Int UsableDimensions { get; set; }
 
@@ -561,9 +581,15 @@ namespace Mutagen.Bethesda.Oblivion
             MapData def = null);
     }
 
+    public partial interface IMapDataInternal :
+        IMapData,
+        IMapDataInternalGetter
+    {
+    }
+
     public partial interface IMapDataGetter :
         ILoquiObject,
-        ILoquiObject<IMapDataGetter>,
+        ILoquiObject<IMapDataInternalGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -582,45 +608,53 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    public partial interface IMapDataInternalGetter : IMapDataGetter
+    {
+        object CommonInstance();
+        object CommonSetterInstance();
+        object CommonSetterCopyInstance();
+
+    }
+
     #endregion
 
     #region Common MixIn
     public static class MapDataMixIn
     {
-        public static void Clear(this IMapData item)
+        public static void Clear(this IMapDataInternal item)
         {
-            ((MapDataCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((MapDataSetterCommon)((IMapDataInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static MapData_Mask<bool> GetEqualsMask(
-            this IMapDataGetter item,
-            IMapDataGetter rhs,
+            this IMapDataInternalGetter item,
+            IMapDataInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((MapDataCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((MapDataCommon)((IMapDataInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IMapDataGetter item,
+            this IMapDataInternalGetter item,
             string name = null,
             MapData_Mask<bool> printMask = null)
         {
-            return ((MapDataCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((MapDataCommon)((IMapDataInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IMapDataGetter item,
+            this IMapDataInternalGetter item,
             FileGeneration fg,
             string name = null,
             MapData_Mask<bool> printMask = null)
         {
-            ((MapDataCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((MapDataCommon)((IMapDataInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -628,28 +662,28 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static bool HasBeenSet(
-            this IMapDataGetter item,
+            this IMapDataInternalGetter item,
             MapData_Mask<bool?> checkMask)
         {
-            return ((MapDataCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((MapDataCommon)((IMapDataInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static MapData_Mask<bool> GetHasBeenSetMask(this IMapDataGetter item)
+        public static MapData_Mask<bool> GetHasBeenSetMask(this IMapDataInternalGetter item)
         {
             var ret = new MapData_Mask<bool>();
-            ((MapDataCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((MapDataCommon)((IMapDataInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this IMapDataGetter item,
-            IMapDataGetter rhs)
+            this IMapDataInternalGetter item,
+            IMapDataInternalGetter rhs)
         {
-            return ((MapDataCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((MapDataCommon)((IMapDataInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -696,13 +730,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IMapDataGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type InternalGetterType = typeof(IMapDataInternalGetter);
 
         public static readonly Type SetterType = typeof(IMapData);
 
-        public static readonly Type InternalSetterType = null;
-
-        public static readonly Type CommonType = typeof(MapDataCommon);
+        public static readonly Type InternalSetterType = typeof(IMapDataInternal);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.MapData";
 
@@ -850,7 +882,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -870,9 +901,156 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
+    public partial class MapDataSetterCommon
+    {
+        public static readonly MapDataSetterCommon Instance = new MapDataSetterCommon();
+
+        partial void ClearPartial();
+        
+        public virtual void Clear(IMapDataInternal item)
+        {
+            ClearPartial();
+            item.UsableDimensions = default(P2Int);
+            item.CellCoordinatesNWCell = default(P2Int16);
+            item.CellCoordinatesSECell = default(P2Int16);
+        }
+        
+        
+    }
     public partial class MapDataCommon
     {
         public static readonly MapDataCommon Instance = new MapDataCommon();
+
+        public MapData_Mask<bool> GetEqualsMask(
+            IMapDataInternalGetter item,
+            IMapDataInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new MapData_Mask<bool>();
+            ((MapDataCommon)((IMapDataInternalGetter)item).CommonInstance()).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+        
+        public void FillEqualsMask(
+            IMapDataInternalGetter item,
+            IMapDataInternalGetter rhs,
+            MapData_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            if (rhs == null) return;
+            ret.UsableDimensions = item.UsableDimensions.Equals(rhs.UsableDimensions);
+            ret.CellCoordinatesNWCell = item.CellCoordinatesNWCell.Equals(rhs.CellCoordinatesNWCell);
+            ret.CellCoordinatesSECell = item.CellCoordinatesSECell.Equals(rhs.CellCoordinatesSECell);
+        }
+        
+        public string ToString(
+            IMapDataInternalGetter item,
+            string name = null,
+            MapData_Mask<bool> printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+            return fg.ToString();
+        }
+        
+        public void ToString(
+            IMapDataInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            MapData_Mask<bool> printMask = null)
+        {
+            if (name == null)
+            {
+                fg.AppendLine($"MapData =>");
+            }
+            else
+            {
+                fg.AppendLine($"{name} (MapData) =>");
+            }
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
+            }
+            fg.AppendLine("]");
+        }
+        
+        protected static void ToStringFields(
+            IMapDataInternalGetter item,
+            FileGeneration fg,
+            MapData_Mask<bool> printMask = null)
+        {
+            if (printMask?.UsableDimensions ?? true)
+            {
+                fg.AppendLine($"UsableDimensions => {item.UsableDimensions}");
+            }
+            if (printMask?.CellCoordinatesNWCell ?? true)
+            {
+                fg.AppendLine($"CellCoordinatesNWCell => {item.CellCoordinatesNWCell}");
+            }
+            if (printMask?.CellCoordinatesSECell ?? true)
+            {
+                fg.AppendLine($"CellCoordinatesSECell => {item.CellCoordinatesSECell}");
+            }
+        }
+        
+        public bool HasBeenSet(
+            IMapDataInternalGetter item,
+            MapData_Mask<bool?> checkMask)
+        {
+            return true;
+        }
+        
+        public void FillHasBeenSetMask(
+            IMapDataInternalGetter item,
+            MapData_Mask<bool> mask)
+        {
+            mask.UsableDimensions = true;
+            mask.CellCoordinatesNWCell = true;
+            mask.CellCoordinatesSECell = true;
+        }
+        
+        #region Equals and Hash
+        public virtual bool Equals(
+            IMapDataInternalGetter lhs,
+            IMapDataInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!lhs.UsableDimensions.Equals(rhs.UsableDimensions)) return false;
+            if (!lhs.CellCoordinatesNWCell.Equals(rhs.CellCoordinatesNWCell)) return false;
+            if (!lhs.CellCoordinatesSECell.Equals(rhs.CellCoordinatesSECell)) return false;
+            return true;
+        }
+        
+        public virtual int GetHashCode(IMapDataInternalGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.UsableDimensions).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.CellCoordinatesNWCell).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.CellCoordinatesSECell).CombineHashCode(ret);
+            return ret;
+        }
+        
+        #endregion
+        
+        
+        
+    }
+    public partial class MapDataSetterCopyCommon
+    {
+        public static readonly MapDataSetterCopyCommon Instance = new MapDataSetterCopyCommon();
 
         #region Copy Fields From
         public static void CopyFieldsFrom(
@@ -934,144 +1112,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
         }
-
+        
         #endregion
-
-        partial void ClearPartial();
-
-        public virtual void Clear(IMapData item)
-        {
-            ClearPartial();
-            item.UsableDimensions = default(P2Int);
-            item.CellCoordinatesNWCell = default(P2Int16);
-            item.CellCoordinatesSECell = default(P2Int16);
-        }
-
-        public MapData_Mask<bool> GetEqualsMask(
-            IMapDataGetter item,
-            IMapDataGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new MapData_Mask<bool>();
-            ((MapDataCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public void FillEqualsMask(
-            IMapDataGetter item,
-            IMapDataGetter rhs,
-            MapData_Mask<bool> ret,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            if (rhs == null) return;
-            ret.UsableDimensions = item.UsableDimensions.Equals(rhs.UsableDimensions);
-            ret.CellCoordinatesNWCell = item.CellCoordinatesNWCell.Equals(rhs.CellCoordinatesNWCell);
-            ret.CellCoordinatesSECell = item.CellCoordinatesSECell.Equals(rhs.CellCoordinatesSECell);
-        }
-
-        public string ToString(
-            IMapDataGetter item,
-            string name = null,
-            MapData_Mask<bool> printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(
-                item: item,
-                fg: fg,
-                name: name,
-                printMask: printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(
-            IMapDataGetter item,
-            FileGeneration fg,
-            string name = null,
-            MapData_Mask<bool> printMask = null)
-        {
-            if (name == null)
-            {
-                fg.AppendLine($"MapData =>");
-            }
-            else
-            {
-                fg.AppendLine($"{name} (MapData) =>");
-            }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                ToStringFields(
-                    item: item,
-                    fg: fg,
-                    printMask: printMask);
-            }
-            fg.AppendLine("]");
-        }
-
-        protected static void ToStringFields(
-            IMapDataGetter item,
-            FileGeneration fg,
-            MapData_Mask<bool> printMask = null)
-        {
-            if (printMask?.UsableDimensions ?? true)
-            {
-                fg.AppendLine($"UsableDimensions => {item.UsableDimensions}");
-            }
-            if (printMask?.CellCoordinatesNWCell ?? true)
-            {
-                fg.AppendLine($"CellCoordinatesNWCell => {item.CellCoordinatesNWCell}");
-            }
-            if (printMask?.CellCoordinatesSECell ?? true)
-            {
-                fg.AppendLine($"CellCoordinatesSECell => {item.CellCoordinatesSECell}");
-            }
-        }
-
-        public bool HasBeenSet(
-            IMapDataGetter item,
-            MapData_Mask<bool?> checkMask)
-        {
-            return true;
-        }
-
-        public void FillHasBeenSetMask(
-            IMapDataGetter item,
-            MapData_Mask<bool> mask)
-        {
-            mask.UsableDimensions = true;
-            mask.CellCoordinatesNWCell = true;
-            mask.CellCoordinatesSECell = true;
-        }
-
-        #region Equals and Hash
-        public virtual bool Equals(
-            IMapDataGetter lhs,
-            IMapDataGetter rhs)
-        {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
-            if (!lhs.UsableDimensions.Equals(rhs.UsableDimensions)) return false;
-            if (!lhs.CellCoordinatesNWCell.Equals(rhs.CellCoordinatesNWCell)) return false;
-            if (!lhs.CellCoordinatesSECell.Equals(rhs.CellCoordinatesSECell)) return false;
-            return true;
-        }
-
-        public virtual int GetHashCode(IMapDataGetter item)
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.UsableDimensions).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.CellCoordinatesNWCell).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.CellCoordinatesSECell).CombineHashCode(ret);
-            return ret;
-        }
-
-        #endregion
-
-
+        
+        
     }
     #endregion
 
@@ -1082,7 +1126,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static MapDataXmlWriteTranslation Instance = new MapDataXmlWriteTranslation();
 
         public static void WriteToNodeXml(
-            IMapDataGetter item,
+            IMapDataInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1118,7 +1162,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             XElement node,
-            IMapDataGetter item,
+            IMapDataInternalGetter item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)
@@ -1144,7 +1188,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             Write(
-                item: (IMapDataGetter)item,
+                item: (IMapDataInternalGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1153,7 +1197,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             XElement node,
-            IMapDataGetter item,
+            IMapDataInternalGetter item,
             ErrorMaskBuilder errorMask,
             int fieldIndex,
             TranslationCrystal translationMask,
@@ -1163,7 +1207,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 errorMask?.PushIndex(fieldIndex);
                 Write(
-                    item: (IMapDataGetter)item,
+                    item: (IMapDataInternalGetter)item,
                     name: name,
                     node: node,
                     errorMask: errorMask,
@@ -1187,7 +1231,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static MapDataXmlCreateTranslation Instance = new MapDataXmlCreateTranslation();
 
         public static void FillPublicXml(
-            IMapData item,
+            IMapDataInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1212,7 +1256,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElementXml(
-            IMapData item,
+            IMapDataInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -1309,7 +1353,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public static class MapDataXmlTranslationMixIn
     {
         public static void WriteToXml(
-            this IMapDataGetter item,
+            this IMapDataInternalGetter item,
             XElement node,
             out MapData_ErrorMask errorMask,
             bool doMasks = true,
@@ -1327,7 +1371,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IMapDataGetter item,
+            this IMapDataInternalGetter item,
             string path,
             out MapData_ErrorMask errorMask,
             MapData_TranslationMask translationMask = null,
@@ -1346,7 +1390,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IMapDataGetter item,
+            this IMapDataInternalGetter item,
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1364,7 +1408,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IMapDataGetter item,
+            this IMapDataInternalGetter item,
             Stream stream,
             out MapData_ErrorMask errorMask,
             MapData_TranslationMask translationMask = null,
@@ -1383,7 +1427,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IMapDataGetter item,
+            this IMapDataInternalGetter item,
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1401,7 +1445,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IMapDataGetter item,
+            this IMapDataInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1416,7 +1460,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IMapDataGetter item,
+            this IMapDataInternalGetter item,
             XElement node,
             string name = null,
             MapData_TranslationMask translationMask = null)
@@ -1430,7 +1474,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IMapDataGetter item,
+            this IMapDataInternalGetter item,
             string path,
             string name = null)
         {
@@ -1445,7 +1489,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IMapDataGetter item,
+            this IMapDataInternalGetter item,
             Stream stream,
             string name = null)
         {
@@ -1800,7 +1844,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static MapDataBinaryWriteTranslation Instance = new MapDataBinaryWriteTranslation();
 
         public static void Write_Embedded(
-            IMapDataGetter item,
+            IMapDataInternalGetter item,
             MutagenWriter writer,
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
@@ -1818,7 +1862,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             MutagenWriter writer,
-            IMapDataGetter item,
+            IMapDataInternalGetter item,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
@@ -1844,7 +1888,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask)
         {
             Write(
-                item: (IMapDataGetter)item,
+                item: (IMapDataInternalGetter)item,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -1863,7 +1907,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public static class MapDataBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IMapDataGetter item,
+            this IMapDataInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
             out MapData_ErrorMask errorMask,
@@ -1880,7 +1924,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToBinary(
-            this IMapDataGetter item,
+            this IMapDataInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -1894,7 +1938,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToBinary(
-            this IMapDataGetter item,
+            this IMapDataInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
@@ -1911,22 +1955,65 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     public partial class MapDataBinaryWrapper :
         BinaryWrapper,
-        IMapDataGetter
+        IMapDataInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MapData_Registration.Instance;
         public static MapData_Registration Registration => MapData_Registration.Instance;
-        protected object CommonInstance => MapDataCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
+        protected object CommonInstance()
+        {
+            return MapDataCommon.Instance;
+        }
+        object IMapDataInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IMapDataInternalGetter.CommonSetterInstance()
+        {
+            return null;
+        }
+        object IMapDataInternalGetter.CommonSetterCopyInstance()
+        {
+            return null;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMapDataGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMapDataInternalGetter)rhs, include);
 
         protected object XmlWriteTranslator => MapDataXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((MapDataXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         protected object BinaryWriteTranslator => MapDataBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((MapDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
 
         public P2Int UsableDimensions => P2IntBinaryTranslation.Read(_data.Span.Slice(0, 8));
         public P2Int16 CellCoordinatesNWCell => P2Int16BinaryTranslation.Read(_data.Span.Slice(8, 4));
@@ -1970,4 +2057,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class MapData
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => MapData_Registration.Instance;
+        public static MapData_Registration Registration => MapData_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return MapDataCommon.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return MapDataSetterCommon.Instance;
+        }
+        protected object CommonSetterCopyInstance()
+        {
+            return MapDataSetterCopyCommon.Instance;
+        }
+        object IMapDataInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IMapDataInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object IMapDataInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
 }

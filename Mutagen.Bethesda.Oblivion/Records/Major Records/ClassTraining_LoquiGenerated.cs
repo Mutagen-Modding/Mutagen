@@ -34,17 +34,11 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class ClassTraining :
         LoquiNotifyingObject,
-        IClassTraining,
+        IClassTrainingInternal,
         ILoquiObjectSetter<ClassTraining>,
         IEquatable<ClassTraining>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => ClassTraining_Registration.Instance;
-        public static ClassTraining_Registration Registration => ClassTraining_Registration.Instance;
-        protected object CommonInstance => ClassTrainingCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
-
         #region Ctor
         public ClassTraining()
         {
@@ -66,11 +60,8 @@ namespace Mutagen.Bethesda.Oblivion
         private Byte _MaximumTrainingLevel;
         public Byte MaximumTrainingLevel
         {
-            get => _MaximumTrainingLevel;
-            set
-            {
-                this._MaximumTrainingLevel = value.PutInRange(MaximumTrainingLevel_Range.Min, MaximumTrainingLevel_Range.Max);
-            }
+            get => this._MaximumTrainingLevel;
+            set => this.RaiseAndSetIfChanged(ref this._MaximumTrainingLevel, value.PutInRange(MaximumTrainingLevel_Range.Min, MaximumTrainingLevel_Range.Max), nameof(MaximumTrainingLevel));
         }
         public static RangeUInt8 MaximumTrainingLevel_Range = new RangeUInt8(0, 100);
         #endregion
@@ -91,7 +82,7 @@ namespace Mutagen.Bethesda.Oblivion
         ReadOnlySpan<Byte> IClassTrainingGetter.Fluff => this.Fluff;
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IClassTrainingGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IClassTrainingInternalGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -109,22 +100,35 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is IClassTrainingGetter rhs)) return false;
-            return ((ClassTrainingCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            if (!(obj is IClassTrainingInternalGetter rhs)) return false;
+            return ((ClassTrainingCommon)((IClassTrainingInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(ClassTraining obj)
         {
-            return ((ClassTrainingCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((ClassTrainingCommon)((IClassTrainingInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((ClassTrainingCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((ClassTrainingCommon)((IClassTrainingInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected object XmlWriteTranslator => ClassTrainingXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((ClassTrainingXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static ClassTraining CreateFromXml(
@@ -294,6 +298,19 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Translation
         protected object BinaryWriteTranslator => ClassTrainingBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((ClassTrainingBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
         #region Binary Create
         [DebuggerStepThrough]
         public static ClassTraining CreateFromBinary(
@@ -458,7 +475,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ClassTrainingCommon.CopyFieldsFrom(
+            ClassTrainingSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -473,7 +490,7 @@ namespace Mutagen.Bethesda.Oblivion
             ClassTraining_CopyMask copyMask = null,
             ClassTraining def = null)
         {
-            ClassTrainingCommon.CopyFieldsFrom(
+            ClassTrainingSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -502,7 +519,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void Clear()
         {
-            ClassTrainingCommon.Instance.Clear(this);
+            ClassTrainingSetterCommon.Instance.Clear(this);
         }
 
         public static ClassTraining Create(IEnumerable<KeyValuePair<ushort, object>> fields)
@@ -541,8 +558,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IClassTraining :
-        IClassTrainingGetter,
-        ILoquiObjectSetter<IClassTraining>
+        IClassTrainingInternalGetter,
+        ILoquiObjectSetter<IClassTrainingInternal>
     {
         new Skill TrainedSkill { get; set; }
 
@@ -557,9 +574,15 @@ namespace Mutagen.Bethesda.Oblivion
             ClassTraining def = null);
     }
 
+    public partial interface IClassTrainingInternal :
+        IClassTraining,
+        IClassTrainingInternalGetter
+    {
+    }
+
     public partial interface IClassTrainingGetter :
         ILoquiObject,
-        ILoquiObject<IClassTrainingGetter>,
+        ILoquiObject<IClassTrainingInternalGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -578,45 +601,53 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    public partial interface IClassTrainingInternalGetter : IClassTrainingGetter
+    {
+        object CommonInstance();
+        object CommonSetterInstance();
+        object CommonSetterCopyInstance();
+
+    }
+
     #endregion
 
     #region Common MixIn
     public static class ClassTrainingMixIn
     {
-        public static void Clear(this IClassTraining item)
+        public static void Clear(this IClassTrainingInternal item)
         {
-            ((ClassTrainingCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((ClassTrainingSetterCommon)((IClassTrainingInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static ClassTraining_Mask<bool> GetEqualsMask(
-            this IClassTrainingGetter item,
-            IClassTrainingGetter rhs,
+            this IClassTrainingInternalGetter item,
+            IClassTrainingInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((ClassTrainingCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((ClassTrainingCommon)((IClassTrainingInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IClassTrainingGetter item,
+            this IClassTrainingInternalGetter item,
             string name = null,
             ClassTraining_Mask<bool> printMask = null)
         {
-            return ((ClassTrainingCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((ClassTrainingCommon)((IClassTrainingInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IClassTrainingGetter item,
+            this IClassTrainingInternalGetter item,
             FileGeneration fg,
             string name = null,
             ClassTraining_Mask<bool> printMask = null)
         {
-            ((ClassTrainingCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((ClassTrainingCommon)((IClassTrainingInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -624,28 +655,28 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static bool HasBeenSet(
-            this IClassTrainingGetter item,
+            this IClassTrainingInternalGetter item,
             ClassTraining_Mask<bool?> checkMask)
         {
-            return ((ClassTrainingCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((ClassTrainingCommon)((IClassTrainingInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static ClassTraining_Mask<bool> GetHasBeenSetMask(this IClassTrainingGetter item)
+        public static ClassTraining_Mask<bool> GetHasBeenSetMask(this IClassTrainingInternalGetter item)
         {
             var ret = new ClassTraining_Mask<bool>();
-            ((ClassTrainingCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((ClassTrainingCommon)((IClassTrainingInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this IClassTrainingGetter item,
-            IClassTrainingGetter rhs)
+            this IClassTrainingInternalGetter item,
+            IClassTrainingInternalGetter rhs)
         {
-            return ((ClassTrainingCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((ClassTrainingCommon)((IClassTrainingInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -692,13 +723,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IClassTrainingGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type InternalGetterType = typeof(IClassTrainingInternalGetter);
 
         public static readonly Type SetterType = typeof(IClassTraining);
 
-        public static readonly Type InternalSetterType = null;
-
-        public static readonly Type CommonType = typeof(ClassTrainingCommon);
+        public static readonly Type InternalSetterType = typeof(IClassTrainingInternal);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.ClassTraining";
 
@@ -844,7 +873,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -864,9 +892,156 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
+    public partial class ClassTrainingSetterCommon
+    {
+        public static readonly ClassTrainingSetterCommon Instance = new ClassTrainingSetterCommon();
+
+        partial void ClearPartial();
+        
+        public virtual void Clear(IClassTrainingInternal item)
+        {
+            ClearPartial();
+            item.TrainedSkill = default(Skill);
+            item.MaximumTrainingLevel = default(Byte);
+            item.Fluff = default(Byte[]);
+        }
+        
+        
+    }
     public partial class ClassTrainingCommon
     {
         public static readonly ClassTrainingCommon Instance = new ClassTrainingCommon();
+
+        public ClassTraining_Mask<bool> GetEqualsMask(
+            IClassTrainingInternalGetter item,
+            IClassTrainingInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new ClassTraining_Mask<bool>();
+            ((ClassTrainingCommon)((IClassTrainingInternalGetter)item).CommonInstance()).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+        
+        public void FillEqualsMask(
+            IClassTrainingInternalGetter item,
+            IClassTrainingInternalGetter rhs,
+            ClassTraining_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            if (rhs == null) return;
+            ret.TrainedSkill = item.TrainedSkill == rhs.TrainedSkill;
+            ret.MaximumTrainingLevel = item.MaximumTrainingLevel == rhs.MaximumTrainingLevel;
+            ret.Fluff = MemoryExtensions.SequenceEqual(item.Fluff, rhs.Fluff);
+        }
+        
+        public string ToString(
+            IClassTrainingInternalGetter item,
+            string name = null,
+            ClassTraining_Mask<bool> printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+            return fg.ToString();
+        }
+        
+        public void ToString(
+            IClassTrainingInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            ClassTraining_Mask<bool> printMask = null)
+        {
+            if (name == null)
+            {
+                fg.AppendLine($"ClassTraining =>");
+            }
+            else
+            {
+                fg.AppendLine($"{name} (ClassTraining) =>");
+            }
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
+            }
+            fg.AppendLine("]");
+        }
+        
+        protected static void ToStringFields(
+            IClassTrainingInternalGetter item,
+            FileGeneration fg,
+            ClassTraining_Mask<bool> printMask = null)
+        {
+            if (printMask?.TrainedSkill ?? true)
+            {
+                fg.AppendLine($"TrainedSkill => {item.TrainedSkill}");
+            }
+            if (printMask?.MaximumTrainingLevel ?? true)
+            {
+                fg.AppendLine($"MaximumTrainingLevel => {item.MaximumTrainingLevel}");
+            }
+            if (printMask?.Fluff ?? true)
+            {
+                fg.AppendLine($"Fluff => {SpanExt.ToHexString(item.Fluff)}");
+            }
+        }
+        
+        public bool HasBeenSet(
+            IClassTrainingInternalGetter item,
+            ClassTraining_Mask<bool?> checkMask)
+        {
+            return true;
+        }
+        
+        public void FillHasBeenSetMask(
+            IClassTrainingInternalGetter item,
+            ClassTraining_Mask<bool> mask)
+        {
+            mask.TrainedSkill = true;
+            mask.MaximumTrainingLevel = true;
+            mask.Fluff = true;
+        }
+        
+        #region Equals and Hash
+        public virtual bool Equals(
+            IClassTrainingInternalGetter lhs,
+            IClassTrainingInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (lhs.TrainedSkill != rhs.TrainedSkill) return false;
+            if (lhs.MaximumTrainingLevel != rhs.MaximumTrainingLevel) return false;
+            if (!MemoryExtensions.SequenceEqual(lhs.Fluff, rhs.Fluff)) return false;
+            return true;
+        }
+        
+        public virtual int GetHashCode(IClassTrainingInternalGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.TrainedSkill).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.MaximumTrainingLevel).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Fluff).CombineHashCode(ret);
+            return ret;
+        }
+        
+        #endregion
+        
+        
+        
+    }
+    public partial class ClassTrainingSetterCopyCommon
+    {
+        public static readonly ClassTrainingSetterCopyCommon Instance = new ClassTrainingSetterCopyCommon();
 
         #region Copy Fields From
         public static void CopyFieldsFrom(
@@ -928,144 +1103,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
         }
-
+        
         #endregion
-
-        partial void ClearPartial();
-
-        public virtual void Clear(IClassTraining item)
-        {
-            ClearPartial();
-            item.TrainedSkill = default(Skill);
-            item.MaximumTrainingLevel = default(Byte);
-            item.Fluff = default(Byte[]);
-        }
-
-        public ClassTraining_Mask<bool> GetEqualsMask(
-            IClassTrainingGetter item,
-            IClassTrainingGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new ClassTraining_Mask<bool>();
-            ((ClassTrainingCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public void FillEqualsMask(
-            IClassTrainingGetter item,
-            IClassTrainingGetter rhs,
-            ClassTraining_Mask<bool> ret,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            if (rhs == null) return;
-            ret.TrainedSkill = item.TrainedSkill == rhs.TrainedSkill;
-            ret.MaximumTrainingLevel = item.MaximumTrainingLevel == rhs.MaximumTrainingLevel;
-            ret.Fluff = MemoryExtensions.SequenceEqual(item.Fluff, rhs.Fluff);
-        }
-
-        public string ToString(
-            IClassTrainingGetter item,
-            string name = null,
-            ClassTraining_Mask<bool> printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(
-                item: item,
-                fg: fg,
-                name: name,
-                printMask: printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(
-            IClassTrainingGetter item,
-            FileGeneration fg,
-            string name = null,
-            ClassTraining_Mask<bool> printMask = null)
-        {
-            if (name == null)
-            {
-                fg.AppendLine($"ClassTraining =>");
-            }
-            else
-            {
-                fg.AppendLine($"{name} (ClassTraining) =>");
-            }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                ToStringFields(
-                    item: item,
-                    fg: fg,
-                    printMask: printMask);
-            }
-            fg.AppendLine("]");
-        }
-
-        protected static void ToStringFields(
-            IClassTrainingGetter item,
-            FileGeneration fg,
-            ClassTraining_Mask<bool> printMask = null)
-        {
-            if (printMask?.TrainedSkill ?? true)
-            {
-                fg.AppendLine($"TrainedSkill => {item.TrainedSkill}");
-            }
-            if (printMask?.MaximumTrainingLevel ?? true)
-            {
-                fg.AppendLine($"MaximumTrainingLevel => {item.MaximumTrainingLevel}");
-            }
-            if (printMask?.Fluff ?? true)
-            {
-                fg.AppendLine($"Fluff => {SpanExt.ToHexString(item.Fluff)}");
-            }
-        }
-
-        public bool HasBeenSet(
-            IClassTrainingGetter item,
-            ClassTraining_Mask<bool?> checkMask)
-        {
-            return true;
-        }
-
-        public void FillHasBeenSetMask(
-            IClassTrainingGetter item,
-            ClassTraining_Mask<bool> mask)
-        {
-            mask.TrainedSkill = true;
-            mask.MaximumTrainingLevel = true;
-            mask.Fluff = true;
-        }
-
-        #region Equals and Hash
-        public virtual bool Equals(
-            IClassTrainingGetter lhs,
-            IClassTrainingGetter rhs)
-        {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
-            if (lhs.TrainedSkill != rhs.TrainedSkill) return false;
-            if (lhs.MaximumTrainingLevel != rhs.MaximumTrainingLevel) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Fluff, rhs.Fluff)) return false;
-            return true;
-        }
-
-        public virtual int GetHashCode(IClassTrainingGetter item)
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.TrainedSkill).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.MaximumTrainingLevel).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Fluff).CombineHashCode(ret);
-            return ret;
-        }
-
-        #endregion
-
-
+        
+        
     }
     #endregion
 
@@ -1076,7 +1117,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static ClassTrainingXmlWriteTranslation Instance = new ClassTrainingXmlWriteTranslation();
 
         public static void WriteToNodeXml(
-            IClassTrainingGetter item,
+            IClassTrainingInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1112,7 +1153,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             XElement node,
-            IClassTrainingGetter item,
+            IClassTrainingInternalGetter item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)
@@ -1138,7 +1179,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             Write(
-                item: (IClassTrainingGetter)item,
+                item: (IClassTrainingInternalGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1147,7 +1188,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             XElement node,
-            IClassTrainingGetter item,
+            IClassTrainingInternalGetter item,
             ErrorMaskBuilder errorMask,
             int fieldIndex,
             TranslationCrystal translationMask,
@@ -1157,7 +1198,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 errorMask?.PushIndex(fieldIndex);
                 Write(
-                    item: (IClassTrainingGetter)item,
+                    item: (IClassTrainingInternalGetter)item,
                     name: name,
                     node: node,
                     errorMask: errorMask,
@@ -1181,7 +1222,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static ClassTrainingXmlCreateTranslation Instance = new ClassTrainingXmlCreateTranslation();
 
         public static void FillPublicXml(
-            IClassTraining item,
+            IClassTrainingInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1206,7 +1247,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElementXml(
-            IClassTraining item,
+            IClassTrainingInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -1303,7 +1344,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public static class ClassTrainingXmlTranslationMixIn
     {
         public static void WriteToXml(
-            this IClassTrainingGetter item,
+            this IClassTrainingInternalGetter item,
             XElement node,
             out ClassTraining_ErrorMask errorMask,
             bool doMasks = true,
@@ -1321,7 +1362,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IClassTrainingGetter item,
+            this IClassTrainingInternalGetter item,
             string path,
             out ClassTraining_ErrorMask errorMask,
             ClassTraining_TranslationMask translationMask = null,
@@ -1340,7 +1381,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IClassTrainingGetter item,
+            this IClassTrainingInternalGetter item,
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1358,7 +1399,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IClassTrainingGetter item,
+            this IClassTrainingInternalGetter item,
             Stream stream,
             out ClassTraining_ErrorMask errorMask,
             ClassTraining_TranslationMask translationMask = null,
@@ -1377,7 +1418,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IClassTrainingGetter item,
+            this IClassTrainingInternalGetter item,
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1395,7 +1436,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IClassTrainingGetter item,
+            this IClassTrainingInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1410,7 +1451,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IClassTrainingGetter item,
+            this IClassTrainingInternalGetter item,
             XElement node,
             string name = null,
             ClassTraining_TranslationMask translationMask = null)
@@ -1424,7 +1465,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IClassTrainingGetter item,
+            this IClassTrainingInternalGetter item,
             string path,
             string name = null)
         {
@@ -1439,7 +1480,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IClassTrainingGetter item,
+            this IClassTrainingInternalGetter item,
             Stream stream,
             string name = null)
         {
@@ -1794,7 +1835,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static ClassTrainingBinaryWriteTranslation Instance = new ClassTrainingBinaryWriteTranslation();
 
         public static void Write_Embedded(
-            IClassTrainingGetter item,
+            IClassTrainingInternalGetter item,
             MutagenWriter writer,
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
@@ -1811,7 +1852,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             MutagenWriter writer,
-            IClassTrainingGetter item,
+            IClassTrainingInternalGetter item,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
@@ -1831,7 +1872,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask)
         {
             Write(
-                item: (IClassTrainingGetter)item,
+                item: (IClassTrainingInternalGetter)item,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -1850,7 +1891,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public static class ClassTrainingBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IClassTrainingGetter item,
+            this IClassTrainingInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
             out ClassTraining_ErrorMask errorMask,
@@ -1867,7 +1908,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToBinary(
-            this IClassTrainingGetter item,
+            this IClassTrainingInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -1881,7 +1922,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToBinary(
-            this IClassTrainingGetter item,
+            this IClassTrainingInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
@@ -1898,22 +1939,65 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     public partial class ClassTrainingBinaryWrapper :
         BinaryWrapper,
-        IClassTrainingGetter
+        IClassTrainingInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ClassTraining_Registration.Instance;
         public static ClassTraining_Registration Registration => ClassTraining_Registration.Instance;
-        protected object CommonInstance => ClassTrainingCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
+        protected object CommonInstance()
+        {
+            return ClassTrainingCommon.Instance;
+        }
+        object IClassTrainingInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IClassTrainingInternalGetter.CommonSetterInstance()
+        {
+            return null;
+        }
+        object IClassTrainingInternalGetter.CommonSetterCopyInstance()
+        {
+            return null;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IClassTrainingGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IClassTrainingInternalGetter)rhs, include);
 
         protected object XmlWriteTranslator => ClassTrainingXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((ClassTrainingXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         protected object BinaryWriteTranslator => ClassTrainingBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((ClassTrainingBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
 
         public Skill TrainedSkill => (Skill)_data.Span.Slice(0, 1)[0];
         public Byte MaximumTrainingLevel => _data.Span[1];
@@ -1955,4 +2039,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class ClassTraining
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => ClassTraining_Registration.Instance;
+        public static ClassTraining_Registration Registration => ClassTraining_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return ClassTrainingCommon.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return ClassTrainingSetterCommon.Instance;
+        }
+        protected object CommonSetterCopyInstance()
+        {
+            return ClassTrainingSetterCopyCommon.Instance;
+        }
+        object IClassTrainingInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IClassTrainingInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object IClassTrainingInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
 }

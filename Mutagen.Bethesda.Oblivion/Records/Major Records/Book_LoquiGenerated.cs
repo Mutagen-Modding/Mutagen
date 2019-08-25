@@ -43,11 +43,6 @@ namespace Mutagen.Bethesda.Oblivion
         IEquatable<Book>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Book_Registration.Instance;
-        public new static Book_Registration Registration => Book_Registration.Instance;
-        protected override object CommonInstance => BookCommon.Instance;
-
         #region Ctor
         protected Book()
         {
@@ -107,7 +102,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Model_Set(default(Model), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IModelGetter IBookGetter.Model => this.Model;
+        IModelInternalGetter IBookGetter.Model => this.Model;
         #endregion
         #region Icon
         public bool Icon_IsSet
@@ -288,20 +283,33 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IBookInternalGetter rhs)) return false;
-            return ((BookCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            return ((BookCommon)((IBookInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(Book obj)
         {
-            return ((BookCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((BookCommon)((IBookInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((BookCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((BookCommon)((IBookInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected override object XmlWriteTranslator => BookXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((BookXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static Book CreateFromXml(
@@ -558,6 +566,19 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Binary Translation
         protected override object BinaryWriteTranslator => BookBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((BookBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
         #region Binary Create
         [DebuggerStepThrough]
         public static Book CreateFromBinary(
@@ -873,7 +894,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            BookCommon.CopyFieldsFrom(
+            BookSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -888,7 +909,7 @@ namespace Mutagen.Bethesda.Oblivion
             Book_CopyMask copyMask = null,
             Book def = null)
         {
-            BookCommon.CopyFieldsFrom(
+            BookSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -945,7 +966,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            BookCommon.Instance.Clear(this);
+            BookSetterCommon.Instance.Clear(this);
         }
 
         public new static Book Create(IEnumerable<KeyValuePair<ushort, object>> fields)
@@ -1084,7 +1105,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Model
-        IModelGetter Model { get; }
+        IModelInternalGetter Model { get; }
         bool Model_IsSet { get; }
 
         #endregion
@@ -1150,7 +1171,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IBookInternal item)
         {
-            ((BookCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((BookSetterCommon)((IBookInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static Book_Mask<bool> GetEqualsMask(
@@ -1158,7 +1179,7 @@ namespace Mutagen.Bethesda.Oblivion
             IBookInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((BookCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((BookCommon)((IBookInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -1169,7 +1190,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Book_Mask<bool> printMask = null)
         {
-            return ((BookCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((BookCommon)((IBookInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -1181,7 +1202,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Book_Mask<bool> printMask = null)
         {
-            ((BookCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((BookCommon)((IBookInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -1192,7 +1213,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IBookInternalGetter item,
             Book_Mask<bool?> checkMask)
         {
-            return ((BookCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((BookCommon)((IBookInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -1200,7 +1221,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Book_Mask<bool> GetHasBeenSetMask(this IBookInternalGetter item)
         {
             var ret = new Book_Mask<bool>();
-            ((BookCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((BookCommon)((IBookInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -1210,7 +1231,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IBookInternalGetter item,
             IBookInternalGetter rhs)
         {
-            return ((BookCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((BookCommon)((IBookInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1276,8 +1297,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type SetterType = typeof(IBook);
 
         public static readonly Type InternalSetterType = typeof(IBookInternal);
-
-        public static readonly Type CommonType = typeof(BookCommon);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.Book";
 
@@ -1533,7 +1552,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -1553,9 +1571,436 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
+    public partial class BookSetterCommon : ItemAbstractSetterCommon
+    {
+        public new static readonly BookSetterCommon Instance = new BookSetterCommon();
+
+        partial void ClearPartial();
+        
+        public virtual void Clear(IBookInternal item)
+        {
+            ClearPartial();
+            item.Name_Unset();
+            item.Model_Unset();
+            item.Icon_Unset();
+            item.Script_Property.Unset();
+            item.Enchantment_Property.Unset();
+            item.EnchantmentPoints_Unset();
+            item.Description_Unset();
+            item.Flags = default(Book.BookFlag);
+            item.Teaches = default(Skill);
+            item.Value = default(Single);
+            item.Weight = default(Single);
+            base.Clear(item);
+        }
+        
+        public override void Clear(IItemAbstractInternal item)
+        {
+            Clear(item: (IBookInternal)item);
+        }
+        
+        public override void Clear(IOblivionMajorRecordInternal item)
+        {
+            Clear(item: (IBookInternal)item);
+        }
+        
+        public override void Clear(IMajorRecordInternal item)
+        {
+            Clear(item: (IBookInternal)item);
+        }
+        
+        
+    }
     public partial class BookCommon : ItemAbstractCommon
     {
-        public static readonly BookCommon Instance = new BookCommon();
+        public new static readonly BookCommon Instance = new BookCommon();
+
+        public Book_Mask<bool> GetEqualsMask(
+            IBookInternalGetter item,
+            IBookInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new Book_Mask<bool>();
+            ((BookCommon)((IBookInternalGetter)item).CommonInstance()).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+        
+        public void FillEqualsMask(
+            IBookInternalGetter item,
+            IBookInternalGetter rhs,
+            Book_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            if (rhs == null) return;
+            ret.Name = item.Name_IsSet == rhs.Name_IsSet && string.Equals(item.Name, rhs.Name);
+            ret.Model = EqualsMaskHelper.EqualsHelper(
+                item.Model_IsSet,
+                rhs.Model_IsSet,
+                item.Model,
+                rhs.Model,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
+            ret.Icon = item.Icon_IsSet == rhs.Icon_IsSet && string.Equals(item.Icon, rhs.Icon);
+            ret.Script = item.Script_Property.FormKey == rhs.Script_Property.FormKey;
+            ret.Enchantment = item.Enchantment_Property.FormKey == rhs.Enchantment_Property.FormKey;
+            ret.EnchantmentPoints = item.EnchantmentPoints_IsSet == rhs.EnchantmentPoints_IsSet && item.EnchantmentPoints == rhs.EnchantmentPoints;
+            ret.Description = item.Description_IsSet == rhs.Description_IsSet && string.Equals(item.Description, rhs.Description);
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.Teaches = item.Teaches == rhs.Teaches;
+            ret.Value = item.Value.EqualsWithin(rhs.Value);
+            ret.Weight = item.Weight.EqualsWithin(rhs.Weight);
+            base.FillEqualsMask(item, rhs, ret, include);
+        }
+        
+        public string ToString(
+            IBookInternalGetter item,
+            string name = null,
+            Book_Mask<bool> printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+            return fg.ToString();
+        }
+        
+        public void ToString(
+            IBookInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            Book_Mask<bool> printMask = null)
+        {
+            if (name == null)
+            {
+                fg.AppendLine($"Book =>");
+            }
+            else
+            {
+                fg.AppendLine($"{name} (Book) =>");
+            }
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
+            }
+            fg.AppendLine("]");
+        }
+        
+        protected static void ToStringFields(
+            IBookInternalGetter item,
+            FileGeneration fg,
+            Book_Mask<bool> printMask = null)
+        {
+            ItemAbstractCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.Name ?? true)
+            {
+                fg.AppendLine($"Name => {item.Name}");
+            }
+            if (printMask?.Model?.Overall ?? true)
+            {
+                item.Model?.ToString(fg, "Model");
+            }
+            if (printMask?.Icon ?? true)
+            {
+                fg.AppendLine($"Icon => {item.Icon}");
+            }
+            if (printMask?.Script ?? true)
+            {
+                fg.AppendLine($"Script => {item.Script_Property}");
+            }
+            if (printMask?.Enchantment ?? true)
+            {
+                fg.AppendLine($"Enchantment => {item.Enchantment_Property}");
+            }
+            if (printMask?.EnchantmentPoints ?? true)
+            {
+                fg.AppendLine($"EnchantmentPoints => {item.EnchantmentPoints}");
+            }
+            if (printMask?.Description ?? true)
+            {
+                fg.AppendLine($"Description => {item.Description}");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                fg.AppendLine($"Flags => {item.Flags}");
+            }
+            if (printMask?.Teaches ?? true)
+            {
+                fg.AppendLine($"Teaches => {item.Teaches}");
+            }
+            if (printMask?.Value ?? true)
+            {
+                fg.AppendLine($"Value => {item.Value}");
+            }
+            if (printMask?.Weight ?? true)
+            {
+                fg.AppendLine($"Weight => {item.Weight}");
+            }
+            if (printMask?.DATADataTypeState ?? true)
+            {
+            }
+        }
+        
+        public bool HasBeenSet(
+            IBookInternalGetter item,
+            Book_Mask<bool?> checkMask)
+        {
+            if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_IsSet) return false;
+            if (checkMask.Model.Overall.HasValue && checkMask.Model.Overall.Value != item.Model_IsSet) return false;
+            if (checkMask.Model.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
+            if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_IsSet) return false;
+            if (checkMask.Script.HasValue && checkMask.Script.Value != item.Script_Property.HasBeenSet) return false;
+            if (checkMask.Enchantment.HasValue && checkMask.Enchantment.Value != item.Enchantment_Property.HasBeenSet) return false;
+            if (checkMask.EnchantmentPoints.HasValue && checkMask.EnchantmentPoints.Value != item.EnchantmentPoints_IsSet) return false;
+            if (checkMask.Description.HasValue && checkMask.Description.Value != item.Description_IsSet) return false;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+        
+        public void FillHasBeenSetMask(
+            IBookInternalGetter item,
+            Book_Mask<bool> mask)
+        {
+            mask.Name = item.Name_IsSet;
+            mask.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, item.Model.GetHasBeenSetMask());
+            mask.Icon = item.Icon_IsSet;
+            mask.Script = item.Script_Property.HasBeenSet;
+            mask.Enchantment = item.Enchantment_Property.HasBeenSet;
+            mask.EnchantmentPoints = item.EnchantmentPoints_IsSet;
+            mask.Description = item.Description_IsSet;
+            mask.Flags = true;
+            mask.Teaches = true;
+            mask.Value = true;
+            mask.Weight = true;
+            mask.DATADataTypeState = true;
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
+        }
+        
+        public static Book_FieldIndex ConvertFieldIndex(ItemAbstract_FieldIndex index)
+        {
+            switch (index)
+            {
+                case ItemAbstract_FieldIndex.MajorRecordFlagsRaw:
+                    return (Book_FieldIndex)((int)index);
+                case ItemAbstract_FieldIndex.FormKey:
+                    return (Book_FieldIndex)((int)index);
+                case ItemAbstract_FieldIndex.Version:
+                    return (Book_FieldIndex)((int)index);
+                case ItemAbstract_FieldIndex.EditorID:
+                    return (Book_FieldIndex)((int)index);
+                case ItemAbstract_FieldIndex.OblivionMajorRecordFlags:
+                    return (Book_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        public static Book_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (Book_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.FormKey:
+                    return (Book_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.Version:
+                    return (Book_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.EditorID:
+                    return (Book_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
+                    return (Book_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        public static Book_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (Book_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.FormKey:
+                    return (Book_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.Version:
+                    return (Book_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.EditorID:
+                    return (Book_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        #region Equals and Hash
+        public virtual bool Equals(
+            IBookInternalGetter lhs,
+            IBookInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.Name_IsSet != rhs.Name_IsSet) return false;
+            if (lhs.Name_IsSet)
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if (lhs.Model_IsSet != rhs.Model_IsSet) return false;
+            if (lhs.Model_IsSet)
+            {
+                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            }
+            if (lhs.Icon_IsSet != rhs.Icon_IsSet) return false;
+            if (lhs.Icon_IsSet)
+            {
+                if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
+            }
+            if (lhs.Script_Property.HasBeenSet != rhs.Script_Property.HasBeenSet) return false;
+            if (lhs.Script_Property.HasBeenSet)
+            {
+                if (!lhs.Script_Property.Equals(rhs.Script_Property)) return false;
+            }
+            if (lhs.Enchantment_Property.HasBeenSet != rhs.Enchantment_Property.HasBeenSet) return false;
+            if (lhs.Enchantment_Property.HasBeenSet)
+            {
+                if (!lhs.Enchantment_Property.Equals(rhs.Enchantment_Property)) return false;
+            }
+            if (lhs.EnchantmentPoints_IsSet != rhs.EnchantmentPoints_IsSet) return false;
+            if (lhs.EnchantmentPoints_IsSet)
+            {
+                if (lhs.EnchantmentPoints != rhs.EnchantmentPoints) return false;
+            }
+            if (lhs.Description_IsSet != rhs.Description_IsSet) return false;
+            if (lhs.Description_IsSet)
+            {
+                if (!string.Equals(lhs.Description, rhs.Description)) return false;
+            }
+            if (lhs.Flags != rhs.Flags) return false;
+            if (lhs.Teaches != rhs.Teaches) return false;
+            if (!lhs.Value.EqualsWithin(rhs.Value)) return false;
+            if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
+            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            return true;
+        }
+        
+        public override bool Equals(
+            IItemAbstractInternalGetter lhs,
+            IItemAbstractInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IBookInternalGetter)lhs,
+                rhs: rhs as IBookInternalGetter);
+        }
+        
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IBookInternalGetter)lhs,
+                rhs: rhs as IBookInternalGetter);
+        }
+        
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IBookInternalGetter)lhs,
+                rhs: rhs as IBookInternalGetter);
+        }
+        
+        public virtual int GetHashCode(IBookInternalGetter item)
+        {
+            int ret = 0;
+            if (item.Name_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Name).CombineHashCode(ret);
+            }
+            if (item.Model_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Model).CombineHashCode(ret);
+            }
+            if (item.Icon_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Icon).CombineHashCode(ret);
+            }
+            if (item.Script_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Script).CombineHashCode(ret);
+            }
+            if (item.Enchantment_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Enchantment).CombineHashCode(ret);
+            }
+            if (item.EnchantmentPoints_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.EnchantmentPoints).CombineHashCode(ret);
+            }
+            if (item.Description_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Description).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Teaches).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Value).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Weight).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.DATADataTypeState).CombineHashCode(ret);
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+        
+        public override int GetHashCode(IItemAbstractInternalGetter item)
+        {
+            return GetHashCode(item: (IBookInternalGetter)item);
+        }
+        
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IBookInternalGetter)item);
+        }
+        
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IBookInternalGetter)item);
+        }
+        
+        #endregion
+        
+        
+        #region Mutagen
+        partial void PostDuplicate(Book obj, Book rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+        
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new Book(getNextFormKey());
+            ret.CopyFieldsFrom((Book)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (Book)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+        
+        #endregion
+        
+        
+    }
+    public partial class BookSetterCopyCommon : ItemAbstractSetterCopyCommon
+    {
+        public new static readonly BookSetterCopyCommon Instance = new BookSetterCopyCommon();
 
         #region Copy Fields From
         public static void CopyFieldsFrom(
@@ -1565,7 +2010,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             Book_CopyMask copyMask)
         {
-            ItemAbstractCommon.CopyFieldsFrom(
+            ItemAbstractSetterCopyCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1619,7 +2064,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             case CopyOption.Reference:
                                 throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
-                                ModelCommon.CopyFieldsFrom(
+                                ModelSetterCopyCommon.CopyFieldsFrom(
                                     item: item.Model,
                                     rhs: rhs.Model,
                                     def: def?.Model,
@@ -1850,424 +2295,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
         }
-
+        
         #endregion
-
-        partial void ClearPartial();
-
-        public virtual void Clear(IBookInternal item)
-        {
-            ClearPartial();
-            item.Name_Unset();
-            item.Model_Unset();
-            item.Icon_Unset();
-            item.Script_Property.Unset();
-            item.Enchantment_Property.Unset();
-            item.EnchantmentPoints_Unset();
-            item.Description_Unset();
-            item.Flags = default(Book.BookFlag);
-            item.Teaches = default(Skill);
-            item.Value = default(Single);
-            item.Weight = default(Single);
-            base.Clear(item);
-        }
-
-        public override void Clear(IItemAbstractInternal item)
-        {
-            Clear(item: (IBookInternal)item);
-        }
-
-        public override void Clear(IOblivionMajorRecordInternal item)
-        {
-            Clear(item: (IBookInternal)item);
-        }
-
-        public override void Clear(IMajorRecordInternal item)
-        {
-            Clear(item: (IBookInternal)item);
-        }
-
-        public Book_Mask<bool> GetEqualsMask(
-            IBookInternalGetter item,
-            IBookInternalGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new Book_Mask<bool>();
-            ((BookCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public void FillEqualsMask(
-            IBookInternalGetter item,
-            IBookInternalGetter rhs,
-            Book_Mask<bool> ret,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            if (rhs == null) return;
-            ret.Name = item.Name_IsSet == rhs.Name_IsSet && string.Equals(item.Name, rhs.Name);
-            ret.Model = EqualsMaskHelper.EqualsHelper(
-                item.Model_IsSet,
-                rhs.Model_IsSet,
-                item.Model,
-                rhs.Model,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
-                include);
-            ret.Icon = item.Icon_IsSet == rhs.Icon_IsSet && string.Equals(item.Icon, rhs.Icon);
-            ret.Script = item.Script_Property.FormKey == rhs.Script_Property.FormKey;
-            ret.Enchantment = item.Enchantment_Property.FormKey == rhs.Enchantment_Property.FormKey;
-            ret.EnchantmentPoints = item.EnchantmentPoints_IsSet == rhs.EnchantmentPoints_IsSet && item.EnchantmentPoints == rhs.EnchantmentPoints;
-            ret.Description = item.Description_IsSet == rhs.Description_IsSet && string.Equals(item.Description, rhs.Description);
-            ret.Flags = item.Flags == rhs.Flags;
-            ret.Teaches = item.Teaches == rhs.Teaches;
-            ret.Value = item.Value.EqualsWithin(rhs.Value);
-            ret.Weight = item.Weight.EqualsWithin(rhs.Weight);
-            base.FillEqualsMask(item, rhs, ret, include);
-        }
-
-        public string ToString(
-            IBookInternalGetter item,
-            string name = null,
-            Book_Mask<bool> printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(
-                item: item,
-                fg: fg,
-                name: name,
-                printMask: printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(
-            IBookInternalGetter item,
-            FileGeneration fg,
-            string name = null,
-            Book_Mask<bool> printMask = null)
-        {
-            if (name == null)
-            {
-                fg.AppendLine($"Book =>");
-            }
-            else
-            {
-                fg.AppendLine($"{name} (Book) =>");
-            }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                ToStringFields(
-                    item: item,
-                    fg: fg,
-                    printMask: printMask);
-            }
-            fg.AppendLine("]");
-        }
-
-        protected static void ToStringFields(
-            IBookInternalGetter item,
-            FileGeneration fg,
-            Book_Mask<bool> printMask = null)
-        {
-            ItemAbstractCommon.ToStringFields(
-                item: item,
-                fg: fg,
-                printMask: printMask);
-            if (printMask?.Name ?? true)
-            {
-                fg.AppendLine($"Name => {item.Name}");
-            }
-            if (printMask?.Model?.Overall ?? true)
-            {
-                item.Model?.ToString(fg, "Model");
-            }
-            if (printMask?.Icon ?? true)
-            {
-                fg.AppendLine($"Icon => {item.Icon}");
-            }
-            if (printMask?.Script ?? true)
-            {
-                fg.AppendLine($"Script => {item.Script_Property}");
-            }
-            if (printMask?.Enchantment ?? true)
-            {
-                fg.AppendLine($"Enchantment => {item.Enchantment_Property}");
-            }
-            if (printMask?.EnchantmentPoints ?? true)
-            {
-                fg.AppendLine($"EnchantmentPoints => {item.EnchantmentPoints}");
-            }
-            if (printMask?.Description ?? true)
-            {
-                fg.AppendLine($"Description => {item.Description}");
-            }
-            if (printMask?.Flags ?? true)
-            {
-                fg.AppendLine($"Flags => {item.Flags}");
-            }
-            if (printMask?.Teaches ?? true)
-            {
-                fg.AppendLine($"Teaches => {item.Teaches}");
-            }
-            if (printMask?.Value ?? true)
-            {
-                fg.AppendLine($"Value => {item.Value}");
-            }
-            if (printMask?.Weight ?? true)
-            {
-                fg.AppendLine($"Weight => {item.Weight}");
-            }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-            }
-        }
-
-        public bool HasBeenSet(
-            IBookInternalGetter item,
-            Book_Mask<bool?> checkMask)
-        {
-            if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_IsSet) return false;
-            if (checkMask.Model.Overall.HasValue && checkMask.Model.Overall.Value != item.Model_IsSet) return false;
-            if (checkMask.Model.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
-            if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_IsSet) return false;
-            if (checkMask.Script.HasValue && checkMask.Script.Value != item.Script_Property.HasBeenSet) return false;
-            if (checkMask.Enchantment.HasValue && checkMask.Enchantment.Value != item.Enchantment_Property.HasBeenSet) return false;
-            if (checkMask.EnchantmentPoints.HasValue && checkMask.EnchantmentPoints.Value != item.EnchantmentPoints_IsSet) return false;
-            if (checkMask.Description.HasValue && checkMask.Description.Value != item.Description_IsSet) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public void FillHasBeenSetMask(
-            IBookInternalGetter item,
-            Book_Mask<bool> mask)
-        {
-            mask.Name = item.Name_IsSet;
-            mask.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, item.Model.GetHasBeenSetMask());
-            mask.Icon = item.Icon_IsSet;
-            mask.Script = item.Script_Property.HasBeenSet;
-            mask.Enchantment = item.Enchantment_Property.HasBeenSet;
-            mask.EnchantmentPoints = item.EnchantmentPoints_IsSet;
-            mask.Description = item.Description_IsSet;
-            mask.Flags = true;
-            mask.Teaches = true;
-            mask.Value = true;
-            mask.Weight = true;
-            mask.DATADataTypeState = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-
-        public static Book_FieldIndex ConvertFieldIndex(ItemAbstract_FieldIndex index)
-        {
-            switch (index)
-            {
-                case ItemAbstract_FieldIndex.MajorRecordFlagsRaw:
-                    return (Book_FieldIndex)((int)index);
-                case ItemAbstract_FieldIndex.FormKey:
-                    return (Book_FieldIndex)((int)index);
-                case ItemAbstract_FieldIndex.Version:
-                    return (Book_FieldIndex)((int)index);
-                case ItemAbstract_FieldIndex.EditorID:
-                    return (Book_FieldIndex)((int)index);
-                case ItemAbstract_FieldIndex.OblivionMajorRecordFlags:
-                    return (Book_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        public static Book_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
-        {
-            switch (index)
-            {
-                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Book_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.FormKey:
-                    return (Book_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.Version:
-                    return (Book_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.EditorID:
-                    return (Book_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
-                    return (Book_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        public static Book_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
-        {
-            switch (index)
-            {
-                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Book_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.FormKey:
-                    return (Book_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
-                    return (Book_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.EditorID:
-                    return (Book_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        #region Equals and Hash
-        public virtual bool Equals(
-            IBookInternalGetter lhs,
-            IBookInternalGetter rhs)
-        {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (lhs.Name_IsSet != rhs.Name_IsSet) return false;
-            if (lhs.Name_IsSet)
-            {
-                if (!string.Equals(lhs.Name, rhs.Name)) return false;
-            }
-            if (lhs.Model_IsSet != rhs.Model_IsSet) return false;
-            if (lhs.Model_IsSet)
-            {
-                if (!object.Equals(lhs.Model, rhs.Model)) return false;
-            }
-            if (lhs.Icon_IsSet != rhs.Icon_IsSet) return false;
-            if (lhs.Icon_IsSet)
-            {
-                if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
-            }
-            if (lhs.Script_Property.HasBeenSet != rhs.Script_Property.HasBeenSet) return false;
-            if (lhs.Script_Property.HasBeenSet)
-            {
-                if (!lhs.Script_Property.Equals(rhs.Script_Property)) return false;
-            }
-            if (lhs.Enchantment_Property.HasBeenSet != rhs.Enchantment_Property.HasBeenSet) return false;
-            if (lhs.Enchantment_Property.HasBeenSet)
-            {
-                if (!lhs.Enchantment_Property.Equals(rhs.Enchantment_Property)) return false;
-            }
-            if (lhs.EnchantmentPoints_IsSet != rhs.EnchantmentPoints_IsSet) return false;
-            if (lhs.EnchantmentPoints_IsSet)
-            {
-                if (lhs.EnchantmentPoints != rhs.EnchantmentPoints) return false;
-            }
-            if (lhs.Description_IsSet != rhs.Description_IsSet) return false;
-            if (lhs.Description_IsSet)
-            {
-                if (!string.Equals(lhs.Description, rhs.Description)) return false;
-            }
-            if (lhs.Flags != rhs.Flags) return false;
-            if (lhs.Teaches != rhs.Teaches) return false;
-            if (!lhs.Value.EqualsWithin(rhs.Value)) return false;
-            if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
-            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
-            return true;
-        }
-
-        public override bool Equals(
-            IItemAbstractInternalGetter lhs,
-            IItemAbstractInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (IBookInternalGetter)lhs,
-                rhs: rhs as IBookInternalGetter);
-        }
-
-        public override bool Equals(
-            IOblivionMajorRecordInternalGetter lhs,
-            IOblivionMajorRecordInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (IBookInternalGetter)lhs,
-                rhs: rhs as IBookInternalGetter);
-        }
-
-        public override bool Equals(
-            IMajorRecordInternalGetter lhs,
-            IMajorRecordInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (IBookInternalGetter)lhs,
-                rhs: rhs as IBookInternalGetter);
-        }
-
-        public virtual int GetHashCode(IBookInternalGetter item)
-        {
-            int ret = 0;
-            if (item.Name_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Name).CombineHashCode(ret);
-            }
-            if (item.Model_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Model).CombineHashCode(ret);
-            }
-            if (item.Icon_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Icon).CombineHashCode(ret);
-            }
-            if (item.Script_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.Script).CombineHashCode(ret);
-            }
-            if (item.Enchantment_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.Enchantment).CombineHashCode(ret);
-            }
-            if (item.EnchantmentPoints_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.EnchantmentPoints).CombineHashCode(ret);
-            }
-            if (item.Description_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Description).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Teaches).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Value).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Weight).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.DATADataTypeState).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        public override int GetHashCode(IItemAbstractInternalGetter item)
-        {
-            return GetHashCode(item: (IBookInternalGetter)item);
-        }
-
-        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
-        {
-            return GetHashCode(item: (IBookInternalGetter)item);
-        }
-
-        public override int GetHashCode(IMajorRecordInternalGetter item)
-        {
-            return GetHashCode(item: (IBookInternalGetter)item);
-        }
-
-        #endregion
-
-
-        #region Mutagen
-        partial void PostDuplicate(Book obj, Book rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new Book(getNextFormKey());
-            ret.CopyFieldsFrom((Book)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (Book)item, getNextFormKey, duplicatedRecords);
-            return ret;
-        }
-
-        #endregion
-
+        
+        
     }
     #endregion
 
@@ -3691,17 +3722,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         ItemAbstractBinaryWrapper,
         IBookInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Book_Registration.Instance;
         public new static Book_Registration Registration => Book_Registration.Instance;
-        protected override object CommonInstance => BookCommon.Instance;
+        protected override object CommonInstance()
+        {
+            return BookCommon.Instance;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IBookInternalGetter)rhs, include);
 
         protected override object XmlWriteTranslator => BookXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((BookXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         protected override object BinaryWriteTranslator => BookBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((BookBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
 
         #region Name
         private int? _NameLocation;
@@ -3709,7 +3772,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public String Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _NameLocation.Value, _package.Meta)) : default;
         #endregion
         #region Model
-        public IModelGetter Model { get; private set; }
+        public IModelInternalGetter Model { get; private set; }
         public bool Model_IsSet => Model != null;
         #endregion
         #region Icon
@@ -3871,4 +3934,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class Book
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Book_Registration.Instance;
+        public new static Book_Registration Registration => Book_Registration.Instance;
+        protected override object CommonInstance()
+        {
+            return BookCommon.Instance;
+        }
+        protected override object CommonSetterInstance()
+        {
+            return BookSetterCommon.Instance;
+        }
+        protected override object CommonSetterCopyInstance()
+        {
+            return BookSetterCopyCommon.Instance;
+        }
+
+        #endregion
+
+    }
 }

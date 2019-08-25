@@ -44,11 +44,6 @@ namespace Mutagen.Bethesda.Oblivion
         IEquatable<LeveledCreature>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => LeveledCreature_Registration.Instance;
-        public new static LeveledCreature_Registration Registration => LeveledCreature_Registration.Instance;
-        protected override object CommonInstance => LeveledCreatureCommon.Instance;
-
         #region Ctor
         protected LeveledCreature()
         {
@@ -117,7 +112,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<LeveledEntry<NPCSpawn>> ILeveledCreature.Entries => _Entries;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<ILeveledEntryGetter<INPCSpawnInternalGetter>> ILeveledCreatureGetter.Entries => _Entries;
+        IReadOnlySetList<ILeveledEntryInternalGetter<INPCSpawnInternalGetter>> ILeveledCreatureGetter.Entries => _Entries;
         #endregion
 
         #endregion
@@ -157,20 +152,33 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is ILeveledCreatureInternalGetter rhs)) return false;
-            return ((LeveledCreatureCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            return ((LeveledCreatureCommon)((ILeveledCreatureInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(LeveledCreature obj)
         {
-            return ((LeveledCreatureCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((LeveledCreatureCommon)((ILeveledCreatureInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((LeveledCreatureCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((LeveledCreatureCommon)((ILeveledCreatureInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected override object XmlWriteTranslator => LeveledCreatureXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((LeveledCreatureXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static LeveledCreature CreateFromXml(
@@ -422,6 +430,19 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Binary Translation
         protected override object BinaryWriteTranslator => LeveledCreatureBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((LeveledCreatureBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
         #region Binary Create
         [DebuggerStepThrough]
         public static LeveledCreature CreateFromBinary(
@@ -651,7 +672,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            LeveledCreatureCommon.CopyFieldsFrom(
+            LeveledCreatureSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -666,7 +687,7 @@ namespace Mutagen.Bethesda.Oblivion
             LeveledCreature_CopyMask copyMask = null,
             LeveledCreature def = null)
         {
-            LeveledCreatureCommon.CopyFieldsFrom(
+            LeveledCreatureSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -702,7 +723,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            LeveledCreatureCommon.Instance.Clear(this);
+            LeveledCreatureSetterCommon.Instance.Clear(this);
         }
 
         public new static LeveledCreature Create(IEnumerable<KeyValuePair<ushort, object>> fields)
@@ -801,7 +822,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Entries
-        IReadOnlySetList<ILeveledEntryGetter<INPCSpawnInternalGetter>> Entries { get; }
+        IReadOnlySetList<ILeveledEntryInternalGetter<INPCSpawnInternalGetter>> Entries { get; }
         #endregion
         #region Script
         IScriptInternalGetter Script { get; }
@@ -830,7 +851,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this ILeveledCreatureInternal item)
         {
-            ((LeveledCreatureCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((LeveledCreatureSetterCommon)((ILeveledCreatureInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static LeveledCreature_Mask<bool> GetEqualsMask(
@@ -838,7 +859,7 @@ namespace Mutagen.Bethesda.Oblivion
             ILeveledCreatureInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((LeveledCreatureCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((LeveledCreatureCommon)((ILeveledCreatureInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -849,7 +870,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             LeveledCreature_Mask<bool> printMask = null)
         {
-            return ((LeveledCreatureCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((LeveledCreatureCommon)((ILeveledCreatureInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -861,7 +882,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             LeveledCreature_Mask<bool> printMask = null)
         {
-            ((LeveledCreatureCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((LeveledCreatureCommon)((ILeveledCreatureInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -872,7 +893,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ILeveledCreatureInternalGetter item,
             LeveledCreature_Mask<bool?> checkMask)
         {
-            return ((LeveledCreatureCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((LeveledCreatureCommon)((ILeveledCreatureInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -880,7 +901,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static LeveledCreature_Mask<bool> GetHasBeenSetMask(this ILeveledCreatureInternalGetter item)
         {
             var ret = new LeveledCreature_Mask<bool>();
-            ((LeveledCreatureCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((LeveledCreatureCommon)((ILeveledCreatureInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -890,7 +911,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ILeveledCreatureInternalGetter item,
             ILeveledCreatureInternalGetter rhs)
         {
-            return ((LeveledCreatureCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((LeveledCreatureCommon)((ILeveledCreatureInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -949,8 +970,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type SetterType = typeof(ILeveledCreature);
 
         public static readonly Type InternalSetterType = typeof(ILeveledCreatureInternal);
-
-        public static readonly Type CommonType = typeof(LeveledCreatureCommon);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.LeveledCreature";
 
@@ -1127,7 +1146,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -1147,9 +1165,370 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
+    public partial class LeveledCreatureSetterCommon : NPCSpawnSetterCommon
+    {
+        public new static readonly LeveledCreatureSetterCommon Instance = new LeveledCreatureSetterCommon();
+
+        partial void ClearPartial();
+        
+        public virtual void Clear(ILeveledCreatureInternal item)
+        {
+            ClearPartial();
+            item.ChanceNone_Unset();
+            item.Flags_Unset();
+            item.Entries.Unset();
+            item.Script_Property.Unset();
+            item.Template_Property.Unset();
+            base.Clear(item);
+        }
+        
+        public override void Clear(INPCSpawnInternal item)
+        {
+            Clear(item: (ILeveledCreatureInternal)item);
+        }
+        
+        public override void Clear(IOblivionMajorRecordInternal item)
+        {
+            Clear(item: (ILeveledCreatureInternal)item);
+        }
+        
+        public override void Clear(IMajorRecordInternal item)
+        {
+            Clear(item: (ILeveledCreatureInternal)item);
+        }
+        
+        
+    }
     public partial class LeveledCreatureCommon : NPCSpawnCommon
     {
-        public static readonly LeveledCreatureCommon Instance = new LeveledCreatureCommon();
+        public new static readonly LeveledCreatureCommon Instance = new LeveledCreatureCommon();
+
+        public LeveledCreature_Mask<bool> GetEqualsMask(
+            ILeveledCreatureInternalGetter item,
+            ILeveledCreatureInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new LeveledCreature_Mask<bool>();
+            ((LeveledCreatureCommon)((ILeveledCreatureInternalGetter)item).CommonInstance()).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+        
+        public void FillEqualsMask(
+            ILeveledCreatureInternalGetter item,
+            ILeveledCreatureInternalGetter rhs,
+            LeveledCreature_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            if (rhs == null) return;
+            ret.ChanceNone = item.ChanceNone_IsSet == rhs.ChanceNone_IsSet && item.ChanceNone == rhs.ChanceNone;
+            ret.Flags = item.Flags_IsSet == rhs.Flags_IsSet && item.Flags == rhs.Flags;
+            ret.Entries = item.Entries.CollectionEqualsHelper(
+                rhs.Entries,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Script = item.Script_Property.FormKey == rhs.Script_Property.FormKey;
+            ret.Template = item.Template_Property.FormKey == rhs.Template_Property.FormKey;
+            base.FillEqualsMask(item, rhs, ret, include);
+        }
+        
+        public string ToString(
+            ILeveledCreatureInternalGetter item,
+            string name = null,
+            LeveledCreature_Mask<bool> printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+            return fg.ToString();
+        }
+        
+        public void ToString(
+            ILeveledCreatureInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            LeveledCreature_Mask<bool> printMask = null)
+        {
+            if (name == null)
+            {
+                fg.AppendLine($"LeveledCreature =>");
+            }
+            else
+            {
+                fg.AppendLine($"{name} (LeveledCreature) =>");
+            }
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
+            }
+            fg.AppendLine("]");
+        }
+        
+        protected static void ToStringFields(
+            ILeveledCreatureInternalGetter item,
+            FileGeneration fg,
+            LeveledCreature_Mask<bool> printMask = null)
+        {
+            NPCSpawnCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.ChanceNone ?? true)
+            {
+                fg.AppendLine($"ChanceNone => {item.ChanceNone}");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                fg.AppendLine($"Flags => {item.Flags}");
+            }
+            if (printMask?.Entries?.Overall ?? true)
+            {
+                fg.AppendLine("Entries =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Entries)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.Script ?? true)
+            {
+                fg.AppendLine($"Script => {item.Script_Property}");
+            }
+            if (printMask?.Template ?? true)
+            {
+                fg.AppendLine($"Template => {item.Template_Property}");
+            }
+        }
+        
+        public bool HasBeenSet(
+            ILeveledCreatureInternalGetter item,
+            LeveledCreature_Mask<bool?> checkMask)
+        {
+            if (checkMask.ChanceNone.HasValue && checkMask.ChanceNone.Value != item.ChanceNone_IsSet) return false;
+            if (checkMask.Flags.HasValue && checkMask.Flags.Value != item.Flags_IsSet) return false;
+            if (checkMask.Entries.Overall.HasValue && checkMask.Entries.Overall.Value != item.Entries.HasBeenSet) return false;
+            if (checkMask.Script.HasValue && checkMask.Script.Value != item.Script_Property.HasBeenSet) return false;
+            if (checkMask.Template.HasValue && checkMask.Template.Value != item.Template_Property.HasBeenSet) return false;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+        
+        public void FillHasBeenSetMask(
+            ILeveledCreatureInternalGetter item,
+            LeveledCreature_Mask<bool> mask)
+        {
+            mask.ChanceNone = item.ChanceNone_IsSet;
+            mask.Flags = item.Flags_IsSet;
+            mask.Entries = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, LeveledEntry_Mask<bool>>>>(item.Entries.HasBeenSet, item.Entries.WithIndex().Select((i) => new MaskItemIndexed<bool, LeveledEntry_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.Script = item.Script_Property.HasBeenSet;
+            mask.Template = item.Template_Property.HasBeenSet;
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
+        }
+        
+        public static LeveledCreature_FieldIndex ConvertFieldIndex(NPCSpawn_FieldIndex index)
+        {
+            switch (index)
+            {
+                case NPCSpawn_FieldIndex.MajorRecordFlagsRaw:
+                    return (LeveledCreature_FieldIndex)((int)index);
+                case NPCSpawn_FieldIndex.FormKey:
+                    return (LeveledCreature_FieldIndex)((int)index);
+                case NPCSpawn_FieldIndex.Version:
+                    return (LeveledCreature_FieldIndex)((int)index);
+                case NPCSpawn_FieldIndex.EditorID:
+                    return (LeveledCreature_FieldIndex)((int)index);
+                case NPCSpawn_FieldIndex.OblivionMajorRecordFlags:
+                    return (LeveledCreature_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        public static LeveledCreature_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (LeveledCreature_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.FormKey:
+                    return (LeveledCreature_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.Version:
+                    return (LeveledCreature_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.EditorID:
+                    return (LeveledCreature_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
+                    return (LeveledCreature_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        public static LeveledCreature_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (LeveledCreature_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.FormKey:
+                    return (LeveledCreature_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.Version:
+                    return (LeveledCreature_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.EditorID:
+                    return (LeveledCreature_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        #region Equals and Hash
+        public virtual bool Equals(
+            ILeveledCreatureInternalGetter lhs,
+            ILeveledCreatureInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.ChanceNone_IsSet != rhs.ChanceNone_IsSet) return false;
+            if (lhs.ChanceNone_IsSet)
+            {
+                if (lhs.ChanceNone != rhs.ChanceNone) return false;
+            }
+            if (lhs.Flags_IsSet != rhs.Flags_IsSet) return false;
+            if (lhs.Flags_IsSet)
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if (lhs.Entries.HasBeenSet != rhs.Entries.HasBeenSet) return false;
+            if (lhs.Entries.HasBeenSet)
+            {
+                if (!lhs.Entries.SequenceEqual(rhs.Entries)) return false;
+            }
+            if (lhs.Script_Property.HasBeenSet != rhs.Script_Property.HasBeenSet) return false;
+            if (lhs.Script_Property.HasBeenSet)
+            {
+                if (!lhs.Script_Property.Equals(rhs.Script_Property)) return false;
+            }
+            if (lhs.Template_Property.HasBeenSet != rhs.Template_Property.HasBeenSet) return false;
+            if (lhs.Template_Property.HasBeenSet)
+            {
+                if (!lhs.Template_Property.Equals(rhs.Template_Property)) return false;
+            }
+            return true;
+        }
+        
+        public override bool Equals(
+            INPCSpawnInternalGetter lhs,
+            INPCSpawnInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (ILeveledCreatureInternalGetter)lhs,
+                rhs: rhs as ILeveledCreatureInternalGetter);
+        }
+        
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (ILeveledCreatureInternalGetter)lhs,
+                rhs: rhs as ILeveledCreatureInternalGetter);
+        }
+        
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (ILeveledCreatureInternalGetter)lhs,
+                rhs: rhs as ILeveledCreatureInternalGetter);
+        }
+        
+        public virtual int GetHashCode(ILeveledCreatureInternalGetter item)
+        {
+            int ret = 0;
+            if (item.ChanceNone_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.ChanceNone).CombineHashCode(ret);
+            }
+            if (item.Flags_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
+            }
+            if (item.Entries.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Entries).CombineHashCode(ret);
+            }
+            if (item.Script_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Script).CombineHashCode(ret);
+            }
+            if (item.Template_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Template).CombineHashCode(ret);
+            }
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+        
+        public override int GetHashCode(INPCSpawnInternalGetter item)
+        {
+            return GetHashCode(item: (ILeveledCreatureInternalGetter)item);
+        }
+        
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (ILeveledCreatureInternalGetter)item);
+        }
+        
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (ILeveledCreatureInternalGetter)item);
+        }
+        
+        #endregion
+        
+        
+        #region Mutagen
+        partial void PostDuplicate(LeveledCreature obj, LeveledCreature rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+        
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new LeveledCreature(getNextFormKey());
+            ret.CopyFieldsFrom((LeveledCreature)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (LeveledCreature)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+        
+        #endregion
+        
+        
+    }
+    public partial class LeveledCreatureSetterCopyCommon : NPCSpawnSetterCopyCommon
+    {
+        public new static readonly LeveledCreatureSetterCopyCommon Instance = new LeveledCreatureSetterCopyCommon();
 
         #region Copy Fields From
         public static void CopyFieldsFrom(
@@ -1159,7 +1538,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             LeveledCreature_CopyMask copyMask)
         {
-            NPCSpawnCommon.CopyFieldsFrom(
+            NPCSpawnSetterCopyCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1298,358 +1677,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
         }
-
+        
         #endregion
-
-        partial void ClearPartial();
-
-        public virtual void Clear(ILeveledCreatureInternal item)
-        {
-            ClearPartial();
-            item.ChanceNone_Unset();
-            item.Flags_Unset();
-            item.Entries.Unset();
-            item.Script_Property.Unset();
-            item.Template_Property.Unset();
-            base.Clear(item);
-        }
-
-        public override void Clear(INPCSpawnInternal item)
-        {
-            Clear(item: (ILeveledCreatureInternal)item);
-        }
-
-        public override void Clear(IOblivionMajorRecordInternal item)
-        {
-            Clear(item: (ILeveledCreatureInternal)item);
-        }
-
-        public override void Clear(IMajorRecordInternal item)
-        {
-            Clear(item: (ILeveledCreatureInternal)item);
-        }
-
-        public LeveledCreature_Mask<bool> GetEqualsMask(
-            ILeveledCreatureInternalGetter item,
-            ILeveledCreatureInternalGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new LeveledCreature_Mask<bool>();
-            ((LeveledCreatureCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public void FillEqualsMask(
-            ILeveledCreatureInternalGetter item,
-            ILeveledCreatureInternalGetter rhs,
-            LeveledCreature_Mask<bool> ret,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            if (rhs == null) return;
-            ret.ChanceNone = item.ChanceNone_IsSet == rhs.ChanceNone_IsSet && item.ChanceNone == rhs.ChanceNone;
-            ret.Flags = item.Flags_IsSet == rhs.Flags_IsSet && item.Flags == rhs.Flags;
-            ret.Entries = item.Entries.CollectionEqualsHelper(
-                rhs.Entries,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
-                include);
-            ret.Script = item.Script_Property.FormKey == rhs.Script_Property.FormKey;
-            ret.Template = item.Template_Property.FormKey == rhs.Template_Property.FormKey;
-            base.FillEqualsMask(item, rhs, ret, include);
-        }
-
-        public string ToString(
-            ILeveledCreatureInternalGetter item,
-            string name = null,
-            LeveledCreature_Mask<bool> printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(
-                item: item,
-                fg: fg,
-                name: name,
-                printMask: printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(
-            ILeveledCreatureInternalGetter item,
-            FileGeneration fg,
-            string name = null,
-            LeveledCreature_Mask<bool> printMask = null)
-        {
-            if (name == null)
-            {
-                fg.AppendLine($"LeveledCreature =>");
-            }
-            else
-            {
-                fg.AppendLine($"{name} (LeveledCreature) =>");
-            }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                ToStringFields(
-                    item: item,
-                    fg: fg,
-                    printMask: printMask);
-            }
-            fg.AppendLine("]");
-        }
-
-        protected static void ToStringFields(
-            ILeveledCreatureInternalGetter item,
-            FileGeneration fg,
-            LeveledCreature_Mask<bool> printMask = null)
-        {
-            NPCSpawnCommon.ToStringFields(
-                item: item,
-                fg: fg,
-                printMask: printMask);
-            if (printMask?.ChanceNone ?? true)
-            {
-                fg.AppendLine($"ChanceNone => {item.ChanceNone}");
-            }
-            if (printMask?.Flags ?? true)
-            {
-                fg.AppendLine($"Flags => {item.Flags}");
-            }
-            if (printMask?.Entries?.Overall ?? true)
-            {
-                fg.AppendLine("Entries =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
-                {
-                    foreach (var subItem in item.Entries)
-                    {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            subItem?.ToString(fg, "Item");
-                        }
-                        fg.AppendLine("]");
-                    }
-                }
-                fg.AppendLine("]");
-            }
-            if (printMask?.Script ?? true)
-            {
-                fg.AppendLine($"Script => {item.Script_Property}");
-            }
-            if (printMask?.Template ?? true)
-            {
-                fg.AppendLine($"Template => {item.Template_Property}");
-            }
-        }
-
-        public bool HasBeenSet(
-            ILeveledCreatureInternalGetter item,
-            LeveledCreature_Mask<bool?> checkMask)
-        {
-            if (checkMask.ChanceNone.HasValue && checkMask.ChanceNone.Value != item.ChanceNone_IsSet) return false;
-            if (checkMask.Flags.HasValue && checkMask.Flags.Value != item.Flags_IsSet) return false;
-            if (checkMask.Entries.Overall.HasValue && checkMask.Entries.Overall.Value != item.Entries.HasBeenSet) return false;
-            if (checkMask.Script.HasValue && checkMask.Script.Value != item.Script_Property.HasBeenSet) return false;
-            if (checkMask.Template.HasValue && checkMask.Template.Value != item.Template_Property.HasBeenSet) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public void FillHasBeenSetMask(
-            ILeveledCreatureInternalGetter item,
-            LeveledCreature_Mask<bool> mask)
-        {
-            mask.ChanceNone = item.ChanceNone_IsSet;
-            mask.Flags = item.Flags_IsSet;
-            mask.Entries = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, LeveledEntry_Mask<bool>>>>(item.Entries.HasBeenSet, item.Entries.WithIndex().Select((i) => new MaskItemIndexed<bool, LeveledEntry_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.Script = item.Script_Property.HasBeenSet;
-            mask.Template = item.Template_Property.HasBeenSet;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-
-        public static LeveledCreature_FieldIndex ConvertFieldIndex(NPCSpawn_FieldIndex index)
-        {
-            switch (index)
-            {
-                case NPCSpawn_FieldIndex.MajorRecordFlagsRaw:
-                    return (LeveledCreature_FieldIndex)((int)index);
-                case NPCSpawn_FieldIndex.FormKey:
-                    return (LeveledCreature_FieldIndex)((int)index);
-                case NPCSpawn_FieldIndex.Version:
-                    return (LeveledCreature_FieldIndex)((int)index);
-                case NPCSpawn_FieldIndex.EditorID:
-                    return (LeveledCreature_FieldIndex)((int)index);
-                case NPCSpawn_FieldIndex.OblivionMajorRecordFlags:
-                    return (LeveledCreature_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        public static LeveledCreature_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
-        {
-            switch (index)
-            {
-                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (LeveledCreature_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.FormKey:
-                    return (LeveledCreature_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.Version:
-                    return (LeveledCreature_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.EditorID:
-                    return (LeveledCreature_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
-                    return (LeveledCreature_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        public static LeveledCreature_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
-        {
-            switch (index)
-            {
-                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (LeveledCreature_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.FormKey:
-                    return (LeveledCreature_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
-                    return (LeveledCreature_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.EditorID:
-                    return (LeveledCreature_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        #region Equals and Hash
-        public virtual bool Equals(
-            ILeveledCreatureInternalGetter lhs,
-            ILeveledCreatureInternalGetter rhs)
-        {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (lhs.ChanceNone_IsSet != rhs.ChanceNone_IsSet) return false;
-            if (lhs.ChanceNone_IsSet)
-            {
-                if (lhs.ChanceNone != rhs.ChanceNone) return false;
-            }
-            if (lhs.Flags_IsSet != rhs.Flags_IsSet) return false;
-            if (lhs.Flags_IsSet)
-            {
-                if (lhs.Flags != rhs.Flags) return false;
-            }
-            if (lhs.Entries.HasBeenSet != rhs.Entries.HasBeenSet) return false;
-            if (lhs.Entries.HasBeenSet)
-            {
-                if (!lhs.Entries.SequenceEqual(rhs.Entries)) return false;
-            }
-            if (lhs.Script_Property.HasBeenSet != rhs.Script_Property.HasBeenSet) return false;
-            if (lhs.Script_Property.HasBeenSet)
-            {
-                if (!lhs.Script_Property.Equals(rhs.Script_Property)) return false;
-            }
-            if (lhs.Template_Property.HasBeenSet != rhs.Template_Property.HasBeenSet) return false;
-            if (lhs.Template_Property.HasBeenSet)
-            {
-                if (!lhs.Template_Property.Equals(rhs.Template_Property)) return false;
-            }
-            return true;
-        }
-
-        public override bool Equals(
-            INPCSpawnInternalGetter lhs,
-            INPCSpawnInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (ILeveledCreatureInternalGetter)lhs,
-                rhs: rhs as ILeveledCreatureInternalGetter);
-        }
-
-        public override bool Equals(
-            IOblivionMajorRecordInternalGetter lhs,
-            IOblivionMajorRecordInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (ILeveledCreatureInternalGetter)lhs,
-                rhs: rhs as ILeveledCreatureInternalGetter);
-        }
-
-        public override bool Equals(
-            IMajorRecordInternalGetter lhs,
-            IMajorRecordInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (ILeveledCreatureInternalGetter)lhs,
-                rhs: rhs as ILeveledCreatureInternalGetter);
-        }
-
-        public virtual int GetHashCode(ILeveledCreatureInternalGetter item)
-        {
-            int ret = 0;
-            if (item.ChanceNone_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.ChanceNone).CombineHashCode(ret);
-            }
-            if (item.Flags_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
-            }
-            if (item.Entries.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.Entries).CombineHashCode(ret);
-            }
-            if (item.Script_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.Script).CombineHashCode(ret);
-            }
-            if (item.Template_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.Template).CombineHashCode(ret);
-            }
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        public override int GetHashCode(INPCSpawnInternalGetter item)
-        {
-            return GetHashCode(item: (ILeveledCreatureInternalGetter)item);
-        }
-
-        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
-        {
-            return GetHashCode(item: (ILeveledCreatureInternalGetter)item);
-        }
-
-        public override int GetHashCode(IMajorRecordInternalGetter item)
-        {
-            return GetHashCode(item: (ILeveledCreatureInternalGetter)item);
-        }
-
-        #endregion
-
-
-        #region Mutagen
-        partial void PostDuplicate(LeveledCreature obj, LeveledCreature rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new LeveledCreature(getNextFormKey());
-            ret.CopyFieldsFrom((LeveledCreature)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (LeveledCreature)item, getNextFormKey, duplicatedRecords);
-            return ret;
-        }
-
-        #endregion
-
+        
+        
     }
     #endregion
 
@@ -1695,14 +1726,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Entries.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)LeveledCreature_FieldIndex.Entries) ?? true))
             {
-                ListXmlTranslation<ILeveledEntryGetter<INPCSpawnInternalGetter>>.Instance.Write(
+                ListXmlTranslation<ILeveledEntryInternalGetter<INPCSpawnInternalGetter>>.Instance.Write(
                     node: node,
                     name: nameof(item.Entries),
                     item: item.Entries,
                     fieldIndex: (int)LeveledCreature_FieldIndex.Entries,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)LeveledCreature_FieldIndex.Entries),
-                    transl: (XElement subNode, ILeveledEntryGetter<INPCSpawnInternalGetter> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    transl: (XElement subNode, ILeveledEntryInternalGetter<INPCSpawnInternalGetter> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         var loquiItem = subItem;
                         ((LeveledEntryXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<INPCSpawnInternalGetter>(
@@ -2512,12 +2543,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.Entries.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<ILeveledEntryGetter<INPCSpawnInternalGetter>>.Instance.Write(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<ILeveledEntryInternalGetter<INPCSpawnInternalGetter>>.Instance.Write(
                     writer: writer,
                     items: item.Entries,
                     fieldIndex: (int)LeveledCreature_FieldIndex.Entries,
                     errorMask: errorMask,
-                    transl: (MutagenWriter subWriter, ILeveledEntryGetter<INPCSpawnInternalGetter> subItem, ErrorMaskBuilder listErrorMask) =>
+                    transl: (MutagenWriter subWriter, ILeveledEntryInternalGetter<INPCSpawnInternalGetter> subItem, ErrorMaskBuilder listErrorMask) =>
                     {
                         var loquiItem = subItem;
                         ((LeveledEntryBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<INPCSpawnInternalGetter>(
@@ -2669,17 +2700,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         NPCSpawnBinaryWrapper,
         ILeveledCreatureInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LeveledCreature_Registration.Instance;
         public new static LeveledCreature_Registration Registration => LeveledCreature_Registration.Instance;
-        protected override object CommonInstance => LeveledCreatureCommon.Instance;
+        protected override object CommonInstance()
+        {
+            return LeveledCreatureCommon.Instance;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILeveledCreatureInternalGetter)rhs, include);
 
         protected override object XmlWriteTranslator => LeveledCreatureXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((LeveledCreatureXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         protected override object BinaryWriteTranslator => LeveledCreatureBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((LeveledCreatureBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
 
         #region ChanceNone
         private int? _ChanceNoneLocation;
@@ -2691,7 +2754,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Flags_IsSet => _FlagsLocation.HasValue;
         public LeveledFlag Flags => (LeveledFlag)HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation.Value, _package.Meta)[0];
         #endregion
-        public IReadOnlySetList<ILeveledEntryGetter<INPCSpawnInternalGetter>> Entries { get; private set; } = EmptySetList<LeveledEntryBinaryWrapper<INPCSpawnInternalGetter>>.Instance;
+        public IReadOnlySetList<ILeveledEntryInternalGetter<INPCSpawnInternalGetter>> Entries { get; private set; } = EmptySetList<LeveledEntryBinaryWrapper<INPCSpawnInternalGetter>>.Instance;
         #region Script
         private int? _ScriptLocation;
         public bool Script_IsSet => _ScriptLocation.HasValue;
@@ -2805,4 +2868,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class LeveledCreature
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => LeveledCreature_Registration.Instance;
+        public new static LeveledCreature_Registration Registration => LeveledCreature_Registration.Instance;
+        protected override object CommonInstance()
+        {
+            return LeveledCreatureCommon.Instance;
+        }
+        protected override object CommonSetterInstance()
+        {
+            return LeveledCreatureSetterCommon.Instance;
+        }
+        protected override object CommonSetterCopyInstance()
+        {
+            return LeveledCreatureSetterCopyCommon.Instance;
+        }
+
+        #endregion
+
+    }
 }

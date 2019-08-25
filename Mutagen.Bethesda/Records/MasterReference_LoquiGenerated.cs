@@ -33,17 +33,11 @@ namespace Mutagen.Bethesda
     #region Class
     public partial class MasterReference :
         LoquiNotifyingObject,
-        IMasterReference,
+        IMasterReferenceInternal,
         ILoquiObjectSetter<MasterReference>,
         IEquatable<MasterReference>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => MasterReference_Registration.Instance;
-        public static MasterReference_Registration Registration => MasterReference_Registration.Instance;
-        protected object CommonInstance => MasterReferenceCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
-
         #region Ctor
         public MasterReference()
         {
@@ -88,7 +82,7 @@ namespace Mutagen.Bethesda
         }
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMasterReferenceGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMasterReferenceInternalGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -106,22 +100,35 @@ namespace Mutagen.Bethesda
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is IMasterReferenceGetter rhs)) return false;
-            return ((MasterReferenceCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            if (!(obj is IMasterReferenceInternalGetter rhs)) return false;
+            return ((MasterReferenceCommon)((IMasterReferenceInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(MasterReference obj)
         {
-            return ((MasterReferenceCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((MasterReferenceCommon)((IMasterReferenceInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((MasterReferenceCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((MasterReferenceCommon)((IMasterReferenceInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected object XmlWriteTranslator => MasterReferenceXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((MasterReferenceXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static MasterReference CreateFromXml(
@@ -295,6 +302,19 @@ namespace Mutagen.Bethesda
         #region Binary Translation
         protected object BinaryWriteTranslator => MasterReferenceBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((MasterReferenceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
         #region Binary Create
         [DebuggerStepThrough]
         public static MasterReference CreateFromBinary(
@@ -479,7 +499,7 @@ namespace Mutagen.Bethesda
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            MasterReferenceCommon.CopyFieldsFrom(
+            MasterReferenceSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -494,7 +514,7 @@ namespace Mutagen.Bethesda
             MasterReference_CopyMask copyMask = null,
             MasterReference def = null)
         {
-            MasterReferenceCommon.CopyFieldsFrom(
+            MasterReferenceSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -520,7 +540,7 @@ namespace Mutagen.Bethesda
 
         public void Clear()
         {
-            MasterReferenceCommon.Instance.Clear(this);
+            MasterReferenceSetterCommon.Instance.Clear(this);
         }
 
         public static MasterReference Create(IEnumerable<KeyValuePair<ushort, object>> fields)
@@ -556,8 +576,8 @@ namespace Mutagen.Bethesda
 
     #region Interface
     public partial interface IMasterReference :
-        IMasterReferenceGetter,
-        ILoquiObjectSetter<IMasterReference>
+        IMasterReferenceInternalGetter,
+        ILoquiObjectSetter<IMasterReferenceInternal>
     {
         new ModKey Master { get; set; }
 
@@ -573,9 +593,15 @@ namespace Mutagen.Bethesda
             MasterReference def = null);
     }
 
+    public partial interface IMasterReferenceInternal :
+        IMasterReference,
+        IMasterReferenceInternalGetter
+    {
+    }
+
     public partial interface IMasterReferenceGetter :
         ILoquiObject,
-        ILoquiObject<IMasterReferenceGetter>,
+        ILoquiObject<IMasterReferenceInternalGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -591,45 +617,53 @@ namespace Mutagen.Bethesda
 
     }
 
+    public partial interface IMasterReferenceInternalGetter : IMasterReferenceGetter
+    {
+        object CommonInstance();
+        object CommonSetterInstance();
+        object CommonSetterCopyInstance();
+
+    }
+
     #endregion
 
     #region Common MixIn
     public static class MasterReferenceMixIn
     {
-        public static void Clear(this IMasterReference item)
+        public static void Clear(this IMasterReferenceInternal item)
         {
-            ((MasterReferenceCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((MasterReferenceSetterCommon)((IMasterReferenceInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static MasterReference_Mask<bool> GetEqualsMask(
-            this IMasterReferenceGetter item,
-            IMasterReferenceGetter rhs,
+            this IMasterReferenceInternalGetter item,
+            IMasterReferenceInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((MasterReferenceCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((MasterReferenceCommon)((IMasterReferenceInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IMasterReferenceGetter item,
+            this IMasterReferenceInternalGetter item,
             string name = null,
             MasterReference_Mask<bool> printMask = null)
         {
-            return ((MasterReferenceCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((MasterReferenceCommon)((IMasterReferenceInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IMasterReferenceGetter item,
+            this IMasterReferenceInternalGetter item,
             FileGeneration fg,
             string name = null,
             MasterReference_Mask<bool> printMask = null)
         {
-            ((MasterReferenceCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((MasterReferenceCommon)((IMasterReferenceInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -637,28 +671,28 @@ namespace Mutagen.Bethesda
         }
 
         public static bool HasBeenSet(
-            this IMasterReferenceGetter item,
+            this IMasterReferenceInternalGetter item,
             MasterReference_Mask<bool?> checkMask)
         {
-            return ((MasterReferenceCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((MasterReferenceCommon)((IMasterReferenceInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static MasterReference_Mask<bool> GetHasBeenSetMask(this IMasterReferenceGetter item)
+        public static MasterReference_Mask<bool> GetHasBeenSetMask(this IMasterReferenceInternalGetter item)
         {
             var ret = new MasterReference_Mask<bool>();
-            ((MasterReferenceCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((MasterReferenceCommon)((IMasterReferenceInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this IMasterReferenceGetter item,
-            IMasterReferenceGetter rhs)
+            this IMasterReferenceInternalGetter item,
+            IMasterReferenceInternalGetter rhs)
         {
-            return ((MasterReferenceCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((MasterReferenceCommon)((IMasterReferenceInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -704,13 +738,11 @@ namespace Mutagen.Bethesda.Internals
 
         public static readonly Type GetterType = typeof(IMasterReferenceGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type InternalGetterType = typeof(IMasterReferenceInternalGetter);
 
         public static readonly Type SetterType = typeof(IMasterReference);
 
-        public static readonly Type InternalSetterType = null;
-
-        public static readonly Type CommonType = typeof(MasterReferenceCommon);
+        public static readonly Type InternalSetterType = typeof(IMasterReferenceInternal);
 
         public const string FullName = "Mutagen.Bethesda.MasterReference";
 
@@ -848,7 +880,6 @@ namespace Mutagen.Bethesda.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -868,9 +899,155 @@ namespace Mutagen.Bethesda.Internals
     #endregion
 
     #region Common
+    public partial class MasterReferenceSetterCommon
+    {
+        public static readonly MasterReferenceSetterCommon Instance = new MasterReferenceSetterCommon();
+
+        partial void ClearPartial();
+        
+        public virtual void Clear(IMasterReferenceInternal item)
+        {
+            ClearPartial();
+            item.Master = default(ModKey);
+            item.FileSize_Unset();
+        }
+        
+        
+    }
     public partial class MasterReferenceCommon
     {
         public static readonly MasterReferenceCommon Instance = new MasterReferenceCommon();
+
+        public MasterReference_Mask<bool> GetEqualsMask(
+            IMasterReferenceInternalGetter item,
+            IMasterReferenceInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new MasterReference_Mask<bool>();
+            ((MasterReferenceCommon)((IMasterReferenceInternalGetter)item).CommonInstance()).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+        
+        public void FillEqualsMask(
+            IMasterReferenceInternalGetter item,
+            IMasterReferenceInternalGetter rhs,
+            MasterReference_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            if (rhs == null) return;
+            ret.Master = item.Master == rhs.Master;
+            ret.FileSize = item.FileSize_IsSet == rhs.FileSize_IsSet && item.FileSize == rhs.FileSize;
+        }
+        
+        public string ToString(
+            IMasterReferenceInternalGetter item,
+            string name = null,
+            MasterReference_Mask<bool> printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+            return fg.ToString();
+        }
+        
+        public void ToString(
+            IMasterReferenceInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            MasterReference_Mask<bool> printMask = null)
+        {
+            if (name == null)
+            {
+                fg.AppendLine($"MasterReference =>");
+            }
+            else
+            {
+                fg.AppendLine($"{name} (MasterReference) =>");
+            }
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
+            }
+            fg.AppendLine("]");
+        }
+        
+        protected static void ToStringFields(
+            IMasterReferenceInternalGetter item,
+            FileGeneration fg,
+            MasterReference_Mask<bool> printMask = null)
+        {
+            if (printMask?.Master ?? true)
+            {
+                fg.AppendLine($"Master => {item.Master}");
+            }
+            if (printMask?.FileSize ?? true)
+            {
+                fg.AppendLine($"FileSize => {item.FileSize}");
+            }
+        }
+        
+        public bool HasBeenSet(
+            IMasterReferenceInternalGetter item,
+            MasterReference_Mask<bool?> checkMask)
+        {
+            if (checkMask.FileSize.HasValue && checkMask.FileSize.Value != item.FileSize_IsSet) return false;
+            return true;
+        }
+        
+        public void FillHasBeenSetMask(
+            IMasterReferenceInternalGetter item,
+            MasterReference_Mask<bool> mask)
+        {
+            mask.Master = true;
+            mask.FileSize = item.FileSize_IsSet;
+        }
+        
+        #region Equals and Hash
+        public virtual bool Equals(
+            IMasterReferenceInternalGetter lhs,
+            IMasterReferenceInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (lhs.Master != rhs.Master) return false;
+            if (lhs.FileSize_IsSet != rhs.FileSize_IsSet) return false;
+            if (lhs.FileSize_IsSet)
+            {
+                if (lhs.FileSize != rhs.FileSize) return false;
+            }
+            return true;
+        }
+        
+        public virtual int GetHashCode(IMasterReferenceInternalGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.Master).CombineHashCode(ret);
+            if (item.FileSize_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.FileSize).CombineHashCode(ret);
+            }
+            return ret;
+        }
+        
+        #endregion
+        
+        
+        
+    }
+    public partial class MasterReferenceSetterCopyCommon
+    {
+        public static readonly MasterReferenceSetterCopyCommon Instance = new MasterReferenceSetterCopyCommon();
 
         #region Copy Fields From
         public static void CopyFieldsFrom(
@@ -928,143 +1105,10 @@ namespace Mutagen.Bethesda.Internals
                 }
             }
         }
-
+        
         #endregion
-
-        partial void ClearPartial();
-
-        public virtual void Clear(IMasterReference item)
-        {
-            ClearPartial();
-            item.Master = default(ModKey);
-            item.FileSize_Unset();
-        }
-
-        public MasterReference_Mask<bool> GetEqualsMask(
-            IMasterReferenceGetter item,
-            IMasterReferenceGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new MasterReference_Mask<bool>();
-            ((MasterReferenceCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public void FillEqualsMask(
-            IMasterReferenceGetter item,
-            IMasterReferenceGetter rhs,
-            MasterReference_Mask<bool> ret,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            if (rhs == null) return;
-            ret.Master = item.Master == rhs.Master;
-            ret.FileSize = item.FileSize_IsSet == rhs.FileSize_IsSet && item.FileSize == rhs.FileSize;
-        }
-
-        public string ToString(
-            IMasterReferenceGetter item,
-            string name = null,
-            MasterReference_Mask<bool> printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(
-                item: item,
-                fg: fg,
-                name: name,
-                printMask: printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(
-            IMasterReferenceGetter item,
-            FileGeneration fg,
-            string name = null,
-            MasterReference_Mask<bool> printMask = null)
-        {
-            if (name == null)
-            {
-                fg.AppendLine($"MasterReference =>");
-            }
-            else
-            {
-                fg.AppendLine($"{name} (MasterReference) =>");
-            }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                ToStringFields(
-                    item: item,
-                    fg: fg,
-                    printMask: printMask);
-            }
-            fg.AppendLine("]");
-        }
-
-        protected static void ToStringFields(
-            IMasterReferenceGetter item,
-            FileGeneration fg,
-            MasterReference_Mask<bool> printMask = null)
-        {
-            if (printMask?.Master ?? true)
-            {
-                fg.AppendLine($"Master => {item.Master}");
-            }
-            if (printMask?.FileSize ?? true)
-            {
-                fg.AppendLine($"FileSize => {item.FileSize}");
-            }
-        }
-
-        public bool HasBeenSet(
-            IMasterReferenceGetter item,
-            MasterReference_Mask<bool?> checkMask)
-        {
-            if (checkMask.FileSize.HasValue && checkMask.FileSize.Value != item.FileSize_IsSet) return false;
-            return true;
-        }
-
-        public void FillHasBeenSetMask(
-            IMasterReferenceGetter item,
-            MasterReference_Mask<bool> mask)
-        {
-            mask.Master = true;
-            mask.FileSize = item.FileSize_IsSet;
-        }
-
-        #region Equals and Hash
-        public virtual bool Equals(
-            IMasterReferenceGetter lhs,
-            IMasterReferenceGetter rhs)
-        {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
-            if (lhs.Master != rhs.Master) return false;
-            if (lhs.FileSize_IsSet != rhs.FileSize_IsSet) return false;
-            if (lhs.FileSize_IsSet)
-            {
-                if (lhs.FileSize != rhs.FileSize) return false;
-            }
-            return true;
-        }
-
-        public virtual int GetHashCode(IMasterReferenceGetter item)
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.Master).CombineHashCode(ret);
-            if (item.FileSize_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.FileSize).CombineHashCode(ret);
-            }
-            return ret;
-        }
-
-        #endregion
-
-
+        
+        
     }
     #endregion
 
@@ -1075,7 +1119,7 @@ namespace Mutagen.Bethesda.Internals
         public readonly static MasterReferenceXmlWriteTranslation Instance = new MasterReferenceXmlWriteTranslation();
 
         public static void WriteToNodeXml(
-            IMasterReferenceGetter item,
+            IMasterReferenceInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1103,7 +1147,7 @@ namespace Mutagen.Bethesda.Internals
 
         public void Write(
             XElement node,
-            IMasterReferenceGetter item,
+            IMasterReferenceInternalGetter item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)
@@ -1129,7 +1173,7 @@ namespace Mutagen.Bethesda.Internals
             string name = null)
         {
             Write(
-                item: (IMasterReferenceGetter)item,
+                item: (IMasterReferenceInternalGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1138,7 +1182,7 @@ namespace Mutagen.Bethesda.Internals
 
         public void Write(
             XElement node,
-            IMasterReferenceGetter item,
+            IMasterReferenceInternalGetter item,
             ErrorMaskBuilder errorMask,
             int fieldIndex,
             TranslationCrystal translationMask,
@@ -1148,7 +1192,7 @@ namespace Mutagen.Bethesda.Internals
             {
                 errorMask?.PushIndex(fieldIndex);
                 Write(
-                    item: (IMasterReferenceGetter)item,
+                    item: (IMasterReferenceInternalGetter)item,
                     name: name,
                     node: node,
                     errorMask: errorMask,
@@ -1172,7 +1216,7 @@ namespace Mutagen.Bethesda.Internals
         public readonly static MasterReferenceXmlCreateTranslation Instance = new MasterReferenceXmlCreateTranslation();
 
         public static void FillPublicXml(
-            IMasterReference item,
+            IMasterReferenceInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1197,7 +1241,7 @@ namespace Mutagen.Bethesda.Internals
         }
 
         public static void FillPublicElementXml(
-            IMasterReference item,
+            IMasterReferenceInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -1268,7 +1312,7 @@ namespace Mutagen.Bethesda.Internals
     public static class MasterReferenceXmlTranslationMixIn
     {
         public static void WriteToXml(
-            this IMasterReferenceGetter item,
+            this IMasterReferenceInternalGetter item,
             XElement node,
             out MasterReference_ErrorMask errorMask,
             bool doMasks = true,
@@ -1286,7 +1330,7 @@ namespace Mutagen.Bethesda.Internals
         }
 
         public static void WriteToXml(
-            this IMasterReferenceGetter item,
+            this IMasterReferenceInternalGetter item,
             string path,
             out MasterReference_ErrorMask errorMask,
             MasterReference_TranslationMask translationMask = null,
@@ -1305,7 +1349,7 @@ namespace Mutagen.Bethesda.Internals
         }
 
         public static void WriteToXml(
-            this IMasterReferenceGetter item,
+            this IMasterReferenceInternalGetter item,
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1323,7 +1367,7 @@ namespace Mutagen.Bethesda.Internals
         }
 
         public static void WriteToXml(
-            this IMasterReferenceGetter item,
+            this IMasterReferenceInternalGetter item,
             Stream stream,
             out MasterReference_ErrorMask errorMask,
             MasterReference_TranslationMask translationMask = null,
@@ -1342,7 +1386,7 @@ namespace Mutagen.Bethesda.Internals
         }
 
         public static void WriteToXml(
-            this IMasterReferenceGetter item,
+            this IMasterReferenceInternalGetter item,
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1360,7 +1404,7 @@ namespace Mutagen.Bethesda.Internals
         }
 
         public static void WriteToXml(
-            this IMasterReferenceGetter item,
+            this IMasterReferenceInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1375,7 +1419,7 @@ namespace Mutagen.Bethesda.Internals
         }
 
         public static void WriteToXml(
-            this IMasterReferenceGetter item,
+            this IMasterReferenceInternalGetter item,
             XElement node,
             string name = null,
             MasterReference_TranslationMask translationMask = null)
@@ -1389,7 +1433,7 @@ namespace Mutagen.Bethesda.Internals
         }
 
         public static void WriteToXml(
-            this IMasterReferenceGetter item,
+            this IMasterReferenceInternalGetter item,
             string path,
             string name = null)
         {
@@ -1404,7 +1448,7 @@ namespace Mutagen.Bethesda.Internals
         }
 
         public static void WriteToXml(
-            this IMasterReferenceGetter item,
+            this IMasterReferenceInternalGetter item,
             Stream stream,
             string name = null)
         {
@@ -1732,7 +1776,7 @@ namespace Mutagen.Bethesda.Internals
         public readonly static MasterReferenceBinaryWriteTranslation Instance = new MasterReferenceBinaryWriteTranslation();
 
         public static void Write_RecordTypes(
-            IMasterReferenceGetter item,
+            IMasterReferenceInternalGetter item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask,
@@ -1755,7 +1799,7 @@ namespace Mutagen.Bethesda.Internals
 
         public void Write(
             MutagenWriter writer,
-            IMasterReferenceGetter item,
+            IMasterReferenceInternalGetter item,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
@@ -1776,7 +1820,7 @@ namespace Mutagen.Bethesda.Internals
             ErrorMaskBuilder errorMask)
         {
             Write(
-                item: (IMasterReferenceGetter)item,
+                item: (IMasterReferenceInternalGetter)item,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -1795,7 +1839,7 @@ namespace Mutagen.Bethesda.Internals
     public static class MasterReferenceBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IMasterReferenceGetter item,
+            this IMasterReferenceInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
             out MasterReference_ErrorMask errorMask,
@@ -1812,7 +1856,7 @@ namespace Mutagen.Bethesda.Internals
         }
 
         public static void WriteToBinary(
-            this IMasterReferenceGetter item,
+            this IMasterReferenceInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -1826,7 +1870,7 @@ namespace Mutagen.Bethesda.Internals
         }
 
         public static void WriteToBinary(
-            this IMasterReferenceGetter item,
+            this IMasterReferenceInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
@@ -1843,22 +1887,65 @@ namespace Mutagen.Bethesda.Internals
 
     public partial class MasterReferenceBinaryWrapper :
         BinaryWrapper,
-        IMasterReferenceGetter
+        IMasterReferenceInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MasterReference_Registration.Instance;
         public static MasterReference_Registration Registration => MasterReference_Registration.Instance;
-        protected object CommonInstance => MasterReferenceCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
+        protected object CommonInstance()
+        {
+            return MasterReferenceCommon.Instance;
+        }
+        object IMasterReferenceInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IMasterReferenceInternalGetter.CommonSetterInstance()
+        {
+            return null;
+        }
+        object IMasterReferenceInternalGetter.CommonSetterCopyInstance()
+        {
+            return null;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMasterReferenceGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMasterReferenceInternalGetter)rhs, include);
 
         protected object XmlWriteTranslator => MasterReferenceXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((MasterReferenceXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         protected object BinaryWriteTranslator => MasterReferenceBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((MasterReferenceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
 
         #region Master
         private int? _MasterLocation;
@@ -1938,4 +2025,42 @@ namespace Mutagen.Bethesda.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda
+{
+    public partial class MasterReference
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => MasterReference_Registration.Instance;
+        public static MasterReference_Registration Registration => MasterReference_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return MasterReferenceCommon.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return MasterReferenceSetterCommon.Instance;
+        }
+        protected object CommonSetterCopyInstance()
+        {
+            return MasterReferenceSetterCopyCommon.Instance;
+        }
+        object IMasterReferenceInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IMasterReferenceInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object IMasterReferenceInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
 }

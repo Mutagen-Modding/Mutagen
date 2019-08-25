@@ -45,11 +45,6 @@ namespace Mutagen.Bethesda.Oblivion
         IEquatable<Enchantment>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Enchantment_Registration.Instance;
-        public new static Enchantment_Registration Registration => Enchantment_Registration.Instance;
-        protected override object CommonInstance => EnchantmentCommon.Instance;
-
         #region Ctor
         protected Enchantment()
         {
@@ -181,20 +176,33 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IEnchantmentInternalGetter rhs)) return false;
-            return ((EnchantmentCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            return ((EnchantmentCommon)((IEnchantmentInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(Enchantment obj)
         {
-            return ((EnchantmentCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((EnchantmentCommon)((IEnchantmentInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((EnchantmentCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((EnchantmentCommon)((IEnchantmentInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected override object XmlWriteTranslator => EnchantmentXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((EnchantmentXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static Enchantment CreateFromXml(
@@ -447,6 +455,19 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Binary Translation
         protected override object BinaryWriteTranslator => EnchantmentBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((EnchantmentBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
         #region Binary Create
         [DebuggerStepThrough]
         public static Enchantment CreateFromBinary(
@@ -685,7 +706,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            EnchantmentCommon.CopyFieldsFrom(
+            EnchantmentSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -700,7 +721,7 @@ namespace Mutagen.Bethesda.Oblivion
             Enchantment_CopyMask copyMask = null,
             Enchantment def = null)
         {
-            EnchantmentCommon.CopyFieldsFrom(
+            EnchantmentSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -742,7 +763,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            EnchantmentCommon.Instance.Clear(this);
+            EnchantmentSetterCommon.Instance.Clear(this);
         }
 
         public new static Enchantment Create(IEnumerable<KeyValuePair<ushort, object>> fields)
@@ -878,7 +899,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IEnchantmentInternal item)
         {
-            ((EnchantmentCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((EnchantmentSetterCommon)((IEnchantmentInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static Enchantment_Mask<bool> GetEqualsMask(
@@ -886,7 +907,7 @@ namespace Mutagen.Bethesda.Oblivion
             IEnchantmentInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((EnchantmentCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((EnchantmentCommon)((IEnchantmentInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -897,7 +918,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Enchantment_Mask<bool> printMask = null)
         {
-            return ((EnchantmentCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((EnchantmentCommon)((IEnchantmentInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -909,7 +930,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Enchantment_Mask<bool> printMask = null)
         {
-            ((EnchantmentCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((EnchantmentCommon)((IEnchantmentInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -920,7 +941,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IEnchantmentInternalGetter item,
             Enchantment_Mask<bool?> checkMask)
         {
-            return ((EnchantmentCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((EnchantmentCommon)((IEnchantmentInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -928,7 +949,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Enchantment_Mask<bool> GetHasBeenSetMask(this IEnchantmentInternalGetter item)
         {
             var ret = new Enchantment_Mask<bool>();
-            ((EnchantmentCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((EnchantmentCommon)((IEnchantmentInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -938,7 +959,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IEnchantmentInternalGetter item,
             IEnchantmentInternalGetter rhs)
         {
-            return ((EnchantmentCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((EnchantmentCommon)((IEnchantmentInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -999,8 +1020,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type SetterType = typeof(IEnchantment);
 
         public static readonly Type InternalSetterType = typeof(IEnchantmentInternal);
-
-        public static readonly Type CommonType = typeof(EnchantmentCommon);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.Enchantment";
 
@@ -1197,7 +1216,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -1217,9 +1235,323 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
+    public partial class EnchantmentSetterCommon : OblivionMajorRecordSetterCommon
+    {
+        public new static readonly EnchantmentSetterCommon Instance = new EnchantmentSetterCommon();
+
+        partial void ClearPartial();
+        
+        public virtual void Clear(IEnchantmentInternal item)
+        {
+            ClearPartial();
+            item.Name_Unset();
+            item.Type = default(Enchantment.EnchantmentType);
+            item.ChargeAmount = default(UInt32);
+            item.EnchantCost = default(UInt32);
+            item.Flags = default(Enchantment.Flag);
+            item.Effects.Unset();
+            base.Clear(item);
+        }
+        
+        public override void Clear(IOblivionMajorRecordInternal item)
+        {
+            Clear(item: (IEnchantmentInternal)item);
+        }
+        
+        public override void Clear(IMajorRecordInternal item)
+        {
+            Clear(item: (IEnchantmentInternal)item);
+        }
+        
+        
+    }
     public partial class EnchantmentCommon : OblivionMajorRecordCommon
     {
-        public static readonly EnchantmentCommon Instance = new EnchantmentCommon();
+        public new static readonly EnchantmentCommon Instance = new EnchantmentCommon();
+
+        public Enchantment_Mask<bool> GetEqualsMask(
+            IEnchantmentInternalGetter item,
+            IEnchantmentInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new Enchantment_Mask<bool>();
+            ((EnchantmentCommon)((IEnchantmentInternalGetter)item).CommonInstance()).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+        
+        public void FillEqualsMask(
+            IEnchantmentInternalGetter item,
+            IEnchantmentInternalGetter rhs,
+            Enchantment_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            if (rhs == null) return;
+            ret.Name = item.Name_IsSet == rhs.Name_IsSet && string.Equals(item.Name, rhs.Name);
+            ret.Type = item.Type == rhs.Type;
+            ret.ChargeAmount = item.ChargeAmount == rhs.ChargeAmount;
+            ret.EnchantCost = item.EnchantCost == rhs.EnchantCost;
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.Effects = item.Effects.CollectionEqualsHelper(
+                rhs.Effects,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            base.FillEqualsMask(item, rhs, ret, include);
+        }
+        
+        public string ToString(
+            IEnchantmentInternalGetter item,
+            string name = null,
+            Enchantment_Mask<bool> printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+            return fg.ToString();
+        }
+        
+        public void ToString(
+            IEnchantmentInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            Enchantment_Mask<bool> printMask = null)
+        {
+            if (name == null)
+            {
+                fg.AppendLine($"Enchantment =>");
+            }
+            else
+            {
+                fg.AppendLine($"{name} (Enchantment) =>");
+            }
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
+            }
+            fg.AppendLine("]");
+        }
+        
+        protected static void ToStringFields(
+            IEnchantmentInternalGetter item,
+            FileGeneration fg,
+            Enchantment_Mask<bool> printMask = null)
+        {
+            OblivionMajorRecordCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.Name ?? true)
+            {
+                fg.AppendLine($"Name => {item.Name}");
+            }
+            if (printMask?.Type ?? true)
+            {
+                fg.AppendLine($"Type => {item.Type}");
+            }
+            if (printMask?.ChargeAmount ?? true)
+            {
+                fg.AppendLine($"ChargeAmount => {item.ChargeAmount}");
+            }
+            if (printMask?.EnchantCost ?? true)
+            {
+                fg.AppendLine($"EnchantCost => {item.EnchantCost}");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                fg.AppendLine($"Flags => {item.Flags}");
+            }
+            if (printMask?.Effects?.Overall ?? true)
+            {
+                fg.AppendLine("Effects =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Effects)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.ENITDataTypeState ?? true)
+            {
+            }
+        }
+        
+        public bool HasBeenSet(
+            IEnchantmentInternalGetter item,
+            Enchantment_Mask<bool?> checkMask)
+        {
+            if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_IsSet) return false;
+            if (checkMask.Effects.Overall.HasValue && checkMask.Effects.Overall.Value != item.Effects.HasBeenSet) return false;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+        
+        public void FillHasBeenSetMask(
+            IEnchantmentInternalGetter item,
+            Enchantment_Mask<bool> mask)
+        {
+            mask.Name = item.Name_IsSet;
+            mask.Type = true;
+            mask.ChargeAmount = true;
+            mask.EnchantCost = true;
+            mask.Flags = true;
+            mask.Effects = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Effect_Mask<bool>>>>(item.Effects.HasBeenSet, item.Effects.WithIndex().Select((i) => new MaskItemIndexed<bool, Effect_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.ENITDataTypeState = true;
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
+        }
+        
+        public static Enchantment_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (Enchantment_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.FormKey:
+                    return (Enchantment_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.Version:
+                    return (Enchantment_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.EditorID:
+                    return (Enchantment_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
+                    return (Enchantment_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        public static Enchantment_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (Enchantment_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.FormKey:
+                    return (Enchantment_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.Version:
+                    return (Enchantment_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.EditorID:
+                    return (Enchantment_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        #region Equals and Hash
+        public virtual bool Equals(
+            IEnchantmentInternalGetter lhs,
+            IEnchantmentInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.Name_IsSet != rhs.Name_IsSet) return false;
+            if (lhs.Name_IsSet)
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if (lhs.Type != rhs.Type) return false;
+            if (lhs.ChargeAmount != rhs.ChargeAmount) return false;
+            if (lhs.EnchantCost != rhs.EnchantCost) return false;
+            if (lhs.Flags != rhs.Flags) return false;
+            if (lhs.Effects.HasBeenSet != rhs.Effects.HasBeenSet) return false;
+            if (lhs.Effects.HasBeenSet)
+            {
+                if (!lhs.Effects.SequenceEqual(rhs.Effects)) return false;
+            }
+            if (lhs.ENITDataTypeState != rhs.ENITDataTypeState) return false;
+            return true;
+        }
+        
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IEnchantmentInternalGetter)lhs,
+                rhs: rhs as IEnchantmentInternalGetter);
+        }
+        
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IEnchantmentInternalGetter)lhs,
+                rhs: rhs as IEnchantmentInternalGetter);
+        }
+        
+        public virtual int GetHashCode(IEnchantmentInternalGetter item)
+        {
+            int ret = 0;
+            if (item.Name_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Name).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.Type).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.ChargeAmount).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.EnchantCost).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
+            if (item.Effects.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Effects).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.ENITDataTypeState).CombineHashCode(ret);
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+        
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IEnchantmentInternalGetter)item);
+        }
+        
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IEnchantmentInternalGetter)item);
+        }
+        
+        #endregion
+        
+        
+        #region Mutagen
+        partial void PostDuplicate(Enchantment obj, Enchantment rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+        
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new Enchantment(getNextFormKey());
+            ret.CopyFieldsFrom((Enchantment)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (Enchantment)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+        
+        #endregion
+        
+        
+    }
+    public partial class EnchantmentSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
+    {
+        public new static readonly EnchantmentSetterCopyCommon Instance = new EnchantmentSetterCopyCommon();
 
         #region Copy Fields From
         public static void CopyFieldsFrom(
@@ -1229,7 +1561,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             Enchantment_CopyMask copyMask)
         {
-            OblivionMajorRecordCommon.CopyFieldsFrom(
+            OblivionMajorRecordSetterCopyCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1368,311 +1700,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
         }
-
+        
         #endregion
-
-        partial void ClearPartial();
-
-        public virtual void Clear(IEnchantmentInternal item)
-        {
-            ClearPartial();
-            item.Name_Unset();
-            item.Type = default(Enchantment.EnchantmentType);
-            item.ChargeAmount = default(UInt32);
-            item.EnchantCost = default(UInt32);
-            item.Flags = default(Enchantment.Flag);
-            item.Effects.Unset();
-            base.Clear(item);
-        }
-
-        public override void Clear(IOblivionMajorRecordInternal item)
-        {
-            Clear(item: (IEnchantmentInternal)item);
-        }
-
-        public override void Clear(IMajorRecordInternal item)
-        {
-            Clear(item: (IEnchantmentInternal)item);
-        }
-
-        public Enchantment_Mask<bool> GetEqualsMask(
-            IEnchantmentInternalGetter item,
-            IEnchantmentInternalGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new Enchantment_Mask<bool>();
-            ((EnchantmentCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public void FillEqualsMask(
-            IEnchantmentInternalGetter item,
-            IEnchantmentInternalGetter rhs,
-            Enchantment_Mask<bool> ret,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            if (rhs == null) return;
-            ret.Name = item.Name_IsSet == rhs.Name_IsSet && string.Equals(item.Name, rhs.Name);
-            ret.Type = item.Type == rhs.Type;
-            ret.ChargeAmount = item.ChargeAmount == rhs.ChargeAmount;
-            ret.EnchantCost = item.EnchantCost == rhs.EnchantCost;
-            ret.Flags = item.Flags == rhs.Flags;
-            ret.Effects = item.Effects.CollectionEqualsHelper(
-                rhs.Effects,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
-                include);
-            base.FillEqualsMask(item, rhs, ret, include);
-        }
-
-        public string ToString(
-            IEnchantmentInternalGetter item,
-            string name = null,
-            Enchantment_Mask<bool> printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(
-                item: item,
-                fg: fg,
-                name: name,
-                printMask: printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(
-            IEnchantmentInternalGetter item,
-            FileGeneration fg,
-            string name = null,
-            Enchantment_Mask<bool> printMask = null)
-        {
-            if (name == null)
-            {
-                fg.AppendLine($"Enchantment =>");
-            }
-            else
-            {
-                fg.AppendLine($"{name} (Enchantment) =>");
-            }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                ToStringFields(
-                    item: item,
-                    fg: fg,
-                    printMask: printMask);
-            }
-            fg.AppendLine("]");
-        }
-
-        protected static void ToStringFields(
-            IEnchantmentInternalGetter item,
-            FileGeneration fg,
-            Enchantment_Mask<bool> printMask = null)
-        {
-            OblivionMajorRecordCommon.ToStringFields(
-                item: item,
-                fg: fg,
-                printMask: printMask);
-            if (printMask?.Name ?? true)
-            {
-                fg.AppendLine($"Name => {item.Name}");
-            }
-            if (printMask?.Type ?? true)
-            {
-                fg.AppendLine($"Type => {item.Type}");
-            }
-            if (printMask?.ChargeAmount ?? true)
-            {
-                fg.AppendLine($"ChargeAmount => {item.ChargeAmount}");
-            }
-            if (printMask?.EnchantCost ?? true)
-            {
-                fg.AppendLine($"EnchantCost => {item.EnchantCost}");
-            }
-            if (printMask?.Flags ?? true)
-            {
-                fg.AppendLine($"Flags => {item.Flags}");
-            }
-            if (printMask?.Effects?.Overall ?? true)
-            {
-                fg.AppendLine("Effects =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
-                {
-                    foreach (var subItem in item.Effects)
-                    {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            subItem?.ToString(fg, "Item");
-                        }
-                        fg.AppendLine("]");
-                    }
-                }
-                fg.AppendLine("]");
-            }
-            if (printMask?.ENITDataTypeState ?? true)
-            {
-            }
-        }
-
-        public bool HasBeenSet(
-            IEnchantmentInternalGetter item,
-            Enchantment_Mask<bool?> checkMask)
-        {
-            if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_IsSet) return false;
-            if (checkMask.Effects.Overall.HasValue && checkMask.Effects.Overall.Value != item.Effects.HasBeenSet) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public void FillHasBeenSetMask(
-            IEnchantmentInternalGetter item,
-            Enchantment_Mask<bool> mask)
-        {
-            mask.Name = item.Name_IsSet;
-            mask.Type = true;
-            mask.ChargeAmount = true;
-            mask.EnchantCost = true;
-            mask.Flags = true;
-            mask.Effects = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Effect_Mask<bool>>>>(item.Effects.HasBeenSet, item.Effects.WithIndex().Select((i) => new MaskItemIndexed<bool, Effect_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.ENITDataTypeState = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-
-        public static Enchantment_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
-        {
-            switch (index)
-            {
-                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Enchantment_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.FormKey:
-                    return (Enchantment_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.Version:
-                    return (Enchantment_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.EditorID:
-                    return (Enchantment_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
-                    return (Enchantment_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        public static Enchantment_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
-        {
-            switch (index)
-            {
-                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Enchantment_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.FormKey:
-                    return (Enchantment_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
-                    return (Enchantment_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.EditorID:
-                    return (Enchantment_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        #region Equals and Hash
-        public virtual bool Equals(
-            IEnchantmentInternalGetter lhs,
-            IEnchantmentInternalGetter rhs)
-        {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (lhs.Name_IsSet != rhs.Name_IsSet) return false;
-            if (lhs.Name_IsSet)
-            {
-                if (!string.Equals(lhs.Name, rhs.Name)) return false;
-            }
-            if (lhs.Type != rhs.Type) return false;
-            if (lhs.ChargeAmount != rhs.ChargeAmount) return false;
-            if (lhs.EnchantCost != rhs.EnchantCost) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (lhs.Effects.HasBeenSet != rhs.Effects.HasBeenSet) return false;
-            if (lhs.Effects.HasBeenSet)
-            {
-                if (!lhs.Effects.SequenceEqual(rhs.Effects)) return false;
-            }
-            if (lhs.ENITDataTypeState != rhs.ENITDataTypeState) return false;
-            return true;
-        }
-
-        public override bool Equals(
-            IOblivionMajorRecordInternalGetter lhs,
-            IOblivionMajorRecordInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (IEnchantmentInternalGetter)lhs,
-                rhs: rhs as IEnchantmentInternalGetter);
-        }
-
-        public override bool Equals(
-            IMajorRecordInternalGetter lhs,
-            IMajorRecordInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (IEnchantmentInternalGetter)lhs,
-                rhs: rhs as IEnchantmentInternalGetter);
-        }
-
-        public virtual int GetHashCode(IEnchantmentInternalGetter item)
-        {
-            int ret = 0;
-            if (item.Name_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Name).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(item.Type).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.ChargeAmount).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.EnchantCost).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
-            if (item.Effects.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.Effects).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(item.ENITDataTypeState).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
-        {
-            return GetHashCode(item: (IEnchantmentInternalGetter)item);
-        }
-
-        public override int GetHashCode(IMajorRecordInternalGetter item)
-        {
-            return GetHashCode(item: (IEnchantmentInternalGetter)item);
-        }
-
-        #endregion
-
-
-        #region Mutagen
-        partial void PostDuplicate(Enchantment obj, Enchantment rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new Enchantment(getNextFormKey());
-            ret.CopyFieldsFrom((Enchantment)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (Enchantment)item, getNextFormKey, duplicatedRecords);
-            return ret;
-        }
-
-        #endregion
-
+        
+        
     }
     #endregion
 
@@ -2827,17 +2858,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         OblivionMajorRecordBinaryWrapper,
         IEnchantmentInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Enchantment_Registration.Instance;
         public new static Enchantment_Registration Registration => Enchantment_Registration.Instance;
-        protected override object CommonInstance => EnchantmentCommon.Instance;
+        protected override object CommonInstance()
+        {
+            return EnchantmentCommon.Instance;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IEnchantmentInternalGetter)rhs, include);
 
         protected override object XmlWriteTranslator => EnchantmentXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((EnchantmentXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         protected override object BinaryWriteTranslator => EnchantmentBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((EnchantmentBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
 
         #region Name
         private int? _NameLocation;
@@ -2953,4 +3016,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class Enchantment
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Enchantment_Registration.Instance;
+        public new static Enchantment_Registration Registration => Enchantment_Registration.Instance;
+        protected override object CommonInstance()
+        {
+            return EnchantmentCommon.Instance;
+        }
+        protected override object CommonSetterInstance()
+        {
+            return EnchantmentSetterCommon.Instance;
+        }
+        protected override object CommonSetterCopyInstance()
+        {
+            return EnchantmentSetterCopyCommon.Instance;
+        }
+
+        #endregion
+
+    }
 }

@@ -35,17 +35,11 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class FacePart :
         LoquiNotifyingObject,
-        IFacePart,
+        IFacePartInternal,
         ILoquiObjectSetter<FacePart>,
         IEquatable<FacePart>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => FacePart_Registration.Instance;
-        public static FacePart_Registration Registration => FacePart_Registration.Instance;
-        protected object CommonInstance => FacePartCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
-
         #region Ctor
         public FacePart()
         {
@@ -106,7 +100,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Model_Set(default(Model), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IModelGetter IFacePartGetter.Model => this.Model;
+        IModelInternalGetter IFacePartGetter.Model => this.Model;
         #endregion
         #region Icon
         public bool Icon_IsSet
@@ -135,7 +129,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IFacePartGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IFacePartInternalGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -153,22 +147,35 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is IFacePartGetter rhs)) return false;
-            return ((FacePartCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            if (!(obj is IFacePartInternalGetter rhs)) return false;
+            return ((FacePartCommon)((IFacePartInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(FacePart obj)
         {
-            return ((FacePartCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((FacePartCommon)((IFacePartInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((FacePartCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((FacePartCommon)((IFacePartInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected object XmlWriteTranslator => FacePartXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((FacePartXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static FacePart CreateFromXml(
@@ -338,6 +345,19 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Translation
         protected object BinaryWriteTranslator => FacePartBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((FacePartBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
         #region Binary Create
         [DebuggerStepThrough]
         public static FacePart CreateFromBinary(
@@ -556,7 +576,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            FacePartCommon.CopyFieldsFrom(
+            FacePartSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -571,7 +591,7 @@ namespace Mutagen.Bethesda.Oblivion
             FacePart_CopyMask copyMask = null,
             FacePart def = null)
         {
-            FacePartCommon.CopyFieldsFrom(
+            FacePartSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -600,7 +620,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void Clear()
         {
-            FacePartCommon.Instance.Clear(this);
+            FacePartSetterCommon.Instance.Clear(this);
         }
 
         public static FacePart Create(IEnumerable<KeyValuePair<ushort, object>> fields)
@@ -639,8 +659,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IFacePart :
-        IFacePartGetter,
-        ILoquiObjectSetter<IFacePart>
+        IFacePartInternalGetter,
+        ILoquiObjectSetter<IFacePartInternal>
     {
         new Race.FaceIndex Index { get; set; }
         new bool Index_IsSet { get; set; }
@@ -664,9 +684,15 @@ namespace Mutagen.Bethesda.Oblivion
             FacePart def = null);
     }
 
+    public partial interface IFacePartInternal :
+        IFacePart,
+        IFacePartInternalGetter
+    {
+    }
+
     public partial interface IFacePartGetter :
         ILoquiObject,
-        ILoquiObject<IFacePartGetter>,
+        ILoquiObject<IFacePartInternalGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -676,7 +702,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Model
-        IModelGetter Model { get; }
+        IModelInternalGetter Model { get; }
         bool Model_IsSet { get; }
 
         #endregion
@@ -688,45 +714,53 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    public partial interface IFacePartInternalGetter : IFacePartGetter
+    {
+        object CommonInstance();
+        object CommonSetterInstance();
+        object CommonSetterCopyInstance();
+
+    }
+
     #endregion
 
     #region Common MixIn
     public static class FacePartMixIn
     {
-        public static void Clear(this IFacePart item)
+        public static void Clear(this IFacePartInternal item)
         {
-            ((FacePartCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((FacePartSetterCommon)((IFacePartInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static FacePart_Mask<bool> GetEqualsMask(
-            this IFacePartGetter item,
-            IFacePartGetter rhs,
+            this IFacePartInternalGetter item,
+            IFacePartInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((FacePartCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((FacePartCommon)((IFacePartInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IFacePartGetter item,
+            this IFacePartInternalGetter item,
             string name = null,
             FacePart_Mask<bool> printMask = null)
         {
-            return ((FacePartCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((FacePartCommon)((IFacePartInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IFacePartGetter item,
+            this IFacePartInternalGetter item,
             FileGeneration fg,
             string name = null,
             FacePart_Mask<bool> printMask = null)
         {
-            ((FacePartCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((FacePartCommon)((IFacePartInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -734,28 +768,28 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static bool HasBeenSet(
-            this IFacePartGetter item,
+            this IFacePartInternalGetter item,
             FacePart_Mask<bool?> checkMask)
         {
-            return ((FacePartCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((FacePartCommon)((IFacePartInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static FacePart_Mask<bool> GetHasBeenSetMask(this IFacePartGetter item)
+        public static FacePart_Mask<bool> GetHasBeenSetMask(this IFacePartInternalGetter item)
         {
             var ret = new FacePart_Mask<bool>();
-            ((FacePartCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((FacePartCommon)((IFacePartInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this IFacePartGetter item,
-            IFacePartGetter rhs)
+            this IFacePartInternalGetter item,
+            IFacePartInternalGetter rhs)
         {
-            return ((FacePartCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((FacePartCommon)((IFacePartInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -802,13 +836,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IFacePartGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type InternalGetterType = typeof(IFacePartInternalGetter);
 
         public static readonly Type SetterType = typeof(IFacePart);
 
-        public static readonly Type InternalSetterType = null;
-
-        public static readonly Type CommonType = typeof(FacePartCommon);
+        public static readonly Type InternalSetterType = typeof(IFacePartInternal);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.FacePart";
 
@@ -971,7 +1003,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -991,9 +1022,187 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
+    public partial class FacePartSetterCommon
+    {
+        public static readonly FacePartSetterCommon Instance = new FacePartSetterCommon();
+
+        partial void ClearPartial();
+        
+        public virtual void Clear(IFacePartInternal item)
+        {
+            ClearPartial();
+            item.Index_Unset();
+            item.Model_Unset();
+            item.Icon_Unset();
+        }
+        
+        
+    }
     public partial class FacePartCommon
     {
         public static readonly FacePartCommon Instance = new FacePartCommon();
+
+        public FacePart_Mask<bool> GetEqualsMask(
+            IFacePartInternalGetter item,
+            IFacePartInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new FacePart_Mask<bool>();
+            ((FacePartCommon)((IFacePartInternalGetter)item).CommonInstance()).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+        
+        public void FillEqualsMask(
+            IFacePartInternalGetter item,
+            IFacePartInternalGetter rhs,
+            FacePart_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            if (rhs == null) return;
+            ret.Index = item.Index_IsSet == rhs.Index_IsSet && item.Index == rhs.Index;
+            ret.Model = EqualsMaskHelper.EqualsHelper(
+                item.Model_IsSet,
+                rhs.Model_IsSet,
+                item.Model,
+                rhs.Model,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
+            ret.Icon = item.Icon_IsSet == rhs.Icon_IsSet && string.Equals(item.Icon, rhs.Icon);
+        }
+        
+        public string ToString(
+            IFacePartInternalGetter item,
+            string name = null,
+            FacePart_Mask<bool> printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+            return fg.ToString();
+        }
+        
+        public void ToString(
+            IFacePartInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            FacePart_Mask<bool> printMask = null)
+        {
+            if (name == null)
+            {
+                fg.AppendLine($"FacePart =>");
+            }
+            else
+            {
+                fg.AppendLine($"{name} (FacePart) =>");
+            }
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
+            }
+            fg.AppendLine("]");
+        }
+        
+        protected static void ToStringFields(
+            IFacePartInternalGetter item,
+            FileGeneration fg,
+            FacePart_Mask<bool> printMask = null)
+        {
+            if (printMask?.Index ?? true)
+            {
+                fg.AppendLine($"Index => {item.Index}");
+            }
+            if (printMask?.Model?.Overall ?? true)
+            {
+                item.Model?.ToString(fg, "Model");
+            }
+            if (printMask?.Icon ?? true)
+            {
+                fg.AppendLine($"Icon => {item.Icon}");
+            }
+        }
+        
+        public bool HasBeenSet(
+            IFacePartInternalGetter item,
+            FacePart_Mask<bool?> checkMask)
+        {
+            if (checkMask.Index.HasValue && checkMask.Index.Value != item.Index_IsSet) return false;
+            if (checkMask.Model.Overall.HasValue && checkMask.Model.Overall.Value != item.Model_IsSet) return false;
+            if (checkMask.Model.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
+            if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_IsSet) return false;
+            return true;
+        }
+        
+        public void FillHasBeenSetMask(
+            IFacePartInternalGetter item,
+            FacePart_Mask<bool> mask)
+        {
+            mask.Index = item.Index_IsSet;
+            mask.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, item.Model.GetHasBeenSetMask());
+            mask.Icon = item.Icon_IsSet;
+        }
+        
+        #region Equals and Hash
+        public virtual bool Equals(
+            IFacePartInternalGetter lhs,
+            IFacePartInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (lhs.Index_IsSet != rhs.Index_IsSet) return false;
+            if (lhs.Index_IsSet)
+            {
+                if (lhs.Index != rhs.Index) return false;
+            }
+            if (lhs.Model_IsSet != rhs.Model_IsSet) return false;
+            if (lhs.Model_IsSet)
+            {
+                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            }
+            if (lhs.Icon_IsSet != rhs.Icon_IsSet) return false;
+            if (lhs.Icon_IsSet)
+            {
+                if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
+            }
+            return true;
+        }
+        
+        public virtual int GetHashCode(IFacePartInternalGetter item)
+        {
+            int ret = 0;
+            if (item.Index_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Index).CombineHashCode(ret);
+            }
+            if (item.Model_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Model).CombineHashCode(ret);
+            }
+            if (item.Icon_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Icon).CombineHashCode(ret);
+            }
+            return ret;
+        }
+        
+        #endregion
+        
+        
+        
+    }
+    public partial class FacePartSetterCopyCommon
+    {
+        public static readonly FacePartSetterCopyCommon Instance = new FacePartSetterCopyCommon();
 
         #region Copy Fields From
         public static void CopyFieldsFrom(
@@ -1051,7 +1260,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             case CopyOption.Reference:
                                 throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
-                                ModelCommon.CopyFieldsFrom(
+                                ModelSetterCopyCommon.CopyFieldsFrom(
                                     item: item.Model,
                                     rhs: rhs.Model,
                                     def: def?.Model,
@@ -1116,175 +1325,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
         }
-
+        
         #endregion
-
-        partial void ClearPartial();
-
-        public virtual void Clear(IFacePart item)
-        {
-            ClearPartial();
-            item.Index_Unset();
-            item.Model_Unset();
-            item.Icon_Unset();
-        }
-
-        public FacePart_Mask<bool> GetEqualsMask(
-            IFacePartGetter item,
-            IFacePartGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new FacePart_Mask<bool>();
-            ((FacePartCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public void FillEqualsMask(
-            IFacePartGetter item,
-            IFacePartGetter rhs,
-            FacePart_Mask<bool> ret,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            if (rhs == null) return;
-            ret.Index = item.Index_IsSet == rhs.Index_IsSet && item.Index == rhs.Index;
-            ret.Model = EqualsMaskHelper.EqualsHelper(
-                item.Model_IsSet,
-                rhs.Model_IsSet,
-                item.Model,
-                rhs.Model,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
-                include);
-            ret.Icon = item.Icon_IsSet == rhs.Icon_IsSet && string.Equals(item.Icon, rhs.Icon);
-        }
-
-        public string ToString(
-            IFacePartGetter item,
-            string name = null,
-            FacePart_Mask<bool> printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(
-                item: item,
-                fg: fg,
-                name: name,
-                printMask: printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(
-            IFacePartGetter item,
-            FileGeneration fg,
-            string name = null,
-            FacePart_Mask<bool> printMask = null)
-        {
-            if (name == null)
-            {
-                fg.AppendLine($"FacePart =>");
-            }
-            else
-            {
-                fg.AppendLine($"{name} (FacePart) =>");
-            }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                ToStringFields(
-                    item: item,
-                    fg: fg,
-                    printMask: printMask);
-            }
-            fg.AppendLine("]");
-        }
-
-        protected static void ToStringFields(
-            IFacePartGetter item,
-            FileGeneration fg,
-            FacePart_Mask<bool> printMask = null)
-        {
-            if (printMask?.Index ?? true)
-            {
-                fg.AppendLine($"Index => {item.Index}");
-            }
-            if (printMask?.Model?.Overall ?? true)
-            {
-                item.Model?.ToString(fg, "Model");
-            }
-            if (printMask?.Icon ?? true)
-            {
-                fg.AppendLine($"Icon => {item.Icon}");
-            }
-        }
-
-        public bool HasBeenSet(
-            IFacePartGetter item,
-            FacePart_Mask<bool?> checkMask)
-        {
-            if (checkMask.Index.HasValue && checkMask.Index.Value != item.Index_IsSet) return false;
-            if (checkMask.Model.Overall.HasValue && checkMask.Model.Overall.Value != item.Model_IsSet) return false;
-            if (checkMask.Model.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
-            if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_IsSet) return false;
-            return true;
-        }
-
-        public void FillHasBeenSetMask(
-            IFacePartGetter item,
-            FacePart_Mask<bool> mask)
-        {
-            mask.Index = item.Index_IsSet;
-            mask.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, item.Model.GetHasBeenSetMask());
-            mask.Icon = item.Icon_IsSet;
-        }
-
-        #region Equals and Hash
-        public virtual bool Equals(
-            IFacePartGetter lhs,
-            IFacePartGetter rhs)
-        {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
-            if (lhs.Index_IsSet != rhs.Index_IsSet) return false;
-            if (lhs.Index_IsSet)
-            {
-                if (lhs.Index != rhs.Index) return false;
-            }
-            if (lhs.Model_IsSet != rhs.Model_IsSet) return false;
-            if (lhs.Model_IsSet)
-            {
-                if (!object.Equals(lhs.Model, rhs.Model)) return false;
-            }
-            if (lhs.Icon_IsSet != rhs.Icon_IsSet) return false;
-            if (lhs.Icon_IsSet)
-            {
-                if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
-            }
-            return true;
-        }
-
-        public virtual int GetHashCode(IFacePartGetter item)
-        {
-            int ret = 0;
-            if (item.Index_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Index).CombineHashCode(ret);
-            }
-            if (item.Model_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Model).CombineHashCode(ret);
-            }
-            if (item.Icon_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Icon).CombineHashCode(ret);
-            }
-            return ret;
-        }
-
-        #endregion
-
-
+        
+        
     }
     #endregion
 
@@ -1295,7 +1339,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static FacePartXmlWriteTranslation Instance = new FacePartXmlWriteTranslation();
 
         public static void WriteToNodeXml(
-            IFacePartGetter item,
+            IFacePartInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1336,7 +1380,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             XElement node,
-            IFacePartGetter item,
+            IFacePartInternalGetter item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)
@@ -1362,7 +1406,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             Write(
-                item: (IFacePartGetter)item,
+                item: (IFacePartInternalGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1371,7 +1415,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             XElement node,
-            IFacePartGetter item,
+            IFacePartInternalGetter item,
             ErrorMaskBuilder errorMask,
             int fieldIndex,
             TranslationCrystal translationMask,
@@ -1381,7 +1425,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 errorMask?.PushIndex(fieldIndex);
                 Write(
-                    item: (IFacePartGetter)item,
+                    item: (IFacePartInternalGetter)item,
                     name: name,
                     node: node,
                     errorMask: errorMask,
@@ -1405,7 +1449,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static FacePartXmlCreateTranslation Instance = new FacePartXmlCreateTranslation();
 
         public static void FillPublicXml(
-            IFacePart item,
+            IFacePartInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1430,7 +1474,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElementXml(
-            IFacePart item,
+            IFacePartInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -1528,7 +1572,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public static class FacePartXmlTranslationMixIn
     {
         public static void WriteToXml(
-            this IFacePartGetter item,
+            this IFacePartInternalGetter item,
             XElement node,
             out FacePart_ErrorMask errorMask,
             bool doMasks = true,
@@ -1546,7 +1590,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IFacePartGetter item,
+            this IFacePartInternalGetter item,
             string path,
             out FacePart_ErrorMask errorMask,
             FacePart_TranslationMask translationMask = null,
@@ -1565,7 +1609,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IFacePartGetter item,
+            this IFacePartInternalGetter item,
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1583,7 +1627,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IFacePartGetter item,
+            this IFacePartInternalGetter item,
             Stream stream,
             out FacePart_ErrorMask errorMask,
             FacePart_TranslationMask translationMask = null,
@@ -1602,7 +1646,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IFacePartGetter item,
+            this IFacePartInternalGetter item,
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1620,7 +1664,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IFacePartGetter item,
+            this IFacePartInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1635,7 +1679,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IFacePartGetter item,
+            this IFacePartInternalGetter item,
             XElement node,
             string name = null,
             FacePart_TranslationMask translationMask = null)
@@ -1649,7 +1693,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IFacePartGetter item,
+            this IFacePartInternalGetter item,
             string path,
             string name = null)
         {
@@ -1664,7 +1708,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IFacePartGetter item,
+            this IFacePartInternalGetter item,
             Stream stream,
             string name = null)
         {
@@ -2031,7 +2075,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static FacePartBinaryWriteTranslation Instance = new FacePartBinaryWriteTranslation();
 
         public static void Write_RecordTypes(
-            IFacePartGetter item,
+            IFacePartInternalGetter item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask,
@@ -2068,7 +2112,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             MutagenWriter writer,
-            IFacePartGetter item,
+            IFacePartInternalGetter item,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
@@ -2089,7 +2133,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask)
         {
             Write(
-                item: (IFacePartGetter)item,
+                item: (IFacePartInternalGetter)item,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -2108,7 +2152,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public static class FacePartBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IFacePartGetter item,
+            this IFacePartInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
             out FacePart_ErrorMask errorMask,
@@ -2125,7 +2169,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToBinary(
-            this IFacePartGetter item,
+            this IFacePartInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -2139,7 +2183,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToBinary(
-            this IFacePartGetter item,
+            this IFacePartInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
@@ -2156,22 +2200,65 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     public partial class FacePartBinaryWrapper :
         BinaryWrapper,
-        IFacePartGetter
+        IFacePartInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FacePart_Registration.Instance;
         public static FacePart_Registration Registration => FacePart_Registration.Instance;
-        protected object CommonInstance => FacePartCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
+        protected object CommonInstance()
+        {
+            return FacePartCommon.Instance;
+        }
+        object IFacePartInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IFacePartInternalGetter.CommonSetterInstance()
+        {
+            return null;
+        }
+        object IFacePartInternalGetter.CommonSetterCopyInstance()
+        {
+            return null;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IFacePartGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IFacePartInternalGetter)rhs, include);
 
         protected object XmlWriteTranslator => FacePartXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((FacePartXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         protected object BinaryWriteTranslator => FacePartBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((FacePartBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
 
         #region Index
         private int? _IndexLocation;
@@ -2179,7 +2266,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Race.FaceIndex Index => (Race.FaceIndex)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _IndexLocation.Value, _package.Meta));
         #endregion
         #region Model
-        public IModelGetter Model { get; private set; }
+        public IModelInternalGetter Model { get; private set; }
         public bool Model_IsSet => Model != null;
         #endregion
         #region Icon
@@ -2266,4 +2353,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class FacePart
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => FacePart_Registration.Instance;
+        public static FacePart_Registration Registration => FacePart_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return FacePartCommon.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return FacePartSetterCommon.Instance;
+        }
+        protected object CommonSetterCopyInstance()
+        {
+            return FacePartSetterCopyCommon.Instance;
+        }
+        object IFacePartInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IFacePartInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object IFacePartInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
 }

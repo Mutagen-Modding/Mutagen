@@ -42,11 +42,6 @@ namespace Mutagen.Bethesda.Oblivion
         IEquatable<PlacedNPC>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => PlacedNPC_Registration.Instance;
-        public new static PlacedNPC_Registration Registration => PlacedNPC_Registration.Instance;
-        protected override object CommonInstance => PlacedNPCCommon.Instance;
-
         #region Ctor
         protected PlacedNPC()
         {
@@ -144,7 +139,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.DistantLODData_Set(default(DistantLODData), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IDistantLODDataGetter IPlacedNPCGetter.DistantLODData => this.DistantLODData;
+        IDistantLODDataInternalGetter IPlacedNPCGetter.DistantLODData => this.DistantLODData;
         #endregion
         #region EnableParent
         public bool EnableParent_IsSet
@@ -171,7 +166,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.EnableParent_Set(default(EnableParent), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnableParentGetter IPlacedNPCGetter.EnableParent => this.EnableParent;
+        IEnableParentInternalGetter IPlacedNPCGetter.EnableParent => this.EnableParent;
         #endregion
         #region MerchantContainer
         public IFormIDSetLink<PlacedObject> MerchantContainer_Property { get; } = new FormIDSetLink<PlacedObject>();
@@ -304,20 +299,33 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IPlacedNPCInternalGetter rhs)) return false;
-            return ((PlacedNPCCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            return ((PlacedNPCCommon)((IPlacedNPCInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(PlacedNPC obj)
         {
-            return ((PlacedNPCCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((PlacedNPCCommon)((IPlacedNPCInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((PlacedNPCCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((PlacedNPCCommon)((IPlacedNPCInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected override object XmlWriteTranslator => PlacedNPCXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((PlacedNPCXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static PlacedNPC CreateFromXml(
@@ -592,6 +600,19 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Binary Translation
         protected override object BinaryWriteTranslator => PlacedNPCBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((PlacedNPCBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
         #region Binary Create
         [DebuggerStepThrough]
         public static PlacedNPC CreateFromBinary(
@@ -924,7 +945,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            PlacedNPCCommon.CopyFieldsFrom(
+            PlacedNPCSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -939,7 +960,7 @@ namespace Mutagen.Bethesda.Oblivion
             PlacedNPC_CopyMask copyMask = null,
             PlacedNPC def = null)
         {
-            PlacedNPCCommon.CopyFieldsFrom(
+            PlacedNPCSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -996,7 +1017,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            PlacedNPCCommon.Instance.Clear(this);
+            PlacedNPCSetterCommon.Instance.Clear(this);
         }
 
         public new static PlacedNPC Create(IEnumerable<KeyValuePair<ushort, object>> fields)
@@ -1152,12 +1173,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region DistantLODData
-        IDistantLODDataGetter DistantLODData { get; }
+        IDistantLODDataInternalGetter DistantLODData { get; }
         bool DistantLODData_IsSet { get; }
 
         #endregion
         #region EnableParent
-        IEnableParentGetter EnableParent { get; }
+        IEnableParentInternalGetter EnableParent { get; }
         bool EnableParent_IsSet { get; }
 
         #endregion
@@ -1210,7 +1231,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IPlacedNPCInternal item)
         {
-            ((PlacedNPCCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((PlacedNPCSetterCommon)((IPlacedNPCInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static PlacedNPC_Mask<bool> GetEqualsMask(
@@ -1218,7 +1239,7 @@ namespace Mutagen.Bethesda.Oblivion
             IPlacedNPCInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((PlacedNPCCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((PlacedNPCCommon)((IPlacedNPCInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -1229,7 +1250,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             PlacedNPC_Mask<bool> printMask = null)
         {
-            return ((PlacedNPCCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((PlacedNPCCommon)((IPlacedNPCInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -1241,7 +1262,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             PlacedNPC_Mask<bool> printMask = null)
         {
-            ((PlacedNPCCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((PlacedNPCCommon)((IPlacedNPCInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -1252,7 +1273,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IPlacedNPCInternalGetter item,
             PlacedNPC_Mask<bool?> checkMask)
         {
-            return ((PlacedNPCCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((PlacedNPCCommon)((IPlacedNPCInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -1260,7 +1281,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static PlacedNPC_Mask<bool> GetHasBeenSetMask(this IPlacedNPCInternalGetter item)
         {
             var ret = new PlacedNPC_Mask<bool>();
-            ((PlacedNPCCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((PlacedNPCCommon)((IPlacedNPCInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -1270,7 +1291,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IPlacedNPCInternalGetter item,
             IPlacedNPCInternalGetter rhs)
         {
-            return ((PlacedNPCCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((PlacedNPCCommon)((IPlacedNPCInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1336,8 +1357,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type SetterType = typeof(IPlacedNPC);
 
         public static readonly Type InternalSetterType = typeof(IPlacedNPCInternal);
-
-        public static readonly Type CommonType = typeof(PlacedNPCCommon);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.PlacedNPC";
 
@@ -1595,7 +1614,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -1615,9 +1633,421 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
+    public partial class PlacedNPCSetterCommon : OblivionMajorRecordSetterCommon
+    {
+        public new static readonly PlacedNPCSetterCommon Instance = new PlacedNPCSetterCommon();
+
+        partial void ClearPartial();
+        
+        public virtual void Clear(IPlacedNPCInternal item)
+        {
+            ClearPartial();
+            item.Base_Property.Unset();
+            item.XPCIFluff_Unset();
+            item.FULLFluff_Unset();
+            item.DistantLODData_Unset();
+            item.EnableParent_Unset();
+            item.MerchantContainer_Property.Unset();
+            item.Horse_Property.Unset();
+            item.RagdollData_Unset();
+            item.Scale_Unset();
+            item.Position = default(P3Float);
+            item.Rotation = default(P3Float);
+            base.Clear(item);
+        }
+        
+        public override void Clear(IOblivionMajorRecordInternal item)
+        {
+            Clear(item: (IPlacedNPCInternal)item);
+        }
+        
+        public override void Clear(IMajorRecordInternal item)
+        {
+            Clear(item: (IPlacedNPCInternal)item);
+        }
+        
+        
+    }
     public partial class PlacedNPCCommon : OblivionMajorRecordCommon
     {
-        public static readonly PlacedNPCCommon Instance = new PlacedNPCCommon();
+        public new static readonly PlacedNPCCommon Instance = new PlacedNPCCommon();
+
+        public PlacedNPC_Mask<bool> GetEqualsMask(
+            IPlacedNPCInternalGetter item,
+            IPlacedNPCInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new PlacedNPC_Mask<bool>();
+            ((PlacedNPCCommon)((IPlacedNPCInternalGetter)item).CommonInstance()).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+        
+        public void FillEqualsMask(
+            IPlacedNPCInternalGetter item,
+            IPlacedNPCInternalGetter rhs,
+            PlacedNPC_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            if (rhs == null) return;
+            ret.Base = item.Base_Property.FormKey == rhs.Base_Property.FormKey;
+            ret.XPCIFluff = item.XPCIFluff_IsSet == rhs.XPCIFluff_IsSet && MemoryExtensions.SequenceEqual(item.XPCIFluff, rhs.XPCIFluff);
+            ret.FULLFluff = item.FULLFluff_IsSet == rhs.FULLFluff_IsSet && MemoryExtensions.SequenceEqual(item.FULLFluff, rhs.FULLFluff);
+            ret.DistantLODData = EqualsMaskHelper.EqualsHelper(
+                item.DistantLODData_IsSet,
+                rhs.DistantLODData_IsSet,
+                item.DistantLODData,
+                rhs.DistantLODData,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
+            ret.EnableParent = EqualsMaskHelper.EqualsHelper(
+                item.EnableParent_IsSet,
+                rhs.EnableParent_IsSet,
+                item.EnableParent,
+                rhs.EnableParent,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
+            ret.MerchantContainer = item.MerchantContainer_Property.FormKey == rhs.MerchantContainer_Property.FormKey;
+            ret.Horse = item.Horse_Property.FormKey == rhs.Horse_Property.FormKey;
+            ret.RagdollData = item.RagdollData_IsSet == rhs.RagdollData_IsSet && MemoryExtensions.SequenceEqual(item.RagdollData, rhs.RagdollData);
+            ret.Scale = item.Scale_IsSet == rhs.Scale_IsSet && item.Scale.EqualsWithin(rhs.Scale);
+            ret.Position = item.Position.Equals(rhs.Position);
+            ret.Rotation = item.Rotation.Equals(rhs.Rotation);
+            base.FillEqualsMask(item, rhs, ret, include);
+        }
+        
+        public string ToString(
+            IPlacedNPCInternalGetter item,
+            string name = null,
+            PlacedNPC_Mask<bool> printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+            return fg.ToString();
+        }
+        
+        public void ToString(
+            IPlacedNPCInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            PlacedNPC_Mask<bool> printMask = null)
+        {
+            if (name == null)
+            {
+                fg.AppendLine($"PlacedNPC =>");
+            }
+            else
+            {
+                fg.AppendLine($"{name} (PlacedNPC) =>");
+            }
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
+            }
+            fg.AppendLine("]");
+        }
+        
+        protected static void ToStringFields(
+            IPlacedNPCInternalGetter item,
+            FileGeneration fg,
+            PlacedNPC_Mask<bool> printMask = null)
+        {
+            OblivionMajorRecordCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.Base ?? true)
+            {
+                fg.AppendLine($"Base => {item.Base_Property}");
+            }
+            if (printMask?.XPCIFluff ?? true)
+            {
+                fg.AppendLine($"XPCIFluff => {SpanExt.ToHexString(item.XPCIFluff)}");
+            }
+            if (printMask?.FULLFluff ?? true)
+            {
+                fg.AppendLine($"FULLFluff => {SpanExt.ToHexString(item.FULLFluff)}");
+            }
+            if (printMask?.DistantLODData?.Overall ?? true)
+            {
+                item.DistantLODData?.ToString(fg, "DistantLODData");
+            }
+            if (printMask?.EnableParent?.Overall ?? true)
+            {
+                item.EnableParent?.ToString(fg, "EnableParent");
+            }
+            if (printMask?.MerchantContainer ?? true)
+            {
+                fg.AppendLine($"MerchantContainer => {item.MerchantContainer_Property}");
+            }
+            if (printMask?.Horse ?? true)
+            {
+                fg.AppendLine($"Horse => {item.Horse_Property}");
+            }
+            if (printMask?.RagdollData ?? true)
+            {
+                fg.AppendLine($"RagdollData => {SpanExt.ToHexString(item.RagdollData)}");
+            }
+            if (printMask?.Scale ?? true)
+            {
+                fg.AppendLine($"Scale => {item.Scale}");
+            }
+            if (printMask?.Position ?? true)
+            {
+                fg.AppendLine($"Position => {item.Position}");
+            }
+            if (printMask?.Rotation ?? true)
+            {
+                fg.AppendLine($"Rotation => {item.Rotation}");
+            }
+            if (printMask?.DATADataTypeState ?? true)
+            {
+            }
+        }
+        
+        public bool HasBeenSet(
+            IPlacedNPCInternalGetter item,
+            PlacedNPC_Mask<bool?> checkMask)
+        {
+            if (checkMask.Base.HasValue && checkMask.Base.Value != item.Base_Property.HasBeenSet) return false;
+            if (checkMask.XPCIFluff.HasValue && checkMask.XPCIFluff.Value != item.XPCIFluff_IsSet) return false;
+            if (checkMask.FULLFluff.HasValue && checkMask.FULLFluff.Value != item.FULLFluff_IsSet) return false;
+            if (checkMask.DistantLODData.Overall.HasValue && checkMask.DistantLODData.Overall.Value != item.DistantLODData_IsSet) return false;
+            if (checkMask.DistantLODData.Specific != null && (item.DistantLODData == null || !item.DistantLODData.HasBeenSet(checkMask.DistantLODData.Specific))) return false;
+            if (checkMask.EnableParent.Overall.HasValue && checkMask.EnableParent.Overall.Value != item.EnableParent_IsSet) return false;
+            if (checkMask.EnableParent.Specific != null && (item.EnableParent == null || !item.EnableParent.HasBeenSet(checkMask.EnableParent.Specific))) return false;
+            if (checkMask.MerchantContainer.HasValue && checkMask.MerchantContainer.Value != item.MerchantContainer_Property.HasBeenSet) return false;
+            if (checkMask.Horse.HasValue && checkMask.Horse.Value != item.Horse_Property.HasBeenSet) return false;
+            if (checkMask.RagdollData.HasValue && checkMask.RagdollData.Value != item.RagdollData_IsSet) return false;
+            if (checkMask.Scale.HasValue && checkMask.Scale.Value != item.Scale_IsSet) return false;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+        
+        public void FillHasBeenSetMask(
+            IPlacedNPCInternalGetter item,
+            PlacedNPC_Mask<bool> mask)
+        {
+            mask.Base = item.Base_Property.HasBeenSet;
+            mask.XPCIFluff = item.XPCIFluff_IsSet;
+            mask.FULLFluff = item.FULLFluff_IsSet;
+            mask.DistantLODData = new MaskItem<bool, DistantLODData_Mask<bool>>(item.DistantLODData_IsSet, item.DistantLODData.GetHasBeenSetMask());
+            mask.EnableParent = new MaskItem<bool, EnableParent_Mask<bool>>(item.EnableParent_IsSet, item.EnableParent.GetHasBeenSetMask());
+            mask.MerchantContainer = item.MerchantContainer_Property.HasBeenSet;
+            mask.Horse = item.Horse_Property.HasBeenSet;
+            mask.RagdollData = item.RagdollData_IsSet;
+            mask.Scale = item.Scale_IsSet;
+            mask.Position = true;
+            mask.Rotation = true;
+            mask.DATADataTypeState = true;
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
+        }
+        
+        public static PlacedNPC_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (PlacedNPC_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.FormKey:
+                    return (PlacedNPC_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.Version:
+                    return (PlacedNPC_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.EditorID:
+                    return (PlacedNPC_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
+                    return (PlacedNPC_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        public static PlacedNPC_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (PlacedNPC_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.FormKey:
+                    return (PlacedNPC_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.Version:
+                    return (PlacedNPC_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.EditorID:
+                    return (PlacedNPC_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        #region Equals and Hash
+        public virtual bool Equals(
+            IPlacedNPCInternalGetter lhs,
+            IPlacedNPCInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.Base_Property.HasBeenSet != rhs.Base_Property.HasBeenSet) return false;
+            if (lhs.Base_Property.HasBeenSet)
+            {
+                if (!lhs.Base_Property.Equals(rhs.Base_Property)) return false;
+            }
+            if (lhs.XPCIFluff_IsSet != rhs.XPCIFluff_IsSet) return false;
+            if (lhs.XPCIFluff_IsSet)
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.XPCIFluff, rhs.XPCIFluff)) return false;
+            }
+            if (lhs.FULLFluff_IsSet != rhs.FULLFluff_IsSet) return false;
+            if (lhs.FULLFluff_IsSet)
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.FULLFluff, rhs.FULLFluff)) return false;
+            }
+            if (lhs.DistantLODData_IsSet != rhs.DistantLODData_IsSet) return false;
+            if (lhs.DistantLODData_IsSet)
+            {
+                if (!object.Equals(lhs.DistantLODData, rhs.DistantLODData)) return false;
+            }
+            if (lhs.EnableParent_IsSet != rhs.EnableParent_IsSet) return false;
+            if (lhs.EnableParent_IsSet)
+            {
+                if (!object.Equals(lhs.EnableParent, rhs.EnableParent)) return false;
+            }
+            if (lhs.MerchantContainer_Property.HasBeenSet != rhs.MerchantContainer_Property.HasBeenSet) return false;
+            if (lhs.MerchantContainer_Property.HasBeenSet)
+            {
+                if (!lhs.MerchantContainer_Property.Equals(rhs.MerchantContainer_Property)) return false;
+            }
+            if (lhs.Horse_Property.HasBeenSet != rhs.Horse_Property.HasBeenSet) return false;
+            if (lhs.Horse_Property.HasBeenSet)
+            {
+                if (!lhs.Horse_Property.Equals(rhs.Horse_Property)) return false;
+            }
+            if (lhs.RagdollData_IsSet != rhs.RagdollData_IsSet) return false;
+            if (lhs.RagdollData_IsSet)
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.RagdollData, rhs.RagdollData)) return false;
+            }
+            if (lhs.Scale_IsSet != rhs.Scale_IsSet) return false;
+            if (lhs.Scale_IsSet)
+            {
+                if (!lhs.Scale.EqualsWithin(rhs.Scale)) return false;
+            }
+            if (!lhs.Position.Equals(rhs.Position)) return false;
+            if (!lhs.Rotation.Equals(rhs.Rotation)) return false;
+            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            return true;
+        }
+        
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IPlacedNPCInternalGetter)lhs,
+                rhs: rhs as IPlacedNPCInternalGetter);
+        }
+        
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IPlacedNPCInternalGetter)lhs,
+                rhs: rhs as IPlacedNPCInternalGetter);
+        }
+        
+        public virtual int GetHashCode(IPlacedNPCInternalGetter item)
+        {
+            int ret = 0;
+            if (item.Base_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Base).CombineHashCode(ret);
+            }
+            if (item.XPCIFluff_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.XPCIFluff).CombineHashCode(ret);
+            }
+            if (item.FULLFluff_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.FULLFluff).CombineHashCode(ret);
+            }
+            if (item.DistantLODData_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.DistantLODData).CombineHashCode(ret);
+            }
+            if (item.EnableParent_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.EnableParent).CombineHashCode(ret);
+            }
+            if (item.MerchantContainer_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.MerchantContainer).CombineHashCode(ret);
+            }
+            if (item.Horse_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Horse).CombineHashCode(ret);
+            }
+            if (item.RagdollData_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.RagdollData).CombineHashCode(ret);
+            }
+            if (item.Scale_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Scale).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.Position).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Rotation).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.DATADataTypeState).CombineHashCode(ret);
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+        
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IPlacedNPCInternalGetter)item);
+        }
+        
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IPlacedNPCInternalGetter)item);
+        }
+        
+        #endregion
+        
+        
+        #region Mutagen
+        partial void PostDuplicate(PlacedNPC obj, PlacedNPC rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+        
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new PlacedNPC(getNextFormKey());
+            ret.CopyFieldsFrom((PlacedNPC)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (PlacedNPC)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+        
+        #endregion
+        
+        
+    }
+    public partial class PlacedNPCSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
+    {
+        public new static readonly PlacedNPCSetterCopyCommon Instance = new PlacedNPCSetterCopyCommon();
 
         #region Copy Fields From
         public static void CopyFieldsFrom(
@@ -1627,7 +2057,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             PlacedNPC_CopyMask copyMask)
         {
-            OblivionMajorRecordCommon.CopyFieldsFrom(
+            OblivionMajorRecordSetterCopyCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1730,7 +2160,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             case CopyOption.Reference:
                                 throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
-                                DistantLODDataCommon.CopyFieldsFrom(
+                                DistantLODDataSetterCopyCommon.CopyFieldsFrom(
                                     item: item.DistantLODData,
                                     rhs: rhs.DistantLODData,
                                     def: def?.DistantLODData,
@@ -1782,7 +2212,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             case CopyOption.Reference:
                                 throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
-                                EnableParentCommon.CopyFieldsFrom(
+                                EnableParentSetterCopyCommon.CopyFieldsFrom(
                                     item: item.EnableParent,
                                     rhs: rhs.EnableParent,
                                     def: def?.EnableParent,
@@ -1949,409 +2379,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
         }
-
+        
         #endregion
-
-        partial void ClearPartial();
-
-        public virtual void Clear(IPlacedNPCInternal item)
-        {
-            ClearPartial();
-            item.Base_Property.Unset();
-            item.XPCIFluff_Unset();
-            item.FULLFluff_Unset();
-            item.DistantLODData_Unset();
-            item.EnableParent_Unset();
-            item.MerchantContainer_Property.Unset();
-            item.Horse_Property.Unset();
-            item.RagdollData_Unset();
-            item.Scale_Unset();
-            item.Position = default(P3Float);
-            item.Rotation = default(P3Float);
-            base.Clear(item);
-        }
-
-        public override void Clear(IOblivionMajorRecordInternal item)
-        {
-            Clear(item: (IPlacedNPCInternal)item);
-        }
-
-        public override void Clear(IMajorRecordInternal item)
-        {
-            Clear(item: (IPlacedNPCInternal)item);
-        }
-
-        public PlacedNPC_Mask<bool> GetEqualsMask(
-            IPlacedNPCInternalGetter item,
-            IPlacedNPCInternalGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new PlacedNPC_Mask<bool>();
-            ((PlacedNPCCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public void FillEqualsMask(
-            IPlacedNPCInternalGetter item,
-            IPlacedNPCInternalGetter rhs,
-            PlacedNPC_Mask<bool> ret,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            if (rhs == null) return;
-            ret.Base = item.Base_Property.FormKey == rhs.Base_Property.FormKey;
-            ret.XPCIFluff = item.XPCIFluff_IsSet == rhs.XPCIFluff_IsSet && MemoryExtensions.SequenceEqual(item.XPCIFluff, rhs.XPCIFluff);
-            ret.FULLFluff = item.FULLFluff_IsSet == rhs.FULLFluff_IsSet && MemoryExtensions.SequenceEqual(item.FULLFluff, rhs.FULLFluff);
-            ret.DistantLODData = EqualsMaskHelper.EqualsHelper(
-                item.DistantLODData_IsSet,
-                rhs.DistantLODData_IsSet,
-                item.DistantLODData,
-                rhs.DistantLODData,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
-                include);
-            ret.EnableParent = EqualsMaskHelper.EqualsHelper(
-                item.EnableParent_IsSet,
-                rhs.EnableParent_IsSet,
-                item.EnableParent,
-                rhs.EnableParent,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
-                include);
-            ret.MerchantContainer = item.MerchantContainer_Property.FormKey == rhs.MerchantContainer_Property.FormKey;
-            ret.Horse = item.Horse_Property.FormKey == rhs.Horse_Property.FormKey;
-            ret.RagdollData = item.RagdollData_IsSet == rhs.RagdollData_IsSet && MemoryExtensions.SequenceEqual(item.RagdollData, rhs.RagdollData);
-            ret.Scale = item.Scale_IsSet == rhs.Scale_IsSet && item.Scale.EqualsWithin(rhs.Scale);
-            ret.Position = item.Position.Equals(rhs.Position);
-            ret.Rotation = item.Rotation.Equals(rhs.Rotation);
-            base.FillEqualsMask(item, rhs, ret, include);
-        }
-
-        public string ToString(
-            IPlacedNPCInternalGetter item,
-            string name = null,
-            PlacedNPC_Mask<bool> printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(
-                item: item,
-                fg: fg,
-                name: name,
-                printMask: printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(
-            IPlacedNPCInternalGetter item,
-            FileGeneration fg,
-            string name = null,
-            PlacedNPC_Mask<bool> printMask = null)
-        {
-            if (name == null)
-            {
-                fg.AppendLine($"PlacedNPC =>");
-            }
-            else
-            {
-                fg.AppendLine($"{name} (PlacedNPC) =>");
-            }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                ToStringFields(
-                    item: item,
-                    fg: fg,
-                    printMask: printMask);
-            }
-            fg.AppendLine("]");
-        }
-
-        protected static void ToStringFields(
-            IPlacedNPCInternalGetter item,
-            FileGeneration fg,
-            PlacedNPC_Mask<bool> printMask = null)
-        {
-            OblivionMajorRecordCommon.ToStringFields(
-                item: item,
-                fg: fg,
-                printMask: printMask);
-            if (printMask?.Base ?? true)
-            {
-                fg.AppendLine($"Base => {item.Base_Property}");
-            }
-            if (printMask?.XPCIFluff ?? true)
-            {
-                fg.AppendLine($"XPCIFluff => {SpanExt.ToHexString(item.XPCIFluff)}");
-            }
-            if (printMask?.FULLFluff ?? true)
-            {
-                fg.AppendLine($"FULLFluff => {SpanExt.ToHexString(item.FULLFluff)}");
-            }
-            if (printMask?.DistantLODData?.Overall ?? true)
-            {
-                item.DistantLODData?.ToString(fg, "DistantLODData");
-            }
-            if (printMask?.EnableParent?.Overall ?? true)
-            {
-                item.EnableParent?.ToString(fg, "EnableParent");
-            }
-            if (printMask?.MerchantContainer ?? true)
-            {
-                fg.AppendLine($"MerchantContainer => {item.MerchantContainer_Property}");
-            }
-            if (printMask?.Horse ?? true)
-            {
-                fg.AppendLine($"Horse => {item.Horse_Property}");
-            }
-            if (printMask?.RagdollData ?? true)
-            {
-                fg.AppendLine($"RagdollData => {SpanExt.ToHexString(item.RagdollData)}");
-            }
-            if (printMask?.Scale ?? true)
-            {
-                fg.AppendLine($"Scale => {item.Scale}");
-            }
-            if (printMask?.Position ?? true)
-            {
-                fg.AppendLine($"Position => {item.Position}");
-            }
-            if (printMask?.Rotation ?? true)
-            {
-                fg.AppendLine($"Rotation => {item.Rotation}");
-            }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-            }
-        }
-
-        public bool HasBeenSet(
-            IPlacedNPCInternalGetter item,
-            PlacedNPC_Mask<bool?> checkMask)
-        {
-            if (checkMask.Base.HasValue && checkMask.Base.Value != item.Base_Property.HasBeenSet) return false;
-            if (checkMask.XPCIFluff.HasValue && checkMask.XPCIFluff.Value != item.XPCIFluff_IsSet) return false;
-            if (checkMask.FULLFluff.HasValue && checkMask.FULLFluff.Value != item.FULLFluff_IsSet) return false;
-            if (checkMask.DistantLODData.Overall.HasValue && checkMask.DistantLODData.Overall.Value != item.DistantLODData_IsSet) return false;
-            if (checkMask.DistantLODData.Specific != null && (item.DistantLODData == null || !item.DistantLODData.HasBeenSet(checkMask.DistantLODData.Specific))) return false;
-            if (checkMask.EnableParent.Overall.HasValue && checkMask.EnableParent.Overall.Value != item.EnableParent_IsSet) return false;
-            if (checkMask.EnableParent.Specific != null && (item.EnableParent == null || !item.EnableParent.HasBeenSet(checkMask.EnableParent.Specific))) return false;
-            if (checkMask.MerchantContainer.HasValue && checkMask.MerchantContainer.Value != item.MerchantContainer_Property.HasBeenSet) return false;
-            if (checkMask.Horse.HasValue && checkMask.Horse.Value != item.Horse_Property.HasBeenSet) return false;
-            if (checkMask.RagdollData.HasValue && checkMask.RagdollData.Value != item.RagdollData_IsSet) return false;
-            if (checkMask.Scale.HasValue && checkMask.Scale.Value != item.Scale_IsSet) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public void FillHasBeenSetMask(
-            IPlacedNPCInternalGetter item,
-            PlacedNPC_Mask<bool> mask)
-        {
-            mask.Base = item.Base_Property.HasBeenSet;
-            mask.XPCIFluff = item.XPCIFluff_IsSet;
-            mask.FULLFluff = item.FULLFluff_IsSet;
-            mask.DistantLODData = new MaskItem<bool, DistantLODData_Mask<bool>>(item.DistantLODData_IsSet, item.DistantLODData.GetHasBeenSetMask());
-            mask.EnableParent = new MaskItem<bool, EnableParent_Mask<bool>>(item.EnableParent_IsSet, item.EnableParent.GetHasBeenSetMask());
-            mask.MerchantContainer = item.MerchantContainer_Property.HasBeenSet;
-            mask.Horse = item.Horse_Property.HasBeenSet;
-            mask.RagdollData = item.RagdollData_IsSet;
-            mask.Scale = item.Scale_IsSet;
-            mask.Position = true;
-            mask.Rotation = true;
-            mask.DATADataTypeState = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-
-        public static PlacedNPC_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
-        {
-            switch (index)
-            {
-                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (PlacedNPC_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.FormKey:
-                    return (PlacedNPC_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.Version:
-                    return (PlacedNPC_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.EditorID:
-                    return (PlacedNPC_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
-                    return (PlacedNPC_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        public static PlacedNPC_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
-        {
-            switch (index)
-            {
-                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (PlacedNPC_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.FormKey:
-                    return (PlacedNPC_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
-                    return (PlacedNPC_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.EditorID:
-                    return (PlacedNPC_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        #region Equals and Hash
-        public virtual bool Equals(
-            IPlacedNPCInternalGetter lhs,
-            IPlacedNPCInternalGetter rhs)
-        {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (lhs.Base_Property.HasBeenSet != rhs.Base_Property.HasBeenSet) return false;
-            if (lhs.Base_Property.HasBeenSet)
-            {
-                if (!lhs.Base_Property.Equals(rhs.Base_Property)) return false;
-            }
-            if (lhs.XPCIFluff_IsSet != rhs.XPCIFluff_IsSet) return false;
-            if (lhs.XPCIFluff_IsSet)
-            {
-                if (!MemoryExtensions.SequenceEqual(lhs.XPCIFluff, rhs.XPCIFluff)) return false;
-            }
-            if (lhs.FULLFluff_IsSet != rhs.FULLFluff_IsSet) return false;
-            if (lhs.FULLFluff_IsSet)
-            {
-                if (!MemoryExtensions.SequenceEqual(lhs.FULLFluff, rhs.FULLFluff)) return false;
-            }
-            if (lhs.DistantLODData_IsSet != rhs.DistantLODData_IsSet) return false;
-            if (lhs.DistantLODData_IsSet)
-            {
-                if (!object.Equals(lhs.DistantLODData, rhs.DistantLODData)) return false;
-            }
-            if (lhs.EnableParent_IsSet != rhs.EnableParent_IsSet) return false;
-            if (lhs.EnableParent_IsSet)
-            {
-                if (!object.Equals(lhs.EnableParent, rhs.EnableParent)) return false;
-            }
-            if (lhs.MerchantContainer_Property.HasBeenSet != rhs.MerchantContainer_Property.HasBeenSet) return false;
-            if (lhs.MerchantContainer_Property.HasBeenSet)
-            {
-                if (!lhs.MerchantContainer_Property.Equals(rhs.MerchantContainer_Property)) return false;
-            }
-            if (lhs.Horse_Property.HasBeenSet != rhs.Horse_Property.HasBeenSet) return false;
-            if (lhs.Horse_Property.HasBeenSet)
-            {
-                if (!lhs.Horse_Property.Equals(rhs.Horse_Property)) return false;
-            }
-            if (lhs.RagdollData_IsSet != rhs.RagdollData_IsSet) return false;
-            if (lhs.RagdollData_IsSet)
-            {
-                if (!MemoryExtensions.SequenceEqual(lhs.RagdollData, rhs.RagdollData)) return false;
-            }
-            if (lhs.Scale_IsSet != rhs.Scale_IsSet) return false;
-            if (lhs.Scale_IsSet)
-            {
-                if (!lhs.Scale.EqualsWithin(rhs.Scale)) return false;
-            }
-            if (!lhs.Position.Equals(rhs.Position)) return false;
-            if (!lhs.Rotation.Equals(rhs.Rotation)) return false;
-            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
-            return true;
-        }
-
-        public override bool Equals(
-            IOblivionMajorRecordInternalGetter lhs,
-            IOblivionMajorRecordInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (IPlacedNPCInternalGetter)lhs,
-                rhs: rhs as IPlacedNPCInternalGetter);
-        }
-
-        public override bool Equals(
-            IMajorRecordInternalGetter lhs,
-            IMajorRecordInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (IPlacedNPCInternalGetter)lhs,
-                rhs: rhs as IPlacedNPCInternalGetter);
-        }
-
-        public virtual int GetHashCode(IPlacedNPCInternalGetter item)
-        {
-            int ret = 0;
-            if (item.Base_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.Base).CombineHashCode(ret);
-            }
-            if (item.XPCIFluff_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.XPCIFluff).CombineHashCode(ret);
-            }
-            if (item.FULLFluff_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.FULLFluff).CombineHashCode(ret);
-            }
-            if (item.DistantLODData_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.DistantLODData).CombineHashCode(ret);
-            }
-            if (item.EnableParent_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.EnableParent).CombineHashCode(ret);
-            }
-            if (item.MerchantContainer_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.MerchantContainer).CombineHashCode(ret);
-            }
-            if (item.Horse_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.Horse).CombineHashCode(ret);
-            }
-            if (item.RagdollData_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.RagdollData).CombineHashCode(ret);
-            }
-            if (item.Scale_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Scale).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(item.Position).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Rotation).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.DATADataTypeState).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
-        {
-            return GetHashCode(item: (IPlacedNPCInternalGetter)item);
-        }
-
-        public override int GetHashCode(IMajorRecordInternalGetter item)
-        {
-            return GetHashCode(item: (IPlacedNPCInternalGetter)item);
-        }
-
-        #endregion
-
-
-        #region Mutagen
-        partial void PostDuplicate(PlacedNPC obj, PlacedNPC rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new PlacedNPC(getNextFormKey());
-            ret.CopyFieldsFrom((PlacedNPC)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (PlacedNPC)item, getNextFormKey, duplicatedRecords);
-            return ret;
-        }
-
-        #endregion
-
+        
+        
     }
     #endregion
 
@@ -3754,17 +3785,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         OblivionMajorRecordBinaryWrapper,
         IPlacedNPCInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedNPC_Registration.Instance;
         public new static PlacedNPC_Registration Registration => PlacedNPC_Registration.Instance;
-        protected override object CommonInstance => PlacedNPCCommon.Instance;
+        protected override object CommonInstance()
+        {
+            return PlacedNPCCommon.Instance;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPlacedNPCInternalGetter)rhs, include);
 
         protected override object XmlWriteTranslator => PlacedNPCXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((PlacedNPCXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         protected override object BinaryWriteTranslator => PlacedNPCBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((PlacedNPCBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
 
         #region Base
         private int? _BaseLocation;
@@ -3783,11 +3846,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public ReadOnlySpan<Byte> FULLFluff => _FULLFluffLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _FULLFluffLocation.Value, _package.Meta).ToArray() : default;
         #endregion
         #region DistantLODData
-        public IDistantLODDataGetter DistantLODData { get; private set; }
+        public IDistantLODDataInternalGetter DistantLODData { get; private set; }
         public bool DistantLODData_IsSet => DistantLODData != null;
         #endregion
         #region EnableParent
-        public IEnableParentGetter EnableParent { get; private set; }
+        public IEnableParentInternalGetter EnableParent { get; private set; }
         public bool EnableParent_IsSet => EnableParent != null;
         #endregion
         #region MerchantContainer
@@ -3947,4 +4010,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class PlacedNPC
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => PlacedNPC_Registration.Instance;
+        public new static PlacedNPC_Registration Registration => PlacedNPC_Registration.Instance;
+        protected override object CommonInstance()
+        {
+            return PlacedNPCCommon.Instance;
+        }
+        protected override object CommonSetterInstance()
+        {
+            return PlacedNPCSetterCommon.Instance;
+        }
+        protected override object CommonSetterCopyInstance()
+        {
+            return PlacedNPCSetterCopyCommon.Instance;
+        }
+
+        #endregion
+
+    }
 }

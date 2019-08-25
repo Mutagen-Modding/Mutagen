@@ -41,11 +41,6 @@ namespace Mutagen.Bethesda.Oblivion
         IEquatable<GlobalInt>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => GlobalInt_Registration.Instance;
-        public new static GlobalInt_Registration Registration => GlobalInt_Registration.Instance;
-        protected override object CommonInstance => GlobalIntCommon.Instance;
-
         #region Ctor
         protected GlobalInt()
         {
@@ -100,20 +95,33 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IGlobalIntInternalGetter rhs)) return false;
-            return ((GlobalIntCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            return ((GlobalIntCommon)((IGlobalIntInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(GlobalInt obj)
         {
-            return ((GlobalIntCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((GlobalIntCommon)((IGlobalIntInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((GlobalIntCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((GlobalIntCommon)((IGlobalIntInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected override object XmlWriteTranslator => GlobalIntXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((GlobalIntXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static GlobalInt CreateFromXml(
@@ -320,6 +328,19 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Binary Translation
         protected override object BinaryWriteTranslator => GlobalIntBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((GlobalIntBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
         #region Binary Create
         [DebuggerStepThrough]
         public static GlobalInt CreateFromBinary(
@@ -500,7 +521,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            GlobalIntCommon.CopyFieldsFrom(
+            GlobalIntSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -515,7 +536,7 @@ namespace Mutagen.Bethesda.Oblivion
             GlobalInt_CopyMask copyMask = null,
             GlobalInt def = null)
         {
-            GlobalIntCommon.CopyFieldsFrom(
+            GlobalIntSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -539,7 +560,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            GlobalIntCommon.Instance.Clear(this);
+            GlobalIntSetterCommon.Instance.Clear(this);
         }
 
         public new static GlobalInt Create(IEnumerable<KeyValuePair<ushort, object>> fields)
@@ -623,7 +644,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IGlobalIntInternal item)
         {
-            ((GlobalIntCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((GlobalIntSetterCommon)((IGlobalIntInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static GlobalInt_Mask<bool> GetEqualsMask(
@@ -631,7 +652,7 @@ namespace Mutagen.Bethesda.Oblivion
             IGlobalIntInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((GlobalIntCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((GlobalIntCommon)((IGlobalIntInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -642,7 +663,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             GlobalInt_Mask<bool> printMask = null)
         {
-            return ((GlobalIntCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((GlobalIntCommon)((IGlobalIntInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -654,7 +675,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             GlobalInt_Mask<bool> printMask = null)
         {
-            ((GlobalIntCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((GlobalIntCommon)((IGlobalIntInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -665,7 +686,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IGlobalIntInternalGetter item,
             GlobalInt_Mask<bool?> checkMask)
         {
-            return ((GlobalIntCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((GlobalIntCommon)((IGlobalIntInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -673,7 +694,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static GlobalInt_Mask<bool> GetHasBeenSetMask(this IGlobalIntInternalGetter item)
         {
             var ret = new GlobalInt_Mask<bool>();
-            ((GlobalIntCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((GlobalIntCommon)((IGlobalIntInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -683,7 +704,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IGlobalIntInternalGetter item,
             IGlobalIntInternalGetter rhs)
         {
-            return ((GlobalIntCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((GlobalIntCommon)((IGlobalIntInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -738,8 +759,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type SetterType = typeof(IGlobalInt);
 
         public static readonly Type InternalSetterType = typeof(IGlobalIntInternal);
-
-        public static readonly Type CommonType = typeof(GlobalIntCommon);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.GlobalInt";
 
@@ -866,7 +885,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -886,9 +904,285 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
+    public partial class GlobalIntSetterCommon : GlobalSetterCommon
+    {
+        public new static readonly GlobalIntSetterCommon Instance = new GlobalIntSetterCommon();
+
+        partial void ClearPartial();
+        
+        public virtual void Clear(IGlobalIntInternal item)
+        {
+            ClearPartial();
+            item.Data_Unset();
+            base.Clear(item);
+        }
+        
+        public override void Clear(IGlobalInternal item)
+        {
+            Clear(item: (IGlobalIntInternal)item);
+        }
+        
+        public override void Clear(IOblivionMajorRecordInternal item)
+        {
+            Clear(item: (IGlobalIntInternal)item);
+        }
+        
+        public override void Clear(IMajorRecordInternal item)
+        {
+            Clear(item: (IGlobalIntInternal)item);
+        }
+        
+        
+    }
     public partial class GlobalIntCommon : GlobalCommon
     {
-        public static readonly GlobalIntCommon Instance = new GlobalIntCommon();
+        public new static readonly GlobalIntCommon Instance = new GlobalIntCommon();
+
+        public GlobalInt_Mask<bool> GetEqualsMask(
+            IGlobalIntInternalGetter item,
+            IGlobalIntInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new GlobalInt_Mask<bool>();
+            ((GlobalIntCommon)((IGlobalIntInternalGetter)item).CommonInstance()).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+        
+        public void FillEqualsMask(
+            IGlobalIntInternalGetter item,
+            IGlobalIntInternalGetter rhs,
+            GlobalInt_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            if (rhs == null) return;
+            ret.Data = item.Data_IsSet == rhs.Data_IsSet && item.Data == rhs.Data;
+            base.FillEqualsMask(item, rhs, ret, include);
+        }
+        
+        public string ToString(
+            IGlobalIntInternalGetter item,
+            string name = null,
+            GlobalInt_Mask<bool> printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+            return fg.ToString();
+        }
+        
+        public void ToString(
+            IGlobalIntInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            GlobalInt_Mask<bool> printMask = null)
+        {
+            if (name == null)
+            {
+                fg.AppendLine($"GlobalInt =>");
+            }
+            else
+            {
+                fg.AppendLine($"{name} (GlobalInt) =>");
+            }
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
+            }
+            fg.AppendLine("]");
+        }
+        
+        protected static void ToStringFields(
+            IGlobalIntInternalGetter item,
+            FileGeneration fg,
+            GlobalInt_Mask<bool> printMask = null)
+        {
+            GlobalCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.Data ?? true)
+            {
+                fg.AppendLine($"Data => {item.Data}");
+            }
+        }
+        
+        public bool HasBeenSet(
+            IGlobalIntInternalGetter item,
+            GlobalInt_Mask<bool?> checkMask)
+        {
+            if (checkMask.Data.HasValue && checkMask.Data.Value != item.Data_IsSet) return false;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+        
+        public void FillHasBeenSetMask(
+            IGlobalIntInternalGetter item,
+            GlobalInt_Mask<bool> mask)
+        {
+            mask.Data = item.Data_IsSet;
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
+        }
+        
+        public static GlobalInt_FieldIndex ConvertFieldIndex(Global_FieldIndex index)
+        {
+            switch (index)
+            {
+                case Global_FieldIndex.MajorRecordFlagsRaw:
+                    return (GlobalInt_FieldIndex)((int)index);
+                case Global_FieldIndex.FormKey:
+                    return (GlobalInt_FieldIndex)((int)index);
+                case Global_FieldIndex.Version:
+                    return (GlobalInt_FieldIndex)((int)index);
+                case Global_FieldIndex.EditorID:
+                    return (GlobalInt_FieldIndex)((int)index);
+                case Global_FieldIndex.OblivionMajorRecordFlags:
+                    return (GlobalInt_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        public static GlobalInt_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (GlobalInt_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.FormKey:
+                    return (GlobalInt_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.Version:
+                    return (GlobalInt_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.EditorID:
+                    return (GlobalInt_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
+                    return (GlobalInt_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        public static GlobalInt_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (GlobalInt_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.FormKey:
+                    return (GlobalInt_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.Version:
+                    return (GlobalInt_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.EditorID:
+                    return (GlobalInt_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        #region Equals and Hash
+        public virtual bool Equals(
+            IGlobalIntInternalGetter lhs,
+            IGlobalIntInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.Data_IsSet != rhs.Data_IsSet) return false;
+            if (lhs.Data_IsSet)
+            {
+                if (lhs.Data != rhs.Data) return false;
+            }
+            return true;
+        }
+        
+        public override bool Equals(
+            IGlobalInternalGetter lhs,
+            IGlobalInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IGlobalIntInternalGetter)lhs,
+                rhs: rhs as IGlobalIntInternalGetter);
+        }
+        
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IGlobalIntInternalGetter)lhs,
+                rhs: rhs as IGlobalIntInternalGetter);
+        }
+        
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IGlobalIntInternalGetter)lhs,
+                rhs: rhs as IGlobalIntInternalGetter);
+        }
+        
+        public virtual int GetHashCode(IGlobalIntInternalGetter item)
+        {
+            int ret = 0;
+            if (item.Data_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Data).CombineHashCode(ret);
+            }
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+        
+        public override int GetHashCode(IGlobalInternalGetter item)
+        {
+            return GetHashCode(item: (IGlobalIntInternalGetter)item);
+        }
+        
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IGlobalIntInternalGetter)item);
+        }
+        
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IGlobalIntInternalGetter)item);
+        }
+        
+        #endregion
+        
+        
+        #region Mutagen
+        partial void PostDuplicate(GlobalInt obj, GlobalInt rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+        
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new GlobalInt(getNextFormKey());
+            ret.CopyFieldsFrom((GlobalInt)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (GlobalInt)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+        
+        #endregion
+        
+        
+    }
+    public partial class GlobalIntSetterCopyCommon : GlobalSetterCopyCommon
+    {
+        public new static readonly GlobalIntSetterCopyCommon Instance = new GlobalIntSetterCopyCommon();
 
         #region Copy Fields From
         public static void CopyFieldsFrom(
@@ -898,7 +1192,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             GlobalInt_CopyMask copyMask)
         {
-            GlobalCommon.CopyFieldsFrom(
+            GlobalSetterCopyCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -935,273 +1229,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
         }
-
+        
         #endregion
-
-        partial void ClearPartial();
-
-        public virtual void Clear(IGlobalIntInternal item)
-        {
-            ClearPartial();
-            item.Data_Unset();
-            base.Clear(item);
-        }
-
-        public override void Clear(IGlobalInternal item)
-        {
-            Clear(item: (IGlobalIntInternal)item);
-        }
-
-        public override void Clear(IOblivionMajorRecordInternal item)
-        {
-            Clear(item: (IGlobalIntInternal)item);
-        }
-
-        public override void Clear(IMajorRecordInternal item)
-        {
-            Clear(item: (IGlobalIntInternal)item);
-        }
-
-        public GlobalInt_Mask<bool> GetEqualsMask(
-            IGlobalIntInternalGetter item,
-            IGlobalIntInternalGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new GlobalInt_Mask<bool>();
-            ((GlobalIntCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public void FillEqualsMask(
-            IGlobalIntInternalGetter item,
-            IGlobalIntInternalGetter rhs,
-            GlobalInt_Mask<bool> ret,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            if (rhs == null) return;
-            ret.Data = item.Data_IsSet == rhs.Data_IsSet && item.Data == rhs.Data;
-            base.FillEqualsMask(item, rhs, ret, include);
-        }
-
-        public string ToString(
-            IGlobalIntInternalGetter item,
-            string name = null,
-            GlobalInt_Mask<bool> printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(
-                item: item,
-                fg: fg,
-                name: name,
-                printMask: printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(
-            IGlobalIntInternalGetter item,
-            FileGeneration fg,
-            string name = null,
-            GlobalInt_Mask<bool> printMask = null)
-        {
-            if (name == null)
-            {
-                fg.AppendLine($"GlobalInt =>");
-            }
-            else
-            {
-                fg.AppendLine($"{name} (GlobalInt) =>");
-            }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                ToStringFields(
-                    item: item,
-                    fg: fg,
-                    printMask: printMask);
-            }
-            fg.AppendLine("]");
-        }
-
-        protected static void ToStringFields(
-            IGlobalIntInternalGetter item,
-            FileGeneration fg,
-            GlobalInt_Mask<bool> printMask = null)
-        {
-            GlobalCommon.ToStringFields(
-                item: item,
-                fg: fg,
-                printMask: printMask);
-            if (printMask?.Data ?? true)
-            {
-                fg.AppendLine($"Data => {item.Data}");
-            }
-        }
-
-        public bool HasBeenSet(
-            IGlobalIntInternalGetter item,
-            GlobalInt_Mask<bool?> checkMask)
-        {
-            if (checkMask.Data.HasValue && checkMask.Data.Value != item.Data_IsSet) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public void FillHasBeenSetMask(
-            IGlobalIntInternalGetter item,
-            GlobalInt_Mask<bool> mask)
-        {
-            mask.Data = item.Data_IsSet;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-
-        public static GlobalInt_FieldIndex ConvertFieldIndex(Global_FieldIndex index)
-        {
-            switch (index)
-            {
-                case Global_FieldIndex.MajorRecordFlagsRaw:
-                    return (GlobalInt_FieldIndex)((int)index);
-                case Global_FieldIndex.FormKey:
-                    return (GlobalInt_FieldIndex)((int)index);
-                case Global_FieldIndex.Version:
-                    return (GlobalInt_FieldIndex)((int)index);
-                case Global_FieldIndex.EditorID:
-                    return (GlobalInt_FieldIndex)((int)index);
-                case Global_FieldIndex.OblivionMajorRecordFlags:
-                    return (GlobalInt_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        public static GlobalInt_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
-        {
-            switch (index)
-            {
-                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (GlobalInt_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.FormKey:
-                    return (GlobalInt_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.Version:
-                    return (GlobalInt_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.EditorID:
-                    return (GlobalInt_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
-                    return (GlobalInt_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        public static GlobalInt_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
-        {
-            switch (index)
-            {
-                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (GlobalInt_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.FormKey:
-                    return (GlobalInt_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
-                    return (GlobalInt_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.EditorID:
-                    return (GlobalInt_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        #region Equals and Hash
-        public virtual bool Equals(
-            IGlobalIntInternalGetter lhs,
-            IGlobalIntInternalGetter rhs)
-        {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (lhs.Data_IsSet != rhs.Data_IsSet) return false;
-            if (lhs.Data_IsSet)
-            {
-                if (lhs.Data != rhs.Data) return false;
-            }
-            return true;
-        }
-
-        public override bool Equals(
-            IGlobalInternalGetter lhs,
-            IGlobalInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (IGlobalIntInternalGetter)lhs,
-                rhs: rhs as IGlobalIntInternalGetter);
-        }
-
-        public override bool Equals(
-            IOblivionMajorRecordInternalGetter lhs,
-            IOblivionMajorRecordInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (IGlobalIntInternalGetter)lhs,
-                rhs: rhs as IGlobalIntInternalGetter);
-        }
-
-        public override bool Equals(
-            IMajorRecordInternalGetter lhs,
-            IMajorRecordInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (IGlobalIntInternalGetter)lhs,
-                rhs: rhs as IGlobalIntInternalGetter);
-        }
-
-        public virtual int GetHashCode(IGlobalIntInternalGetter item)
-        {
-            int ret = 0;
-            if (item.Data_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Data).CombineHashCode(ret);
-            }
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        public override int GetHashCode(IGlobalInternalGetter item)
-        {
-            return GetHashCode(item: (IGlobalIntInternalGetter)item);
-        }
-
-        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
-        {
-            return GetHashCode(item: (IGlobalIntInternalGetter)item);
-        }
-
-        public override int GetHashCode(IMajorRecordInternalGetter item)
-        {
-            return GetHashCode(item: (IGlobalIntInternalGetter)item);
-        }
-
-        #endregion
-
-
-        #region Mutagen
-        partial void PostDuplicate(GlobalInt obj, GlobalInt rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new GlobalInt(getNextFormKey());
-            ret.CopyFieldsFrom((GlobalInt)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (GlobalInt)item, getNextFormKey, duplicatedRecords);
-            return ret;
-        }
-
-        #endregion
-
+        
+        
     }
     #endregion
 
@@ -1906,17 +1937,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         GlobalBinaryWrapper,
         IGlobalIntInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GlobalInt_Registration.Instance;
         public new static GlobalInt_Registration Registration => GlobalInt_Registration.Instance;
-        protected override object CommonInstance => GlobalIntCommon.Instance;
+        protected override object CommonInstance()
+        {
+            return GlobalIntCommon.Instance;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IGlobalIntInternalGetter)rhs, include);
 
         protected override object XmlWriteTranslator => GlobalIntXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((GlobalIntXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         protected override object BinaryWriteTranslator => GlobalIntBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((GlobalIntBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
 
         #region Data
         partial void DataCustomParse(
@@ -2000,4 +2063,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class GlobalInt
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => GlobalInt_Registration.Instance;
+        public new static GlobalInt_Registration Registration => GlobalInt_Registration.Instance;
+        protected override object CommonInstance()
+        {
+            return GlobalIntCommon.Instance;
+        }
+        protected override object CommonSetterInstance()
+        {
+            return GlobalIntSetterCommon.Instance;
+        }
+        protected override object CommonSetterCopyInstance()
+        {
+            return GlobalIntSetterCopyCommon.Instance;
+        }
+
+        #endregion
+
+    }
 }

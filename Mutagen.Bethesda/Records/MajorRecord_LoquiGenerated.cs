@@ -39,12 +39,6 @@ namespace Mutagen.Bethesda
         IEquatable<MajorRecord>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => MajorRecord_Registration.Instance;
-        public static MajorRecord_Registration Registration => MajorRecord_Registration.Instance;
-        protected virtual object CommonInstance => MajorRecordCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
-
         #region Ctor
         protected MajorRecord()
         {
@@ -129,21 +123,34 @@ namespace Mutagen.Bethesda
         public override bool Equals(object obj)
         {
             if (!(obj is IMajorRecordInternalGetter rhs)) return false;
-            return ((MajorRecordCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            return ((MajorRecordCommon)((IMajorRecordInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(MajorRecord obj)
         {
-            return ((MajorRecordCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((MajorRecordCommon)((IMajorRecordInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((MajorRecordCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((MajorRecordCommon)((IMajorRecordInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected virtual object XmlWriteTranslator => MajorRecordXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((MajorRecordXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static MajorRecord CreateFromXml(
@@ -381,6 +388,19 @@ namespace Mutagen.Bethesda
         #region Binary Translation
         protected virtual object BinaryWriteTranslator => MajorRecordBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((MajorRecordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
         protected static void FillBinaryStructs(
             MajorRecord item,
             MutagenFrame frame,
@@ -506,7 +526,7 @@ namespace Mutagen.Bethesda
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            MajorRecordCommon.CopyFieldsFrom(
+            MajorRecordSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -521,7 +541,7 @@ namespace Mutagen.Bethesda
             MajorRecord_CopyMask copyMask = null,
             MajorRecord def = null)
         {
-            MajorRecordCommon.CopyFieldsFrom(
+            MajorRecordSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -553,7 +573,7 @@ namespace Mutagen.Bethesda
 
         public virtual void Clear()
         {
-            MajorRecordCommon.Instance.Clear(this);
+            MajorRecordSetterCommon.Instance.Clear(this);
         }
 
         protected static void CopyInInternal_MajorRecord(MajorRecord obj, KeyValuePair<ushort, object> pair)
@@ -640,6 +660,9 @@ namespace Mutagen.Bethesda
 
     public partial interface IMajorRecordInternalGetter : IMajorRecordGetter
     {
+        object CommonInstance();
+        object CommonSetterInstance();
+        object CommonSetterCopyInstance();
 
     }
 
@@ -650,7 +673,7 @@ namespace Mutagen.Bethesda
     {
         public static void Clear(this IMajorRecordInternal item)
         {
-            ((MajorRecordCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((MajorRecordSetterCommon)((IMajorRecordInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static MajorRecord_Mask<bool> GetEqualsMask(
@@ -658,7 +681,7 @@ namespace Mutagen.Bethesda
             IMajorRecordInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((MajorRecordCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((MajorRecordCommon)((IMajorRecordInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -669,7 +692,7 @@ namespace Mutagen.Bethesda
             string name = null,
             MajorRecord_Mask<bool> printMask = null)
         {
-            return ((MajorRecordCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((MajorRecordCommon)((IMajorRecordInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -681,7 +704,7 @@ namespace Mutagen.Bethesda
             string name = null,
             MajorRecord_Mask<bool> printMask = null)
         {
-            ((MajorRecordCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((MajorRecordCommon)((IMajorRecordInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -692,7 +715,7 @@ namespace Mutagen.Bethesda
             this IMajorRecordInternalGetter item,
             MajorRecord_Mask<bool?> checkMask)
         {
-            return ((MajorRecordCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((MajorRecordCommon)((IMajorRecordInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -700,7 +723,7 @@ namespace Mutagen.Bethesda
         public static MajorRecord_Mask<bool> GetHasBeenSetMask(this IMajorRecordInternalGetter item)
         {
             var ret = new MajorRecord_Mask<bool>();
-            ((MajorRecordCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((MajorRecordCommon)((IMajorRecordInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -710,7 +733,7 @@ namespace Mutagen.Bethesda
             this IMajorRecordInternalGetter item,
             IMajorRecordInternalGetter rhs)
         {
-            return ((MajorRecordCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((MajorRecordCommon)((IMajorRecordInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -721,7 +744,7 @@ namespace Mutagen.Bethesda
             Func<FormKey> getNextFormKey,
             IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords = null)
         {
-            return ((MajorRecordCommon)((ILoquiObject)item).CommonInstance).Duplicate(
+            return ((MajorRecordCommon)((IMajorRecordInternalGetter)item).CommonInstance()).Duplicate(
                 item: item,
                 getNextFormKey: getNextFormKey,
                 duplicatedRecords: duplicatedRecords);
@@ -776,8 +799,6 @@ namespace Mutagen.Bethesda.Internals
         public static readonly Type SetterType = typeof(IMajorRecord);
 
         public static readonly Type InternalSetterType = typeof(IMajorRecordInternal);
-
-        public static readonly Type CommonType = typeof(MajorRecordCommon);
 
         public const string FullName = "Mutagen.Bethesda.MajorRecord";
 
@@ -1086,7 +1107,6 @@ namespace Mutagen.Bethesda.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -1106,9 +1126,180 @@ namespace Mutagen.Bethesda.Internals
     #endregion
 
     #region Common
+    public partial class MajorRecordSetterCommon
+    {
+        public static readonly MajorRecordSetterCommon Instance = new MajorRecordSetterCommon();
+
+        partial void ClearPartial();
+        
+        public virtual void Clear(IMajorRecordInternal item)
+        {
+            ClearPartial();
+            item.MajorRecordFlagsRaw = default(Int32);
+            item.Version = default(UInt32);
+            item.EditorID_Unset();
+        }
+        
+        
+    }
     public partial class MajorRecordCommon
     {
         public static readonly MajorRecordCommon Instance = new MajorRecordCommon();
+
+        public MajorRecord_Mask<bool> GetEqualsMask(
+            IMajorRecordInternalGetter item,
+            IMajorRecordInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new MajorRecord_Mask<bool>();
+            ((MajorRecordCommon)((IMajorRecordInternalGetter)item).CommonInstance()).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+        
+        public void FillEqualsMask(
+            IMajorRecordInternalGetter item,
+            IMajorRecordInternalGetter rhs,
+            MajorRecord_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            if (rhs == null) return;
+            ret.MajorRecordFlagsRaw = item.MajorRecordFlagsRaw == rhs.MajorRecordFlagsRaw;
+            ret.Version = item.Version == rhs.Version;
+            ret.EditorID = item.EditorID_IsSet == rhs.EditorID_IsSet && string.Equals(item.EditorID, rhs.EditorID);
+        }
+        
+        public string ToString(
+            IMajorRecordInternalGetter item,
+            string name = null,
+            MajorRecord_Mask<bool> printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+            return fg.ToString();
+        }
+        
+        public void ToString(
+            IMajorRecordInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            MajorRecord_Mask<bool> printMask = null)
+        {
+            if (name == null)
+            {
+                fg.AppendLine($"MajorRecord =>");
+            }
+            else
+            {
+                fg.AppendLine($"{name} (MajorRecord) =>");
+            }
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
+            }
+            fg.AppendLine("]");
+        }
+        
+        protected static void ToStringFields(
+            IMajorRecordInternalGetter item,
+            FileGeneration fg,
+            MajorRecord_Mask<bool> printMask = null)
+        {
+            if (printMask?.MajorRecordFlagsRaw ?? true)
+            {
+                fg.AppendLine($"MajorRecordFlagsRaw => {item.MajorRecordFlagsRaw}");
+            }
+            if (printMask?.FormKey ?? true)
+            {
+            }
+            if (printMask?.Version ?? true)
+            {
+                fg.AppendLine($"Version => {item.Version}");
+            }
+            if (printMask?.EditorID ?? true)
+            {
+                fg.AppendLine($"EditorID => {item.EditorID}");
+            }
+        }
+        
+        public bool HasBeenSet(
+            IMajorRecordInternalGetter item,
+            MajorRecord_Mask<bool?> checkMask)
+        {
+            if (checkMask.EditorID.HasValue && checkMask.EditorID.Value != item.EditorID_IsSet) return false;
+            return true;
+        }
+        
+        public void FillHasBeenSetMask(
+            IMajorRecordInternalGetter item,
+            MajorRecord_Mask<bool> mask)
+        {
+            mask.MajorRecordFlagsRaw = true;
+            mask.FormKey = true;
+            mask.Version = true;
+            mask.EditorID = item.EditorID_IsSet;
+        }
+        
+        #region Equals and Hash
+        public virtual bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (lhs.MajorRecordFlagsRaw != rhs.MajorRecordFlagsRaw) return false;
+            if (lhs.FormKey != rhs.FormKey) return false;
+            if (lhs.Version != rhs.Version) return false;
+            if (lhs.EditorID_IsSet != rhs.EditorID_IsSet) return false;
+            if (lhs.EditorID_IsSet)
+            {
+                if (!string.Equals(lhs.EditorID, rhs.EditorID)) return false;
+            }
+            return true;
+        }
+        
+        public virtual int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.MajorRecordFlagsRaw).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.FormKey).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Version).CombineHashCode(ret);
+            if (item.EditorID_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.EditorID).CombineHashCode(ret);
+            }
+            return ret;
+        }
+        
+        #endregion
+        
+        
+        #region Mutagen
+        partial void PostDuplicate(MajorRecord obj, MajorRecord rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+        
+        public virtual IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            throw new NotImplementedException();
+        }
+        
+        #endregion
+        
+        
+    }
+    public partial class MajorRecordSetterCopyCommon
+    {
+        public static readonly MajorRecordSetterCopyCommon Instance = new MajorRecordSetterCopyCommon();
 
         #region Copy Fields From
         public static void CopyFieldsFrom(
@@ -1183,168 +1374,10 @@ namespace Mutagen.Bethesda.Internals
                 }
             }
         }
-
+        
         #endregion
-
-        partial void ClearPartial();
-
-        public virtual void Clear(IMajorRecordInternal item)
-        {
-            ClearPartial();
-            item.MajorRecordFlagsRaw = default(Int32);
-            item.Version = default(UInt32);
-            item.EditorID_Unset();
-        }
-
-        public MajorRecord_Mask<bool> GetEqualsMask(
-            IMajorRecordInternalGetter item,
-            IMajorRecordInternalGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new MajorRecord_Mask<bool>();
-            ((MajorRecordCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public void FillEqualsMask(
-            IMajorRecordInternalGetter item,
-            IMajorRecordInternalGetter rhs,
-            MajorRecord_Mask<bool> ret,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            if (rhs == null) return;
-            ret.MajorRecordFlagsRaw = item.MajorRecordFlagsRaw == rhs.MajorRecordFlagsRaw;
-            ret.Version = item.Version == rhs.Version;
-            ret.EditorID = item.EditorID_IsSet == rhs.EditorID_IsSet && string.Equals(item.EditorID, rhs.EditorID);
-        }
-
-        public string ToString(
-            IMajorRecordInternalGetter item,
-            string name = null,
-            MajorRecord_Mask<bool> printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(
-                item: item,
-                fg: fg,
-                name: name,
-                printMask: printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(
-            IMajorRecordInternalGetter item,
-            FileGeneration fg,
-            string name = null,
-            MajorRecord_Mask<bool> printMask = null)
-        {
-            if (name == null)
-            {
-                fg.AppendLine($"MajorRecord =>");
-            }
-            else
-            {
-                fg.AppendLine($"{name} (MajorRecord) =>");
-            }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                ToStringFields(
-                    item: item,
-                    fg: fg,
-                    printMask: printMask);
-            }
-            fg.AppendLine("]");
-        }
-
-        protected static void ToStringFields(
-            IMajorRecordInternalGetter item,
-            FileGeneration fg,
-            MajorRecord_Mask<bool> printMask = null)
-        {
-            if (printMask?.MajorRecordFlagsRaw ?? true)
-            {
-                fg.AppendLine($"MajorRecordFlagsRaw => {item.MajorRecordFlagsRaw}");
-            }
-            if (printMask?.FormKey ?? true)
-            {
-            }
-            if (printMask?.Version ?? true)
-            {
-                fg.AppendLine($"Version => {item.Version}");
-            }
-            if (printMask?.EditorID ?? true)
-            {
-                fg.AppendLine($"EditorID => {item.EditorID}");
-            }
-        }
-
-        public bool HasBeenSet(
-            IMajorRecordInternalGetter item,
-            MajorRecord_Mask<bool?> checkMask)
-        {
-            if (checkMask.EditorID.HasValue && checkMask.EditorID.Value != item.EditorID_IsSet) return false;
-            return true;
-        }
-
-        public void FillHasBeenSetMask(
-            IMajorRecordInternalGetter item,
-            MajorRecord_Mask<bool> mask)
-        {
-            mask.MajorRecordFlagsRaw = true;
-            mask.FormKey = true;
-            mask.Version = true;
-            mask.EditorID = item.EditorID_IsSet;
-        }
-
-        #region Equals and Hash
-        public virtual bool Equals(
-            IMajorRecordInternalGetter lhs,
-            IMajorRecordInternalGetter rhs)
-        {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
-            if (lhs.MajorRecordFlagsRaw != rhs.MajorRecordFlagsRaw) return false;
-            if (lhs.FormKey != rhs.FormKey) return false;
-            if (lhs.Version != rhs.Version) return false;
-            if (lhs.EditorID_IsSet != rhs.EditorID_IsSet) return false;
-            if (lhs.EditorID_IsSet)
-            {
-                if (!string.Equals(lhs.EditorID, rhs.EditorID)) return false;
-            }
-            return true;
-        }
-
-        public virtual int GetHashCode(IMajorRecordInternalGetter item)
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.MajorRecordFlagsRaw).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.FormKey).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Version).CombineHashCode(ret);
-            if (item.EditorID_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.EditorID).CombineHashCode(ret);
-            }
-            return ret;
-        }
-
-        #endregion
-
-
-        #region Mutagen
-        partial void PostDuplicate(MajorRecord obj, MajorRecord rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public virtual IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            throw new NotImplementedException();
-        }
-
-        #endregion
-
+        
+        
     }
     #endregion
 
@@ -2237,11 +2270,28 @@ namespace Mutagen.Bethesda.Internals
         BinaryWrapper,
         IMajorRecordInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MajorRecord_Registration.Instance;
         public static MajorRecord_Registration Registration => MajorRecord_Registration.Instance;
-        protected virtual object CommonInstance => MajorRecordCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
+        protected virtual object CommonInstance()
+        {
+            return MajorRecordCommon.Instance;
+        }
+        object IMajorRecordInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IMajorRecordInternalGetter.CommonSetterInstance()
+        {
+            return null;
+        }
+        object IMajorRecordInternalGetter.CommonSetterCopyInstance()
+        {
+            return null;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
@@ -2249,8 +2299,34 @@ namespace Mutagen.Bethesda.Internals
 
         protected virtual object XmlWriteTranslator => MajorRecordXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((MajorRecordXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         protected virtual object BinaryWriteTranslator => MajorRecordBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((MajorRecordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
 
         public Int32 MajorRecordFlagsRaw => BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0, 4));
         public FormKey FormKey => FormKeyBinaryTranslation.Parse(_data.Span.Slice(4, 4), this._package.MasterReferences);
@@ -2301,4 +2377,42 @@ namespace Mutagen.Bethesda.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda
+{
+    public partial class MajorRecord
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => MajorRecord_Registration.Instance;
+        public static MajorRecord_Registration Registration => MajorRecord_Registration.Instance;
+        protected virtual object CommonInstance()
+        {
+            return MajorRecordCommon.Instance;
+        }
+        protected virtual object CommonSetterInstance()
+        {
+            return MajorRecordSetterCommon.Instance;
+        }
+        protected virtual object CommonSetterCopyInstance()
+        {
+            return MajorRecordSetterCopyCommon.Instance;
+        }
+        object IMajorRecordInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IMajorRecordInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object IMajorRecordInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
 }

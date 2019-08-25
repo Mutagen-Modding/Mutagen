@@ -34,17 +34,11 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Condition :
         LoquiNotifyingObject,
-        ICondition,
+        IConditionInternal,
         ILoquiObjectSetter<Condition>,
         IEquatable<Condition>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Condition_Registration.Instance;
-        public static Condition_Registration Registration => Condition_Registration.Instance;
-        protected object CommonInstance => ConditionCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
-
         #region Ctor
         public Condition()
         {
@@ -127,7 +121,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IConditionGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IConditionInternalGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -145,22 +139,35 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is IConditionGetter rhs)) return false;
-            return ((ConditionCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            if (!(obj is IConditionInternalGetter rhs)) return false;
+            return ((ConditionCommon)((IConditionInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(Condition obj)
         {
-            return ((ConditionCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((ConditionCommon)((IConditionInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((ConditionCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((ConditionCommon)((IConditionInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected object XmlWriteTranslator => ConditionXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((ConditionXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static Condition CreateFromXml(
@@ -335,6 +342,19 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Translation
         protected object BinaryWriteTranslator => ConditionBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((ConditionBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
         #region Binary Create
         [DebuggerStepThrough]
         public static Condition CreateFromBinary(
@@ -535,7 +555,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ConditionCommon.CopyFieldsFrom(
+            ConditionSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -550,7 +570,7 @@ namespace Mutagen.Bethesda.Oblivion
             Condition_CopyMask copyMask = null,
             Condition def = null)
         {
-            ConditionCommon.CopyFieldsFrom(
+            ConditionSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -594,7 +614,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void Clear()
         {
-            ConditionCommon.Instance.Clear(this);
+            ConditionSetterCommon.Instance.Clear(this);
         }
 
         public static Condition Create(IEnumerable<KeyValuePair<ushort, object>> fields)
@@ -648,8 +668,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface ICondition :
-        IConditionGetter,
-        ILoquiObjectSetter<ICondition>
+        IConditionInternalGetter,
+        ILoquiObjectSetter<IConditionInternal>
     {
         new CompareOperator CompareOperator { get; set; }
 
@@ -674,9 +694,15 @@ namespace Mutagen.Bethesda.Oblivion
             Condition def = null);
     }
 
+    public partial interface IConditionInternal :
+        ICondition,
+        IConditionInternalGetter
+    {
+    }
+
     public partial interface IConditionGetter :
         ILoquiObject,
-        ILoquiObject<IConditionGetter>,
+        ILoquiObject<IConditionInternalGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -715,45 +741,53 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    public partial interface IConditionInternalGetter : IConditionGetter
+    {
+        object CommonInstance();
+        object CommonSetterInstance();
+        object CommonSetterCopyInstance();
+
+    }
+
     #endregion
 
     #region Common MixIn
     public static class ConditionMixIn
     {
-        public static void Clear(this ICondition item)
+        public static void Clear(this IConditionInternal item)
         {
-            ((ConditionCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((ConditionSetterCommon)((IConditionInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static Condition_Mask<bool> GetEqualsMask(
-            this IConditionGetter item,
-            IConditionGetter rhs,
+            this IConditionInternalGetter item,
+            IConditionInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((ConditionCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((ConditionCommon)((IConditionInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IConditionGetter item,
+            this IConditionInternalGetter item,
             string name = null,
             Condition_Mask<bool> printMask = null)
         {
-            return ((ConditionCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((ConditionCommon)((IConditionInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IConditionGetter item,
+            this IConditionInternalGetter item,
             FileGeneration fg,
             string name = null,
             Condition_Mask<bool> printMask = null)
         {
-            ((ConditionCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((ConditionCommon)((IConditionInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -761,28 +795,28 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static bool HasBeenSet(
-            this IConditionGetter item,
+            this IConditionInternalGetter item,
             Condition_Mask<bool?> checkMask)
         {
-            return ((ConditionCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((ConditionCommon)((IConditionInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static Condition_Mask<bool> GetHasBeenSetMask(this IConditionGetter item)
+        public static Condition_Mask<bool> GetHasBeenSetMask(this IConditionInternalGetter item)
         {
             var ret = new Condition_Mask<bool>();
-            ((ConditionCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((ConditionCommon)((IConditionInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this IConditionGetter item,
-            IConditionGetter rhs)
+            this IConditionInternalGetter item,
+            IConditionInternalGetter rhs)
         {
-            return ((ConditionCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((ConditionCommon)((IConditionInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -834,13 +868,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IConditionGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type InternalGetterType = typeof(IConditionInternalGetter);
 
         public static readonly Type SetterType = typeof(ICondition);
 
-        public static readonly Type InternalSetterType = null;
-
-        public static readonly Type CommonType = typeof(ConditionCommon);
+        public static readonly Type InternalSetterType = typeof(IConditionInternal);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.Condition";
 
@@ -1055,7 +1087,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -1075,9 +1106,201 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
+    public partial class ConditionSetterCommon
+    {
+        public static readonly ConditionSetterCommon Instance = new ConditionSetterCommon();
+
+        partial void ClearPartial();
+        
+        public virtual void Clear(IConditionInternal item)
+        {
+            ClearPartial();
+            item.CompareOperator = default(CompareOperator);
+            item.Flags = default(Condition.Flag);
+            item.Fluff = default(Byte[]);
+            item.ComparisonValue = default(Single);
+            item.Function = default(Function);
+            item.FirstParameter = default(Int32);
+            item.SecondParameter = default(Int32);
+            item.ThirdParameter = default(Int32);
+        }
+        
+        
+    }
     public partial class ConditionCommon
     {
         public static readonly ConditionCommon Instance = new ConditionCommon();
+
+        public Condition_Mask<bool> GetEqualsMask(
+            IConditionInternalGetter item,
+            IConditionInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new Condition_Mask<bool>();
+            ((ConditionCommon)((IConditionInternalGetter)item).CommonInstance()).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+        
+        public void FillEqualsMask(
+            IConditionInternalGetter item,
+            IConditionInternalGetter rhs,
+            Condition_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            if (rhs == null) return;
+            ret.CompareOperator = item.CompareOperator == rhs.CompareOperator;
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.Fluff = MemoryExtensions.SequenceEqual(item.Fluff, rhs.Fluff);
+            ret.ComparisonValue = item.ComparisonValue.EqualsWithin(rhs.ComparisonValue);
+            ret.Function = item.Function == rhs.Function;
+            ret.FirstParameter = item.FirstParameter == rhs.FirstParameter;
+            ret.SecondParameter = item.SecondParameter == rhs.SecondParameter;
+            ret.ThirdParameter = item.ThirdParameter == rhs.ThirdParameter;
+        }
+        
+        public string ToString(
+            IConditionInternalGetter item,
+            string name = null,
+            Condition_Mask<bool> printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+            return fg.ToString();
+        }
+        
+        public void ToString(
+            IConditionInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            Condition_Mask<bool> printMask = null)
+        {
+            if (name == null)
+            {
+                fg.AppendLine($"Condition =>");
+            }
+            else
+            {
+                fg.AppendLine($"{name} (Condition) =>");
+            }
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
+            }
+            fg.AppendLine("]");
+        }
+        
+        protected static void ToStringFields(
+            IConditionInternalGetter item,
+            FileGeneration fg,
+            Condition_Mask<bool> printMask = null)
+        {
+            if (printMask?.CompareOperator ?? true)
+            {
+                fg.AppendLine($"CompareOperator => {item.CompareOperator}");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                fg.AppendLine($"Flags => {item.Flags}");
+            }
+            if (printMask?.Fluff ?? true)
+            {
+                fg.AppendLine($"Fluff => {SpanExt.ToHexString(item.Fluff)}");
+            }
+            if (printMask?.ComparisonValue ?? true)
+            {
+                fg.AppendLine($"ComparisonValue => {item.ComparisonValue}");
+            }
+            if (printMask?.Function ?? true)
+            {
+                fg.AppendLine($"Function => {item.Function}");
+            }
+            if (printMask?.FirstParameter ?? true)
+            {
+                fg.AppendLine($"FirstParameter => {item.FirstParameter}");
+            }
+            if (printMask?.SecondParameter ?? true)
+            {
+                fg.AppendLine($"SecondParameter => {item.SecondParameter}");
+            }
+            if (printMask?.ThirdParameter ?? true)
+            {
+                fg.AppendLine($"ThirdParameter => {item.ThirdParameter}");
+            }
+        }
+        
+        public bool HasBeenSet(
+            IConditionInternalGetter item,
+            Condition_Mask<bool?> checkMask)
+        {
+            return true;
+        }
+        
+        public void FillHasBeenSetMask(
+            IConditionInternalGetter item,
+            Condition_Mask<bool> mask)
+        {
+            mask.CompareOperator = true;
+            mask.Flags = true;
+            mask.Fluff = true;
+            mask.ComparisonValue = true;
+            mask.Function = true;
+            mask.FirstParameter = true;
+            mask.SecondParameter = true;
+            mask.ThirdParameter = true;
+        }
+        
+        #region Equals and Hash
+        public virtual bool Equals(
+            IConditionInternalGetter lhs,
+            IConditionInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (lhs.CompareOperator != rhs.CompareOperator) return false;
+            if (lhs.Flags != rhs.Flags) return false;
+            if (!MemoryExtensions.SequenceEqual(lhs.Fluff, rhs.Fluff)) return false;
+            if (!lhs.ComparisonValue.EqualsWithin(rhs.ComparisonValue)) return false;
+            if (lhs.Function != rhs.Function) return false;
+            if (lhs.FirstParameter != rhs.FirstParameter) return false;
+            if (lhs.SecondParameter != rhs.SecondParameter) return false;
+            if (lhs.ThirdParameter != rhs.ThirdParameter) return false;
+            return true;
+        }
+        
+        public virtual int GetHashCode(IConditionInternalGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.CompareOperator).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Fluff).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.ComparisonValue).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Function).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.FirstParameter).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.SecondParameter).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.ThirdParameter).CombineHashCode(ret);
+            return ret;
+        }
+        
+        #endregion
+        
+        
+        
+    }
+    public partial class ConditionSetterCopyCommon
+    {
+        public static readonly ConditionSetterCopyCommon Instance = new ConditionSetterCopyCommon();
 
         #region Copy Fields From
         public static void CopyFieldsFrom(
@@ -1224,189 +1447,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
         }
-
+        
         #endregion
-
-        partial void ClearPartial();
-
-        public virtual void Clear(ICondition item)
-        {
-            ClearPartial();
-            item.CompareOperator = default(CompareOperator);
-            item.Flags = default(Condition.Flag);
-            item.Fluff = default(Byte[]);
-            item.ComparisonValue = default(Single);
-            item.Function = default(Function);
-            item.FirstParameter = default(Int32);
-            item.SecondParameter = default(Int32);
-            item.ThirdParameter = default(Int32);
-        }
-
-        public Condition_Mask<bool> GetEqualsMask(
-            IConditionGetter item,
-            IConditionGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new Condition_Mask<bool>();
-            ((ConditionCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public void FillEqualsMask(
-            IConditionGetter item,
-            IConditionGetter rhs,
-            Condition_Mask<bool> ret,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            if (rhs == null) return;
-            ret.CompareOperator = item.CompareOperator == rhs.CompareOperator;
-            ret.Flags = item.Flags == rhs.Flags;
-            ret.Fluff = MemoryExtensions.SequenceEqual(item.Fluff, rhs.Fluff);
-            ret.ComparisonValue = item.ComparisonValue.EqualsWithin(rhs.ComparisonValue);
-            ret.Function = item.Function == rhs.Function;
-            ret.FirstParameter = item.FirstParameter == rhs.FirstParameter;
-            ret.SecondParameter = item.SecondParameter == rhs.SecondParameter;
-            ret.ThirdParameter = item.ThirdParameter == rhs.ThirdParameter;
-        }
-
-        public string ToString(
-            IConditionGetter item,
-            string name = null,
-            Condition_Mask<bool> printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(
-                item: item,
-                fg: fg,
-                name: name,
-                printMask: printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(
-            IConditionGetter item,
-            FileGeneration fg,
-            string name = null,
-            Condition_Mask<bool> printMask = null)
-        {
-            if (name == null)
-            {
-                fg.AppendLine($"Condition =>");
-            }
-            else
-            {
-                fg.AppendLine($"{name} (Condition) =>");
-            }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                ToStringFields(
-                    item: item,
-                    fg: fg,
-                    printMask: printMask);
-            }
-            fg.AppendLine("]");
-        }
-
-        protected static void ToStringFields(
-            IConditionGetter item,
-            FileGeneration fg,
-            Condition_Mask<bool> printMask = null)
-        {
-            if (printMask?.CompareOperator ?? true)
-            {
-                fg.AppendLine($"CompareOperator => {item.CompareOperator}");
-            }
-            if (printMask?.Flags ?? true)
-            {
-                fg.AppendLine($"Flags => {item.Flags}");
-            }
-            if (printMask?.Fluff ?? true)
-            {
-                fg.AppendLine($"Fluff => {SpanExt.ToHexString(item.Fluff)}");
-            }
-            if (printMask?.ComparisonValue ?? true)
-            {
-                fg.AppendLine($"ComparisonValue => {item.ComparisonValue}");
-            }
-            if (printMask?.Function ?? true)
-            {
-                fg.AppendLine($"Function => {item.Function}");
-            }
-            if (printMask?.FirstParameter ?? true)
-            {
-                fg.AppendLine($"FirstParameter => {item.FirstParameter}");
-            }
-            if (printMask?.SecondParameter ?? true)
-            {
-                fg.AppendLine($"SecondParameter => {item.SecondParameter}");
-            }
-            if (printMask?.ThirdParameter ?? true)
-            {
-                fg.AppendLine($"ThirdParameter => {item.ThirdParameter}");
-            }
-        }
-
-        public bool HasBeenSet(
-            IConditionGetter item,
-            Condition_Mask<bool?> checkMask)
-        {
-            return true;
-        }
-
-        public void FillHasBeenSetMask(
-            IConditionGetter item,
-            Condition_Mask<bool> mask)
-        {
-            mask.CompareOperator = true;
-            mask.Flags = true;
-            mask.Fluff = true;
-            mask.ComparisonValue = true;
-            mask.Function = true;
-            mask.FirstParameter = true;
-            mask.SecondParameter = true;
-            mask.ThirdParameter = true;
-        }
-
-        #region Equals and Hash
-        public virtual bool Equals(
-            IConditionGetter lhs,
-            IConditionGetter rhs)
-        {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
-            if (lhs.CompareOperator != rhs.CompareOperator) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Fluff, rhs.Fluff)) return false;
-            if (!lhs.ComparisonValue.EqualsWithin(rhs.ComparisonValue)) return false;
-            if (lhs.Function != rhs.Function) return false;
-            if (lhs.FirstParameter != rhs.FirstParameter) return false;
-            if (lhs.SecondParameter != rhs.SecondParameter) return false;
-            if (lhs.ThirdParameter != rhs.ThirdParameter) return false;
-            return true;
-        }
-
-        public virtual int GetHashCode(IConditionGetter item)
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.CompareOperator).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Fluff).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.ComparisonValue).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Function).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.FirstParameter).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.SecondParameter).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.ThirdParameter).CombineHashCode(ret);
-            return ret;
-        }
-
-        #endregion
-
-
+        
+        
     }
     #endregion
 
@@ -1417,7 +1461,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static ConditionXmlWriteTranslation Instance = new ConditionXmlWriteTranslation();
 
         public static void WriteToNodeXml(
-            IConditionGetter item,
+            IConditionInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1498,7 +1542,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             XElement node,
-            IConditionGetter item,
+            IConditionInternalGetter item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)
@@ -1524,7 +1568,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             Write(
-                item: (IConditionGetter)item,
+                item: (IConditionInternalGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1533,7 +1577,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             XElement node,
-            IConditionGetter item,
+            IConditionInternalGetter item,
             ErrorMaskBuilder errorMask,
             int fieldIndex,
             TranslationCrystal translationMask,
@@ -1543,7 +1587,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 errorMask?.PushIndex(fieldIndex);
                 Write(
-                    item: (IConditionGetter)item,
+                    item: (IConditionInternalGetter)item,
                     name: name,
                     node: node,
                     errorMask: errorMask,
@@ -1567,7 +1611,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static ConditionXmlCreateTranslation Instance = new ConditionXmlCreateTranslation();
 
         public static void FillPublicXml(
-            ICondition item,
+            IConditionInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1592,7 +1636,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElementXml(
-            ICondition item,
+            IConditionInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -1819,7 +1863,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public static class ConditionXmlTranslationMixIn
     {
         public static void WriteToXml(
-            this IConditionGetter item,
+            this IConditionInternalGetter item,
             XElement node,
             out Condition_ErrorMask errorMask,
             bool doMasks = true,
@@ -1837,7 +1881,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IConditionGetter item,
+            this IConditionInternalGetter item,
             string path,
             out Condition_ErrorMask errorMask,
             Condition_TranslationMask translationMask = null,
@@ -1856,7 +1900,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IConditionGetter item,
+            this IConditionInternalGetter item,
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1874,7 +1918,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IConditionGetter item,
+            this IConditionInternalGetter item,
             Stream stream,
             out Condition_ErrorMask errorMask,
             Condition_TranslationMask translationMask = null,
@@ -1893,7 +1937,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IConditionGetter item,
+            this IConditionInternalGetter item,
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1911,7 +1955,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IConditionGetter item,
+            this IConditionInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1926,7 +1970,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IConditionGetter item,
+            this IConditionInternalGetter item,
             XElement node,
             string name = null,
             Condition_TranslationMask translationMask = null)
@@ -1940,7 +1984,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IConditionGetter item,
+            this IConditionInternalGetter item,
             string path,
             string name = null)
         {
@@ -1955,7 +1999,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IConditionGetter item,
+            this IConditionInternalGetter item,
             Stream stream,
             string name = null)
         {
@@ -2446,13 +2490,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         static partial void WriteBinaryInitialParserCustom(
             MutagenWriter writer,
-            IConditionGetter item,
+            IConditionInternalGetter item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
 
         public static void WriteBinaryInitialParser(
             MutagenWriter writer,
-            IConditionGetter item,
+            IConditionInternalGetter item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
@@ -2464,7 +2508,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void Write_Embedded(
-            IConditionGetter item,
+            IConditionInternalGetter item,
             MutagenWriter writer,
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
@@ -2491,7 +2535,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             MutagenWriter writer,
-            IConditionGetter item,
+            IConditionInternalGetter item,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
@@ -2517,7 +2561,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask)
         {
             Write(
-                item: (IConditionGetter)item,
+                item: (IConditionInternalGetter)item,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -2555,7 +2599,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public static class ConditionBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IConditionGetter item,
+            this IConditionInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
             out Condition_ErrorMask errorMask,
@@ -2572,7 +2616,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToBinary(
-            this IConditionGetter item,
+            this IConditionInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -2586,7 +2630,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToBinary(
-            this IConditionGetter item,
+            this IConditionInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
@@ -2603,22 +2647,65 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     public partial class ConditionBinaryWrapper :
         BinaryWrapper,
-        IConditionGetter
+        IConditionInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Condition_Registration.Instance;
         public static Condition_Registration Registration => Condition_Registration.Instance;
-        protected object CommonInstance => ConditionCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
+        protected object CommonInstance()
+        {
+            return ConditionCommon.Instance;
+        }
+        object IConditionInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IConditionInternalGetter.CommonSetterInstance()
+        {
+            return null;
+        }
+        object IConditionInternalGetter.CommonSetterCopyInstance()
+        {
+            return null;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IConditionGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IConditionInternalGetter)rhs, include);
 
         protected object XmlWriteTranslator => ConditionXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((ConditionXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         protected object BinaryWriteTranslator => ConditionBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((ConditionBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
 
         #region InitialParser
         partial void InitialParserCustomParse(
@@ -2682,4 +2769,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class Condition
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Condition_Registration.Instance;
+        public static Condition_Registration Registration => Condition_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return ConditionCommon.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return ConditionSetterCommon.Instance;
+        }
+        protected object CommonSetterCopyInstance()
+        {
+            return ConditionSetterCopyCommon.Instance;
+        }
+        object IConditionInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IConditionInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object IConditionInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
 }

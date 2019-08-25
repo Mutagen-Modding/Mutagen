@@ -120,7 +120,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     public partial class RoadBinaryWrapper
     {
-        public IReadOnlySetList<IRoadPointGetter> Points { get; private set; } = EmptySetList<IRoadPointGetter>.Instance;
+        public IReadOnlySetList<IRoadPointInternalGetter> Points { get; private set; } = EmptySetList<IRoadPointInternalGetter>.Instance;
 
         partial void PointsCustomParse(BinaryMemoryReadStream stream, long finalPos, int offset, RecordType type, int? lastParsed)
         {
@@ -135,7 +135,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x52524750: // "PGRR":
                     stream.Position += subMeta.HeaderLength;
                     var connBytes = stream.ReadMemory(subMeta.RecordLength);
-                    this.Points = BinaryWrapperSetList<IRoadPointGetter>.FactoryByLazyParse(
+                    this.Points = BinaryWrapperSetList<IRoadPointInternalGetter>.FactoryByLazyParse(
                         pointBytes,
                         _package,
                         getter: (s, p) =>
@@ -163,7 +163,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         });
                     break;
                 default:
-                    this.Points = BinaryWrapperSetList<IRoadPointGetter>.FactoryByStartIndex(
+                    this.Points = BinaryWrapperSetList<IRoadPointInternalGetter>.FactoryByStartIndex(
                         pointBytes,
                         _package,
                         itemLength: RoadBinaryCreateTranslation.POINT_LEN,

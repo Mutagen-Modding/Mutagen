@@ -34,18 +34,12 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class EnableParent :
         LoquiNotifyingObject,
-        IEnableParent,
+        IEnableParentInternal,
         ILoquiObjectSetter<EnableParent>,
         ILinkSubContainer,
         IEquatable<EnableParent>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => EnableParent_Registration.Instance;
-        public static EnableParent_Registration Registration => EnableParent_Registration.Instance;
-        protected object CommonInstance => EnableParentCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
-
         #region Ctor
         public EnableParent()
         {
@@ -72,7 +66,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IEnableParentGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IEnableParentInternalGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -90,22 +84,35 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is IEnableParentGetter rhs)) return false;
-            return ((EnableParentCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            if (!(obj is IEnableParentInternalGetter rhs)) return false;
+            return ((EnableParentCommon)((IEnableParentInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(EnableParent obj)
         {
-            return ((EnableParentCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((EnableParentCommon)((IEnableParentInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((EnableParentCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((EnableParentCommon)((IEnableParentInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected object XmlWriteTranslator => EnableParentXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((EnableParentXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static EnableParent CreateFromXml(
@@ -295,6 +302,19 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Translation
         protected object BinaryWriteTranslator => EnableParentBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((EnableParentBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
         #region Binary Create
         [DebuggerStepThrough]
         public static EnableParent CreateFromBinary(
@@ -455,7 +475,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            EnableParentCommon.CopyFieldsFrom(
+            EnableParentSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -470,7 +490,7 @@ namespace Mutagen.Bethesda.Oblivion
             EnableParent_CopyMask copyMask = null,
             EnableParent def = null)
         {
-            EnableParentCommon.CopyFieldsFrom(
+            EnableParentSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -496,7 +516,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void Clear()
         {
-            EnableParentCommon.Instance.Clear(this);
+            EnableParentSetterCommon.Instance.Clear(this);
         }
 
         public static EnableParent Create(IEnumerable<KeyValuePair<ushort, object>> fields)
@@ -532,8 +552,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IEnableParent :
-        IEnableParentGetter,
-        ILoquiObjectSetter<IEnableParent>
+        IEnableParentInternalGetter,
+        ILoquiObjectSetter<IEnableParentInternal>
     {
         new IPlaced Reference { get; set; }
         new IFormIDLink<IPlaced> Reference_Property { get; }
@@ -546,9 +566,17 @@ namespace Mutagen.Bethesda.Oblivion
             EnableParent def = null);
     }
 
+    public partial interface IEnableParentInternal :
+        IEnableParent,
+        IEnableParentInternalGetter
+    {
+        new IPlaced Reference { get; set; }
+        new IFormIDLink<IPlaced> Reference_Property { get; }
+    }
+
     public partial interface IEnableParentGetter :
         ILoquiObject,
-        ILoquiObject<IEnableParentGetter>,
+        ILoquiObject<IEnableParentInternalGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -564,45 +592,53 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    public partial interface IEnableParentInternalGetter : IEnableParentGetter
+    {
+        object CommonInstance();
+        object CommonSetterInstance();
+        object CommonSetterCopyInstance();
+
+    }
+
     #endregion
 
     #region Common MixIn
     public static class EnableParentMixIn
     {
-        public static void Clear(this IEnableParent item)
+        public static void Clear(this IEnableParentInternal item)
         {
-            ((EnableParentCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((EnableParentSetterCommon)((IEnableParentInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static EnableParent_Mask<bool> GetEqualsMask(
-            this IEnableParentGetter item,
-            IEnableParentGetter rhs,
+            this IEnableParentInternalGetter item,
+            IEnableParentInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((EnableParentCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((EnableParentCommon)((IEnableParentInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IEnableParentGetter item,
+            this IEnableParentInternalGetter item,
             string name = null,
             EnableParent_Mask<bool> printMask = null)
         {
-            return ((EnableParentCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((EnableParentCommon)((IEnableParentInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IEnableParentGetter item,
+            this IEnableParentInternalGetter item,
             FileGeneration fg,
             string name = null,
             EnableParent_Mask<bool> printMask = null)
         {
-            ((EnableParentCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((EnableParentCommon)((IEnableParentInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -610,28 +646,28 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static bool HasBeenSet(
-            this IEnableParentGetter item,
+            this IEnableParentInternalGetter item,
             EnableParent_Mask<bool?> checkMask)
         {
-            return ((EnableParentCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((EnableParentCommon)((IEnableParentInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static EnableParent_Mask<bool> GetHasBeenSetMask(this IEnableParentGetter item)
+        public static EnableParent_Mask<bool> GetHasBeenSetMask(this IEnableParentInternalGetter item)
         {
             var ret = new EnableParent_Mask<bool>();
-            ((EnableParentCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((EnableParentCommon)((IEnableParentInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this IEnableParentGetter item,
-            IEnableParentGetter rhs)
+            this IEnableParentInternalGetter item,
+            IEnableParentInternalGetter rhs)
         {
-            return ((EnableParentCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((EnableParentCommon)((IEnableParentInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -677,13 +713,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IEnableParentGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type InternalGetterType = typeof(IEnableParentInternalGetter);
 
         public static readonly Type SetterType = typeof(IEnableParent);
 
-        public static readonly Type InternalSetterType = null;
-
-        public static readonly Type CommonType = typeof(EnableParentCommon);
+        public static readonly Type InternalSetterType = typeof(IEnableParentInternal);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.EnableParent";
 
@@ -820,7 +854,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -840,9 +873,147 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
+    public partial class EnableParentSetterCommon
+    {
+        public static readonly EnableParentSetterCommon Instance = new EnableParentSetterCommon();
+
+        partial void ClearPartial();
+        
+        public virtual void Clear(IEnableParentInternal item)
+        {
+            ClearPartial();
+            item.Reference = default(IPlaced);
+            item.Flags = default(EnableParent.Flag);
+        }
+        
+        
+    }
     public partial class EnableParentCommon
     {
         public static readonly EnableParentCommon Instance = new EnableParentCommon();
+
+        public EnableParent_Mask<bool> GetEqualsMask(
+            IEnableParentInternalGetter item,
+            IEnableParentInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new EnableParent_Mask<bool>();
+            ((EnableParentCommon)((IEnableParentInternalGetter)item).CommonInstance()).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+        
+        public void FillEqualsMask(
+            IEnableParentInternalGetter item,
+            IEnableParentInternalGetter rhs,
+            EnableParent_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            if (rhs == null) return;
+            ret.Reference = item.Reference_Property.FormKey == rhs.Reference_Property.FormKey;
+            ret.Flags = item.Flags == rhs.Flags;
+        }
+        
+        public string ToString(
+            IEnableParentInternalGetter item,
+            string name = null,
+            EnableParent_Mask<bool> printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+            return fg.ToString();
+        }
+        
+        public void ToString(
+            IEnableParentInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            EnableParent_Mask<bool> printMask = null)
+        {
+            if (name == null)
+            {
+                fg.AppendLine($"EnableParent =>");
+            }
+            else
+            {
+                fg.AppendLine($"{name} (EnableParent) =>");
+            }
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
+            }
+            fg.AppendLine("]");
+        }
+        
+        protected static void ToStringFields(
+            IEnableParentInternalGetter item,
+            FileGeneration fg,
+            EnableParent_Mask<bool> printMask = null)
+        {
+            if (printMask?.Reference ?? true)
+            {
+                fg.AppendLine($"Reference => {item.Reference_Property}");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                fg.AppendLine($"Flags => {item.Flags}");
+            }
+        }
+        
+        public bool HasBeenSet(
+            IEnableParentInternalGetter item,
+            EnableParent_Mask<bool?> checkMask)
+        {
+            return true;
+        }
+        
+        public void FillHasBeenSetMask(
+            IEnableParentInternalGetter item,
+            EnableParent_Mask<bool> mask)
+        {
+            mask.Reference = true;
+            mask.Flags = true;
+        }
+        
+        #region Equals and Hash
+        public virtual bool Equals(
+            IEnableParentInternalGetter lhs,
+            IEnableParentInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!lhs.Reference_Property.Equals(rhs.Reference_Property)) return false;
+            if (lhs.Flags != rhs.Flags) return false;
+            return true;
+        }
+        
+        public virtual int GetHashCode(IEnableParentInternalGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.Reference).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
+            return ret;
+        }
+        
+        #endregion
+        
+        
+        
+    }
+    public partial class EnableParentSetterCopyCommon
+    {
+        public static readonly EnableParentSetterCopyCommon Instance = new EnableParentSetterCopyCommon();
 
         #region Copy Fields From
         public static void CopyFieldsFrom(
@@ -887,135 +1058,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
         }
-
+        
         #endregion
-
-        partial void ClearPartial();
-
-        public virtual void Clear(IEnableParent item)
-        {
-            ClearPartial();
-            item.Reference = default(IPlaced);
-            item.Flags = default(EnableParent.Flag);
-        }
-
-        public EnableParent_Mask<bool> GetEqualsMask(
-            IEnableParentGetter item,
-            IEnableParentGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new EnableParent_Mask<bool>();
-            ((EnableParentCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public void FillEqualsMask(
-            IEnableParentGetter item,
-            IEnableParentGetter rhs,
-            EnableParent_Mask<bool> ret,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            if (rhs == null) return;
-            ret.Reference = item.Reference_Property.FormKey == rhs.Reference_Property.FormKey;
-            ret.Flags = item.Flags == rhs.Flags;
-        }
-
-        public string ToString(
-            IEnableParentGetter item,
-            string name = null,
-            EnableParent_Mask<bool> printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(
-                item: item,
-                fg: fg,
-                name: name,
-                printMask: printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(
-            IEnableParentGetter item,
-            FileGeneration fg,
-            string name = null,
-            EnableParent_Mask<bool> printMask = null)
-        {
-            if (name == null)
-            {
-                fg.AppendLine($"EnableParent =>");
-            }
-            else
-            {
-                fg.AppendLine($"{name} (EnableParent) =>");
-            }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                ToStringFields(
-                    item: item,
-                    fg: fg,
-                    printMask: printMask);
-            }
-            fg.AppendLine("]");
-        }
-
-        protected static void ToStringFields(
-            IEnableParentGetter item,
-            FileGeneration fg,
-            EnableParent_Mask<bool> printMask = null)
-        {
-            if (printMask?.Reference ?? true)
-            {
-                fg.AppendLine($"Reference => {item.Reference_Property}");
-            }
-            if (printMask?.Flags ?? true)
-            {
-                fg.AppendLine($"Flags => {item.Flags}");
-            }
-        }
-
-        public bool HasBeenSet(
-            IEnableParentGetter item,
-            EnableParent_Mask<bool?> checkMask)
-        {
-            return true;
-        }
-
-        public void FillHasBeenSetMask(
-            IEnableParentGetter item,
-            EnableParent_Mask<bool> mask)
-        {
-            mask.Reference = true;
-            mask.Flags = true;
-        }
-
-        #region Equals and Hash
-        public virtual bool Equals(
-            IEnableParentGetter lhs,
-            IEnableParentGetter rhs)
-        {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
-            if (!lhs.Reference_Property.Equals(rhs.Reference_Property)) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            return true;
-        }
-
-        public virtual int GetHashCode(IEnableParentGetter item)
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.Reference).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
-            return ret;
-        }
-
-        #endregion
-
-
+        
+        
     }
     #endregion
 
@@ -1026,7 +1072,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static EnableParentXmlWriteTranslation Instance = new EnableParentXmlWriteTranslation();
 
         public static void WriteToNodeXml(
-            IEnableParentGetter item,
+            IEnableParentInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1053,7 +1099,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             XElement node,
-            IEnableParentGetter item,
+            IEnableParentInternalGetter item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)
@@ -1079,7 +1125,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             Write(
-                item: (IEnableParentGetter)item,
+                item: (IEnableParentInternalGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1088,7 +1134,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             XElement node,
-            IEnableParentGetter item,
+            IEnableParentInternalGetter item,
             ErrorMaskBuilder errorMask,
             int fieldIndex,
             TranslationCrystal translationMask,
@@ -1098,7 +1144,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 errorMask?.PushIndex(fieldIndex);
                 Write(
-                    item: (IEnableParentGetter)item,
+                    item: (IEnableParentInternalGetter)item,
                     name: name,
                     node: node,
                     errorMask: errorMask,
@@ -1122,7 +1168,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static EnableParentXmlCreateTranslation Instance = new EnableParentXmlCreateTranslation();
 
         public static void FillPublicXml(
-            IEnableParent item,
+            IEnableParentInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1147,7 +1193,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElementXml(
-            IEnableParent item,
+            IEnableParentInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -1199,7 +1245,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public static class EnableParentXmlTranslationMixIn
     {
         public static void WriteToXml(
-            this IEnableParentGetter item,
+            this IEnableParentInternalGetter item,
             XElement node,
             out EnableParent_ErrorMask errorMask,
             bool doMasks = true,
@@ -1217,7 +1263,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IEnableParentGetter item,
+            this IEnableParentInternalGetter item,
             string path,
             out EnableParent_ErrorMask errorMask,
             EnableParent_TranslationMask translationMask = null,
@@ -1236,7 +1282,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IEnableParentGetter item,
+            this IEnableParentInternalGetter item,
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1254,7 +1300,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IEnableParentGetter item,
+            this IEnableParentInternalGetter item,
             Stream stream,
             out EnableParent_ErrorMask errorMask,
             EnableParent_TranslationMask translationMask = null,
@@ -1273,7 +1319,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IEnableParentGetter item,
+            this IEnableParentInternalGetter item,
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1291,7 +1337,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IEnableParentGetter item,
+            this IEnableParentInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1306,7 +1352,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IEnableParentGetter item,
+            this IEnableParentInternalGetter item,
             XElement node,
             string name = null,
             EnableParent_TranslationMask translationMask = null)
@@ -1320,7 +1366,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IEnableParentGetter item,
+            this IEnableParentInternalGetter item,
             string path,
             string name = null)
         {
@@ -1335,7 +1381,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IEnableParentGetter item,
+            this IEnableParentInternalGetter item,
             Stream stream,
             string name = null)
         {
@@ -1663,7 +1709,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static EnableParentBinaryWriteTranslation Instance = new EnableParentBinaryWriteTranslation();
 
         public static void Write_Embedded(
-            IEnableParentGetter item,
+            IEnableParentInternalGetter item,
             MutagenWriter writer,
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
@@ -1680,7 +1726,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             MutagenWriter writer,
-            IEnableParentGetter item,
+            IEnableParentInternalGetter item,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
@@ -1706,7 +1752,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask)
         {
             Write(
-                item: (IEnableParentGetter)item,
+                item: (IEnableParentInternalGetter)item,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -1725,7 +1771,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public static class EnableParentBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IEnableParentGetter item,
+            this IEnableParentInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
             out EnableParent_ErrorMask errorMask,
@@ -1742,7 +1788,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToBinary(
-            this IEnableParentGetter item,
+            this IEnableParentInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -1756,7 +1802,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToBinary(
-            this IEnableParentGetter item,
+            this IEnableParentInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
@@ -1773,22 +1819,65 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     public partial class EnableParentBinaryWrapper :
         BinaryWrapper,
-        IEnableParentGetter
+        IEnableParentInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => EnableParent_Registration.Instance;
         public static EnableParent_Registration Registration => EnableParent_Registration.Instance;
-        protected object CommonInstance => EnableParentCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
+        protected object CommonInstance()
+        {
+            return EnableParentCommon.Instance;
+        }
+        object IEnableParentInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IEnableParentInternalGetter.CommonSetterInstance()
+        {
+            return null;
+        }
+        object IEnableParentInternalGetter.CommonSetterCopyInstance()
+        {
+            return null;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IEnableParentGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IEnableParentInternalGetter)rhs, include);
 
         protected object XmlWriteTranslator => EnableParentXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((EnableParentXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         protected object BinaryWriteTranslator => EnableParentBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((EnableParentBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
 
         #region Reference
         public IFormIDLinkGetter<IPlacedGetter> Reference_Property => new FormIDLink<IPlacedGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
@@ -1834,4 +1923,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class EnableParent
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => EnableParent_Registration.Instance;
+        public static EnableParent_Registration Registration => EnableParent_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return EnableParentCommon.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return EnableParentSetterCommon.Instance;
+        }
+        protected object CommonSetterCopyInstance()
+        {
+            return EnableParentSetterCopyCommon.Instance;
+        }
+        object IEnableParentInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IEnableParentInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object IEnableParentInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
 }

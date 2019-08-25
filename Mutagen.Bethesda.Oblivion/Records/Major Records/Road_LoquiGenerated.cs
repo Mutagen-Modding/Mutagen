@@ -43,11 +43,6 @@ namespace Mutagen.Bethesda.Oblivion
         IEquatable<Road>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Road_Registration.Instance;
-        public new static Road_Registration Registration => Road_Registration.Instance;
-        protected override object CommonInstance => RoadCommon.Instance;
-
         #region Ctor
         protected Road()
         {
@@ -64,7 +59,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<RoadPoint> IRoad.Points => _Points;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IRoadPointGetter> IRoadGetter.Points => _Points;
+        IReadOnlySetList<IRoadPointInternalGetter> IRoadGetter.Points => _Points;
         #endregion
 
         #endregion
@@ -88,20 +83,33 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IRoadInternalGetter rhs)) return false;
-            return ((RoadCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            return ((RoadCommon)((IRoadInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(Road obj)
         {
-            return ((RoadCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((RoadCommon)((IRoadInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((RoadCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((RoadCommon)((IRoadInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected override object XmlWriteTranslator => RoadXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((RoadXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static Road CreateFromXml(
@@ -297,6 +305,19 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Binary Translation
         protected override object BinaryWriteTranslator => RoadBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((RoadBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
         #region Binary Create
         [DebuggerStepThrough]
         public static Road CreateFromBinary(
@@ -477,7 +498,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            RoadCommon.CopyFieldsFrom(
+            RoadSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -492,7 +513,7 @@ namespace Mutagen.Bethesda.Oblivion
             Road_CopyMask copyMask = null,
             Road def = null)
         {
-            RoadCommon.CopyFieldsFrom(
+            RoadSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -516,7 +537,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            RoadCommon.Instance.Clear(this);
+            RoadSetterCommon.Instance.Clear(this);
         }
 
         public new static Road Create(IEnumerable<KeyValuePair<ushort, object>> fields)
@@ -575,7 +596,7 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem
     {
         #region Points
-        IReadOnlySetList<IRoadPointGetter> Points { get; }
+        IReadOnlySetList<IRoadPointInternalGetter> Points { get; }
         #endregion
 
     }
@@ -594,7 +615,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IRoadInternal item)
         {
-            ((RoadCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((RoadSetterCommon)((IRoadInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static Road_Mask<bool> GetEqualsMask(
@@ -602,7 +623,7 @@ namespace Mutagen.Bethesda.Oblivion
             IRoadInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((RoadCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((RoadCommon)((IRoadInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -613,7 +634,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Road_Mask<bool> printMask = null)
         {
-            return ((RoadCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((RoadCommon)((IRoadInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -625,7 +646,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Road_Mask<bool> printMask = null)
         {
-            ((RoadCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((RoadCommon)((IRoadInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -636,7 +657,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRoadInternalGetter item,
             Road_Mask<bool?> checkMask)
         {
-            return ((RoadCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((RoadCommon)((IRoadInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -644,7 +665,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Road_Mask<bool> GetHasBeenSetMask(this IRoadInternalGetter item)
         {
             var ret = new Road_Mask<bool>();
-            ((RoadCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((RoadCommon)((IRoadInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -654,7 +675,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRoadInternalGetter item,
             IRoadInternalGetter rhs)
         {
-            return ((RoadCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((RoadCommon)((IRoadInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -709,8 +730,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type SetterType = typeof(IRoad);
 
         public static readonly Type InternalSetterType = typeof(IRoadInternal);
-
-        public static readonly Type CommonType = typeof(RoadCommon);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.Road";
 
@@ -837,7 +856,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -857,9 +875,264 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
+    public partial class RoadSetterCommon : OblivionMajorRecordSetterCommon
+    {
+        public new static readonly RoadSetterCommon Instance = new RoadSetterCommon();
+
+        partial void ClearPartial();
+        
+        public virtual void Clear(IRoadInternal item)
+        {
+            ClearPartial();
+            item.Points.Unset();
+            base.Clear(item);
+        }
+        
+        public override void Clear(IOblivionMajorRecordInternal item)
+        {
+            Clear(item: (IRoadInternal)item);
+        }
+        
+        public override void Clear(IMajorRecordInternal item)
+        {
+            Clear(item: (IRoadInternal)item);
+        }
+        
+        
+    }
     public partial class RoadCommon : OblivionMajorRecordCommon
     {
-        public static readonly RoadCommon Instance = new RoadCommon();
+        public new static readonly RoadCommon Instance = new RoadCommon();
+
+        public Road_Mask<bool> GetEqualsMask(
+            IRoadInternalGetter item,
+            IRoadInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new Road_Mask<bool>();
+            ((RoadCommon)((IRoadInternalGetter)item).CommonInstance()).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+        
+        public void FillEqualsMask(
+            IRoadInternalGetter item,
+            IRoadInternalGetter rhs,
+            Road_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            if (rhs == null) return;
+            ret.Points = item.Points.CollectionEqualsHelper(
+                rhs.Points,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            base.FillEqualsMask(item, rhs, ret, include);
+        }
+        
+        public string ToString(
+            IRoadInternalGetter item,
+            string name = null,
+            Road_Mask<bool> printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+            return fg.ToString();
+        }
+        
+        public void ToString(
+            IRoadInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            Road_Mask<bool> printMask = null)
+        {
+            if (name == null)
+            {
+                fg.AppendLine($"Road =>");
+            }
+            else
+            {
+                fg.AppendLine($"{name} (Road) =>");
+            }
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
+            }
+            fg.AppendLine("]");
+        }
+        
+        protected static void ToStringFields(
+            IRoadInternalGetter item,
+            FileGeneration fg,
+            Road_Mask<bool> printMask = null)
+        {
+            OblivionMajorRecordCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.Points?.Overall ?? true)
+            {
+                fg.AppendLine("Points =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Points)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+        }
+        
+        public bool HasBeenSet(
+            IRoadInternalGetter item,
+            Road_Mask<bool?> checkMask)
+        {
+            if (checkMask.Points.Overall.HasValue && checkMask.Points.Overall.Value != item.Points.HasBeenSet) return false;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+        
+        public void FillHasBeenSetMask(
+            IRoadInternalGetter item,
+            Road_Mask<bool> mask)
+        {
+            mask.Points = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, RoadPoint_Mask<bool>>>>(item.Points.HasBeenSet, item.Points.WithIndex().Select((i) => new MaskItemIndexed<bool, RoadPoint_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
+        }
+        
+        public static Road_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (Road_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.FormKey:
+                    return (Road_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.Version:
+                    return (Road_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.EditorID:
+                    return (Road_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
+                    return (Road_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        public static Road_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (Road_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.FormKey:
+                    return (Road_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.Version:
+                    return (Road_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.EditorID:
+                    return (Road_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        #region Equals and Hash
+        public virtual bool Equals(
+            IRoadInternalGetter lhs,
+            IRoadInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.Points.HasBeenSet != rhs.Points.HasBeenSet) return false;
+            if (lhs.Points.HasBeenSet)
+            {
+                if (!lhs.Points.SequenceEqual(rhs.Points)) return false;
+            }
+            return true;
+        }
+        
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IRoadInternalGetter)lhs,
+                rhs: rhs as IRoadInternalGetter);
+        }
+        
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IRoadInternalGetter)lhs,
+                rhs: rhs as IRoadInternalGetter);
+        }
+        
+        public virtual int GetHashCode(IRoadInternalGetter item)
+        {
+            int ret = 0;
+            if (item.Points.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Points).CombineHashCode(ret);
+            }
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+        
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IRoadInternalGetter)item);
+        }
+        
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IRoadInternalGetter)item);
+        }
+        
+        #endregion
+        
+        
+        #region Mutagen
+        partial void PostDuplicate(Road obj, Road rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+        
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new Road(getNextFormKey());
+            ret.CopyFieldsFrom((Road)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (Road)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+        
+        #endregion
+        
+        
+    }
+    public partial class RoadSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
+    {
+        public new static readonly RoadSetterCopyCommon Instance = new RoadSetterCopyCommon();
 
         #region Copy Fields From
         public static void CopyFieldsFrom(
@@ -869,7 +1142,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             Road_CopyMask copyMask)
         {
-            OblivionMajorRecordCommon.CopyFieldsFrom(
+            OblivionMajorRecordSetterCopyCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -910,252 +1183,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
         }
-
+        
         #endregion
-
-        partial void ClearPartial();
-
-        public virtual void Clear(IRoadInternal item)
-        {
-            ClearPartial();
-            item.Points.Unset();
-            base.Clear(item);
-        }
-
-        public override void Clear(IOblivionMajorRecordInternal item)
-        {
-            Clear(item: (IRoadInternal)item);
-        }
-
-        public override void Clear(IMajorRecordInternal item)
-        {
-            Clear(item: (IRoadInternal)item);
-        }
-
-        public Road_Mask<bool> GetEqualsMask(
-            IRoadInternalGetter item,
-            IRoadInternalGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new Road_Mask<bool>();
-            ((RoadCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public void FillEqualsMask(
-            IRoadInternalGetter item,
-            IRoadInternalGetter rhs,
-            Road_Mask<bool> ret,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            if (rhs == null) return;
-            ret.Points = item.Points.CollectionEqualsHelper(
-                rhs.Points,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
-                include);
-            base.FillEqualsMask(item, rhs, ret, include);
-        }
-
-        public string ToString(
-            IRoadInternalGetter item,
-            string name = null,
-            Road_Mask<bool> printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(
-                item: item,
-                fg: fg,
-                name: name,
-                printMask: printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(
-            IRoadInternalGetter item,
-            FileGeneration fg,
-            string name = null,
-            Road_Mask<bool> printMask = null)
-        {
-            if (name == null)
-            {
-                fg.AppendLine($"Road =>");
-            }
-            else
-            {
-                fg.AppendLine($"{name} (Road) =>");
-            }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                ToStringFields(
-                    item: item,
-                    fg: fg,
-                    printMask: printMask);
-            }
-            fg.AppendLine("]");
-        }
-
-        protected static void ToStringFields(
-            IRoadInternalGetter item,
-            FileGeneration fg,
-            Road_Mask<bool> printMask = null)
-        {
-            OblivionMajorRecordCommon.ToStringFields(
-                item: item,
-                fg: fg,
-                printMask: printMask);
-            if (printMask?.Points?.Overall ?? true)
-            {
-                fg.AppendLine("Points =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
-                {
-                    foreach (var subItem in item.Points)
-                    {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            subItem?.ToString(fg, "Item");
-                        }
-                        fg.AppendLine("]");
-                    }
-                }
-                fg.AppendLine("]");
-            }
-        }
-
-        public bool HasBeenSet(
-            IRoadInternalGetter item,
-            Road_Mask<bool?> checkMask)
-        {
-            if (checkMask.Points.Overall.HasValue && checkMask.Points.Overall.Value != item.Points.HasBeenSet) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public void FillHasBeenSetMask(
-            IRoadInternalGetter item,
-            Road_Mask<bool> mask)
-        {
-            mask.Points = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, RoadPoint_Mask<bool>>>>(item.Points.HasBeenSet, item.Points.WithIndex().Select((i) => new MaskItemIndexed<bool, RoadPoint_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-
-        public static Road_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
-        {
-            switch (index)
-            {
-                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Road_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.FormKey:
-                    return (Road_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.Version:
-                    return (Road_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.EditorID:
-                    return (Road_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
-                    return (Road_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        public static Road_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
-        {
-            switch (index)
-            {
-                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Road_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.FormKey:
-                    return (Road_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
-                    return (Road_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.EditorID:
-                    return (Road_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        #region Equals and Hash
-        public virtual bool Equals(
-            IRoadInternalGetter lhs,
-            IRoadInternalGetter rhs)
-        {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (lhs.Points.HasBeenSet != rhs.Points.HasBeenSet) return false;
-            if (lhs.Points.HasBeenSet)
-            {
-                if (!lhs.Points.SequenceEqual(rhs.Points)) return false;
-            }
-            return true;
-        }
-
-        public override bool Equals(
-            IOblivionMajorRecordInternalGetter lhs,
-            IOblivionMajorRecordInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (IRoadInternalGetter)lhs,
-                rhs: rhs as IRoadInternalGetter);
-        }
-
-        public override bool Equals(
-            IMajorRecordInternalGetter lhs,
-            IMajorRecordInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (IRoadInternalGetter)lhs,
-                rhs: rhs as IRoadInternalGetter);
-        }
-
-        public virtual int GetHashCode(IRoadInternalGetter item)
-        {
-            int ret = 0;
-            if (item.Points.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.Points).CombineHashCode(ret);
-            }
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
-        {
-            return GetHashCode(item: (IRoadInternalGetter)item);
-        }
-
-        public override int GetHashCode(IMajorRecordInternalGetter item)
-        {
-            return GetHashCode(item: (IRoadInternalGetter)item);
-        }
-
-        #endregion
-
-
-        #region Mutagen
-        partial void PostDuplicate(Road obj, Road rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new Road(getNextFormKey());
-            ret.CopyFieldsFrom((Road)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (Road)item, getNextFormKey, duplicatedRecords);
-            return ret;
-        }
-
-        #endregion
-
+        
+        
     }
     #endregion
 
@@ -1181,14 +1212,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Points.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Road_FieldIndex.Points) ?? true))
             {
-                ListXmlTranslation<IRoadPointGetter>.Instance.Write(
+                ListXmlTranslation<IRoadPointInternalGetter>.Instance.Write(
                     node: node,
                     name: nameof(item.Points),
                     item: item.Points,
                     fieldIndex: (int)Road_FieldIndex.Points,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)Road_FieldIndex.Points),
-                    transl: (XElement subNode, IRoadPointGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    transl: (XElement subNode, IRoadPointInternalGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         var loquiItem = subItem;
                         ((RoadPointXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
@@ -1921,17 +1952,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         OblivionMajorRecordBinaryWrapper,
         IRoadInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Road_Registration.Instance;
         public new static Road_Registration Registration => Road_Registration.Instance;
-        protected override object CommonInstance => RoadCommon.Instance;
+        protected override object CommonInstance()
+        {
+            return RoadCommon.Instance;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRoadInternalGetter)rhs, include);
 
         protected override object XmlWriteTranslator => RoadXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((RoadXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         protected override object BinaryWriteTranslator => RoadBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((RoadBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
 
         #region Points
         partial void PointsCustomParse(
@@ -2017,4 +2080,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class Road
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Road_Registration.Instance;
+        public new static Road_Registration Registration => Road_Registration.Instance;
+        protected override object CommonInstance()
+        {
+            return RoadCommon.Instance;
+        }
+        protected override object CommonSetterInstance()
+        {
+            return RoadSetterCommon.Instance;
+        }
+        protected override object CommonSetterCopyInstance()
+        {
+            return RoadSetterCopyCommon.Instance;
+        }
+
+        #endregion
+
+    }
 }

@@ -34,18 +34,12 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class RaceVoices :
         LoquiNotifyingObject,
-        IRaceVoices,
+        IRaceVoicesInternal,
         ILoquiObjectSetter<RaceVoices>,
         ILinkSubContainer,
         IEquatable<RaceVoices>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => RaceVoices_Registration.Instance;
-        public static RaceVoices_Registration Registration => RaceVoices_Registration.Instance;
-        protected object CommonInstance => RaceVoicesCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
-
         #region Ctor
         public RaceVoices()
         {
@@ -71,7 +65,7 @@ namespace Mutagen.Bethesda.Oblivion
         IFormIDLinkGetter<IRaceInternalGetter> IRaceVoicesGetter.Female_Property => this.Female_Property;
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRaceVoicesGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRaceVoicesInternalGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -89,22 +83,35 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is IRaceVoicesGetter rhs)) return false;
-            return ((RaceVoicesCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            if (!(obj is IRaceVoicesInternalGetter rhs)) return false;
+            return ((RaceVoicesCommon)((IRaceVoicesInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(RaceVoices obj)
         {
-            return ((RaceVoicesCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((RaceVoicesCommon)((IRaceVoicesInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((RaceVoicesCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((RaceVoicesCommon)((IRaceVoicesInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected object XmlWriteTranslator => RaceVoicesXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((RaceVoicesXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static RaceVoices CreateFromXml(
@@ -285,6 +292,19 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Translation
         protected object BinaryWriteTranslator => RaceVoicesBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((RaceVoicesBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
         #region Binary Create
         [DebuggerStepThrough]
         public static RaceVoices CreateFromBinary(
@@ -439,7 +459,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            RaceVoicesCommon.CopyFieldsFrom(
+            RaceVoicesSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -454,7 +474,7 @@ namespace Mutagen.Bethesda.Oblivion
             RaceVoices_CopyMask copyMask = null,
             RaceVoices def = null)
         {
-            RaceVoicesCommon.CopyFieldsFrom(
+            RaceVoicesSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -480,7 +500,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void Clear()
         {
-            RaceVoicesCommon.Instance.Clear(this);
+            RaceVoicesSetterCommon.Instance.Clear(this);
         }
 
         public static RaceVoices Create(IEnumerable<KeyValuePair<ushort, object>> fields)
@@ -516,8 +536,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IRaceVoices :
-        IRaceVoicesGetter,
-        ILoquiObjectSetter<IRaceVoices>
+        IRaceVoicesInternalGetter,
+        ILoquiObjectSetter<IRaceVoicesInternal>
     {
         new Race Male { get; set; }
         new IFormIDLink<Race> Male_Property { get; }
@@ -530,9 +550,19 @@ namespace Mutagen.Bethesda.Oblivion
             RaceVoices def = null);
     }
 
+    public partial interface IRaceVoicesInternal :
+        IRaceVoices,
+        IRaceVoicesInternalGetter
+    {
+        new Race Male { get; set; }
+        new IFormIDLink<Race> Male_Property { get; }
+        new Race Female { get; set; }
+        new IFormIDLink<Race> Female_Property { get; }
+    }
+
     public partial interface IRaceVoicesGetter :
         ILoquiObject,
-        ILoquiObject<IRaceVoicesGetter>,
+        ILoquiObject<IRaceVoicesInternalGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -549,45 +579,53 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    public partial interface IRaceVoicesInternalGetter : IRaceVoicesGetter
+    {
+        object CommonInstance();
+        object CommonSetterInstance();
+        object CommonSetterCopyInstance();
+
+    }
+
     #endregion
 
     #region Common MixIn
     public static class RaceVoicesMixIn
     {
-        public static void Clear(this IRaceVoices item)
+        public static void Clear(this IRaceVoicesInternal item)
         {
-            ((RaceVoicesCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((RaceVoicesSetterCommon)((IRaceVoicesInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static RaceVoices_Mask<bool> GetEqualsMask(
-            this IRaceVoicesGetter item,
-            IRaceVoicesGetter rhs,
+            this IRaceVoicesInternalGetter item,
+            IRaceVoicesInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((RaceVoicesCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((RaceVoicesCommon)((IRaceVoicesInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IRaceVoicesGetter item,
+            this IRaceVoicesInternalGetter item,
             string name = null,
             RaceVoices_Mask<bool> printMask = null)
         {
-            return ((RaceVoicesCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((RaceVoicesCommon)((IRaceVoicesInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IRaceVoicesGetter item,
+            this IRaceVoicesInternalGetter item,
             FileGeneration fg,
             string name = null,
             RaceVoices_Mask<bool> printMask = null)
         {
-            ((RaceVoicesCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((RaceVoicesCommon)((IRaceVoicesInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -595,28 +633,28 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static bool HasBeenSet(
-            this IRaceVoicesGetter item,
+            this IRaceVoicesInternalGetter item,
             RaceVoices_Mask<bool?> checkMask)
         {
-            return ((RaceVoicesCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((RaceVoicesCommon)((IRaceVoicesInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static RaceVoices_Mask<bool> GetHasBeenSetMask(this IRaceVoicesGetter item)
+        public static RaceVoices_Mask<bool> GetHasBeenSetMask(this IRaceVoicesInternalGetter item)
         {
             var ret = new RaceVoices_Mask<bool>();
-            ((RaceVoicesCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((RaceVoicesCommon)((IRaceVoicesInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this IRaceVoicesGetter item,
-            IRaceVoicesGetter rhs)
+            this IRaceVoicesInternalGetter item,
+            IRaceVoicesInternalGetter rhs)
         {
-            return ((RaceVoicesCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((RaceVoicesCommon)((IRaceVoicesInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -662,13 +700,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IRaceVoicesGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type InternalGetterType = typeof(IRaceVoicesInternalGetter);
 
         public static readonly Type SetterType = typeof(IRaceVoices);
 
-        public static readonly Type InternalSetterType = null;
-
-        public static readonly Type CommonType = typeof(RaceVoicesCommon);
+        public static readonly Type InternalSetterType = typeof(IRaceVoicesInternal);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.RaceVoices";
 
@@ -805,7 +841,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -825,9 +860,147 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
+    public partial class RaceVoicesSetterCommon
+    {
+        public static readonly RaceVoicesSetterCommon Instance = new RaceVoicesSetterCommon();
+
+        partial void ClearPartial();
+        
+        public virtual void Clear(IRaceVoicesInternal item)
+        {
+            ClearPartial();
+            item.Male = default(Race);
+            item.Female = default(Race);
+        }
+        
+        
+    }
     public partial class RaceVoicesCommon
     {
         public static readonly RaceVoicesCommon Instance = new RaceVoicesCommon();
+
+        public RaceVoices_Mask<bool> GetEqualsMask(
+            IRaceVoicesInternalGetter item,
+            IRaceVoicesInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new RaceVoices_Mask<bool>();
+            ((RaceVoicesCommon)((IRaceVoicesInternalGetter)item).CommonInstance()).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+        
+        public void FillEqualsMask(
+            IRaceVoicesInternalGetter item,
+            IRaceVoicesInternalGetter rhs,
+            RaceVoices_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            if (rhs == null) return;
+            ret.Male = item.Male_Property.FormKey == rhs.Male_Property.FormKey;
+            ret.Female = item.Female_Property.FormKey == rhs.Female_Property.FormKey;
+        }
+        
+        public string ToString(
+            IRaceVoicesInternalGetter item,
+            string name = null,
+            RaceVoices_Mask<bool> printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+            return fg.ToString();
+        }
+        
+        public void ToString(
+            IRaceVoicesInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            RaceVoices_Mask<bool> printMask = null)
+        {
+            if (name == null)
+            {
+                fg.AppendLine($"RaceVoices =>");
+            }
+            else
+            {
+                fg.AppendLine($"{name} (RaceVoices) =>");
+            }
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
+            }
+            fg.AppendLine("]");
+        }
+        
+        protected static void ToStringFields(
+            IRaceVoicesInternalGetter item,
+            FileGeneration fg,
+            RaceVoices_Mask<bool> printMask = null)
+        {
+            if (printMask?.Male ?? true)
+            {
+                fg.AppendLine($"Male => {item.Male_Property}");
+            }
+            if (printMask?.Female ?? true)
+            {
+                fg.AppendLine($"Female => {item.Female_Property}");
+            }
+        }
+        
+        public bool HasBeenSet(
+            IRaceVoicesInternalGetter item,
+            RaceVoices_Mask<bool?> checkMask)
+        {
+            return true;
+        }
+        
+        public void FillHasBeenSetMask(
+            IRaceVoicesInternalGetter item,
+            RaceVoices_Mask<bool> mask)
+        {
+            mask.Male = true;
+            mask.Female = true;
+        }
+        
+        #region Equals and Hash
+        public virtual bool Equals(
+            IRaceVoicesInternalGetter lhs,
+            IRaceVoicesInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!lhs.Male_Property.Equals(rhs.Male_Property)) return false;
+            if (!lhs.Female_Property.Equals(rhs.Female_Property)) return false;
+            return true;
+        }
+        
+        public virtual int GetHashCode(IRaceVoicesInternalGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.Male).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Female).CombineHashCode(ret);
+            return ret;
+        }
+        
+        #endregion
+        
+        
+        
+    }
+    public partial class RaceVoicesSetterCopyCommon
+    {
+        public static readonly RaceVoicesSetterCopyCommon Instance = new RaceVoicesSetterCopyCommon();
 
         #region Copy Fields From
         public static void CopyFieldsFrom(
@@ -872,135 +1045,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
         }
-
+        
         #endregion
-
-        partial void ClearPartial();
-
-        public virtual void Clear(IRaceVoices item)
-        {
-            ClearPartial();
-            item.Male = default(Race);
-            item.Female = default(Race);
-        }
-
-        public RaceVoices_Mask<bool> GetEqualsMask(
-            IRaceVoicesGetter item,
-            IRaceVoicesGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new RaceVoices_Mask<bool>();
-            ((RaceVoicesCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public void FillEqualsMask(
-            IRaceVoicesGetter item,
-            IRaceVoicesGetter rhs,
-            RaceVoices_Mask<bool> ret,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            if (rhs == null) return;
-            ret.Male = item.Male_Property.FormKey == rhs.Male_Property.FormKey;
-            ret.Female = item.Female_Property.FormKey == rhs.Female_Property.FormKey;
-        }
-
-        public string ToString(
-            IRaceVoicesGetter item,
-            string name = null,
-            RaceVoices_Mask<bool> printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(
-                item: item,
-                fg: fg,
-                name: name,
-                printMask: printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(
-            IRaceVoicesGetter item,
-            FileGeneration fg,
-            string name = null,
-            RaceVoices_Mask<bool> printMask = null)
-        {
-            if (name == null)
-            {
-                fg.AppendLine($"RaceVoices =>");
-            }
-            else
-            {
-                fg.AppendLine($"{name} (RaceVoices) =>");
-            }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                ToStringFields(
-                    item: item,
-                    fg: fg,
-                    printMask: printMask);
-            }
-            fg.AppendLine("]");
-        }
-
-        protected static void ToStringFields(
-            IRaceVoicesGetter item,
-            FileGeneration fg,
-            RaceVoices_Mask<bool> printMask = null)
-        {
-            if (printMask?.Male ?? true)
-            {
-                fg.AppendLine($"Male => {item.Male_Property}");
-            }
-            if (printMask?.Female ?? true)
-            {
-                fg.AppendLine($"Female => {item.Female_Property}");
-            }
-        }
-
-        public bool HasBeenSet(
-            IRaceVoicesGetter item,
-            RaceVoices_Mask<bool?> checkMask)
-        {
-            return true;
-        }
-
-        public void FillHasBeenSetMask(
-            IRaceVoicesGetter item,
-            RaceVoices_Mask<bool> mask)
-        {
-            mask.Male = true;
-            mask.Female = true;
-        }
-
-        #region Equals and Hash
-        public virtual bool Equals(
-            IRaceVoicesGetter lhs,
-            IRaceVoicesGetter rhs)
-        {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
-            if (!lhs.Male_Property.Equals(rhs.Male_Property)) return false;
-            if (!lhs.Female_Property.Equals(rhs.Female_Property)) return false;
-            return true;
-        }
-
-        public virtual int GetHashCode(IRaceVoicesGetter item)
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.Male).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Female).CombineHashCode(ret);
-            return ret;
-        }
-
-        #endregion
-
-
+        
+        
     }
     #endregion
 
@@ -1011,7 +1059,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static RaceVoicesXmlWriteTranslation Instance = new RaceVoicesXmlWriteTranslation();
 
         public static void WriteToNodeXml(
-            IRaceVoicesGetter item,
+            IRaceVoicesInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1038,7 +1086,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             XElement node,
-            IRaceVoicesGetter item,
+            IRaceVoicesInternalGetter item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)
@@ -1064,7 +1112,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             Write(
-                item: (IRaceVoicesGetter)item,
+                item: (IRaceVoicesInternalGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1073,7 +1121,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             XElement node,
-            IRaceVoicesGetter item,
+            IRaceVoicesInternalGetter item,
             ErrorMaskBuilder errorMask,
             int fieldIndex,
             TranslationCrystal translationMask,
@@ -1083,7 +1131,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 errorMask?.PushIndex(fieldIndex);
                 Write(
-                    item: (IRaceVoicesGetter)item,
+                    item: (IRaceVoicesInternalGetter)item,
                     name: name,
                     node: node,
                     errorMask: errorMask,
@@ -1107,7 +1155,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static RaceVoicesXmlCreateTranslation Instance = new RaceVoicesXmlCreateTranslation();
 
         public static void FillPublicXml(
-            IRaceVoices item,
+            IRaceVoicesInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1132,7 +1180,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElementXml(
-            IRaceVoices item,
+            IRaceVoicesInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -1165,7 +1213,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public static class RaceVoicesXmlTranslationMixIn
     {
         public static void WriteToXml(
-            this IRaceVoicesGetter item,
+            this IRaceVoicesInternalGetter item,
             XElement node,
             out RaceVoices_ErrorMask errorMask,
             bool doMasks = true,
@@ -1183,7 +1231,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IRaceVoicesGetter item,
+            this IRaceVoicesInternalGetter item,
             string path,
             out RaceVoices_ErrorMask errorMask,
             RaceVoices_TranslationMask translationMask = null,
@@ -1202,7 +1250,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IRaceVoicesGetter item,
+            this IRaceVoicesInternalGetter item,
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1220,7 +1268,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IRaceVoicesGetter item,
+            this IRaceVoicesInternalGetter item,
             Stream stream,
             out RaceVoices_ErrorMask errorMask,
             RaceVoices_TranslationMask translationMask = null,
@@ -1239,7 +1287,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IRaceVoicesGetter item,
+            this IRaceVoicesInternalGetter item,
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1257,7 +1305,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IRaceVoicesGetter item,
+            this IRaceVoicesInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1272,7 +1320,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IRaceVoicesGetter item,
+            this IRaceVoicesInternalGetter item,
             XElement node,
             string name = null,
             RaceVoices_TranslationMask translationMask = null)
@@ -1286,7 +1334,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IRaceVoicesGetter item,
+            this IRaceVoicesInternalGetter item,
             string path,
             string name = null)
         {
@@ -1301,7 +1349,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IRaceVoicesGetter item,
+            this IRaceVoicesInternalGetter item,
             Stream stream,
             string name = null)
         {
@@ -1629,7 +1677,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static RaceVoicesBinaryWriteTranslation Instance = new RaceVoicesBinaryWriteTranslation();
 
         public static void Write_Embedded(
-            IRaceVoicesGetter item,
+            IRaceVoicesInternalGetter item,
             MutagenWriter writer,
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
@@ -1646,7 +1694,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             MutagenWriter writer,
-            IRaceVoicesGetter item,
+            IRaceVoicesInternalGetter item,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
@@ -1672,7 +1720,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask)
         {
             Write(
-                item: (IRaceVoicesGetter)item,
+                item: (IRaceVoicesInternalGetter)item,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -1691,7 +1739,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public static class RaceVoicesBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IRaceVoicesGetter item,
+            this IRaceVoicesInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
             out RaceVoices_ErrorMask errorMask,
@@ -1708,7 +1756,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToBinary(
-            this IRaceVoicesGetter item,
+            this IRaceVoicesInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -1722,7 +1770,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToBinary(
-            this IRaceVoicesGetter item,
+            this IRaceVoicesInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
@@ -1739,22 +1787,65 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     public partial class RaceVoicesBinaryWrapper :
         BinaryWrapper,
-        IRaceVoicesGetter
+        IRaceVoicesInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RaceVoices_Registration.Instance;
         public static RaceVoices_Registration Registration => RaceVoices_Registration.Instance;
-        protected object CommonInstance => RaceVoicesCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
+        protected object CommonInstance()
+        {
+            return RaceVoicesCommon.Instance;
+        }
+        object IRaceVoicesInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IRaceVoicesInternalGetter.CommonSetterInstance()
+        {
+            return null;
+        }
+        object IRaceVoicesInternalGetter.CommonSetterCopyInstance()
+        {
+            return null;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRaceVoicesGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRaceVoicesInternalGetter)rhs, include);
 
         protected object XmlWriteTranslator => RaceVoicesXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((RaceVoicesXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         protected object BinaryWriteTranslator => RaceVoicesBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((RaceVoicesBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
 
         #region Male
         public IFormIDLinkGetter<IRaceInternalGetter> Male_Property => new FormIDLink<IRaceInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
@@ -1803,4 +1894,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class RaceVoices
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => RaceVoices_Registration.Instance;
+        public static RaceVoices_Registration Registration => RaceVoices_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return RaceVoicesCommon.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return RaceVoicesSetterCommon.Instance;
+        }
+        protected object CommonSetterCopyInstance()
+        {
+            return RaceVoicesSetterCopyCommon.Instance;
+        }
+        object IRaceVoicesInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IRaceVoicesInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object IRaceVoicesInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
 }

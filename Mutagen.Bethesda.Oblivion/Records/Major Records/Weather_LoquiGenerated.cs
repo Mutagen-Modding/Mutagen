@@ -46,11 +46,6 @@ namespace Mutagen.Bethesda.Oblivion
         IEquatable<Weather>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Weather_Registration.Instance;
-        public new static Weather_Registration Registration => Weather_Registration.Instance;
-        protected override object CommonInstance => WeatherCommon.Instance;
-
         #region Ctor
         protected Weather()
         {
@@ -136,7 +131,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Model_Set(default(Model), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IModelGetter IWeatherGetter.Model => this.Model;
+        IModelInternalGetter IWeatherGetter.Model => this.Model;
         #endregion
         #region WeatherTypes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -146,7 +141,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<WeatherType> IWeather.WeatherTypes => _WeatherTypes;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IWeatherTypeGetter> IWeatherGetter.WeatherTypes => _WeatherTypes;
+        IReadOnlySetList<IWeatherTypeInternalGetter> IWeatherGetter.WeatherTypes => _WeatherTypes;
         #endregion
 
         #endregion
@@ -530,7 +525,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<WeatherSound> IWeather.Sounds => _Sounds;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IWeatherSoundGetter> IWeatherGetter.Sounds => _Sounds;
+        IReadOnlySetList<IWeatherSoundInternalGetter> IWeatherGetter.Sounds => _Sounds;
         #endregion
 
         #endregion
@@ -605,20 +600,33 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IWeatherInternalGetter rhs)) return false;
-            return ((WeatherCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            return ((WeatherCommon)((IWeatherInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(Weather obj)
         {
-            return ((WeatherCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((WeatherCommon)((IWeatherInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((WeatherCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((WeatherCommon)((IWeatherInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected override object XmlWriteTranslator => WeatherXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((WeatherXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static Weather CreateFromXml(
@@ -920,6 +928,19 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Binary Translation
         protected override object BinaryWriteTranslator => WeatherBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((WeatherBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
         #region Binary Create
         [DebuggerStepThrough]
         public static Weather CreateFromBinary(
@@ -1423,7 +1444,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            WeatherCommon.CopyFieldsFrom(
+            WeatherSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -1438,7 +1459,7 @@ namespace Mutagen.Bethesda.Oblivion
             Weather_CopyMask copyMask = null,
             Weather def = null)
         {
-            WeatherCommon.CopyFieldsFrom(
+            WeatherSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -1576,7 +1597,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            WeatherCommon.Instance.Clear(this);
+            WeatherSetterCommon.Instance.Clear(this);
         }
 
         public new static Weather Create(IEnumerable<KeyValuePair<ushort, object>> fields)
@@ -1843,12 +1864,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Model
-        IModelGetter Model { get; }
+        IModelInternalGetter Model { get; }
         bool Model_IsSet { get; }
 
         #endregion
         #region WeatherTypes
-        IReadOnlySetList<IWeatherTypeGetter> WeatherTypes { get; }
+        IReadOnlySetList<IWeatherTypeInternalGetter> WeatherTypes { get; }
         #endregion
         #region FogDayNear
         Single FogDayNear { get; }
@@ -1975,7 +1996,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Sounds
-        IReadOnlySetList<IWeatherSoundGetter> Sounds { get; }
+        IReadOnlySetList<IWeatherSoundInternalGetter> Sounds { get; }
         #endregion
 
     }
@@ -2006,7 +2027,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IWeatherInternal item)
         {
-            ((WeatherCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((WeatherSetterCommon)((IWeatherInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static Weather_Mask<bool> GetEqualsMask(
@@ -2014,7 +2035,7 @@ namespace Mutagen.Bethesda.Oblivion
             IWeatherInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((WeatherCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((WeatherCommon)((IWeatherInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -2025,7 +2046,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Weather_Mask<bool> printMask = null)
         {
-            return ((WeatherCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((WeatherCommon)((IWeatherInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -2037,7 +2058,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Weather_Mask<bool> printMask = null)
         {
-            ((WeatherCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((WeatherCommon)((IWeatherInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -2048,7 +2069,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IWeatherInternalGetter item,
             Weather_Mask<bool?> checkMask)
         {
-            return ((WeatherCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((WeatherCommon)((IWeatherInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -2056,7 +2077,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Weather_Mask<bool> GetHasBeenSetMask(this IWeatherInternalGetter item)
         {
             var ret = new Weather_Mask<bool>();
-            ((WeatherCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((WeatherCommon)((IWeatherInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -2066,7 +2087,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IWeatherInternalGetter item,
             IWeatherInternalGetter rhs)
         {
-            return ((WeatherCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((WeatherCommon)((IWeatherInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -2159,8 +2180,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type SetterType = typeof(IWeather);
 
         public static readonly Type InternalSetterType = typeof(IWeatherInternal);
-
-        public static readonly Type CommonType = typeof(WeatherCommon);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.Weather";
 
@@ -2714,7 +2733,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -2734,9 +2752,653 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
+    public partial class WeatherSetterCommon : OblivionMajorRecordSetterCommon
+    {
+        public new static readonly WeatherSetterCommon Instance = new WeatherSetterCommon();
+
+        partial void ClearPartial();
+        
+        public virtual void Clear(IWeatherInternal item)
+        {
+            ClearPartial();
+            item.TextureLowerLayer_Unset();
+            item.TextureUpperLayer_Unset();
+            item.Model_Unset();
+            item.WeatherTypes.Unset();
+            item.FogDayNear = default(Single);
+            item.FogDayFar = default(Single);
+            item.FogNightNear = default(Single);
+            item.FogNightFar = default(Single);
+            item.HdrEyeAdaptSpeed = default(Single);
+            item.HdrBlurRadius = default(Single);
+            item.HdrBlurPasses = default(Single);
+            item.HdrEmissiveMult = default(Single);
+            item.HdrTargetLum = default(Single);
+            item.HdrUpperLumClamp = default(Single);
+            item.HdrBrightScale = default(Single);
+            item.HdrBrightClamp = default(Single);
+            item.HdrLumRampNoTex = default(Single);
+            item.HdrLumRampMin = default(Single);
+            item.HdrLumRampMax = default(Single);
+            item.HdrSunlightDimmer = default(Single);
+            item.HdrGrassDimmer = default(Single);
+            item.HdrTreeDimmer = default(Single);
+            item.WindSpeed = default(Byte);
+            item.CloudSpeedLower = default(Byte);
+            item.CloudSpeedUpper = default(Byte);
+            item.TransDelta = default(Byte);
+            item.SunGlare = default(Byte);
+            item.SunDamage = default(Byte);
+            item.PrecipitationBeginFadeIn = default(Byte);
+            item.PrecipitationEndFadeOut = default(Byte);
+            item.ThunderLightningBeginFadeIn = default(Byte);
+            item.ThunderLightningEndFadeOut = default(Byte);
+            item.ThunderLightningFrequency = default(Byte);
+            item.Classification = default(Weather.WeatherClassification);
+            item.LightningColor = default(Color);
+            item.Sounds.Unset();
+            base.Clear(item);
+        }
+        
+        public override void Clear(IOblivionMajorRecordInternal item)
+        {
+            Clear(item: (IWeatherInternal)item);
+        }
+        
+        public override void Clear(IMajorRecordInternal item)
+        {
+            Clear(item: (IWeatherInternal)item);
+        }
+        
+        
+    }
     public partial class WeatherCommon : OblivionMajorRecordCommon
     {
-        public static readonly WeatherCommon Instance = new WeatherCommon();
+        public new static readonly WeatherCommon Instance = new WeatherCommon();
+
+        public Weather_Mask<bool> GetEqualsMask(
+            IWeatherInternalGetter item,
+            IWeatherInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new Weather_Mask<bool>();
+            ((WeatherCommon)((IWeatherInternalGetter)item).CommonInstance()).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+        
+        public void FillEqualsMask(
+            IWeatherInternalGetter item,
+            IWeatherInternalGetter rhs,
+            Weather_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            if (rhs == null) return;
+            ret.TextureLowerLayer = item.TextureLowerLayer_IsSet == rhs.TextureLowerLayer_IsSet && string.Equals(item.TextureLowerLayer, rhs.TextureLowerLayer);
+            ret.TextureUpperLayer = item.TextureUpperLayer_IsSet == rhs.TextureUpperLayer_IsSet && string.Equals(item.TextureUpperLayer, rhs.TextureUpperLayer);
+            ret.Model = EqualsMaskHelper.EqualsHelper(
+                item.Model_IsSet,
+                rhs.Model_IsSet,
+                item.Model,
+                rhs.Model,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
+            ret.WeatherTypes = item.WeatherTypes.CollectionEqualsHelper(
+                rhs.WeatherTypes,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.FogDayNear = item.FogDayNear.EqualsWithin(rhs.FogDayNear);
+            ret.FogDayFar = item.FogDayFar.EqualsWithin(rhs.FogDayFar);
+            ret.FogNightNear = item.FogNightNear.EqualsWithin(rhs.FogNightNear);
+            ret.FogNightFar = item.FogNightFar.EqualsWithin(rhs.FogNightFar);
+            ret.HdrEyeAdaptSpeed = item.HdrEyeAdaptSpeed.EqualsWithin(rhs.HdrEyeAdaptSpeed);
+            ret.HdrBlurRadius = item.HdrBlurRadius.EqualsWithin(rhs.HdrBlurRadius);
+            ret.HdrBlurPasses = item.HdrBlurPasses.EqualsWithin(rhs.HdrBlurPasses);
+            ret.HdrEmissiveMult = item.HdrEmissiveMult.EqualsWithin(rhs.HdrEmissiveMult);
+            ret.HdrTargetLum = item.HdrTargetLum.EqualsWithin(rhs.HdrTargetLum);
+            ret.HdrUpperLumClamp = item.HdrUpperLumClamp.EqualsWithin(rhs.HdrUpperLumClamp);
+            ret.HdrBrightScale = item.HdrBrightScale.EqualsWithin(rhs.HdrBrightScale);
+            ret.HdrBrightClamp = item.HdrBrightClamp.EqualsWithin(rhs.HdrBrightClamp);
+            ret.HdrLumRampNoTex = item.HdrLumRampNoTex.EqualsWithin(rhs.HdrLumRampNoTex);
+            ret.HdrLumRampMin = item.HdrLumRampMin.EqualsWithin(rhs.HdrLumRampMin);
+            ret.HdrLumRampMax = item.HdrLumRampMax.EqualsWithin(rhs.HdrLumRampMax);
+            ret.HdrSunlightDimmer = item.HdrSunlightDimmer.EqualsWithin(rhs.HdrSunlightDimmer);
+            ret.HdrGrassDimmer = item.HdrGrassDimmer.EqualsWithin(rhs.HdrGrassDimmer);
+            ret.HdrTreeDimmer = item.HdrTreeDimmer.EqualsWithin(rhs.HdrTreeDimmer);
+            ret.WindSpeed = item.WindSpeed == rhs.WindSpeed;
+            ret.CloudSpeedLower = item.CloudSpeedLower == rhs.CloudSpeedLower;
+            ret.CloudSpeedUpper = item.CloudSpeedUpper == rhs.CloudSpeedUpper;
+            ret.TransDelta = item.TransDelta == rhs.TransDelta;
+            ret.SunGlare = item.SunGlare == rhs.SunGlare;
+            ret.SunDamage = item.SunDamage == rhs.SunDamage;
+            ret.PrecipitationBeginFadeIn = item.PrecipitationBeginFadeIn == rhs.PrecipitationBeginFadeIn;
+            ret.PrecipitationEndFadeOut = item.PrecipitationEndFadeOut == rhs.PrecipitationEndFadeOut;
+            ret.ThunderLightningBeginFadeIn = item.ThunderLightningBeginFadeIn == rhs.ThunderLightningBeginFadeIn;
+            ret.ThunderLightningEndFadeOut = item.ThunderLightningEndFadeOut == rhs.ThunderLightningEndFadeOut;
+            ret.ThunderLightningFrequency = item.ThunderLightningFrequency == rhs.ThunderLightningFrequency;
+            ret.Classification = item.Classification == rhs.Classification;
+            ret.LightningColor = item.LightningColor.ColorOnlyEquals(rhs.LightningColor);
+            ret.Sounds = item.Sounds.CollectionEqualsHelper(
+                rhs.Sounds,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            base.FillEqualsMask(item, rhs, ret, include);
+        }
+        
+        public string ToString(
+            IWeatherInternalGetter item,
+            string name = null,
+            Weather_Mask<bool> printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+            return fg.ToString();
+        }
+        
+        public void ToString(
+            IWeatherInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            Weather_Mask<bool> printMask = null)
+        {
+            if (name == null)
+            {
+                fg.AppendLine($"Weather =>");
+            }
+            else
+            {
+                fg.AppendLine($"{name} (Weather) =>");
+            }
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
+            }
+            fg.AppendLine("]");
+        }
+        
+        protected static void ToStringFields(
+            IWeatherInternalGetter item,
+            FileGeneration fg,
+            Weather_Mask<bool> printMask = null)
+        {
+            OblivionMajorRecordCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.TextureLowerLayer ?? true)
+            {
+                fg.AppendLine($"TextureLowerLayer => {item.TextureLowerLayer}");
+            }
+            if (printMask?.TextureUpperLayer ?? true)
+            {
+                fg.AppendLine($"TextureUpperLayer => {item.TextureUpperLayer}");
+            }
+            if (printMask?.Model?.Overall ?? true)
+            {
+                item.Model?.ToString(fg, "Model");
+            }
+            if (printMask?.WeatherTypes?.Overall ?? true)
+            {
+                fg.AppendLine("WeatherTypes =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.WeatherTypes)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.FogDayNear ?? true)
+            {
+                fg.AppendLine($"FogDayNear => {item.FogDayNear}");
+            }
+            if (printMask?.FogDayFar ?? true)
+            {
+                fg.AppendLine($"FogDayFar => {item.FogDayFar}");
+            }
+            if (printMask?.FogNightNear ?? true)
+            {
+                fg.AppendLine($"FogNightNear => {item.FogNightNear}");
+            }
+            if (printMask?.FogNightFar ?? true)
+            {
+                fg.AppendLine($"FogNightFar => {item.FogNightFar}");
+            }
+            if (printMask?.HdrEyeAdaptSpeed ?? true)
+            {
+                fg.AppendLine($"HdrEyeAdaptSpeed => {item.HdrEyeAdaptSpeed}");
+            }
+            if (printMask?.HdrBlurRadius ?? true)
+            {
+                fg.AppendLine($"HdrBlurRadius => {item.HdrBlurRadius}");
+            }
+            if (printMask?.HdrBlurPasses ?? true)
+            {
+                fg.AppendLine($"HdrBlurPasses => {item.HdrBlurPasses}");
+            }
+            if (printMask?.HdrEmissiveMult ?? true)
+            {
+                fg.AppendLine($"HdrEmissiveMult => {item.HdrEmissiveMult}");
+            }
+            if (printMask?.HdrTargetLum ?? true)
+            {
+                fg.AppendLine($"HdrTargetLum => {item.HdrTargetLum}");
+            }
+            if (printMask?.HdrUpperLumClamp ?? true)
+            {
+                fg.AppendLine($"HdrUpperLumClamp => {item.HdrUpperLumClamp}");
+            }
+            if (printMask?.HdrBrightScale ?? true)
+            {
+                fg.AppendLine($"HdrBrightScale => {item.HdrBrightScale}");
+            }
+            if (printMask?.HdrBrightClamp ?? true)
+            {
+                fg.AppendLine($"HdrBrightClamp => {item.HdrBrightClamp}");
+            }
+            if (printMask?.HdrLumRampNoTex ?? true)
+            {
+                fg.AppendLine($"HdrLumRampNoTex => {item.HdrLumRampNoTex}");
+            }
+            if (printMask?.HdrLumRampMin ?? true)
+            {
+                fg.AppendLine($"HdrLumRampMin => {item.HdrLumRampMin}");
+            }
+            if (printMask?.HdrLumRampMax ?? true)
+            {
+                fg.AppendLine($"HdrLumRampMax => {item.HdrLumRampMax}");
+            }
+            if (printMask?.HdrSunlightDimmer ?? true)
+            {
+                fg.AppendLine($"HdrSunlightDimmer => {item.HdrSunlightDimmer}");
+            }
+            if (printMask?.HdrGrassDimmer ?? true)
+            {
+                fg.AppendLine($"HdrGrassDimmer => {item.HdrGrassDimmer}");
+            }
+            if (printMask?.HdrTreeDimmer ?? true)
+            {
+                fg.AppendLine($"HdrTreeDimmer => {item.HdrTreeDimmer}");
+            }
+            if (printMask?.WindSpeed ?? true)
+            {
+                fg.AppendLine($"WindSpeed => {item.WindSpeed}");
+            }
+            if (printMask?.CloudSpeedLower ?? true)
+            {
+                fg.AppendLine($"CloudSpeedLower => {item.CloudSpeedLower}");
+            }
+            if (printMask?.CloudSpeedUpper ?? true)
+            {
+                fg.AppendLine($"CloudSpeedUpper => {item.CloudSpeedUpper}");
+            }
+            if (printMask?.TransDelta ?? true)
+            {
+                fg.AppendLine($"TransDelta => {item.TransDelta}");
+            }
+            if (printMask?.SunGlare ?? true)
+            {
+                fg.AppendLine($"SunGlare => {item.SunGlare}");
+            }
+            if (printMask?.SunDamage ?? true)
+            {
+                fg.AppendLine($"SunDamage => {item.SunDamage}");
+            }
+            if (printMask?.PrecipitationBeginFadeIn ?? true)
+            {
+                fg.AppendLine($"PrecipitationBeginFadeIn => {item.PrecipitationBeginFadeIn}");
+            }
+            if (printMask?.PrecipitationEndFadeOut ?? true)
+            {
+                fg.AppendLine($"PrecipitationEndFadeOut => {item.PrecipitationEndFadeOut}");
+            }
+            if (printMask?.ThunderLightningBeginFadeIn ?? true)
+            {
+                fg.AppendLine($"ThunderLightningBeginFadeIn => {item.ThunderLightningBeginFadeIn}");
+            }
+            if (printMask?.ThunderLightningEndFadeOut ?? true)
+            {
+                fg.AppendLine($"ThunderLightningEndFadeOut => {item.ThunderLightningEndFadeOut}");
+            }
+            if (printMask?.ThunderLightningFrequency ?? true)
+            {
+                fg.AppendLine($"ThunderLightningFrequency => {item.ThunderLightningFrequency}");
+            }
+            if (printMask?.Classification ?? true)
+            {
+                fg.AppendLine($"Classification => {item.Classification}");
+            }
+            if (printMask?.LightningColor ?? true)
+            {
+                fg.AppendLine($"LightningColor => {item.LightningColor}");
+            }
+            if (printMask?.Sounds?.Overall ?? true)
+            {
+                fg.AppendLine("Sounds =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Sounds)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.FNAMDataTypeState ?? true)
+            {
+            }
+            if (printMask?.HNAMDataTypeState ?? true)
+            {
+            }
+            if (printMask?.DATADataTypeState ?? true)
+            {
+            }
+        }
+        
+        public bool HasBeenSet(
+            IWeatherInternalGetter item,
+            Weather_Mask<bool?> checkMask)
+        {
+            if (checkMask.TextureLowerLayer.HasValue && checkMask.TextureLowerLayer.Value != item.TextureLowerLayer_IsSet) return false;
+            if (checkMask.TextureUpperLayer.HasValue && checkMask.TextureUpperLayer.Value != item.TextureUpperLayer_IsSet) return false;
+            if (checkMask.Model.Overall.HasValue && checkMask.Model.Overall.Value != item.Model_IsSet) return false;
+            if (checkMask.Model.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
+            if (checkMask.WeatherTypes.Overall.HasValue && checkMask.WeatherTypes.Overall.Value != item.WeatherTypes.HasBeenSet) return false;
+            if (checkMask.Sounds.Overall.HasValue && checkMask.Sounds.Overall.Value != item.Sounds.HasBeenSet) return false;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+        
+        public void FillHasBeenSetMask(
+            IWeatherInternalGetter item,
+            Weather_Mask<bool> mask)
+        {
+            mask.TextureLowerLayer = item.TextureLowerLayer_IsSet;
+            mask.TextureUpperLayer = item.TextureUpperLayer_IsSet;
+            mask.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, item.Model.GetHasBeenSetMask());
+            mask.WeatherTypes = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, WeatherType_Mask<bool>>>>(item.WeatherTypes.HasBeenSet, item.WeatherTypes.WithIndex().Select((i) => new MaskItemIndexed<bool, WeatherType_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.FogDayNear = true;
+            mask.FogDayFar = true;
+            mask.FogNightNear = true;
+            mask.FogNightFar = true;
+            mask.HdrEyeAdaptSpeed = true;
+            mask.HdrBlurRadius = true;
+            mask.HdrBlurPasses = true;
+            mask.HdrEmissiveMult = true;
+            mask.HdrTargetLum = true;
+            mask.HdrUpperLumClamp = true;
+            mask.HdrBrightScale = true;
+            mask.HdrBrightClamp = true;
+            mask.HdrLumRampNoTex = true;
+            mask.HdrLumRampMin = true;
+            mask.HdrLumRampMax = true;
+            mask.HdrSunlightDimmer = true;
+            mask.HdrGrassDimmer = true;
+            mask.HdrTreeDimmer = true;
+            mask.WindSpeed = true;
+            mask.CloudSpeedLower = true;
+            mask.CloudSpeedUpper = true;
+            mask.TransDelta = true;
+            mask.SunGlare = true;
+            mask.SunDamage = true;
+            mask.PrecipitationBeginFadeIn = true;
+            mask.PrecipitationEndFadeOut = true;
+            mask.ThunderLightningBeginFadeIn = true;
+            mask.ThunderLightningEndFadeOut = true;
+            mask.ThunderLightningFrequency = true;
+            mask.Classification = true;
+            mask.LightningColor = true;
+            mask.Sounds = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, WeatherSound_Mask<bool>>>>(item.Sounds.HasBeenSet, item.Sounds.WithIndex().Select((i) => new MaskItemIndexed<bool, WeatherSound_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.FNAMDataTypeState = true;
+            mask.HNAMDataTypeState = true;
+            mask.DATADataTypeState = true;
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
+        }
+        
+        public static Weather_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (Weather_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.FormKey:
+                    return (Weather_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.Version:
+                    return (Weather_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.EditorID:
+                    return (Weather_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
+                    return (Weather_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        public static Weather_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (Weather_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.FormKey:
+                    return (Weather_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.Version:
+                    return (Weather_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.EditorID:
+                    return (Weather_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        #region Equals and Hash
+        public virtual bool Equals(
+            IWeatherInternalGetter lhs,
+            IWeatherInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.TextureLowerLayer_IsSet != rhs.TextureLowerLayer_IsSet) return false;
+            if (lhs.TextureLowerLayer_IsSet)
+            {
+                if (!string.Equals(lhs.TextureLowerLayer, rhs.TextureLowerLayer)) return false;
+            }
+            if (lhs.TextureUpperLayer_IsSet != rhs.TextureUpperLayer_IsSet) return false;
+            if (lhs.TextureUpperLayer_IsSet)
+            {
+                if (!string.Equals(lhs.TextureUpperLayer, rhs.TextureUpperLayer)) return false;
+            }
+            if (lhs.Model_IsSet != rhs.Model_IsSet) return false;
+            if (lhs.Model_IsSet)
+            {
+                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            }
+            if (lhs.WeatherTypes.HasBeenSet != rhs.WeatherTypes.HasBeenSet) return false;
+            if (lhs.WeatherTypes.HasBeenSet)
+            {
+                if (!lhs.WeatherTypes.SequenceEqual(rhs.WeatherTypes)) return false;
+            }
+            if (!lhs.FogDayNear.EqualsWithin(rhs.FogDayNear)) return false;
+            if (!lhs.FogDayFar.EqualsWithin(rhs.FogDayFar)) return false;
+            if (!lhs.FogNightNear.EqualsWithin(rhs.FogNightNear)) return false;
+            if (!lhs.FogNightFar.EqualsWithin(rhs.FogNightFar)) return false;
+            if (!lhs.HdrEyeAdaptSpeed.EqualsWithin(rhs.HdrEyeAdaptSpeed)) return false;
+            if (!lhs.HdrBlurRadius.EqualsWithin(rhs.HdrBlurRadius)) return false;
+            if (!lhs.HdrBlurPasses.EqualsWithin(rhs.HdrBlurPasses)) return false;
+            if (!lhs.HdrEmissiveMult.EqualsWithin(rhs.HdrEmissiveMult)) return false;
+            if (!lhs.HdrTargetLum.EqualsWithin(rhs.HdrTargetLum)) return false;
+            if (!lhs.HdrUpperLumClamp.EqualsWithin(rhs.HdrUpperLumClamp)) return false;
+            if (!lhs.HdrBrightScale.EqualsWithin(rhs.HdrBrightScale)) return false;
+            if (!lhs.HdrBrightClamp.EqualsWithin(rhs.HdrBrightClamp)) return false;
+            if (!lhs.HdrLumRampNoTex.EqualsWithin(rhs.HdrLumRampNoTex)) return false;
+            if (!lhs.HdrLumRampMin.EqualsWithin(rhs.HdrLumRampMin)) return false;
+            if (!lhs.HdrLumRampMax.EqualsWithin(rhs.HdrLumRampMax)) return false;
+            if (!lhs.HdrSunlightDimmer.EqualsWithin(rhs.HdrSunlightDimmer)) return false;
+            if (!lhs.HdrGrassDimmer.EqualsWithin(rhs.HdrGrassDimmer)) return false;
+            if (!lhs.HdrTreeDimmer.EqualsWithin(rhs.HdrTreeDimmer)) return false;
+            if (lhs.WindSpeed != rhs.WindSpeed) return false;
+            if (lhs.CloudSpeedLower != rhs.CloudSpeedLower) return false;
+            if (lhs.CloudSpeedUpper != rhs.CloudSpeedUpper) return false;
+            if (lhs.TransDelta != rhs.TransDelta) return false;
+            if (lhs.SunGlare != rhs.SunGlare) return false;
+            if (lhs.SunDamage != rhs.SunDamage) return false;
+            if (lhs.PrecipitationBeginFadeIn != rhs.PrecipitationBeginFadeIn) return false;
+            if (lhs.PrecipitationEndFadeOut != rhs.PrecipitationEndFadeOut) return false;
+            if (lhs.ThunderLightningBeginFadeIn != rhs.ThunderLightningBeginFadeIn) return false;
+            if (lhs.ThunderLightningEndFadeOut != rhs.ThunderLightningEndFadeOut) return false;
+            if (lhs.ThunderLightningFrequency != rhs.ThunderLightningFrequency) return false;
+            if (lhs.Classification != rhs.Classification) return false;
+            if (!lhs.LightningColor.ColorOnlyEquals(rhs.LightningColor)) return false;
+            if (lhs.Sounds.HasBeenSet != rhs.Sounds.HasBeenSet) return false;
+            if (lhs.Sounds.HasBeenSet)
+            {
+                if (!lhs.Sounds.SequenceEqual(rhs.Sounds)) return false;
+            }
+            if (lhs.FNAMDataTypeState != rhs.FNAMDataTypeState) return false;
+            if (lhs.HNAMDataTypeState != rhs.HNAMDataTypeState) return false;
+            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            return true;
+        }
+        
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IWeatherInternalGetter)lhs,
+                rhs: rhs as IWeatherInternalGetter);
+        }
+        
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IWeatherInternalGetter)lhs,
+                rhs: rhs as IWeatherInternalGetter);
+        }
+        
+        public virtual int GetHashCode(IWeatherInternalGetter item)
+        {
+            int ret = 0;
+            if (item.TextureLowerLayer_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.TextureLowerLayer).CombineHashCode(ret);
+            }
+            if (item.TextureUpperLayer_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.TextureUpperLayer).CombineHashCode(ret);
+            }
+            if (item.Model_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Model).CombineHashCode(ret);
+            }
+            if (item.WeatherTypes.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.WeatherTypes).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.FogDayNear).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.FogDayFar).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.FogNightNear).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.FogNightFar).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.HdrEyeAdaptSpeed).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.HdrBlurRadius).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.HdrBlurPasses).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.HdrEmissiveMult).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.HdrTargetLum).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.HdrUpperLumClamp).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.HdrBrightScale).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.HdrBrightClamp).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.HdrLumRampNoTex).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.HdrLumRampMin).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.HdrLumRampMax).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.HdrSunlightDimmer).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.HdrGrassDimmer).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.HdrTreeDimmer).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.WindSpeed).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.CloudSpeedLower).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.CloudSpeedUpper).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.TransDelta).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.SunGlare).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.SunDamage).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.PrecipitationBeginFadeIn).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.PrecipitationEndFadeOut).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.ThunderLightningBeginFadeIn).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.ThunderLightningEndFadeOut).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.ThunderLightningFrequency).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Classification).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.LightningColor).CombineHashCode(ret);
+            if (item.Sounds.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Sounds).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.FNAMDataTypeState).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.HNAMDataTypeState).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.DATADataTypeState).CombineHashCode(ret);
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+        
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IWeatherInternalGetter)item);
+        }
+        
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IWeatherInternalGetter)item);
+        }
+        
+        #endregion
+        
+        
+        #region Mutagen
+        partial void PostDuplicate(Weather obj, Weather rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+        
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new Weather(getNextFormKey());
+            ret.CopyFieldsFrom((Weather)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (Weather)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+        
+        #endregion
+        
+        
+    }
+    public partial class WeatherSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
+    {
+        public new static readonly WeatherSetterCopyCommon Instance = new WeatherSetterCopyCommon();
 
         #region Copy Fields From
         public static void CopyFieldsFrom(
@@ -2746,7 +3408,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             Weather_CopyMask copyMask)
         {
-            OblivionMajorRecordCommon.CopyFieldsFrom(
+            OblivionMajorRecordSetterCopyCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -2830,7 +3492,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             case CopyOption.Reference:
                                 throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
-                                ModelCommon.CopyFieldsFrom(
+                                ModelSetterCopyCommon.CopyFieldsFrom(
                                     item: item.Model,
                                     rhs: rhs.Model,
                                     def: def?.Model,
@@ -3460,641 +4122,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
         }
-
+        
         #endregion
-
-        partial void ClearPartial();
-
-        public virtual void Clear(IWeatherInternal item)
-        {
-            ClearPartial();
-            item.TextureLowerLayer_Unset();
-            item.TextureUpperLayer_Unset();
-            item.Model_Unset();
-            item.WeatherTypes.Unset();
-            item.FogDayNear = default(Single);
-            item.FogDayFar = default(Single);
-            item.FogNightNear = default(Single);
-            item.FogNightFar = default(Single);
-            item.HdrEyeAdaptSpeed = default(Single);
-            item.HdrBlurRadius = default(Single);
-            item.HdrBlurPasses = default(Single);
-            item.HdrEmissiveMult = default(Single);
-            item.HdrTargetLum = default(Single);
-            item.HdrUpperLumClamp = default(Single);
-            item.HdrBrightScale = default(Single);
-            item.HdrBrightClamp = default(Single);
-            item.HdrLumRampNoTex = default(Single);
-            item.HdrLumRampMin = default(Single);
-            item.HdrLumRampMax = default(Single);
-            item.HdrSunlightDimmer = default(Single);
-            item.HdrGrassDimmer = default(Single);
-            item.HdrTreeDimmer = default(Single);
-            item.WindSpeed = default(Byte);
-            item.CloudSpeedLower = default(Byte);
-            item.CloudSpeedUpper = default(Byte);
-            item.TransDelta = default(Byte);
-            item.SunGlare = default(Byte);
-            item.SunDamage = default(Byte);
-            item.PrecipitationBeginFadeIn = default(Byte);
-            item.PrecipitationEndFadeOut = default(Byte);
-            item.ThunderLightningBeginFadeIn = default(Byte);
-            item.ThunderLightningEndFadeOut = default(Byte);
-            item.ThunderLightningFrequency = default(Byte);
-            item.Classification = default(Weather.WeatherClassification);
-            item.LightningColor = default(Color);
-            item.Sounds.Unset();
-            base.Clear(item);
-        }
-
-        public override void Clear(IOblivionMajorRecordInternal item)
-        {
-            Clear(item: (IWeatherInternal)item);
-        }
-
-        public override void Clear(IMajorRecordInternal item)
-        {
-            Clear(item: (IWeatherInternal)item);
-        }
-
-        public Weather_Mask<bool> GetEqualsMask(
-            IWeatherInternalGetter item,
-            IWeatherInternalGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new Weather_Mask<bool>();
-            ((WeatherCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public void FillEqualsMask(
-            IWeatherInternalGetter item,
-            IWeatherInternalGetter rhs,
-            Weather_Mask<bool> ret,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            if (rhs == null) return;
-            ret.TextureLowerLayer = item.TextureLowerLayer_IsSet == rhs.TextureLowerLayer_IsSet && string.Equals(item.TextureLowerLayer, rhs.TextureLowerLayer);
-            ret.TextureUpperLayer = item.TextureUpperLayer_IsSet == rhs.TextureUpperLayer_IsSet && string.Equals(item.TextureUpperLayer, rhs.TextureUpperLayer);
-            ret.Model = EqualsMaskHelper.EqualsHelper(
-                item.Model_IsSet,
-                rhs.Model_IsSet,
-                item.Model,
-                rhs.Model,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
-                include);
-            ret.WeatherTypes = item.WeatherTypes.CollectionEqualsHelper(
-                rhs.WeatherTypes,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
-                include);
-            ret.FogDayNear = item.FogDayNear.EqualsWithin(rhs.FogDayNear);
-            ret.FogDayFar = item.FogDayFar.EqualsWithin(rhs.FogDayFar);
-            ret.FogNightNear = item.FogNightNear.EqualsWithin(rhs.FogNightNear);
-            ret.FogNightFar = item.FogNightFar.EqualsWithin(rhs.FogNightFar);
-            ret.HdrEyeAdaptSpeed = item.HdrEyeAdaptSpeed.EqualsWithin(rhs.HdrEyeAdaptSpeed);
-            ret.HdrBlurRadius = item.HdrBlurRadius.EqualsWithin(rhs.HdrBlurRadius);
-            ret.HdrBlurPasses = item.HdrBlurPasses.EqualsWithin(rhs.HdrBlurPasses);
-            ret.HdrEmissiveMult = item.HdrEmissiveMult.EqualsWithin(rhs.HdrEmissiveMult);
-            ret.HdrTargetLum = item.HdrTargetLum.EqualsWithin(rhs.HdrTargetLum);
-            ret.HdrUpperLumClamp = item.HdrUpperLumClamp.EqualsWithin(rhs.HdrUpperLumClamp);
-            ret.HdrBrightScale = item.HdrBrightScale.EqualsWithin(rhs.HdrBrightScale);
-            ret.HdrBrightClamp = item.HdrBrightClamp.EqualsWithin(rhs.HdrBrightClamp);
-            ret.HdrLumRampNoTex = item.HdrLumRampNoTex.EqualsWithin(rhs.HdrLumRampNoTex);
-            ret.HdrLumRampMin = item.HdrLumRampMin.EqualsWithin(rhs.HdrLumRampMin);
-            ret.HdrLumRampMax = item.HdrLumRampMax.EqualsWithin(rhs.HdrLumRampMax);
-            ret.HdrSunlightDimmer = item.HdrSunlightDimmer.EqualsWithin(rhs.HdrSunlightDimmer);
-            ret.HdrGrassDimmer = item.HdrGrassDimmer.EqualsWithin(rhs.HdrGrassDimmer);
-            ret.HdrTreeDimmer = item.HdrTreeDimmer.EqualsWithin(rhs.HdrTreeDimmer);
-            ret.WindSpeed = item.WindSpeed == rhs.WindSpeed;
-            ret.CloudSpeedLower = item.CloudSpeedLower == rhs.CloudSpeedLower;
-            ret.CloudSpeedUpper = item.CloudSpeedUpper == rhs.CloudSpeedUpper;
-            ret.TransDelta = item.TransDelta == rhs.TransDelta;
-            ret.SunGlare = item.SunGlare == rhs.SunGlare;
-            ret.SunDamage = item.SunDamage == rhs.SunDamage;
-            ret.PrecipitationBeginFadeIn = item.PrecipitationBeginFadeIn == rhs.PrecipitationBeginFadeIn;
-            ret.PrecipitationEndFadeOut = item.PrecipitationEndFadeOut == rhs.PrecipitationEndFadeOut;
-            ret.ThunderLightningBeginFadeIn = item.ThunderLightningBeginFadeIn == rhs.ThunderLightningBeginFadeIn;
-            ret.ThunderLightningEndFadeOut = item.ThunderLightningEndFadeOut == rhs.ThunderLightningEndFadeOut;
-            ret.ThunderLightningFrequency = item.ThunderLightningFrequency == rhs.ThunderLightningFrequency;
-            ret.Classification = item.Classification == rhs.Classification;
-            ret.LightningColor = item.LightningColor.ColorOnlyEquals(rhs.LightningColor);
-            ret.Sounds = item.Sounds.CollectionEqualsHelper(
-                rhs.Sounds,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
-                include);
-            base.FillEqualsMask(item, rhs, ret, include);
-        }
-
-        public string ToString(
-            IWeatherInternalGetter item,
-            string name = null,
-            Weather_Mask<bool> printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(
-                item: item,
-                fg: fg,
-                name: name,
-                printMask: printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(
-            IWeatherInternalGetter item,
-            FileGeneration fg,
-            string name = null,
-            Weather_Mask<bool> printMask = null)
-        {
-            if (name == null)
-            {
-                fg.AppendLine($"Weather =>");
-            }
-            else
-            {
-                fg.AppendLine($"{name} (Weather) =>");
-            }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                ToStringFields(
-                    item: item,
-                    fg: fg,
-                    printMask: printMask);
-            }
-            fg.AppendLine("]");
-        }
-
-        protected static void ToStringFields(
-            IWeatherInternalGetter item,
-            FileGeneration fg,
-            Weather_Mask<bool> printMask = null)
-        {
-            OblivionMajorRecordCommon.ToStringFields(
-                item: item,
-                fg: fg,
-                printMask: printMask);
-            if (printMask?.TextureLowerLayer ?? true)
-            {
-                fg.AppendLine($"TextureLowerLayer => {item.TextureLowerLayer}");
-            }
-            if (printMask?.TextureUpperLayer ?? true)
-            {
-                fg.AppendLine($"TextureUpperLayer => {item.TextureUpperLayer}");
-            }
-            if (printMask?.Model?.Overall ?? true)
-            {
-                item.Model?.ToString(fg, "Model");
-            }
-            if (printMask?.WeatherTypes?.Overall ?? true)
-            {
-                fg.AppendLine("WeatherTypes =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
-                {
-                    foreach (var subItem in item.WeatherTypes)
-                    {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            subItem?.ToString(fg, "Item");
-                        }
-                        fg.AppendLine("]");
-                    }
-                }
-                fg.AppendLine("]");
-            }
-            if (printMask?.FogDayNear ?? true)
-            {
-                fg.AppendLine($"FogDayNear => {item.FogDayNear}");
-            }
-            if (printMask?.FogDayFar ?? true)
-            {
-                fg.AppendLine($"FogDayFar => {item.FogDayFar}");
-            }
-            if (printMask?.FogNightNear ?? true)
-            {
-                fg.AppendLine($"FogNightNear => {item.FogNightNear}");
-            }
-            if (printMask?.FogNightFar ?? true)
-            {
-                fg.AppendLine($"FogNightFar => {item.FogNightFar}");
-            }
-            if (printMask?.HdrEyeAdaptSpeed ?? true)
-            {
-                fg.AppendLine($"HdrEyeAdaptSpeed => {item.HdrEyeAdaptSpeed}");
-            }
-            if (printMask?.HdrBlurRadius ?? true)
-            {
-                fg.AppendLine($"HdrBlurRadius => {item.HdrBlurRadius}");
-            }
-            if (printMask?.HdrBlurPasses ?? true)
-            {
-                fg.AppendLine($"HdrBlurPasses => {item.HdrBlurPasses}");
-            }
-            if (printMask?.HdrEmissiveMult ?? true)
-            {
-                fg.AppendLine($"HdrEmissiveMult => {item.HdrEmissiveMult}");
-            }
-            if (printMask?.HdrTargetLum ?? true)
-            {
-                fg.AppendLine($"HdrTargetLum => {item.HdrTargetLum}");
-            }
-            if (printMask?.HdrUpperLumClamp ?? true)
-            {
-                fg.AppendLine($"HdrUpperLumClamp => {item.HdrUpperLumClamp}");
-            }
-            if (printMask?.HdrBrightScale ?? true)
-            {
-                fg.AppendLine($"HdrBrightScale => {item.HdrBrightScale}");
-            }
-            if (printMask?.HdrBrightClamp ?? true)
-            {
-                fg.AppendLine($"HdrBrightClamp => {item.HdrBrightClamp}");
-            }
-            if (printMask?.HdrLumRampNoTex ?? true)
-            {
-                fg.AppendLine($"HdrLumRampNoTex => {item.HdrLumRampNoTex}");
-            }
-            if (printMask?.HdrLumRampMin ?? true)
-            {
-                fg.AppendLine($"HdrLumRampMin => {item.HdrLumRampMin}");
-            }
-            if (printMask?.HdrLumRampMax ?? true)
-            {
-                fg.AppendLine($"HdrLumRampMax => {item.HdrLumRampMax}");
-            }
-            if (printMask?.HdrSunlightDimmer ?? true)
-            {
-                fg.AppendLine($"HdrSunlightDimmer => {item.HdrSunlightDimmer}");
-            }
-            if (printMask?.HdrGrassDimmer ?? true)
-            {
-                fg.AppendLine($"HdrGrassDimmer => {item.HdrGrassDimmer}");
-            }
-            if (printMask?.HdrTreeDimmer ?? true)
-            {
-                fg.AppendLine($"HdrTreeDimmer => {item.HdrTreeDimmer}");
-            }
-            if (printMask?.WindSpeed ?? true)
-            {
-                fg.AppendLine($"WindSpeed => {item.WindSpeed}");
-            }
-            if (printMask?.CloudSpeedLower ?? true)
-            {
-                fg.AppendLine($"CloudSpeedLower => {item.CloudSpeedLower}");
-            }
-            if (printMask?.CloudSpeedUpper ?? true)
-            {
-                fg.AppendLine($"CloudSpeedUpper => {item.CloudSpeedUpper}");
-            }
-            if (printMask?.TransDelta ?? true)
-            {
-                fg.AppendLine($"TransDelta => {item.TransDelta}");
-            }
-            if (printMask?.SunGlare ?? true)
-            {
-                fg.AppendLine($"SunGlare => {item.SunGlare}");
-            }
-            if (printMask?.SunDamage ?? true)
-            {
-                fg.AppendLine($"SunDamage => {item.SunDamage}");
-            }
-            if (printMask?.PrecipitationBeginFadeIn ?? true)
-            {
-                fg.AppendLine($"PrecipitationBeginFadeIn => {item.PrecipitationBeginFadeIn}");
-            }
-            if (printMask?.PrecipitationEndFadeOut ?? true)
-            {
-                fg.AppendLine($"PrecipitationEndFadeOut => {item.PrecipitationEndFadeOut}");
-            }
-            if (printMask?.ThunderLightningBeginFadeIn ?? true)
-            {
-                fg.AppendLine($"ThunderLightningBeginFadeIn => {item.ThunderLightningBeginFadeIn}");
-            }
-            if (printMask?.ThunderLightningEndFadeOut ?? true)
-            {
-                fg.AppendLine($"ThunderLightningEndFadeOut => {item.ThunderLightningEndFadeOut}");
-            }
-            if (printMask?.ThunderLightningFrequency ?? true)
-            {
-                fg.AppendLine($"ThunderLightningFrequency => {item.ThunderLightningFrequency}");
-            }
-            if (printMask?.Classification ?? true)
-            {
-                fg.AppendLine($"Classification => {item.Classification}");
-            }
-            if (printMask?.LightningColor ?? true)
-            {
-                fg.AppendLine($"LightningColor => {item.LightningColor}");
-            }
-            if (printMask?.Sounds?.Overall ?? true)
-            {
-                fg.AppendLine("Sounds =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
-                {
-                    foreach (var subItem in item.Sounds)
-                    {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            subItem?.ToString(fg, "Item");
-                        }
-                        fg.AppendLine("]");
-                    }
-                }
-                fg.AppendLine("]");
-            }
-            if (printMask?.FNAMDataTypeState ?? true)
-            {
-            }
-            if (printMask?.HNAMDataTypeState ?? true)
-            {
-            }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-            }
-        }
-
-        public bool HasBeenSet(
-            IWeatherInternalGetter item,
-            Weather_Mask<bool?> checkMask)
-        {
-            if (checkMask.TextureLowerLayer.HasValue && checkMask.TextureLowerLayer.Value != item.TextureLowerLayer_IsSet) return false;
-            if (checkMask.TextureUpperLayer.HasValue && checkMask.TextureUpperLayer.Value != item.TextureUpperLayer_IsSet) return false;
-            if (checkMask.Model.Overall.HasValue && checkMask.Model.Overall.Value != item.Model_IsSet) return false;
-            if (checkMask.Model.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
-            if (checkMask.WeatherTypes.Overall.HasValue && checkMask.WeatherTypes.Overall.Value != item.WeatherTypes.HasBeenSet) return false;
-            if (checkMask.Sounds.Overall.HasValue && checkMask.Sounds.Overall.Value != item.Sounds.HasBeenSet) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public void FillHasBeenSetMask(
-            IWeatherInternalGetter item,
-            Weather_Mask<bool> mask)
-        {
-            mask.TextureLowerLayer = item.TextureLowerLayer_IsSet;
-            mask.TextureUpperLayer = item.TextureUpperLayer_IsSet;
-            mask.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, item.Model.GetHasBeenSetMask());
-            mask.WeatherTypes = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, WeatherType_Mask<bool>>>>(item.WeatherTypes.HasBeenSet, item.WeatherTypes.WithIndex().Select((i) => new MaskItemIndexed<bool, WeatherType_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.FogDayNear = true;
-            mask.FogDayFar = true;
-            mask.FogNightNear = true;
-            mask.FogNightFar = true;
-            mask.HdrEyeAdaptSpeed = true;
-            mask.HdrBlurRadius = true;
-            mask.HdrBlurPasses = true;
-            mask.HdrEmissiveMult = true;
-            mask.HdrTargetLum = true;
-            mask.HdrUpperLumClamp = true;
-            mask.HdrBrightScale = true;
-            mask.HdrBrightClamp = true;
-            mask.HdrLumRampNoTex = true;
-            mask.HdrLumRampMin = true;
-            mask.HdrLumRampMax = true;
-            mask.HdrSunlightDimmer = true;
-            mask.HdrGrassDimmer = true;
-            mask.HdrTreeDimmer = true;
-            mask.WindSpeed = true;
-            mask.CloudSpeedLower = true;
-            mask.CloudSpeedUpper = true;
-            mask.TransDelta = true;
-            mask.SunGlare = true;
-            mask.SunDamage = true;
-            mask.PrecipitationBeginFadeIn = true;
-            mask.PrecipitationEndFadeOut = true;
-            mask.ThunderLightningBeginFadeIn = true;
-            mask.ThunderLightningEndFadeOut = true;
-            mask.ThunderLightningFrequency = true;
-            mask.Classification = true;
-            mask.LightningColor = true;
-            mask.Sounds = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, WeatherSound_Mask<bool>>>>(item.Sounds.HasBeenSet, item.Sounds.WithIndex().Select((i) => new MaskItemIndexed<bool, WeatherSound_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.FNAMDataTypeState = true;
-            mask.HNAMDataTypeState = true;
-            mask.DATADataTypeState = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-
-        public static Weather_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
-        {
-            switch (index)
-            {
-                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Weather_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.FormKey:
-                    return (Weather_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.Version:
-                    return (Weather_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.EditorID:
-                    return (Weather_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
-                    return (Weather_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        public static Weather_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
-        {
-            switch (index)
-            {
-                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Weather_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.FormKey:
-                    return (Weather_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
-                    return (Weather_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.EditorID:
-                    return (Weather_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        #region Equals and Hash
-        public virtual bool Equals(
-            IWeatherInternalGetter lhs,
-            IWeatherInternalGetter rhs)
-        {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (lhs.TextureLowerLayer_IsSet != rhs.TextureLowerLayer_IsSet) return false;
-            if (lhs.TextureLowerLayer_IsSet)
-            {
-                if (!string.Equals(lhs.TextureLowerLayer, rhs.TextureLowerLayer)) return false;
-            }
-            if (lhs.TextureUpperLayer_IsSet != rhs.TextureUpperLayer_IsSet) return false;
-            if (lhs.TextureUpperLayer_IsSet)
-            {
-                if (!string.Equals(lhs.TextureUpperLayer, rhs.TextureUpperLayer)) return false;
-            }
-            if (lhs.Model_IsSet != rhs.Model_IsSet) return false;
-            if (lhs.Model_IsSet)
-            {
-                if (!object.Equals(lhs.Model, rhs.Model)) return false;
-            }
-            if (lhs.WeatherTypes.HasBeenSet != rhs.WeatherTypes.HasBeenSet) return false;
-            if (lhs.WeatherTypes.HasBeenSet)
-            {
-                if (!lhs.WeatherTypes.SequenceEqual(rhs.WeatherTypes)) return false;
-            }
-            if (!lhs.FogDayNear.EqualsWithin(rhs.FogDayNear)) return false;
-            if (!lhs.FogDayFar.EqualsWithin(rhs.FogDayFar)) return false;
-            if (!lhs.FogNightNear.EqualsWithin(rhs.FogNightNear)) return false;
-            if (!lhs.FogNightFar.EqualsWithin(rhs.FogNightFar)) return false;
-            if (!lhs.HdrEyeAdaptSpeed.EqualsWithin(rhs.HdrEyeAdaptSpeed)) return false;
-            if (!lhs.HdrBlurRadius.EqualsWithin(rhs.HdrBlurRadius)) return false;
-            if (!lhs.HdrBlurPasses.EqualsWithin(rhs.HdrBlurPasses)) return false;
-            if (!lhs.HdrEmissiveMult.EqualsWithin(rhs.HdrEmissiveMult)) return false;
-            if (!lhs.HdrTargetLum.EqualsWithin(rhs.HdrTargetLum)) return false;
-            if (!lhs.HdrUpperLumClamp.EqualsWithin(rhs.HdrUpperLumClamp)) return false;
-            if (!lhs.HdrBrightScale.EqualsWithin(rhs.HdrBrightScale)) return false;
-            if (!lhs.HdrBrightClamp.EqualsWithin(rhs.HdrBrightClamp)) return false;
-            if (!lhs.HdrLumRampNoTex.EqualsWithin(rhs.HdrLumRampNoTex)) return false;
-            if (!lhs.HdrLumRampMin.EqualsWithin(rhs.HdrLumRampMin)) return false;
-            if (!lhs.HdrLumRampMax.EqualsWithin(rhs.HdrLumRampMax)) return false;
-            if (!lhs.HdrSunlightDimmer.EqualsWithin(rhs.HdrSunlightDimmer)) return false;
-            if (!lhs.HdrGrassDimmer.EqualsWithin(rhs.HdrGrassDimmer)) return false;
-            if (!lhs.HdrTreeDimmer.EqualsWithin(rhs.HdrTreeDimmer)) return false;
-            if (lhs.WindSpeed != rhs.WindSpeed) return false;
-            if (lhs.CloudSpeedLower != rhs.CloudSpeedLower) return false;
-            if (lhs.CloudSpeedUpper != rhs.CloudSpeedUpper) return false;
-            if (lhs.TransDelta != rhs.TransDelta) return false;
-            if (lhs.SunGlare != rhs.SunGlare) return false;
-            if (lhs.SunDamage != rhs.SunDamage) return false;
-            if (lhs.PrecipitationBeginFadeIn != rhs.PrecipitationBeginFadeIn) return false;
-            if (lhs.PrecipitationEndFadeOut != rhs.PrecipitationEndFadeOut) return false;
-            if (lhs.ThunderLightningBeginFadeIn != rhs.ThunderLightningBeginFadeIn) return false;
-            if (lhs.ThunderLightningEndFadeOut != rhs.ThunderLightningEndFadeOut) return false;
-            if (lhs.ThunderLightningFrequency != rhs.ThunderLightningFrequency) return false;
-            if (lhs.Classification != rhs.Classification) return false;
-            if (!lhs.LightningColor.ColorOnlyEquals(rhs.LightningColor)) return false;
-            if (lhs.Sounds.HasBeenSet != rhs.Sounds.HasBeenSet) return false;
-            if (lhs.Sounds.HasBeenSet)
-            {
-                if (!lhs.Sounds.SequenceEqual(rhs.Sounds)) return false;
-            }
-            if (lhs.FNAMDataTypeState != rhs.FNAMDataTypeState) return false;
-            if (lhs.HNAMDataTypeState != rhs.HNAMDataTypeState) return false;
-            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
-            return true;
-        }
-
-        public override bool Equals(
-            IOblivionMajorRecordInternalGetter lhs,
-            IOblivionMajorRecordInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (IWeatherInternalGetter)lhs,
-                rhs: rhs as IWeatherInternalGetter);
-        }
-
-        public override bool Equals(
-            IMajorRecordInternalGetter lhs,
-            IMajorRecordInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (IWeatherInternalGetter)lhs,
-                rhs: rhs as IWeatherInternalGetter);
-        }
-
-        public virtual int GetHashCode(IWeatherInternalGetter item)
-        {
-            int ret = 0;
-            if (item.TextureLowerLayer_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.TextureLowerLayer).CombineHashCode(ret);
-            }
-            if (item.TextureUpperLayer_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.TextureUpperLayer).CombineHashCode(ret);
-            }
-            if (item.Model_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Model).CombineHashCode(ret);
-            }
-            if (item.WeatherTypes.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.WeatherTypes).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(item.FogDayNear).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.FogDayFar).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.FogNightNear).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.FogNightFar).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.HdrEyeAdaptSpeed).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.HdrBlurRadius).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.HdrBlurPasses).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.HdrEmissiveMult).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.HdrTargetLum).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.HdrUpperLumClamp).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.HdrBrightScale).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.HdrBrightClamp).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.HdrLumRampNoTex).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.HdrLumRampMin).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.HdrLumRampMax).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.HdrSunlightDimmer).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.HdrGrassDimmer).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.HdrTreeDimmer).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.WindSpeed).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.CloudSpeedLower).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.CloudSpeedUpper).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.TransDelta).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.SunGlare).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.SunDamage).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.PrecipitationBeginFadeIn).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.PrecipitationEndFadeOut).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.ThunderLightningBeginFadeIn).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.ThunderLightningEndFadeOut).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.ThunderLightningFrequency).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Classification).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.LightningColor).CombineHashCode(ret);
-            if (item.Sounds.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.Sounds).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(item.FNAMDataTypeState).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.HNAMDataTypeState).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.DATADataTypeState).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
-        {
-            return GetHashCode(item: (IWeatherInternalGetter)item);
-        }
-
-        public override int GetHashCode(IMajorRecordInternalGetter item)
-        {
-            return GetHashCode(item: (IWeatherInternalGetter)item);
-        }
-
-        #endregion
-
-
-        #region Mutagen
-        partial void PostDuplicate(Weather obj, Weather rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new Weather(getNextFormKey());
-            ret.CopyFieldsFrom((Weather)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (Weather)item, getNextFormKey, duplicatedRecords);
-            return ret;
-        }
-
-        #endregion
-
+        
+        
     }
     #endregion
 
@@ -4152,14 +4183,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.WeatherTypes.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Weather_FieldIndex.WeatherTypes) ?? true))
             {
-                ListXmlTranslation<IWeatherTypeGetter>.Instance.Write(
+                ListXmlTranslation<IWeatherTypeInternalGetter>.Instance.Write(
                     node: node,
                     name: nameof(item.WeatherTypes),
                     item: item.WeatherTypes,
                     fieldIndex: (int)Weather_FieldIndex.WeatherTypes,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.WeatherTypes),
-                    transl: (XElement subNode, IWeatherTypeGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    transl: (XElement subNode, IWeatherTypeInternalGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         var loquiItem = subItem;
                         ((WeatherTypeXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
@@ -4461,14 +4492,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Sounds.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Weather_FieldIndex.Sounds) ?? true))
             {
-                ListXmlTranslation<IWeatherSoundGetter>.Instance.Write(
+                ListXmlTranslation<IWeatherSoundInternalGetter>.Instance.Write(
                     node: node,
                     name: nameof(item.Sounds),
                     item: item.Sounds,
                     fieldIndex: (int)Weather_FieldIndex.Sounds,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.Sounds),
-                    transl: (XElement subNode, IWeatherSoundGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    transl: (XElement subNode, IWeatherSoundInternalGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         var loquiItem = subItem;
                         ((WeatherSoundXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
@@ -7228,13 +7259,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.WeatherTypes.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<IWeatherTypeGetter>.Instance.Write(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<IWeatherTypeInternalGetter>.Instance.Write(
                     writer: writer,
                     items: item.WeatherTypes,
                     fieldIndex: (int)Weather_FieldIndex.WeatherTypes,
                     recordType: Weather_Registration.NAM0_HEADER,
                     errorMask: errorMask,
-                    transl: (MutagenWriter subWriter, IWeatherTypeGetter subItem, ErrorMaskBuilder listErrorMask) =>
+                    transl: (MutagenWriter subWriter, IWeatherTypeInternalGetter subItem, ErrorMaskBuilder listErrorMask) =>
                     {
                         {
                             var loquiItem = subItem;
@@ -7339,12 +7370,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.Sounds.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<IWeatherSoundGetter>.Instance.Write(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<IWeatherSoundInternalGetter>.Instance.Write(
                     writer: writer,
                     items: item.Sounds,
                     fieldIndex: (int)Weather_FieldIndex.Sounds,
                     errorMask: errorMask,
-                    transl: (MutagenWriter subWriter, IWeatherSoundGetter subItem, ErrorMaskBuilder listErrorMask) =>
+                    transl: (MutagenWriter subWriter, IWeatherSoundInternalGetter subItem, ErrorMaskBuilder listErrorMask) =>
                     {
                         var loquiItem = subItem;
                         ((WeatherSoundBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
@@ -7463,17 +7494,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         OblivionMajorRecordBinaryWrapper,
         IWeatherInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Weather_Registration.Instance;
         public new static Weather_Registration Registration => Weather_Registration.Instance;
-        protected override object CommonInstance => WeatherCommon.Instance;
+        protected override object CommonInstance()
+        {
+            return WeatherCommon.Instance;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWeatherInternalGetter)rhs, include);
 
         protected override object XmlWriteTranslator => WeatherXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((WeatherXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         protected override object BinaryWriteTranslator => WeatherBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((WeatherBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
 
         #region TextureLowerLayer
         private int? _TextureLowerLayerLocation;
@@ -7486,10 +7549,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public String TextureUpperLayer => _TextureUpperLayerLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _TextureUpperLayerLocation.Value, _package.Meta)) : default;
         #endregion
         #region Model
-        public IModelGetter Model { get; private set; }
+        public IModelInternalGetter Model { get; private set; }
         public bool Model_IsSet => Model != null;
         #endregion
-        public IReadOnlySetList<IWeatherTypeGetter> WeatherTypes { get; private set; } = EmptySetList<WeatherTypeBinaryWrapper>.Instance;
+        public IReadOnlySetList<IWeatherTypeInternalGetter> WeatherTypes { get; private set; } = EmptySetList<WeatherTypeBinaryWrapper>.Instance;
         private int? _FNAMLocation;
         public Weather.FNAMDataType FNAMDataTypeState { get; private set; }
         #region FogDayNear
@@ -7607,7 +7670,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private bool _LightningColor_IsSet => _DATALocation.HasValue;
         public Color LightningColor => _LightningColor_IsSet ? _data.Span.Slice(_LightningColorLocation, 3).ReadColor() : default;
         #endregion
-        public IReadOnlySetList<IWeatherSoundGetter> Sounds { get; private set; } = EmptySetList<WeatherSoundBinaryWrapper>.Instance;
+        public IReadOnlySetList<IWeatherSoundInternalGetter> Sounds { get; private set; } = EmptySetList<WeatherSoundBinaryWrapper>.Instance;
         partial void CustomCtor(
             BinaryMemoryReadStream stream,
             long finalPos,
@@ -7737,4 +7800,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class Weather
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Weather_Registration.Instance;
+        public new static Weather_Registration Registration => Weather_Registration.Instance;
+        protected override object CommonInstance()
+        {
+            return WeatherCommon.Instance;
+        }
+        protected override object CommonSetterInstance()
+        {
+            return WeatherSetterCommon.Instance;
+        }
+        protected override object CommonSetterCopyInstance()
+        {
+            return WeatherSetterCopyCommon.Instance;
+        }
+
+        #endregion
+
+    }
 }

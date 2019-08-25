@@ -325,12 +325,12 @@ namespace Mutagen.Bethesda.Oblivion
                             masterReferences: masterReferences,
                             errorMask: errorMask);
                     }
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IWorldspaceBlockGetter>.Instance.Write(
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IWorldspaceBlockInternalGetter>.Instance.Write(
                         writer: writer,
                         items: obj.SubCells,
                         fieldIndex: (int)Worldspace_FieldIndex.SubCells,
                         errorMask: errorMask,
-                        transl: (MutagenWriter subWriter, IWorldspaceBlockGetter subItem, ErrorMaskBuilder listSubMask) =>
+                        transl: (MutagenWriter subWriter, IWorldspaceBlockInternalGetter subItem, ErrorMaskBuilder listSubMask) =>
                         {
                             subItem.WriteToBinary(
                                 writer: subWriter,
@@ -475,7 +475,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             public ReadOnlySpan<byte> SubCellsTimestamp => _grupData != null ? _package.Meta.Group(_grupData.Value).LastModifiedSpan : UtilityTranslation.Zeros.Slice(0, 4);
 
-            public IReadOnlySetList<IWorldspaceBlockGetter> SubCells { get; private set; } = EmptySetList<IWorldspaceBlockGetter>.Instance;
+            public IReadOnlySetList<IWorldspaceBlockInternalGetter> SubCells { get; private set; } = EmptySetList<IWorldspaceBlockInternalGetter>.Instance;
 
             private int? _OffsetLengthLocation;
             public bool UsingOffsetLength => this._OffsetLengthLocation.HasValue;
@@ -551,7 +551,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             break;
                         case 0x50555247: // "GRUP":
-                            this.SubCells = BinaryWrapperSetList<IWorldspaceBlockGetter>.FactoryByArray(
+                            this.SubCells = BinaryWrapperSetList<IWorldspaceBlockInternalGetter>.FactoryByArray(
                                 stream.RemainingMemory,
                                 _package,
                                 getter: (s, p) => WorldspaceBlockBinaryWrapper.WorldspaceBlockFactory(new BinaryMemoryReadStream(s), p),

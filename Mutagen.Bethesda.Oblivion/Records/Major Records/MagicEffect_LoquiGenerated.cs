@@ -45,11 +45,6 @@ namespace Mutagen.Bethesda.Oblivion
         IEquatable<MagicEffect>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => MagicEffect_Registration.Instance;
-        public new static MagicEffect_Registration Registration => MagicEffect_Registration.Instance;
-        protected override object CommonInstance => MagicEffectCommon.Instance;
-
         #region Ctor
         protected MagicEffect()
         {
@@ -161,7 +156,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Model_Set(default(Model), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IModelGetter IMagicEffectGetter.Model => this.Model;
+        IModelInternalGetter IMagicEffectGetter.Model => this.Model;
         #endregion
         #region Flags
         private MagicEffect.MagicFlag _Flags;
@@ -275,7 +270,7 @@ namespace Mutagen.Bethesda.Oblivion
             get => _SubData;
             set => _SubData = value ?? new MagicEffectSubData();
         }
-        IMagicEffectSubDataGetter IMagicEffectGetter.SubData => _SubData;
+        IMagicEffectSubDataInternalGetter IMagicEffectGetter.SubData => _SubData;
         #endregion
         #region CounterEffects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -326,20 +321,33 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IMagicEffectInternalGetter rhs)) return false;
-            return ((MagicEffectCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            return ((MagicEffectCommon)((IMagicEffectInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(MagicEffect obj)
         {
-            return ((MagicEffectCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((MagicEffectCommon)((IMagicEffectInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((MagicEffectCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((MagicEffectCommon)((IMagicEffectInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected override object XmlWriteTranslator => MagicEffectXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((MagicEffectXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static MagicEffect CreateFromXml(
@@ -618,6 +626,19 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Binary Translation
         protected override object BinaryWriteTranslator => MagicEffectBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((MagicEffectBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
         #region Binary Create
         [DebuggerStepThrough]
         public static MagicEffect CreateFromBinary(
@@ -971,7 +992,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            MagicEffectCommon.CopyFieldsFrom(
+            MagicEffectSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -986,7 +1007,7 @@ namespace Mutagen.Bethesda.Oblivion
             MagicEffect_CopyMask copyMask = null,
             MagicEffect def = null)
         {
-            MagicEffectCommon.CopyFieldsFrom(
+            MagicEffectSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -1055,7 +1076,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            MagicEffectCommon.Instance.Clear(this);
+            MagicEffectSetterCommon.Instance.Clear(this);
         }
 
         public new static MagicEffect Create(IEnumerable<KeyValuePair<ushort, object>> fields)
@@ -1220,7 +1241,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Model
-        IModelGetter Model { get; }
+        IModelInternalGetter Model { get; }
         bool Model_IsSet { get; }
 
         #endregion
@@ -1263,7 +1284,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region SubData
-        IMagicEffectSubDataGetter SubData { get; }
+        IMagicEffectSubDataInternalGetter SubData { get; }
 
         #endregion
         #region CounterEffects
@@ -1290,7 +1311,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IMagicEffectInternal item)
         {
-            ((MagicEffectCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((MagicEffectSetterCommon)((IMagicEffectInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static MagicEffect_Mask<bool> GetEqualsMask(
@@ -1298,7 +1319,7 @@ namespace Mutagen.Bethesda.Oblivion
             IMagicEffectInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((MagicEffectCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((MagicEffectCommon)((IMagicEffectInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -1309,7 +1330,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             MagicEffect_Mask<bool> printMask = null)
         {
-            return ((MagicEffectCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((MagicEffectCommon)((IMagicEffectInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -1321,7 +1342,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             MagicEffect_Mask<bool> printMask = null)
         {
-            ((MagicEffectCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((MagicEffectCommon)((IMagicEffectInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -1332,7 +1353,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IMagicEffectInternalGetter item,
             MagicEffect_Mask<bool?> checkMask)
         {
-            return ((MagicEffectCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((MagicEffectCommon)((IMagicEffectInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -1340,7 +1361,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static MagicEffect_Mask<bool> GetHasBeenSetMask(this IMagicEffectInternalGetter item)
         {
             var ret = new MagicEffect_Mask<bool>();
-            ((MagicEffectCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((MagicEffectCommon)((IMagicEffectInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -1350,7 +1371,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IMagicEffectInternalGetter item,
             IMagicEffectInternalGetter rhs)
         {
-            return ((MagicEffectCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((MagicEffectCommon)((IMagicEffectInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1420,8 +1441,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type SetterType = typeof(IMagicEffect);
 
         public static readonly Type InternalSetterType = typeof(IMagicEffectInternal);
-
-        public static readonly Type CommonType = typeof(MagicEffectCommon);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.MagicEffect";
 
@@ -1720,7 +1739,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -1740,9 +1758,435 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
+    public partial class MagicEffectSetterCommon : OblivionMajorRecordSetterCommon
+    {
+        public new static readonly MagicEffectSetterCommon Instance = new MagicEffectSetterCommon();
+
+        partial void ClearPartial();
+        
+        public virtual void Clear(IMagicEffectInternal item)
+        {
+            ClearPartial();
+            item.Name_Unset();
+            item.Description_Unset();
+            item.Icon_Unset();
+            item.Model_Unset();
+            item.Flags = default(MagicEffect.MagicFlag);
+            item.BaseCost = default(Single);
+            item.Unused = default(Byte[]);
+            item.MagicSchool = default(MagicSchool);
+            item.Resistance = default(Resistance);
+            item.CounterEffectCount = default(UInt32);
+            item.Light = default(Light);
+            item.ProjectileSpeed = default(Single);
+            item.EffectShader = default(EffectShader);
+            item.SubData = default(MagicEffectSubData);
+            item.CounterEffects.Unset();
+            base.Clear(item);
+        }
+        
+        public override void Clear(IOblivionMajorRecordInternal item)
+        {
+            Clear(item: (IMagicEffectInternal)item);
+        }
+        
+        public override void Clear(IMajorRecordInternal item)
+        {
+            Clear(item: (IMagicEffectInternal)item);
+        }
+        
+        
+    }
     public partial class MagicEffectCommon : OblivionMajorRecordCommon
     {
-        public static readonly MagicEffectCommon Instance = new MagicEffectCommon();
+        public new static readonly MagicEffectCommon Instance = new MagicEffectCommon();
+
+        public MagicEffect_Mask<bool> GetEqualsMask(
+            IMagicEffectInternalGetter item,
+            IMagicEffectInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new MagicEffect_Mask<bool>();
+            ((MagicEffectCommon)((IMagicEffectInternalGetter)item).CommonInstance()).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+        
+        public void FillEqualsMask(
+            IMagicEffectInternalGetter item,
+            IMagicEffectInternalGetter rhs,
+            MagicEffect_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            if (rhs == null) return;
+            ret.Name = item.Name_IsSet == rhs.Name_IsSet && string.Equals(item.Name, rhs.Name);
+            ret.Description = item.Description_IsSet == rhs.Description_IsSet && string.Equals(item.Description, rhs.Description);
+            ret.Icon = item.Icon_IsSet == rhs.Icon_IsSet && string.Equals(item.Icon, rhs.Icon);
+            ret.Model = EqualsMaskHelper.EqualsHelper(
+                item.Model_IsSet,
+                rhs.Model_IsSet,
+                item.Model,
+                rhs.Model,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.BaseCost = item.BaseCost.EqualsWithin(rhs.BaseCost);
+            ret.Unused = MemoryExtensions.SequenceEqual(item.Unused, rhs.Unused);
+            ret.MagicSchool = item.MagicSchool == rhs.MagicSchool;
+            ret.Resistance = item.Resistance == rhs.Resistance;
+            ret.CounterEffectCount = item.CounterEffectCount == rhs.CounterEffectCount;
+            ret.Light = item.Light_Property.FormKey == rhs.Light_Property.FormKey;
+            ret.ProjectileSpeed = item.ProjectileSpeed.EqualsWithin(rhs.ProjectileSpeed);
+            ret.EffectShader = item.EffectShader_Property.FormKey == rhs.EffectShader_Property.FormKey;
+            ret.SubData = MaskItemExt.Factory(item.SubData.GetEqualsMask(rhs.SubData, include), include);
+            ret.CounterEffects = item.CounterEffects.CollectionEqualsHelper(
+                rhs.CounterEffects,
+                (l, r) => object.Equals(l, r),
+                include);
+            base.FillEqualsMask(item, rhs, ret, include);
+        }
+        
+        public string ToString(
+            IMagicEffectInternalGetter item,
+            string name = null,
+            MagicEffect_Mask<bool> printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+            return fg.ToString();
+        }
+        
+        public void ToString(
+            IMagicEffectInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            MagicEffect_Mask<bool> printMask = null)
+        {
+            if (name == null)
+            {
+                fg.AppendLine($"MagicEffect =>");
+            }
+            else
+            {
+                fg.AppendLine($"{name} (MagicEffect) =>");
+            }
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
+            }
+            fg.AppendLine("]");
+        }
+        
+        protected static void ToStringFields(
+            IMagicEffectInternalGetter item,
+            FileGeneration fg,
+            MagicEffect_Mask<bool> printMask = null)
+        {
+            OblivionMajorRecordCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.Name ?? true)
+            {
+                fg.AppendLine($"Name => {item.Name}");
+            }
+            if (printMask?.Description ?? true)
+            {
+                fg.AppendLine($"Description => {item.Description}");
+            }
+            if (printMask?.Icon ?? true)
+            {
+                fg.AppendLine($"Icon => {item.Icon}");
+            }
+            if (printMask?.Model?.Overall ?? true)
+            {
+                item.Model?.ToString(fg, "Model");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                fg.AppendLine($"Flags => {item.Flags}");
+            }
+            if (printMask?.BaseCost ?? true)
+            {
+                fg.AppendLine($"BaseCost => {item.BaseCost}");
+            }
+            if (printMask?.Unused ?? true)
+            {
+                fg.AppendLine($"Unused => {SpanExt.ToHexString(item.Unused)}");
+            }
+            if (printMask?.MagicSchool ?? true)
+            {
+                fg.AppendLine($"MagicSchool => {item.MagicSchool}");
+            }
+            if (printMask?.Resistance ?? true)
+            {
+                fg.AppendLine($"Resistance => {item.Resistance}");
+            }
+            if (printMask?.CounterEffectCount ?? true)
+            {
+                fg.AppendLine($"CounterEffectCount => {item.CounterEffectCount}");
+            }
+            if (printMask?.Light ?? true)
+            {
+                fg.AppendLine($"Light => {item.Light_Property}");
+            }
+            if (printMask?.ProjectileSpeed ?? true)
+            {
+                fg.AppendLine($"ProjectileSpeed => {item.ProjectileSpeed}");
+            }
+            if (printMask?.EffectShader ?? true)
+            {
+                fg.AppendLine($"EffectShader => {item.EffectShader_Property}");
+            }
+            if (printMask?.SubData?.Overall ?? true)
+            {
+                item.SubData?.ToString(fg, "SubData");
+            }
+            if (printMask?.CounterEffects?.Overall ?? true)
+            {
+                fg.AppendLine("CounterEffects =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.CounterEffects)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"Item => {subItem}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.DATADataTypeState ?? true)
+            {
+            }
+        }
+        
+        public bool HasBeenSet(
+            IMagicEffectInternalGetter item,
+            MagicEffect_Mask<bool?> checkMask)
+        {
+            if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_IsSet) return false;
+            if (checkMask.Description.HasValue && checkMask.Description.Value != item.Description_IsSet) return false;
+            if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_IsSet) return false;
+            if (checkMask.Model.Overall.HasValue && checkMask.Model.Overall.Value != item.Model_IsSet) return false;
+            if (checkMask.Model.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
+            if (checkMask.CounterEffects.Overall.HasValue && checkMask.CounterEffects.Overall.Value != item.CounterEffects.HasBeenSet) return false;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+        
+        public void FillHasBeenSetMask(
+            IMagicEffectInternalGetter item,
+            MagicEffect_Mask<bool> mask)
+        {
+            mask.Name = item.Name_IsSet;
+            mask.Description = item.Description_IsSet;
+            mask.Icon = item.Icon_IsSet;
+            mask.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, item.Model.GetHasBeenSetMask());
+            mask.Flags = true;
+            mask.BaseCost = true;
+            mask.Unused = true;
+            mask.MagicSchool = true;
+            mask.Resistance = true;
+            mask.CounterEffectCount = true;
+            mask.Light = true;
+            mask.ProjectileSpeed = true;
+            mask.EffectShader = true;
+            mask.SubData = new MaskItem<bool, MagicEffectSubData_Mask<bool>>(true, item.SubData.GetHasBeenSetMask());
+            mask.CounterEffects = new MaskItem<bool, IEnumerable<(int, bool)>>(item.CounterEffects.HasBeenSet, null);
+            mask.DATADataTypeState = true;
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
+        }
+        
+        public static MagicEffect_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (MagicEffect_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.FormKey:
+                    return (MagicEffect_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.Version:
+                    return (MagicEffect_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.EditorID:
+                    return (MagicEffect_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
+                    return (MagicEffect_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        public static MagicEffect_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (MagicEffect_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.FormKey:
+                    return (MagicEffect_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.Version:
+                    return (MagicEffect_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.EditorID:
+                    return (MagicEffect_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        #region Equals and Hash
+        public virtual bool Equals(
+            IMagicEffectInternalGetter lhs,
+            IMagicEffectInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.Name_IsSet != rhs.Name_IsSet) return false;
+            if (lhs.Name_IsSet)
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if (lhs.Description_IsSet != rhs.Description_IsSet) return false;
+            if (lhs.Description_IsSet)
+            {
+                if (!string.Equals(lhs.Description, rhs.Description)) return false;
+            }
+            if (lhs.Icon_IsSet != rhs.Icon_IsSet) return false;
+            if (lhs.Icon_IsSet)
+            {
+                if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
+            }
+            if (lhs.Model_IsSet != rhs.Model_IsSet) return false;
+            if (lhs.Model_IsSet)
+            {
+                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            }
+            if (lhs.Flags != rhs.Flags) return false;
+            if (!lhs.BaseCost.EqualsWithin(rhs.BaseCost)) return false;
+            if (!MemoryExtensions.SequenceEqual(lhs.Unused, rhs.Unused)) return false;
+            if (lhs.MagicSchool != rhs.MagicSchool) return false;
+            if (lhs.Resistance != rhs.Resistance) return false;
+            if (lhs.CounterEffectCount != rhs.CounterEffectCount) return false;
+            if (!lhs.Light_Property.Equals(rhs.Light_Property)) return false;
+            if (!lhs.ProjectileSpeed.EqualsWithin(rhs.ProjectileSpeed)) return false;
+            if (!lhs.EffectShader_Property.Equals(rhs.EffectShader_Property)) return false;
+            if (!object.Equals(lhs.SubData, rhs.SubData)) return false;
+            if (lhs.CounterEffects.HasBeenSet != rhs.CounterEffects.HasBeenSet) return false;
+            if (lhs.CounterEffects.HasBeenSet)
+            {
+                if (!lhs.CounterEffects.SequenceEqual(rhs.CounterEffects)) return false;
+            }
+            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            return true;
+        }
+        
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IMagicEffectInternalGetter)lhs,
+                rhs: rhs as IMagicEffectInternalGetter);
+        }
+        
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IMagicEffectInternalGetter)lhs,
+                rhs: rhs as IMagicEffectInternalGetter);
+        }
+        
+        public virtual int GetHashCode(IMagicEffectInternalGetter item)
+        {
+            int ret = 0;
+            if (item.Name_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Name).CombineHashCode(ret);
+            }
+            if (item.Description_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Description).CombineHashCode(ret);
+            }
+            if (item.Icon_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Icon).CombineHashCode(ret);
+            }
+            if (item.Model_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Model).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.BaseCost).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Unused).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.MagicSchool).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Resistance).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.CounterEffectCount).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Light).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.ProjectileSpeed).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.EffectShader).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.SubData).CombineHashCode(ret);
+            if (item.CounterEffects.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.CounterEffects).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.DATADataTypeState).CombineHashCode(ret);
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+        
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IMagicEffectInternalGetter)item);
+        }
+        
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IMagicEffectInternalGetter)item);
+        }
+        
+        #endregion
+        
+        
+        #region Mutagen
+        partial void PostDuplicate(MagicEffect obj, MagicEffect rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+        
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new MagicEffect(getNextFormKey());
+            ret.CopyFieldsFrom((MagicEffect)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (MagicEffect)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+        
+        #endregion
+        
+        
+    }
+    public partial class MagicEffectSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
+    {
+        public new static readonly MagicEffectSetterCopyCommon Instance = new MagicEffectSetterCopyCommon();
 
         #region Copy Fields From
         public static void CopyFieldsFrom(
@@ -1752,7 +2196,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             MagicEffect_CopyMask copyMask)
         {
-            OblivionMajorRecordCommon.CopyFieldsFrom(
+            OblivionMajorRecordSetterCopyCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1866,7 +2310,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             case CopyOption.Reference:
                                 throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
-                                ModelCommon.CopyFieldsFrom(
+                                ModelSetterCopyCommon.CopyFieldsFrom(
                                     item: item.Model,
                                     rhs: rhs.Model,
                                     def: def?.Model,
@@ -2064,7 +2508,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             item.SubData = Utility.GetGetterInterfaceReference<MagicEffectSubData>(rhs.SubData);
                             break;
                         case CopyOption.CopyIn:
-                            MagicEffectSubDataCommon.CopyFieldsFrom(
+                            MagicEffectSubDataSetterCopyCommon.CopyFieldsFrom(
                                 item: item.SubData,
                                 rhs: rhs.SubData,
                                 def: def?.SubData,
@@ -2118,423 +2562,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
         }
-
+        
         #endregion
-
-        partial void ClearPartial();
-
-        public virtual void Clear(IMagicEffectInternal item)
-        {
-            ClearPartial();
-            item.Name_Unset();
-            item.Description_Unset();
-            item.Icon_Unset();
-            item.Model_Unset();
-            item.Flags = default(MagicEffect.MagicFlag);
-            item.BaseCost = default(Single);
-            item.Unused = default(Byte[]);
-            item.MagicSchool = default(MagicSchool);
-            item.Resistance = default(Resistance);
-            item.CounterEffectCount = default(UInt32);
-            item.Light = default(Light);
-            item.ProjectileSpeed = default(Single);
-            item.EffectShader = default(EffectShader);
-            item.SubData = default(MagicEffectSubData);
-            item.CounterEffects.Unset();
-            base.Clear(item);
-        }
-
-        public override void Clear(IOblivionMajorRecordInternal item)
-        {
-            Clear(item: (IMagicEffectInternal)item);
-        }
-
-        public override void Clear(IMajorRecordInternal item)
-        {
-            Clear(item: (IMagicEffectInternal)item);
-        }
-
-        public MagicEffect_Mask<bool> GetEqualsMask(
-            IMagicEffectInternalGetter item,
-            IMagicEffectInternalGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new MagicEffect_Mask<bool>();
-            ((MagicEffectCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public void FillEqualsMask(
-            IMagicEffectInternalGetter item,
-            IMagicEffectInternalGetter rhs,
-            MagicEffect_Mask<bool> ret,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            if (rhs == null) return;
-            ret.Name = item.Name_IsSet == rhs.Name_IsSet && string.Equals(item.Name, rhs.Name);
-            ret.Description = item.Description_IsSet == rhs.Description_IsSet && string.Equals(item.Description, rhs.Description);
-            ret.Icon = item.Icon_IsSet == rhs.Icon_IsSet && string.Equals(item.Icon, rhs.Icon);
-            ret.Model = EqualsMaskHelper.EqualsHelper(
-                item.Model_IsSet,
-                rhs.Model_IsSet,
-                item.Model,
-                rhs.Model,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
-                include);
-            ret.Flags = item.Flags == rhs.Flags;
-            ret.BaseCost = item.BaseCost.EqualsWithin(rhs.BaseCost);
-            ret.Unused = MemoryExtensions.SequenceEqual(item.Unused, rhs.Unused);
-            ret.MagicSchool = item.MagicSchool == rhs.MagicSchool;
-            ret.Resistance = item.Resistance == rhs.Resistance;
-            ret.CounterEffectCount = item.CounterEffectCount == rhs.CounterEffectCount;
-            ret.Light = item.Light_Property.FormKey == rhs.Light_Property.FormKey;
-            ret.ProjectileSpeed = item.ProjectileSpeed.EqualsWithin(rhs.ProjectileSpeed);
-            ret.EffectShader = item.EffectShader_Property.FormKey == rhs.EffectShader_Property.FormKey;
-            ret.SubData = MaskItemExt.Factory(item.SubData.GetEqualsMask(rhs.SubData, include), include);
-            ret.CounterEffects = item.CounterEffects.CollectionEqualsHelper(
-                rhs.CounterEffects,
-                (l, r) => object.Equals(l, r),
-                include);
-            base.FillEqualsMask(item, rhs, ret, include);
-        }
-
-        public string ToString(
-            IMagicEffectInternalGetter item,
-            string name = null,
-            MagicEffect_Mask<bool> printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(
-                item: item,
-                fg: fg,
-                name: name,
-                printMask: printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(
-            IMagicEffectInternalGetter item,
-            FileGeneration fg,
-            string name = null,
-            MagicEffect_Mask<bool> printMask = null)
-        {
-            if (name == null)
-            {
-                fg.AppendLine($"MagicEffect =>");
-            }
-            else
-            {
-                fg.AppendLine($"{name} (MagicEffect) =>");
-            }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                ToStringFields(
-                    item: item,
-                    fg: fg,
-                    printMask: printMask);
-            }
-            fg.AppendLine("]");
-        }
-
-        protected static void ToStringFields(
-            IMagicEffectInternalGetter item,
-            FileGeneration fg,
-            MagicEffect_Mask<bool> printMask = null)
-        {
-            OblivionMajorRecordCommon.ToStringFields(
-                item: item,
-                fg: fg,
-                printMask: printMask);
-            if (printMask?.Name ?? true)
-            {
-                fg.AppendLine($"Name => {item.Name}");
-            }
-            if (printMask?.Description ?? true)
-            {
-                fg.AppendLine($"Description => {item.Description}");
-            }
-            if (printMask?.Icon ?? true)
-            {
-                fg.AppendLine($"Icon => {item.Icon}");
-            }
-            if (printMask?.Model?.Overall ?? true)
-            {
-                item.Model?.ToString(fg, "Model");
-            }
-            if (printMask?.Flags ?? true)
-            {
-                fg.AppendLine($"Flags => {item.Flags}");
-            }
-            if (printMask?.BaseCost ?? true)
-            {
-                fg.AppendLine($"BaseCost => {item.BaseCost}");
-            }
-            if (printMask?.Unused ?? true)
-            {
-                fg.AppendLine($"Unused => {SpanExt.ToHexString(item.Unused)}");
-            }
-            if (printMask?.MagicSchool ?? true)
-            {
-                fg.AppendLine($"MagicSchool => {item.MagicSchool}");
-            }
-            if (printMask?.Resistance ?? true)
-            {
-                fg.AppendLine($"Resistance => {item.Resistance}");
-            }
-            if (printMask?.CounterEffectCount ?? true)
-            {
-                fg.AppendLine($"CounterEffectCount => {item.CounterEffectCount}");
-            }
-            if (printMask?.Light ?? true)
-            {
-                fg.AppendLine($"Light => {item.Light_Property}");
-            }
-            if (printMask?.ProjectileSpeed ?? true)
-            {
-                fg.AppendLine($"ProjectileSpeed => {item.ProjectileSpeed}");
-            }
-            if (printMask?.EffectShader ?? true)
-            {
-                fg.AppendLine($"EffectShader => {item.EffectShader_Property}");
-            }
-            if (printMask?.SubData?.Overall ?? true)
-            {
-                item.SubData?.ToString(fg, "SubData");
-            }
-            if (printMask?.CounterEffects?.Overall ?? true)
-            {
-                fg.AppendLine("CounterEffects =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
-                {
-                    foreach (var subItem in item.CounterEffects)
-                    {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            fg.AppendLine($"Item => {subItem}");
-                        }
-                        fg.AppendLine("]");
-                    }
-                }
-                fg.AppendLine("]");
-            }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-            }
-        }
-
-        public bool HasBeenSet(
-            IMagicEffectInternalGetter item,
-            MagicEffect_Mask<bool?> checkMask)
-        {
-            if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_IsSet) return false;
-            if (checkMask.Description.HasValue && checkMask.Description.Value != item.Description_IsSet) return false;
-            if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_IsSet) return false;
-            if (checkMask.Model.Overall.HasValue && checkMask.Model.Overall.Value != item.Model_IsSet) return false;
-            if (checkMask.Model.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
-            if (checkMask.CounterEffects.Overall.HasValue && checkMask.CounterEffects.Overall.Value != item.CounterEffects.HasBeenSet) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public void FillHasBeenSetMask(
-            IMagicEffectInternalGetter item,
-            MagicEffect_Mask<bool> mask)
-        {
-            mask.Name = item.Name_IsSet;
-            mask.Description = item.Description_IsSet;
-            mask.Icon = item.Icon_IsSet;
-            mask.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, item.Model.GetHasBeenSetMask());
-            mask.Flags = true;
-            mask.BaseCost = true;
-            mask.Unused = true;
-            mask.MagicSchool = true;
-            mask.Resistance = true;
-            mask.CounterEffectCount = true;
-            mask.Light = true;
-            mask.ProjectileSpeed = true;
-            mask.EffectShader = true;
-            mask.SubData = new MaskItem<bool, MagicEffectSubData_Mask<bool>>(true, item.SubData.GetHasBeenSetMask());
-            mask.CounterEffects = new MaskItem<bool, IEnumerable<(int, bool)>>(item.CounterEffects.HasBeenSet, null);
-            mask.DATADataTypeState = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-
-        public static MagicEffect_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
-        {
-            switch (index)
-            {
-                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (MagicEffect_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.FormKey:
-                    return (MagicEffect_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.Version:
-                    return (MagicEffect_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.EditorID:
-                    return (MagicEffect_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
-                    return (MagicEffect_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        public static MagicEffect_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
-        {
-            switch (index)
-            {
-                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (MagicEffect_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.FormKey:
-                    return (MagicEffect_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
-                    return (MagicEffect_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.EditorID:
-                    return (MagicEffect_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        #region Equals and Hash
-        public virtual bool Equals(
-            IMagicEffectInternalGetter lhs,
-            IMagicEffectInternalGetter rhs)
-        {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (lhs.Name_IsSet != rhs.Name_IsSet) return false;
-            if (lhs.Name_IsSet)
-            {
-                if (!string.Equals(lhs.Name, rhs.Name)) return false;
-            }
-            if (lhs.Description_IsSet != rhs.Description_IsSet) return false;
-            if (lhs.Description_IsSet)
-            {
-                if (!string.Equals(lhs.Description, rhs.Description)) return false;
-            }
-            if (lhs.Icon_IsSet != rhs.Icon_IsSet) return false;
-            if (lhs.Icon_IsSet)
-            {
-                if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
-            }
-            if (lhs.Model_IsSet != rhs.Model_IsSet) return false;
-            if (lhs.Model_IsSet)
-            {
-                if (!object.Equals(lhs.Model, rhs.Model)) return false;
-            }
-            if (lhs.Flags != rhs.Flags) return false;
-            if (!lhs.BaseCost.EqualsWithin(rhs.BaseCost)) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Unused, rhs.Unused)) return false;
-            if (lhs.MagicSchool != rhs.MagicSchool) return false;
-            if (lhs.Resistance != rhs.Resistance) return false;
-            if (lhs.CounterEffectCount != rhs.CounterEffectCount) return false;
-            if (!lhs.Light_Property.Equals(rhs.Light_Property)) return false;
-            if (!lhs.ProjectileSpeed.EqualsWithin(rhs.ProjectileSpeed)) return false;
-            if (!lhs.EffectShader_Property.Equals(rhs.EffectShader_Property)) return false;
-            if (!object.Equals(lhs.SubData, rhs.SubData)) return false;
-            if (lhs.CounterEffects.HasBeenSet != rhs.CounterEffects.HasBeenSet) return false;
-            if (lhs.CounterEffects.HasBeenSet)
-            {
-                if (!lhs.CounterEffects.SequenceEqual(rhs.CounterEffects)) return false;
-            }
-            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
-            return true;
-        }
-
-        public override bool Equals(
-            IOblivionMajorRecordInternalGetter lhs,
-            IOblivionMajorRecordInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (IMagicEffectInternalGetter)lhs,
-                rhs: rhs as IMagicEffectInternalGetter);
-        }
-
-        public override bool Equals(
-            IMajorRecordInternalGetter lhs,
-            IMajorRecordInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (IMagicEffectInternalGetter)lhs,
-                rhs: rhs as IMagicEffectInternalGetter);
-        }
-
-        public virtual int GetHashCode(IMagicEffectInternalGetter item)
-        {
-            int ret = 0;
-            if (item.Name_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Name).CombineHashCode(ret);
-            }
-            if (item.Description_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Description).CombineHashCode(ret);
-            }
-            if (item.Icon_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Icon).CombineHashCode(ret);
-            }
-            if (item.Model_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Model).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.BaseCost).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Unused).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.MagicSchool).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Resistance).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.CounterEffectCount).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Light).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.ProjectileSpeed).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.EffectShader).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.SubData).CombineHashCode(ret);
-            if (item.CounterEffects.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.CounterEffects).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(item.DATADataTypeState).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
-        {
-            return GetHashCode(item: (IMagicEffectInternalGetter)item);
-        }
-
-        public override int GetHashCode(IMajorRecordInternalGetter item)
-        {
-            return GetHashCode(item: (IMagicEffectInternalGetter)item);
-        }
-
-        #endregion
-
-
-        #region Mutagen
-        partial void PostDuplicate(MagicEffect obj, MagicEffect rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new MagicEffect(getNextFormKey());
-            ret.CopyFieldsFrom((MagicEffect)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (MagicEffect)item, getNextFormKey, duplicatedRecords);
-            return ret;
-        }
-
-        #endregion
-
+        
+        
     }
     #endregion
 
@@ -4292,17 +4323,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         OblivionMajorRecordBinaryWrapper,
         IMagicEffectInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MagicEffect_Registration.Instance;
         public new static MagicEffect_Registration Registration => MagicEffect_Registration.Instance;
-        protected override object CommonInstance => MagicEffectCommon.Instance;
+        protected override object CommonInstance()
+        {
+            return MagicEffectCommon.Instance;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMagicEffectInternalGetter)rhs, include);
 
         protected override object XmlWriteTranslator => MagicEffectXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((MagicEffectXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         protected override object BinaryWriteTranslator => MagicEffectBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((MagicEffectBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
 
         #region Name
         private int? _NameLocation;
@@ -4320,7 +4383,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public String Icon => _IconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _IconLocation.Value, _package.Meta)) : default;
         #endregion
         #region Model
-        public IModelGetter Model { get; private set; }
+        public IModelInternalGetter Model { get; private set; }
         public bool Model_IsSet => Model != null;
         #endregion
         private int? _DATALocation;
@@ -4375,8 +4438,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region SubData
         private int _SubDataLocation => _DATALocation.Value + 0x24;
         private bool _SubData_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(MagicEffect.DATADataType.Break0);
-        private IMagicEffectSubDataGetter _SubData => _SubData_IsSet ? MagicEffectSubDataBinaryWrapper.MagicEffectSubDataFactory(new BinaryMemoryReadStream(_data.Slice(_SubDataLocation)), _package) : default;
-        public IMagicEffectSubDataGetter SubData => _SubData ?? new MagicEffectSubData();
+        private IMagicEffectSubDataInternalGetter _SubData => _SubData_IsSet ? MagicEffectSubDataBinaryWrapper.MagicEffectSubDataFactory(new BinaryMemoryReadStream(_data.Slice(_SubDataLocation)), _package) : default;
+        public IMagicEffectSubDataInternalGetter SubData => _SubData ?? new MagicEffectSubData();
         #endregion
         public IReadOnlySetList<IEDIDLinkGetter<IMagicEffectInternalGetter>> CounterEffects { get; private set; } = EmptySetList<IEDIDLinkGetter<IMagicEffectInternalGetter>>.Instance;
         partial void CustomCtor(
@@ -4491,4 +4554,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class MagicEffect
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => MagicEffect_Registration.Instance;
+        public new static MagicEffect_Registration Registration => MagicEffect_Registration.Instance;
+        protected override object CommonInstance()
+        {
+            return MagicEffectCommon.Instance;
+        }
+        protected override object CommonSetterInstance()
+        {
+            return MagicEffectSetterCommon.Instance;
+        }
+        protected override object CommonSetterCopyInstance()
+        {
+            return MagicEffectSetterCopyCommon.Instance;
+        }
+
+        #endregion
+
+    }
 }

@@ -46,11 +46,6 @@ namespace Mutagen.Bethesda.Oblivion
         IEquatable<Region>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Region_Registration.Instance;
-        public new static Region_Registration Registration => Region_Registration.Instance;
-        protected override object CommonInstance => RegionCommon.Instance;
-
         #region Ctor
         protected Region()
         {
@@ -127,7 +122,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<RegionArea> IRegion.Areas => _Areas;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IRegionAreaGetter> IRegionGetter.Areas => _Areas;
+        IReadOnlySetList<IRegionAreaInternalGetter> IRegionGetter.Areas => _Areas;
         #endregion
 
         #endregion
@@ -286,20 +281,33 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IRegionInternalGetter rhs)) return false;
-            return ((RegionCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            return ((RegionCommon)((IRegionInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(Region obj)
         {
-            return ((RegionCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((RegionCommon)((IRegionInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((RegionCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((RegionCommon)((IRegionInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected override object XmlWriteTranslator => RegionXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((RegionXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static Region CreateFromXml(
@@ -592,6 +600,19 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Binary Translation
         protected override object BinaryWriteTranslator => RegionBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((RegionBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
         #region Binary Create
         [DebuggerStepThrough]
         public static Region CreateFromBinary(
@@ -833,7 +854,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            RegionCommon.CopyFieldsFrom(
+            RegionSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -848,7 +869,7 @@ namespace Mutagen.Bethesda.Oblivion
             Region_CopyMask copyMask = null,
             Region def = null)
         {
-            RegionCommon.CopyFieldsFrom(
+            RegionSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -896,7 +917,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            RegionCommon.Instance.Clear(this);
+            RegionSetterCommon.Instance.Clear(this);
         }
 
         public new static Region Create(IEnumerable<KeyValuePair<ushort, object>> fields)
@@ -1033,7 +1054,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Areas
-        IReadOnlySetList<IRegionAreaGetter> Areas { get; }
+        IReadOnlySetList<IRegionAreaInternalGetter> Areas { get; }
         #endregion
         #region Objects
         IRegionDataObjectsInternalGetter Objects { get; }
@@ -1077,7 +1098,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IRegionInternal item)
         {
-            ((RegionCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((RegionSetterCommon)((IRegionInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static Region_Mask<bool> GetEqualsMask(
@@ -1085,7 +1106,7 @@ namespace Mutagen.Bethesda.Oblivion
             IRegionInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((RegionCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((RegionCommon)((IRegionInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -1096,7 +1117,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Region_Mask<bool> printMask = null)
         {
-            return ((RegionCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((RegionCommon)((IRegionInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -1108,7 +1129,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Region_Mask<bool> printMask = null)
         {
-            ((RegionCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((RegionCommon)((IRegionInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -1119,7 +1140,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRegionInternalGetter item,
             Region_Mask<bool?> checkMask)
         {
-            return ((RegionCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((RegionCommon)((IRegionInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -1127,7 +1148,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Region_Mask<bool> GetHasBeenSetMask(this IRegionInternalGetter item)
         {
             var ret = new Region_Mask<bool>();
-            ((RegionCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((RegionCommon)((IRegionInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -1137,7 +1158,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRegionInternalGetter item,
             IRegionInternalGetter rhs)
         {
-            return ((RegionCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((RegionCommon)((IRegionInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1200,8 +1221,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type SetterType = typeof(IRegion);
 
         public static readonly Type InternalSetterType = typeof(IRegionInternal);
-
-        public static readonly Type CommonType = typeof(RegionCommon);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.Region";
 
@@ -1423,7 +1442,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -1443,9 +1461,435 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
+    public partial class RegionSetterCommon : OblivionMajorRecordSetterCommon
+    {
+        public new static readonly RegionSetterCommon Instance = new RegionSetterCommon();
+
+        partial void ClearPartial();
+        
+        public virtual void Clear(IRegionInternal item)
+        {
+            ClearPartial();
+            item.Icon_Unset();
+            item.MapColor_Unset();
+            item.Worldspace_Property.Unset();
+            item.Areas.Unset();
+            item.Objects_Unset();
+            item.Weather_Unset();
+            item.MapName_Unset();
+            item.Grasses_Unset();
+            item.Sounds_Unset();
+            base.Clear(item);
+        }
+        
+        public override void Clear(IOblivionMajorRecordInternal item)
+        {
+            Clear(item: (IRegionInternal)item);
+        }
+        
+        public override void Clear(IMajorRecordInternal item)
+        {
+            Clear(item: (IRegionInternal)item);
+        }
+        
+        
+    }
     public partial class RegionCommon : OblivionMajorRecordCommon
     {
-        public static readonly RegionCommon Instance = new RegionCommon();
+        public new static readonly RegionCommon Instance = new RegionCommon();
+
+        public Region_Mask<bool> GetEqualsMask(
+            IRegionInternalGetter item,
+            IRegionInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new Region_Mask<bool>();
+            ((RegionCommon)((IRegionInternalGetter)item).CommonInstance()).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+        
+        public void FillEqualsMask(
+            IRegionInternalGetter item,
+            IRegionInternalGetter rhs,
+            Region_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            if (rhs == null) return;
+            ret.Icon = item.Icon_IsSet == rhs.Icon_IsSet && string.Equals(item.Icon, rhs.Icon);
+            ret.MapColor = item.MapColor_IsSet == rhs.MapColor_IsSet && item.MapColor.ColorOnlyEquals(rhs.MapColor);
+            ret.Worldspace = item.Worldspace_Property.FormKey == rhs.Worldspace_Property.FormKey;
+            ret.Areas = item.Areas.CollectionEqualsHelper(
+                rhs.Areas,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Objects = EqualsMaskHelper.EqualsHelper(
+                item.Objects_IsSet,
+                rhs.Objects_IsSet,
+                item.Objects,
+                rhs.Objects,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
+            ret.Weather = EqualsMaskHelper.EqualsHelper(
+                item.Weather_IsSet,
+                rhs.Weather_IsSet,
+                item.Weather,
+                rhs.Weather,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
+            ret.MapName = EqualsMaskHelper.EqualsHelper(
+                item.MapName_IsSet,
+                rhs.MapName_IsSet,
+                item.MapName,
+                rhs.MapName,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
+            ret.Grasses = EqualsMaskHelper.EqualsHelper(
+                item.Grasses_IsSet,
+                rhs.Grasses_IsSet,
+                item.Grasses,
+                rhs.Grasses,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
+            ret.Sounds = EqualsMaskHelper.EqualsHelper(
+                item.Sounds_IsSet,
+                rhs.Sounds_IsSet,
+                item.Sounds,
+                rhs.Sounds,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
+            base.FillEqualsMask(item, rhs, ret, include);
+        }
+        
+        public string ToString(
+            IRegionInternalGetter item,
+            string name = null,
+            Region_Mask<bool> printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+            return fg.ToString();
+        }
+        
+        public void ToString(
+            IRegionInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            Region_Mask<bool> printMask = null)
+        {
+            if (name == null)
+            {
+                fg.AppendLine($"Region =>");
+            }
+            else
+            {
+                fg.AppendLine($"{name} (Region) =>");
+            }
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
+            }
+            fg.AppendLine("]");
+        }
+        
+        protected static void ToStringFields(
+            IRegionInternalGetter item,
+            FileGeneration fg,
+            Region_Mask<bool> printMask = null)
+        {
+            OblivionMajorRecordCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.Icon ?? true)
+            {
+                fg.AppendLine($"Icon => {item.Icon}");
+            }
+            if (printMask?.MapColor ?? true)
+            {
+                fg.AppendLine($"MapColor => {item.MapColor}");
+            }
+            if (printMask?.Worldspace ?? true)
+            {
+                fg.AppendLine($"Worldspace => {item.Worldspace_Property}");
+            }
+            if (printMask?.Areas?.Overall ?? true)
+            {
+                fg.AppendLine("Areas =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Areas)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.Objects?.Overall ?? true)
+            {
+                item.Objects?.ToString(fg, "Objects");
+            }
+            if (printMask?.Weather?.Overall ?? true)
+            {
+                item.Weather?.ToString(fg, "Weather");
+            }
+            if (printMask?.MapName?.Overall ?? true)
+            {
+                item.MapName?.ToString(fg, "MapName");
+            }
+            if (printMask?.Grasses?.Overall ?? true)
+            {
+                item.Grasses?.ToString(fg, "Grasses");
+            }
+            if (printMask?.Sounds?.Overall ?? true)
+            {
+                item.Sounds?.ToString(fg, "Sounds");
+            }
+        }
+        
+        public bool HasBeenSet(
+            IRegionInternalGetter item,
+            Region_Mask<bool?> checkMask)
+        {
+            if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_IsSet) return false;
+            if (checkMask.MapColor.HasValue && checkMask.MapColor.Value != item.MapColor_IsSet) return false;
+            if (checkMask.Worldspace.HasValue && checkMask.Worldspace.Value != item.Worldspace_Property.HasBeenSet) return false;
+            if (checkMask.Areas.Overall.HasValue && checkMask.Areas.Overall.Value != item.Areas.HasBeenSet) return false;
+            if (checkMask.Objects.Overall.HasValue && checkMask.Objects.Overall.Value != item.Objects_IsSet) return false;
+            if (checkMask.Objects.Specific != null && (item.Objects == null || !item.Objects.HasBeenSet(checkMask.Objects.Specific))) return false;
+            if (checkMask.Weather.Overall.HasValue && checkMask.Weather.Overall.Value != item.Weather_IsSet) return false;
+            if (checkMask.Weather.Specific != null && (item.Weather == null || !item.Weather.HasBeenSet(checkMask.Weather.Specific))) return false;
+            if (checkMask.MapName.Overall.HasValue && checkMask.MapName.Overall.Value != item.MapName_IsSet) return false;
+            if (checkMask.MapName.Specific != null && (item.MapName == null || !item.MapName.HasBeenSet(checkMask.MapName.Specific))) return false;
+            if (checkMask.Grasses.Overall.HasValue && checkMask.Grasses.Overall.Value != item.Grasses_IsSet) return false;
+            if (checkMask.Grasses.Specific != null && (item.Grasses == null || !item.Grasses.HasBeenSet(checkMask.Grasses.Specific))) return false;
+            if (checkMask.Sounds.Overall.HasValue && checkMask.Sounds.Overall.Value != item.Sounds_IsSet) return false;
+            if (checkMask.Sounds.Specific != null && (item.Sounds == null || !item.Sounds.HasBeenSet(checkMask.Sounds.Specific))) return false;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+        
+        public void FillHasBeenSetMask(
+            IRegionInternalGetter item,
+            Region_Mask<bool> mask)
+        {
+            mask.Icon = item.Icon_IsSet;
+            mask.MapColor = item.MapColor_IsSet;
+            mask.Worldspace = item.Worldspace_Property.HasBeenSet;
+            mask.Areas = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, RegionArea_Mask<bool>>>>(item.Areas.HasBeenSet, item.Areas.WithIndex().Select((i) => new MaskItemIndexed<bool, RegionArea_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.Objects = new MaskItem<bool, RegionDataObjects_Mask<bool>>(item.Objects_IsSet, item.Objects.GetHasBeenSetMask());
+            mask.Weather = new MaskItem<bool, RegionDataWeather_Mask<bool>>(item.Weather_IsSet, item.Weather.GetHasBeenSetMask());
+            mask.MapName = new MaskItem<bool, RegionDataMapName_Mask<bool>>(item.MapName_IsSet, item.MapName.GetHasBeenSetMask());
+            mask.Grasses = new MaskItem<bool, RegionDataGrasses_Mask<bool>>(item.Grasses_IsSet, item.Grasses.GetHasBeenSetMask());
+            mask.Sounds = new MaskItem<bool, RegionDataSounds_Mask<bool>>(item.Sounds_IsSet, item.Sounds.GetHasBeenSetMask());
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
+        }
+        
+        public static Region_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (Region_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.FormKey:
+                    return (Region_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.Version:
+                    return (Region_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.EditorID:
+                    return (Region_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
+                    return (Region_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        public static Region_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (Region_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.FormKey:
+                    return (Region_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.Version:
+                    return (Region_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.EditorID:
+                    return (Region_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        #region Equals and Hash
+        public virtual bool Equals(
+            IRegionInternalGetter lhs,
+            IRegionInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.Icon_IsSet != rhs.Icon_IsSet) return false;
+            if (lhs.Icon_IsSet)
+            {
+                if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
+            }
+            if (lhs.MapColor_IsSet != rhs.MapColor_IsSet) return false;
+            if (lhs.MapColor_IsSet)
+            {
+                if (!lhs.MapColor.ColorOnlyEquals(rhs.MapColor)) return false;
+            }
+            if (lhs.Worldspace_Property.HasBeenSet != rhs.Worldspace_Property.HasBeenSet) return false;
+            if (lhs.Worldspace_Property.HasBeenSet)
+            {
+                if (!lhs.Worldspace_Property.Equals(rhs.Worldspace_Property)) return false;
+            }
+            if (lhs.Areas.HasBeenSet != rhs.Areas.HasBeenSet) return false;
+            if (lhs.Areas.HasBeenSet)
+            {
+                if (!lhs.Areas.SequenceEqual(rhs.Areas)) return false;
+            }
+            if (lhs.Objects_IsSet != rhs.Objects_IsSet) return false;
+            if (lhs.Objects_IsSet)
+            {
+                if (!object.Equals(lhs.Objects, rhs.Objects)) return false;
+            }
+            if (lhs.Weather_IsSet != rhs.Weather_IsSet) return false;
+            if (lhs.Weather_IsSet)
+            {
+                if (!object.Equals(lhs.Weather, rhs.Weather)) return false;
+            }
+            if (lhs.MapName_IsSet != rhs.MapName_IsSet) return false;
+            if (lhs.MapName_IsSet)
+            {
+                if (!object.Equals(lhs.MapName, rhs.MapName)) return false;
+            }
+            if (lhs.Grasses_IsSet != rhs.Grasses_IsSet) return false;
+            if (lhs.Grasses_IsSet)
+            {
+                if (!object.Equals(lhs.Grasses, rhs.Grasses)) return false;
+            }
+            if (lhs.Sounds_IsSet != rhs.Sounds_IsSet) return false;
+            if (lhs.Sounds_IsSet)
+            {
+                if (!object.Equals(lhs.Sounds, rhs.Sounds)) return false;
+            }
+            return true;
+        }
+        
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IRegionInternalGetter)lhs,
+                rhs: rhs as IRegionInternalGetter);
+        }
+        
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IRegionInternalGetter)lhs,
+                rhs: rhs as IRegionInternalGetter);
+        }
+        
+        public virtual int GetHashCode(IRegionInternalGetter item)
+        {
+            int ret = 0;
+            if (item.Icon_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Icon).CombineHashCode(ret);
+            }
+            if (item.MapColor_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.MapColor).CombineHashCode(ret);
+            }
+            if (item.Worldspace_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Worldspace).CombineHashCode(ret);
+            }
+            if (item.Areas.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Areas).CombineHashCode(ret);
+            }
+            if (item.Objects_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Objects).CombineHashCode(ret);
+            }
+            if (item.Weather_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Weather).CombineHashCode(ret);
+            }
+            if (item.MapName_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.MapName).CombineHashCode(ret);
+            }
+            if (item.Grasses_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Grasses).CombineHashCode(ret);
+            }
+            if (item.Sounds_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Sounds).CombineHashCode(ret);
+            }
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+        
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IRegionInternalGetter)item);
+        }
+        
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IRegionInternalGetter)item);
+        }
+        
+        #endregion
+        
+        
+        #region Mutagen
+        partial void PostDuplicate(Region obj, Region rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+        
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new Region(getNextFormKey());
+            ret.CopyFieldsFrom((Region)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (Region)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+        
+        #endregion
+        
+        
+    }
+    public partial class RegionSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
+    {
+        public new static readonly RegionSetterCopyCommon Instance = new RegionSetterCopyCommon();
 
         #region Copy Fields From
         public static void CopyFieldsFrom(
@@ -1455,7 +1899,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             Region_CopyMask copyMask)
         {
-            OblivionMajorRecordCommon.CopyFieldsFrom(
+            OblivionMajorRecordSetterCopyCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1592,7 +2036,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             case CopyOption.Reference:
                                 throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
-                                RegionDataObjectsCommon.CopyFieldsFrom(
+                                RegionDataObjectsSetterCopyCommon.CopyFieldsFrom(
                                     item: item.Objects,
                                     rhs: rhs.Objects,
                                     def: def?.Objects,
@@ -1644,7 +2088,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             case CopyOption.Reference:
                                 throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
-                                RegionDataWeatherCommon.CopyFieldsFrom(
+                                RegionDataWeatherSetterCopyCommon.CopyFieldsFrom(
                                     item: item.Weather,
                                     rhs: rhs.Weather,
                                     def: def?.Weather,
@@ -1696,7 +2140,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             case CopyOption.Reference:
                                 throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
-                                RegionDataMapNameCommon.CopyFieldsFrom(
+                                RegionDataMapNameSetterCopyCommon.CopyFieldsFrom(
                                     item: item.MapName,
                                     rhs: rhs.MapName,
                                     def: def?.MapName,
@@ -1748,7 +2192,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             case CopyOption.Reference:
                                 throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
-                                RegionDataGrassesCommon.CopyFieldsFrom(
+                                RegionDataGrassesSetterCopyCommon.CopyFieldsFrom(
                                     item: item.Grasses,
                                     rhs: rhs.Grasses,
                                     def: def?.Grasses,
@@ -1800,7 +2244,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             case CopyOption.Reference:
                                 throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
-                                RegionDataSoundsCommon.CopyFieldsFrom(
+                                RegionDataSoundsSetterCopyCommon.CopyFieldsFrom(
                                     item: item.Sounds,
                                     rhs: rhs.Sounds,
                                     def: def?.Sounds,
@@ -1835,423 +2279,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
         }
-
+        
         #endregion
-
-        partial void ClearPartial();
-
-        public virtual void Clear(IRegionInternal item)
-        {
-            ClearPartial();
-            item.Icon_Unset();
-            item.MapColor_Unset();
-            item.Worldspace_Property.Unset();
-            item.Areas.Unset();
-            item.Objects_Unset();
-            item.Weather_Unset();
-            item.MapName_Unset();
-            item.Grasses_Unset();
-            item.Sounds_Unset();
-            base.Clear(item);
-        }
-
-        public override void Clear(IOblivionMajorRecordInternal item)
-        {
-            Clear(item: (IRegionInternal)item);
-        }
-
-        public override void Clear(IMajorRecordInternal item)
-        {
-            Clear(item: (IRegionInternal)item);
-        }
-
-        public Region_Mask<bool> GetEqualsMask(
-            IRegionInternalGetter item,
-            IRegionInternalGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new Region_Mask<bool>();
-            ((RegionCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public void FillEqualsMask(
-            IRegionInternalGetter item,
-            IRegionInternalGetter rhs,
-            Region_Mask<bool> ret,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            if (rhs == null) return;
-            ret.Icon = item.Icon_IsSet == rhs.Icon_IsSet && string.Equals(item.Icon, rhs.Icon);
-            ret.MapColor = item.MapColor_IsSet == rhs.MapColor_IsSet && item.MapColor.ColorOnlyEquals(rhs.MapColor);
-            ret.Worldspace = item.Worldspace_Property.FormKey == rhs.Worldspace_Property.FormKey;
-            ret.Areas = item.Areas.CollectionEqualsHelper(
-                rhs.Areas,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
-                include);
-            ret.Objects = EqualsMaskHelper.EqualsHelper(
-                item.Objects_IsSet,
-                rhs.Objects_IsSet,
-                item.Objects,
-                rhs.Objects,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
-                include);
-            ret.Weather = EqualsMaskHelper.EqualsHelper(
-                item.Weather_IsSet,
-                rhs.Weather_IsSet,
-                item.Weather,
-                rhs.Weather,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
-                include);
-            ret.MapName = EqualsMaskHelper.EqualsHelper(
-                item.MapName_IsSet,
-                rhs.MapName_IsSet,
-                item.MapName,
-                rhs.MapName,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
-                include);
-            ret.Grasses = EqualsMaskHelper.EqualsHelper(
-                item.Grasses_IsSet,
-                rhs.Grasses_IsSet,
-                item.Grasses,
-                rhs.Grasses,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
-                include);
-            ret.Sounds = EqualsMaskHelper.EqualsHelper(
-                item.Sounds_IsSet,
-                rhs.Sounds_IsSet,
-                item.Sounds,
-                rhs.Sounds,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
-                include);
-            base.FillEqualsMask(item, rhs, ret, include);
-        }
-
-        public string ToString(
-            IRegionInternalGetter item,
-            string name = null,
-            Region_Mask<bool> printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(
-                item: item,
-                fg: fg,
-                name: name,
-                printMask: printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(
-            IRegionInternalGetter item,
-            FileGeneration fg,
-            string name = null,
-            Region_Mask<bool> printMask = null)
-        {
-            if (name == null)
-            {
-                fg.AppendLine($"Region =>");
-            }
-            else
-            {
-                fg.AppendLine($"{name} (Region) =>");
-            }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                ToStringFields(
-                    item: item,
-                    fg: fg,
-                    printMask: printMask);
-            }
-            fg.AppendLine("]");
-        }
-
-        protected static void ToStringFields(
-            IRegionInternalGetter item,
-            FileGeneration fg,
-            Region_Mask<bool> printMask = null)
-        {
-            OblivionMajorRecordCommon.ToStringFields(
-                item: item,
-                fg: fg,
-                printMask: printMask);
-            if (printMask?.Icon ?? true)
-            {
-                fg.AppendLine($"Icon => {item.Icon}");
-            }
-            if (printMask?.MapColor ?? true)
-            {
-                fg.AppendLine($"MapColor => {item.MapColor}");
-            }
-            if (printMask?.Worldspace ?? true)
-            {
-                fg.AppendLine($"Worldspace => {item.Worldspace_Property}");
-            }
-            if (printMask?.Areas?.Overall ?? true)
-            {
-                fg.AppendLine("Areas =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
-                {
-                    foreach (var subItem in item.Areas)
-                    {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            subItem?.ToString(fg, "Item");
-                        }
-                        fg.AppendLine("]");
-                    }
-                }
-                fg.AppendLine("]");
-            }
-            if (printMask?.Objects?.Overall ?? true)
-            {
-                item.Objects?.ToString(fg, "Objects");
-            }
-            if (printMask?.Weather?.Overall ?? true)
-            {
-                item.Weather?.ToString(fg, "Weather");
-            }
-            if (printMask?.MapName?.Overall ?? true)
-            {
-                item.MapName?.ToString(fg, "MapName");
-            }
-            if (printMask?.Grasses?.Overall ?? true)
-            {
-                item.Grasses?.ToString(fg, "Grasses");
-            }
-            if (printMask?.Sounds?.Overall ?? true)
-            {
-                item.Sounds?.ToString(fg, "Sounds");
-            }
-        }
-
-        public bool HasBeenSet(
-            IRegionInternalGetter item,
-            Region_Mask<bool?> checkMask)
-        {
-            if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_IsSet) return false;
-            if (checkMask.MapColor.HasValue && checkMask.MapColor.Value != item.MapColor_IsSet) return false;
-            if (checkMask.Worldspace.HasValue && checkMask.Worldspace.Value != item.Worldspace_Property.HasBeenSet) return false;
-            if (checkMask.Areas.Overall.HasValue && checkMask.Areas.Overall.Value != item.Areas.HasBeenSet) return false;
-            if (checkMask.Objects.Overall.HasValue && checkMask.Objects.Overall.Value != item.Objects_IsSet) return false;
-            if (checkMask.Objects.Specific != null && (item.Objects == null || !item.Objects.HasBeenSet(checkMask.Objects.Specific))) return false;
-            if (checkMask.Weather.Overall.HasValue && checkMask.Weather.Overall.Value != item.Weather_IsSet) return false;
-            if (checkMask.Weather.Specific != null && (item.Weather == null || !item.Weather.HasBeenSet(checkMask.Weather.Specific))) return false;
-            if (checkMask.MapName.Overall.HasValue && checkMask.MapName.Overall.Value != item.MapName_IsSet) return false;
-            if (checkMask.MapName.Specific != null && (item.MapName == null || !item.MapName.HasBeenSet(checkMask.MapName.Specific))) return false;
-            if (checkMask.Grasses.Overall.HasValue && checkMask.Grasses.Overall.Value != item.Grasses_IsSet) return false;
-            if (checkMask.Grasses.Specific != null && (item.Grasses == null || !item.Grasses.HasBeenSet(checkMask.Grasses.Specific))) return false;
-            if (checkMask.Sounds.Overall.HasValue && checkMask.Sounds.Overall.Value != item.Sounds_IsSet) return false;
-            if (checkMask.Sounds.Specific != null && (item.Sounds == null || !item.Sounds.HasBeenSet(checkMask.Sounds.Specific))) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public void FillHasBeenSetMask(
-            IRegionInternalGetter item,
-            Region_Mask<bool> mask)
-        {
-            mask.Icon = item.Icon_IsSet;
-            mask.MapColor = item.MapColor_IsSet;
-            mask.Worldspace = item.Worldspace_Property.HasBeenSet;
-            mask.Areas = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, RegionArea_Mask<bool>>>>(item.Areas.HasBeenSet, item.Areas.WithIndex().Select((i) => new MaskItemIndexed<bool, RegionArea_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.Objects = new MaskItem<bool, RegionDataObjects_Mask<bool>>(item.Objects_IsSet, item.Objects.GetHasBeenSetMask());
-            mask.Weather = new MaskItem<bool, RegionDataWeather_Mask<bool>>(item.Weather_IsSet, item.Weather.GetHasBeenSetMask());
-            mask.MapName = new MaskItem<bool, RegionDataMapName_Mask<bool>>(item.MapName_IsSet, item.MapName.GetHasBeenSetMask());
-            mask.Grasses = new MaskItem<bool, RegionDataGrasses_Mask<bool>>(item.Grasses_IsSet, item.Grasses.GetHasBeenSetMask());
-            mask.Sounds = new MaskItem<bool, RegionDataSounds_Mask<bool>>(item.Sounds_IsSet, item.Sounds.GetHasBeenSetMask());
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-
-        public static Region_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
-        {
-            switch (index)
-            {
-                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Region_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.FormKey:
-                    return (Region_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.Version:
-                    return (Region_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.EditorID:
-                    return (Region_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
-                    return (Region_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        public static Region_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
-        {
-            switch (index)
-            {
-                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Region_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.FormKey:
-                    return (Region_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
-                    return (Region_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.EditorID:
-                    return (Region_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        #region Equals and Hash
-        public virtual bool Equals(
-            IRegionInternalGetter lhs,
-            IRegionInternalGetter rhs)
-        {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (lhs.Icon_IsSet != rhs.Icon_IsSet) return false;
-            if (lhs.Icon_IsSet)
-            {
-                if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
-            }
-            if (lhs.MapColor_IsSet != rhs.MapColor_IsSet) return false;
-            if (lhs.MapColor_IsSet)
-            {
-                if (!lhs.MapColor.ColorOnlyEquals(rhs.MapColor)) return false;
-            }
-            if (lhs.Worldspace_Property.HasBeenSet != rhs.Worldspace_Property.HasBeenSet) return false;
-            if (lhs.Worldspace_Property.HasBeenSet)
-            {
-                if (!lhs.Worldspace_Property.Equals(rhs.Worldspace_Property)) return false;
-            }
-            if (lhs.Areas.HasBeenSet != rhs.Areas.HasBeenSet) return false;
-            if (lhs.Areas.HasBeenSet)
-            {
-                if (!lhs.Areas.SequenceEqual(rhs.Areas)) return false;
-            }
-            if (lhs.Objects_IsSet != rhs.Objects_IsSet) return false;
-            if (lhs.Objects_IsSet)
-            {
-                if (!object.Equals(lhs.Objects, rhs.Objects)) return false;
-            }
-            if (lhs.Weather_IsSet != rhs.Weather_IsSet) return false;
-            if (lhs.Weather_IsSet)
-            {
-                if (!object.Equals(lhs.Weather, rhs.Weather)) return false;
-            }
-            if (lhs.MapName_IsSet != rhs.MapName_IsSet) return false;
-            if (lhs.MapName_IsSet)
-            {
-                if (!object.Equals(lhs.MapName, rhs.MapName)) return false;
-            }
-            if (lhs.Grasses_IsSet != rhs.Grasses_IsSet) return false;
-            if (lhs.Grasses_IsSet)
-            {
-                if (!object.Equals(lhs.Grasses, rhs.Grasses)) return false;
-            }
-            if (lhs.Sounds_IsSet != rhs.Sounds_IsSet) return false;
-            if (lhs.Sounds_IsSet)
-            {
-                if (!object.Equals(lhs.Sounds, rhs.Sounds)) return false;
-            }
-            return true;
-        }
-
-        public override bool Equals(
-            IOblivionMajorRecordInternalGetter lhs,
-            IOblivionMajorRecordInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (IRegionInternalGetter)lhs,
-                rhs: rhs as IRegionInternalGetter);
-        }
-
-        public override bool Equals(
-            IMajorRecordInternalGetter lhs,
-            IMajorRecordInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (IRegionInternalGetter)lhs,
-                rhs: rhs as IRegionInternalGetter);
-        }
-
-        public virtual int GetHashCode(IRegionInternalGetter item)
-        {
-            int ret = 0;
-            if (item.Icon_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Icon).CombineHashCode(ret);
-            }
-            if (item.MapColor_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.MapColor).CombineHashCode(ret);
-            }
-            if (item.Worldspace_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.Worldspace).CombineHashCode(ret);
-            }
-            if (item.Areas.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.Areas).CombineHashCode(ret);
-            }
-            if (item.Objects_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Objects).CombineHashCode(ret);
-            }
-            if (item.Weather_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Weather).CombineHashCode(ret);
-            }
-            if (item.MapName_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.MapName).CombineHashCode(ret);
-            }
-            if (item.Grasses_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Grasses).CombineHashCode(ret);
-            }
-            if (item.Sounds_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Sounds).CombineHashCode(ret);
-            }
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
-        {
-            return GetHashCode(item: (IRegionInternalGetter)item);
-        }
-
-        public override int GetHashCode(IMajorRecordInternalGetter item)
-        {
-            return GetHashCode(item: (IRegionInternalGetter)item);
-        }
-
-        #endregion
-
-
-        #region Mutagen
-        partial void PostDuplicate(Region obj, Region rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new Region(getNextFormKey());
-            ret.CopyFieldsFrom((Region)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (Region)item, getNextFormKey, duplicatedRecords);
-            return ret;
-        }
-
-        #endregion
-
+        
+        
     }
     #endregion
 
@@ -2307,14 +2338,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Areas.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Region_FieldIndex.Areas) ?? true))
             {
-                ListXmlTranslation<IRegionAreaGetter>.Instance.Write(
+                ListXmlTranslation<IRegionAreaInternalGetter>.Instance.Write(
                     node: node,
                     name: nameof(item.Areas),
                     item: item.Areas,
                     fieldIndex: (int)Region_FieldIndex.Areas,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)Region_FieldIndex.Areas),
-                    transl: (XElement subNode, IRegionAreaGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    transl: (XElement subNode, IRegionAreaInternalGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         var loquiItem = subItem;
                         ((RegionAreaXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
@@ -3473,12 +3504,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.Areas.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<IRegionAreaGetter>.Instance.Write(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<IRegionAreaInternalGetter>.Instance.Write(
                     writer: writer,
                     items: item.Areas,
                     fieldIndex: (int)Region_FieldIndex.Areas,
                     errorMask: errorMask,
-                    transl: (MutagenWriter subWriter, IRegionAreaGetter subItem, ErrorMaskBuilder listErrorMask) =>
+                    transl: (MutagenWriter subWriter, IRegionAreaInternalGetter subItem, ErrorMaskBuilder listErrorMask) =>
                     {
                         var loquiItem = subItem;
                         ((RegionAreaBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
@@ -3621,17 +3652,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         OblivionMajorRecordBinaryWrapper,
         IRegionInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Region_Registration.Instance;
         public new static Region_Registration Registration => Region_Registration.Instance;
-        protected override object CommonInstance => RegionCommon.Instance;
+        protected override object CommonInstance()
+        {
+            return RegionCommon.Instance;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRegionInternalGetter)rhs, include);
 
         protected override object XmlWriteTranslator => RegionXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((RegionXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         protected override object BinaryWriteTranslator => RegionBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((RegionBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
 
         #region MapColor
         private int? _MapColorLocation;
@@ -3644,7 +3707,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IFormIDSetLinkGetter<IWorldspaceInternalGetter> Worldspace_Property => _WorldspaceLocation.HasValue ? new FormIDSetLink<IWorldspaceInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _WorldspaceLocation.Value, _package.Meta)))) : FormIDSetLink<IWorldspaceInternalGetter>.Empty;
         public IWorldspaceInternalGetter Worldspace => default;
         #endregion
-        public IReadOnlySetList<IRegionAreaGetter> Areas { get; private set; } = EmptySetList<RegionAreaBinaryWrapper>.Instance;
+        public IReadOnlySetList<IRegionAreaInternalGetter> Areas { get; private set; } = EmptySetList<RegionAreaBinaryWrapper>.Instance;
         #region RegionAreaLogic
         partial void RegionAreaLogicCustomParse(
             BinaryMemoryReadStream stream,
@@ -3743,4 +3806,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class Region
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Region_Registration.Instance;
+        public new static Region_Registration Registration => Region_Registration.Instance;
+        protected override object CommonInstance()
+        {
+            return RegionCommon.Instance;
+        }
+        protected override object CommonSetterInstance()
+        {
+            return RegionSetterCommon.Instance;
+        }
+        protected override object CommonSetterCopyInstance()
+        {
+            return RegionSetterCopyCommon.Instance;
+        }
+
+        #endregion
+
+    }
 }

@@ -36,18 +36,12 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class PointToReferenceMapping :
         LoquiNotifyingObject,
-        IPointToReferenceMapping,
+        IPointToReferenceMappingInternal,
         ILoquiObjectSetter<PointToReferenceMapping>,
         ILinkSubContainer,
         IEquatable<PointToReferenceMapping>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => PointToReferenceMapping_Registration.Instance;
-        public static PointToReferenceMapping_Registration Registration => PointToReferenceMapping_Registration.Instance;
-        protected object CommonInstance => PointToReferenceMappingCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
-
         #region Ctor
         public PointToReferenceMapping()
         {
@@ -77,7 +71,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPointToReferenceMappingGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPointToReferenceMappingInternalGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -95,22 +89,35 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is IPointToReferenceMappingGetter rhs)) return false;
-            return ((PointToReferenceMappingCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            if (!(obj is IPointToReferenceMappingInternalGetter rhs)) return false;
+            return ((PointToReferenceMappingCommon)((IPointToReferenceMappingInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(PointToReferenceMapping obj)
         {
-            return ((PointToReferenceMappingCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((PointToReferenceMappingCommon)((IPointToReferenceMappingInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((PointToReferenceMappingCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((PointToReferenceMappingCommon)((IPointToReferenceMappingInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected object XmlWriteTranslator => PointToReferenceMappingXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((PointToReferenceMappingXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static PointToReferenceMapping CreateFromXml(
@@ -287,6 +294,19 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Translation
         protected object BinaryWriteTranslator => PointToReferenceMappingBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((PointToReferenceMappingBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
         #region Binary Create
         [DebuggerStepThrough]
         public static PointToReferenceMapping CreateFromBinary(
@@ -441,7 +461,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            PointToReferenceMappingCommon.CopyFieldsFrom(
+            PointToReferenceMappingSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -456,7 +476,7 @@ namespace Mutagen.Bethesda.Oblivion
             PointToReferenceMapping_CopyMask copyMask = null,
             PointToReferenceMapping def = null)
         {
-            PointToReferenceMappingCommon.CopyFieldsFrom(
+            PointToReferenceMappingSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -482,7 +502,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void Clear()
         {
-            PointToReferenceMappingCommon.Instance.Clear(this);
+            PointToReferenceMappingSetterCommon.Instance.Clear(this);
         }
 
         public static PointToReferenceMapping Create(IEnumerable<KeyValuePair<ushort, object>> fields)
@@ -518,8 +538,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IPointToReferenceMapping :
-        IPointToReferenceMappingGetter,
-        ILoquiObjectSetter<IPointToReferenceMapping>
+        IPointToReferenceMappingInternalGetter,
+        ILoquiObjectSetter<IPointToReferenceMappingInternal>
     {
         new IPlaced Reference { get; set; }
         new IFormIDLink<IPlaced> Reference_Property { get; }
@@ -531,9 +551,17 @@ namespace Mutagen.Bethesda.Oblivion
             PointToReferenceMapping def = null);
     }
 
+    public partial interface IPointToReferenceMappingInternal :
+        IPointToReferenceMapping,
+        IPointToReferenceMappingInternalGetter
+    {
+        new IPlaced Reference { get; set; }
+        new IFormIDLink<IPlaced> Reference_Property { get; }
+    }
+
     public partial interface IPointToReferenceMappingGetter :
         ILoquiObject,
-        ILoquiObject<IPointToReferenceMappingGetter>,
+        ILoquiObject<IPointToReferenceMappingInternalGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -548,45 +576,53 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    public partial interface IPointToReferenceMappingInternalGetter : IPointToReferenceMappingGetter
+    {
+        object CommonInstance();
+        object CommonSetterInstance();
+        object CommonSetterCopyInstance();
+
+    }
+
     #endregion
 
     #region Common MixIn
     public static class PointToReferenceMappingMixIn
     {
-        public static void Clear(this IPointToReferenceMapping item)
+        public static void Clear(this IPointToReferenceMappingInternal item)
         {
-            ((PointToReferenceMappingCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((PointToReferenceMappingSetterCommon)((IPointToReferenceMappingInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static PointToReferenceMapping_Mask<bool> GetEqualsMask(
-            this IPointToReferenceMappingGetter item,
-            IPointToReferenceMappingGetter rhs,
+            this IPointToReferenceMappingInternalGetter item,
+            IPointToReferenceMappingInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((PointToReferenceMappingCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((PointToReferenceMappingCommon)((IPointToReferenceMappingInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IPointToReferenceMappingGetter item,
+            this IPointToReferenceMappingInternalGetter item,
             string name = null,
             PointToReferenceMapping_Mask<bool> printMask = null)
         {
-            return ((PointToReferenceMappingCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((PointToReferenceMappingCommon)((IPointToReferenceMappingInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IPointToReferenceMappingGetter item,
+            this IPointToReferenceMappingInternalGetter item,
             FileGeneration fg,
             string name = null,
             PointToReferenceMapping_Mask<bool> printMask = null)
         {
-            ((PointToReferenceMappingCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((PointToReferenceMappingCommon)((IPointToReferenceMappingInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -594,28 +630,28 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static bool HasBeenSet(
-            this IPointToReferenceMappingGetter item,
+            this IPointToReferenceMappingInternalGetter item,
             PointToReferenceMapping_Mask<bool?> checkMask)
         {
-            return ((PointToReferenceMappingCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((PointToReferenceMappingCommon)((IPointToReferenceMappingInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static PointToReferenceMapping_Mask<bool> GetHasBeenSetMask(this IPointToReferenceMappingGetter item)
+        public static PointToReferenceMapping_Mask<bool> GetHasBeenSetMask(this IPointToReferenceMappingInternalGetter item)
         {
             var ret = new PointToReferenceMapping_Mask<bool>();
-            ((PointToReferenceMappingCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((PointToReferenceMappingCommon)((IPointToReferenceMappingInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this IPointToReferenceMappingGetter item,
-            IPointToReferenceMappingGetter rhs)
+            this IPointToReferenceMappingInternalGetter item,
+            IPointToReferenceMappingInternalGetter rhs)
         {
-            return ((PointToReferenceMappingCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((PointToReferenceMappingCommon)((IPointToReferenceMappingInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -661,13 +697,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IPointToReferenceMappingGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type InternalGetterType = typeof(IPointToReferenceMappingInternalGetter);
 
         public static readonly Type SetterType = typeof(IPointToReferenceMapping);
 
-        public static readonly Type InternalSetterType = null;
-
-        public static readonly Type CommonType = typeof(PointToReferenceMappingCommon);
+        public static readonly Type InternalSetterType = typeof(IPointToReferenceMappingInternal);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.PointToReferenceMapping";
 
@@ -805,7 +839,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -825,9 +858,164 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
+    public partial class PointToReferenceMappingSetterCommon
+    {
+        public static readonly PointToReferenceMappingSetterCommon Instance = new PointToReferenceMappingSetterCommon();
+
+        partial void ClearPartial();
+        
+        public virtual void Clear(IPointToReferenceMappingInternal item)
+        {
+            ClearPartial();
+            item.Reference = default(IPlaced);
+            item.Points.Clear();
+        }
+        
+        
+    }
     public partial class PointToReferenceMappingCommon
     {
         public static readonly PointToReferenceMappingCommon Instance = new PointToReferenceMappingCommon();
+
+        public PointToReferenceMapping_Mask<bool> GetEqualsMask(
+            IPointToReferenceMappingInternalGetter item,
+            IPointToReferenceMappingInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new PointToReferenceMapping_Mask<bool>();
+            ((PointToReferenceMappingCommon)((IPointToReferenceMappingInternalGetter)item).CommonInstance()).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+        
+        public void FillEqualsMask(
+            IPointToReferenceMappingInternalGetter item,
+            IPointToReferenceMappingInternalGetter rhs,
+            PointToReferenceMapping_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            if (rhs == null) return;
+            ret.Reference = item.Reference_Property.FormKey == rhs.Reference_Property.FormKey;
+            ret.Points = item.Points.CollectionEqualsHelper(
+                rhs.Points,
+                (l, r) => l == r,
+                include);
+        }
+        
+        public string ToString(
+            IPointToReferenceMappingInternalGetter item,
+            string name = null,
+            PointToReferenceMapping_Mask<bool> printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+            return fg.ToString();
+        }
+        
+        public void ToString(
+            IPointToReferenceMappingInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            PointToReferenceMapping_Mask<bool> printMask = null)
+        {
+            if (name == null)
+            {
+                fg.AppendLine($"PointToReferenceMapping =>");
+            }
+            else
+            {
+                fg.AppendLine($"{name} (PointToReferenceMapping) =>");
+            }
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
+            }
+            fg.AppendLine("]");
+        }
+        
+        protected static void ToStringFields(
+            IPointToReferenceMappingInternalGetter item,
+            FileGeneration fg,
+            PointToReferenceMapping_Mask<bool> printMask = null)
+        {
+            if (printMask?.Reference ?? true)
+            {
+                fg.AppendLine($"Reference => {item.Reference_Property}");
+            }
+            if (printMask?.Points?.Overall ?? true)
+            {
+                fg.AppendLine("Points =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Points)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"Item => {subItem}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+        }
+        
+        public bool HasBeenSet(
+            IPointToReferenceMappingInternalGetter item,
+            PointToReferenceMapping_Mask<bool?> checkMask)
+        {
+            return true;
+        }
+        
+        public void FillHasBeenSetMask(
+            IPointToReferenceMappingInternalGetter item,
+            PointToReferenceMapping_Mask<bool> mask)
+        {
+            mask.Reference = true;
+            mask.Points = new MaskItem<bool, IEnumerable<(int, bool)>>(true, null);
+        }
+        
+        #region Equals and Hash
+        public virtual bool Equals(
+            IPointToReferenceMappingInternalGetter lhs,
+            IPointToReferenceMappingInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!lhs.Reference_Property.Equals(rhs.Reference_Property)) return false;
+            if (!lhs.Points.SequenceEqual(rhs.Points)) return false;
+            return true;
+        }
+        
+        public virtual int GetHashCode(IPointToReferenceMappingInternalGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.Reference).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Points).CombineHashCode(ret);
+            return ret;
+        }
+        
+        #endregion
+        
+        
+        
+    }
+    public partial class PointToReferenceMappingSetterCopyCommon
+    {
+        public static readonly PointToReferenceMappingSetterCopyCommon Instance = new PointToReferenceMappingSetterCopyCommon();
 
         #region Copy Fields From
         public static void CopyFieldsFrom(
@@ -874,152 +1062,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
         }
-
+        
         #endregion
-
-        partial void ClearPartial();
-
-        public virtual void Clear(IPointToReferenceMapping item)
-        {
-            ClearPartial();
-            item.Reference = default(IPlaced);
-            item.Points.Clear();
-        }
-
-        public PointToReferenceMapping_Mask<bool> GetEqualsMask(
-            IPointToReferenceMappingGetter item,
-            IPointToReferenceMappingGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new PointToReferenceMapping_Mask<bool>();
-            ((PointToReferenceMappingCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public void FillEqualsMask(
-            IPointToReferenceMappingGetter item,
-            IPointToReferenceMappingGetter rhs,
-            PointToReferenceMapping_Mask<bool> ret,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            if (rhs == null) return;
-            ret.Reference = item.Reference_Property.FormKey == rhs.Reference_Property.FormKey;
-            ret.Points = item.Points.CollectionEqualsHelper(
-                rhs.Points,
-                (l, r) => l == r,
-                include);
-        }
-
-        public string ToString(
-            IPointToReferenceMappingGetter item,
-            string name = null,
-            PointToReferenceMapping_Mask<bool> printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(
-                item: item,
-                fg: fg,
-                name: name,
-                printMask: printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(
-            IPointToReferenceMappingGetter item,
-            FileGeneration fg,
-            string name = null,
-            PointToReferenceMapping_Mask<bool> printMask = null)
-        {
-            if (name == null)
-            {
-                fg.AppendLine($"PointToReferenceMapping =>");
-            }
-            else
-            {
-                fg.AppendLine($"{name} (PointToReferenceMapping) =>");
-            }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                ToStringFields(
-                    item: item,
-                    fg: fg,
-                    printMask: printMask);
-            }
-            fg.AppendLine("]");
-        }
-
-        protected static void ToStringFields(
-            IPointToReferenceMappingGetter item,
-            FileGeneration fg,
-            PointToReferenceMapping_Mask<bool> printMask = null)
-        {
-            if (printMask?.Reference ?? true)
-            {
-                fg.AppendLine($"Reference => {item.Reference_Property}");
-            }
-            if (printMask?.Points?.Overall ?? true)
-            {
-                fg.AppendLine("Points =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
-                {
-                    foreach (var subItem in item.Points)
-                    {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            fg.AppendLine($"Item => {subItem}");
-                        }
-                        fg.AppendLine("]");
-                    }
-                }
-                fg.AppendLine("]");
-            }
-        }
-
-        public bool HasBeenSet(
-            IPointToReferenceMappingGetter item,
-            PointToReferenceMapping_Mask<bool?> checkMask)
-        {
-            return true;
-        }
-
-        public void FillHasBeenSetMask(
-            IPointToReferenceMappingGetter item,
-            PointToReferenceMapping_Mask<bool> mask)
-        {
-            mask.Reference = true;
-            mask.Points = new MaskItem<bool, IEnumerable<(int, bool)>>(true, null);
-        }
-
-        #region Equals and Hash
-        public virtual bool Equals(
-            IPointToReferenceMappingGetter lhs,
-            IPointToReferenceMappingGetter rhs)
-        {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
-            if (!lhs.Reference_Property.Equals(rhs.Reference_Property)) return false;
-            if (!lhs.Points.SequenceEqual(rhs.Points)) return false;
-            return true;
-        }
-
-        public virtual int GetHashCode(IPointToReferenceMappingGetter item)
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.Reference).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Points).CombineHashCode(ret);
-            return ret;
-        }
-
-        #endregion
-
-
+        
+        
     }
     #endregion
 
@@ -1030,7 +1076,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static PointToReferenceMappingXmlWriteTranslation Instance = new PointToReferenceMappingXmlWriteTranslation();
 
         public static void WriteToNodeXml(
-            IPointToReferenceMappingGetter item,
+            IPointToReferenceMappingInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1066,7 +1112,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             XElement node,
-            IPointToReferenceMappingGetter item,
+            IPointToReferenceMappingInternalGetter item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)
@@ -1092,7 +1138,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             Write(
-                item: (IPointToReferenceMappingGetter)item,
+                item: (IPointToReferenceMappingInternalGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1101,7 +1147,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             XElement node,
-            IPointToReferenceMappingGetter item,
+            IPointToReferenceMappingInternalGetter item,
             ErrorMaskBuilder errorMask,
             int fieldIndex,
             TranslationCrystal translationMask,
@@ -1111,7 +1157,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 errorMask?.PushIndex(fieldIndex);
                 Write(
-                    item: (IPointToReferenceMappingGetter)item,
+                    item: (IPointToReferenceMappingInternalGetter)item,
                     name: name,
                     node: node,
                     errorMask: errorMask,
@@ -1135,7 +1181,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static PointToReferenceMappingXmlCreateTranslation Instance = new PointToReferenceMappingXmlCreateTranslation();
 
         public static void FillPublicXml(
-            IPointToReferenceMapping item,
+            IPointToReferenceMappingInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1160,7 +1206,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElementXml(
-            IPointToReferenceMapping item,
+            IPointToReferenceMappingInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -1214,7 +1260,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public static class PointToReferenceMappingXmlTranslationMixIn
     {
         public static void WriteToXml(
-            this IPointToReferenceMappingGetter item,
+            this IPointToReferenceMappingInternalGetter item,
             XElement node,
             out PointToReferenceMapping_ErrorMask errorMask,
             bool doMasks = true,
@@ -1232,7 +1278,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IPointToReferenceMappingGetter item,
+            this IPointToReferenceMappingInternalGetter item,
             string path,
             out PointToReferenceMapping_ErrorMask errorMask,
             PointToReferenceMapping_TranslationMask translationMask = null,
@@ -1251,7 +1297,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IPointToReferenceMappingGetter item,
+            this IPointToReferenceMappingInternalGetter item,
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1269,7 +1315,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IPointToReferenceMappingGetter item,
+            this IPointToReferenceMappingInternalGetter item,
             Stream stream,
             out PointToReferenceMapping_ErrorMask errorMask,
             PointToReferenceMapping_TranslationMask translationMask = null,
@@ -1288,7 +1334,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IPointToReferenceMappingGetter item,
+            this IPointToReferenceMappingInternalGetter item,
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1306,7 +1352,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IPointToReferenceMappingGetter item,
+            this IPointToReferenceMappingInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1321,7 +1367,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IPointToReferenceMappingGetter item,
+            this IPointToReferenceMappingInternalGetter item,
             XElement node,
             string name = null,
             PointToReferenceMapping_TranslationMask translationMask = null)
@@ -1335,7 +1381,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IPointToReferenceMappingGetter item,
+            this IPointToReferenceMappingInternalGetter item,
             string path,
             string name = null)
         {
@@ -1350,7 +1396,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IPointToReferenceMappingGetter item,
+            this IPointToReferenceMappingInternalGetter item,
             Stream stream,
             string name = null)
         {
@@ -1747,7 +1793,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static PointToReferenceMappingBinaryWriteTranslation Instance = new PointToReferenceMappingBinaryWriteTranslation();
 
         public static void Write_Embedded(
-            IPointToReferenceMappingGetter item,
+            IPointToReferenceMappingInternalGetter item,
             MutagenWriter writer,
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
@@ -1764,7 +1810,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             MutagenWriter writer,
-            IPointToReferenceMappingGetter item,
+            IPointToReferenceMappingInternalGetter item,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
@@ -1790,7 +1836,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask)
         {
             Write(
-                item: (IPointToReferenceMappingGetter)item,
+                item: (IPointToReferenceMappingInternalGetter)item,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -1809,7 +1855,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public static class PointToReferenceMappingBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IPointToReferenceMappingGetter item,
+            this IPointToReferenceMappingInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
             out PointToReferenceMapping_ErrorMask errorMask,
@@ -1826,7 +1872,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToBinary(
-            this IPointToReferenceMappingGetter item,
+            this IPointToReferenceMappingInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -1840,7 +1886,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToBinary(
-            this IPointToReferenceMappingGetter item,
+            this IPointToReferenceMappingInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
@@ -1857,22 +1903,65 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     public partial class PointToReferenceMappingBinaryWrapper :
         BinaryWrapper,
-        IPointToReferenceMappingGetter
+        IPointToReferenceMappingInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PointToReferenceMapping_Registration.Instance;
         public static PointToReferenceMapping_Registration Registration => PointToReferenceMapping_Registration.Instance;
-        protected object CommonInstance => PointToReferenceMappingCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
+        protected object CommonInstance()
+        {
+            return PointToReferenceMappingCommon.Instance;
+        }
+        object IPointToReferenceMappingInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IPointToReferenceMappingInternalGetter.CommonSetterInstance()
+        {
+            return null;
+        }
+        object IPointToReferenceMappingInternalGetter.CommonSetterCopyInstance()
+        {
+            return null;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPointToReferenceMappingGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPointToReferenceMappingInternalGetter)rhs, include);
 
         protected object XmlWriteTranslator => PointToReferenceMappingXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((PointToReferenceMappingXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         protected object BinaryWriteTranslator => PointToReferenceMappingBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((PointToReferenceMappingBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
 
         #region Reference
         public IFormIDLinkGetter<IPlacedGetter> Reference_Property => new FormIDLink<IPlacedGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
@@ -1918,4 +2007,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class PointToReferenceMapping
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => PointToReferenceMapping_Registration.Instance;
+        public static PointToReferenceMapping_Registration Registration => PointToReferenceMapping_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return PointToReferenceMappingCommon.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return PointToReferenceMappingSetterCommon.Instance;
+        }
+        protected object CommonSetterCopyInstance()
+        {
+            return PointToReferenceMappingSetterCopyCommon.Instance;
+        }
+        object IPointToReferenceMappingInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IPointToReferenceMappingInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object IPointToReferenceMappingInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
 }

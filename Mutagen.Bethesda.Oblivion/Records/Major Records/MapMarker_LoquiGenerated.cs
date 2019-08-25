@@ -36,18 +36,12 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class MapMarker :
         LoquiNotifyingObject,
-        IMapMarker,
+        IMapMarkerInternal,
         ILoquiObjectSetter<MapMarker>,
         INamed,
         IEquatable<MapMarker>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => MapMarker_Registration.Instance;
-        public static MapMarker_Registration Registration => MapMarker_Registration.Instance;
-        protected object CommonInstance => MapMarkerCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
-
         #region Ctor
         public MapMarker()
         {
@@ -122,7 +116,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMapMarkerGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMapMarkerInternalGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -140,22 +134,35 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is IMapMarkerGetter rhs)) return false;
-            return ((MapMarkerCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            if (!(obj is IMapMarkerInternalGetter rhs)) return false;
+            return ((MapMarkerCommon)((IMapMarkerInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(MapMarker obj)
         {
-            return ((MapMarkerCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((MapMarkerCommon)((IMapMarkerInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((MapMarkerCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((MapMarkerCommon)((IMapMarkerInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected object XmlWriteTranslator => MapMarkerXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((MapMarkerXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static MapMarker CreateFromXml(
@@ -326,6 +333,19 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Translation
         protected object BinaryWriteTranslator => MapMarkerBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((MapMarkerBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
         #region Binary Create
         [DebuggerStepThrough]
         public static MapMarker CreateFromBinary(
@@ -536,7 +556,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            MapMarkerCommon.CopyFieldsFrom(
+            MapMarkerSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -551,7 +571,7 @@ namespace Mutagen.Bethesda.Oblivion
             MapMarker_CopyMask copyMask = null,
             MapMarker def = null)
         {
-            MapMarkerCommon.CopyFieldsFrom(
+            MapMarkerSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -580,7 +600,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void Clear()
         {
-            MapMarkerCommon.Instance.Clear(this);
+            MapMarkerSetterCommon.Instance.Clear(this);
         }
 
         public static MapMarker Create(IEnumerable<KeyValuePair<ushort, object>> fields)
@@ -619,8 +639,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IMapMarker :
-        IMapMarkerGetter,
-        ILoquiObjectSetter<IMapMarker>
+        IMapMarkerInternalGetter,
+        ILoquiObjectSetter<IMapMarkerInternal>
     {
         new MapMarker.Flag Flags { get; set; }
         new bool Flags_IsSet { get; set; }
@@ -640,9 +660,15 @@ namespace Mutagen.Bethesda.Oblivion
             MapMarker def = null);
     }
 
+    public partial interface IMapMarkerInternal :
+        IMapMarker,
+        IMapMarkerInternalGetter
+    {
+    }
+
     public partial interface IMapMarkerGetter :
         ILoquiObject,
-        ILoquiObject<IMapMarkerGetter>,
+        ILoquiObject<IMapMarkerInternalGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -662,45 +688,53 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    public partial interface IMapMarkerInternalGetter : IMapMarkerGetter
+    {
+        object CommonInstance();
+        object CommonSetterInstance();
+        object CommonSetterCopyInstance();
+
+    }
+
     #endregion
 
     #region Common MixIn
     public static class MapMarkerMixIn
     {
-        public static void Clear(this IMapMarker item)
+        public static void Clear(this IMapMarkerInternal item)
         {
-            ((MapMarkerCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((MapMarkerSetterCommon)((IMapMarkerInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static MapMarker_Mask<bool> GetEqualsMask(
-            this IMapMarkerGetter item,
-            IMapMarkerGetter rhs,
+            this IMapMarkerInternalGetter item,
+            IMapMarkerInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((MapMarkerCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((MapMarkerCommon)((IMapMarkerInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IMapMarkerGetter item,
+            this IMapMarkerInternalGetter item,
             string name = null,
             MapMarker_Mask<bool> printMask = null)
         {
-            return ((MapMarkerCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((MapMarkerCommon)((IMapMarkerInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IMapMarkerGetter item,
+            this IMapMarkerInternalGetter item,
             FileGeneration fg,
             string name = null,
             MapMarker_Mask<bool> printMask = null)
         {
-            ((MapMarkerCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((MapMarkerCommon)((IMapMarkerInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -708,28 +742,28 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static bool HasBeenSet(
-            this IMapMarkerGetter item,
+            this IMapMarkerInternalGetter item,
             MapMarker_Mask<bool?> checkMask)
         {
-            return ((MapMarkerCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((MapMarkerCommon)((IMapMarkerInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static MapMarker_Mask<bool> GetHasBeenSetMask(this IMapMarkerGetter item)
+        public static MapMarker_Mask<bool> GetHasBeenSetMask(this IMapMarkerInternalGetter item)
         {
             var ret = new MapMarker_Mask<bool>();
-            ((MapMarkerCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((MapMarkerCommon)((IMapMarkerInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this IMapMarkerGetter item,
-            IMapMarkerGetter rhs)
+            this IMapMarkerInternalGetter item,
+            IMapMarkerInternalGetter rhs)
         {
-            return ((MapMarkerCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((MapMarkerCommon)((IMapMarkerInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -776,13 +810,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IMapMarkerGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type InternalGetterType = typeof(IMapMarkerInternalGetter);
 
         public static readonly Type SetterType = typeof(IMapMarker);
 
-        public static readonly Type InternalSetterType = null;
-
-        public static readonly Type CommonType = typeof(MapMarkerCommon);
+        public static readonly Type InternalSetterType = typeof(IMapMarkerInternal);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.MapMarker";
 
@@ -945,7 +977,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -965,9 +996,197 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
+    public partial class MapMarkerSetterCommon
+    {
+        public static readonly MapMarkerSetterCommon Instance = new MapMarkerSetterCommon();
+
+        partial void ClearPartial();
+        
+        public virtual void Clear(IMapMarkerInternal item)
+        {
+            ClearPartial();
+            item.Flags_Unset();
+            item.Name_Unset();
+            item.Types.Unset();
+        }
+        
+        
+    }
     public partial class MapMarkerCommon
     {
         public static readonly MapMarkerCommon Instance = new MapMarkerCommon();
+
+        public MapMarker_Mask<bool> GetEqualsMask(
+            IMapMarkerInternalGetter item,
+            IMapMarkerInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new MapMarker_Mask<bool>();
+            ((MapMarkerCommon)((IMapMarkerInternalGetter)item).CommonInstance()).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+        
+        public void FillEqualsMask(
+            IMapMarkerInternalGetter item,
+            IMapMarkerInternalGetter rhs,
+            MapMarker_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            if (rhs == null) return;
+            ret.Flags = item.Flags_IsSet == rhs.Flags_IsSet && item.Flags == rhs.Flags;
+            ret.Name = item.Name_IsSet == rhs.Name_IsSet && string.Equals(item.Name, rhs.Name);
+            ret.Types = item.Types.CollectionEqualsHelper(
+                rhs.Types,
+                (l, r) => l == r,
+                include);
+        }
+        
+        public string ToString(
+            IMapMarkerInternalGetter item,
+            string name = null,
+            MapMarker_Mask<bool> printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+            return fg.ToString();
+        }
+        
+        public void ToString(
+            IMapMarkerInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            MapMarker_Mask<bool> printMask = null)
+        {
+            if (name == null)
+            {
+                fg.AppendLine($"MapMarker =>");
+            }
+            else
+            {
+                fg.AppendLine($"{name} (MapMarker) =>");
+            }
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
+            }
+            fg.AppendLine("]");
+        }
+        
+        protected static void ToStringFields(
+            IMapMarkerInternalGetter item,
+            FileGeneration fg,
+            MapMarker_Mask<bool> printMask = null)
+        {
+            if (printMask?.Flags ?? true)
+            {
+                fg.AppendLine($"Flags => {item.Flags}");
+            }
+            if (printMask?.Name ?? true)
+            {
+                fg.AppendLine($"Name => {item.Name}");
+            }
+            if (printMask?.Types?.Overall ?? true)
+            {
+                fg.AppendLine("Types =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Types)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"Item => {subItem}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+        }
+        
+        public bool HasBeenSet(
+            IMapMarkerInternalGetter item,
+            MapMarker_Mask<bool?> checkMask)
+        {
+            if (checkMask.Flags.HasValue && checkMask.Flags.Value != item.Flags_IsSet) return false;
+            if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_IsSet) return false;
+            if (checkMask.Types.Overall.HasValue && checkMask.Types.Overall.Value != item.Types.HasBeenSet) return false;
+            return true;
+        }
+        
+        public void FillHasBeenSetMask(
+            IMapMarkerInternalGetter item,
+            MapMarker_Mask<bool> mask)
+        {
+            mask.Flags = item.Flags_IsSet;
+            mask.Name = item.Name_IsSet;
+            mask.Types = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Types.HasBeenSet, null);
+        }
+        
+        #region Equals and Hash
+        public virtual bool Equals(
+            IMapMarkerInternalGetter lhs,
+            IMapMarkerInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (lhs.Flags_IsSet != rhs.Flags_IsSet) return false;
+            if (lhs.Flags_IsSet)
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if (lhs.Name_IsSet != rhs.Name_IsSet) return false;
+            if (lhs.Name_IsSet)
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if (lhs.Types.HasBeenSet != rhs.Types.HasBeenSet) return false;
+            if (lhs.Types.HasBeenSet)
+            {
+                if (!lhs.Types.SequenceEqual(rhs.Types)) return false;
+            }
+            return true;
+        }
+        
+        public virtual int GetHashCode(IMapMarkerInternalGetter item)
+        {
+            int ret = 0;
+            if (item.Flags_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
+            }
+            if (item.Name_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Name).CombineHashCode(ret);
+            }
+            if (item.Types.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Types).CombineHashCode(ret);
+            }
+            return ret;
+        }
+        
+        #endregion
+        
+        
+        
+    }
+    public partial class MapMarkerSetterCopyCommon
+    {
+        public static readonly MapMarkerSetterCopyCommon Instance = new MapMarkerSetterCopyCommon();
 
         #region Copy Fields From
         public static void CopyFieldsFrom(
@@ -1057,185 +1276,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
         }
-
+        
         #endregion
-
-        partial void ClearPartial();
-
-        public virtual void Clear(IMapMarker item)
-        {
-            ClearPartial();
-            item.Flags_Unset();
-            item.Name_Unset();
-            item.Types.Unset();
-        }
-
-        public MapMarker_Mask<bool> GetEqualsMask(
-            IMapMarkerGetter item,
-            IMapMarkerGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new MapMarker_Mask<bool>();
-            ((MapMarkerCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public void FillEqualsMask(
-            IMapMarkerGetter item,
-            IMapMarkerGetter rhs,
-            MapMarker_Mask<bool> ret,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            if (rhs == null) return;
-            ret.Flags = item.Flags_IsSet == rhs.Flags_IsSet && item.Flags == rhs.Flags;
-            ret.Name = item.Name_IsSet == rhs.Name_IsSet && string.Equals(item.Name, rhs.Name);
-            ret.Types = item.Types.CollectionEqualsHelper(
-                rhs.Types,
-                (l, r) => l == r,
-                include);
-        }
-
-        public string ToString(
-            IMapMarkerGetter item,
-            string name = null,
-            MapMarker_Mask<bool> printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(
-                item: item,
-                fg: fg,
-                name: name,
-                printMask: printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(
-            IMapMarkerGetter item,
-            FileGeneration fg,
-            string name = null,
-            MapMarker_Mask<bool> printMask = null)
-        {
-            if (name == null)
-            {
-                fg.AppendLine($"MapMarker =>");
-            }
-            else
-            {
-                fg.AppendLine($"{name} (MapMarker) =>");
-            }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                ToStringFields(
-                    item: item,
-                    fg: fg,
-                    printMask: printMask);
-            }
-            fg.AppendLine("]");
-        }
-
-        protected static void ToStringFields(
-            IMapMarkerGetter item,
-            FileGeneration fg,
-            MapMarker_Mask<bool> printMask = null)
-        {
-            if (printMask?.Flags ?? true)
-            {
-                fg.AppendLine($"Flags => {item.Flags}");
-            }
-            if (printMask?.Name ?? true)
-            {
-                fg.AppendLine($"Name => {item.Name}");
-            }
-            if (printMask?.Types?.Overall ?? true)
-            {
-                fg.AppendLine("Types =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
-                {
-                    foreach (var subItem in item.Types)
-                    {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            fg.AppendLine($"Item => {subItem}");
-                        }
-                        fg.AppendLine("]");
-                    }
-                }
-                fg.AppendLine("]");
-            }
-        }
-
-        public bool HasBeenSet(
-            IMapMarkerGetter item,
-            MapMarker_Mask<bool?> checkMask)
-        {
-            if (checkMask.Flags.HasValue && checkMask.Flags.Value != item.Flags_IsSet) return false;
-            if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_IsSet) return false;
-            if (checkMask.Types.Overall.HasValue && checkMask.Types.Overall.Value != item.Types.HasBeenSet) return false;
-            return true;
-        }
-
-        public void FillHasBeenSetMask(
-            IMapMarkerGetter item,
-            MapMarker_Mask<bool> mask)
-        {
-            mask.Flags = item.Flags_IsSet;
-            mask.Name = item.Name_IsSet;
-            mask.Types = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Types.HasBeenSet, null);
-        }
-
-        #region Equals and Hash
-        public virtual bool Equals(
-            IMapMarkerGetter lhs,
-            IMapMarkerGetter rhs)
-        {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
-            if (lhs.Flags_IsSet != rhs.Flags_IsSet) return false;
-            if (lhs.Flags_IsSet)
-            {
-                if (lhs.Flags != rhs.Flags) return false;
-            }
-            if (lhs.Name_IsSet != rhs.Name_IsSet) return false;
-            if (lhs.Name_IsSet)
-            {
-                if (!string.Equals(lhs.Name, rhs.Name)) return false;
-            }
-            if (lhs.Types.HasBeenSet != rhs.Types.HasBeenSet) return false;
-            if (lhs.Types.HasBeenSet)
-            {
-                if (!lhs.Types.SequenceEqual(rhs.Types)) return false;
-            }
-            return true;
-        }
-
-        public virtual int GetHashCode(IMapMarkerGetter item)
-        {
-            int ret = 0;
-            if (item.Flags_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
-            }
-            if (item.Name_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Name).CombineHashCode(ret);
-            }
-            if (item.Types.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.Types).CombineHashCode(ret);
-            }
-            return ret;
-        }
-
-        #endregion
-
-
+        
+        
     }
     #endregion
 
@@ -1246,7 +1290,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static MapMarkerXmlWriteTranslation Instance = new MapMarkerXmlWriteTranslation();
 
         public static void WriteToNodeXml(
-            IMapMarkerGetter item,
+            IMapMarkerInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1294,7 +1338,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             XElement node,
-            IMapMarkerGetter item,
+            IMapMarkerInternalGetter item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)
@@ -1320,7 +1364,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             Write(
-                item: (IMapMarkerGetter)item,
+                item: (IMapMarkerInternalGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1329,7 +1373,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             XElement node,
-            IMapMarkerGetter item,
+            IMapMarkerInternalGetter item,
             ErrorMaskBuilder errorMask,
             int fieldIndex,
             TranslationCrystal translationMask,
@@ -1339,7 +1383,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 errorMask?.PushIndex(fieldIndex);
                 Write(
-                    item: (IMapMarkerGetter)item,
+                    item: (IMapMarkerInternalGetter)item,
                     name: name,
                     node: node,
                     errorMask: errorMask,
@@ -1363,7 +1407,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static MapMarkerXmlCreateTranslation Instance = new MapMarkerXmlCreateTranslation();
 
         public static void FillPublicXml(
-            IMapMarker item,
+            IMapMarkerInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1388,7 +1432,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElementXml(
-            IMapMarker item,
+            IMapMarkerInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -1487,7 +1531,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public static class MapMarkerXmlTranslationMixIn
     {
         public static void WriteToXml(
-            this IMapMarkerGetter item,
+            this IMapMarkerInternalGetter item,
             XElement node,
             out MapMarker_ErrorMask errorMask,
             bool doMasks = true,
@@ -1505,7 +1549,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IMapMarkerGetter item,
+            this IMapMarkerInternalGetter item,
             string path,
             out MapMarker_ErrorMask errorMask,
             MapMarker_TranslationMask translationMask = null,
@@ -1524,7 +1568,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IMapMarkerGetter item,
+            this IMapMarkerInternalGetter item,
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1542,7 +1586,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IMapMarkerGetter item,
+            this IMapMarkerInternalGetter item,
             Stream stream,
             out MapMarker_ErrorMask errorMask,
             MapMarker_TranslationMask translationMask = null,
@@ -1561,7 +1605,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IMapMarkerGetter item,
+            this IMapMarkerInternalGetter item,
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1579,7 +1623,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IMapMarkerGetter item,
+            this IMapMarkerInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1594,7 +1638,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IMapMarkerGetter item,
+            this IMapMarkerInternalGetter item,
             XElement node,
             string name = null,
             MapMarker_TranslationMask translationMask = null)
@@ -1608,7 +1652,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IMapMarkerGetter item,
+            this IMapMarkerInternalGetter item,
             string path,
             string name = null)
         {
@@ -1623,7 +1667,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IMapMarkerGetter item,
+            this IMapMarkerInternalGetter item,
             Stream stream,
             string name = null)
         {
@@ -2047,7 +2091,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static MapMarkerBinaryWriteTranslation Instance = new MapMarkerBinaryWriteTranslation();
 
         public static void Write_RecordTypes(
-            IMapMarkerGetter item,
+            IMapMarkerInternalGetter item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask,
@@ -2088,7 +2132,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             MutagenWriter writer,
-            IMapMarkerGetter item,
+            IMapMarkerInternalGetter item,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
@@ -2109,7 +2153,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask)
         {
             Write(
-                item: (IMapMarkerGetter)item,
+                item: (IMapMarkerInternalGetter)item,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -2128,7 +2172,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public static class MapMarkerBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IMapMarkerGetter item,
+            this IMapMarkerInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
             out MapMarker_ErrorMask errorMask,
@@ -2145,7 +2189,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToBinary(
-            this IMapMarkerGetter item,
+            this IMapMarkerInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -2159,7 +2203,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToBinary(
-            this IMapMarkerGetter item,
+            this IMapMarkerInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
@@ -2176,22 +2220,65 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     public partial class MapMarkerBinaryWrapper :
         BinaryWrapper,
-        IMapMarkerGetter
+        IMapMarkerInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MapMarker_Registration.Instance;
         public static MapMarker_Registration Registration => MapMarker_Registration.Instance;
-        protected object CommonInstance => MapMarkerCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
+        protected object CommonInstance()
+        {
+            return MapMarkerCommon.Instance;
+        }
+        object IMapMarkerInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IMapMarkerInternalGetter.CommonSetterInstance()
+        {
+            return null;
+        }
+        object IMapMarkerInternalGetter.CommonSetterCopyInstance()
+        {
+            return null;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMapMarkerGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMapMarkerInternalGetter)rhs, include);
 
         protected object XmlWriteTranslator => MapMarkerXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((MapMarkerXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         protected object BinaryWriteTranslator => MapMarkerBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((MapMarkerBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
 
         #region Flags
         private int? _FlagsLocation;
@@ -2287,4 +2374,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class MapMarker
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => MapMarker_Registration.Instance;
+        public static MapMarker_Registration Registration => MapMarker_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return MapMarkerCommon.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return MapMarkerSetterCommon.Instance;
+        }
+        protected object CommonSetterCopyInstance()
+        {
+            return MapMarkerSetterCopyCommon.Instance;
+        }
+        object IMapMarkerInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IMapMarkerInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object IMapMarkerInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
 }

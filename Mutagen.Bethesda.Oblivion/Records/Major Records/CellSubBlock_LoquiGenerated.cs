@@ -36,18 +36,12 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class CellSubBlock :
         LoquiNotifyingObject,
-        ICellSubBlock,
+        ICellSubBlockInternal,
         ILoquiObjectSetter<CellSubBlock>,
         ILinkSubContainer,
         IEquatable<CellSubBlock>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => CellSubBlock_Registration.Instance;
-        public static CellSubBlock_Registration Registration => CellSubBlock_Registration.Instance;
-        protected object CommonInstance => CellSubBlockCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
-
         #region Ctor
         public CellSubBlock()
         {
@@ -102,7 +96,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICellSubBlockGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICellSubBlockInternalGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -120,22 +114,35 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is ICellSubBlockGetter rhs)) return false;
-            return ((CellSubBlockCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            if (!(obj is ICellSubBlockInternalGetter rhs)) return false;
+            return ((CellSubBlockCommon)((ICellSubBlockInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(CellSubBlock obj)
         {
-            return ((CellSubBlockCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((CellSubBlockCommon)((ICellSubBlockInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((CellSubBlockCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((CellSubBlockCommon)((ICellSubBlockInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected object XmlWriteTranslator => CellSubBlockXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((CellSubBlockXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static CellSubBlock CreateFromXml(
@@ -334,6 +341,19 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Translation
         protected object BinaryWriteTranslator => CellSubBlockBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((CellSubBlockBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
         #region Binary Create
         [DebuggerStepThrough]
         public static async Task<CellSubBlock> CreateFromBinary(
@@ -533,7 +553,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            CellSubBlockCommon.CopyFieldsFrom(
+            CellSubBlockSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -548,7 +568,7 @@ namespace Mutagen.Bethesda.Oblivion
             CellSubBlock_CopyMask copyMask = null,
             CellSubBlock def = null)
         {
-            CellSubBlockCommon.CopyFieldsFrom(
+            CellSubBlockSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -580,7 +600,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void Clear()
         {
-            CellSubBlockCommon.Instance.Clear(this);
+            CellSubBlockSetterCommon.Instance.Clear(this);
         }
 
         public static CellSubBlock Create(IEnumerable<KeyValuePair<ushort, object>> fields)
@@ -622,8 +642,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface ICellSubBlock :
-        ICellSubBlockGetter,
-        ILoquiObjectSetter<ICellSubBlock>
+        ICellSubBlockInternalGetter,
+        ILoquiObjectSetter<ICellSubBlockInternal>
     {
         new Int32 BlockNumber { get; set; }
 
@@ -639,9 +659,15 @@ namespace Mutagen.Bethesda.Oblivion
             CellSubBlock def = null);
     }
 
+    public partial interface ICellSubBlockInternal :
+        ICellSubBlock,
+        ICellSubBlockInternalGetter
+    {
+    }
+
     public partial interface ICellSubBlockGetter :
         ILoquiObject,
-        ILoquiObject<ICellSubBlockGetter>,
+        ILoquiObject<ICellSubBlockInternalGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -663,45 +689,53 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    public partial interface ICellSubBlockInternalGetter : ICellSubBlockGetter
+    {
+        object CommonInstance();
+        object CommonSetterInstance();
+        object CommonSetterCopyInstance();
+
+    }
+
     #endregion
 
     #region Common MixIn
     public static class CellSubBlockMixIn
     {
-        public static void Clear(this ICellSubBlock item)
+        public static void Clear(this ICellSubBlockInternal item)
         {
-            ((CellSubBlockCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((CellSubBlockSetterCommon)((ICellSubBlockInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static CellSubBlock_Mask<bool> GetEqualsMask(
-            this ICellSubBlockGetter item,
-            ICellSubBlockGetter rhs,
+            this ICellSubBlockInternalGetter item,
+            ICellSubBlockInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((CellSubBlockCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((CellSubBlockCommon)((ICellSubBlockInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this ICellSubBlockGetter item,
+            this ICellSubBlockInternalGetter item,
             string name = null,
             CellSubBlock_Mask<bool> printMask = null)
         {
-            return ((CellSubBlockCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((CellSubBlockCommon)((ICellSubBlockInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this ICellSubBlockGetter item,
+            this ICellSubBlockInternalGetter item,
             FileGeneration fg,
             string name = null,
             CellSubBlock_Mask<bool> printMask = null)
         {
-            ((CellSubBlockCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((CellSubBlockCommon)((ICellSubBlockInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -709,28 +743,28 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static bool HasBeenSet(
-            this ICellSubBlockGetter item,
+            this ICellSubBlockInternalGetter item,
             CellSubBlock_Mask<bool?> checkMask)
         {
-            return ((CellSubBlockCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((CellSubBlockCommon)((ICellSubBlockInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static CellSubBlock_Mask<bool> GetHasBeenSetMask(this ICellSubBlockGetter item)
+        public static CellSubBlock_Mask<bool> GetHasBeenSetMask(this ICellSubBlockInternalGetter item)
         {
             var ret = new CellSubBlock_Mask<bool>();
-            ((CellSubBlockCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((CellSubBlockCommon)((ICellSubBlockInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this ICellSubBlockGetter item,
-            ICellSubBlockGetter rhs)
+            this ICellSubBlockInternalGetter item,
+            ICellSubBlockInternalGetter rhs)
         {
-            return ((CellSubBlockCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((CellSubBlockCommon)((ICellSubBlockInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -778,13 +812,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(ICellSubBlockGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type InternalGetterType = typeof(ICellSubBlockInternalGetter);
 
         public static readonly Type SetterType = typeof(ICellSubBlock);
 
-        public static readonly Type InternalSetterType = null;
-
-        public static readonly Type CommonType = typeof(CellSubBlockCommon);
+        public static readonly Type InternalSetterType = typeof(ICellSubBlockInternal);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.CellSubBlock";
 
@@ -946,7 +978,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -966,9 +997,190 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
+    public partial class CellSubBlockSetterCommon
+    {
+        public static readonly CellSubBlockSetterCommon Instance = new CellSubBlockSetterCommon();
+
+        partial void ClearPartial();
+        
+        public virtual void Clear(ICellSubBlockInternal item)
+        {
+            ClearPartial();
+            item.BlockNumber = default(Int32);
+            item.GroupType = default(GroupTypeEnum);
+            item.LastModified = default(Byte[]);
+            item.Items.Unset();
+        }
+        
+        
+    }
     public partial class CellSubBlockCommon
     {
         public static readonly CellSubBlockCommon Instance = new CellSubBlockCommon();
+
+        public CellSubBlock_Mask<bool> GetEqualsMask(
+            ICellSubBlockInternalGetter item,
+            ICellSubBlockInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new CellSubBlock_Mask<bool>();
+            ((CellSubBlockCommon)((ICellSubBlockInternalGetter)item).CommonInstance()).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+        
+        public void FillEqualsMask(
+            ICellSubBlockInternalGetter item,
+            ICellSubBlockInternalGetter rhs,
+            CellSubBlock_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            if (rhs == null) return;
+            ret.BlockNumber = item.BlockNumber == rhs.BlockNumber;
+            ret.GroupType = item.GroupType == rhs.GroupType;
+            ret.LastModified = MemoryExtensions.SequenceEqual(item.LastModified, rhs.LastModified);
+            ret.Items = item.Items.CollectionEqualsHelper(
+                rhs.Items,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+        }
+        
+        public string ToString(
+            ICellSubBlockInternalGetter item,
+            string name = null,
+            CellSubBlock_Mask<bool> printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+            return fg.ToString();
+        }
+        
+        public void ToString(
+            ICellSubBlockInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            CellSubBlock_Mask<bool> printMask = null)
+        {
+            if (name == null)
+            {
+                fg.AppendLine($"CellSubBlock =>");
+            }
+            else
+            {
+                fg.AppendLine($"{name} (CellSubBlock) =>");
+            }
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
+            }
+            fg.AppendLine("]");
+        }
+        
+        protected static void ToStringFields(
+            ICellSubBlockInternalGetter item,
+            FileGeneration fg,
+            CellSubBlock_Mask<bool> printMask = null)
+        {
+            if (printMask?.BlockNumber ?? true)
+            {
+                fg.AppendLine($"BlockNumber => {item.BlockNumber}");
+            }
+            if (printMask?.GroupType ?? true)
+            {
+                fg.AppendLine($"GroupType => {item.GroupType}");
+            }
+            if (printMask?.LastModified ?? true)
+            {
+                fg.AppendLine($"LastModified => {SpanExt.ToHexString(item.LastModified)}");
+            }
+            if (printMask?.Items?.Overall ?? true)
+            {
+                fg.AppendLine("Items =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Items)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+        }
+        
+        public bool HasBeenSet(
+            ICellSubBlockInternalGetter item,
+            CellSubBlock_Mask<bool?> checkMask)
+        {
+            if (checkMask.Items.Overall.HasValue && checkMask.Items.Overall.Value != item.Items.HasBeenSet) return false;
+            return true;
+        }
+        
+        public void FillHasBeenSetMask(
+            ICellSubBlockInternalGetter item,
+            CellSubBlock_Mask<bool> mask)
+        {
+            mask.BlockNumber = true;
+            mask.GroupType = true;
+            mask.LastModified = true;
+            mask.Items = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Cell_Mask<bool>>>>(item.Items.HasBeenSet, item.Items.WithIndex().Select((i) => new MaskItemIndexed<bool, Cell_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
+        }
+        
+        #region Equals and Hash
+        public virtual bool Equals(
+            ICellSubBlockInternalGetter lhs,
+            ICellSubBlockInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (lhs.BlockNumber != rhs.BlockNumber) return false;
+            if (lhs.GroupType != rhs.GroupType) return false;
+            if (!MemoryExtensions.SequenceEqual(lhs.LastModified, rhs.LastModified)) return false;
+            if (lhs.Items.HasBeenSet != rhs.Items.HasBeenSet) return false;
+            if (lhs.Items.HasBeenSet)
+            {
+                if (!lhs.Items.SequenceEqual(rhs.Items)) return false;
+            }
+            return true;
+        }
+        
+        public virtual int GetHashCode(ICellSubBlockInternalGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.BlockNumber).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.GroupType).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.LastModified).CombineHashCode(ret);
+            if (item.Items.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Items).CombineHashCode(ret);
+            }
+            return ret;
+        }
+        
+        #endregion
+        
+        
+        
+    }
+    public partial class CellSubBlockSetterCopyCommon
+    {
+        public static readonly CellSubBlockSetterCopyCommon Instance = new CellSubBlockSetterCopyCommon();
 
         #region Copy Fields From
         public static void CopyFieldsFrom(
@@ -1064,178 +1276,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
         }
-
+        
         #endregion
-
-        partial void ClearPartial();
-
-        public virtual void Clear(ICellSubBlock item)
-        {
-            ClearPartial();
-            item.BlockNumber = default(Int32);
-            item.GroupType = default(GroupTypeEnum);
-            item.LastModified = default(Byte[]);
-            item.Items.Unset();
-        }
-
-        public CellSubBlock_Mask<bool> GetEqualsMask(
-            ICellSubBlockGetter item,
-            ICellSubBlockGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new CellSubBlock_Mask<bool>();
-            ((CellSubBlockCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public void FillEqualsMask(
-            ICellSubBlockGetter item,
-            ICellSubBlockGetter rhs,
-            CellSubBlock_Mask<bool> ret,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            if (rhs == null) return;
-            ret.BlockNumber = item.BlockNumber == rhs.BlockNumber;
-            ret.GroupType = item.GroupType == rhs.GroupType;
-            ret.LastModified = MemoryExtensions.SequenceEqual(item.LastModified, rhs.LastModified);
-            ret.Items = item.Items.CollectionEqualsHelper(
-                rhs.Items,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
-                include);
-        }
-
-        public string ToString(
-            ICellSubBlockGetter item,
-            string name = null,
-            CellSubBlock_Mask<bool> printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(
-                item: item,
-                fg: fg,
-                name: name,
-                printMask: printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(
-            ICellSubBlockGetter item,
-            FileGeneration fg,
-            string name = null,
-            CellSubBlock_Mask<bool> printMask = null)
-        {
-            if (name == null)
-            {
-                fg.AppendLine($"CellSubBlock =>");
-            }
-            else
-            {
-                fg.AppendLine($"{name} (CellSubBlock) =>");
-            }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                ToStringFields(
-                    item: item,
-                    fg: fg,
-                    printMask: printMask);
-            }
-            fg.AppendLine("]");
-        }
-
-        protected static void ToStringFields(
-            ICellSubBlockGetter item,
-            FileGeneration fg,
-            CellSubBlock_Mask<bool> printMask = null)
-        {
-            if (printMask?.BlockNumber ?? true)
-            {
-                fg.AppendLine($"BlockNumber => {item.BlockNumber}");
-            }
-            if (printMask?.GroupType ?? true)
-            {
-                fg.AppendLine($"GroupType => {item.GroupType}");
-            }
-            if (printMask?.LastModified ?? true)
-            {
-                fg.AppendLine($"LastModified => {SpanExt.ToHexString(item.LastModified)}");
-            }
-            if (printMask?.Items?.Overall ?? true)
-            {
-                fg.AppendLine("Items =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
-                {
-                    foreach (var subItem in item.Items)
-                    {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            subItem?.ToString(fg, "Item");
-                        }
-                        fg.AppendLine("]");
-                    }
-                }
-                fg.AppendLine("]");
-            }
-        }
-
-        public bool HasBeenSet(
-            ICellSubBlockGetter item,
-            CellSubBlock_Mask<bool?> checkMask)
-        {
-            if (checkMask.Items.Overall.HasValue && checkMask.Items.Overall.Value != item.Items.HasBeenSet) return false;
-            return true;
-        }
-
-        public void FillHasBeenSetMask(
-            ICellSubBlockGetter item,
-            CellSubBlock_Mask<bool> mask)
-        {
-            mask.BlockNumber = true;
-            mask.GroupType = true;
-            mask.LastModified = true;
-            mask.Items = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Cell_Mask<bool>>>>(item.Items.HasBeenSet, item.Items.WithIndex().Select((i) => new MaskItemIndexed<bool, Cell_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
-        }
-
-        #region Equals and Hash
-        public virtual bool Equals(
-            ICellSubBlockGetter lhs,
-            ICellSubBlockGetter rhs)
-        {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
-            if (lhs.BlockNumber != rhs.BlockNumber) return false;
-            if (lhs.GroupType != rhs.GroupType) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.LastModified, rhs.LastModified)) return false;
-            if (lhs.Items.HasBeenSet != rhs.Items.HasBeenSet) return false;
-            if (lhs.Items.HasBeenSet)
-            {
-                if (!lhs.Items.SequenceEqual(rhs.Items)) return false;
-            }
-            return true;
-        }
-
-        public virtual int GetHashCode(ICellSubBlockGetter item)
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.BlockNumber).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.GroupType).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.LastModified).CombineHashCode(ret);
-            if (item.Items.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.Items).CombineHashCode(ret);
-            }
-            return ret;
-        }
-
-        #endregion
-
-
+        
+        
     }
     #endregion
 
@@ -1246,7 +1290,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static CellSubBlockXmlWriteTranslation Instance = new CellSubBlockXmlWriteTranslation();
 
         public static void WriteToNodeXml(
-            ICellSubBlockGetter item,
+            ICellSubBlockInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1303,7 +1347,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             XElement node,
-            ICellSubBlockGetter item,
+            ICellSubBlockInternalGetter item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)
@@ -1329,7 +1373,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             Write(
-                item: (ICellSubBlockGetter)item,
+                item: (ICellSubBlockInternalGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1338,7 +1382,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             XElement node,
-            ICellSubBlockGetter item,
+            ICellSubBlockInternalGetter item,
             ErrorMaskBuilder errorMask,
             int fieldIndex,
             TranslationCrystal translationMask,
@@ -1348,7 +1392,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 errorMask?.PushIndex(fieldIndex);
                 Write(
-                    item: (ICellSubBlockGetter)item,
+                    item: (ICellSubBlockInternalGetter)item,
                     name: name,
                     node: node,
                     errorMask: errorMask,
@@ -1372,7 +1416,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static CellSubBlockXmlCreateTranslation Instance = new CellSubBlockXmlCreateTranslation();
 
         public static void FillPublicXml(
-            ICellSubBlock item,
+            ICellSubBlockInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1397,7 +1441,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElementXml(
-            ICellSubBlock item,
+            ICellSubBlockInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -1522,7 +1566,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public static class CellSubBlockXmlTranslationMixIn
     {
         public static void WriteToXml(
-            this ICellSubBlockGetter item,
+            this ICellSubBlockInternalGetter item,
             XElement node,
             out CellSubBlock_ErrorMask errorMask,
             bool doMasks = true,
@@ -1540,7 +1584,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this ICellSubBlockGetter item,
+            this ICellSubBlockInternalGetter item,
             string path,
             out CellSubBlock_ErrorMask errorMask,
             CellSubBlock_TranslationMask translationMask = null,
@@ -1559,7 +1603,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this ICellSubBlockGetter item,
+            this ICellSubBlockInternalGetter item,
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1577,7 +1621,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this ICellSubBlockGetter item,
+            this ICellSubBlockInternalGetter item,
             Stream stream,
             out CellSubBlock_ErrorMask errorMask,
             CellSubBlock_TranslationMask translationMask = null,
@@ -1596,7 +1640,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this ICellSubBlockGetter item,
+            this ICellSubBlockInternalGetter item,
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1614,7 +1658,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this ICellSubBlockGetter item,
+            this ICellSubBlockInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1629,7 +1673,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this ICellSubBlockGetter item,
+            this ICellSubBlockInternalGetter item,
             XElement node,
             string name = null,
             CellSubBlock_TranslationMask translationMask = null)
@@ -1643,7 +1687,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this ICellSubBlockGetter item,
+            this ICellSubBlockInternalGetter item,
             string path,
             string name = null)
         {
@@ -1658,7 +1702,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this ICellSubBlockGetter item,
+            this ICellSubBlockInternalGetter item,
             Stream stream,
             string name = null)
         {
@@ -2118,7 +2162,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static CellSubBlockBinaryWriteTranslation Instance = new CellSubBlockBinaryWriteTranslation();
 
         public static void Write_Embedded(
-            ICellSubBlockGetter item,
+            ICellSubBlockInternalGetter item,
             MutagenWriter writer,
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
@@ -2134,7 +2178,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void Write_RecordTypes(
-            ICellSubBlockGetter item,
+            ICellSubBlockInternalGetter item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask,
@@ -2162,7 +2206,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             MutagenWriter writer,
-            ICellSubBlockGetter item,
+            ICellSubBlockInternalGetter item,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
@@ -2194,7 +2238,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask)
         {
             Write(
-                item: (ICellSubBlockGetter)item,
+                item: (ICellSubBlockInternalGetter)item,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -2213,7 +2257,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public static class CellSubBlockBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this ICellSubBlockGetter item,
+            this ICellSubBlockInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
             out CellSubBlock_ErrorMask errorMask,
@@ -2230,7 +2274,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToBinary(
-            this ICellSubBlockGetter item,
+            this ICellSubBlockInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -2244,7 +2288,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToBinary(
-            this ICellSubBlockGetter item,
+            this ICellSubBlockInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
@@ -2261,22 +2305,65 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     public partial class CellSubBlockBinaryWrapper :
         BinaryWrapper,
-        ICellSubBlockGetter
+        ICellSubBlockInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CellSubBlock_Registration.Instance;
         public static CellSubBlock_Registration Registration => CellSubBlock_Registration.Instance;
-        protected object CommonInstance => CellSubBlockCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
+        protected object CommonInstance()
+        {
+            return CellSubBlockCommon.Instance;
+        }
+        object ICellSubBlockInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object ICellSubBlockInternalGetter.CommonSetterInstance()
+        {
+            return null;
+        }
+        object ICellSubBlockInternalGetter.CommonSetterCopyInstance()
+        {
+            return null;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICellSubBlockGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICellSubBlockInternalGetter)rhs, include);
 
         protected object XmlWriteTranslator => CellSubBlockXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((CellSubBlockXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         protected object BinaryWriteTranslator => CellSubBlockBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((CellSubBlockBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
 
         public Int32 BlockNumber => BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0, 4));
         public GroupTypeEnum GroupType => (GroupTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(4, 4));
@@ -2359,4 +2446,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class CellSubBlock
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => CellSubBlock_Registration.Instance;
+        public static CellSubBlock_Registration Registration => CellSubBlock_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return CellSubBlockCommon.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return CellSubBlockSetterCommon.Instance;
+        }
+        protected object CommonSetterCopyInstance()
+        {
+            return CellSubBlockSetterCopyCommon.Instance;
+        }
+        object ICellSubBlockInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object ICellSubBlockInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object ICellSubBlockInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
 }

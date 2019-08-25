@@ -41,11 +41,6 @@ namespace Mutagen.Bethesda.Oblivion
         IEquatable<Grass>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Grass_Registration.Instance;
-        public new static Grass_Registration Registration => Grass_Registration.Instance;
-        protected override object CommonInstance => GrassCommon.Instance;
-
         #region Ctor
         protected Grass()
         {
@@ -79,7 +74,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Model_Set(default(Model), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IModelGetter IGrassGetter.Model => this.Model;
+        IModelInternalGetter IGrassGetter.Model => this.Model;
         #endregion
         #region Density
         private Byte _Density;
@@ -262,20 +257,33 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IGrassInternalGetter rhs)) return false;
-            return ((GrassCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            return ((GrassCommon)((IGrassInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(Grass obj)
         {
-            return ((GrassCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((GrassCommon)((IGrassInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((GrassCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((GrassCommon)((IGrassInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected override object XmlWriteTranslator => GrassXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((GrassXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static Grass CreateFromXml(
@@ -504,6 +512,19 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Binary Translation
         protected override object BinaryWriteTranslator => GrassBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((GrassBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
         #region Binary Create
         [DebuggerStepThrough]
         public static Grass CreateFromBinary(
@@ -773,7 +794,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            GrassCommon.CopyFieldsFrom(
+            GrassSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -788,7 +809,7 @@ namespace Mutagen.Bethesda.Oblivion
             Grass_CopyMask copyMask = null,
             Grass def = null)
         {
-            GrassCommon.CopyFieldsFrom(
+            GrassSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -851,7 +872,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            GrassCommon.Instance.Clear(this);
+            GrassSetterCommon.Instance.Clear(this);
         }
 
         public new static Grass Create(IEnumerable<KeyValuePair<ushort, object>> fields)
@@ -979,7 +1000,7 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem
     {
         #region Model
-        IModelGetter Model { get; }
+        IModelInternalGetter Model { get; }
         bool Model_IsSet { get; }
 
         #endregion
@@ -1052,7 +1073,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IGrassInternal item)
         {
-            ((GrassCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((GrassSetterCommon)((IGrassInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static Grass_Mask<bool> GetEqualsMask(
@@ -1060,7 +1081,7 @@ namespace Mutagen.Bethesda.Oblivion
             IGrassInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((GrassCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((GrassCommon)((IGrassInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -1071,7 +1092,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Grass_Mask<bool> printMask = null)
         {
-            return ((GrassCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((GrassCommon)((IGrassInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -1083,7 +1104,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Grass_Mask<bool> printMask = null)
         {
-            ((GrassCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((GrassCommon)((IGrassInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -1094,7 +1115,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IGrassInternalGetter item,
             Grass_Mask<bool?> checkMask)
         {
-            return ((GrassCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((GrassCommon)((IGrassInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -1102,7 +1123,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Grass_Mask<bool> GetHasBeenSetMask(this IGrassInternalGetter item)
         {
             var ret = new Grass_Mask<bool>();
-            ((GrassCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((GrassCommon)((IGrassInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -1112,7 +1133,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IGrassInternalGetter item,
             IGrassInternalGetter rhs)
         {
-            return ((GrassCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((GrassCommon)((IGrassInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1180,8 +1201,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type SetterType = typeof(IGrass);
 
         public static readonly Type InternalSetterType = typeof(IGrassInternal);
-
-        public static readonly Type CommonType = typeof(GrassCommon);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.Grass";
 
@@ -1453,7 +1472,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -1473,9 +1491,368 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
+    public partial class GrassSetterCommon : OblivionMajorRecordSetterCommon
+    {
+        public new static readonly GrassSetterCommon Instance = new GrassSetterCommon();
+
+        partial void ClearPartial();
+        
+        public virtual void Clear(IGrassInternal item)
+        {
+            ClearPartial();
+            item.Model_Unset();
+            item.Density = default(Byte);
+            item.MinSlope = default(Byte);
+            item.MaxSlope = default(Byte);
+            item.Fluff1 = default(Byte);
+            item.UnitFromWaterAmount = default(UInt16);
+            item.Fluff2 = default(UInt16);
+            item.UnitFromWaterMode = default(Grass.UnitFromWaterType);
+            item.PositionRange = default(Single);
+            item.HeightRange = default(Single);
+            item.ColorRange = default(Single);
+            item.WavePeriod = default(Single);
+            item.Flags = default(Grass.GrassFlag);
+            base.Clear(item);
+        }
+        
+        public override void Clear(IOblivionMajorRecordInternal item)
+        {
+            Clear(item: (IGrassInternal)item);
+        }
+        
+        public override void Clear(IMajorRecordInternal item)
+        {
+            Clear(item: (IGrassInternal)item);
+        }
+        
+        
+    }
     public partial class GrassCommon : OblivionMajorRecordCommon
     {
-        public static readonly GrassCommon Instance = new GrassCommon();
+        public new static readonly GrassCommon Instance = new GrassCommon();
+
+        public Grass_Mask<bool> GetEqualsMask(
+            IGrassInternalGetter item,
+            IGrassInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new Grass_Mask<bool>();
+            ((GrassCommon)((IGrassInternalGetter)item).CommonInstance()).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+        
+        public void FillEqualsMask(
+            IGrassInternalGetter item,
+            IGrassInternalGetter rhs,
+            Grass_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            if (rhs == null) return;
+            ret.Model = EqualsMaskHelper.EqualsHelper(
+                item.Model_IsSet,
+                rhs.Model_IsSet,
+                item.Model,
+                rhs.Model,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
+            ret.Density = item.Density == rhs.Density;
+            ret.MinSlope = item.MinSlope == rhs.MinSlope;
+            ret.MaxSlope = item.MaxSlope == rhs.MaxSlope;
+            ret.Fluff1 = item.Fluff1 == rhs.Fluff1;
+            ret.UnitFromWaterAmount = item.UnitFromWaterAmount == rhs.UnitFromWaterAmount;
+            ret.Fluff2 = item.Fluff2 == rhs.Fluff2;
+            ret.UnitFromWaterMode = item.UnitFromWaterMode == rhs.UnitFromWaterMode;
+            ret.PositionRange = item.PositionRange.EqualsWithin(rhs.PositionRange);
+            ret.HeightRange = item.HeightRange.EqualsWithin(rhs.HeightRange);
+            ret.ColorRange = item.ColorRange.EqualsWithin(rhs.ColorRange);
+            ret.WavePeriod = item.WavePeriod.EqualsWithin(rhs.WavePeriod);
+            ret.Flags = item.Flags == rhs.Flags;
+            base.FillEqualsMask(item, rhs, ret, include);
+        }
+        
+        public string ToString(
+            IGrassInternalGetter item,
+            string name = null,
+            Grass_Mask<bool> printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+            return fg.ToString();
+        }
+        
+        public void ToString(
+            IGrassInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            Grass_Mask<bool> printMask = null)
+        {
+            if (name == null)
+            {
+                fg.AppendLine($"Grass =>");
+            }
+            else
+            {
+                fg.AppendLine($"{name} (Grass) =>");
+            }
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
+            }
+            fg.AppendLine("]");
+        }
+        
+        protected static void ToStringFields(
+            IGrassInternalGetter item,
+            FileGeneration fg,
+            Grass_Mask<bool> printMask = null)
+        {
+            OblivionMajorRecordCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.Model?.Overall ?? true)
+            {
+                item.Model?.ToString(fg, "Model");
+            }
+            if (printMask?.Density ?? true)
+            {
+                fg.AppendLine($"Density => {item.Density}");
+            }
+            if (printMask?.MinSlope ?? true)
+            {
+                fg.AppendLine($"MinSlope => {item.MinSlope}");
+            }
+            if (printMask?.MaxSlope ?? true)
+            {
+                fg.AppendLine($"MaxSlope => {item.MaxSlope}");
+            }
+            if (printMask?.Fluff1 ?? true)
+            {
+                fg.AppendLine($"Fluff1 => {item.Fluff1}");
+            }
+            if (printMask?.UnitFromWaterAmount ?? true)
+            {
+                fg.AppendLine($"UnitFromWaterAmount => {item.UnitFromWaterAmount}");
+            }
+            if (printMask?.Fluff2 ?? true)
+            {
+                fg.AppendLine($"Fluff2 => {item.Fluff2}");
+            }
+            if (printMask?.UnitFromWaterMode ?? true)
+            {
+                fg.AppendLine($"UnitFromWaterMode => {item.UnitFromWaterMode}");
+            }
+            if (printMask?.PositionRange ?? true)
+            {
+                fg.AppendLine($"PositionRange => {item.PositionRange}");
+            }
+            if (printMask?.HeightRange ?? true)
+            {
+                fg.AppendLine($"HeightRange => {item.HeightRange}");
+            }
+            if (printMask?.ColorRange ?? true)
+            {
+                fg.AppendLine($"ColorRange => {item.ColorRange}");
+            }
+            if (printMask?.WavePeriod ?? true)
+            {
+                fg.AppendLine($"WavePeriod => {item.WavePeriod}");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                fg.AppendLine($"Flags => {item.Flags}");
+            }
+            if (printMask?.DATADataTypeState ?? true)
+            {
+            }
+        }
+        
+        public bool HasBeenSet(
+            IGrassInternalGetter item,
+            Grass_Mask<bool?> checkMask)
+        {
+            if (checkMask.Model.Overall.HasValue && checkMask.Model.Overall.Value != item.Model_IsSet) return false;
+            if (checkMask.Model.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+        
+        public void FillHasBeenSetMask(
+            IGrassInternalGetter item,
+            Grass_Mask<bool> mask)
+        {
+            mask.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, item.Model.GetHasBeenSetMask());
+            mask.Density = true;
+            mask.MinSlope = true;
+            mask.MaxSlope = true;
+            mask.Fluff1 = true;
+            mask.UnitFromWaterAmount = true;
+            mask.Fluff2 = true;
+            mask.UnitFromWaterMode = true;
+            mask.PositionRange = true;
+            mask.HeightRange = true;
+            mask.ColorRange = true;
+            mask.WavePeriod = true;
+            mask.Flags = true;
+            mask.DATADataTypeState = true;
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
+        }
+        
+        public static Grass_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (Grass_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.FormKey:
+                    return (Grass_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.Version:
+                    return (Grass_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.EditorID:
+                    return (Grass_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
+                    return (Grass_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        public static Grass_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (Grass_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.FormKey:
+                    return (Grass_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.Version:
+                    return (Grass_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.EditorID:
+                    return (Grass_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        #region Equals and Hash
+        public virtual bool Equals(
+            IGrassInternalGetter lhs,
+            IGrassInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.Model_IsSet != rhs.Model_IsSet) return false;
+            if (lhs.Model_IsSet)
+            {
+                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            }
+            if (lhs.Density != rhs.Density) return false;
+            if (lhs.MinSlope != rhs.MinSlope) return false;
+            if (lhs.MaxSlope != rhs.MaxSlope) return false;
+            if (lhs.Fluff1 != rhs.Fluff1) return false;
+            if (lhs.UnitFromWaterAmount != rhs.UnitFromWaterAmount) return false;
+            if (lhs.Fluff2 != rhs.Fluff2) return false;
+            if (lhs.UnitFromWaterMode != rhs.UnitFromWaterMode) return false;
+            if (!lhs.PositionRange.EqualsWithin(rhs.PositionRange)) return false;
+            if (!lhs.HeightRange.EqualsWithin(rhs.HeightRange)) return false;
+            if (!lhs.ColorRange.EqualsWithin(rhs.ColorRange)) return false;
+            if (!lhs.WavePeriod.EqualsWithin(rhs.WavePeriod)) return false;
+            if (lhs.Flags != rhs.Flags) return false;
+            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            return true;
+        }
+        
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IGrassInternalGetter)lhs,
+                rhs: rhs as IGrassInternalGetter);
+        }
+        
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IGrassInternalGetter)lhs,
+                rhs: rhs as IGrassInternalGetter);
+        }
+        
+        public virtual int GetHashCode(IGrassInternalGetter item)
+        {
+            int ret = 0;
+            if (item.Model_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Model).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.Density).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.MinSlope).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.MaxSlope).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Fluff1).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.UnitFromWaterAmount).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Fluff2).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.UnitFromWaterMode).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.PositionRange).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.HeightRange).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.ColorRange).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.WavePeriod).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.DATADataTypeState).CombineHashCode(ret);
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+        
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IGrassInternalGetter)item);
+        }
+        
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IGrassInternalGetter)item);
+        }
+        
+        #endregion
+        
+        
+        #region Mutagen
+        partial void PostDuplicate(Grass obj, Grass rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+        
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new Grass(getNextFormKey());
+            ret.CopyFieldsFrom((Grass)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (Grass)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+        
+        #endregion
+        
+        
+    }
+    public partial class GrassSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
+    {
+        public new static readonly GrassSetterCopyCommon Instance = new GrassSetterCopyCommon();
 
         #region Copy Fields From
         public static void CopyFieldsFrom(
@@ -1485,7 +1862,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             Grass_CopyMask copyMask)
         {
-            OblivionMajorRecordCommon.CopyFieldsFrom(
+            OblivionMajorRecordSetterCopyCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1509,7 +1886,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             case CopyOption.Reference:
                                 throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
-                                ModelCommon.CopyFieldsFrom(
+                                ModelSetterCopyCommon.CopyFieldsFrom(
                                     item: item.Model,
                                     rhs: rhs.Model,
                                     def: def?.Model,
@@ -1748,356 +2125,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
         }
-
+        
         #endregion
-
-        partial void ClearPartial();
-
-        public virtual void Clear(IGrassInternal item)
-        {
-            ClearPartial();
-            item.Model_Unset();
-            item.Density = default(Byte);
-            item.MinSlope = default(Byte);
-            item.MaxSlope = default(Byte);
-            item.Fluff1 = default(Byte);
-            item.UnitFromWaterAmount = default(UInt16);
-            item.Fluff2 = default(UInt16);
-            item.UnitFromWaterMode = default(Grass.UnitFromWaterType);
-            item.PositionRange = default(Single);
-            item.HeightRange = default(Single);
-            item.ColorRange = default(Single);
-            item.WavePeriod = default(Single);
-            item.Flags = default(Grass.GrassFlag);
-            base.Clear(item);
-        }
-
-        public override void Clear(IOblivionMajorRecordInternal item)
-        {
-            Clear(item: (IGrassInternal)item);
-        }
-
-        public override void Clear(IMajorRecordInternal item)
-        {
-            Clear(item: (IGrassInternal)item);
-        }
-
-        public Grass_Mask<bool> GetEqualsMask(
-            IGrassInternalGetter item,
-            IGrassInternalGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new Grass_Mask<bool>();
-            ((GrassCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public void FillEqualsMask(
-            IGrassInternalGetter item,
-            IGrassInternalGetter rhs,
-            Grass_Mask<bool> ret,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            if (rhs == null) return;
-            ret.Model = EqualsMaskHelper.EqualsHelper(
-                item.Model_IsSet,
-                rhs.Model_IsSet,
-                item.Model,
-                rhs.Model,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
-                include);
-            ret.Density = item.Density == rhs.Density;
-            ret.MinSlope = item.MinSlope == rhs.MinSlope;
-            ret.MaxSlope = item.MaxSlope == rhs.MaxSlope;
-            ret.Fluff1 = item.Fluff1 == rhs.Fluff1;
-            ret.UnitFromWaterAmount = item.UnitFromWaterAmount == rhs.UnitFromWaterAmount;
-            ret.Fluff2 = item.Fluff2 == rhs.Fluff2;
-            ret.UnitFromWaterMode = item.UnitFromWaterMode == rhs.UnitFromWaterMode;
-            ret.PositionRange = item.PositionRange.EqualsWithin(rhs.PositionRange);
-            ret.HeightRange = item.HeightRange.EqualsWithin(rhs.HeightRange);
-            ret.ColorRange = item.ColorRange.EqualsWithin(rhs.ColorRange);
-            ret.WavePeriod = item.WavePeriod.EqualsWithin(rhs.WavePeriod);
-            ret.Flags = item.Flags == rhs.Flags;
-            base.FillEqualsMask(item, rhs, ret, include);
-        }
-
-        public string ToString(
-            IGrassInternalGetter item,
-            string name = null,
-            Grass_Mask<bool> printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(
-                item: item,
-                fg: fg,
-                name: name,
-                printMask: printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(
-            IGrassInternalGetter item,
-            FileGeneration fg,
-            string name = null,
-            Grass_Mask<bool> printMask = null)
-        {
-            if (name == null)
-            {
-                fg.AppendLine($"Grass =>");
-            }
-            else
-            {
-                fg.AppendLine($"{name} (Grass) =>");
-            }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                ToStringFields(
-                    item: item,
-                    fg: fg,
-                    printMask: printMask);
-            }
-            fg.AppendLine("]");
-        }
-
-        protected static void ToStringFields(
-            IGrassInternalGetter item,
-            FileGeneration fg,
-            Grass_Mask<bool> printMask = null)
-        {
-            OblivionMajorRecordCommon.ToStringFields(
-                item: item,
-                fg: fg,
-                printMask: printMask);
-            if (printMask?.Model?.Overall ?? true)
-            {
-                item.Model?.ToString(fg, "Model");
-            }
-            if (printMask?.Density ?? true)
-            {
-                fg.AppendLine($"Density => {item.Density}");
-            }
-            if (printMask?.MinSlope ?? true)
-            {
-                fg.AppendLine($"MinSlope => {item.MinSlope}");
-            }
-            if (printMask?.MaxSlope ?? true)
-            {
-                fg.AppendLine($"MaxSlope => {item.MaxSlope}");
-            }
-            if (printMask?.Fluff1 ?? true)
-            {
-                fg.AppendLine($"Fluff1 => {item.Fluff1}");
-            }
-            if (printMask?.UnitFromWaterAmount ?? true)
-            {
-                fg.AppendLine($"UnitFromWaterAmount => {item.UnitFromWaterAmount}");
-            }
-            if (printMask?.Fluff2 ?? true)
-            {
-                fg.AppendLine($"Fluff2 => {item.Fluff2}");
-            }
-            if (printMask?.UnitFromWaterMode ?? true)
-            {
-                fg.AppendLine($"UnitFromWaterMode => {item.UnitFromWaterMode}");
-            }
-            if (printMask?.PositionRange ?? true)
-            {
-                fg.AppendLine($"PositionRange => {item.PositionRange}");
-            }
-            if (printMask?.HeightRange ?? true)
-            {
-                fg.AppendLine($"HeightRange => {item.HeightRange}");
-            }
-            if (printMask?.ColorRange ?? true)
-            {
-                fg.AppendLine($"ColorRange => {item.ColorRange}");
-            }
-            if (printMask?.WavePeriod ?? true)
-            {
-                fg.AppendLine($"WavePeriod => {item.WavePeriod}");
-            }
-            if (printMask?.Flags ?? true)
-            {
-                fg.AppendLine($"Flags => {item.Flags}");
-            }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-            }
-        }
-
-        public bool HasBeenSet(
-            IGrassInternalGetter item,
-            Grass_Mask<bool?> checkMask)
-        {
-            if (checkMask.Model.Overall.HasValue && checkMask.Model.Overall.Value != item.Model_IsSet) return false;
-            if (checkMask.Model.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public void FillHasBeenSetMask(
-            IGrassInternalGetter item,
-            Grass_Mask<bool> mask)
-        {
-            mask.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, item.Model.GetHasBeenSetMask());
-            mask.Density = true;
-            mask.MinSlope = true;
-            mask.MaxSlope = true;
-            mask.Fluff1 = true;
-            mask.UnitFromWaterAmount = true;
-            mask.Fluff2 = true;
-            mask.UnitFromWaterMode = true;
-            mask.PositionRange = true;
-            mask.HeightRange = true;
-            mask.ColorRange = true;
-            mask.WavePeriod = true;
-            mask.Flags = true;
-            mask.DATADataTypeState = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-
-        public static Grass_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
-        {
-            switch (index)
-            {
-                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Grass_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.FormKey:
-                    return (Grass_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.Version:
-                    return (Grass_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.EditorID:
-                    return (Grass_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
-                    return (Grass_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        public static Grass_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
-        {
-            switch (index)
-            {
-                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Grass_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.FormKey:
-                    return (Grass_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
-                    return (Grass_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.EditorID:
-                    return (Grass_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        #region Equals and Hash
-        public virtual bool Equals(
-            IGrassInternalGetter lhs,
-            IGrassInternalGetter rhs)
-        {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (lhs.Model_IsSet != rhs.Model_IsSet) return false;
-            if (lhs.Model_IsSet)
-            {
-                if (!object.Equals(lhs.Model, rhs.Model)) return false;
-            }
-            if (lhs.Density != rhs.Density) return false;
-            if (lhs.MinSlope != rhs.MinSlope) return false;
-            if (lhs.MaxSlope != rhs.MaxSlope) return false;
-            if (lhs.Fluff1 != rhs.Fluff1) return false;
-            if (lhs.UnitFromWaterAmount != rhs.UnitFromWaterAmount) return false;
-            if (lhs.Fluff2 != rhs.Fluff2) return false;
-            if (lhs.UnitFromWaterMode != rhs.UnitFromWaterMode) return false;
-            if (!lhs.PositionRange.EqualsWithin(rhs.PositionRange)) return false;
-            if (!lhs.HeightRange.EqualsWithin(rhs.HeightRange)) return false;
-            if (!lhs.ColorRange.EqualsWithin(rhs.ColorRange)) return false;
-            if (!lhs.WavePeriod.EqualsWithin(rhs.WavePeriod)) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
-            return true;
-        }
-
-        public override bool Equals(
-            IOblivionMajorRecordInternalGetter lhs,
-            IOblivionMajorRecordInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (IGrassInternalGetter)lhs,
-                rhs: rhs as IGrassInternalGetter);
-        }
-
-        public override bool Equals(
-            IMajorRecordInternalGetter lhs,
-            IMajorRecordInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (IGrassInternalGetter)lhs,
-                rhs: rhs as IGrassInternalGetter);
-        }
-
-        public virtual int GetHashCode(IGrassInternalGetter item)
-        {
-            int ret = 0;
-            if (item.Model_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Model).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(item.Density).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.MinSlope).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.MaxSlope).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Fluff1).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.UnitFromWaterAmount).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Fluff2).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.UnitFromWaterMode).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.PositionRange).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.HeightRange).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.ColorRange).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.WavePeriod).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.DATADataTypeState).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
-        {
-            return GetHashCode(item: (IGrassInternalGetter)item);
-        }
-
-        public override int GetHashCode(IMajorRecordInternalGetter item)
-        {
-            return GetHashCode(item: (IGrassInternalGetter)item);
-        }
-
-        #endregion
-
-
-        #region Mutagen
-        partial void PostDuplicate(Grass obj, Grass rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new Grass(getNextFormKey());
-            ret.CopyFieldsFrom((Grass)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (Grass)item, getNextFormKey, duplicatedRecords);
-            return ret;
-        }
-
-        #endregion
-
+        
+        
     }
     #endregion
 
@@ -3609,20 +3640,52 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         OblivionMajorRecordBinaryWrapper,
         IGrassInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Grass_Registration.Instance;
         public new static Grass_Registration Registration => Grass_Registration.Instance;
-        protected override object CommonInstance => GrassCommon.Instance;
+        protected override object CommonInstance()
+        {
+            return GrassCommon.Instance;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IGrassInternalGetter)rhs, include);
 
         protected override object XmlWriteTranslator => GrassXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((GrassXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         protected override object BinaryWriteTranslator => GrassBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((GrassBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
 
         #region Model
-        public IModelGetter Model { get; private set; }
+        public IModelInternalGetter Model { get; private set; }
         public bool Model_IsSet => Model != null;
         #endregion
         private int? _DATALocation;
@@ -3751,4 +3814,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class Grass
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Grass_Registration.Instance;
+        public new static Grass_Registration Registration => Grass_Registration.Instance;
+        protected override object CommonInstance()
+        {
+            return GrassCommon.Instance;
+        }
+        protected override object CommonSetterInstance()
+        {
+            return GrassSetterCommon.Instance;
+        }
+        protected override object CommonSetterCopyInstance()
+        {
+            return GrassSetterCopyCommon.Instance;
+        }
+
+        #endregion
+
+    }
 }

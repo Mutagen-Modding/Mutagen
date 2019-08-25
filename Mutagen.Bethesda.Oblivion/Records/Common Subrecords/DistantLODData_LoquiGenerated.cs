@@ -34,17 +34,11 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class DistantLODData :
         LoquiNotifyingObject,
-        IDistantLODData,
+        IDistantLODDataInternal,
         ILoquiObjectSetter<DistantLODData>,
         IEquatable<DistantLODData>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => DistantLODData_Registration.Instance;
-        public static DistantLODData_Registration Registration => DistantLODData_Registration.Instance;
-        protected object CommonInstance => DistantLODDataCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
-
         #region Ctor
         public DistantLODData()
         {
@@ -79,7 +73,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDistantLODDataGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDistantLODDataInternalGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -97,22 +91,35 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is IDistantLODDataGetter rhs)) return false;
-            return ((DistantLODDataCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            if (!(obj is IDistantLODDataInternalGetter rhs)) return false;
+            return ((DistantLODDataCommon)((IDistantLODDataInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(DistantLODData obj)
         {
-            return ((DistantLODDataCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((DistantLODDataCommon)((IDistantLODDataInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((DistantLODDataCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((DistantLODDataCommon)((IDistantLODDataInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected object XmlWriteTranslator => DistantLODDataXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((DistantLODDataXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static DistantLODData CreateFromXml(
@@ -286,6 +293,19 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Translation
         protected object BinaryWriteTranslator => DistantLODDataBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((DistantLODDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
         #region Binary Create
         [DebuggerStepThrough]
         public static DistantLODData CreateFromBinary(
@@ -462,7 +482,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            DistantLODDataCommon.CopyFieldsFrom(
+            DistantLODDataSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -477,7 +497,7 @@ namespace Mutagen.Bethesda.Oblivion
             DistantLODData_CopyMask copyMask = null,
             DistantLODData def = null)
         {
-            DistantLODDataCommon.CopyFieldsFrom(
+            DistantLODDataSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -506,7 +526,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void Clear()
         {
-            DistantLODDataCommon.Instance.Clear(this);
+            DistantLODDataSetterCommon.Instance.Clear(this);
         }
 
         public static DistantLODData Create(IEnumerable<KeyValuePair<ushort, object>> fields)
@@ -545,8 +565,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IDistantLODData :
-        IDistantLODDataGetter,
-        ILoquiObjectSetter<IDistantLODData>
+        IDistantLODDataInternalGetter,
+        ILoquiObjectSetter<IDistantLODDataInternal>
     {
         new Single Unknown0 { get; set; }
 
@@ -561,9 +581,15 @@ namespace Mutagen.Bethesda.Oblivion
             DistantLODData def = null);
     }
 
+    public partial interface IDistantLODDataInternal :
+        IDistantLODData,
+        IDistantLODDataInternalGetter
+    {
+    }
+
     public partial interface IDistantLODDataGetter :
         ILoquiObject,
-        ILoquiObject<IDistantLODDataGetter>,
+        ILoquiObject<IDistantLODDataInternalGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -582,45 +608,53 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    public partial interface IDistantLODDataInternalGetter : IDistantLODDataGetter
+    {
+        object CommonInstance();
+        object CommonSetterInstance();
+        object CommonSetterCopyInstance();
+
+    }
+
     #endregion
 
     #region Common MixIn
     public static class DistantLODDataMixIn
     {
-        public static void Clear(this IDistantLODData item)
+        public static void Clear(this IDistantLODDataInternal item)
         {
-            ((DistantLODDataCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((DistantLODDataSetterCommon)((IDistantLODDataInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static DistantLODData_Mask<bool> GetEqualsMask(
-            this IDistantLODDataGetter item,
-            IDistantLODDataGetter rhs,
+            this IDistantLODDataInternalGetter item,
+            IDistantLODDataInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((DistantLODDataCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((DistantLODDataCommon)((IDistantLODDataInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IDistantLODDataGetter item,
+            this IDistantLODDataInternalGetter item,
             string name = null,
             DistantLODData_Mask<bool> printMask = null)
         {
-            return ((DistantLODDataCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((DistantLODDataCommon)((IDistantLODDataInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IDistantLODDataGetter item,
+            this IDistantLODDataInternalGetter item,
             FileGeneration fg,
             string name = null,
             DistantLODData_Mask<bool> printMask = null)
         {
-            ((DistantLODDataCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((DistantLODDataCommon)((IDistantLODDataInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -628,28 +662,28 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static bool HasBeenSet(
-            this IDistantLODDataGetter item,
+            this IDistantLODDataInternalGetter item,
             DistantLODData_Mask<bool?> checkMask)
         {
-            return ((DistantLODDataCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((DistantLODDataCommon)((IDistantLODDataInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static DistantLODData_Mask<bool> GetHasBeenSetMask(this IDistantLODDataGetter item)
+        public static DistantLODData_Mask<bool> GetHasBeenSetMask(this IDistantLODDataInternalGetter item)
         {
             var ret = new DistantLODData_Mask<bool>();
-            ((DistantLODDataCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((DistantLODDataCommon)((IDistantLODDataInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this IDistantLODDataGetter item,
-            IDistantLODDataGetter rhs)
+            this IDistantLODDataInternalGetter item,
+            IDistantLODDataInternalGetter rhs)
         {
-            return ((DistantLODDataCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((DistantLODDataCommon)((IDistantLODDataInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -696,13 +730,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IDistantLODDataGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type InternalGetterType = typeof(IDistantLODDataInternalGetter);
 
         public static readonly Type SetterType = typeof(IDistantLODData);
 
-        public static readonly Type InternalSetterType = null;
-
-        public static readonly Type CommonType = typeof(DistantLODDataCommon);
+        public static readonly Type InternalSetterType = typeof(IDistantLODDataInternal);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.DistantLODData";
 
@@ -850,7 +882,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -870,9 +901,156 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
+    public partial class DistantLODDataSetterCommon
+    {
+        public static readonly DistantLODDataSetterCommon Instance = new DistantLODDataSetterCommon();
+
+        partial void ClearPartial();
+        
+        public virtual void Clear(IDistantLODDataInternal item)
+        {
+            ClearPartial();
+            item.Unknown0 = default(Single);
+            item.Unknown1 = default(Single);
+            item.Unknown2 = default(Single);
+        }
+        
+        
+    }
     public partial class DistantLODDataCommon
     {
         public static readonly DistantLODDataCommon Instance = new DistantLODDataCommon();
+
+        public DistantLODData_Mask<bool> GetEqualsMask(
+            IDistantLODDataInternalGetter item,
+            IDistantLODDataInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new DistantLODData_Mask<bool>();
+            ((DistantLODDataCommon)((IDistantLODDataInternalGetter)item).CommonInstance()).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+        
+        public void FillEqualsMask(
+            IDistantLODDataInternalGetter item,
+            IDistantLODDataInternalGetter rhs,
+            DistantLODData_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            if (rhs == null) return;
+            ret.Unknown0 = item.Unknown0.EqualsWithin(rhs.Unknown0);
+            ret.Unknown1 = item.Unknown1.EqualsWithin(rhs.Unknown1);
+            ret.Unknown2 = item.Unknown2.EqualsWithin(rhs.Unknown2);
+        }
+        
+        public string ToString(
+            IDistantLODDataInternalGetter item,
+            string name = null,
+            DistantLODData_Mask<bool> printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+            return fg.ToString();
+        }
+        
+        public void ToString(
+            IDistantLODDataInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            DistantLODData_Mask<bool> printMask = null)
+        {
+            if (name == null)
+            {
+                fg.AppendLine($"DistantLODData =>");
+            }
+            else
+            {
+                fg.AppendLine($"{name} (DistantLODData) =>");
+            }
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
+            }
+            fg.AppendLine("]");
+        }
+        
+        protected static void ToStringFields(
+            IDistantLODDataInternalGetter item,
+            FileGeneration fg,
+            DistantLODData_Mask<bool> printMask = null)
+        {
+            if (printMask?.Unknown0 ?? true)
+            {
+                fg.AppendLine($"Unknown0 => {item.Unknown0}");
+            }
+            if (printMask?.Unknown1 ?? true)
+            {
+                fg.AppendLine($"Unknown1 => {item.Unknown1}");
+            }
+            if (printMask?.Unknown2 ?? true)
+            {
+                fg.AppendLine($"Unknown2 => {item.Unknown2}");
+            }
+        }
+        
+        public bool HasBeenSet(
+            IDistantLODDataInternalGetter item,
+            DistantLODData_Mask<bool?> checkMask)
+        {
+            return true;
+        }
+        
+        public void FillHasBeenSetMask(
+            IDistantLODDataInternalGetter item,
+            DistantLODData_Mask<bool> mask)
+        {
+            mask.Unknown0 = true;
+            mask.Unknown1 = true;
+            mask.Unknown2 = true;
+        }
+        
+        #region Equals and Hash
+        public virtual bool Equals(
+            IDistantLODDataInternalGetter lhs,
+            IDistantLODDataInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!lhs.Unknown0.EqualsWithin(rhs.Unknown0)) return false;
+            if (!lhs.Unknown1.EqualsWithin(rhs.Unknown1)) return false;
+            if (!lhs.Unknown2.EqualsWithin(rhs.Unknown2)) return false;
+            return true;
+        }
+        
+        public virtual int GetHashCode(IDistantLODDataInternalGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.Unknown0).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Unknown1).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Unknown2).CombineHashCode(ret);
+            return ret;
+        }
+        
+        #endregion
+        
+        
+        
+    }
+    public partial class DistantLODDataSetterCopyCommon
+    {
+        public static readonly DistantLODDataSetterCopyCommon Instance = new DistantLODDataSetterCopyCommon();
 
         #region Copy Fields From
         public static void CopyFieldsFrom(
@@ -934,144 +1112,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
         }
-
+        
         #endregion
-
-        partial void ClearPartial();
-
-        public virtual void Clear(IDistantLODData item)
-        {
-            ClearPartial();
-            item.Unknown0 = default(Single);
-            item.Unknown1 = default(Single);
-            item.Unknown2 = default(Single);
-        }
-
-        public DistantLODData_Mask<bool> GetEqualsMask(
-            IDistantLODDataGetter item,
-            IDistantLODDataGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new DistantLODData_Mask<bool>();
-            ((DistantLODDataCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public void FillEqualsMask(
-            IDistantLODDataGetter item,
-            IDistantLODDataGetter rhs,
-            DistantLODData_Mask<bool> ret,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            if (rhs == null) return;
-            ret.Unknown0 = item.Unknown0.EqualsWithin(rhs.Unknown0);
-            ret.Unknown1 = item.Unknown1.EqualsWithin(rhs.Unknown1);
-            ret.Unknown2 = item.Unknown2.EqualsWithin(rhs.Unknown2);
-        }
-
-        public string ToString(
-            IDistantLODDataGetter item,
-            string name = null,
-            DistantLODData_Mask<bool> printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(
-                item: item,
-                fg: fg,
-                name: name,
-                printMask: printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(
-            IDistantLODDataGetter item,
-            FileGeneration fg,
-            string name = null,
-            DistantLODData_Mask<bool> printMask = null)
-        {
-            if (name == null)
-            {
-                fg.AppendLine($"DistantLODData =>");
-            }
-            else
-            {
-                fg.AppendLine($"{name} (DistantLODData) =>");
-            }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                ToStringFields(
-                    item: item,
-                    fg: fg,
-                    printMask: printMask);
-            }
-            fg.AppendLine("]");
-        }
-
-        protected static void ToStringFields(
-            IDistantLODDataGetter item,
-            FileGeneration fg,
-            DistantLODData_Mask<bool> printMask = null)
-        {
-            if (printMask?.Unknown0 ?? true)
-            {
-                fg.AppendLine($"Unknown0 => {item.Unknown0}");
-            }
-            if (printMask?.Unknown1 ?? true)
-            {
-                fg.AppendLine($"Unknown1 => {item.Unknown1}");
-            }
-            if (printMask?.Unknown2 ?? true)
-            {
-                fg.AppendLine($"Unknown2 => {item.Unknown2}");
-            }
-        }
-
-        public bool HasBeenSet(
-            IDistantLODDataGetter item,
-            DistantLODData_Mask<bool?> checkMask)
-        {
-            return true;
-        }
-
-        public void FillHasBeenSetMask(
-            IDistantLODDataGetter item,
-            DistantLODData_Mask<bool> mask)
-        {
-            mask.Unknown0 = true;
-            mask.Unknown1 = true;
-            mask.Unknown2 = true;
-        }
-
-        #region Equals and Hash
-        public virtual bool Equals(
-            IDistantLODDataGetter lhs,
-            IDistantLODDataGetter rhs)
-        {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
-            if (!lhs.Unknown0.EqualsWithin(rhs.Unknown0)) return false;
-            if (!lhs.Unknown1.EqualsWithin(rhs.Unknown1)) return false;
-            if (!lhs.Unknown2.EqualsWithin(rhs.Unknown2)) return false;
-            return true;
-        }
-
-        public virtual int GetHashCode(IDistantLODDataGetter item)
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.Unknown0).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Unknown1).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Unknown2).CombineHashCode(ret);
-            return ret;
-        }
-
-        #endregion
-
-
+        
+        
     }
     #endregion
 
@@ -1082,7 +1126,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static DistantLODDataXmlWriteTranslation Instance = new DistantLODDataXmlWriteTranslation();
 
         public static void WriteToNodeXml(
-            IDistantLODDataGetter item,
+            IDistantLODDataInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1118,7 +1162,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             XElement node,
-            IDistantLODDataGetter item,
+            IDistantLODDataInternalGetter item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)
@@ -1144,7 +1188,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             Write(
-                item: (IDistantLODDataGetter)item,
+                item: (IDistantLODDataInternalGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1153,7 +1197,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             XElement node,
-            IDistantLODDataGetter item,
+            IDistantLODDataInternalGetter item,
             ErrorMaskBuilder errorMask,
             int fieldIndex,
             TranslationCrystal translationMask,
@@ -1163,7 +1207,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 errorMask?.PushIndex(fieldIndex);
                 Write(
-                    item: (IDistantLODDataGetter)item,
+                    item: (IDistantLODDataInternalGetter)item,
                     name: name,
                     node: node,
                     errorMask: errorMask,
@@ -1187,7 +1231,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static DistantLODDataXmlCreateTranslation Instance = new DistantLODDataXmlCreateTranslation();
 
         public static void FillPublicXml(
-            IDistantLODData item,
+            IDistantLODDataInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1212,7 +1256,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElementXml(
-            IDistantLODData item,
+            IDistantLODDataInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -1309,7 +1353,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public static class DistantLODDataXmlTranslationMixIn
     {
         public static void WriteToXml(
-            this IDistantLODDataGetter item,
+            this IDistantLODDataInternalGetter item,
             XElement node,
             out DistantLODData_ErrorMask errorMask,
             bool doMasks = true,
@@ -1327,7 +1371,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IDistantLODDataGetter item,
+            this IDistantLODDataInternalGetter item,
             string path,
             out DistantLODData_ErrorMask errorMask,
             DistantLODData_TranslationMask translationMask = null,
@@ -1346,7 +1390,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IDistantLODDataGetter item,
+            this IDistantLODDataInternalGetter item,
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1364,7 +1408,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IDistantLODDataGetter item,
+            this IDistantLODDataInternalGetter item,
             Stream stream,
             out DistantLODData_ErrorMask errorMask,
             DistantLODData_TranslationMask translationMask = null,
@@ -1383,7 +1427,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IDistantLODDataGetter item,
+            this IDistantLODDataInternalGetter item,
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1401,7 +1445,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IDistantLODDataGetter item,
+            this IDistantLODDataInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1416,7 +1460,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IDistantLODDataGetter item,
+            this IDistantLODDataInternalGetter item,
             XElement node,
             string name = null,
             DistantLODData_TranslationMask translationMask = null)
@@ -1430,7 +1474,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IDistantLODDataGetter item,
+            this IDistantLODDataInternalGetter item,
             string path,
             string name = null)
         {
@@ -1445,7 +1489,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IDistantLODDataGetter item,
+            this IDistantLODDataInternalGetter item,
             Stream stream,
             string name = null)
         {
@@ -1800,7 +1844,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static DistantLODDataBinaryWriteTranslation Instance = new DistantLODDataBinaryWriteTranslation();
 
         public static void Write_Embedded(
-            IDistantLODDataGetter item,
+            IDistantLODDataInternalGetter item,
             MutagenWriter writer,
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
@@ -1818,7 +1862,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             MutagenWriter writer,
-            IDistantLODDataGetter item,
+            IDistantLODDataInternalGetter item,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
@@ -1844,7 +1888,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask)
         {
             Write(
-                item: (IDistantLODDataGetter)item,
+                item: (IDistantLODDataInternalGetter)item,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -1863,7 +1907,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public static class DistantLODDataBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IDistantLODDataGetter item,
+            this IDistantLODDataInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
             out DistantLODData_ErrorMask errorMask,
@@ -1880,7 +1924,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToBinary(
-            this IDistantLODDataGetter item,
+            this IDistantLODDataInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -1894,7 +1938,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToBinary(
-            this IDistantLODDataGetter item,
+            this IDistantLODDataInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
@@ -1911,22 +1955,65 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     public partial class DistantLODDataBinaryWrapper :
         BinaryWrapper,
-        IDistantLODDataGetter
+        IDistantLODDataInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DistantLODData_Registration.Instance;
         public static DistantLODData_Registration Registration => DistantLODData_Registration.Instance;
-        protected object CommonInstance => DistantLODDataCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
+        protected object CommonInstance()
+        {
+            return DistantLODDataCommon.Instance;
+        }
+        object IDistantLODDataInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IDistantLODDataInternalGetter.CommonSetterInstance()
+        {
+            return null;
+        }
+        object IDistantLODDataInternalGetter.CommonSetterCopyInstance()
+        {
+            return null;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDistantLODDataGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDistantLODDataInternalGetter)rhs, include);
 
         protected object XmlWriteTranslator => DistantLODDataXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((DistantLODDataXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         protected object BinaryWriteTranslator => DistantLODDataBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((DistantLODDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
 
         public Single Unknown0 => SpanExt.GetFloat(_data.Span.Slice(0, 4));
         public Single Unknown1 => SpanExt.GetFloat(_data.Span.Slice(4, 4));
@@ -1970,4 +2057,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class DistantLODData
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => DistantLODData_Registration.Instance;
+        public static DistantLODData_Registration Registration => DistantLODData_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return DistantLODDataCommon.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return DistantLODDataSetterCommon.Instance;
+        }
+        protected object CommonSetterCopyInstance()
+        {
+            return DistantLODDataSetterCopyCommon.Instance;
+        }
+        object IDistantLODDataInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IDistantLODDataInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object IDistantLODDataInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
 }

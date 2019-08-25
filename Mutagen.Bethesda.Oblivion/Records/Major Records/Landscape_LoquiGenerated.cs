@@ -44,11 +44,6 @@ namespace Mutagen.Bethesda.Oblivion
         IEquatable<Landscape>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Landscape_Registration.Instance;
-        public new static Landscape_Registration Registration => Landscape_Registration.Instance;
-        protected override object CommonInstance => LandscapeCommon.Instance;
-
         #region Ctor
         protected Landscape()
         {
@@ -213,20 +208,33 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is ILandscapeInternalGetter rhs)) return false;
-            return ((LandscapeCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            return ((LandscapeCommon)((ILandscapeInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(Landscape obj)
         {
-            return ((LandscapeCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((LandscapeCommon)((ILandscapeInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((LandscapeCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((LandscapeCommon)((ILandscapeInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected override object XmlWriteTranslator => LandscapeXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((LandscapeXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static Landscape CreateFromXml(
@@ -480,6 +488,19 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Binary Translation
         protected override object BinaryWriteTranslator => LandscapeBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((LandscapeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
         #region Binary Create
         [DebuggerStepThrough]
         public static Landscape CreateFromBinary(
@@ -753,7 +774,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            LandscapeCommon.CopyFieldsFrom(
+            LandscapeSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -768,7 +789,7 @@ namespace Mutagen.Bethesda.Oblivion
             Landscape_CopyMask copyMask = null,
             Landscape def = null)
         {
-            LandscapeCommon.CopyFieldsFrom(
+            LandscapeSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -807,7 +828,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            LandscapeCommon.Instance.Clear(this);
+            LandscapeSetterCommon.Instance.Clear(this);
         }
 
         public new static Landscape Create(IEnumerable<KeyValuePair<ushort, object>> fields)
@@ -946,7 +967,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this ILandscapeInternal item)
         {
-            ((LandscapeCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((LandscapeSetterCommon)((ILandscapeInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static Landscape_Mask<bool> GetEqualsMask(
@@ -954,7 +975,7 @@ namespace Mutagen.Bethesda.Oblivion
             ILandscapeInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((LandscapeCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((LandscapeCommon)((ILandscapeInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -965,7 +986,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Landscape_Mask<bool> printMask = null)
         {
-            return ((LandscapeCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((LandscapeCommon)((ILandscapeInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -977,7 +998,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Landscape_Mask<bool> printMask = null)
         {
-            ((LandscapeCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((LandscapeCommon)((ILandscapeInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -988,7 +1009,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ILandscapeInternalGetter item,
             Landscape_Mask<bool?> checkMask)
         {
-            return ((LandscapeCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((LandscapeCommon)((ILandscapeInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -996,7 +1017,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Landscape_Mask<bool> GetHasBeenSetMask(this ILandscapeInternalGetter item)
         {
             var ret = new Landscape_Mask<bool>();
-            ((LandscapeCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((LandscapeCommon)((ILandscapeInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -1006,7 +1027,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ILandscapeInternalGetter item,
             ILandscapeInternalGetter rhs)
         {
-            return ((LandscapeCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((LandscapeCommon)((ILandscapeInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1066,8 +1087,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type SetterType = typeof(ILandscape);
 
         public static readonly Type InternalSetterType = typeof(ILandscapeInternal);
-
-        public static readonly Type CommonType = typeof(LandscapeCommon);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.Landscape";
 
@@ -1257,7 +1276,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -1277,9 +1295,366 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
+    public partial class LandscapeSetterCommon : OblivionMajorRecordSetterCommon
+    {
+        public new static readonly LandscapeSetterCommon Instance = new LandscapeSetterCommon();
+
+        partial void ClearPartial();
+        
+        public virtual void Clear(ILandscapeInternal item)
+        {
+            ClearPartial();
+            item.Unknown_Unset();
+            item.VertexNormals_Unset();
+            item.VertexHeightMap_Unset();
+            item.VertexColors_Unset();
+            item.Layers.Unset();
+            item.Textures.Unset();
+            base.Clear(item);
+        }
+        
+        public override void Clear(IOblivionMajorRecordInternal item)
+        {
+            Clear(item: (ILandscapeInternal)item);
+        }
+        
+        public override void Clear(IMajorRecordInternal item)
+        {
+            Clear(item: (ILandscapeInternal)item);
+        }
+        
+        
+    }
     public partial class LandscapeCommon : OblivionMajorRecordCommon
     {
-        public static readonly LandscapeCommon Instance = new LandscapeCommon();
+        public new static readonly LandscapeCommon Instance = new LandscapeCommon();
+
+        public Landscape_Mask<bool> GetEqualsMask(
+            ILandscapeInternalGetter item,
+            ILandscapeInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new Landscape_Mask<bool>();
+            ((LandscapeCommon)((ILandscapeInternalGetter)item).CommonInstance()).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+        
+        public void FillEqualsMask(
+            ILandscapeInternalGetter item,
+            ILandscapeInternalGetter rhs,
+            Landscape_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            if (rhs == null) return;
+            ret.Unknown = item.Unknown_IsSet == rhs.Unknown_IsSet && MemoryExtensions.SequenceEqual(item.Unknown, rhs.Unknown);
+            ret.VertexNormals = item.VertexNormals_IsSet == rhs.VertexNormals_IsSet && MemoryExtensions.SequenceEqual(item.VertexNormals, rhs.VertexNormals);
+            ret.VertexHeightMap = item.VertexHeightMap_IsSet == rhs.VertexHeightMap_IsSet && MemoryExtensions.SequenceEqual(item.VertexHeightMap, rhs.VertexHeightMap);
+            ret.VertexColors = item.VertexColors_IsSet == rhs.VertexColors_IsSet && MemoryExtensions.SequenceEqual(item.VertexColors, rhs.VertexColors);
+            ret.Layers = item.Layers.CollectionEqualsHelper(
+                rhs.Layers,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Textures = item.Textures.CollectionEqualsHelper(
+                rhs.Textures,
+                (l, r) => object.Equals(l, r),
+                include);
+            base.FillEqualsMask(item, rhs, ret, include);
+        }
+        
+        public string ToString(
+            ILandscapeInternalGetter item,
+            string name = null,
+            Landscape_Mask<bool> printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+            return fg.ToString();
+        }
+        
+        public void ToString(
+            ILandscapeInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            Landscape_Mask<bool> printMask = null)
+        {
+            if (name == null)
+            {
+                fg.AppendLine($"Landscape =>");
+            }
+            else
+            {
+                fg.AppendLine($"{name} (Landscape) =>");
+            }
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
+            }
+            fg.AppendLine("]");
+        }
+        
+        protected static void ToStringFields(
+            ILandscapeInternalGetter item,
+            FileGeneration fg,
+            Landscape_Mask<bool> printMask = null)
+        {
+            OblivionMajorRecordCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.Unknown ?? true)
+            {
+                fg.AppendLine($"Unknown => {SpanExt.ToHexString(item.Unknown)}");
+            }
+            if (printMask?.VertexNormals ?? true)
+            {
+                fg.AppendLine($"VertexNormals => {SpanExt.ToHexString(item.VertexNormals)}");
+            }
+            if (printMask?.VertexHeightMap ?? true)
+            {
+                fg.AppendLine($"VertexHeightMap => {SpanExt.ToHexString(item.VertexHeightMap)}");
+            }
+            if (printMask?.VertexColors ?? true)
+            {
+                fg.AppendLine($"VertexColors => {SpanExt.ToHexString(item.VertexColors)}");
+            }
+            if (printMask?.Layers?.Overall ?? true)
+            {
+                fg.AppendLine("Layers =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Layers)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.Textures?.Overall ?? true)
+            {
+                fg.AppendLine("Textures =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Textures)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"Item => {subItem}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+        }
+        
+        public bool HasBeenSet(
+            ILandscapeInternalGetter item,
+            Landscape_Mask<bool?> checkMask)
+        {
+            if (checkMask.Unknown.HasValue && checkMask.Unknown.Value != item.Unknown_IsSet) return false;
+            if (checkMask.VertexNormals.HasValue && checkMask.VertexNormals.Value != item.VertexNormals_IsSet) return false;
+            if (checkMask.VertexHeightMap.HasValue && checkMask.VertexHeightMap.Value != item.VertexHeightMap_IsSet) return false;
+            if (checkMask.VertexColors.HasValue && checkMask.VertexColors.Value != item.VertexColors_IsSet) return false;
+            if (checkMask.Layers.Overall.HasValue && checkMask.Layers.Overall.Value != item.Layers.HasBeenSet) return false;
+            if (checkMask.Textures.Overall.HasValue && checkMask.Textures.Overall.Value != item.Textures.HasBeenSet) return false;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+        
+        public void FillHasBeenSetMask(
+            ILandscapeInternalGetter item,
+            Landscape_Mask<bool> mask)
+        {
+            mask.Unknown = item.Unknown_IsSet;
+            mask.VertexNormals = item.VertexNormals_IsSet;
+            mask.VertexHeightMap = item.VertexHeightMap_IsSet;
+            mask.VertexColors = item.VertexColors_IsSet;
+            mask.Layers = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, BaseLayer_Mask<bool>>>>(item.Layers.HasBeenSet, item.Layers.WithIndex().Select((i) => new MaskItemIndexed<bool, BaseLayer_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.Textures = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Textures.HasBeenSet, null);
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
+        }
+        
+        public static Landscape_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (Landscape_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.FormKey:
+                    return (Landscape_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.Version:
+                    return (Landscape_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.EditorID:
+                    return (Landscape_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
+                    return (Landscape_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        public static Landscape_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (Landscape_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.FormKey:
+                    return (Landscape_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.Version:
+                    return (Landscape_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.EditorID:
+                    return (Landscape_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        #region Equals and Hash
+        public virtual bool Equals(
+            ILandscapeInternalGetter lhs,
+            ILandscapeInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.Unknown_IsSet != rhs.Unknown_IsSet) return false;
+            if (lhs.Unknown_IsSet)
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.Unknown, rhs.Unknown)) return false;
+            }
+            if (lhs.VertexNormals_IsSet != rhs.VertexNormals_IsSet) return false;
+            if (lhs.VertexNormals_IsSet)
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.VertexNormals, rhs.VertexNormals)) return false;
+            }
+            if (lhs.VertexHeightMap_IsSet != rhs.VertexHeightMap_IsSet) return false;
+            if (lhs.VertexHeightMap_IsSet)
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.VertexHeightMap, rhs.VertexHeightMap)) return false;
+            }
+            if (lhs.VertexColors_IsSet != rhs.VertexColors_IsSet) return false;
+            if (lhs.VertexColors_IsSet)
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.VertexColors, rhs.VertexColors)) return false;
+            }
+            if (lhs.Layers.HasBeenSet != rhs.Layers.HasBeenSet) return false;
+            if (lhs.Layers.HasBeenSet)
+            {
+                if (!lhs.Layers.SequenceEqual(rhs.Layers)) return false;
+            }
+            if (lhs.Textures.HasBeenSet != rhs.Textures.HasBeenSet) return false;
+            if (lhs.Textures.HasBeenSet)
+            {
+                if (!lhs.Textures.SequenceEqual(rhs.Textures)) return false;
+            }
+            return true;
+        }
+        
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (ILandscapeInternalGetter)lhs,
+                rhs: rhs as ILandscapeInternalGetter);
+        }
+        
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (ILandscapeInternalGetter)lhs,
+                rhs: rhs as ILandscapeInternalGetter);
+        }
+        
+        public virtual int GetHashCode(ILandscapeInternalGetter item)
+        {
+            int ret = 0;
+            if (item.Unknown_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Unknown).CombineHashCode(ret);
+            }
+            if (item.VertexNormals_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.VertexNormals).CombineHashCode(ret);
+            }
+            if (item.VertexHeightMap_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.VertexHeightMap).CombineHashCode(ret);
+            }
+            if (item.VertexColors_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.VertexColors).CombineHashCode(ret);
+            }
+            if (item.Layers.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Layers).CombineHashCode(ret);
+            }
+            if (item.Textures.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Textures).CombineHashCode(ret);
+            }
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+        
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (ILandscapeInternalGetter)item);
+        }
+        
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (ILandscapeInternalGetter)item);
+        }
+        
+        #endregion
+        
+        
+        #region Mutagen
+        partial void PostDuplicate(Landscape obj, Landscape rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+        
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new Landscape(getNextFormKey());
+            ret.CopyFieldsFrom((Landscape)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (Landscape)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+        
+        #endregion
+        
+        
+    }
+    public partial class LandscapeSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
+    {
+        public new static readonly LandscapeSetterCopyCommon Instance = new LandscapeSetterCopyCommon();
 
         #region Copy Fields From
         public static void CopyFieldsFrom(
@@ -1289,7 +1664,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             Landscape_CopyMask copyMask)
         {
-            OblivionMajorRecordCommon.CopyFieldsFrom(
+            OblivionMajorRecordSetterCopyCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1469,354 +1844,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
         }
-
+        
         #endregion
-
-        partial void ClearPartial();
-
-        public virtual void Clear(ILandscapeInternal item)
-        {
-            ClearPartial();
-            item.Unknown_Unset();
-            item.VertexNormals_Unset();
-            item.VertexHeightMap_Unset();
-            item.VertexColors_Unset();
-            item.Layers.Unset();
-            item.Textures.Unset();
-            base.Clear(item);
-        }
-
-        public override void Clear(IOblivionMajorRecordInternal item)
-        {
-            Clear(item: (ILandscapeInternal)item);
-        }
-
-        public override void Clear(IMajorRecordInternal item)
-        {
-            Clear(item: (ILandscapeInternal)item);
-        }
-
-        public Landscape_Mask<bool> GetEqualsMask(
-            ILandscapeInternalGetter item,
-            ILandscapeInternalGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new Landscape_Mask<bool>();
-            ((LandscapeCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public void FillEqualsMask(
-            ILandscapeInternalGetter item,
-            ILandscapeInternalGetter rhs,
-            Landscape_Mask<bool> ret,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            if (rhs == null) return;
-            ret.Unknown = item.Unknown_IsSet == rhs.Unknown_IsSet && MemoryExtensions.SequenceEqual(item.Unknown, rhs.Unknown);
-            ret.VertexNormals = item.VertexNormals_IsSet == rhs.VertexNormals_IsSet && MemoryExtensions.SequenceEqual(item.VertexNormals, rhs.VertexNormals);
-            ret.VertexHeightMap = item.VertexHeightMap_IsSet == rhs.VertexHeightMap_IsSet && MemoryExtensions.SequenceEqual(item.VertexHeightMap, rhs.VertexHeightMap);
-            ret.VertexColors = item.VertexColors_IsSet == rhs.VertexColors_IsSet && MemoryExtensions.SequenceEqual(item.VertexColors, rhs.VertexColors);
-            ret.Layers = item.Layers.CollectionEqualsHelper(
-                rhs.Layers,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
-                include);
-            ret.Textures = item.Textures.CollectionEqualsHelper(
-                rhs.Textures,
-                (l, r) => object.Equals(l, r),
-                include);
-            base.FillEqualsMask(item, rhs, ret, include);
-        }
-
-        public string ToString(
-            ILandscapeInternalGetter item,
-            string name = null,
-            Landscape_Mask<bool> printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(
-                item: item,
-                fg: fg,
-                name: name,
-                printMask: printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(
-            ILandscapeInternalGetter item,
-            FileGeneration fg,
-            string name = null,
-            Landscape_Mask<bool> printMask = null)
-        {
-            if (name == null)
-            {
-                fg.AppendLine($"Landscape =>");
-            }
-            else
-            {
-                fg.AppendLine($"{name} (Landscape) =>");
-            }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                ToStringFields(
-                    item: item,
-                    fg: fg,
-                    printMask: printMask);
-            }
-            fg.AppendLine("]");
-        }
-
-        protected static void ToStringFields(
-            ILandscapeInternalGetter item,
-            FileGeneration fg,
-            Landscape_Mask<bool> printMask = null)
-        {
-            OblivionMajorRecordCommon.ToStringFields(
-                item: item,
-                fg: fg,
-                printMask: printMask);
-            if (printMask?.Unknown ?? true)
-            {
-                fg.AppendLine($"Unknown => {SpanExt.ToHexString(item.Unknown)}");
-            }
-            if (printMask?.VertexNormals ?? true)
-            {
-                fg.AppendLine($"VertexNormals => {SpanExt.ToHexString(item.VertexNormals)}");
-            }
-            if (printMask?.VertexHeightMap ?? true)
-            {
-                fg.AppendLine($"VertexHeightMap => {SpanExt.ToHexString(item.VertexHeightMap)}");
-            }
-            if (printMask?.VertexColors ?? true)
-            {
-                fg.AppendLine($"VertexColors => {SpanExt.ToHexString(item.VertexColors)}");
-            }
-            if (printMask?.Layers?.Overall ?? true)
-            {
-                fg.AppendLine("Layers =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
-                {
-                    foreach (var subItem in item.Layers)
-                    {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            subItem?.ToString(fg, "Item");
-                        }
-                        fg.AppendLine("]");
-                    }
-                }
-                fg.AppendLine("]");
-            }
-            if (printMask?.Textures?.Overall ?? true)
-            {
-                fg.AppendLine("Textures =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
-                {
-                    foreach (var subItem in item.Textures)
-                    {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            fg.AppendLine($"Item => {subItem}");
-                        }
-                        fg.AppendLine("]");
-                    }
-                }
-                fg.AppendLine("]");
-            }
-        }
-
-        public bool HasBeenSet(
-            ILandscapeInternalGetter item,
-            Landscape_Mask<bool?> checkMask)
-        {
-            if (checkMask.Unknown.HasValue && checkMask.Unknown.Value != item.Unknown_IsSet) return false;
-            if (checkMask.VertexNormals.HasValue && checkMask.VertexNormals.Value != item.VertexNormals_IsSet) return false;
-            if (checkMask.VertexHeightMap.HasValue && checkMask.VertexHeightMap.Value != item.VertexHeightMap_IsSet) return false;
-            if (checkMask.VertexColors.HasValue && checkMask.VertexColors.Value != item.VertexColors_IsSet) return false;
-            if (checkMask.Layers.Overall.HasValue && checkMask.Layers.Overall.Value != item.Layers.HasBeenSet) return false;
-            if (checkMask.Textures.Overall.HasValue && checkMask.Textures.Overall.Value != item.Textures.HasBeenSet) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public void FillHasBeenSetMask(
-            ILandscapeInternalGetter item,
-            Landscape_Mask<bool> mask)
-        {
-            mask.Unknown = item.Unknown_IsSet;
-            mask.VertexNormals = item.VertexNormals_IsSet;
-            mask.VertexHeightMap = item.VertexHeightMap_IsSet;
-            mask.VertexColors = item.VertexColors_IsSet;
-            mask.Layers = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, BaseLayer_Mask<bool>>>>(item.Layers.HasBeenSet, item.Layers.WithIndex().Select((i) => new MaskItemIndexed<bool, BaseLayer_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.Textures = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Textures.HasBeenSet, null);
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-
-        public static Landscape_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
-        {
-            switch (index)
-            {
-                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Landscape_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.FormKey:
-                    return (Landscape_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.Version:
-                    return (Landscape_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.EditorID:
-                    return (Landscape_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
-                    return (Landscape_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        public static Landscape_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
-        {
-            switch (index)
-            {
-                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Landscape_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.FormKey:
-                    return (Landscape_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
-                    return (Landscape_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.EditorID:
-                    return (Landscape_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        #region Equals and Hash
-        public virtual bool Equals(
-            ILandscapeInternalGetter lhs,
-            ILandscapeInternalGetter rhs)
-        {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (lhs.Unknown_IsSet != rhs.Unknown_IsSet) return false;
-            if (lhs.Unknown_IsSet)
-            {
-                if (!MemoryExtensions.SequenceEqual(lhs.Unknown, rhs.Unknown)) return false;
-            }
-            if (lhs.VertexNormals_IsSet != rhs.VertexNormals_IsSet) return false;
-            if (lhs.VertexNormals_IsSet)
-            {
-                if (!MemoryExtensions.SequenceEqual(lhs.VertexNormals, rhs.VertexNormals)) return false;
-            }
-            if (lhs.VertexHeightMap_IsSet != rhs.VertexHeightMap_IsSet) return false;
-            if (lhs.VertexHeightMap_IsSet)
-            {
-                if (!MemoryExtensions.SequenceEqual(lhs.VertexHeightMap, rhs.VertexHeightMap)) return false;
-            }
-            if (lhs.VertexColors_IsSet != rhs.VertexColors_IsSet) return false;
-            if (lhs.VertexColors_IsSet)
-            {
-                if (!MemoryExtensions.SequenceEqual(lhs.VertexColors, rhs.VertexColors)) return false;
-            }
-            if (lhs.Layers.HasBeenSet != rhs.Layers.HasBeenSet) return false;
-            if (lhs.Layers.HasBeenSet)
-            {
-                if (!lhs.Layers.SequenceEqual(rhs.Layers)) return false;
-            }
-            if (lhs.Textures.HasBeenSet != rhs.Textures.HasBeenSet) return false;
-            if (lhs.Textures.HasBeenSet)
-            {
-                if (!lhs.Textures.SequenceEqual(rhs.Textures)) return false;
-            }
-            return true;
-        }
-
-        public override bool Equals(
-            IOblivionMajorRecordInternalGetter lhs,
-            IOblivionMajorRecordInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (ILandscapeInternalGetter)lhs,
-                rhs: rhs as ILandscapeInternalGetter);
-        }
-
-        public override bool Equals(
-            IMajorRecordInternalGetter lhs,
-            IMajorRecordInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (ILandscapeInternalGetter)lhs,
-                rhs: rhs as ILandscapeInternalGetter);
-        }
-
-        public virtual int GetHashCode(ILandscapeInternalGetter item)
-        {
-            int ret = 0;
-            if (item.Unknown_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Unknown).CombineHashCode(ret);
-            }
-            if (item.VertexNormals_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.VertexNormals).CombineHashCode(ret);
-            }
-            if (item.VertexHeightMap_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.VertexHeightMap).CombineHashCode(ret);
-            }
-            if (item.VertexColors_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.VertexColors).CombineHashCode(ret);
-            }
-            if (item.Layers.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.Layers).CombineHashCode(ret);
-            }
-            if (item.Textures.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.Textures).CombineHashCode(ret);
-            }
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
-        {
-            return GetHashCode(item: (ILandscapeInternalGetter)item);
-        }
-
-        public override int GetHashCode(IMajorRecordInternalGetter item)
-        {
-            return GetHashCode(item: (ILandscapeInternalGetter)item);
-        }
-
-        #endregion
-
-
-        #region Mutagen
-        partial void PostDuplicate(Landscape obj, Landscape rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new Landscape(getNextFormKey());
-            ret.CopyFieldsFrom((Landscape)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (Landscape)item, getNextFormKey, duplicatedRecords);
-            return ret;
-        }
-
-        #endregion
-
+        
+        
     }
     #endregion
 
@@ -2998,17 +3029,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         OblivionMajorRecordBinaryWrapper,
         ILandscapeInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Landscape_Registration.Instance;
         public new static Landscape_Registration Registration => Landscape_Registration.Instance;
-        protected override object CommonInstance => LandscapeCommon.Instance;
+        protected override object CommonInstance()
+        {
+            return LandscapeCommon.Instance;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILandscapeInternalGetter)rhs, include);
 
         protected override object XmlWriteTranslator => LandscapeXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((LandscapeXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         protected override object BinaryWriteTranslator => LandscapeBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((LandscapeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
 
         #region Unknown
         private int? _UnknownLocation;
@@ -3151,4 +3214,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class Landscape
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Landscape_Registration.Instance;
+        public new static Landscape_Registration Registration => Landscape_Registration.Instance;
+        protected override object CommonInstance()
+        {
+            return LandscapeCommon.Instance;
+        }
+        protected override object CommonSetterInstance()
+        {
+            return LandscapeSetterCommon.Instance;
+        }
+        protected override object CommonSetterCopyInstance()
+        {
+            return LandscapeSetterCopyCommon.Instance;
+        }
+
+        #endregion
+
+    }
 }

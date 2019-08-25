@@ -37,18 +37,12 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class SkyrimMod :
         LoquiNotifyingObject,
-        ISkyrimMod,
+        ISkyrimModInternal,
         ILoquiObjectSetter<SkyrimMod>,
         ILinkContainer,
         IEquatable<SkyrimMod>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => SkyrimMod_Registration.Instance;
-        public static SkyrimMod_Registration Registration => SkyrimMod_Registration.Instance;
-        protected object CommonInstance => SkyrimModCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
-
         #region Ctor
         protected SkyrimMod()
         {
@@ -74,28 +68,28 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public ModHeader ModHeader => _ModHeader_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IModHeaderGetter ISkyrimModGetter.ModHeader => this.ModHeader;
+        IModHeaderInternalGetter ISkyrimModGetter.ModHeader => this.ModHeader;
         #endregion
         #region GameSettings
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<GameSetting> _GameSettings_Object;
         public Group<GameSetting> GameSettings => _GameSettings_Object;
-        IGroupGetter<IGameSettingInternalGetter> ISkyrimModGetter.GameSettings => _GameSettings_Object;
+        IGroupInternalGetter<IGameSettingInternalGetter> ISkyrimModGetter.GameSettings => _GameSettings_Object;
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Keyword> _Keywords_Object;
         public Group<Keyword> Keywords => _Keywords_Object;
-        IGroupGetter<IKeywordInternalGetter> ISkyrimModGetter.Keywords => _Keywords_Object;
+        IGroupInternalGetter<IKeywordInternalGetter> ISkyrimModGetter.Keywords => _Keywords_Object;
         #endregion
         #region LocationReferenceTypes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<LocationReferenceType> _LocationReferenceTypes_Object;
         public Group<LocationReferenceType> LocationReferenceTypes => _LocationReferenceTypes_Object;
-        IGroupGetter<ILocationReferenceTypeInternalGetter> ISkyrimModGetter.LocationReferenceTypes => _LocationReferenceTypes_Object;
+        IGroupInternalGetter<ILocationReferenceTypeInternalGetter> ISkyrimModGetter.LocationReferenceTypes => _LocationReferenceTypes_Object;
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISkyrimModGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISkyrimModInternalGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -113,22 +107,35 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is ISkyrimModGetter rhs)) return false;
-            return ((SkyrimModCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            if (!(obj is ISkyrimModInternalGetter rhs)) return false;
+            return ((SkyrimModCommon)((ISkyrimModInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(SkyrimMod obj)
         {
-            return ((SkyrimModCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((SkyrimModCommon)((ISkyrimModInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((SkyrimModCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((SkyrimModCommon)((ISkyrimModInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected object XmlWriteTranslator => SkyrimModXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((SkyrimModXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static SkyrimMod CreateFromXml(
@@ -961,7 +968,7 @@ namespace Mutagen.Bethesda.Skyrim
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            SkyrimModCommon.CopyFieldsFrom(
+            SkyrimModSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -976,7 +983,7 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMod_CopyMask copyMask = null,
             SkyrimMod def = null)
         {
-            SkyrimModCommon.CopyFieldsFrom(
+            SkyrimModSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -1008,7 +1015,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public void Clear()
         {
-            SkyrimModCommon.Instance.Clear(this);
+            SkyrimModSetterCommon.Instance.Clear(this);
         }
 
         public static SkyrimMod Create(IEnumerable<KeyValuePair<ushort, object>> fields)
@@ -1050,8 +1057,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ISkyrimMod :
-        ISkyrimModGetter,
-        ILoquiObjectSetter<ISkyrimMod>
+        ISkyrimModInternalGetter,
+        ILoquiObjectSetter<ISkyrimModInternal>
     {
         new ModHeader ModHeader { get; }
         new Group<GameSetting> GameSettings { get; }
@@ -1064,25 +1071,43 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMod def = null);
     }
 
+    public partial interface ISkyrimModInternal :
+        ISkyrimMod,
+        ISkyrimModInternalGetter
+    {
+        new ModHeader ModHeader { get; }
+        new Group<GameSetting> GameSettings { get; }
+        new Group<Keyword> Keywords { get; }
+        new Group<LocationReferenceType> LocationReferenceTypes { get; }
+    }
+
     public partial interface ISkyrimModGetter :
         ILoquiObject,
-        ILoquiObject<ISkyrimModGetter>,
+        ILoquiObject<ISkyrimModInternalGetter>,
         IXmlItem
     {
         #region ModHeader
-        IModHeaderGetter ModHeader { get; }
+        IModHeaderInternalGetter ModHeader { get; }
         bool ModHeader_IsSet { get; }
 
         #endregion
         #region GameSettings
-        IGroupGetter<IGameSettingInternalGetter> GameSettings { get; }
+        IGroupInternalGetter<IGameSettingInternalGetter> GameSettings { get; }
         #endregion
         #region Keywords
-        IGroupGetter<IKeywordInternalGetter> Keywords { get; }
+        IGroupInternalGetter<IKeywordInternalGetter> Keywords { get; }
         #endregion
         #region LocationReferenceTypes
-        IGroupGetter<ILocationReferenceTypeInternalGetter> LocationReferenceTypes { get; }
+        IGroupInternalGetter<ILocationReferenceTypeInternalGetter> LocationReferenceTypes { get; }
         #endregion
+
+    }
+
+    public partial interface ISkyrimModInternalGetter : ISkyrimModGetter
+    {
+        object CommonInstance();
+        object CommonSetterInstance();
+        object CommonSetterCopyInstance();
 
     }
 
@@ -1091,40 +1116,40 @@ namespace Mutagen.Bethesda.Skyrim
     #region Common MixIn
     public static class SkyrimModMixIn
     {
-        public static void Clear(this ISkyrimMod item)
+        public static void Clear(this ISkyrimModInternal item)
         {
-            ((SkyrimModCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((SkyrimModSetterCommon)((ISkyrimModInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static SkyrimMod_Mask<bool> GetEqualsMask(
-            this ISkyrimModGetter item,
-            ISkyrimModGetter rhs,
+            this ISkyrimModInternalGetter item,
+            ISkyrimModInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((SkyrimModCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((SkyrimModCommon)((ISkyrimModInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this ISkyrimModGetter item,
+            this ISkyrimModInternalGetter item,
             string name = null,
             SkyrimMod_Mask<bool> printMask = null)
         {
-            return ((SkyrimModCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((SkyrimModCommon)((ISkyrimModInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this ISkyrimModGetter item,
+            this ISkyrimModInternalGetter item,
             FileGeneration fg,
             string name = null,
             SkyrimMod_Mask<bool> printMask = null)
         {
-            ((SkyrimModCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((SkyrimModCommon)((ISkyrimModInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -1132,43 +1157,43 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static bool HasBeenSet(
-            this ISkyrimModGetter item,
+            this ISkyrimModInternalGetter item,
             SkyrimMod_Mask<bool?> checkMask)
         {
-            return ((SkyrimModCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((SkyrimModCommon)((ISkyrimModInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static SkyrimMod_Mask<bool> GetHasBeenSetMask(this ISkyrimModGetter item)
+        public static SkyrimMod_Mask<bool> GetHasBeenSetMask(this ISkyrimModInternalGetter item)
         {
             var ret = new SkyrimMod_Mask<bool>();
-            ((SkyrimModCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((SkyrimModCommon)((ISkyrimModInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this ISkyrimModGetter item,
-            ISkyrimModGetter rhs)
+            this ISkyrimModInternalGetter item,
+            ISkyrimModInternalGetter rhs)
         {
-            return ((SkyrimModCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((SkyrimModCommon)((ISkyrimModInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
 
         #region Mutagen
-        public static IReadOnlyCache<T, FormKey> GetGroupGetter<T>(this ISkyrimModGetter obj)
+        public static IReadOnlyCache<T, FormKey> GetGroupGetter<T>(this ISkyrimModInternalGetter obj)
             where T : IMajorRecordInternalGetter
         {
-            return (IReadOnlyCache<T, FormKey>)((SkyrimModCommon)((ILoquiObject)obj).CommonInstance).GetGroup<T>(obj: obj);
+            return (IReadOnlyCache<T, FormKey>)((SkyrimModCommon)((ISkyrimModInternalGetter)obj).CommonInstance()).GetGroup<T>(obj: obj);
         }
 
-        public static ISourceCache<T, FormKey> GetGroup<T>(this ISkyrimMod obj)
+        public static ISourceCache<T, FormKey> GetGroup<T>(this ISkyrimModInternal obj)
             where T : IMajorRecordInternal
         {
-            return (ISourceCache<T, FormKey>)((SkyrimModCommon)((ILoquiObject)obj).CommonInstance).GetGroup<T>(obj: obj);
+            return (ISourceCache<T, FormKey>)((SkyrimModCommon)((ISkyrimModInternalGetter)obj).CommonInstance()).GetGroup<T>(obj: obj);
         }
         #endregion
 
@@ -1215,13 +1240,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type GetterType = typeof(ISkyrimModGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type InternalGetterType = typeof(ISkyrimModInternalGetter);
 
         public static readonly Type SetterType = typeof(ISkyrimMod);
 
-        public static readonly Type InternalSetterType = null;
-
-        public static readonly Type CommonType = typeof(SkyrimModCommon);
+        public static readonly Type InternalSetterType = typeof(ISkyrimModInternal);
 
         public const string FullName = "Mutagen.Bethesda.Skyrim.SkyrimMod";
 
@@ -1395,7 +1418,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -1415,134 +1437,40 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
+    public partial class SkyrimModSetterCommon
+    {
+        public static readonly SkyrimModSetterCommon Instance = new SkyrimModSetterCommon();
+
+        partial void ClearPartial();
+        
+        public virtual void Clear(ISkyrimModInternal item)
+        {
+            ClearPartial();
+        }
+        
+        
+    }
     public partial class SkyrimModCommon
     {
         public static readonly SkyrimModCommon Instance = new SkyrimModCommon();
 
-        #region Copy Fields From
-        public static void CopyFieldsFrom(
-            SkyrimMod item,
-            SkyrimMod rhs,
-            SkyrimMod def,
-            ErrorMaskBuilder errorMask,
-            SkyrimMod_CopyMask copyMask)
-        {
-            if (copyMask?.ModHeader.Overall ?? true)
-            {
-                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.ModHeader);
-                try
-                {
-                    ModHeaderCommon.CopyFieldsFrom(
-                        item: item.ModHeader,
-                        rhs: rhs.ModHeader,
-                        def: def?.ModHeader,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.ModHeader.Specific);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if (copyMask?.GameSettings.Overall ?? true)
-            {
-                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.GameSettings);
-                try
-                {
-                    GroupCommon.CopyFieldsFrom<GameSetting, GameSetting_CopyMask>(
-                        item: item.GameSettings,
-                        rhs: rhs.GameSettings,
-                        def: def?.GameSettings,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.GameSettings.Specific);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if (copyMask?.Keywords.Overall ?? true)
-            {
-                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Keywords);
-                try
-                {
-                    GroupCommon.CopyFieldsFrom<Keyword, Keyword_CopyMask>(
-                        item: item.Keywords,
-                        rhs: rhs.Keywords,
-                        def: def?.Keywords,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.Keywords.Specific);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if (copyMask?.LocationReferenceTypes.Overall ?? true)
-            {
-                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.LocationReferenceTypes);
-                try
-                {
-                    GroupCommon.CopyFieldsFrom<LocationReferenceType, LocationReferenceType_CopyMask>(
-                        item: item.LocationReferenceTypes,
-                        rhs: rhs.LocationReferenceTypes,
-                        def: def?.LocationReferenceTypes,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.LocationReferenceTypes.Specific);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-        }
-
-        #endregion
-
-        partial void ClearPartial();
-
-        public virtual void Clear(ISkyrimMod item)
-        {
-            ClearPartial();
-        }
-
         public SkyrimMod_Mask<bool> GetEqualsMask(
-            ISkyrimModGetter item,
-            ISkyrimModGetter rhs,
+            ISkyrimModInternalGetter item,
+            ISkyrimModInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new SkyrimMod_Mask<bool>();
-            ((SkyrimModCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
+            ((SkyrimModCommon)((ISkyrimModInternalGetter)item).CommonInstance()).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
                 include: include);
             return ret;
         }
-
+        
         public void FillEqualsMask(
-            ISkyrimModGetter item,
-            ISkyrimModGetter rhs,
+            ISkyrimModInternalGetter item,
+            ISkyrimModInternalGetter rhs,
             SkyrimMod_Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
@@ -1558,9 +1486,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Keywords = MaskItemExt.Factory(item.Keywords.GetEqualsMask(rhs.Keywords, include), include);
             ret.LocationReferenceTypes = MaskItemExt.Factory(item.LocationReferenceTypes.GetEqualsMask(rhs.LocationReferenceTypes, include), include);
         }
-
+        
         public string ToString(
-            ISkyrimModGetter item,
+            ISkyrimModInternalGetter item,
             string name = null,
             SkyrimMod_Mask<bool> printMask = null)
         {
@@ -1572,9 +1500,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 printMask: printMask);
             return fg.ToString();
         }
-
+        
         public void ToString(
-            ISkyrimModGetter item,
+            ISkyrimModInternalGetter item,
             FileGeneration fg,
             string name = null,
             SkyrimMod_Mask<bool> printMask = null)
@@ -1597,9 +1525,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             fg.AppendLine("]");
         }
-
+        
         protected static void ToStringFields(
-            ISkyrimModGetter item,
+            ISkyrimModInternalGetter item,
             FileGeneration fg,
             SkyrimMod_Mask<bool> printMask = null)
         {
@@ -1620,18 +1548,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item.LocationReferenceTypes?.ToString(fg, "LocationReferenceTypes");
             }
         }
-
+        
         public bool HasBeenSet(
-            ISkyrimModGetter item,
+            ISkyrimModInternalGetter item,
             SkyrimMod_Mask<bool?> checkMask)
         {
             if (checkMask.ModHeader.Overall.HasValue && checkMask.ModHeader.Overall.Value != item.ModHeader_IsSet) return false;
             if (checkMask.ModHeader.Specific != null && (item.ModHeader == null || !item.ModHeader.HasBeenSet(checkMask.ModHeader.Specific))) return false;
             return true;
         }
-
+        
         public void FillHasBeenSetMask(
-            ISkyrimModGetter item,
+            ISkyrimModInternalGetter item,
             SkyrimMod_Mask<bool> mask)
         {
             mask.ModHeader = new MaskItem<bool, ModHeader_Mask<bool>>(item.ModHeader_IsSet, item.ModHeader.GetHasBeenSetMask());
@@ -1639,11 +1567,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.Keywords = new MaskItem<bool, Group_Mask<bool>>(true, item.Keywords.GetHasBeenSetMask());
             mask.LocationReferenceTypes = new MaskItem<bool, Group_Mask<bool>>(true, item.LocationReferenceTypes.GetHasBeenSetMask());
         }
-
+        
         #region Equals and Hash
         public virtual bool Equals(
-            ISkyrimModGetter lhs,
-            ISkyrimModGetter rhs)
+            ISkyrimModInternalGetter lhs,
+            ISkyrimModInternalGetter rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
@@ -1657,8 +1585,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!object.Equals(lhs.LocationReferenceTypes, rhs.LocationReferenceTypes)) return false;
             return true;
         }
-
-        public virtual int GetHashCode(ISkyrimModGetter item)
+        
+        public virtual int GetHashCode(ISkyrimModInternalGetter item)
         {
             int ret = 0;
             if (item.ModHeader_IsSet)
@@ -1670,12 +1598,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret = HashHelper.GetHashCode(item.LocationReferenceTypes).CombineHashCode(ret);
             return ret;
         }
-
+        
         #endregion
-
-
+        
+        
         #region Mutagen
-        public object GetGroup<T>(ISkyrimModGetter obj)
+        public object GetGroup<T>(ISkyrimModInternalGetter obj)
             where T : IMajorRecordInternalGetter
         {
             switch (typeof(T).Name)
@@ -1696,9 +1624,116 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     throw new ArgumentException($"Unknown group type: {typeof(T)}");
             }
         }
-
+        
         #endregion
+        
+        
+    }
+    public partial class SkyrimModSetterCopyCommon
+    {
+        public static readonly SkyrimModSetterCopyCommon Instance = new SkyrimModSetterCopyCommon();
 
+        #region Copy Fields From
+        public static void CopyFieldsFrom(
+            SkyrimMod item,
+            SkyrimMod rhs,
+            SkyrimMod def,
+            ErrorMaskBuilder errorMask,
+            SkyrimMod_CopyMask copyMask)
+        {
+            if (copyMask?.ModHeader.Overall ?? true)
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.ModHeader);
+                try
+                {
+                    ModHeaderSetterCopyCommon.CopyFieldsFrom(
+                        item: item.ModHeader,
+                        rhs: rhs.ModHeader,
+                        def: def?.ModHeader,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.ModHeader.Specific);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.GameSettings.Overall ?? true)
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.GameSettings);
+                try
+                {
+                    GroupSetterCopyCommon.CopyFieldsFrom(
+                        item: item.GameSettings,
+                        rhs: rhs.GameSettings,
+                        def: def?.GameSettings,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GameSettings.Specific);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.Keywords.Overall ?? true)
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Keywords);
+                try
+                {
+                    GroupSetterCopyCommon.CopyFieldsFrom(
+                        item: item.Keywords,
+                        rhs: rhs.Keywords,
+                        def: def?.Keywords,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.Keywords.Specific);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.LocationReferenceTypes.Overall ?? true)
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.LocationReferenceTypes);
+                try
+                {
+                    GroupSetterCopyCommon.CopyFieldsFrom(
+                        item: item.LocationReferenceTypes,
+                        rhs: rhs.LocationReferenceTypes,
+                        def: def?.LocationReferenceTypes,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.LocationReferenceTypes.Specific);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+        }
+        
+        #endregion
+        
+        
     }
     #endregion
 
@@ -1709,7 +1744,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public readonly static SkyrimModXmlWriteTranslation Instance = new SkyrimModXmlWriteTranslation();
 
         public static void WriteToNodeXml(
-            ISkyrimModGetter item,
+            ISkyrimModInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1763,7 +1798,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public void Write(
             XElement node,
-            ISkyrimModGetter item,
+            ISkyrimModInternalGetter item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)
@@ -1789,7 +1824,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string name = null)
         {
             Write(
-                item: (ISkyrimModGetter)item,
+                item: (ISkyrimModInternalGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1798,7 +1833,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public void Write(
             XElement node,
-            ISkyrimModGetter item,
+            ISkyrimModInternalGetter item,
             ErrorMaskBuilder errorMask,
             int fieldIndex,
             TranslationCrystal translationMask,
@@ -1808,7 +1843,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 errorMask?.PushIndex(fieldIndex);
                 Write(
-                    item: (ISkyrimModGetter)item,
+                    item: (ISkyrimModInternalGetter)item,
                     name: name,
                     node: node,
                     errorMask: errorMask,
@@ -1832,7 +1867,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public readonly static SkyrimModXmlCreateTranslation Instance = new SkyrimModXmlCreateTranslation();
 
         public static void FillPublicXml(
-            ISkyrimMod item,
+            ISkyrimModInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1857,7 +1892,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static void FillPublicElementXml(
-            ISkyrimMod item,
+            ISkyrimModInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -1945,7 +1980,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public static class SkyrimModXmlTranslationMixIn
     {
         public static void WriteToXml(
-            this ISkyrimModGetter item,
+            this ISkyrimModInternalGetter item,
             XElement node,
             out SkyrimMod_ErrorMask errorMask,
             bool doMasks = true,
@@ -1963,7 +1998,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static void WriteToXml(
-            this ISkyrimModGetter item,
+            this ISkyrimModInternalGetter item,
             string path,
             out SkyrimMod_ErrorMask errorMask,
             SkyrimMod_TranslationMask translationMask = null,
@@ -1982,7 +2017,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static void WriteToXml(
-            this ISkyrimModGetter item,
+            this ISkyrimModInternalGetter item,
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -2000,7 +2035,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static void WriteToXml(
-            this ISkyrimModGetter item,
+            this ISkyrimModInternalGetter item,
             Stream stream,
             out SkyrimMod_ErrorMask errorMask,
             SkyrimMod_TranslationMask translationMask = null,
@@ -2019,7 +2054,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static void WriteToXml(
-            this ISkyrimModGetter item,
+            this ISkyrimModInternalGetter item,
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -2037,7 +2072,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static void WriteToXml(
-            this ISkyrimModGetter item,
+            this ISkyrimModInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -2052,7 +2087,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static void WriteToXml(
-            this ISkyrimModGetter item,
+            this ISkyrimModInternalGetter item,
             XElement node,
             string name = null,
             SkyrimMod_TranslationMask translationMask = null)
@@ -2066,7 +2101,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static void WriteToXml(
-            this ISkyrimModGetter item,
+            this ISkyrimModInternalGetter item,
             string path,
             string name = null)
         {
@@ -2081,7 +2116,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static void WriteToXml(
-            this ISkyrimModGetter item,
+            this ISkyrimModInternalGetter item,
             Stream stream,
             string name = null)
         {
@@ -2529,7 +2564,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public readonly static SkyrimModBinaryWriteTranslation Instance = new SkyrimModBinaryWriteTranslation();
 
         public static void Write_RecordTypes(
-            ISkyrimModGetter item,
+            ISkyrimModInternalGetter item,
             MutagenWriter writer,
             GroupMask importMask,
             ModKey modKey,
@@ -2590,7 +2625,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public void Write(
             MutagenWriter writer,
-            ISkyrimModGetter item,
+            ISkyrimModInternalGetter item,
             ModKey modKey,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask,
@@ -2614,7 +2649,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             GroupMask importMask = null)
         {
             Write(
-                item: (ISkyrimModGetter)item,
+                item: (ISkyrimModInternalGetter)item,
                 importMask: importMask,
                 modKey: modKey,
                 writer: writer,
@@ -2634,7 +2669,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public static class SkyrimModBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this ISkyrimModGetter item,
+            this ISkyrimModInternalGetter item,
             MutagenWriter writer,
             ModKey modKey,
             out SkyrimMod_ErrorMask errorMask,
@@ -2653,7 +2688,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static void WriteToBinary(
-            this ISkyrimModGetter item,
+            this ISkyrimModInternalGetter item,
             string path,
             ModKey modKey,
             out SkyrimMod_ErrorMask errorMask,
@@ -2681,7 +2716,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static void WriteToBinary(
-            this ISkyrimModGetter item,
+            this ISkyrimModInternalGetter item,
             string path,
             ModKey modKey,
             ErrorMaskBuilder errorMask,
@@ -2708,7 +2743,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static void WriteToBinary(
-            this ISkyrimModGetter item,
+            this ISkyrimModInternalGetter item,
             Stream stream,
             ModKey modKey,
             out SkyrimMod_ErrorMask errorMask,
@@ -2728,7 +2763,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static void WriteToBinary(
-            this ISkyrimModGetter item,
+            this ISkyrimModInternalGetter item,
             Stream stream,
             ModKey modKey,
             ErrorMaskBuilder errorMask,
@@ -2747,7 +2782,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static void WriteToBinary(
-            this ISkyrimModGetter item,
+            this ISkyrimModInternalGetter item,
             MutagenWriter writer,
             ModKey modKey,
             ErrorMaskBuilder errorMask,
@@ -2763,7 +2798,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static void WriteToBinary(
-            this ISkyrimModGetter item,
+            this ISkyrimModInternalGetter item,
             MutagenWriter writer,
             ModKey modKey,
             GroupMask importMask = null)
@@ -2778,7 +2813,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static void WriteToBinary(
-            this ISkyrimModGetter item,
+            this ISkyrimModInternalGetter item,
             string path,
             ModKey modKey,
             GroupMask importMask = null)
@@ -2804,7 +2839,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static void WriteToBinary(
-            this ISkyrimModGetter item,
+            this ISkyrimModInternalGetter item,
             Stream stream,
             ModKey modKey,
             GroupMask importMask = null)
@@ -2826,17 +2861,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     public partial class SkyrimModBinaryWrapper :
         BinaryWrapper,
-        ISkyrimModGetter
+        ISkyrimModInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SkyrimMod_Registration.Instance;
         public static SkyrimMod_Registration Registration => SkyrimMod_Registration.Instance;
-        protected object CommonInstance => SkyrimModCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
+        protected object CommonInstance()
+        {
+            return SkyrimModCommon.Instance;
+        }
+        object ISkyrimModInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object ISkyrimModInternalGetter.CommonSetterInstance()
+        {
+            return null;
+        }
+        object ISkyrimModInternalGetter.CommonSetterCopyInstance()
+        {
+            return null;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISkyrimModGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISkyrimModInternalGetter)rhs, include);
 
         public GameMode GameMode => GameMode.Skyrim;
         IReadOnlyCache<T, FormKey> IModGetter.GetGroupGetter<T>() => this.GetGroupGetter<T>();
@@ -2852,24 +2904,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IReadOnlyCache<IMajorRecordInternalGetter, FormKey> IModGetter.MajorRecords => throw new NotImplementedException();
         protected object XmlWriteTranslator => SkyrimModXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((SkyrimModXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         public ModKey ModKey { get; }
 
         #region ModHeader
-        private IModHeaderGetter _ModHeader;
-        public IModHeaderGetter ModHeader => _ModHeader ?? new ModHeader();
+        private IModHeaderInternalGetter _ModHeader;
+        public IModHeaderInternalGetter ModHeader => _ModHeader ?? new ModHeader();
         public bool ModHeader_IsSet => ModHeader != null;
         #endregion
         #region GameSettings
-        private IGroupGetter<IGameSettingInternalGetter> _GameSettings;
-        public IGroupGetter<IGameSettingInternalGetter> GameSettings => _GameSettings ?? new Group<GameSetting>(this);
+        private IGroupInternalGetter<IGameSettingInternalGetter> _GameSettings;
+        public IGroupInternalGetter<IGameSettingInternalGetter> GameSettings => _GameSettings ?? new Group<GameSetting>(this);
         #endregion
         #region Keywords
-        private IGroupGetter<IKeywordInternalGetter> _Keywords;
-        public IGroupGetter<IKeywordInternalGetter> Keywords => _Keywords ?? new Group<Keyword>(this);
+        private IGroupInternalGetter<IKeywordInternalGetter> _Keywords;
+        public IGroupInternalGetter<IKeywordInternalGetter> Keywords => _Keywords ?? new Group<Keyword>(this);
         #endregion
         #region LocationReferenceTypes
-        private IGroupGetter<ILocationReferenceTypeInternalGetter> _LocationReferenceTypes;
-        public IGroupGetter<ILocationReferenceTypeInternalGetter> LocationReferenceTypes => _LocationReferenceTypes ?? new Group<LocationReferenceType>(this);
+        private IGroupInternalGetter<ILocationReferenceTypeInternalGetter> _LocationReferenceTypes;
+        public IGroupInternalGetter<ILocationReferenceTypeInternalGetter> LocationReferenceTypes => _LocationReferenceTypes ?? new Group<LocationReferenceType>(this);
         #endregion
         partial void CustomCtor(
             BinaryMemoryReadStream stream,
@@ -2968,4 +3033,42 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda.Skyrim
+{
+    public partial class SkyrimMod
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => SkyrimMod_Registration.Instance;
+        public static SkyrimMod_Registration Registration => SkyrimMod_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return SkyrimModCommon.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return SkyrimModSetterCommon.Instance;
+        }
+        protected object CommonSetterCopyInstance()
+        {
+            return SkyrimModSetterCopyCommon.Instance;
+        }
+        object ISkyrimModInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object ISkyrimModInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object ISkyrimModInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
 }

@@ -1,4 +1,4 @@
-﻿using Loqui.Internal;
+using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Noggog;
 using System;
@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public partial class ConditionBinaryWriteTranslation
         {
-            static partial void WriteBinaryInitialParserCustom(MutagenWriter writer, IConditionGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void WriteBinaryInitialParserCustom(MutagenWriter writer, IConditionInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
                 byte b = (byte)item.Flags;
                 b |= (byte)(((int)(item.CompareOperator) * 16) & ConditionBinaryCreateTranslation.Mask);

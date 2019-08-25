@@ -41,11 +41,6 @@ namespace Mutagen.Bethesda.Oblivion
         IEquatable<Clothing>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Clothing_Registration.Instance;
-        public new static Clothing_Registration Registration => Clothing_Registration.Instance;
-        protected override object CommonInstance => ClothingCommon.Instance;
-
         #region Ctor
         protected Clothing()
         {
@@ -115,20 +110,33 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IClothingInternalGetter rhs)) return false;
-            return ((ClothingCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            return ((ClothingCommon)((IClothingInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(Clothing obj)
         {
-            return ((ClothingCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((ClothingCommon)((IClothingInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((ClothingCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((ClothingCommon)((IClothingInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected override object XmlWriteTranslator => ClothingXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((ClothingXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static Clothing CreateFromXml(
@@ -345,6 +353,19 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Binary Translation
         protected override object BinaryWriteTranslator => ClothingBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((ClothingBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
         #region Binary Create
         [DebuggerStepThrough]
         public static Clothing CreateFromBinary(
@@ -537,7 +558,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ClothingCommon.CopyFieldsFrom(
+            ClothingSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -552,7 +573,7 @@ namespace Mutagen.Bethesda.Oblivion
             Clothing_CopyMask copyMask = null,
             Clothing def = null)
         {
-            ClothingCommon.CopyFieldsFrom(
+            ClothingSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -582,7 +603,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            ClothingCommon.Instance.Clear(this);
+            ClothingSetterCommon.Instance.Clear(this);
         }
 
         public new static Clothing Create(IEnumerable<KeyValuePair<ushort, object>> fields)
@@ -680,7 +701,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IClothingInternal item)
         {
-            ((ClothingCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((ClothingSetterCommon)((IClothingInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static Clothing_Mask<bool> GetEqualsMask(
@@ -688,7 +709,7 @@ namespace Mutagen.Bethesda.Oblivion
             IClothingInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((ClothingCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((ClothingCommon)((IClothingInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -699,7 +720,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Clothing_Mask<bool> printMask = null)
         {
-            return ((ClothingCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((ClothingCommon)((IClothingInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -711,7 +732,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Clothing_Mask<bool> printMask = null)
         {
-            ((ClothingCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((ClothingCommon)((IClothingInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -722,7 +743,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IClothingInternalGetter item,
             Clothing_Mask<bool?> checkMask)
         {
-            return ((ClothingCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((ClothingCommon)((IClothingInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -730,7 +751,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Clothing_Mask<bool> GetHasBeenSetMask(this IClothingInternalGetter item)
         {
             var ret = new Clothing_Mask<bool>();
-            ((ClothingCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((ClothingCommon)((IClothingInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -740,7 +761,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IClothingInternalGetter item,
             IClothingInternalGetter rhs)
         {
-            return ((ClothingCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((ClothingCommon)((IClothingInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -810,8 +831,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type SetterType = typeof(IClothing);
 
         public static readonly Type InternalSetterType = typeof(IClothingInternal);
-
-        public static readonly Type CommonType = typeof(ClothingCommon);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.Clothing";
 
@@ -960,7 +979,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -980,64 +998,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class ClothingCommon : ClothingAbstractCommon
+    public partial class ClothingSetterCommon : ClothingAbstractSetterCommon
     {
-        public static readonly ClothingCommon Instance = new ClothingCommon();
-
-        #region Copy Fields From
-        public static void CopyFieldsFrom(
-            Clothing item,
-            Clothing rhs,
-            Clothing def,
-            ErrorMaskBuilder errorMask,
-            Clothing_CopyMask copyMask)
-        {
-            ClothingAbstractCommon.CopyFieldsFrom(
-                item,
-                rhs,
-                def,
-                errorMask,
-                copyMask);
-            if (copyMask?.Value ?? true)
-            {
-                errorMask?.PushIndex((int)Clothing_FieldIndex.Value);
-                try
-                {
-                    item.Value = rhs.Value;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if (copyMask?.Weight ?? true)
-            {
-                errorMask?.PushIndex((int)Clothing_FieldIndex.Weight);
-                try
-                {
-                    item.Weight = rhs.Weight;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-        }
-
-        #endregion
+        public new static readonly ClothingSetterCommon Instance = new ClothingSetterCommon();
 
         partial void ClearPartial();
-
+        
         public virtual void Clear(IClothingInternal item)
         {
             ClearPartial();
@@ -1045,26 +1011,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Weight = default(Single);
             base.Clear(item);
         }
-
+        
         public override void Clear(IClothingAbstractInternal item)
         {
             Clear(item: (IClothingInternal)item);
         }
-
+        
         public override void Clear(IItemAbstractInternal item)
         {
             Clear(item: (IClothingInternal)item);
         }
-
+        
         public override void Clear(IOblivionMajorRecordInternal item)
         {
             Clear(item: (IClothingInternal)item);
         }
-
+        
         public override void Clear(IMajorRecordInternal item)
         {
             Clear(item: (IClothingInternal)item);
         }
+        
+        
+    }
+    public partial class ClothingCommon : ClothingAbstractCommon
+    {
+        public new static readonly ClothingCommon Instance = new ClothingCommon();
 
         public Clothing_Mask<bool> GetEqualsMask(
             IClothingInternalGetter item,
@@ -1072,14 +1044,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new Clothing_Mask<bool>();
-            ((ClothingCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
+            ((ClothingCommon)((IClothingInternalGetter)item).CommonInstance()).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
                 include: include);
             return ret;
         }
-
+        
         public void FillEqualsMask(
             IClothingInternalGetter item,
             IClothingInternalGetter rhs,
@@ -1091,7 +1063,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Weight = item.Weight.EqualsWithin(rhs.Weight);
             base.FillEqualsMask(item, rhs, ret, include);
         }
-
+        
         public string ToString(
             IClothingInternalGetter item,
             string name = null,
@@ -1105,7 +1077,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 printMask: printMask);
             return fg.ToString();
         }
-
+        
         public void ToString(
             IClothingInternalGetter item,
             FileGeneration fg,
@@ -1130,7 +1102,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             fg.AppendLine("]");
         }
-
+        
         protected static void ToStringFields(
             IClothingInternalGetter item,
             FileGeneration fg,
@@ -1152,7 +1124,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
             }
         }
-
+        
         public bool HasBeenSet(
             IClothingInternalGetter item,
             Clothing_Mask<bool?> checkMask)
@@ -1161,7 +1133,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 checkMask: checkMask);
         }
-
+        
         public void FillHasBeenSetMask(
             IClothingInternalGetter item,
             Clothing_Mask<bool> mask)
@@ -1173,7 +1145,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 mask: mask);
         }
-
+        
         public static Clothing_FieldIndex ConvertFieldIndex(ClothingAbstract_FieldIndex index)
         {
             switch (index)
@@ -1218,7 +1190,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
-
+        
         public static Clothing_FieldIndex ConvertFieldIndex(ItemAbstract_FieldIndex index)
         {
             switch (index)
@@ -1237,7 +1209,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
-
+        
         public static Clothing_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
         {
             switch (index)
@@ -1256,7 +1228,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
-
+        
         public static Clothing_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
@@ -1273,7 +1245,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
-
+        
         #region Equals and Hash
         public virtual bool Equals(
             IClothingInternalGetter lhs,
@@ -1287,7 +1259,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             return true;
         }
-
+        
         public override bool Equals(
             IClothingAbstractInternalGetter lhs,
             IClothingAbstractInternalGetter rhs)
@@ -1296,7 +1268,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 lhs: (IClothingInternalGetter)lhs,
                 rhs: rhs as IClothingInternalGetter);
         }
-
+        
         public override bool Equals(
             IItemAbstractInternalGetter lhs,
             IItemAbstractInternalGetter rhs)
@@ -1305,7 +1277,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 lhs: (IClothingInternalGetter)lhs,
                 rhs: rhs as IClothingInternalGetter);
         }
-
+        
         public override bool Equals(
             IOblivionMajorRecordInternalGetter lhs,
             IOblivionMajorRecordInternalGetter rhs)
@@ -1314,7 +1286,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 lhs: (IClothingInternalGetter)lhs,
                 rhs: rhs as IClothingInternalGetter);
         }
-
+        
         public override bool Equals(
             IMajorRecordInternalGetter lhs,
             IMajorRecordInternalGetter rhs)
@@ -1323,7 +1295,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 lhs: (IClothingInternalGetter)lhs,
                 rhs: rhs as IClothingInternalGetter);
         }
-
+        
         public virtual int GetHashCode(IClothingInternalGetter item)
         {
             int ret = 0;
@@ -1333,33 +1305,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
-
+        
         public override int GetHashCode(IClothingAbstractInternalGetter item)
         {
             return GetHashCode(item: (IClothingInternalGetter)item);
         }
-
+        
         public override int GetHashCode(IItemAbstractInternalGetter item)
         {
             return GetHashCode(item: (IClothingInternalGetter)item);
         }
-
+        
         public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
         {
             return GetHashCode(item: (IClothingInternalGetter)item);
         }
-
+        
         public override int GetHashCode(IMajorRecordInternalGetter item)
         {
             return GetHashCode(item: (IClothingInternalGetter)item);
         }
-
+        
         #endregion
-
-
+        
+        
         #region Mutagen
         partial void PostDuplicate(Clothing obj, Clothing rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
+        
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new Clothing(getNextFormKey());
@@ -1368,9 +1340,68 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             PostDuplicate(ret, (Clothing)item, getNextFormKey, duplicatedRecords);
             return ret;
         }
-
+        
         #endregion
+        
+        
+    }
+    public partial class ClothingSetterCopyCommon : ClothingAbstractSetterCopyCommon
+    {
+        public new static readonly ClothingSetterCopyCommon Instance = new ClothingSetterCopyCommon();
 
+        #region Copy Fields From
+        public static void CopyFieldsFrom(
+            Clothing item,
+            Clothing rhs,
+            Clothing def,
+            ErrorMaskBuilder errorMask,
+            Clothing_CopyMask copyMask)
+        {
+            ClothingAbstractSetterCopyCommon.CopyFieldsFrom(
+                item,
+                rhs,
+                def,
+                errorMask,
+                copyMask);
+            if (copyMask?.Value ?? true)
+            {
+                errorMask?.PushIndex((int)Clothing_FieldIndex.Value);
+                try
+                {
+                    item.Value = rhs.Value;
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.Weight ?? true)
+            {
+                errorMask?.PushIndex((int)Clothing_FieldIndex.Weight);
+                try
+                {
+                    item.Weight = rhs.Weight;
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+        }
+        
+        #endregion
+        
+        
     }
     #endregion
 
@@ -2212,17 +2243,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         ClothingAbstractBinaryWrapper,
         IClothingInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Clothing_Registration.Instance;
         public new static Clothing_Registration Registration => Clothing_Registration.Instance;
-        protected override object CommonInstance => ClothingCommon.Instance;
+        protected override object CommonInstance()
+        {
+            return ClothingCommon.Instance;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IClothingInternalGetter)rhs, include);
 
         protected override object XmlWriteTranslator => ClothingXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((ClothingXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         protected override object BinaryWriteTranslator => ClothingBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((ClothingBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
 
         private int? _DATALocation;
         public Clothing.DATADataType DATADataTypeState { get; private set; }
@@ -2308,4 +2371,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class Clothing
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Clothing_Registration.Instance;
+        public new static Clothing_Registration Registration => Clothing_Registration.Instance;
+        protected override object CommonInstance()
+        {
+            return ClothingCommon.Instance;
+        }
+        protected override object CommonSetterInstance()
+        {
+            return ClothingSetterCommon.Instance;
+        }
+        protected override object CommonSetterCopyInstance()
+        {
+            return ClothingSetterCopyCommon.Instance;
+        }
+
+        #endregion
+
+    }
 }

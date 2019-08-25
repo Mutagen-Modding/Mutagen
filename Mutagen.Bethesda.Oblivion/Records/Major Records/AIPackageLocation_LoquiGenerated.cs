@@ -34,18 +34,12 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class AIPackageLocation :
         LoquiNotifyingObject,
-        IAIPackageLocation,
+        IAIPackageLocationInternal,
         ILoquiObjectSetter<AIPackageLocation>,
         ILinkSubContainer,
         IEquatable<AIPackageLocation>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => AIPackageLocation_Registration.Instance;
-        public static AIPackageLocation_Registration Registration => AIPackageLocation_Registration.Instance;
-        protected object CommonInstance => AIPackageLocationCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
-
         #region Ctor
         public AIPackageLocation()
         {
@@ -80,7 +74,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAIPackageLocationGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAIPackageLocationInternalGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -98,22 +92,35 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is IAIPackageLocationGetter rhs)) return false;
-            return ((AIPackageLocationCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            if (!(obj is IAIPackageLocationInternalGetter rhs)) return false;
+            return ((AIPackageLocationCommon)((IAIPackageLocationInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(AIPackageLocation obj)
         {
-            return ((AIPackageLocationCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((AIPackageLocationCommon)((IAIPackageLocationInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((AIPackageLocationCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((AIPackageLocationCommon)((IAIPackageLocationInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected object XmlWriteTranslator => AIPackageLocationXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((AIPackageLocationXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static AIPackageLocation CreateFromXml(
@@ -304,6 +311,19 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Translation
         protected object BinaryWriteTranslator => AIPackageLocationBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((AIPackageLocationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
         #region Binary Create
         [DebuggerStepThrough]
         public static AIPackageLocation CreateFromBinary(
@@ -474,7 +494,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            AIPackageLocationCommon.CopyFieldsFrom(
+            AIPackageLocationSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -489,7 +509,7 @@ namespace Mutagen.Bethesda.Oblivion
             AIPackageLocation_CopyMask copyMask = null,
             AIPackageLocation def = null)
         {
-            AIPackageLocationCommon.CopyFieldsFrom(
+            AIPackageLocationSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -518,7 +538,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void Clear()
         {
-            AIPackageLocationCommon.Instance.Clear(this);
+            AIPackageLocationSetterCommon.Instance.Clear(this);
         }
 
         public static AIPackageLocation Create(IEnumerable<KeyValuePair<ushort, object>> fields)
@@ -557,8 +577,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IAIPackageLocation :
-        IAIPackageLocationGetter,
-        ILoquiObjectSetter<IAIPackageLocation>
+        IAIPackageLocationInternalGetter,
+        ILoquiObjectSetter<IAIPackageLocationInternal>
     {
         new AIPackageLocation.LocationType Type { get; set; }
 
@@ -573,9 +593,17 @@ namespace Mutagen.Bethesda.Oblivion
             AIPackageLocation def = null);
     }
 
+    public partial interface IAIPackageLocationInternal :
+        IAIPackageLocation,
+        IAIPackageLocationInternalGetter
+    {
+        new IPlaced LocationReference { get; set; }
+        new IFormIDLink<IPlaced> LocationReference_Property { get; }
+    }
+
     public partial interface IAIPackageLocationGetter :
         ILoquiObject,
-        ILoquiObject<IAIPackageLocationGetter>,
+        ILoquiObject<IAIPackageLocationInternalGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -595,45 +623,53 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    public partial interface IAIPackageLocationInternalGetter : IAIPackageLocationGetter
+    {
+        object CommonInstance();
+        object CommonSetterInstance();
+        object CommonSetterCopyInstance();
+
+    }
+
     #endregion
 
     #region Common MixIn
     public static class AIPackageLocationMixIn
     {
-        public static void Clear(this IAIPackageLocation item)
+        public static void Clear(this IAIPackageLocationInternal item)
         {
-            ((AIPackageLocationCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((AIPackageLocationSetterCommon)((IAIPackageLocationInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static AIPackageLocation_Mask<bool> GetEqualsMask(
-            this IAIPackageLocationGetter item,
-            IAIPackageLocationGetter rhs,
+            this IAIPackageLocationInternalGetter item,
+            IAIPackageLocationInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((AIPackageLocationCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((AIPackageLocationCommon)((IAIPackageLocationInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IAIPackageLocationGetter item,
+            this IAIPackageLocationInternalGetter item,
             string name = null,
             AIPackageLocation_Mask<bool> printMask = null)
         {
-            return ((AIPackageLocationCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((AIPackageLocationCommon)((IAIPackageLocationInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IAIPackageLocationGetter item,
+            this IAIPackageLocationInternalGetter item,
             FileGeneration fg,
             string name = null,
             AIPackageLocation_Mask<bool> printMask = null)
         {
-            ((AIPackageLocationCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((AIPackageLocationCommon)((IAIPackageLocationInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -641,28 +677,28 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static bool HasBeenSet(
-            this IAIPackageLocationGetter item,
+            this IAIPackageLocationInternalGetter item,
             AIPackageLocation_Mask<bool?> checkMask)
         {
-            return ((AIPackageLocationCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((AIPackageLocationCommon)((IAIPackageLocationInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static AIPackageLocation_Mask<bool> GetHasBeenSetMask(this IAIPackageLocationGetter item)
+        public static AIPackageLocation_Mask<bool> GetHasBeenSetMask(this IAIPackageLocationInternalGetter item)
         {
             var ret = new AIPackageLocation_Mask<bool>();
-            ((AIPackageLocationCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((AIPackageLocationCommon)((IAIPackageLocationInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this IAIPackageLocationGetter item,
-            IAIPackageLocationGetter rhs)
+            this IAIPackageLocationInternalGetter item,
+            IAIPackageLocationInternalGetter rhs)
         {
-            return ((AIPackageLocationCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((AIPackageLocationCommon)((IAIPackageLocationInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -709,13 +745,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IAIPackageLocationGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type InternalGetterType = typeof(IAIPackageLocationInternalGetter);
 
         public static readonly Type SetterType = typeof(IAIPackageLocation);
 
-        public static readonly Type InternalSetterType = null;
-
-        public static readonly Type CommonType = typeof(AIPackageLocationCommon);
+        public static readonly Type InternalSetterType = typeof(IAIPackageLocationInternal);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.AIPackageLocation";
 
@@ -863,7 +897,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -883,9 +916,156 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
+    public partial class AIPackageLocationSetterCommon
+    {
+        public static readonly AIPackageLocationSetterCommon Instance = new AIPackageLocationSetterCommon();
+
+        partial void ClearPartial();
+        
+        public virtual void Clear(IAIPackageLocationInternal item)
+        {
+            ClearPartial();
+            item.Type = default(AIPackageLocation.LocationType);
+            item.LocationReference = default(IPlaced);
+            item.Radius = default(Single);
+        }
+        
+        
+    }
     public partial class AIPackageLocationCommon
     {
         public static readonly AIPackageLocationCommon Instance = new AIPackageLocationCommon();
+
+        public AIPackageLocation_Mask<bool> GetEqualsMask(
+            IAIPackageLocationInternalGetter item,
+            IAIPackageLocationInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new AIPackageLocation_Mask<bool>();
+            ((AIPackageLocationCommon)((IAIPackageLocationInternalGetter)item).CommonInstance()).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+        
+        public void FillEqualsMask(
+            IAIPackageLocationInternalGetter item,
+            IAIPackageLocationInternalGetter rhs,
+            AIPackageLocation_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            if (rhs == null) return;
+            ret.Type = item.Type == rhs.Type;
+            ret.LocationReference = item.LocationReference_Property.FormKey == rhs.LocationReference_Property.FormKey;
+            ret.Radius = item.Radius.EqualsWithin(rhs.Radius);
+        }
+        
+        public string ToString(
+            IAIPackageLocationInternalGetter item,
+            string name = null,
+            AIPackageLocation_Mask<bool> printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+            return fg.ToString();
+        }
+        
+        public void ToString(
+            IAIPackageLocationInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            AIPackageLocation_Mask<bool> printMask = null)
+        {
+            if (name == null)
+            {
+                fg.AppendLine($"AIPackageLocation =>");
+            }
+            else
+            {
+                fg.AppendLine($"{name} (AIPackageLocation) =>");
+            }
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
+            }
+            fg.AppendLine("]");
+        }
+        
+        protected static void ToStringFields(
+            IAIPackageLocationInternalGetter item,
+            FileGeneration fg,
+            AIPackageLocation_Mask<bool> printMask = null)
+        {
+            if (printMask?.Type ?? true)
+            {
+                fg.AppendLine($"Type => {item.Type}");
+            }
+            if (printMask?.LocationReference ?? true)
+            {
+                fg.AppendLine($"LocationReference => {item.LocationReference_Property}");
+            }
+            if (printMask?.Radius ?? true)
+            {
+                fg.AppendLine($"Radius => {item.Radius}");
+            }
+        }
+        
+        public bool HasBeenSet(
+            IAIPackageLocationInternalGetter item,
+            AIPackageLocation_Mask<bool?> checkMask)
+        {
+            return true;
+        }
+        
+        public void FillHasBeenSetMask(
+            IAIPackageLocationInternalGetter item,
+            AIPackageLocation_Mask<bool> mask)
+        {
+            mask.Type = true;
+            mask.LocationReference = true;
+            mask.Radius = true;
+        }
+        
+        #region Equals and Hash
+        public virtual bool Equals(
+            IAIPackageLocationInternalGetter lhs,
+            IAIPackageLocationInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (lhs.Type != rhs.Type) return false;
+            if (!lhs.LocationReference_Property.Equals(rhs.LocationReference_Property)) return false;
+            if (!lhs.Radius.EqualsWithin(rhs.Radius)) return false;
+            return true;
+        }
+        
+        public virtual int GetHashCode(IAIPackageLocationInternalGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.Type).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.LocationReference).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Radius).CombineHashCode(ret);
+            return ret;
+        }
+        
+        #endregion
+        
+        
+        
+    }
+    public partial class AIPackageLocationSetterCopyCommon
+    {
+        public static readonly AIPackageLocationSetterCopyCommon Instance = new AIPackageLocationSetterCopyCommon();
 
         #region Copy Fields From
         public static void CopyFieldsFrom(
@@ -947,144 +1127,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
         }
-
+        
         #endregion
-
-        partial void ClearPartial();
-
-        public virtual void Clear(IAIPackageLocation item)
-        {
-            ClearPartial();
-            item.Type = default(AIPackageLocation.LocationType);
-            item.LocationReference = default(IPlaced);
-            item.Radius = default(Single);
-        }
-
-        public AIPackageLocation_Mask<bool> GetEqualsMask(
-            IAIPackageLocationGetter item,
-            IAIPackageLocationGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new AIPackageLocation_Mask<bool>();
-            ((AIPackageLocationCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public void FillEqualsMask(
-            IAIPackageLocationGetter item,
-            IAIPackageLocationGetter rhs,
-            AIPackageLocation_Mask<bool> ret,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            if (rhs == null) return;
-            ret.Type = item.Type == rhs.Type;
-            ret.LocationReference = item.LocationReference_Property.FormKey == rhs.LocationReference_Property.FormKey;
-            ret.Radius = item.Radius.EqualsWithin(rhs.Radius);
-        }
-
-        public string ToString(
-            IAIPackageLocationGetter item,
-            string name = null,
-            AIPackageLocation_Mask<bool> printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(
-                item: item,
-                fg: fg,
-                name: name,
-                printMask: printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(
-            IAIPackageLocationGetter item,
-            FileGeneration fg,
-            string name = null,
-            AIPackageLocation_Mask<bool> printMask = null)
-        {
-            if (name == null)
-            {
-                fg.AppendLine($"AIPackageLocation =>");
-            }
-            else
-            {
-                fg.AppendLine($"{name} (AIPackageLocation) =>");
-            }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                ToStringFields(
-                    item: item,
-                    fg: fg,
-                    printMask: printMask);
-            }
-            fg.AppendLine("]");
-        }
-
-        protected static void ToStringFields(
-            IAIPackageLocationGetter item,
-            FileGeneration fg,
-            AIPackageLocation_Mask<bool> printMask = null)
-        {
-            if (printMask?.Type ?? true)
-            {
-                fg.AppendLine($"Type => {item.Type}");
-            }
-            if (printMask?.LocationReference ?? true)
-            {
-                fg.AppendLine($"LocationReference => {item.LocationReference_Property}");
-            }
-            if (printMask?.Radius ?? true)
-            {
-                fg.AppendLine($"Radius => {item.Radius}");
-            }
-        }
-
-        public bool HasBeenSet(
-            IAIPackageLocationGetter item,
-            AIPackageLocation_Mask<bool?> checkMask)
-        {
-            return true;
-        }
-
-        public void FillHasBeenSetMask(
-            IAIPackageLocationGetter item,
-            AIPackageLocation_Mask<bool> mask)
-        {
-            mask.Type = true;
-            mask.LocationReference = true;
-            mask.Radius = true;
-        }
-
-        #region Equals and Hash
-        public virtual bool Equals(
-            IAIPackageLocationGetter lhs,
-            IAIPackageLocationGetter rhs)
-        {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
-            if (lhs.Type != rhs.Type) return false;
-            if (!lhs.LocationReference_Property.Equals(rhs.LocationReference_Property)) return false;
-            if (!lhs.Radius.EqualsWithin(rhs.Radius)) return false;
-            return true;
-        }
-
-        public virtual int GetHashCode(IAIPackageLocationGetter item)
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.Type).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.LocationReference).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Radius).CombineHashCode(ret);
-            return ret;
-        }
-
-        #endregion
-
-
+        
+        
     }
     #endregion
 
@@ -1095,7 +1141,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static AIPackageLocationXmlWriteTranslation Instance = new AIPackageLocationXmlWriteTranslation();
 
         public static void WriteToNodeXml(
-            IAIPackageLocationGetter item,
+            IAIPackageLocationInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1131,7 +1177,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             XElement node,
-            IAIPackageLocationGetter item,
+            IAIPackageLocationInternalGetter item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)
@@ -1157,7 +1203,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             Write(
-                item: (IAIPackageLocationGetter)item,
+                item: (IAIPackageLocationInternalGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1166,7 +1212,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             XElement node,
-            IAIPackageLocationGetter item,
+            IAIPackageLocationInternalGetter item,
             ErrorMaskBuilder errorMask,
             int fieldIndex,
             TranslationCrystal translationMask,
@@ -1176,7 +1222,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 errorMask?.PushIndex(fieldIndex);
                 Write(
-                    item: (IAIPackageLocationGetter)item,
+                    item: (IAIPackageLocationInternalGetter)item,
                     name: name,
                     node: node,
                     errorMask: errorMask,
@@ -1200,7 +1246,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static AIPackageLocationXmlCreateTranslation Instance = new AIPackageLocationXmlCreateTranslation();
 
         public static void FillPublicXml(
-            IAIPackageLocation item,
+            IAIPackageLocationInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1225,7 +1271,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElementXml(
-            IAIPackageLocation item,
+            IAIPackageLocationInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -1303,7 +1349,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public static class AIPackageLocationXmlTranslationMixIn
     {
         public static void WriteToXml(
-            this IAIPackageLocationGetter item,
+            this IAIPackageLocationInternalGetter item,
             XElement node,
             out AIPackageLocation_ErrorMask errorMask,
             bool doMasks = true,
@@ -1321,7 +1367,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IAIPackageLocationGetter item,
+            this IAIPackageLocationInternalGetter item,
             string path,
             out AIPackageLocation_ErrorMask errorMask,
             AIPackageLocation_TranslationMask translationMask = null,
@@ -1340,7 +1386,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IAIPackageLocationGetter item,
+            this IAIPackageLocationInternalGetter item,
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1358,7 +1404,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IAIPackageLocationGetter item,
+            this IAIPackageLocationInternalGetter item,
             Stream stream,
             out AIPackageLocation_ErrorMask errorMask,
             AIPackageLocation_TranslationMask translationMask = null,
@@ -1377,7 +1423,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IAIPackageLocationGetter item,
+            this IAIPackageLocationInternalGetter item,
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1395,7 +1441,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IAIPackageLocationGetter item,
+            this IAIPackageLocationInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1410,7 +1456,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IAIPackageLocationGetter item,
+            this IAIPackageLocationInternalGetter item,
             XElement node,
             string name = null,
             AIPackageLocation_TranslationMask translationMask = null)
@@ -1424,7 +1470,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IAIPackageLocationGetter item,
+            this IAIPackageLocationInternalGetter item,
             string path,
             string name = null)
         {
@@ -1439,7 +1485,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IAIPackageLocationGetter item,
+            this IAIPackageLocationInternalGetter item,
             Stream stream,
             string name = null)
         {
@@ -1794,7 +1840,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static AIPackageLocationBinaryWriteTranslation Instance = new AIPackageLocationBinaryWriteTranslation();
 
         public static void Write_Embedded(
-            IAIPackageLocationGetter item,
+            IAIPackageLocationInternalGetter item,
             MutagenWriter writer,
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
@@ -1814,7 +1860,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             MutagenWriter writer,
-            IAIPackageLocationGetter item,
+            IAIPackageLocationInternalGetter item,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
@@ -1840,7 +1886,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask)
         {
             Write(
-                item: (IAIPackageLocationGetter)item,
+                item: (IAIPackageLocationInternalGetter)item,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -1859,7 +1905,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public static class AIPackageLocationBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IAIPackageLocationGetter item,
+            this IAIPackageLocationInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
             out AIPackageLocation_ErrorMask errorMask,
@@ -1876,7 +1922,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToBinary(
-            this IAIPackageLocationGetter item,
+            this IAIPackageLocationInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -1890,7 +1936,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToBinary(
-            this IAIPackageLocationGetter item,
+            this IAIPackageLocationInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
@@ -1907,22 +1953,65 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     public partial class AIPackageLocationBinaryWrapper :
         BinaryWrapper,
-        IAIPackageLocationGetter
+        IAIPackageLocationInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AIPackageLocation_Registration.Instance;
         public static AIPackageLocation_Registration Registration => AIPackageLocation_Registration.Instance;
-        protected object CommonInstance => AIPackageLocationCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
+        protected object CommonInstance()
+        {
+            return AIPackageLocationCommon.Instance;
+        }
+        object IAIPackageLocationInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IAIPackageLocationInternalGetter.CommonSetterInstance()
+        {
+            return null;
+        }
+        object IAIPackageLocationInternalGetter.CommonSetterCopyInstance()
+        {
+            return null;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAIPackageLocationGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAIPackageLocationInternalGetter)rhs, include);
 
         protected object XmlWriteTranslator => AIPackageLocationXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((AIPackageLocationXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         protected object BinaryWriteTranslator => AIPackageLocationBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((AIPackageLocationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
 
         public AIPackageLocation.LocationType Type => (AIPackageLocation.LocationType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0, 4));
         #region LocationReference
@@ -1969,4 +2058,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class AIPackageLocation
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => AIPackageLocation_Registration.Instance;
+        public static AIPackageLocation_Registration Registration => AIPackageLocation_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return AIPackageLocationCommon.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return AIPackageLocationSetterCommon.Instance;
+        }
+        protected object CommonSetterCopyInstance()
+        {
+            return AIPackageLocationSetterCopyCommon.Instance;
+        }
+        object IAIPackageLocationInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IAIPackageLocationInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object IAIPackageLocationInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
 }

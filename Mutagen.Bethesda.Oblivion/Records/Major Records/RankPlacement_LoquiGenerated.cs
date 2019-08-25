@@ -34,18 +34,12 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class RankPlacement :
         LoquiNotifyingObject,
-        IRankPlacement,
+        IRankPlacementInternal,
         ILoquiObjectSetter<RankPlacement>,
         ILinkSubContainer,
         IEquatable<RankPlacement>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => RankPlacement_Registration.Instance;
-        public static RankPlacement_Registration Registration => RankPlacement_Registration.Instance;
-        protected object CommonInstance => RankPlacementCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
-
         #region Ctor
         public RankPlacement()
         {
@@ -88,7 +82,7 @@ namespace Mutagen.Bethesda.Oblivion
         ReadOnlySpan<Byte> IRankPlacementGetter.Fluff => this.Fluff;
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRankPlacementGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRankPlacementInternalGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -106,22 +100,35 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is IRankPlacementGetter rhs)) return false;
-            return ((RankPlacementCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            if (!(obj is IRankPlacementInternalGetter rhs)) return false;
+            return ((RankPlacementCommon)((IRankPlacementInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(RankPlacement obj)
         {
-            return ((RankPlacementCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((RankPlacementCommon)((IRankPlacementInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((RankPlacementCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((RankPlacementCommon)((IRankPlacementInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected object XmlWriteTranslator => RankPlacementXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((RankPlacementXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static RankPlacement CreateFromXml(
@@ -312,6 +319,19 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Translation
         protected object BinaryWriteTranslator => RankPlacementBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((RankPlacementBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
         #region Binary Create
         [DebuggerStepThrough]
         public static RankPlacement CreateFromBinary(
@@ -473,7 +493,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            RankPlacementCommon.CopyFieldsFrom(
+            RankPlacementSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -488,7 +508,7 @@ namespace Mutagen.Bethesda.Oblivion
             RankPlacement_CopyMask copyMask = null,
             RankPlacement def = null)
         {
-            RankPlacementCommon.CopyFieldsFrom(
+            RankPlacementSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -517,7 +537,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void Clear()
         {
-            RankPlacementCommon.Instance.Clear(this);
+            RankPlacementSetterCommon.Instance.Clear(this);
         }
 
         public static RankPlacement Create(IEnumerable<KeyValuePair<ushort, object>> fields)
@@ -556,8 +576,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IRankPlacement :
-        IRankPlacementGetter,
-        ILoquiObjectSetter<IRankPlacement>
+        IRankPlacementInternalGetter,
+        ILoquiObjectSetter<IRankPlacementInternal>
     {
         new Faction Faction { get; set; }
         new IFormIDLink<Faction> Faction_Property { get; }
@@ -572,9 +592,17 @@ namespace Mutagen.Bethesda.Oblivion
             RankPlacement def = null);
     }
 
+    public partial interface IRankPlacementInternal :
+        IRankPlacement,
+        IRankPlacementInternalGetter
+    {
+        new Faction Faction { get; set; }
+        new IFormIDLink<Faction> Faction_Property { get; }
+    }
+
     public partial interface IRankPlacementGetter :
         ILoquiObject,
-        ILoquiObject<IRankPlacementGetter>,
+        ILoquiObject<IRankPlacementInternalGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -594,45 +622,53 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    public partial interface IRankPlacementInternalGetter : IRankPlacementGetter
+    {
+        object CommonInstance();
+        object CommonSetterInstance();
+        object CommonSetterCopyInstance();
+
+    }
+
     #endregion
 
     #region Common MixIn
     public static class RankPlacementMixIn
     {
-        public static void Clear(this IRankPlacement item)
+        public static void Clear(this IRankPlacementInternal item)
         {
-            ((RankPlacementCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((RankPlacementSetterCommon)((IRankPlacementInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static RankPlacement_Mask<bool> GetEqualsMask(
-            this IRankPlacementGetter item,
-            IRankPlacementGetter rhs,
+            this IRankPlacementInternalGetter item,
+            IRankPlacementInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((RankPlacementCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((RankPlacementCommon)((IRankPlacementInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IRankPlacementGetter item,
+            this IRankPlacementInternalGetter item,
             string name = null,
             RankPlacement_Mask<bool> printMask = null)
         {
-            return ((RankPlacementCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((RankPlacementCommon)((IRankPlacementInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IRankPlacementGetter item,
+            this IRankPlacementInternalGetter item,
             FileGeneration fg,
             string name = null,
             RankPlacement_Mask<bool> printMask = null)
         {
-            ((RankPlacementCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((RankPlacementCommon)((IRankPlacementInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -640,28 +676,28 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static bool HasBeenSet(
-            this IRankPlacementGetter item,
+            this IRankPlacementInternalGetter item,
             RankPlacement_Mask<bool?> checkMask)
         {
-            return ((RankPlacementCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((RankPlacementCommon)((IRankPlacementInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static RankPlacement_Mask<bool> GetHasBeenSetMask(this IRankPlacementGetter item)
+        public static RankPlacement_Mask<bool> GetHasBeenSetMask(this IRankPlacementInternalGetter item)
         {
             var ret = new RankPlacement_Mask<bool>();
-            ((RankPlacementCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((RankPlacementCommon)((IRankPlacementInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this IRankPlacementGetter item,
-            IRankPlacementGetter rhs)
+            this IRankPlacementInternalGetter item,
+            IRankPlacementInternalGetter rhs)
         {
-            return ((RankPlacementCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((RankPlacementCommon)((IRankPlacementInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -708,13 +744,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IRankPlacementGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type InternalGetterType = typeof(IRankPlacementInternalGetter);
 
         public static readonly Type SetterType = typeof(IRankPlacement);
 
-        public static readonly Type InternalSetterType = null;
-
-        public static readonly Type CommonType = typeof(RankPlacementCommon);
+        public static readonly Type InternalSetterType = typeof(IRankPlacementInternal);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.RankPlacement";
 
@@ -862,7 +896,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -882,9 +915,156 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
+    public partial class RankPlacementSetterCommon
+    {
+        public static readonly RankPlacementSetterCommon Instance = new RankPlacementSetterCommon();
+
+        partial void ClearPartial();
+        
+        public virtual void Clear(IRankPlacementInternal item)
+        {
+            ClearPartial();
+            item.Faction = default(Faction);
+            item.Rank = default(Byte);
+            item.Fluff = default(Byte[]);
+        }
+        
+        
+    }
     public partial class RankPlacementCommon
     {
         public static readonly RankPlacementCommon Instance = new RankPlacementCommon();
+
+        public RankPlacement_Mask<bool> GetEqualsMask(
+            IRankPlacementInternalGetter item,
+            IRankPlacementInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new RankPlacement_Mask<bool>();
+            ((RankPlacementCommon)((IRankPlacementInternalGetter)item).CommonInstance()).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+        
+        public void FillEqualsMask(
+            IRankPlacementInternalGetter item,
+            IRankPlacementInternalGetter rhs,
+            RankPlacement_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            if (rhs == null) return;
+            ret.Faction = item.Faction_Property.FormKey == rhs.Faction_Property.FormKey;
+            ret.Rank = item.Rank == rhs.Rank;
+            ret.Fluff = MemoryExtensions.SequenceEqual(item.Fluff, rhs.Fluff);
+        }
+        
+        public string ToString(
+            IRankPlacementInternalGetter item,
+            string name = null,
+            RankPlacement_Mask<bool> printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+            return fg.ToString();
+        }
+        
+        public void ToString(
+            IRankPlacementInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            RankPlacement_Mask<bool> printMask = null)
+        {
+            if (name == null)
+            {
+                fg.AppendLine($"RankPlacement =>");
+            }
+            else
+            {
+                fg.AppendLine($"{name} (RankPlacement) =>");
+            }
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
+            }
+            fg.AppendLine("]");
+        }
+        
+        protected static void ToStringFields(
+            IRankPlacementInternalGetter item,
+            FileGeneration fg,
+            RankPlacement_Mask<bool> printMask = null)
+        {
+            if (printMask?.Faction ?? true)
+            {
+                fg.AppendLine($"Faction => {item.Faction_Property}");
+            }
+            if (printMask?.Rank ?? true)
+            {
+                fg.AppendLine($"Rank => {item.Rank}");
+            }
+            if (printMask?.Fluff ?? true)
+            {
+                fg.AppendLine($"Fluff => {SpanExt.ToHexString(item.Fluff)}");
+            }
+        }
+        
+        public bool HasBeenSet(
+            IRankPlacementInternalGetter item,
+            RankPlacement_Mask<bool?> checkMask)
+        {
+            return true;
+        }
+        
+        public void FillHasBeenSetMask(
+            IRankPlacementInternalGetter item,
+            RankPlacement_Mask<bool> mask)
+        {
+            mask.Faction = true;
+            mask.Rank = true;
+            mask.Fluff = true;
+        }
+        
+        #region Equals and Hash
+        public virtual bool Equals(
+            IRankPlacementInternalGetter lhs,
+            IRankPlacementInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!lhs.Faction_Property.Equals(rhs.Faction_Property)) return false;
+            if (lhs.Rank != rhs.Rank) return false;
+            if (!MemoryExtensions.SequenceEqual(lhs.Fluff, rhs.Fluff)) return false;
+            return true;
+        }
+        
+        public virtual int GetHashCode(IRankPlacementInternalGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.Faction).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Rank).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Fluff).CombineHashCode(ret);
+            return ret;
+        }
+        
+        #endregion
+        
+        
+        
+    }
+    public partial class RankPlacementSetterCopyCommon
+    {
+        public static readonly RankPlacementSetterCopyCommon Instance = new RankPlacementSetterCopyCommon();
 
         #region Copy Fields From
         public static void CopyFieldsFrom(
@@ -946,144 +1126,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
         }
-
+        
         #endregion
-
-        partial void ClearPartial();
-
-        public virtual void Clear(IRankPlacement item)
-        {
-            ClearPartial();
-            item.Faction = default(Faction);
-            item.Rank = default(Byte);
-            item.Fluff = default(Byte[]);
-        }
-
-        public RankPlacement_Mask<bool> GetEqualsMask(
-            IRankPlacementGetter item,
-            IRankPlacementGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new RankPlacement_Mask<bool>();
-            ((RankPlacementCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public void FillEqualsMask(
-            IRankPlacementGetter item,
-            IRankPlacementGetter rhs,
-            RankPlacement_Mask<bool> ret,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            if (rhs == null) return;
-            ret.Faction = item.Faction_Property.FormKey == rhs.Faction_Property.FormKey;
-            ret.Rank = item.Rank == rhs.Rank;
-            ret.Fluff = MemoryExtensions.SequenceEqual(item.Fluff, rhs.Fluff);
-        }
-
-        public string ToString(
-            IRankPlacementGetter item,
-            string name = null,
-            RankPlacement_Mask<bool> printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(
-                item: item,
-                fg: fg,
-                name: name,
-                printMask: printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(
-            IRankPlacementGetter item,
-            FileGeneration fg,
-            string name = null,
-            RankPlacement_Mask<bool> printMask = null)
-        {
-            if (name == null)
-            {
-                fg.AppendLine($"RankPlacement =>");
-            }
-            else
-            {
-                fg.AppendLine($"{name} (RankPlacement) =>");
-            }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                ToStringFields(
-                    item: item,
-                    fg: fg,
-                    printMask: printMask);
-            }
-            fg.AppendLine("]");
-        }
-
-        protected static void ToStringFields(
-            IRankPlacementGetter item,
-            FileGeneration fg,
-            RankPlacement_Mask<bool> printMask = null)
-        {
-            if (printMask?.Faction ?? true)
-            {
-                fg.AppendLine($"Faction => {item.Faction_Property}");
-            }
-            if (printMask?.Rank ?? true)
-            {
-                fg.AppendLine($"Rank => {item.Rank}");
-            }
-            if (printMask?.Fluff ?? true)
-            {
-                fg.AppendLine($"Fluff => {SpanExt.ToHexString(item.Fluff)}");
-            }
-        }
-
-        public bool HasBeenSet(
-            IRankPlacementGetter item,
-            RankPlacement_Mask<bool?> checkMask)
-        {
-            return true;
-        }
-
-        public void FillHasBeenSetMask(
-            IRankPlacementGetter item,
-            RankPlacement_Mask<bool> mask)
-        {
-            mask.Faction = true;
-            mask.Rank = true;
-            mask.Fluff = true;
-        }
-
-        #region Equals and Hash
-        public virtual bool Equals(
-            IRankPlacementGetter lhs,
-            IRankPlacementGetter rhs)
-        {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
-            if (!lhs.Faction_Property.Equals(rhs.Faction_Property)) return false;
-            if (lhs.Rank != rhs.Rank) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Fluff, rhs.Fluff)) return false;
-            return true;
-        }
-
-        public virtual int GetHashCode(IRankPlacementGetter item)
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.Faction).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Rank).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Fluff).CombineHashCode(ret);
-            return ret;
-        }
-
-        #endregion
-
-
+        
+        
     }
     #endregion
 
@@ -1094,7 +1140,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static RankPlacementXmlWriteTranslation Instance = new RankPlacementXmlWriteTranslation();
 
         public static void WriteToNodeXml(
-            IRankPlacementGetter item,
+            IRankPlacementInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1130,7 +1176,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             XElement node,
-            IRankPlacementGetter item,
+            IRankPlacementInternalGetter item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)
@@ -1156,7 +1202,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             Write(
-                item: (IRankPlacementGetter)item,
+                item: (IRankPlacementInternalGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1165,7 +1211,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             XElement node,
-            IRankPlacementGetter item,
+            IRankPlacementInternalGetter item,
             ErrorMaskBuilder errorMask,
             int fieldIndex,
             TranslationCrystal translationMask,
@@ -1175,7 +1221,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 errorMask?.PushIndex(fieldIndex);
                 Write(
-                    item: (IRankPlacementGetter)item,
+                    item: (IRankPlacementInternalGetter)item,
                     name: name,
                     node: node,
                     errorMask: errorMask,
@@ -1199,7 +1245,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static RankPlacementXmlCreateTranslation Instance = new RankPlacementXmlCreateTranslation();
 
         public static void FillPublicXml(
-            IRankPlacement item,
+            IRankPlacementInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1224,7 +1270,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElementXml(
-            IRankPlacement item,
+            IRankPlacementInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -1302,7 +1348,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public static class RankPlacementXmlTranslationMixIn
     {
         public static void WriteToXml(
-            this IRankPlacementGetter item,
+            this IRankPlacementInternalGetter item,
             XElement node,
             out RankPlacement_ErrorMask errorMask,
             bool doMasks = true,
@@ -1320,7 +1366,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IRankPlacementGetter item,
+            this IRankPlacementInternalGetter item,
             string path,
             out RankPlacement_ErrorMask errorMask,
             RankPlacement_TranslationMask translationMask = null,
@@ -1339,7 +1385,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IRankPlacementGetter item,
+            this IRankPlacementInternalGetter item,
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1357,7 +1403,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IRankPlacementGetter item,
+            this IRankPlacementInternalGetter item,
             Stream stream,
             out RankPlacement_ErrorMask errorMask,
             RankPlacement_TranslationMask translationMask = null,
@@ -1376,7 +1422,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IRankPlacementGetter item,
+            this IRankPlacementInternalGetter item,
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1394,7 +1440,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IRankPlacementGetter item,
+            this IRankPlacementInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1409,7 +1455,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IRankPlacementGetter item,
+            this IRankPlacementInternalGetter item,
             XElement node,
             string name = null,
             RankPlacement_TranslationMask translationMask = null)
@@ -1423,7 +1469,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IRankPlacementGetter item,
+            this IRankPlacementInternalGetter item,
             string path,
             string name = null)
         {
@@ -1438,7 +1484,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IRankPlacementGetter item,
+            this IRankPlacementInternalGetter item,
             Stream stream,
             string name = null)
         {
@@ -1793,7 +1839,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static RankPlacementBinaryWriteTranslation Instance = new RankPlacementBinaryWriteTranslation();
 
         public static void Write_Embedded(
-            IRankPlacementGetter item,
+            IRankPlacementInternalGetter item,
             MutagenWriter writer,
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
@@ -1810,7 +1856,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             MutagenWriter writer,
-            IRankPlacementGetter item,
+            IRankPlacementInternalGetter item,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
@@ -1836,7 +1882,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask)
         {
             Write(
-                item: (IRankPlacementGetter)item,
+                item: (IRankPlacementInternalGetter)item,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -1855,7 +1901,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public static class RankPlacementBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IRankPlacementGetter item,
+            this IRankPlacementInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
             out RankPlacement_ErrorMask errorMask,
@@ -1872,7 +1918,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToBinary(
-            this IRankPlacementGetter item,
+            this IRankPlacementInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -1886,7 +1932,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToBinary(
-            this IRankPlacementGetter item,
+            this IRankPlacementInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
@@ -1903,22 +1949,65 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     public partial class RankPlacementBinaryWrapper :
         BinaryWrapper,
-        IRankPlacementGetter
+        IRankPlacementInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RankPlacement_Registration.Instance;
         public static RankPlacement_Registration Registration => RankPlacement_Registration.Instance;
-        protected object CommonInstance => RankPlacementCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
+        protected object CommonInstance()
+        {
+            return RankPlacementCommon.Instance;
+        }
+        object IRankPlacementInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IRankPlacementInternalGetter.CommonSetterInstance()
+        {
+            return null;
+        }
+        object IRankPlacementInternalGetter.CommonSetterCopyInstance()
+        {
+            return null;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRankPlacementGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRankPlacementInternalGetter)rhs, include);
 
         protected object XmlWriteTranslator => RankPlacementXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((RankPlacementXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         protected object BinaryWriteTranslator => RankPlacementBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((RankPlacementBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
 
         #region Faction
         public IFormIDLinkGetter<IFactionInternalGetter> Faction_Property => new FormIDLink<IFactionInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
@@ -1965,4 +2054,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class RankPlacement
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => RankPlacement_Registration.Instance;
+        public static RankPlacement_Registration Registration => RankPlacement_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return RankPlacementCommon.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return RankPlacementSetterCommon.Instance;
+        }
+        protected object CommonSetterCopyInstance()
+        {
+            return RankPlacementSetterCopyCommon.Instance;
+        }
+        object IRankPlacementInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IRankPlacementInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object IRankPlacementInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
 }

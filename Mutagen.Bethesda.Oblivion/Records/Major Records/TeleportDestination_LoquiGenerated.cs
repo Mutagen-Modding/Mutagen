@@ -34,18 +34,12 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class TeleportDestination :
         LoquiNotifyingObject,
-        ITeleportDestination,
+        ITeleportDestinationInternal,
         ILoquiObjectSetter<TeleportDestination>,
         ILinkSubContainer,
         IEquatable<TeleportDestination>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => TeleportDestination_Registration.Instance;
-        public static TeleportDestination_Registration Registration => TeleportDestination_Registration.Instance;
-        protected object CommonInstance => TeleportDestinationCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
-
         #region Ctor
         public TeleportDestination()
         {
@@ -80,7 +74,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ITeleportDestinationGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ITeleportDestinationInternalGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -98,22 +92,35 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is ITeleportDestinationGetter rhs)) return false;
-            return ((TeleportDestinationCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            if (!(obj is ITeleportDestinationInternalGetter rhs)) return false;
+            return ((TeleportDestinationCommon)((ITeleportDestinationInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(TeleportDestination obj)
         {
-            return ((TeleportDestinationCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((TeleportDestinationCommon)((ITeleportDestinationInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((TeleportDestinationCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((TeleportDestinationCommon)((ITeleportDestinationInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected object XmlWriteTranslator => TeleportDestinationXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((TeleportDestinationXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static TeleportDestination CreateFromXml(
@@ -304,6 +311,19 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Translation
         protected object BinaryWriteTranslator => TeleportDestinationBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((TeleportDestinationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
         #region Binary Create
         [DebuggerStepThrough]
         public static TeleportDestination CreateFromBinary(
@@ -474,7 +494,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            TeleportDestinationCommon.CopyFieldsFrom(
+            TeleportDestinationSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -489,7 +509,7 @@ namespace Mutagen.Bethesda.Oblivion
             TeleportDestination_CopyMask copyMask = null,
             TeleportDestination def = null)
         {
-            TeleportDestinationCommon.CopyFieldsFrom(
+            TeleportDestinationSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -518,7 +538,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void Clear()
         {
-            TeleportDestinationCommon.Instance.Clear(this);
+            TeleportDestinationSetterCommon.Instance.Clear(this);
         }
 
         public static TeleportDestination Create(IEnumerable<KeyValuePair<ushort, object>> fields)
@@ -557,8 +577,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface ITeleportDestination :
-        ITeleportDestinationGetter,
-        ILoquiObjectSetter<ITeleportDestination>
+        ITeleportDestinationInternalGetter,
+        ILoquiObjectSetter<ITeleportDestinationInternal>
     {
         new IPlaced Destination { get; set; }
         new IFormIDLink<IPlaced> Destination_Property { get; }
@@ -573,9 +593,17 @@ namespace Mutagen.Bethesda.Oblivion
             TeleportDestination def = null);
     }
 
+    public partial interface ITeleportDestinationInternal :
+        ITeleportDestination,
+        ITeleportDestinationInternalGetter
+    {
+        new IPlaced Destination { get; set; }
+        new IFormIDLink<IPlaced> Destination_Property { get; }
+    }
+
     public partial interface ITeleportDestinationGetter :
         ILoquiObject,
-        ILoquiObject<ITeleportDestinationGetter>,
+        ILoquiObject<ITeleportDestinationInternalGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -595,45 +623,53 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    public partial interface ITeleportDestinationInternalGetter : ITeleportDestinationGetter
+    {
+        object CommonInstance();
+        object CommonSetterInstance();
+        object CommonSetterCopyInstance();
+
+    }
+
     #endregion
 
     #region Common MixIn
     public static class TeleportDestinationMixIn
     {
-        public static void Clear(this ITeleportDestination item)
+        public static void Clear(this ITeleportDestinationInternal item)
         {
-            ((TeleportDestinationCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((TeleportDestinationSetterCommon)((ITeleportDestinationInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static TeleportDestination_Mask<bool> GetEqualsMask(
-            this ITeleportDestinationGetter item,
-            ITeleportDestinationGetter rhs,
+            this ITeleportDestinationInternalGetter item,
+            ITeleportDestinationInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((TeleportDestinationCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((TeleportDestinationCommon)((ITeleportDestinationInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this ITeleportDestinationGetter item,
+            this ITeleportDestinationInternalGetter item,
             string name = null,
             TeleportDestination_Mask<bool> printMask = null)
         {
-            return ((TeleportDestinationCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((TeleportDestinationCommon)((ITeleportDestinationInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this ITeleportDestinationGetter item,
+            this ITeleportDestinationInternalGetter item,
             FileGeneration fg,
             string name = null,
             TeleportDestination_Mask<bool> printMask = null)
         {
-            ((TeleportDestinationCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((TeleportDestinationCommon)((ITeleportDestinationInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -641,28 +677,28 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static bool HasBeenSet(
-            this ITeleportDestinationGetter item,
+            this ITeleportDestinationInternalGetter item,
             TeleportDestination_Mask<bool?> checkMask)
         {
-            return ((TeleportDestinationCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((TeleportDestinationCommon)((ITeleportDestinationInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static TeleportDestination_Mask<bool> GetHasBeenSetMask(this ITeleportDestinationGetter item)
+        public static TeleportDestination_Mask<bool> GetHasBeenSetMask(this ITeleportDestinationInternalGetter item)
         {
             var ret = new TeleportDestination_Mask<bool>();
-            ((TeleportDestinationCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((TeleportDestinationCommon)((ITeleportDestinationInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this ITeleportDestinationGetter item,
-            ITeleportDestinationGetter rhs)
+            this ITeleportDestinationInternalGetter item,
+            ITeleportDestinationInternalGetter rhs)
         {
-            return ((TeleportDestinationCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((TeleportDestinationCommon)((ITeleportDestinationInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -709,13 +745,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(ITeleportDestinationGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type InternalGetterType = typeof(ITeleportDestinationInternalGetter);
 
         public static readonly Type SetterType = typeof(ITeleportDestination);
 
-        public static readonly Type InternalSetterType = null;
-
-        public static readonly Type CommonType = typeof(TeleportDestinationCommon);
+        public static readonly Type InternalSetterType = typeof(ITeleportDestinationInternal);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.TeleportDestination";
 
@@ -863,7 +897,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -883,9 +916,156 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
+    public partial class TeleportDestinationSetterCommon
+    {
+        public static readonly TeleportDestinationSetterCommon Instance = new TeleportDestinationSetterCommon();
+
+        partial void ClearPartial();
+        
+        public virtual void Clear(ITeleportDestinationInternal item)
+        {
+            ClearPartial();
+            item.Destination = default(IPlaced);
+            item.Position = default(P3Float);
+            item.Rotation = default(P3Float);
+        }
+        
+        
+    }
     public partial class TeleportDestinationCommon
     {
         public static readonly TeleportDestinationCommon Instance = new TeleportDestinationCommon();
+
+        public TeleportDestination_Mask<bool> GetEqualsMask(
+            ITeleportDestinationInternalGetter item,
+            ITeleportDestinationInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new TeleportDestination_Mask<bool>();
+            ((TeleportDestinationCommon)((ITeleportDestinationInternalGetter)item).CommonInstance()).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+        
+        public void FillEqualsMask(
+            ITeleportDestinationInternalGetter item,
+            ITeleportDestinationInternalGetter rhs,
+            TeleportDestination_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            if (rhs == null) return;
+            ret.Destination = item.Destination_Property.FormKey == rhs.Destination_Property.FormKey;
+            ret.Position = item.Position.Equals(rhs.Position);
+            ret.Rotation = item.Rotation.Equals(rhs.Rotation);
+        }
+        
+        public string ToString(
+            ITeleportDestinationInternalGetter item,
+            string name = null,
+            TeleportDestination_Mask<bool> printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+            return fg.ToString();
+        }
+        
+        public void ToString(
+            ITeleportDestinationInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            TeleportDestination_Mask<bool> printMask = null)
+        {
+            if (name == null)
+            {
+                fg.AppendLine($"TeleportDestination =>");
+            }
+            else
+            {
+                fg.AppendLine($"{name} (TeleportDestination) =>");
+            }
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
+            }
+            fg.AppendLine("]");
+        }
+        
+        protected static void ToStringFields(
+            ITeleportDestinationInternalGetter item,
+            FileGeneration fg,
+            TeleportDestination_Mask<bool> printMask = null)
+        {
+            if (printMask?.Destination ?? true)
+            {
+                fg.AppendLine($"Destination => {item.Destination_Property}");
+            }
+            if (printMask?.Position ?? true)
+            {
+                fg.AppendLine($"Position => {item.Position}");
+            }
+            if (printMask?.Rotation ?? true)
+            {
+                fg.AppendLine($"Rotation => {item.Rotation}");
+            }
+        }
+        
+        public bool HasBeenSet(
+            ITeleportDestinationInternalGetter item,
+            TeleportDestination_Mask<bool?> checkMask)
+        {
+            return true;
+        }
+        
+        public void FillHasBeenSetMask(
+            ITeleportDestinationInternalGetter item,
+            TeleportDestination_Mask<bool> mask)
+        {
+            mask.Destination = true;
+            mask.Position = true;
+            mask.Rotation = true;
+        }
+        
+        #region Equals and Hash
+        public virtual bool Equals(
+            ITeleportDestinationInternalGetter lhs,
+            ITeleportDestinationInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!lhs.Destination_Property.Equals(rhs.Destination_Property)) return false;
+            if (!lhs.Position.Equals(rhs.Position)) return false;
+            if (!lhs.Rotation.Equals(rhs.Rotation)) return false;
+            return true;
+        }
+        
+        public virtual int GetHashCode(ITeleportDestinationInternalGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.Destination).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Position).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Rotation).CombineHashCode(ret);
+            return ret;
+        }
+        
+        #endregion
+        
+        
+        
+    }
+    public partial class TeleportDestinationSetterCopyCommon
+    {
+        public static readonly TeleportDestinationSetterCopyCommon Instance = new TeleportDestinationSetterCopyCommon();
 
         #region Copy Fields From
         public static void CopyFieldsFrom(
@@ -947,144 +1127,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
         }
-
+        
         #endregion
-
-        partial void ClearPartial();
-
-        public virtual void Clear(ITeleportDestination item)
-        {
-            ClearPartial();
-            item.Destination = default(IPlaced);
-            item.Position = default(P3Float);
-            item.Rotation = default(P3Float);
-        }
-
-        public TeleportDestination_Mask<bool> GetEqualsMask(
-            ITeleportDestinationGetter item,
-            ITeleportDestinationGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new TeleportDestination_Mask<bool>();
-            ((TeleportDestinationCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public void FillEqualsMask(
-            ITeleportDestinationGetter item,
-            ITeleportDestinationGetter rhs,
-            TeleportDestination_Mask<bool> ret,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            if (rhs == null) return;
-            ret.Destination = item.Destination_Property.FormKey == rhs.Destination_Property.FormKey;
-            ret.Position = item.Position.Equals(rhs.Position);
-            ret.Rotation = item.Rotation.Equals(rhs.Rotation);
-        }
-
-        public string ToString(
-            ITeleportDestinationGetter item,
-            string name = null,
-            TeleportDestination_Mask<bool> printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(
-                item: item,
-                fg: fg,
-                name: name,
-                printMask: printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(
-            ITeleportDestinationGetter item,
-            FileGeneration fg,
-            string name = null,
-            TeleportDestination_Mask<bool> printMask = null)
-        {
-            if (name == null)
-            {
-                fg.AppendLine($"TeleportDestination =>");
-            }
-            else
-            {
-                fg.AppendLine($"{name} (TeleportDestination) =>");
-            }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                ToStringFields(
-                    item: item,
-                    fg: fg,
-                    printMask: printMask);
-            }
-            fg.AppendLine("]");
-        }
-
-        protected static void ToStringFields(
-            ITeleportDestinationGetter item,
-            FileGeneration fg,
-            TeleportDestination_Mask<bool> printMask = null)
-        {
-            if (printMask?.Destination ?? true)
-            {
-                fg.AppendLine($"Destination => {item.Destination_Property}");
-            }
-            if (printMask?.Position ?? true)
-            {
-                fg.AppendLine($"Position => {item.Position}");
-            }
-            if (printMask?.Rotation ?? true)
-            {
-                fg.AppendLine($"Rotation => {item.Rotation}");
-            }
-        }
-
-        public bool HasBeenSet(
-            ITeleportDestinationGetter item,
-            TeleportDestination_Mask<bool?> checkMask)
-        {
-            return true;
-        }
-
-        public void FillHasBeenSetMask(
-            ITeleportDestinationGetter item,
-            TeleportDestination_Mask<bool> mask)
-        {
-            mask.Destination = true;
-            mask.Position = true;
-            mask.Rotation = true;
-        }
-
-        #region Equals and Hash
-        public virtual bool Equals(
-            ITeleportDestinationGetter lhs,
-            ITeleportDestinationGetter rhs)
-        {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
-            if (!lhs.Destination_Property.Equals(rhs.Destination_Property)) return false;
-            if (!lhs.Position.Equals(rhs.Position)) return false;
-            if (!lhs.Rotation.Equals(rhs.Rotation)) return false;
-            return true;
-        }
-
-        public virtual int GetHashCode(ITeleportDestinationGetter item)
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.Destination).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Position).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Rotation).CombineHashCode(ret);
-            return ret;
-        }
-
-        #endregion
-
-
+        
+        
     }
     #endregion
 
@@ -1095,7 +1141,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static TeleportDestinationXmlWriteTranslation Instance = new TeleportDestinationXmlWriteTranslation();
 
         public static void WriteToNodeXml(
-            ITeleportDestinationGetter item,
+            ITeleportDestinationInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1131,7 +1177,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             XElement node,
-            ITeleportDestinationGetter item,
+            ITeleportDestinationInternalGetter item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)
@@ -1157,7 +1203,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             Write(
-                item: (ITeleportDestinationGetter)item,
+                item: (ITeleportDestinationInternalGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1166,7 +1212,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             XElement node,
-            ITeleportDestinationGetter item,
+            ITeleportDestinationInternalGetter item,
             ErrorMaskBuilder errorMask,
             int fieldIndex,
             TranslationCrystal translationMask,
@@ -1176,7 +1222,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 errorMask?.PushIndex(fieldIndex);
                 Write(
-                    item: (ITeleportDestinationGetter)item,
+                    item: (ITeleportDestinationInternalGetter)item,
                     name: name,
                     node: node,
                     errorMask: errorMask,
@@ -1200,7 +1246,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static TeleportDestinationXmlCreateTranslation Instance = new TeleportDestinationXmlCreateTranslation();
 
         public static void FillPublicXml(
-            ITeleportDestination item,
+            ITeleportDestinationInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1225,7 +1271,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElementXml(
-            ITeleportDestination item,
+            ITeleportDestinationInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -1303,7 +1349,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public static class TeleportDestinationXmlTranslationMixIn
     {
         public static void WriteToXml(
-            this ITeleportDestinationGetter item,
+            this ITeleportDestinationInternalGetter item,
             XElement node,
             out TeleportDestination_ErrorMask errorMask,
             bool doMasks = true,
@@ -1321,7 +1367,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this ITeleportDestinationGetter item,
+            this ITeleportDestinationInternalGetter item,
             string path,
             out TeleportDestination_ErrorMask errorMask,
             TeleportDestination_TranslationMask translationMask = null,
@@ -1340,7 +1386,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this ITeleportDestinationGetter item,
+            this ITeleportDestinationInternalGetter item,
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1358,7 +1404,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this ITeleportDestinationGetter item,
+            this ITeleportDestinationInternalGetter item,
             Stream stream,
             out TeleportDestination_ErrorMask errorMask,
             TeleportDestination_TranslationMask translationMask = null,
@@ -1377,7 +1423,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this ITeleportDestinationGetter item,
+            this ITeleportDestinationInternalGetter item,
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1395,7 +1441,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this ITeleportDestinationGetter item,
+            this ITeleportDestinationInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1410,7 +1456,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this ITeleportDestinationGetter item,
+            this ITeleportDestinationInternalGetter item,
             XElement node,
             string name = null,
             TeleportDestination_TranslationMask translationMask = null)
@@ -1424,7 +1470,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this ITeleportDestinationGetter item,
+            this ITeleportDestinationInternalGetter item,
             string path,
             string name = null)
         {
@@ -1439,7 +1485,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this ITeleportDestinationGetter item,
+            this ITeleportDestinationInternalGetter item,
             Stream stream,
             string name = null)
         {
@@ -1794,7 +1840,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static TeleportDestinationBinaryWriteTranslation Instance = new TeleportDestinationBinaryWriteTranslation();
 
         public static void Write_Embedded(
-            ITeleportDestinationGetter item,
+            ITeleportDestinationInternalGetter item,
             MutagenWriter writer,
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
@@ -1813,7 +1859,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             MutagenWriter writer,
-            ITeleportDestinationGetter item,
+            ITeleportDestinationInternalGetter item,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
@@ -1839,7 +1885,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask)
         {
             Write(
-                item: (ITeleportDestinationGetter)item,
+                item: (ITeleportDestinationInternalGetter)item,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -1858,7 +1904,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public static class TeleportDestinationBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this ITeleportDestinationGetter item,
+            this ITeleportDestinationInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
             out TeleportDestination_ErrorMask errorMask,
@@ -1875,7 +1921,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToBinary(
-            this ITeleportDestinationGetter item,
+            this ITeleportDestinationInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -1889,7 +1935,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToBinary(
-            this ITeleportDestinationGetter item,
+            this ITeleportDestinationInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
@@ -1906,22 +1952,65 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     public partial class TeleportDestinationBinaryWrapper :
         BinaryWrapper,
-        ITeleportDestinationGetter
+        ITeleportDestinationInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TeleportDestination_Registration.Instance;
         public static TeleportDestination_Registration Registration => TeleportDestination_Registration.Instance;
-        protected object CommonInstance => TeleportDestinationCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
+        protected object CommonInstance()
+        {
+            return TeleportDestinationCommon.Instance;
+        }
+        object ITeleportDestinationInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object ITeleportDestinationInternalGetter.CommonSetterInstance()
+        {
+            return null;
+        }
+        object ITeleportDestinationInternalGetter.CommonSetterCopyInstance()
+        {
+            return null;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ITeleportDestinationGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ITeleportDestinationInternalGetter)rhs, include);
 
         protected object XmlWriteTranslator => TeleportDestinationXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((TeleportDestinationXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         protected object BinaryWriteTranslator => TeleportDestinationBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((TeleportDestinationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
 
         #region Destination
         public IFormIDLinkGetter<IPlacedGetter> Destination_Property => new FormIDLink<IPlacedGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
@@ -1968,4 +2057,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class TeleportDestination
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => TeleportDestination_Registration.Instance;
+        public static TeleportDestination_Registration Registration => TeleportDestination_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return TeleportDestinationCommon.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return TeleportDestinationSetterCommon.Instance;
+        }
+        protected object CommonSetterCopyInstance()
+        {
+            return TeleportDestinationSetterCopyCommon.Instance;
+        }
+        object ITeleportDestinationInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object ITeleportDestinationInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object ITeleportDestinationInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
 }

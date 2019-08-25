@@ -46,11 +46,6 @@ namespace Mutagen.Bethesda.Oblivion
         IEquatable<Worldspace>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Worldspace_Registration.Instance;
-        public new static Worldspace_Registration Registration => Worldspace_Registration.Instance;
-        protected override object CommonInstance => WorldspaceCommon.Instance;
-
         #region Ctor
         protected Worldspace()
         {
@@ -160,7 +155,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.MapData_Set(default(MapData), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IMapDataGetter IWorldspaceGetter.MapData => this.MapData;
+        IMapDataInternalGetter IWorldspaceGetter.MapData => this.MapData;
         #endregion
         #region Flags
         public bool Flags_IsSet
@@ -372,7 +367,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<WorldspaceBlock> IWorldspace.SubCells => _SubCells;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IWorldspaceBlockGetter> IWorldspaceGetter.SubCells => _SubCells;
+        IReadOnlySetList<IWorldspaceBlockInternalGetter> IWorldspaceGetter.SubCells => _SubCells;
         #endregion
 
         #endregion
@@ -404,20 +399,33 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IWorldspaceInternalGetter rhs)) return false;
-            return ((WorldspaceCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            return ((WorldspaceCommon)((IWorldspaceInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(Worldspace obj)
         {
-            return ((WorldspaceCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((WorldspaceCommon)((IWorldspaceInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((WorldspaceCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((WorldspaceCommon)((IWorldspaceInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected override object XmlWriteTranslator => WorldspaceXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((WorldspaceXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static Worldspace CreateFromXml(
@@ -699,6 +707,19 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Binary Translation
         protected override object BinaryWriteTranslator => WorldspaceBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((WorldspaceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
         #region Binary Create
         [DebuggerStepThrough]
         public static async Task<Worldspace> CreateFromBinary(
@@ -1041,7 +1062,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            WorldspaceCommon.CopyFieldsFrom(
+            WorldspaceSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -1056,7 +1077,7 @@ namespace Mutagen.Bethesda.Oblivion
             Worldspace_CopyMask copyMask = null,
             Worldspace def = null)
         {
-            WorldspaceCommon.CopyFieldsFrom(
+            WorldspaceSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -1125,7 +1146,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            WorldspaceCommon.Instance.Clear(this);
+            WorldspaceSetterCommon.Instance.Clear(this);
         }
 
         public new static Worldspace Create(IEnumerable<KeyValuePair<ushort, object>> fields)
@@ -1320,7 +1341,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region MapData
-        IMapDataGetter MapData { get; }
+        IMapDataInternalGetter MapData { get; }
         bool MapData_IsSet { get; }
 
         #endregion
@@ -1364,7 +1385,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region SubCells
-        IReadOnlySetList<IWorldspaceBlockGetter> SubCells { get; }
+        IReadOnlySetList<IWorldspaceBlockInternalGetter> SubCells { get; }
         #endregion
         #region UsingOffsetLength
         Boolean UsingOffsetLength { get; }
@@ -1387,7 +1408,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IWorldspaceInternal item)
         {
-            ((WorldspaceCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((WorldspaceSetterCommon)((IWorldspaceInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static Worldspace_Mask<bool> GetEqualsMask(
@@ -1395,7 +1416,7 @@ namespace Mutagen.Bethesda.Oblivion
             IWorldspaceInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((WorldspaceCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((WorldspaceCommon)((IWorldspaceInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -1406,7 +1427,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Worldspace_Mask<bool> printMask = null)
         {
-            return ((WorldspaceCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((WorldspaceCommon)((IWorldspaceInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -1418,7 +1439,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Worldspace_Mask<bool> printMask = null)
         {
-            ((WorldspaceCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((WorldspaceCommon)((IWorldspaceInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -1429,7 +1450,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IWorldspaceInternalGetter item,
             Worldspace_Mask<bool?> checkMask)
         {
-            return ((WorldspaceCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((WorldspaceCommon)((IWorldspaceInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -1437,7 +1458,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Worldspace_Mask<bool> GetHasBeenSetMask(this IWorldspaceInternalGetter item)
         {
             var ret = new Worldspace_Mask<bool>();
-            ((WorldspaceCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((WorldspaceCommon)((IWorldspaceInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -1447,7 +1468,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IWorldspaceInternalGetter item,
             IWorldspaceInternalGetter rhs)
         {
-            return ((WorldspaceCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((WorldspaceCommon)((IWorldspaceInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1517,8 +1538,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type SetterType = typeof(IWorldspace);
 
         public static readonly Type InternalSetterType = typeof(IWorldspaceInternal);
-
-        public static readonly Type CommonType = typeof(WorldspaceCommon);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.Worldspace";
 
@@ -1826,7 +1845,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -1846,9 +1864,562 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
+    public partial class WorldspaceSetterCommon : PlaceSetterCommon
+    {
+        public new static readonly WorldspaceSetterCommon Instance = new WorldspaceSetterCommon();
+
+        partial void ClearPartial();
+        
+        public virtual void Clear(IWorldspaceInternal item)
+        {
+            ClearPartial();
+            item.Name_Unset();
+            item.Parent_Property.Unset();
+            item.Climate_Property.Unset();
+            item.Water_Property.Unset();
+            item.Icon_Unset();
+            item.MapData_Unset();
+            item.Flags_Unset();
+            item.ObjectBoundsMin_Unset();
+            item.ObjectBoundsMax_Unset();
+            item.Music_Unset();
+            item.OffsetData_Unset();
+            item.Road_Unset();
+            item.TopCell_Unset();
+            item.SubCellsTimestamp = default(Byte[]);
+            item.SubCells.Unset();
+            item.UsingOffsetLength = default(Boolean);
+            base.Clear(item);
+        }
+        
+        public override void Clear(IPlaceInternal item)
+        {
+            Clear(item: (IWorldspaceInternal)item);
+        }
+        
+        public override void Clear(IOblivionMajorRecordInternal item)
+        {
+            Clear(item: (IWorldspaceInternal)item);
+        }
+        
+        public override void Clear(IMajorRecordInternal item)
+        {
+            Clear(item: (IWorldspaceInternal)item);
+        }
+        
+        
+    }
     public partial class WorldspaceCommon : PlaceCommon
     {
-        public static readonly WorldspaceCommon Instance = new WorldspaceCommon();
+        public new static readonly WorldspaceCommon Instance = new WorldspaceCommon();
+
+        public Worldspace_Mask<bool> GetEqualsMask(
+            IWorldspaceInternalGetter item,
+            IWorldspaceInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new Worldspace_Mask<bool>();
+            ((WorldspaceCommon)((IWorldspaceInternalGetter)item).CommonInstance()).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+        
+        public void FillEqualsMask(
+            IWorldspaceInternalGetter item,
+            IWorldspaceInternalGetter rhs,
+            Worldspace_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            if (rhs == null) return;
+            ret.Name = item.Name_IsSet == rhs.Name_IsSet && string.Equals(item.Name, rhs.Name);
+            ret.Parent = item.Parent_Property.FormKey == rhs.Parent_Property.FormKey;
+            ret.Climate = item.Climate_Property.FormKey == rhs.Climate_Property.FormKey;
+            ret.Water = item.Water_Property.FormKey == rhs.Water_Property.FormKey;
+            ret.Icon = item.Icon_IsSet == rhs.Icon_IsSet && string.Equals(item.Icon, rhs.Icon);
+            ret.MapData = EqualsMaskHelper.EqualsHelper(
+                item.MapData_IsSet,
+                rhs.MapData_IsSet,
+                item.MapData,
+                rhs.MapData,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
+            ret.Flags = item.Flags_IsSet == rhs.Flags_IsSet && item.Flags == rhs.Flags;
+            ret.ObjectBoundsMin = item.ObjectBoundsMin_IsSet == rhs.ObjectBoundsMin_IsSet && item.ObjectBoundsMin.Equals(rhs.ObjectBoundsMin);
+            ret.ObjectBoundsMax = item.ObjectBoundsMax_IsSet == rhs.ObjectBoundsMax_IsSet && item.ObjectBoundsMax.Equals(rhs.ObjectBoundsMax);
+            ret.Music = item.Music_IsSet == rhs.Music_IsSet && item.Music == rhs.Music;
+            ret.OffsetData = item.OffsetData_IsSet == rhs.OffsetData_IsSet && MemoryExtensions.SequenceEqual(item.OffsetData, rhs.OffsetData);
+            ret.Road = EqualsMaskHelper.EqualsHelper(
+                item.Road_IsSet,
+                rhs.Road_IsSet,
+                item.Road,
+                rhs.Road,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
+            ret.TopCell = EqualsMaskHelper.EqualsHelper(
+                item.TopCell_IsSet,
+                rhs.TopCell_IsSet,
+                item.TopCell,
+                rhs.TopCell,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
+            ret.SubCellsTimestamp = MemoryExtensions.SequenceEqual(item.SubCellsTimestamp, rhs.SubCellsTimestamp);
+            ret.SubCells = item.SubCells.CollectionEqualsHelper(
+                rhs.SubCells,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.UsingOffsetLength = item.UsingOffsetLength == rhs.UsingOffsetLength;
+            base.FillEqualsMask(item, rhs, ret, include);
+        }
+        
+        public string ToString(
+            IWorldspaceInternalGetter item,
+            string name = null,
+            Worldspace_Mask<bool> printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+            return fg.ToString();
+        }
+        
+        public void ToString(
+            IWorldspaceInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            Worldspace_Mask<bool> printMask = null)
+        {
+            if (name == null)
+            {
+                fg.AppendLine($"Worldspace =>");
+            }
+            else
+            {
+                fg.AppendLine($"{name} (Worldspace) =>");
+            }
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
+            }
+            fg.AppendLine("]");
+        }
+        
+        protected static void ToStringFields(
+            IWorldspaceInternalGetter item,
+            FileGeneration fg,
+            Worldspace_Mask<bool> printMask = null)
+        {
+            PlaceCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.Name ?? true)
+            {
+                fg.AppendLine($"Name => {item.Name}");
+            }
+            if (printMask?.Parent ?? true)
+            {
+                fg.AppendLine($"Parent => {item.Parent_Property}");
+            }
+            if (printMask?.Climate ?? true)
+            {
+                fg.AppendLine($"Climate => {item.Climate_Property}");
+            }
+            if (printMask?.Water ?? true)
+            {
+                fg.AppendLine($"Water => {item.Water_Property}");
+            }
+            if (printMask?.Icon ?? true)
+            {
+                fg.AppendLine($"Icon => {item.Icon}");
+            }
+            if (printMask?.MapData?.Overall ?? true)
+            {
+                item.MapData?.ToString(fg, "MapData");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                fg.AppendLine($"Flags => {item.Flags}");
+            }
+            if (printMask?.ObjectBoundsMin ?? true)
+            {
+                fg.AppendLine($"ObjectBoundsMin => {item.ObjectBoundsMin}");
+            }
+            if (printMask?.ObjectBoundsMax ?? true)
+            {
+                fg.AppendLine($"ObjectBoundsMax => {item.ObjectBoundsMax}");
+            }
+            if (printMask?.Music ?? true)
+            {
+                fg.AppendLine($"Music => {item.Music}");
+            }
+            if (printMask?.OffsetData ?? true)
+            {
+                fg.AppendLine($"OffsetData => {SpanExt.ToHexString(item.OffsetData)}");
+            }
+            if (printMask?.Road?.Overall ?? true)
+            {
+                item.Road?.ToString(fg, "Road");
+            }
+            if (printMask?.TopCell?.Overall ?? true)
+            {
+                item.TopCell?.ToString(fg, "TopCell");
+            }
+            if (printMask?.SubCellsTimestamp ?? true)
+            {
+                fg.AppendLine($"SubCellsTimestamp => {SpanExt.ToHexString(item.SubCellsTimestamp)}");
+            }
+            if (printMask?.SubCells?.Overall ?? true)
+            {
+                fg.AppendLine("SubCells =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.SubCells)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.UsingOffsetLength ?? true)
+            {
+                fg.AppendLine($"UsingOffsetLength => {item.UsingOffsetLength}");
+            }
+        }
+        
+        public bool HasBeenSet(
+            IWorldspaceInternalGetter item,
+            Worldspace_Mask<bool?> checkMask)
+        {
+            if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_IsSet) return false;
+            if (checkMask.Parent.HasValue && checkMask.Parent.Value != item.Parent_Property.HasBeenSet) return false;
+            if (checkMask.Climate.HasValue && checkMask.Climate.Value != item.Climate_Property.HasBeenSet) return false;
+            if (checkMask.Water.HasValue && checkMask.Water.Value != item.Water_Property.HasBeenSet) return false;
+            if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_IsSet) return false;
+            if (checkMask.MapData.Overall.HasValue && checkMask.MapData.Overall.Value != item.MapData_IsSet) return false;
+            if (checkMask.MapData.Specific != null && (item.MapData == null || !item.MapData.HasBeenSet(checkMask.MapData.Specific))) return false;
+            if (checkMask.Flags.HasValue && checkMask.Flags.Value != item.Flags_IsSet) return false;
+            if (checkMask.ObjectBoundsMin.HasValue && checkMask.ObjectBoundsMin.Value != item.ObjectBoundsMin_IsSet) return false;
+            if (checkMask.ObjectBoundsMax.HasValue && checkMask.ObjectBoundsMax.Value != item.ObjectBoundsMax_IsSet) return false;
+            if (checkMask.Music.HasValue && checkMask.Music.Value != item.Music_IsSet) return false;
+            if (checkMask.OffsetData.HasValue && checkMask.OffsetData.Value != item.OffsetData_IsSet) return false;
+            if (checkMask.Road.Overall.HasValue && checkMask.Road.Overall.Value != item.Road_IsSet) return false;
+            if (checkMask.Road.Specific != null && (item.Road == null || !item.Road.HasBeenSet(checkMask.Road.Specific))) return false;
+            if (checkMask.TopCell.Overall.HasValue && checkMask.TopCell.Overall.Value != item.TopCell_IsSet) return false;
+            if (checkMask.TopCell.Specific != null && (item.TopCell == null || !item.TopCell.HasBeenSet(checkMask.TopCell.Specific))) return false;
+            if (checkMask.SubCells.Overall.HasValue && checkMask.SubCells.Overall.Value != item.SubCells.HasBeenSet) return false;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+        
+        public void FillHasBeenSetMask(
+            IWorldspaceInternalGetter item,
+            Worldspace_Mask<bool> mask)
+        {
+            mask.Name = item.Name_IsSet;
+            mask.Parent = item.Parent_Property.HasBeenSet;
+            mask.Climate = item.Climate_Property.HasBeenSet;
+            mask.Water = item.Water_Property.HasBeenSet;
+            mask.Icon = item.Icon_IsSet;
+            mask.MapData = new MaskItem<bool, MapData_Mask<bool>>(item.MapData_IsSet, item.MapData.GetHasBeenSetMask());
+            mask.Flags = item.Flags_IsSet;
+            mask.ObjectBoundsMin = item.ObjectBoundsMin_IsSet;
+            mask.ObjectBoundsMax = item.ObjectBoundsMax_IsSet;
+            mask.Music = item.Music_IsSet;
+            mask.OffsetData = item.OffsetData_IsSet;
+            mask.Road = new MaskItem<bool, Road_Mask<bool>>(item.Road_IsSet, item.Road.GetHasBeenSetMask());
+            mask.TopCell = new MaskItem<bool, Cell_Mask<bool>>(item.TopCell_IsSet, item.TopCell.GetHasBeenSetMask());
+            mask.SubCellsTimestamp = true;
+            mask.SubCells = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, WorldspaceBlock_Mask<bool>>>>(item.SubCells.HasBeenSet, item.SubCells.WithIndex().Select((i) => new MaskItemIndexed<bool, WorldspaceBlock_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.UsingOffsetLength = true;
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
+        }
+        
+        public static Worldspace_FieldIndex ConvertFieldIndex(Place_FieldIndex index)
+        {
+            switch (index)
+            {
+                case Place_FieldIndex.MajorRecordFlagsRaw:
+                    return (Worldspace_FieldIndex)((int)index);
+                case Place_FieldIndex.FormKey:
+                    return (Worldspace_FieldIndex)((int)index);
+                case Place_FieldIndex.Version:
+                    return (Worldspace_FieldIndex)((int)index);
+                case Place_FieldIndex.EditorID:
+                    return (Worldspace_FieldIndex)((int)index);
+                case Place_FieldIndex.OblivionMajorRecordFlags:
+                    return (Worldspace_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        public static Worldspace_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (Worldspace_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.FormKey:
+                    return (Worldspace_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.Version:
+                    return (Worldspace_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.EditorID:
+                    return (Worldspace_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
+                    return (Worldspace_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        public static Worldspace_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (Worldspace_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.FormKey:
+                    return (Worldspace_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.Version:
+                    return (Worldspace_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.EditorID:
+                    return (Worldspace_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        #region Equals and Hash
+        public virtual bool Equals(
+            IWorldspaceInternalGetter lhs,
+            IWorldspaceInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.Name_IsSet != rhs.Name_IsSet) return false;
+            if (lhs.Name_IsSet)
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if (lhs.Parent_Property.HasBeenSet != rhs.Parent_Property.HasBeenSet) return false;
+            if (lhs.Parent_Property.HasBeenSet)
+            {
+                if (!lhs.Parent_Property.Equals(rhs.Parent_Property)) return false;
+            }
+            if (lhs.Climate_Property.HasBeenSet != rhs.Climate_Property.HasBeenSet) return false;
+            if (lhs.Climate_Property.HasBeenSet)
+            {
+                if (!lhs.Climate_Property.Equals(rhs.Climate_Property)) return false;
+            }
+            if (lhs.Water_Property.HasBeenSet != rhs.Water_Property.HasBeenSet) return false;
+            if (lhs.Water_Property.HasBeenSet)
+            {
+                if (!lhs.Water_Property.Equals(rhs.Water_Property)) return false;
+            }
+            if (lhs.Icon_IsSet != rhs.Icon_IsSet) return false;
+            if (lhs.Icon_IsSet)
+            {
+                if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
+            }
+            if (lhs.MapData_IsSet != rhs.MapData_IsSet) return false;
+            if (lhs.MapData_IsSet)
+            {
+                if (!object.Equals(lhs.MapData, rhs.MapData)) return false;
+            }
+            if (lhs.Flags_IsSet != rhs.Flags_IsSet) return false;
+            if (lhs.Flags_IsSet)
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if (lhs.ObjectBoundsMin_IsSet != rhs.ObjectBoundsMin_IsSet) return false;
+            if (lhs.ObjectBoundsMin_IsSet)
+            {
+                if (!lhs.ObjectBoundsMin.Equals(rhs.ObjectBoundsMin)) return false;
+            }
+            if (lhs.ObjectBoundsMax_IsSet != rhs.ObjectBoundsMax_IsSet) return false;
+            if (lhs.ObjectBoundsMax_IsSet)
+            {
+                if (!lhs.ObjectBoundsMax.Equals(rhs.ObjectBoundsMax)) return false;
+            }
+            if (lhs.Music_IsSet != rhs.Music_IsSet) return false;
+            if (lhs.Music_IsSet)
+            {
+                if (lhs.Music != rhs.Music) return false;
+            }
+            if (lhs.OffsetData_IsSet != rhs.OffsetData_IsSet) return false;
+            if (lhs.OffsetData_IsSet)
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.OffsetData, rhs.OffsetData)) return false;
+            }
+            if (lhs.Road_IsSet != rhs.Road_IsSet) return false;
+            if (lhs.Road_IsSet)
+            {
+                if (!object.Equals(lhs.Road, rhs.Road)) return false;
+            }
+            if (lhs.TopCell_IsSet != rhs.TopCell_IsSet) return false;
+            if (lhs.TopCell_IsSet)
+            {
+                if (!object.Equals(lhs.TopCell, rhs.TopCell)) return false;
+            }
+            if (!MemoryExtensions.SequenceEqual(lhs.SubCellsTimestamp, rhs.SubCellsTimestamp)) return false;
+            if (lhs.SubCells.HasBeenSet != rhs.SubCells.HasBeenSet) return false;
+            if (lhs.SubCells.HasBeenSet)
+            {
+                if (!lhs.SubCells.SequenceEqual(rhs.SubCells)) return false;
+            }
+            if (lhs.UsingOffsetLength != rhs.UsingOffsetLength) return false;
+            return true;
+        }
+        
+        public override bool Equals(
+            IPlaceInternalGetter lhs,
+            IPlaceInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IWorldspaceInternalGetter)lhs,
+                rhs: rhs as IWorldspaceInternalGetter);
+        }
+        
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IWorldspaceInternalGetter)lhs,
+                rhs: rhs as IWorldspaceInternalGetter);
+        }
+        
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IWorldspaceInternalGetter)lhs,
+                rhs: rhs as IWorldspaceInternalGetter);
+        }
+        
+        public virtual int GetHashCode(IWorldspaceInternalGetter item)
+        {
+            int ret = 0;
+            if (item.Name_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Name).CombineHashCode(ret);
+            }
+            if (item.Parent_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Parent).CombineHashCode(ret);
+            }
+            if (item.Climate_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Climate).CombineHashCode(ret);
+            }
+            if (item.Water_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Water).CombineHashCode(ret);
+            }
+            if (item.Icon_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Icon).CombineHashCode(ret);
+            }
+            if (item.MapData_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.MapData).CombineHashCode(ret);
+            }
+            if (item.Flags_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
+            }
+            if (item.ObjectBoundsMin_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.ObjectBoundsMin).CombineHashCode(ret);
+            }
+            if (item.ObjectBoundsMax_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.ObjectBoundsMax).CombineHashCode(ret);
+            }
+            if (item.Music_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Music).CombineHashCode(ret);
+            }
+            if (item.OffsetData_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.OffsetData).CombineHashCode(ret);
+            }
+            if (item.Road_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Road).CombineHashCode(ret);
+            }
+            if (item.TopCell_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.TopCell).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.SubCellsTimestamp).CombineHashCode(ret);
+            if (item.SubCells.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.SubCells).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.UsingOffsetLength).CombineHashCode(ret);
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+        
+        public override int GetHashCode(IPlaceInternalGetter item)
+        {
+            return GetHashCode(item: (IWorldspaceInternalGetter)item);
+        }
+        
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IWorldspaceInternalGetter)item);
+        }
+        
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IWorldspaceInternalGetter)item);
+        }
+        
+        #endregion
+        
+        
+        #region Mutagen
+        partial void PostDuplicate(Worldspace obj, Worldspace rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+        
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new Worldspace(getNextFormKey());
+            ret.CopyFieldsFrom((Worldspace)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (Worldspace)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+        
+        #endregion
+        
+        
+    }
+    public partial class WorldspaceSetterCopyCommon : PlaceSetterCopyCommon
+    {
+        public new static readonly WorldspaceSetterCopyCommon Instance = new WorldspaceSetterCopyCommon();
 
         #region Copy Fields From
         public static void CopyFieldsFrom(
@@ -1858,7 +2429,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             Worldspace_CopyMask copyMask)
         {
-            PlaceCommon.CopyFieldsFrom(
+            PlaceSetterCopyCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1999,7 +2570,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             case CopyOption.Reference:
                                 throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
-                                MapDataCommon.CopyFieldsFrom(
+                                MapDataSetterCopyCommon.CopyFieldsFrom(
                                     item: item.MapData,
                                     rhs: rhs.MapData,
                                     def: def?.MapData,
@@ -2201,7 +2772,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             case CopyOption.Reference:
                                 throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
-                                RoadCommon.CopyFieldsFrom(
+                                RoadSetterCopyCommon.CopyFieldsFrom(
                                     item: item.Road,
                                     rhs: rhs.Road,
                                     def: def?.Road,
@@ -2253,7 +2824,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             case CopyOption.Reference:
                                 throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
-                                CellCommon.CopyFieldsFrom(
+                                CellSetterCopyCommon.CopyFieldsFrom(
                                     item: item.TopCell,
                                     rhs: rhs.TopCell,
                                     def: def?.TopCell,
@@ -2356,550 +2927,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
         }
-
+        
         #endregion
-
-        partial void ClearPartial();
-
-        public virtual void Clear(IWorldspaceInternal item)
-        {
-            ClearPartial();
-            item.Name_Unset();
-            item.Parent_Property.Unset();
-            item.Climate_Property.Unset();
-            item.Water_Property.Unset();
-            item.Icon_Unset();
-            item.MapData_Unset();
-            item.Flags_Unset();
-            item.ObjectBoundsMin_Unset();
-            item.ObjectBoundsMax_Unset();
-            item.Music_Unset();
-            item.OffsetData_Unset();
-            item.Road_Unset();
-            item.TopCell_Unset();
-            item.SubCellsTimestamp = default(Byte[]);
-            item.SubCells.Unset();
-            item.UsingOffsetLength = default(Boolean);
-            base.Clear(item);
-        }
-
-        public override void Clear(IPlaceInternal item)
-        {
-            Clear(item: (IWorldspaceInternal)item);
-        }
-
-        public override void Clear(IOblivionMajorRecordInternal item)
-        {
-            Clear(item: (IWorldspaceInternal)item);
-        }
-
-        public override void Clear(IMajorRecordInternal item)
-        {
-            Clear(item: (IWorldspaceInternal)item);
-        }
-
-        public Worldspace_Mask<bool> GetEqualsMask(
-            IWorldspaceInternalGetter item,
-            IWorldspaceInternalGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new Worldspace_Mask<bool>();
-            ((WorldspaceCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public void FillEqualsMask(
-            IWorldspaceInternalGetter item,
-            IWorldspaceInternalGetter rhs,
-            Worldspace_Mask<bool> ret,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            if (rhs == null) return;
-            ret.Name = item.Name_IsSet == rhs.Name_IsSet && string.Equals(item.Name, rhs.Name);
-            ret.Parent = item.Parent_Property.FormKey == rhs.Parent_Property.FormKey;
-            ret.Climate = item.Climate_Property.FormKey == rhs.Climate_Property.FormKey;
-            ret.Water = item.Water_Property.FormKey == rhs.Water_Property.FormKey;
-            ret.Icon = item.Icon_IsSet == rhs.Icon_IsSet && string.Equals(item.Icon, rhs.Icon);
-            ret.MapData = EqualsMaskHelper.EqualsHelper(
-                item.MapData_IsSet,
-                rhs.MapData_IsSet,
-                item.MapData,
-                rhs.MapData,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
-                include);
-            ret.Flags = item.Flags_IsSet == rhs.Flags_IsSet && item.Flags == rhs.Flags;
-            ret.ObjectBoundsMin = item.ObjectBoundsMin_IsSet == rhs.ObjectBoundsMin_IsSet && item.ObjectBoundsMin.Equals(rhs.ObjectBoundsMin);
-            ret.ObjectBoundsMax = item.ObjectBoundsMax_IsSet == rhs.ObjectBoundsMax_IsSet && item.ObjectBoundsMax.Equals(rhs.ObjectBoundsMax);
-            ret.Music = item.Music_IsSet == rhs.Music_IsSet && item.Music == rhs.Music;
-            ret.OffsetData = item.OffsetData_IsSet == rhs.OffsetData_IsSet && MemoryExtensions.SequenceEqual(item.OffsetData, rhs.OffsetData);
-            ret.Road = EqualsMaskHelper.EqualsHelper(
-                item.Road_IsSet,
-                rhs.Road_IsSet,
-                item.Road,
-                rhs.Road,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
-                include);
-            ret.TopCell = EqualsMaskHelper.EqualsHelper(
-                item.TopCell_IsSet,
-                rhs.TopCell_IsSet,
-                item.TopCell,
-                rhs.TopCell,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
-                include);
-            ret.SubCellsTimestamp = MemoryExtensions.SequenceEqual(item.SubCellsTimestamp, rhs.SubCellsTimestamp);
-            ret.SubCells = item.SubCells.CollectionEqualsHelper(
-                rhs.SubCells,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
-                include);
-            ret.UsingOffsetLength = item.UsingOffsetLength == rhs.UsingOffsetLength;
-            base.FillEqualsMask(item, rhs, ret, include);
-        }
-
-        public string ToString(
-            IWorldspaceInternalGetter item,
-            string name = null,
-            Worldspace_Mask<bool> printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(
-                item: item,
-                fg: fg,
-                name: name,
-                printMask: printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(
-            IWorldspaceInternalGetter item,
-            FileGeneration fg,
-            string name = null,
-            Worldspace_Mask<bool> printMask = null)
-        {
-            if (name == null)
-            {
-                fg.AppendLine($"Worldspace =>");
-            }
-            else
-            {
-                fg.AppendLine($"{name} (Worldspace) =>");
-            }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                ToStringFields(
-                    item: item,
-                    fg: fg,
-                    printMask: printMask);
-            }
-            fg.AppendLine("]");
-        }
-
-        protected static void ToStringFields(
-            IWorldspaceInternalGetter item,
-            FileGeneration fg,
-            Worldspace_Mask<bool> printMask = null)
-        {
-            PlaceCommon.ToStringFields(
-                item: item,
-                fg: fg,
-                printMask: printMask);
-            if (printMask?.Name ?? true)
-            {
-                fg.AppendLine($"Name => {item.Name}");
-            }
-            if (printMask?.Parent ?? true)
-            {
-                fg.AppendLine($"Parent => {item.Parent_Property}");
-            }
-            if (printMask?.Climate ?? true)
-            {
-                fg.AppendLine($"Climate => {item.Climate_Property}");
-            }
-            if (printMask?.Water ?? true)
-            {
-                fg.AppendLine($"Water => {item.Water_Property}");
-            }
-            if (printMask?.Icon ?? true)
-            {
-                fg.AppendLine($"Icon => {item.Icon}");
-            }
-            if (printMask?.MapData?.Overall ?? true)
-            {
-                item.MapData?.ToString(fg, "MapData");
-            }
-            if (printMask?.Flags ?? true)
-            {
-                fg.AppendLine($"Flags => {item.Flags}");
-            }
-            if (printMask?.ObjectBoundsMin ?? true)
-            {
-                fg.AppendLine($"ObjectBoundsMin => {item.ObjectBoundsMin}");
-            }
-            if (printMask?.ObjectBoundsMax ?? true)
-            {
-                fg.AppendLine($"ObjectBoundsMax => {item.ObjectBoundsMax}");
-            }
-            if (printMask?.Music ?? true)
-            {
-                fg.AppendLine($"Music => {item.Music}");
-            }
-            if (printMask?.OffsetData ?? true)
-            {
-                fg.AppendLine($"OffsetData => {SpanExt.ToHexString(item.OffsetData)}");
-            }
-            if (printMask?.Road?.Overall ?? true)
-            {
-                item.Road?.ToString(fg, "Road");
-            }
-            if (printMask?.TopCell?.Overall ?? true)
-            {
-                item.TopCell?.ToString(fg, "TopCell");
-            }
-            if (printMask?.SubCellsTimestamp ?? true)
-            {
-                fg.AppendLine($"SubCellsTimestamp => {SpanExt.ToHexString(item.SubCellsTimestamp)}");
-            }
-            if (printMask?.SubCells?.Overall ?? true)
-            {
-                fg.AppendLine("SubCells =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
-                {
-                    foreach (var subItem in item.SubCells)
-                    {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            subItem?.ToString(fg, "Item");
-                        }
-                        fg.AppendLine("]");
-                    }
-                }
-                fg.AppendLine("]");
-            }
-            if (printMask?.UsingOffsetLength ?? true)
-            {
-                fg.AppendLine($"UsingOffsetLength => {item.UsingOffsetLength}");
-            }
-        }
-
-        public bool HasBeenSet(
-            IWorldspaceInternalGetter item,
-            Worldspace_Mask<bool?> checkMask)
-        {
-            if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_IsSet) return false;
-            if (checkMask.Parent.HasValue && checkMask.Parent.Value != item.Parent_Property.HasBeenSet) return false;
-            if (checkMask.Climate.HasValue && checkMask.Climate.Value != item.Climate_Property.HasBeenSet) return false;
-            if (checkMask.Water.HasValue && checkMask.Water.Value != item.Water_Property.HasBeenSet) return false;
-            if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_IsSet) return false;
-            if (checkMask.MapData.Overall.HasValue && checkMask.MapData.Overall.Value != item.MapData_IsSet) return false;
-            if (checkMask.MapData.Specific != null && (item.MapData == null || !item.MapData.HasBeenSet(checkMask.MapData.Specific))) return false;
-            if (checkMask.Flags.HasValue && checkMask.Flags.Value != item.Flags_IsSet) return false;
-            if (checkMask.ObjectBoundsMin.HasValue && checkMask.ObjectBoundsMin.Value != item.ObjectBoundsMin_IsSet) return false;
-            if (checkMask.ObjectBoundsMax.HasValue && checkMask.ObjectBoundsMax.Value != item.ObjectBoundsMax_IsSet) return false;
-            if (checkMask.Music.HasValue && checkMask.Music.Value != item.Music_IsSet) return false;
-            if (checkMask.OffsetData.HasValue && checkMask.OffsetData.Value != item.OffsetData_IsSet) return false;
-            if (checkMask.Road.Overall.HasValue && checkMask.Road.Overall.Value != item.Road_IsSet) return false;
-            if (checkMask.Road.Specific != null && (item.Road == null || !item.Road.HasBeenSet(checkMask.Road.Specific))) return false;
-            if (checkMask.TopCell.Overall.HasValue && checkMask.TopCell.Overall.Value != item.TopCell_IsSet) return false;
-            if (checkMask.TopCell.Specific != null && (item.TopCell == null || !item.TopCell.HasBeenSet(checkMask.TopCell.Specific))) return false;
-            if (checkMask.SubCells.Overall.HasValue && checkMask.SubCells.Overall.Value != item.SubCells.HasBeenSet) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public void FillHasBeenSetMask(
-            IWorldspaceInternalGetter item,
-            Worldspace_Mask<bool> mask)
-        {
-            mask.Name = item.Name_IsSet;
-            mask.Parent = item.Parent_Property.HasBeenSet;
-            mask.Climate = item.Climate_Property.HasBeenSet;
-            mask.Water = item.Water_Property.HasBeenSet;
-            mask.Icon = item.Icon_IsSet;
-            mask.MapData = new MaskItem<bool, MapData_Mask<bool>>(item.MapData_IsSet, item.MapData.GetHasBeenSetMask());
-            mask.Flags = item.Flags_IsSet;
-            mask.ObjectBoundsMin = item.ObjectBoundsMin_IsSet;
-            mask.ObjectBoundsMax = item.ObjectBoundsMax_IsSet;
-            mask.Music = item.Music_IsSet;
-            mask.OffsetData = item.OffsetData_IsSet;
-            mask.Road = new MaskItem<bool, Road_Mask<bool>>(item.Road_IsSet, item.Road.GetHasBeenSetMask());
-            mask.TopCell = new MaskItem<bool, Cell_Mask<bool>>(item.TopCell_IsSet, item.TopCell.GetHasBeenSetMask());
-            mask.SubCellsTimestamp = true;
-            mask.SubCells = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, WorldspaceBlock_Mask<bool>>>>(item.SubCells.HasBeenSet, item.SubCells.WithIndex().Select((i) => new MaskItemIndexed<bool, WorldspaceBlock_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.UsingOffsetLength = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-
-        public static Worldspace_FieldIndex ConvertFieldIndex(Place_FieldIndex index)
-        {
-            switch (index)
-            {
-                case Place_FieldIndex.MajorRecordFlagsRaw:
-                    return (Worldspace_FieldIndex)((int)index);
-                case Place_FieldIndex.FormKey:
-                    return (Worldspace_FieldIndex)((int)index);
-                case Place_FieldIndex.Version:
-                    return (Worldspace_FieldIndex)((int)index);
-                case Place_FieldIndex.EditorID:
-                    return (Worldspace_FieldIndex)((int)index);
-                case Place_FieldIndex.OblivionMajorRecordFlags:
-                    return (Worldspace_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        public static Worldspace_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
-        {
-            switch (index)
-            {
-                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Worldspace_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.FormKey:
-                    return (Worldspace_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.Version:
-                    return (Worldspace_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.EditorID:
-                    return (Worldspace_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
-                    return (Worldspace_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        public static Worldspace_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
-        {
-            switch (index)
-            {
-                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Worldspace_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.FormKey:
-                    return (Worldspace_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
-                    return (Worldspace_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.EditorID:
-                    return (Worldspace_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        #region Equals and Hash
-        public virtual bool Equals(
-            IWorldspaceInternalGetter lhs,
-            IWorldspaceInternalGetter rhs)
-        {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (lhs.Name_IsSet != rhs.Name_IsSet) return false;
-            if (lhs.Name_IsSet)
-            {
-                if (!string.Equals(lhs.Name, rhs.Name)) return false;
-            }
-            if (lhs.Parent_Property.HasBeenSet != rhs.Parent_Property.HasBeenSet) return false;
-            if (lhs.Parent_Property.HasBeenSet)
-            {
-                if (!lhs.Parent_Property.Equals(rhs.Parent_Property)) return false;
-            }
-            if (lhs.Climate_Property.HasBeenSet != rhs.Climate_Property.HasBeenSet) return false;
-            if (lhs.Climate_Property.HasBeenSet)
-            {
-                if (!lhs.Climate_Property.Equals(rhs.Climate_Property)) return false;
-            }
-            if (lhs.Water_Property.HasBeenSet != rhs.Water_Property.HasBeenSet) return false;
-            if (lhs.Water_Property.HasBeenSet)
-            {
-                if (!lhs.Water_Property.Equals(rhs.Water_Property)) return false;
-            }
-            if (lhs.Icon_IsSet != rhs.Icon_IsSet) return false;
-            if (lhs.Icon_IsSet)
-            {
-                if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
-            }
-            if (lhs.MapData_IsSet != rhs.MapData_IsSet) return false;
-            if (lhs.MapData_IsSet)
-            {
-                if (!object.Equals(lhs.MapData, rhs.MapData)) return false;
-            }
-            if (lhs.Flags_IsSet != rhs.Flags_IsSet) return false;
-            if (lhs.Flags_IsSet)
-            {
-                if (lhs.Flags != rhs.Flags) return false;
-            }
-            if (lhs.ObjectBoundsMin_IsSet != rhs.ObjectBoundsMin_IsSet) return false;
-            if (lhs.ObjectBoundsMin_IsSet)
-            {
-                if (!lhs.ObjectBoundsMin.Equals(rhs.ObjectBoundsMin)) return false;
-            }
-            if (lhs.ObjectBoundsMax_IsSet != rhs.ObjectBoundsMax_IsSet) return false;
-            if (lhs.ObjectBoundsMax_IsSet)
-            {
-                if (!lhs.ObjectBoundsMax.Equals(rhs.ObjectBoundsMax)) return false;
-            }
-            if (lhs.Music_IsSet != rhs.Music_IsSet) return false;
-            if (lhs.Music_IsSet)
-            {
-                if (lhs.Music != rhs.Music) return false;
-            }
-            if (lhs.OffsetData_IsSet != rhs.OffsetData_IsSet) return false;
-            if (lhs.OffsetData_IsSet)
-            {
-                if (!MemoryExtensions.SequenceEqual(lhs.OffsetData, rhs.OffsetData)) return false;
-            }
-            if (lhs.Road_IsSet != rhs.Road_IsSet) return false;
-            if (lhs.Road_IsSet)
-            {
-                if (!object.Equals(lhs.Road, rhs.Road)) return false;
-            }
-            if (lhs.TopCell_IsSet != rhs.TopCell_IsSet) return false;
-            if (lhs.TopCell_IsSet)
-            {
-                if (!object.Equals(lhs.TopCell, rhs.TopCell)) return false;
-            }
-            if (!MemoryExtensions.SequenceEqual(lhs.SubCellsTimestamp, rhs.SubCellsTimestamp)) return false;
-            if (lhs.SubCells.HasBeenSet != rhs.SubCells.HasBeenSet) return false;
-            if (lhs.SubCells.HasBeenSet)
-            {
-                if (!lhs.SubCells.SequenceEqual(rhs.SubCells)) return false;
-            }
-            if (lhs.UsingOffsetLength != rhs.UsingOffsetLength) return false;
-            return true;
-        }
-
-        public override bool Equals(
-            IPlaceInternalGetter lhs,
-            IPlaceInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (IWorldspaceInternalGetter)lhs,
-                rhs: rhs as IWorldspaceInternalGetter);
-        }
-
-        public override bool Equals(
-            IOblivionMajorRecordInternalGetter lhs,
-            IOblivionMajorRecordInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (IWorldspaceInternalGetter)lhs,
-                rhs: rhs as IWorldspaceInternalGetter);
-        }
-
-        public override bool Equals(
-            IMajorRecordInternalGetter lhs,
-            IMajorRecordInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (IWorldspaceInternalGetter)lhs,
-                rhs: rhs as IWorldspaceInternalGetter);
-        }
-
-        public virtual int GetHashCode(IWorldspaceInternalGetter item)
-        {
-            int ret = 0;
-            if (item.Name_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Name).CombineHashCode(ret);
-            }
-            if (item.Parent_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.Parent).CombineHashCode(ret);
-            }
-            if (item.Climate_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.Climate).CombineHashCode(ret);
-            }
-            if (item.Water_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.Water).CombineHashCode(ret);
-            }
-            if (item.Icon_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Icon).CombineHashCode(ret);
-            }
-            if (item.MapData_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.MapData).CombineHashCode(ret);
-            }
-            if (item.Flags_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
-            }
-            if (item.ObjectBoundsMin_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.ObjectBoundsMin).CombineHashCode(ret);
-            }
-            if (item.ObjectBoundsMax_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.ObjectBoundsMax).CombineHashCode(ret);
-            }
-            if (item.Music_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Music).CombineHashCode(ret);
-            }
-            if (item.OffsetData_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.OffsetData).CombineHashCode(ret);
-            }
-            if (item.Road_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Road).CombineHashCode(ret);
-            }
-            if (item.TopCell_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.TopCell).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(item.SubCellsTimestamp).CombineHashCode(ret);
-            if (item.SubCells.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.SubCells).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(item.UsingOffsetLength).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        public override int GetHashCode(IPlaceInternalGetter item)
-        {
-            return GetHashCode(item: (IWorldspaceInternalGetter)item);
-        }
-
-        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
-        {
-            return GetHashCode(item: (IWorldspaceInternalGetter)item);
-        }
-
-        public override int GetHashCode(IMajorRecordInternalGetter item)
-        {
-            return GetHashCode(item: (IWorldspaceInternalGetter)item);
-        }
-
-        #endregion
-
-
-        #region Mutagen
-        partial void PostDuplicate(Worldspace obj, Worldspace rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new Worldspace(getNextFormKey());
-            ret.CopyFieldsFrom((Worldspace)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (Worldspace)item, getNextFormKey, duplicatedRecords);
-            return ret;
-        }
-
-        #endregion
-
+        
+        
     }
     #endregion
 
@@ -3070,14 +3101,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.SubCells.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Worldspace_FieldIndex.SubCells) ?? true))
             {
-                ListXmlTranslation<IWorldspaceBlockGetter>.Instance.Write(
+                ListXmlTranslation<IWorldspaceBlockInternalGetter>.Instance.Write(
                     node: node,
                     name: nameof(item.SubCells),
                     item: item.SubCells,
                     fieldIndex: (int)Worldspace_FieldIndex.SubCells,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)Worldspace_FieldIndex.SubCells),
-                    transl: (XElement subNode, IWorldspaceBlockGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    transl: (XElement subNode, IWorldspaceBlockInternalGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         var loquiItem = subItem;
                         ((WorldspaceBlockXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
@@ -4791,17 +4822,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         PlaceBinaryWrapper,
         IWorldspaceInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Worldspace_Registration.Instance;
         public new static Worldspace_Registration Registration => Worldspace_Registration.Instance;
-        protected override object CommonInstance => WorldspaceCommon.Instance;
+        protected override object CommonInstance()
+        {
+            return WorldspaceCommon.Instance;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWorldspaceInternalGetter)rhs, include);
 
         protected override object XmlWriteTranslator => WorldspaceXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((WorldspaceXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         protected override object BinaryWriteTranslator => WorldspaceBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((WorldspaceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
 
         #region Name
         private int? _NameLocation;
@@ -4832,7 +4895,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public String Icon => _IconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _IconLocation.Value, _package.Meta)) : default;
         #endregion
         #region MapData
-        public IMapDataGetter MapData { get; private set; }
+        public IMapDataInternalGetter MapData { get; private set; }
         public bool MapData_IsSet => MapData != null;
         #endregion
         #region Flags
@@ -5010,4 +5073,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class Worldspace
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Worldspace_Registration.Instance;
+        public new static Worldspace_Registration Registration => Worldspace_Registration.Instance;
+        protected override object CommonInstance()
+        {
+            return WorldspaceCommon.Instance;
+        }
+        protected override object CommonSetterInstance()
+        {
+            return WorldspaceSetterCommon.Instance;
+        }
+        protected override object CommonSetterCopyInstance()
+        {
+            return WorldspaceSetterCopyCommon.Instance;
+        }
+
+        #endregion
+
+    }
 }

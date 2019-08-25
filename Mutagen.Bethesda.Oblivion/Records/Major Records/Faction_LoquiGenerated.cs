@@ -46,11 +46,6 @@ namespace Mutagen.Bethesda.Oblivion
         IEquatable<Faction>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Faction_Registration.Instance;
-        public new static Faction_Registration Registration => Faction_Registration.Instance;
-        protected override object CommonInstance => FactionCommon.Instance;
-
         #region Ctor
         protected Faction()
         {
@@ -93,7 +88,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<Relation> IFaction.Relations => _Relations;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IRelationGetter> IFactionGetter.Relations => _Relations;
+        IReadOnlySetList<IRelationInternalGetter> IFactionGetter.Relations => _Relations;
         #endregion
 
         #endregion
@@ -157,7 +152,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<Rank> IFaction.Ranks => _Ranks;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IRankGetter> IFactionGetter.Ranks => _Ranks;
+        IReadOnlySetList<IRankInternalGetter> IFactionGetter.Ranks => _Ranks;
         #endregion
 
         #endregion
@@ -181,20 +176,33 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IFactionInternalGetter rhs)) return false;
-            return ((FactionCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            return ((FactionCommon)((IFactionInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(Faction obj)
         {
-            return ((FactionCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((FactionCommon)((IFactionInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((FactionCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((FactionCommon)((IFactionInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected override object XmlWriteTranslator => FactionXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((FactionXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static Faction CreateFromXml(
@@ -437,6 +445,19 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Binary Translation
         protected override object BinaryWriteTranslator => FactionBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((FactionBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
         #region Binary Create
         [DebuggerStepThrough]
         public static Faction CreateFromBinary(
@@ -695,7 +716,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            FactionCommon.CopyFieldsFrom(
+            FactionSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -710,7 +731,7 @@ namespace Mutagen.Bethesda.Oblivion
             Faction_CopyMask copyMask = null,
             Faction def = null)
         {
-            FactionCommon.CopyFieldsFrom(
+            FactionSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -746,7 +767,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            FactionCommon.Instance.Clear(this);
+            FactionSetterCommon.Instance.Clear(this);
         }
 
         public new static Faction Create(IEnumerable<KeyValuePair<ushort, object>> fields)
@@ -838,7 +859,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Relations
-        IReadOnlySetList<IRelationGetter> Relations { get; }
+        IReadOnlySetList<IRelationInternalGetter> Relations { get; }
         #endregion
         #region Flags
         Faction.FactionFlag Flags { get; }
@@ -851,7 +872,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Ranks
-        IReadOnlySetList<IRankGetter> Ranks { get; }
+        IReadOnlySetList<IRankInternalGetter> Ranks { get; }
         #endregion
 
     }
@@ -870,7 +891,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IFactionInternal item)
         {
-            ((FactionCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((FactionSetterCommon)((IFactionInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static Faction_Mask<bool> GetEqualsMask(
@@ -878,7 +899,7 @@ namespace Mutagen.Bethesda.Oblivion
             IFactionInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((FactionCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((FactionCommon)((IFactionInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -889,7 +910,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Faction_Mask<bool> printMask = null)
         {
-            return ((FactionCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((FactionCommon)((IFactionInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -901,7 +922,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Faction_Mask<bool> printMask = null)
         {
-            ((FactionCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((FactionCommon)((IFactionInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -912,7 +933,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IFactionInternalGetter item,
             Faction_Mask<bool?> checkMask)
         {
-            return ((FactionCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((FactionCommon)((IFactionInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -920,7 +941,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Faction_Mask<bool> GetHasBeenSetMask(this IFactionInternalGetter item)
         {
             var ret = new Faction_Mask<bool>();
-            ((FactionCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((FactionCommon)((IFactionInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -930,7 +951,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IFactionInternalGetter item,
             IFactionInternalGetter rhs)
         {
-            return ((FactionCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((FactionCommon)((IFactionInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -989,8 +1010,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type SetterType = typeof(IFaction);
 
         public static readonly Type InternalSetterType = typeof(IFactionInternal);
-
-        public static readonly Type CommonType = typeof(FactionCommon);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.Faction";
 
@@ -1170,7 +1189,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -1190,9 +1208,349 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
+    public partial class FactionSetterCommon : OblivionMajorRecordSetterCommon
+    {
+        public new static readonly FactionSetterCommon Instance = new FactionSetterCommon();
+
+        partial void ClearPartial();
+        
+        public virtual void Clear(IFactionInternal item)
+        {
+            ClearPartial();
+            item.Name_Unset();
+            item.Relations.Unset();
+            item.Flags_Unset();
+            item.CrimeGoldMultiplier_Unset();
+            item.Ranks.Unset();
+            base.Clear(item);
+        }
+        
+        public override void Clear(IOblivionMajorRecordInternal item)
+        {
+            Clear(item: (IFactionInternal)item);
+        }
+        
+        public override void Clear(IMajorRecordInternal item)
+        {
+            Clear(item: (IFactionInternal)item);
+        }
+        
+        
+    }
     public partial class FactionCommon : OblivionMajorRecordCommon
     {
-        public static readonly FactionCommon Instance = new FactionCommon();
+        public new static readonly FactionCommon Instance = new FactionCommon();
+
+        public Faction_Mask<bool> GetEqualsMask(
+            IFactionInternalGetter item,
+            IFactionInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new Faction_Mask<bool>();
+            ((FactionCommon)((IFactionInternalGetter)item).CommonInstance()).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+        
+        public void FillEqualsMask(
+            IFactionInternalGetter item,
+            IFactionInternalGetter rhs,
+            Faction_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            if (rhs == null) return;
+            ret.Name = item.Name_IsSet == rhs.Name_IsSet && string.Equals(item.Name, rhs.Name);
+            ret.Relations = item.Relations.CollectionEqualsHelper(
+                rhs.Relations,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Flags = item.Flags_IsSet == rhs.Flags_IsSet && item.Flags == rhs.Flags;
+            ret.CrimeGoldMultiplier = item.CrimeGoldMultiplier_IsSet == rhs.CrimeGoldMultiplier_IsSet && item.CrimeGoldMultiplier.EqualsWithin(rhs.CrimeGoldMultiplier);
+            ret.Ranks = item.Ranks.CollectionEqualsHelper(
+                rhs.Ranks,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            base.FillEqualsMask(item, rhs, ret, include);
+        }
+        
+        public string ToString(
+            IFactionInternalGetter item,
+            string name = null,
+            Faction_Mask<bool> printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+            return fg.ToString();
+        }
+        
+        public void ToString(
+            IFactionInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            Faction_Mask<bool> printMask = null)
+        {
+            if (name == null)
+            {
+                fg.AppendLine($"Faction =>");
+            }
+            else
+            {
+                fg.AppendLine($"{name} (Faction) =>");
+            }
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
+            }
+            fg.AppendLine("]");
+        }
+        
+        protected static void ToStringFields(
+            IFactionInternalGetter item,
+            FileGeneration fg,
+            Faction_Mask<bool> printMask = null)
+        {
+            OblivionMajorRecordCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.Name ?? true)
+            {
+                fg.AppendLine($"Name => {item.Name}");
+            }
+            if (printMask?.Relations?.Overall ?? true)
+            {
+                fg.AppendLine("Relations =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Relations)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                fg.AppendLine($"Flags => {item.Flags}");
+            }
+            if (printMask?.CrimeGoldMultiplier ?? true)
+            {
+                fg.AppendLine($"CrimeGoldMultiplier => {item.CrimeGoldMultiplier}");
+            }
+            if (printMask?.Ranks?.Overall ?? true)
+            {
+                fg.AppendLine("Ranks =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Ranks)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+        }
+        
+        public bool HasBeenSet(
+            IFactionInternalGetter item,
+            Faction_Mask<bool?> checkMask)
+        {
+            if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_IsSet) return false;
+            if (checkMask.Relations.Overall.HasValue && checkMask.Relations.Overall.Value != item.Relations.HasBeenSet) return false;
+            if (checkMask.Flags.HasValue && checkMask.Flags.Value != item.Flags_IsSet) return false;
+            if (checkMask.CrimeGoldMultiplier.HasValue && checkMask.CrimeGoldMultiplier.Value != item.CrimeGoldMultiplier_IsSet) return false;
+            if (checkMask.Ranks.Overall.HasValue && checkMask.Ranks.Overall.Value != item.Ranks.HasBeenSet) return false;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+        
+        public void FillHasBeenSetMask(
+            IFactionInternalGetter item,
+            Faction_Mask<bool> mask)
+        {
+            mask.Name = item.Name_IsSet;
+            mask.Relations = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Relation_Mask<bool>>>>(item.Relations.HasBeenSet, item.Relations.WithIndex().Select((i) => new MaskItemIndexed<bool, Relation_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.Flags = item.Flags_IsSet;
+            mask.CrimeGoldMultiplier = item.CrimeGoldMultiplier_IsSet;
+            mask.Ranks = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Rank_Mask<bool>>>>(item.Ranks.HasBeenSet, item.Ranks.WithIndex().Select((i) => new MaskItemIndexed<bool, Rank_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
+        }
+        
+        public static Faction_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (Faction_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.FormKey:
+                    return (Faction_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.Version:
+                    return (Faction_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.EditorID:
+                    return (Faction_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
+                    return (Faction_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        public static Faction_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (Faction_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.FormKey:
+                    return (Faction_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.Version:
+                    return (Faction_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.EditorID:
+                    return (Faction_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        #region Equals and Hash
+        public virtual bool Equals(
+            IFactionInternalGetter lhs,
+            IFactionInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.Name_IsSet != rhs.Name_IsSet) return false;
+            if (lhs.Name_IsSet)
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if (lhs.Relations.HasBeenSet != rhs.Relations.HasBeenSet) return false;
+            if (lhs.Relations.HasBeenSet)
+            {
+                if (!lhs.Relations.SequenceEqual(rhs.Relations)) return false;
+            }
+            if (lhs.Flags_IsSet != rhs.Flags_IsSet) return false;
+            if (lhs.Flags_IsSet)
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if (lhs.CrimeGoldMultiplier_IsSet != rhs.CrimeGoldMultiplier_IsSet) return false;
+            if (lhs.CrimeGoldMultiplier_IsSet)
+            {
+                if (!lhs.CrimeGoldMultiplier.EqualsWithin(rhs.CrimeGoldMultiplier)) return false;
+            }
+            if (lhs.Ranks.HasBeenSet != rhs.Ranks.HasBeenSet) return false;
+            if (lhs.Ranks.HasBeenSet)
+            {
+                if (!lhs.Ranks.SequenceEqual(rhs.Ranks)) return false;
+            }
+            return true;
+        }
+        
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IFactionInternalGetter)lhs,
+                rhs: rhs as IFactionInternalGetter);
+        }
+        
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IFactionInternalGetter)lhs,
+                rhs: rhs as IFactionInternalGetter);
+        }
+        
+        public virtual int GetHashCode(IFactionInternalGetter item)
+        {
+            int ret = 0;
+            if (item.Name_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Name).CombineHashCode(ret);
+            }
+            if (item.Relations.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Relations).CombineHashCode(ret);
+            }
+            if (item.Flags_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
+            }
+            if (item.CrimeGoldMultiplier_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.CrimeGoldMultiplier).CombineHashCode(ret);
+            }
+            if (item.Ranks.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Ranks).CombineHashCode(ret);
+            }
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+        
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IFactionInternalGetter)item);
+        }
+        
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IFactionInternalGetter)item);
+        }
+        
+        #endregion
+        
+        
+        #region Mutagen
+        partial void PostDuplicate(Faction obj, Faction rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+        
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new Faction(getNextFormKey());
+            ret.CopyFieldsFrom((Faction)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (Faction)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+        
+        #endregion
+        
+        
+    }
+    public partial class FactionSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
+    {
+        public new static readonly FactionSetterCopyCommon Instance = new FactionSetterCopyCommon();
 
         #region Copy Fields From
         public static void CopyFieldsFrom(
@@ -1202,7 +1560,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             Faction_CopyMask copyMask)
         {
-            OblivionMajorRecordCommon.CopyFieldsFrom(
+            OblivionMajorRecordSetterCopyCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1367,337 +1725,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
         }
-
+        
         #endregion
-
-        partial void ClearPartial();
-
-        public virtual void Clear(IFactionInternal item)
-        {
-            ClearPartial();
-            item.Name_Unset();
-            item.Relations.Unset();
-            item.Flags_Unset();
-            item.CrimeGoldMultiplier_Unset();
-            item.Ranks.Unset();
-            base.Clear(item);
-        }
-
-        public override void Clear(IOblivionMajorRecordInternal item)
-        {
-            Clear(item: (IFactionInternal)item);
-        }
-
-        public override void Clear(IMajorRecordInternal item)
-        {
-            Clear(item: (IFactionInternal)item);
-        }
-
-        public Faction_Mask<bool> GetEqualsMask(
-            IFactionInternalGetter item,
-            IFactionInternalGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new Faction_Mask<bool>();
-            ((FactionCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public void FillEqualsMask(
-            IFactionInternalGetter item,
-            IFactionInternalGetter rhs,
-            Faction_Mask<bool> ret,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            if (rhs == null) return;
-            ret.Name = item.Name_IsSet == rhs.Name_IsSet && string.Equals(item.Name, rhs.Name);
-            ret.Relations = item.Relations.CollectionEqualsHelper(
-                rhs.Relations,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
-                include);
-            ret.Flags = item.Flags_IsSet == rhs.Flags_IsSet && item.Flags == rhs.Flags;
-            ret.CrimeGoldMultiplier = item.CrimeGoldMultiplier_IsSet == rhs.CrimeGoldMultiplier_IsSet && item.CrimeGoldMultiplier.EqualsWithin(rhs.CrimeGoldMultiplier);
-            ret.Ranks = item.Ranks.CollectionEqualsHelper(
-                rhs.Ranks,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
-                include);
-            base.FillEqualsMask(item, rhs, ret, include);
-        }
-
-        public string ToString(
-            IFactionInternalGetter item,
-            string name = null,
-            Faction_Mask<bool> printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(
-                item: item,
-                fg: fg,
-                name: name,
-                printMask: printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(
-            IFactionInternalGetter item,
-            FileGeneration fg,
-            string name = null,
-            Faction_Mask<bool> printMask = null)
-        {
-            if (name == null)
-            {
-                fg.AppendLine($"Faction =>");
-            }
-            else
-            {
-                fg.AppendLine($"{name} (Faction) =>");
-            }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                ToStringFields(
-                    item: item,
-                    fg: fg,
-                    printMask: printMask);
-            }
-            fg.AppendLine("]");
-        }
-
-        protected static void ToStringFields(
-            IFactionInternalGetter item,
-            FileGeneration fg,
-            Faction_Mask<bool> printMask = null)
-        {
-            OblivionMajorRecordCommon.ToStringFields(
-                item: item,
-                fg: fg,
-                printMask: printMask);
-            if (printMask?.Name ?? true)
-            {
-                fg.AppendLine($"Name => {item.Name}");
-            }
-            if (printMask?.Relations?.Overall ?? true)
-            {
-                fg.AppendLine("Relations =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
-                {
-                    foreach (var subItem in item.Relations)
-                    {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            subItem?.ToString(fg, "Item");
-                        }
-                        fg.AppendLine("]");
-                    }
-                }
-                fg.AppendLine("]");
-            }
-            if (printMask?.Flags ?? true)
-            {
-                fg.AppendLine($"Flags => {item.Flags}");
-            }
-            if (printMask?.CrimeGoldMultiplier ?? true)
-            {
-                fg.AppendLine($"CrimeGoldMultiplier => {item.CrimeGoldMultiplier}");
-            }
-            if (printMask?.Ranks?.Overall ?? true)
-            {
-                fg.AppendLine("Ranks =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
-                {
-                    foreach (var subItem in item.Ranks)
-                    {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            subItem?.ToString(fg, "Item");
-                        }
-                        fg.AppendLine("]");
-                    }
-                }
-                fg.AppendLine("]");
-            }
-        }
-
-        public bool HasBeenSet(
-            IFactionInternalGetter item,
-            Faction_Mask<bool?> checkMask)
-        {
-            if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_IsSet) return false;
-            if (checkMask.Relations.Overall.HasValue && checkMask.Relations.Overall.Value != item.Relations.HasBeenSet) return false;
-            if (checkMask.Flags.HasValue && checkMask.Flags.Value != item.Flags_IsSet) return false;
-            if (checkMask.CrimeGoldMultiplier.HasValue && checkMask.CrimeGoldMultiplier.Value != item.CrimeGoldMultiplier_IsSet) return false;
-            if (checkMask.Ranks.Overall.HasValue && checkMask.Ranks.Overall.Value != item.Ranks.HasBeenSet) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public void FillHasBeenSetMask(
-            IFactionInternalGetter item,
-            Faction_Mask<bool> mask)
-        {
-            mask.Name = item.Name_IsSet;
-            mask.Relations = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Relation_Mask<bool>>>>(item.Relations.HasBeenSet, item.Relations.WithIndex().Select((i) => new MaskItemIndexed<bool, Relation_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.Flags = item.Flags_IsSet;
-            mask.CrimeGoldMultiplier = item.CrimeGoldMultiplier_IsSet;
-            mask.Ranks = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Rank_Mask<bool>>>>(item.Ranks.HasBeenSet, item.Ranks.WithIndex().Select((i) => new MaskItemIndexed<bool, Rank_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-
-        public static Faction_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
-        {
-            switch (index)
-            {
-                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Faction_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.FormKey:
-                    return (Faction_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.Version:
-                    return (Faction_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.EditorID:
-                    return (Faction_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
-                    return (Faction_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        public static Faction_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
-        {
-            switch (index)
-            {
-                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Faction_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.FormKey:
-                    return (Faction_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
-                    return (Faction_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.EditorID:
-                    return (Faction_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        #region Equals and Hash
-        public virtual bool Equals(
-            IFactionInternalGetter lhs,
-            IFactionInternalGetter rhs)
-        {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (lhs.Name_IsSet != rhs.Name_IsSet) return false;
-            if (lhs.Name_IsSet)
-            {
-                if (!string.Equals(lhs.Name, rhs.Name)) return false;
-            }
-            if (lhs.Relations.HasBeenSet != rhs.Relations.HasBeenSet) return false;
-            if (lhs.Relations.HasBeenSet)
-            {
-                if (!lhs.Relations.SequenceEqual(rhs.Relations)) return false;
-            }
-            if (lhs.Flags_IsSet != rhs.Flags_IsSet) return false;
-            if (lhs.Flags_IsSet)
-            {
-                if (lhs.Flags != rhs.Flags) return false;
-            }
-            if (lhs.CrimeGoldMultiplier_IsSet != rhs.CrimeGoldMultiplier_IsSet) return false;
-            if (lhs.CrimeGoldMultiplier_IsSet)
-            {
-                if (!lhs.CrimeGoldMultiplier.EqualsWithin(rhs.CrimeGoldMultiplier)) return false;
-            }
-            if (lhs.Ranks.HasBeenSet != rhs.Ranks.HasBeenSet) return false;
-            if (lhs.Ranks.HasBeenSet)
-            {
-                if (!lhs.Ranks.SequenceEqual(rhs.Ranks)) return false;
-            }
-            return true;
-        }
-
-        public override bool Equals(
-            IOblivionMajorRecordInternalGetter lhs,
-            IOblivionMajorRecordInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (IFactionInternalGetter)lhs,
-                rhs: rhs as IFactionInternalGetter);
-        }
-
-        public override bool Equals(
-            IMajorRecordInternalGetter lhs,
-            IMajorRecordInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (IFactionInternalGetter)lhs,
-                rhs: rhs as IFactionInternalGetter);
-        }
-
-        public virtual int GetHashCode(IFactionInternalGetter item)
-        {
-            int ret = 0;
-            if (item.Name_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Name).CombineHashCode(ret);
-            }
-            if (item.Relations.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.Relations).CombineHashCode(ret);
-            }
-            if (item.Flags_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
-            }
-            if (item.CrimeGoldMultiplier_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.CrimeGoldMultiplier).CombineHashCode(ret);
-            }
-            if (item.Ranks.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.Ranks).CombineHashCode(ret);
-            }
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
-        {
-            return GetHashCode(item: (IFactionInternalGetter)item);
-        }
-
-        public override int GetHashCode(IMajorRecordInternalGetter item)
-        {
-            return GetHashCode(item: (IFactionInternalGetter)item);
-        }
-
-        #endregion
-
-
-        #region Mutagen
-        partial void PostDuplicate(Faction obj, Faction rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new Faction(getNextFormKey());
-            ret.CopyFieldsFrom((Faction)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (Faction)item, getNextFormKey, duplicatedRecords);
-            return ret;
-        }
-
-        #endregion
-
+        
+        
     }
     #endregion
 
@@ -1733,14 +1764,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Relations.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Faction_FieldIndex.Relations) ?? true))
             {
-                ListXmlTranslation<IRelationGetter>.Instance.Write(
+                ListXmlTranslation<IRelationInternalGetter>.Instance.Write(
                     node: node,
                     name: nameof(item.Relations),
                     item: item.Relations,
                     fieldIndex: (int)Faction_FieldIndex.Relations,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)Faction_FieldIndex.Relations),
-                    transl: (XElement subNode, IRelationGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    transl: (XElement subNode, IRelationInternalGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         var loquiItem = subItem;
                         ((RelationXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
@@ -1774,14 +1805,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Ranks.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Faction_FieldIndex.Ranks) ?? true))
             {
-                ListXmlTranslation<IRankGetter>.Instance.Write(
+                ListXmlTranslation<IRankInternalGetter>.Instance.Write(
                     node: node,
                     name: nameof(item.Ranks),
                     item: item.Ranks,
                     fieldIndex: (int)Faction_FieldIndex.Ranks,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)Faction_FieldIndex.Ranks),
-                    transl: (XElement subNode, IRankGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    transl: (XElement subNode, IRankInternalGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         var loquiItem = subItem;
                         ((RankXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
@@ -2665,12 +2696,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.Relations.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<IRelationGetter>.Instance.Write(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<IRelationInternalGetter>.Instance.Write(
                     writer: writer,
                     items: item.Relations,
                     fieldIndex: (int)Faction_FieldIndex.Relations,
                     errorMask: errorMask,
-                    transl: (MutagenWriter subWriter, IRelationGetter subItem, ErrorMaskBuilder listErrorMask) =>
+                    transl: (MutagenWriter subWriter, IRelationInternalGetter subItem, ErrorMaskBuilder listErrorMask) =>
                     {
                         var loquiItem = subItem;
                         ((RelationBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
@@ -2700,12 +2731,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.Ranks.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<IRankGetter>.Instance.Write(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<IRankInternalGetter>.Instance.Write(
                     writer: writer,
                     items: item.Ranks,
                     fieldIndex: (int)Faction_FieldIndex.Ranks,
                     errorMask: errorMask,
-                    transl: (MutagenWriter subWriter, IRankGetter subItem, ErrorMaskBuilder listErrorMask) =>
+                    transl: (MutagenWriter subWriter, IRankInternalGetter subItem, ErrorMaskBuilder listErrorMask) =>
                     {
                         var loquiItem = subItem;
                         ((RankBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
@@ -2824,24 +2855,56 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         OblivionMajorRecordBinaryWrapper,
         IFactionInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Faction_Registration.Instance;
         public new static Faction_Registration Registration => Faction_Registration.Instance;
-        protected override object CommonInstance => FactionCommon.Instance;
+        protected override object CommonInstance()
+        {
+            return FactionCommon.Instance;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IFactionInternalGetter)rhs, include);
 
         protected override object XmlWriteTranslator => FactionXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((FactionXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         protected override object BinaryWriteTranslator => FactionBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((FactionBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
 
         #region Name
         private int? _NameLocation;
         public bool Name_IsSet => _NameLocation.HasValue;
         public String Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _NameLocation.Value, _package.Meta)) : default;
         #endregion
-        public IReadOnlySetList<IRelationGetter> Relations { get; private set; } = EmptySetList<RelationBinaryWrapper>.Instance;
+        public IReadOnlySetList<IRelationInternalGetter> Relations { get; private set; } = EmptySetList<RelationBinaryWrapper>.Instance;
         #region Flags
         private int? _FlagsLocation;
         public bool Flags_IsSet => _FlagsLocation.HasValue;
@@ -2852,7 +2915,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool CrimeGoldMultiplier_IsSet => _CrimeGoldMultiplierLocation.HasValue;
         public Single CrimeGoldMultiplier => _CrimeGoldMultiplierLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordSpan(_data, _CrimeGoldMultiplierLocation.Value, _package.Meta)) : default;
         #endregion
-        public IReadOnlySetList<IRankGetter> Ranks { get; private set; } = EmptySetList<RankBinaryWrapper>.Instance;
+        public IReadOnlySetList<IRankInternalGetter> Ranks { get; private set; } = EmptySetList<RankBinaryWrapper>.Instance;
         partial void CustomCtor(
             BinaryMemoryReadStream stream,
             long finalPos,
@@ -2961,4 +3024,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class Faction
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Faction_Registration.Instance;
+        public new static Faction_Registration Registration => Faction_Registration.Instance;
+        protected override object CommonInstance()
+        {
+            return FactionCommon.Instance;
+        }
+        protected override object CommonSetterInstance()
+        {
+            return FactionSetterCommon.Instance;
+        }
+        protected override object CommonSetterCopyInstance()
+        {
+            return FactionSetterCopyCommon.Instance;
+        }
+
+        #endregion
+
+    }
 }

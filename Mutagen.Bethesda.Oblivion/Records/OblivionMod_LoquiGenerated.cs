@@ -37,18 +37,12 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class OblivionMod :
         LoquiNotifyingObject,
-        IOblivionMod,
+        IOblivionModInternal,
         ILoquiObjectSetter<OblivionMod>,
         ILinkContainer,
         IEquatable<OblivionMod>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => OblivionMod_Registration.Instance;
-        public static OblivionMod_Registration Registration => OblivionMod_Registration.Instance;
-        protected object CommonInstance => OblivionModCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
-
         #region Ctor
         protected OblivionMod()
         {
@@ -178,346 +172,346 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public ModHeader ModHeader => _ModHeader_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IModHeaderGetter IOblivionModGetter.ModHeader => this.ModHeader;
+        IModHeaderInternalGetter IOblivionModGetter.ModHeader => this.ModHeader;
         #endregion
         #region GameSettings
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<GameSetting> _GameSettings_Object;
         public Group<GameSetting> GameSettings => _GameSettings_Object;
-        IGroupGetter<IGameSettingInternalGetter> IOblivionModGetter.GameSettings => _GameSettings_Object;
+        IGroupInternalGetter<IGameSettingInternalGetter> IOblivionModGetter.GameSettings => _GameSettings_Object;
         #endregion
         #region Globals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Global> _Globals_Object;
         public Group<Global> Globals => _Globals_Object;
-        IGroupGetter<IGlobalInternalGetter> IOblivionModGetter.Globals => _Globals_Object;
+        IGroupInternalGetter<IGlobalInternalGetter> IOblivionModGetter.Globals => _Globals_Object;
         #endregion
         #region Classes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Class> _Classes_Object;
         public Group<Class> Classes => _Classes_Object;
-        IGroupGetter<IClassInternalGetter> IOblivionModGetter.Classes => _Classes_Object;
+        IGroupInternalGetter<IClassInternalGetter> IOblivionModGetter.Classes => _Classes_Object;
         #endregion
         #region Factions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Faction> _Factions_Object;
         public Group<Faction> Factions => _Factions_Object;
-        IGroupGetter<IFactionInternalGetter> IOblivionModGetter.Factions => _Factions_Object;
+        IGroupInternalGetter<IFactionInternalGetter> IOblivionModGetter.Factions => _Factions_Object;
         #endregion
         #region Hairs
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Hair> _Hairs_Object;
         public Group<Hair> Hairs => _Hairs_Object;
-        IGroupGetter<IHairInternalGetter> IOblivionModGetter.Hairs => _Hairs_Object;
+        IGroupInternalGetter<IHairInternalGetter> IOblivionModGetter.Hairs => _Hairs_Object;
         #endregion
         #region Eyes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Eye> _Eyes_Object;
         public Group<Eye> Eyes => _Eyes_Object;
-        IGroupGetter<IEyeInternalGetter> IOblivionModGetter.Eyes => _Eyes_Object;
+        IGroupInternalGetter<IEyeInternalGetter> IOblivionModGetter.Eyes => _Eyes_Object;
         #endregion
         #region Races
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Race> _Races_Object;
         public Group<Race> Races => _Races_Object;
-        IGroupGetter<IRaceInternalGetter> IOblivionModGetter.Races => _Races_Object;
+        IGroupInternalGetter<IRaceInternalGetter> IOblivionModGetter.Races => _Races_Object;
         #endregion
         #region Sounds
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Sound> _Sounds_Object;
         public Group<Sound> Sounds => _Sounds_Object;
-        IGroupGetter<ISoundInternalGetter> IOblivionModGetter.Sounds => _Sounds_Object;
+        IGroupInternalGetter<ISoundInternalGetter> IOblivionModGetter.Sounds => _Sounds_Object;
         #endregion
         #region Skills
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<SkillRecord> _Skills_Object;
         public Group<SkillRecord> Skills => _Skills_Object;
-        IGroupGetter<ISkillRecordInternalGetter> IOblivionModGetter.Skills => _Skills_Object;
+        IGroupInternalGetter<ISkillRecordInternalGetter> IOblivionModGetter.Skills => _Skills_Object;
         #endregion
         #region MagicEffects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<MagicEffect> _MagicEffects_Object;
         public Group<MagicEffect> MagicEffects => _MagicEffects_Object;
-        IGroupGetter<IMagicEffectInternalGetter> IOblivionModGetter.MagicEffects => _MagicEffects_Object;
+        IGroupInternalGetter<IMagicEffectInternalGetter> IOblivionModGetter.MagicEffects => _MagicEffects_Object;
         #endregion
         #region Scripts
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Script> _Scripts_Object;
         public Group<Script> Scripts => _Scripts_Object;
-        IGroupGetter<IScriptInternalGetter> IOblivionModGetter.Scripts => _Scripts_Object;
+        IGroupInternalGetter<IScriptInternalGetter> IOblivionModGetter.Scripts => _Scripts_Object;
         #endregion
         #region LandTextures
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<LandTexture> _LandTextures_Object;
         public Group<LandTexture> LandTextures => _LandTextures_Object;
-        IGroupGetter<ILandTextureInternalGetter> IOblivionModGetter.LandTextures => _LandTextures_Object;
+        IGroupInternalGetter<ILandTextureInternalGetter> IOblivionModGetter.LandTextures => _LandTextures_Object;
         #endregion
         #region Enchantments
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Enchantment> _Enchantments_Object;
         public Group<Enchantment> Enchantments => _Enchantments_Object;
-        IGroupGetter<IEnchantmentInternalGetter> IOblivionModGetter.Enchantments => _Enchantments_Object;
+        IGroupInternalGetter<IEnchantmentInternalGetter> IOblivionModGetter.Enchantments => _Enchantments_Object;
         #endregion
         #region Spells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<SpellUnleveled> _Spells_Object;
         public Group<SpellUnleveled> Spells => _Spells_Object;
-        IGroupGetter<ISpellUnleveledInternalGetter> IOblivionModGetter.Spells => _Spells_Object;
+        IGroupInternalGetter<ISpellUnleveledInternalGetter> IOblivionModGetter.Spells => _Spells_Object;
         #endregion
         #region Birthsigns
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Birthsign> _Birthsigns_Object;
         public Group<Birthsign> Birthsigns => _Birthsigns_Object;
-        IGroupGetter<IBirthsignInternalGetter> IOblivionModGetter.Birthsigns => _Birthsigns_Object;
+        IGroupInternalGetter<IBirthsignInternalGetter> IOblivionModGetter.Birthsigns => _Birthsigns_Object;
         #endregion
         #region Activators
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Activator> _Activators_Object;
         public Group<Activator> Activators => _Activators_Object;
-        IGroupGetter<IActivatorInternalGetter> IOblivionModGetter.Activators => _Activators_Object;
+        IGroupInternalGetter<IActivatorInternalGetter> IOblivionModGetter.Activators => _Activators_Object;
         #endregion
         #region AlchemicalApparatus
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<AlchemicalApparatus> _AlchemicalApparatus_Object;
         public Group<AlchemicalApparatus> AlchemicalApparatus => _AlchemicalApparatus_Object;
-        IGroupGetter<IAlchemicalApparatusInternalGetter> IOblivionModGetter.AlchemicalApparatus => _AlchemicalApparatus_Object;
+        IGroupInternalGetter<IAlchemicalApparatusInternalGetter> IOblivionModGetter.AlchemicalApparatus => _AlchemicalApparatus_Object;
         #endregion
         #region Armors
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Armor> _Armors_Object;
         public Group<Armor> Armors => _Armors_Object;
-        IGroupGetter<IArmorInternalGetter> IOblivionModGetter.Armors => _Armors_Object;
+        IGroupInternalGetter<IArmorInternalGetter> IOblivionModGetter.Armors => _Armors_Object;
         #endregion
         #region Books
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Book> _Books_Object;
         public Group<Book> Books => _Books_Object;
-        IGroupGetter<IBookInternalGetter> IOblivionModGetter.Books => _Books_Object;
+        IGroupInternalGetter<IBookInternalGetter> IOblivionModGetter.Books => _Books_Object;
         #endregion
         #region Clothes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Clothing> _Clothes_Object;
         public Group<Clothing> Clothes => _Clothes_Object;
-        IGroupGetter<IClothingInternalGetter> IOblivionModGetter.Clothes => _Clothes_Object;
+        IGroupInternalGetter<IClothingInternalGetter> IOblivionModGetter.Clothes => _Clothes_Object;
         #endregion
         #region Containers
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Container> _Containers_Object;
         public Group<Container> Containers => _Containers_Object;
-        IGroupGetter<IContainerInternalGetter> IOblivionModGetter.Containers => _Containers_Object;
+        IGroupInternalGetter<IContainerInternalGetter> IOblivionModGetter.Containers => _Containers_Object;
         #endregion
         #region Doors
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Door> _Doors_Object;
         public Group<Door> Doors => _Doors_Object;
-        IGroupGetter<IDoorInternalGetter> IOblivionModGetter.Doors => _Doors_Object;
+        IGroupInternalGetter<IDoorInternalGetter> IOblivionModGetter.Doors => _Doors_Object;
         #endregion
         #region Ingredients
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Ingredient> _Ingredients_Object;
         public Group<Ingredient> Ingredients => _Ingredients_Object;
-        IGroupGetter<IIngredientInternalGetter> IOblivionModGetter.Ingredients => _Ingredients_Object;
+        IGroupInternalGetter<IIngredientInternalGetter> IOblivionModGetter.Ingredients => _Ingredients_Object;
         #endregion
         #region Lights
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Light> _Lights_Object;
         public Group<Light> Lights => _Lights_Object;
-        IGroupGetter<ILightInternalGetter> IOblivionModGetter.Lights => _Lights_Object;
+        IGroupInternalGetter<ILightInternalGetter> IOblivionModGetter.Lights => _Lights_Object;
         #endregion
         #region Miscellaneous
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Miscellaneous> _Miscellaneous_Object;
         public Group<Miscellaneous> Miscellaneous => _Miscellaneous_Object;
-        IGroupGetter<IMiscellaneousInternalGetter> IOblivionModGetter.Miscellaneous => _Miscellaneous_Object;
+        IGroupInternalGetter<IMiscellaneousInternalGetter> IOblivionModGetter.Miscellaneous => _Miscellaneous_Object;
         #endregion
         #region Statics
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Static> _Statics_Object;
         public Group<Static> Statics => _Statics_Object;
-        IGroupGetter<IStaticInternalGetter> IOblivionModGetter.Statics => _Statics_Object;
+        IGroupInternalGetter<IStaticInternalGetter> IOblivionModGetter.Statics => _Statics_Object;
         #endregion
         #region Grasses
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Grass> _Grasses_Object;
         public Group<Grass> Grasses => _Grasses_Object;
-        IGroupGetter<IGrassInternalGetter> IOblivionModGetter.Grasses => _Grasses_Object;
+        IGroupInternalGetter<IGrassInternalGetter> IOblivionModGetter.Grasses => _Grasses_Object;
         #endregion
         #region Trees
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Tree> _Trees_Object;
         public Group<Tree> Trees => _Trees_Object;
-        IGroupGetter<ITreeInternalGetter> IOblivionModGetter.Trees => _Trees_Object;
+        IGroupInternalGetter<ITreeInternalGetter> IOblivionModGetter.Trees => _Trees_Object;
         #endregion
         #region Flora
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Flora> _Flora_Object;
         public Group<Flora> Flora => _Flora_Object;
-        IGroupGetter<IFloraInternalGetter> IOblivionModGetter.Flora => _Flora_Object;
+        IGroupInternalGetter<IFloraInternalGetter> IOblivionModGetter.Flora => _Flora_Object;
         #endregion
         #region Furnature
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Furnature> _Furnature_Object;
         public Group<Furnature> Furnature => _Furnature_Object;
-        IGroupGetter<IFurnatureInternalGetter> IOblivionModGetter.Furnature => _Furnature_Object;
+        IGroupInternalGetter<IFurnatureInternalGetter> IOblivionModGetter.Furnature => _Furnature_Object;
         #endregion
         #region Weapons
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Weapon> _Weapons_Object;
         public Group<Weapon> Weapons => _Weapons_Object;
-        IGroupGetter<IWeaponInternalGetter> IOblivionModGetter.Weapons => _Weapons_Object;
+        IGroupInternalGetter<IWeaponInternalGetter> IOblivionModGetter.Weapons => _Weapons_Object;
         #endregion
         #region Ammo
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Ammo> _Ammo_Object;
         public Group<Ammo> Ammo => _Ammo_Object;
-        IGroupGetter<IAmmoInternalGetter> IOblivionModGetter.Ammo => _Ammo_Object;
+        IGroupInternalGetter<IAmmoInternalGetter> IOblivionModGetter.Ammo => _Ammo_Object;
         #endregion
         #region NPCs
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<NPC> _NPCs_Object;
         public Group<NPC> NPCs => _NPCs_Object;
-        IGroupGetter<INPCInternalGetter> IOblivionModGetter.NPCs => _NPCs_Object;
+        IGroupInternalGetter<INPCInternalGetter> IOblivionModGetter.NPCs => _NPCs_Object;
         #endregion
         #region Creatures
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Creature> _Creatures_Object;
         public Group<Creature> Creatures => _Creatures_Object;
-        IGroupGetter<ICreatureInternalGetter> IOblivionModGetter.Creatures => _Creatures_Object;
+        IGroupInternalGetter<ICreatureInternalGetter> IOblivionModGetter.Creatures => _Creatures_Object;
         #endregion
         #region LeveledCreatures
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<LeveledCreature> _LeveledCreatures_Object;
         public Group<LeveledCreature> LeveledCreatures => _LeveledCreatures_Object;
-        IGroupGetter<ILeveledCreatureInternalGetter> IOblivionModGetter.LeveledCreatures => _LeveledCreatures_Object;
+        IGroupInternalGetter<ILeveledCreatureInternalGetter> IOblivionModGetter.LeveledCreatures => _LeveledCreatures_Object;
         #endregion
         #region SoulGems
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<SoulGem> _SoulGems_Object;
         public Group<SoulGem> SoulGems => _SoulGems_Object;
-        IGroupGetter<ISoulGemInternalGetter> IOblivionModGetter.SoulGems => _SoulGems_Object;
+        IGroupInternalGetter<ISoulGemInternalGetter> IOblivionModGetter.SoulGems => _SoulGems_Object;
         #endregion
         #region Keys
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Key> _Keys_Object;
         public Group<Key> Keys => _Keys_Object;
-        IGroupGetter<IKeyInternalGetter> IOblivionModGetter.Keys => _Keys_Object;
+        IGroupInternalGetter<IKeyInternalGetter> IOblivionModGetter.Keys => _Keys_Object;
         #endregion
         #region Potions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Potion> _Potions_Object;
         public Group<Potion> Potions => _Potions_Object;
-        IGroupGetter<IPotionInternalGetter> IOblivionModGetter.Potions => _Potions_Object;
+        IGroupInternalGetter<IPotionInternalGetter> IOblivionModGetter.Potions => _Potions_Object;
         #endregion
         #region Subspaces
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Subspace> _Subspaces_Object;
         public Group<Subspace> Subspaces => _Subspaces_Object;
-        IGroupGetter<ISubspaceInternalGetter> IOblivionModGetter.Subspaces => _Subspaces_Object;
+        IGroupInternalGetter<ISubspaceInternalGetter> IOblivionModGetter.Subspaces => _Subspaces_Object;
         #endregion
         #region SigilStones
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<SigilStone> _SigilStones_Object;
         public Group<SigilStone> SigilStones => _SigilStones_Object;
-        IGroupGetter<ISigilStoneInternalGetter> IOblivionModGetter.SigilStones => _SigilStones_Object;
+        IGroupInternalGetter<ISigilStoneInternalGetter> IOblivionModGetter.SigilStones => _SigilStones_Object;
         #endregion
         #region LeveledItems
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<LeveledItem> _LeveledItems_Object;
         public Group<LeveledItem> LeveledItems => _LeveledItems_Object;
-        IGroupGetter<ILeveledItemInternalGetter> IOblivionModGetter.LeveledItems => _LeveledItems_Object;
+        IGroupInternalGetter<ILeveledItemInternalGetter> IOblivionModGetter.LeveledItems => _LeveledItems_Object;
         #endregion
         #region Weathers
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Weather> _Weathers_Object;
         public Group<Weather> Weathers => _Weathers_Object;
-        IGroupGetter<IWeatherInternalGetter> IOblivionModGetter.Weathers => _Weathers_Object;
+        IGroupInternalGetter<IWeatherInternalGetter> IOblivionModGetter.Weathers => _Weathers_Object;
         #endregion
         #region Climates
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Climate> _Climates_Object;
         public Group<Climate> Climates => _Climates_Object;
-        IGroupGetter<IClimateInternalGetter> IOblivionModGetter.Climates => _Climates_Object;
+        IGroupInternalGetter<IClimateInternalGetter> IOblivionModGetter.Climates => _Climates_Object;
         #endregion
         #region Regions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Region> _Regions_Object;
         public Group<Region> Regions => _Regions_Object;
-        IGroupGetter<IRegionInternalGetter> IOblivionModGetter.Regions => _Regions_Object;
+        IGroupInternalGetter<IRegionInternalGetter> IOblivionModGetter.Regions => _Regions_Object;
         #endregion
         #region Cells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly ListGroup<CellBlock> _Cells_Object = new ListGroup<CellBlock>();
         public ListGroup<CellBlock> Cells => _Cells_Object;
-        IListGroupGetter<ICellBlockGetter> IOblivionModGetter.Cells => _Cells_Object;
+        IListGroupInternalGetter<ICellBlockInternalGetter> IOblivionModGetter.Cells => _Cells_Object;
         #endregion
         #region Worldspaces
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Worldspace> _Worldspaces_Object;
         public Group<Worldspace> Worldspaces => _Worldspaces_Object;
-        IGroupGetter<IWorldspaceInternalGetter> IOblivionModGetter.Worldspaces => _Worldspaces_Object;
+        IGroupInternalGetter<IWorldspaceInternalGetter> IOblivionModGetter.Worldspaces => _Worldspaces_Object;
         #endregion
         #region DialogTopics
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<DialogTopic> _DialogTopics_Object;
         public Group<DialogTopic> DialogTopics => _DialogTopics_Object;
-        IGroupGetter<IDialogTopicInternalGetter> IOblivionModGetter.DialogTopics => _DialogTopics_Object;
+        IGroupInternalGetter<IDialogTopicInternalGetter> IOblivionModGetter.DialogTopics => _DialogTopics_Object;
         #endregion
         #region Quests
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Quest> _Quests_Object;
         public Group<Quest> Quests => _Quests_Object;
-        IGroupGetter<IQuestInternalGetter> IOblivionModGetter.Quests => _Quests_Object;
+        IGroupInternalGetter<IQuestInternalGetter> IOblivionModGetter.Quests => _Quests_Object;
         #endregion
         #region IdleAnimations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<IdleAnimation> _IdleAnimations_Object;
         public Group<IdleAnimation> IdleAnimations => _IdleAnimations_Object;
-        IGroupGetter<IIdleAnimationInternalGetter> IOblivionModGetter.IdleAnimations => _IdleAnimations_Object;
+        IGroupInternalGetter<IIdleAnimationInternalGetter> IOblivionModGetter.IdleAnimations => _IdleAnimations_Object;
         #endregion
         #region AIPackages
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<AIPackage> _AIPackages_Object;
         public Group<AIPackage> AIPackages => _AIPackages_Object;
-        IGroupGetter<IAIPackageInternalGetter> IOblivionModGetter.AIPackages => _AIPackages_Object;
+        IGroupInternalGetter<IAIPackageInternalGetter> IOblivionModGetter.AIPackages => _AIPackages_Object;
         #endregion
         #region CombatStyles
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<CombatStyle> _CombatStyles_Object;
         public Group<CombatStyle> CombatStyles => _CombatStyles_Object;
-        IGroupGetter<ICombatStyleInternalGetter> IOblivionModGetter.CombatStyles => _CombatStyles_Object;
+        IGroupInternalGetter<ICombatStyleInternalGetter> IOblivionModGetter.CombatStyles => _CombatStyles_Object;
         #endregion
         #region LoadScreens
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<LoadScreen> _LoadScreens_Object;
         public Group<LoadScreen> LoadScreens => _LoadScreens_Object;
-        IGroupGetter<ILoadScreenInternalGetter> IOblivionModGetter.LoadScreens => _LoadScreens_Object;
+        IGroupInternalGetter<ILoadScreenInternalGetter> IOblivionModGetter.LoadScreens => _LoadScreens_Object;
         #endregion
         #region LeveledSpells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<LeveledSpell> _LeveledSpells_Object;
         public Group<LeveledSpell> LeveledSpells => _LeveledSpells_Object;
-        IGroupGetter<ILeveledSpellInternalGetter> IOblivionModGetter.LeveledSpells => _LeveledSpells_Object;
+        IGroupInternalGetter<ILeveledSpellInternalGetter> IOblivionModGetter.LeveledSpells => _LeveledSpells_Object;
         #endregion
         #region AnimatedObjects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<AnimatedObject> _AnimatedObjects_Object;
         public Group<AnimatedObject> AnimatedObjects => _AnimatedObjects_Object;
-        IGroupGetter<IAnimatedObjectInternalGetter> IOblivionModGetter.AnimatedObjects => _AnimatedObjects_Object;
+        IGroupInternalGetter<IAnimatedObjectInternalGetter> IOblivionModGetter.AnimatedObjects => _AnimatedObjects_Object;
         #endregion
         #region Waters
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Water> _Waters_Object;
         public Group<Water> Waters => _Waters_Object;
-        IGroupGetter<IWaterInternalGetter> IOblivionModGetter.Waters => _Waters_Object;
+        IGroupInternalGetter<IWaterInternalGetter> IOblivionModGetter.Waters => _Waters_Object;
         #endregion
         #region EffectShaders
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<EffectShader> _EffectShaders_Object;
         public Group<EffectShader> EffectShaders => _EffectShaders_Object;
-        IGroupGetter<IEffectShaderInternalGetter> IOblivionModGetter.EffectShaders => _EffectShaders_Object;
+        IGroupInternalGetter<IEffectShaderInternalGetter> IOblivionModGetter.EffectShaders => _EffectShaders_Object;
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IOblivionModGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IOblivionModInternalGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -535,22 +529,35 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is IOblivionModGetter rhs)) return false;
-            return ((OblivionModCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            if (!(obj is IOblivionModInternalGetter rhs)) return false;
+            return ((OblivionModCommon)((IOblivionModInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(OblivionMod obj)
         {
-            return ((OblivionModCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((OblivionModCommon)((IOblivionModInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((OblivionModCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((OblivionModCommon)((IOblivionModInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected object XmlWriteTranslator => OblivionModXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((OblivionModXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static OblivionMod CreateFromXml(
@@ -4971,7 +4978,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            OblivionModCommon.CopyFieldsFrom(
+            OblivionModSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -4986,7 +4993,7 @@ namespace Mutagen.Bethesda.Oblivion
             OblivionMod_CopyMask copyMask = null,
             OblivionMod def = null)
         {
-            OblivionModCommon.CopyFieldsFrom(
+            OblivionModSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -5177,7 +5184,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void Clear()
         {
-            OblivionModCommon.Instance.Clear(this);
+            OblivionModSetterCommon.Instance.Clear(this);
         }
 
         public static OblivionMod Create(IEnumerable<KeyValuePair<ushort, object>> fields)
@@ -5378,8 +5385,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IOblivionMod :
-        IOblivionModGetter,
-        ILoquiObjectSetter<IOblivionMod>
+        IOblivionModInternalGetter,
+        ILoquiObjectSetter<IOblivionModInternal>
     {
         new ModHeader ModHeader { get; }
         new Group<GameSetting> GameSettings { get; }
@@ -5445,184 +5452,255 @@ namespace Mutagen.Bethesda.Oblivion
             OblivionMod def = null);
     }
 
+    public partial interface IOblivionModInternal :
+        IOblivionMod,
+        IOblivionModInternalGetter
+    {
+        new ModHeader ModHeader { get; }
+        new Group<GameSetting> GameSettings { get; }
+        new Group<Global> Globals { get; }
+        new Group<Class> Classes { get; }
+        new Group<Faction> Factions { get; }
+        new Group<Hair> Hairs { get; }
+        new Group<Eye> Eyes { get; }
+        new Group<Race> Races { get; }
+        new Group<Sound> Sounds { get; }
+        new Group<SkillRecord> Skills { get; }
+        new Group<MagicEffect> MagicEffects { get; }
+        new Group<Script> Scripts { get; }
+        new Group<LandTexture> LandTextures { get; }
+        new Group<Enchantment> Enchantments { get; }
+        new Group<SpellUnleveled> Spells { get; }
+        new Group<Birthsign> Birthsigns { get; }
+        new Group<Activator> Activators { get; }
+        new Group<AlchemicalApparatus> AlchemicalApparatus { get; }
+        new Group<Armor> Armors { get; }
+        new Group<Book> Books { get; }
+        new Group<Clothing> Clothes { get; }
+        new Group<Container> Containers { get; }
+        new Group<Door> Doors { get; }
+        new Group<Ingredient> Ingredients { get; }
+        new Group<Light> Lights { get; }
+        new Group<Miscellaneous> Miscellaneous { get; }
+        new Group<Static> Statics { get; }
+        new Group<Grass> Grasses { get; }
+        new Group<Tree> Trees { get; }
+        new Group<Flora> Flora { get; }
+        new Group<Furnature> Furnature { get; }
+        new Group<Weapon> Weapons { get; }
+        new Group<Ammo> Ammo { get; }
+        new Group<NPC> NPCs { get; }
+        new Group<Creature> Creatures { get; }
+        new Group<LeveledCreature> LeveledCreatures { get; }
+        new Group<SoulGem> SoulGems { get; }
+        new Group<Key> Keys { get; }
+        new Group<Potion> Potions { get; }
+        new Group<Subspace> Subspaces { get; }
+        new Group<SigilStone> SigilStones { get; }
+        new Group<LeveledItem> LeveledItems { get; }
+        new Group<Weather> Weathers { get; }
+        new Group<Climate> Climates { get; }
+        new Group<Region> Regions { get; }
+        new ListGroup<CellBlock> Cells { get; }
+        new Group<Worldspace> Worldspaces { get; }
+        new Group<DialogTopic> DialogTopics { get; }
+        new Group<Quest> Quests { get; }
+        new Group<IdleAnimation> IdleAnimations { get; }
+        new Group<AIPackage> AIPackages { get; }
+        new Group<CombatStyle> CombatStyles { get; }
+        new Group<LoadScreen> LoadScreens { get; }
+        new Group<LeveledSpell> LeveledSpells { get; }
+        new Group<AnimatedObject> AnimatedObjects { get; }
+        new Group<Water> Waters { get; }
+        new Group<EffectShader> EffectShaders { get; }
+    }
+
     public partial interface IOblivionModGetter :
         ILoquiObject,
-        ILoquiObject<IOblivionModGetter>,
+        ILoquiObject<IOblivionModInternalGetter>,
         IXmlItem
     {
         #region ModHeader
-        IModHeaderGetter ModHeader { get; }
+        IModHeaderInternalGetter ModHeader { get; }
         bool ModHeader_IsSet { get; }
 
         #endregion
         #region GameSettings
-        IGroupGetter<IGameSettingInternalGetter> GameSettings { get; }
+        IGroupInternalGetter<IGameSettingInternalGetter> GameSettings { get; }
         #endregion
         #region Globals
-        IGroupGetter<IGlobalInternalGetter> Globals { get; }
+        IGroupInternalGetter<IGlobalInternalGetter> Globals { get; }
         #endregion
         #region Classes
-        IGroupGetter<IClassInternalGetter> Classes { get; }
+        IGroupInternalGetter<IClassInternalGetter> Classes { get; }
         #endregion
         #region Factions
-        IGroupGetter<IFactionInternalGetter> Factions { get; }
+        IGroupInternalGetter<IFactionInternalGetter> Factions { get; }
         #endregion
         #region Hairs
-        IGroupGetter<IHairInternalGetter> Hairs { get; }
+        IGroupInternalGetter<IHairInternalGetter> Hairs { get; }
         #endregion
         #region Eyes
-        IGroupGetter<IEyeInternalGetter> Eyes { get; }
+        IGroupInternalGetter<IEyeInternalGetter> Eyes { get; }
         #endregion
         #region Races
-        IGroupGetter<IRaceInternalGetter> Races { get; }
+        IGroupInternalGetter<IRaceInternalGetter> Races { get; }
         #endregion
         #region Sounds
-        IGroupGetter<ISoundInternalGetter> Sounds { get; }
+        IGroupInternalGetter<ISoundInternalGetter> Sounds { get; }
         #endregion
         #region Skills
-        IGroupGetter<ISkillRecordInternalGetter> Skills { get; }
+        IGroupInternalGetter<ISkillRecordInternalGetter> Skills { get; }
         #endregion
         #region MagicEffects
-        IGroupGetter<IMagicEffectInternalGetter> MagicEffects { get; }
+        IGroupInternalGetter<IMagicEffectInternalGetter> MagicEffects { get; }
         #endregion
         #region Scripts
-        IGroupGetter<IScriptInternalGetter> Scripts { get; }
+        IGroupInternalGetter<IScriptInternalGetter> Scripts { get; }
         #endregion
         #region LandTextures
-        IGroupGetter<ILandTextureInternalGetter> LandTextures { get; }
+        IGroupInternalGetter<ILandTextureInternalGetter> LandTextures { get; }
         #endregion
         #region Enchantments
-        IGroupGetter<IEnchantmentInternalGetter> Enchantments { get; }
+        IGroupInternalGetter<IEnchantmentInternalGetter> Enchantments { get; }
         #endregion
         #region Spells
-        IGroupGetter<ISpellUnleveledInternalGetter> Spells { get; }
+        IGroupInternalGetter<ISpellUnleveledInternalGetter> Spells { get; }
         #endregion
         #region Birthsigns
-        IGroupGetter<IBirthsignInternalGetter> Birthsigns { get; }
+        IGroupInternalGetter<IBirthsignInternalGetter> Birthsigns { get; }
         #endregion
         #region Activators
-        IGroupGetter<IActivatorInternalGetter> Activators { get; }
+        IGroupInternalGetter<IActivatorInternalGetter> Activators { get; }
         #endregion
         #region AlchemicalApparatus
-        IGroupGetter<IAlchemicalApparatusInternalGetter> AlchemicalApparatus { get; }
+        IGroupInternalGetter<IAlchemicalApparatusInternalGetter> AlchemicalApparatus { get; }
         #endregion
         #region Armors
-        IGroupGetter<IArmorInternalGetter> Armors { get; }
+        IGroupInternalGetter<IArmorInternalGetter> Armors { get; }
         #endregion
         #region Books
-        IGroupGetter<IBookInternalGetter> Books { get; }
+        IGroupInternalGetter<IBookInternalGetter> Books { get; }
         #endregion
         #region Clothes
-        IGroupGetter<IClothingInternalGetter> Clothes { get; }
+        IGroupInternalGetter<IClothingInternalGetter> Clothes { get; }
         #endregion
         #region Containers
-        IGroupGetter<IContainerInternalGetter> Containers { get; }
+        IGroupInternalGetter<IContainerInternalGetter> Containers { get; }
         #endregion
         #region Doors
-        IGroupGetter<IDoorInternalGetter> Doors { get; }
+        IGroupInternalGetter<IDoorInternalGetter> Doors { get; }
         #endregion
         #region Ingredients
-        IGroupGetter<IIngredientInternalGetter> Ingredients { get; }
+        IGroupInternalGetter<IIngredientInternalGetter> Ingredients { get; }
         #endregion
         #region Lights
-        IGroupGetter<ILightInternalGetter> Lights { get; }
+        IGroupInternalGetter<ILightInternalGetter> Lights { get; }
         #endregion
         #region Miscellaneous
-        IGroupGetter<IMiscellaneousInternalGetter> Miscellaneous { get; }
+        IGroupInternalGetter<IMiscellaneousInternalGetter> Miscellaneous { get; }
         #endregion
         #region Statics
-        IGroupGetter<IStaticInternalGetter> Statics { get; }
+        IGroupInternalGetter<IStaticInternalGetter> Statics { get; }
         #endregion
         #region Grasses
-        IGroupGetter<IGrassInternalGetter> Grasses { get; }
+        IGroupInternalGetter<IGrassInternalGetter> Grasses { get; }
         #endregion
         #region Trees
-        IGroupGetter<ITreeInternalGetter> Trees { get; }
+        IGroupInternalGetter<ITreeInternalGetter> Trees { get; }
         #endregion
         #region Flora
-        IGroupGetter<IFloraInternalGetter> Flora { get; }
+        IGroupInternalGetter<IFloraInternalGetter> Flora { get; }
         #endregion
         #region Furnature
-        IGroupGetter<IFurnatureInternalGetter> Furnature { get; }
+        IGroupInternalGetter<IFurnatureInternalGetter> Furnature { get; }
         #endregion
         #region Weapons
-        IGroupGetter<IWeaponInternalGetter> Weapons { get; }
+        IGroupInternalGetter<IWeaponInternalGetter> Weapons { get; }
         #endregion
         #region Ammo
-        IGroupGetter<IAmmoInternalGetter> Ammo { get; }
+        IGroupInternalGetter<IAmmoInternalGetter> Ammo { get; }
         #endregion
         #region NPCs
-        IGroupGetter<INPCInternalGetter> NPCs { get; }
+        IGroupInternalGetter<INPCInternalGetter> NPCs { get; }
         #endregion
         #region Creatures
-        IGroupGetter<ICreatureInternalGetter> Creatures { get; }
+        IGroupInternalGetter<ICreatureInternalGetter> Creatures { get; }
         #endregion
         #region LeveledCreatures
-        IGroupGetter<ILeveledCreatureInternalGetter> LeveledCreatures { get; }
+        IGroupInternalGetter<ILeveledCreatureInternalGetter> LeveledCreatures { get; }
         #endregion
         #region SoulGems
-        IGroupGetter<ISoulGemInternalGetter> SoulGems { get; }
+        IGroupInternalGetter<ISoulGemInternalGetter> SoulGems { get; }
         #endregion
         #region Keys
-        IGroupGetter<IKeyInternalGetter> Keys { get; }
+        IGroupInternalGetter<IKeyInternalGetter> Keys { get; }
         #endregion
         #region Potions
-        IGroupGetter<IPotionInternalGetter> Potions { get; }
+        IGroupInternalGetter<IPotionInternalGetter> Potions { get; }
         #endregion
         #region Subspaces
-        IGroupGetter<ISubspaceInternalGetter> Subspaces { get; }
+        IGroupInternalGetter<ISubspaceInternalGetter> Subspaces { get; }
         #endregion
         #region SigilStones
-        IGroupGetter<ISigilStoneInternalGetter> SigilStones { get; }
+        IGroupInternalGetter<ISigilStoneInternalGetter> SigilStones { get; }
         #endregion
         #region LeveledItems
-        IGroupGetter<ILeveledItemInternalGetter> LeveledItems { get; }
+        IGroupInternalGetter<ILeveledItemInternalGetter> LeveledItems { get; }
         #endregion
         #region Weathers
-        IGroupGetter<IWeatherInternalGetter> Weathers { get; }
+        IGroupInternalGetter<IWeatherInternalGetter> Weathers { get; }
         #endregion
         #region Climates
-        IGroupGetter<IClimateInternalGetter> Climates { get; }
+        IGroupInternalGetter<IClimateInternalGetter> Climates { get; }
         #endregion
         #region Regions
-        IGroupGetter<IRegionInternalGetter> Regions { get; }
+        IGroupInternalGetter<IRegionInternalGetter> Regions { get; }
         #endregion
         #region Cells
-        IListGroupGetter<ICellBlockGetter> Cells { get; }
+        IListGroupInternalGetter<ICellBlockInternalGetter> Cells { get; }
         #endregion
         #region Worldspaces
-        IGroupGetter<IWorldspaceInternalGetter> Worldspaces { get; }
+        IGroupInternalGetter<IWorldspaceInternalGetter> Worldspaces { get; }
         #endregion
         #region DialogTopics
-        IGroupGetter<IDialogTopicInternalGetter> DialogTopics { get; }
+        IGroupInternalGetter<IDialogTopicInternalGetter> DialogTopics { get; }
         #endregion
         #region Quests
-        IGroupGetter<IQuestInternalGetter> Quests { get; }
+        IGroupInternalGetter<IQuestInternalGetter> Quests { get; }
         #endregion
         #region IdleAnimations
-        IGroupGetter<IIdleAnimationInternalGetter> IdleAnimations { get; }
+        IGroupInternalGetter<IIdleAnimationInternalGetter> IdleAnimations { get; }
         #endregion
         #region AIPackages
-        IGroupGetter<IAIPackageInternalGetter> AIPackages { get; }
+        IGroupInternalGetter<IAIPackageInternalGetter> AIPackages { get; }
         #endregion
         #region CombatStyles
-        IGroupGetter<ICombatStyleInternalGetter> CombatStyles { get; }
+        IGroupInternalGetter<ICombatStyleInternalGetter> CombatStyles { get; }
         #endregion
         #region LoadScreens
-        IGroupGetter<ILoadScreenInternalGetter> LoadScreens { get; }
+        IGroupInternalGetter<ILoadScreenInternalGetter> LoadScreens { get; }
         #endregion
         #region LeveledSpells
-        IGroupGetter<ILeveledSpellInternalGetter> LeveledSpells { get; }
+        IGroupInternalGetter<ILeveledSpellInternalGetter> LeveledSpells { get; }
         #endregion
         #region AnimatedObjects
-        IGroupGetter<IAnimatedObjectInternalGetter> AnimatedObjects { get; }
+        IGroupInternalGetter<IAnimatedObjectInternalGetter> AnimatedObjects { get; }
         #endregion
         #region Waters
-        IGroupGetter<IWaterInternalGetter> Waters { get; }
+        IGroupInternalGetter<IWaterInternalGetter> Waters { get; }
         #endregion
         #region EffectShaders
-        IGroupGetter<IEffectShaderInternalGetter> EffectShaders { get; }
+        IGroupInternalGetter<IEffectShaderInternalGetter> EffectShaders { get; }
         #endregion
+
+    }
+
+    public partial interface IOblivionModInternalGetter : IOblivionModGetter
+    {
+        object CommonInstance();
+        object CommonSetterInstance();
+        object CommonSetterCopyInstance();
 
     }
 
@@ -5631,40 +5709,40 @@ namespace Mutagen.Bethesda.Oblivion
     #region Common MixIn
     public static class OblivionModMixIn
     {
-        public static void Clear(this IOblivionMod item)
+        public static void Clear(this IOblivionModInternal item)
         {
-            ((OblivionModCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((OblivionModSetterCommon)((IOblivionModInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static OblivionMod_Mask<bool> GetEqualsMask(
-            this IOblivionModGetter item,
-            IOblivionModGetter rhs,
+            this IOblivionModInternalGetter item,
+            IOblivionModInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((OblivionModCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((OblivionModCommon)((IOblivionModInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IOblivionModGetter item,
+            this IOblivionModInternalGetter item,
             string name = null,
             OblivionMod_Mask<bool> printMask = null)
         {
-            return ((OblivionModCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((OblivionModCommon)((IOblivionModInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IOblivionModGetter item,
+            this IOblivionModInternalGetter item,
             FileGeneration fg,
             string name = null,
             OblivionMod_Mask<bool> printMask = null)
         {
-            ((OblivionModCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((OblivionModCommon)((IOblivionModInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -5672,43 +5750,43 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static bool HasBeenSet(
-            this IOblivionModGetter item,
+            this IOblivionModInternalGetter item,
             OblivionMod_Mask<bool?> checkMask)
         {
-            return ((OblivionModCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((OblivionModCommon)((IOblivionModInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static OblivionMod_Mask<bool> GetHasBeenSetMask(this IOblivionModGetter item)
+        public static OblivionMod_Mask<bool> GetHasBeenSetMask(this IOblivionModInternalGetter item)
         {
             var ret = new OblivionMod_Mask<bool>();
-            ((OblivionModCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((OblivionModCommon)((IOblivionModInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this IOblivionModGetter item,
-            IOblivionModGetter rhs)
+            this IOblivionModInternalGetter item,
+            IOblivionModInternalGetter rhs)
         {
-            return ((OblivionModCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((OblivionModCommon)((IOblivionModInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
 
         #region Mutagen
-        public static IReadOnlyCache<T, FormKey> GetGroupGetter<T>(this IOblivionModGetter obj)
+        public static IReadOnlyCache<T, FormKey> GetGroupGetter<T>(this IOblivionModInternalGetter obj)
             where T : IMajorRecordInternalGetter
         {
-            return (IReadOnlyCache<T, FormKey>)((OblivionModCommon)((ILoquiObject)obj).CommonInstance).GetGroup<T>(obj: obj);
+            return (IReadOnlyCache<T, FormKey>)((OblivionModCommon)((IOblivionModInternalGetter)obj).CommonInstance()).GetGroup<T>(obj: obj);
         }
 
-        public static ISourceCache<T, FormKey> GetGroup<T>(this IOblivionMod obj)
+        public static ISourceCache<T, FormKey> GetGroup<T>(this IOblivionModInternal obj)
             where T : IMajorRecordInternal
         {
-            return (ISourceCache<T, FormKey>)((OblivionModCommon)((ILoquiObject)obj).CommonInstance).GetGroup<T>(obj: obj);
+            return (ISourceCache<T, FormKey>)((OblivionModCommon)((IOblivionModInternalGetter)obj).CommonInstance()).GetGroup<T>(obj: obj);
         }
         #endregion
 
@@ -5808,13 +5886,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IOblivionModGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type InternalGetterType = typeof(IOblivionModInternalGetter);
 
         public static readonly Type SetterType = typeof(IOblivionMod);
 
-        public static readonly Type InternalSetterType = null;
-
-        public static readonly Type CommonType = typeof(OblivionModCommon);
+        public static readonly Type InternalSetterType = typeof(IOblivionModInternal);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.OblivionMod";
 
@@ -6624,7 +6700,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -6644,1300 +6719,40 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
+    public partial class OblivionModSetterCommon
+    {
+        public static readonly OblivionModSetterCommon Instance = new OblivionModSetterCommon();
+
+        partial void ClearPartial();
+        
+        public virtual void Clear(IOblivionModInternal item)
+        {
+            ClearPartial();
+        }
+        
+        
+    }
     public partial class OblivionModCommon
     {
         public static readonly OblivionModCommon Instance = new OblivionModCommon();
 
-        #region Copy Fields From
-        public static void CopyFieldsFrom(
-            OblivionMod item,
-            OblivionMod rhs,
-            OblivionMod def,
-            ErrorMaskBuilder errorMask,
-            OblivionMod_CopyMask copyMask)
-        {
-            if (copyMask?.ModHeader.Overall ?? true)
-            {
-                errorMask?.PushIndex((int)OblivionMod_FieldIndex.ModHeader);
-                try
-                {
-                    ModHeaderCommon.CopyFieldsFrom(
-                        item: item.ModHeader,
-                        rhs: rhs.ModHeader,
-                        def: def?.ModHeader,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.ModHeader.Specific);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if (copyMask?.GameSettings.Overall ?? true)
-            {
-                errorMask?.PushIndex((int)OblivionMod_FieldIndex.GameSettings);
-                try
-                {
-                    GroupCommon.CopyFieldsFrom<GameSetting, GameSetting_CopyMask>(
-                        item: item.GameSettings,
-                        rhs: rhs.GameSettings,
-                        def: def?.GameSettings,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.GameSettings.Specific);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if (copyMask?.Globals.Overall ?? true)
-            {
-                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Globals);
-                try
-                {
-                    GroupCommon.CopyFieldsFrom<Global, Global_CopyMask>(
-                        item: item.Globals,
-                        rhs: rhs.Globals,
-                        def: def?.Globals,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.Globals.Specific);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if (copyMask?.Classes.Overall ?? true)
-            {
-                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Classes);
-                try
-                {
-                    GroupCommon.CopyFieldsFrom<Class, Class_CopyMask>(
-                        item: item.Classes,
-                        rhs: rhs.Classes,
-                        def: def?.Classes,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.Classes.Specific);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if (copyMask?.Factions.Overall ?? true)
-            {
-                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Factions);
-                try
-                {
-                    GroupCommon.CopyFieldsFrom<Faction, Faction_CopyMask>(
-                        item: item.Factions,
-                        rhs: rhs.Factions,
-                        def: def?.Factions,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.Factions.Specific);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if (copyMask?.Hairs.Overall ?? true)
-            {
-                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Hairs);
-                try
-                {
-                    GroupCommon.CopyFieldsFrom<Hair, Hair_CopyMask>(
-                        item: item.Hairs,
-                        rhs: rhs.Hairs,
-                        def: def?.Hairs,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.Hairs.Specific);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if (copyMask?.Eyes.Overall ?? true)
-            {
-                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Eyes);
-                try
-                {
-                    GroupCommon.CopyFieldsFrom<Eye, Eye_CopyMask>(
-                        item: item.Eyes,
-                        rhs: rhs.Eyes,
-                        def: def?.Eyes,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.Eyes.Specific);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if (copyMask?.Races.Overall ?? true)
-            {
-                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Races);
-                try
-                {
-                    GroupCommon.CopyFieldsFrom<Race, Race_CopyMask>(
-                        item: item.Races,
-                        rhs: rhs.Races,
-                        def: def?.Races,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.Races.Specific);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if (copyMask?.Sounds.Overall ?? true)
-            {
-                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Sounds);
-                try
-                {
-                    GroupCommon.CopyFieldsFrom<Sound, Sound_CopyMask>(
-                        item: item.Sounds,
-                        rhs: rhs.Sounds,
-                        def: def?.Sounds,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.Sounds.Specific);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if (copyMask?.Skills.Overall ?? true)
-            {
-                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Skills);
-                try
-                {
-                    GroupCommon.CopyFieldsFrom<SkillRecord, SkillRecord_CopyMask>(
-                        item: item.Skills,
-                        rhs: rhs.Skills,
-                        def: def?.Skills,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.Skills.Specific);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if (copyMask?.MagicEffects.Overall ?? true)
-            {
-                errorMask?.PushIndex((int)OblivionMod_FieldIndex.MagicEffects);
-                try
-                {
-                    GroupCommon.CopyFieldsFrom<MagicEffect, MagicEffect_CopyMask>(
-                        item: item.MagicEffects,
-                        rhs: rhs.MagicEffects,
-                        def: def?.MagicEffects,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.MagicEffects.Specific);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if (copyMask?.Scripts.Overall ?? true)
-            {
-                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Scripts);
-                try
-                {
-                    GroupCommon.CopyFieldsFrom<Script, Script_CopyMask>(
-                        item: item.Scripts,
-                        rhs: rhs.Scripts,
-                        def: def?.Scripts,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.Scripts.Specific);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if (copyMask?.LandTextures.Overall ?? true)
-            {
-                errorMask?.PushIndex((int)OblivionMod_FieldIndex.LandTextures);
-                try
-                {
-                    GroupCommon.CopyFieldsFrom<LandTexture, LandTexture_CopyMask>(
-                        item: item.LandTextures,
-                        rhs: rhs.LandTextures,
-                        def: def?.LandTextures,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.LandTextures.Specific);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if (copyMask?.Enchantments.Overall ?? true)
-            {
-                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Enchantments);
-                try
-                {
-                    GroupCommon.CopyFieldsFrom<Enchantment, Enchantment_CopyMask>(
-                        item: item.Enchantments,
-                        rhs: rhs.Enchantments,
-                        def: def?.Enchantments,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.Enchantments.Specific);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if (copyMask?.Spells.Overall ?? true)
-            {
-                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Spells);
-                try
-                {
-                    GroupCommon.CopyFieldsFrom<SpellUnleveled, SpellUnleveled_CopyMask>(
-                        item: item.Spells,
-                        rhs: rhs.Spells,
-                        def: def?.Spells,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.Spells.Specific);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if (copyMask?.Birthsigns.Overall ?? true)
-            {
-                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Birthsigns);
-                try
-                {
-                    GroupCommon.CopyFieldsFrom<Birthsign, Birthsign_CopyMask>(
-                        item: item.Birthsigns,
-                        rhs: rhs.Birthsigns,
-                        def: def?.Birthsigns,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.Birthsigns.Specific);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if (copyMask?.Activators.Overall ?? true)
-            {
-                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Activators);
-                try
-                {
-                    GroupCommon.CopyFieldsFrom<Activator, Activator_CopyMask>(
-                        item: item.Activators,
-                        rhs: rhs.Activators,
-                        def: def?.Activators,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.Activators.Specific);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if (copyMask?.AlchemicalApparatus.Overall ?? true)
-            {
-                errorMask?.PushIndex((int)OblivionMod_FieldIndex.AlchemicalApparatus);
-                try
-                {
-                    GroupCommon.CopyFieldsFrom<AlchemicalApparatus, AlchemicalApparatus_CopyMask>(
-                        item: item.AlchemicalApparatus,
-                        rhs: rhs.AlchemicalApparatus,
-                        def: def?.AlchemicalApparatus,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.AlchemicalApparatus.Specific);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if (copyMask?.Armors.Overall ?? true)
-            {
-                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Armors);
-                try
-                {
-                    GroupCommon.CopyFieldsFrom<Armor, Armor_CopyMask>(
-                        item: item.Armors,
-                        rhs: rhs.Armors,
-                        def: def?.Armors,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.Armors.Specific);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if (copyMask?.Books.Overall ?? true)
-            {
-                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Books);
-                try
-                {
-                    GroupCommon.CopyFieldsFrom<Book, Book_CopyMask>(
-                        item: item.Books,
-                        rhs: rhs.Books,
-                        def: def?.Books,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.Books.Specific);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if (copyMask?.Clothes.Overall ?? true)
-            {
-                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Clothes);
-                try
-                {
-                    GroupCommon.CopyFieldsFrom<Clothing, Clothing_CopyMask>(
-                        item: item.Clothes,
-                        rhs: rhs.Clothes,
-                        def: def?.Clothes,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.Clothes.Specific);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if (copyMask?.Containers.Overall ?? true)
-            {
-                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Containers);
-                try
-                {
-                    GroupCommon.CopyFieldsFrom<Container, Container_CopyMask>(
-                        item: item.Containers,
-                        rhs: rhs.Containers,
-                        def: def?.Containers,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.Containers.Specific);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if (copyMask?.Doors.Overall ?? true)
-            {
-                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Doors);
-                try
-                {
-                    GroupCommon.CopyFieldsFrom<Door, Door_CopyMask>(
-                        item: item.Doors,
-                        rhs: rhs.Doors,
-                        def: def?.Doors,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.Doors.Specific);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if (copyMask?.Ingredients.Overall ?? true)
-            {
-                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Ingredients);
-                try
-                {
-                    GroupCommon.CopyFieldsFrom<Ingredient, Ingredient_CopyMask>(
-                        item: item.Ingredients,
-                        rhs: rhs.Ingredients,
-                        def: def?.Ingredients,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.Ingredients.Specific);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if (copyMask?.Lights.Overall ?? true)
-            {
-                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Lights);
-                try
-                {
-                    GroupCommon.CopyFieldsFrom<Light, Light_CopyMask>(
-                        item: item.Lights,
-                        rhs: rhs.Lights,
-                        def: def?.Lights,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.Lights.Specific);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if (copyMask?.Miscellaneous.Overall ?? true)
-            {
-                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Miscellaneous);
-                try
-                {
-                    GroupCommon.CopyFieldsFrom<Miscellaneous, Miscellaneous_CopyMask>(
-                        item: item.Miscellaneous,
-                        rhs: rhs.Miscellaneous,
-                        def: def?.Miscellaneous,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.Miscellaneous.Specific);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if (copyMask?.Statics.Overall ?? true)
-            {
-                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Statics);
-                try
-                {
-                    GroupCommon.CopyFieldsFrom<Static, Static_CopyMask>(
-                        item: item.Statics,
-                        rhs: rhs.Statics,
-                        def: def?.Statics,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.Statics.Specific);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if (copyMask?.Grasses.Overall ?? true)
-            {
-                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Grasses);
-                try
-                {
-                    GroupCommon.CopyFieldsFrom<Grass, Grass_CopyMask>(
-                        item: item.Grasses,
-                        rhs: rhs.Grasses,
-                        def: def?.Grasses,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.Grasses.Specific);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if (copyMask?.Trees.Overall ?? true)
-            {
-                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Trees);
-                try
-                {
-                    GroupCommon.CopyFieldsFrom<Tree, Tree_CopyMask>(
-                        item: item.Trees,
-                        rhs: rhs.Trees,
-                        def: def?.Trees,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.Trees.Specific);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if (copyMask?.Flora.Overall ?? true)
-            {
-                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Flora);
-                try
-                {
-                    GroupCommon.CopyFieldsFrom<Flora, Flora_CopyMask>(
-                        item: item.Flora,
-                        rhs: rhs.Flora,
-                        def: def?.Flora,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.Flora.Specific);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if (copyMask?.Furnature.Overall ?? true)
-            {
-                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Furnature);
-                try
-                {
-                    GroupCommon.CopyFieldsFrom<Furnature, Furnature_CopyMask>(
-                        item: item.Furnature,
-                        rhs: rhs.Furnature,
-                        def: def?.Furnature,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.Furnature.Specific);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if (copyMask?.Weapons.Overall ?? true)
-            {
-                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Weapons);
-                try
-                {
-                    GroupCommon.CopyFieldsFrom<Weapon, Weapon_CopyMask>(
-                        item: item.Weapons,
-                        rhs: rhs.Weapons,
-                        def: def?.Weapons,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.Weapons.Specific);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if (copyMask?.Ammo.Overall ?? true)
-            {
-                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Ammo);
-                try
-                {
-                    GroupCommon.CopyFieldsFrom<Ammo, Ammo_CopyMask>(
-                        item: item.Ammo,
-                        rhs: rhs.Ammo,
-                        def: def?.Ammo,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.Ammo.Specific);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if (copyMask?.NPCs.Overall ?? true)
-            {
-                errorMask?.PushIndex((int)OblivionMod_FieldIndex.NPCs);
-                try
-                {
-                    GroupCommon.CopyFieldsFrom<NPC, NPC_CopyMask>(
-                        item: item.NPCs,
-                        rhs: rhs.NPCs,
-                        def: def?.NPCs,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.NPCs.Specific);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if (copyMask?.Creatures.Overall ?? true)
-            {
-                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Creatures);
-                try
-                {
-                    GroupCommon.CopyFieldsFrom<Creature, Creature_CopyMask>(
-                        item: item.Creatures,
-                        rhs: rhs.Creatures,
-                        def: def?.Creatures,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.Creatures.Specific);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if (copyMask?.LeveledCreatures.Overall ?? true)
-            {
-                errorMask?.PushIndex((int)OblivionMod_FieldIndex.LeveledCreatures);
-                try
-                {
-                    GroupCommon.CopyFieldsFrom<LeveledCreature, LeveledCreature_CopyMask>(
-                        item: item.LeveledCreatures,
-                        rhs: rhs.LeveledCreatures,
-                        def: def?.LeveledCreatures,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.LeveledCreatures.Specific);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if (copyMask?.SoulGems.Overall ?? true)
-            {
-                errorMask?.PushIndex((int)OblivionMod_FieldIndex.SoulGems);
-                try
-                {
-                    GroupCommon.CopyFieldsFrom<SoulGem, SoulGem_CopyMask>(
-                        item: item.SoulGems,
-                        rhs: rhs.SoulGems,
-                        def: def?.SoulGems,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.SoulGems.Specific);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if (copyMask?.Keys.Overall ?? true)
-            {
-                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Keys);
-                try
-                {
-                    GroupCommon.CopyFieldsFrom<Key, Key_CopyMask>(
-                        item: item.Keys,
-                        rhs: rhs.Keys,
-                        def: def?.Keys,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.Keys.Specific);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if (copyMask?.Potions.Overall ?? true)
-            {
-                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Potions);
-                try
-                {
-                    GroupCommon.CopyFieldsFrom<Potion, Potion_CopyMask>(
-                        item: item.Potions,
-                        rhs: rhs.Potions,
-                        def: def?.Potions,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.Potions.Specific);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if (copyMask?.Subspaces.Overall ?? true)
-            {
-                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Subspaces);
-                try
-                {
-                    GroupCommon.CopyFieldsFrom<Subspace, Subspace_CopyMask>(
-                        item: item.Subspaces,
-                        rhs: rhs.Subspaces,
-                        def: def?.Subspaces,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.Subspaces.Specific);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if (copyMask?.SigilStones.Overall ?? true)
-            {
-                errorMask?.PushIndex((int)OblivionMod_FieldIndex.SigilStones);
-                try
-                {
-                    GroupCommon.CopyFieldsFrom<SigilStone, SigilStone_CopyMask>(
-                        item: item.SigilStones,
-                        rhs: rhs.SigilStones,
-                        def: def?.SigilStones,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.SigilStones.Specific);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if (copyMask?.LeveledItems.Overall ?? true)
-            {
-                errorMask?.PushIndex((int)OblivionMod_FieldIndex.LeveledItems);
-                try
-                {
-                    GroupCommon.CopyFieldsFrom<LeveledItem, LeveledItem_CopyMask>(
-                        item: item.LeveledItems,
-                        rhs: rhs.LeveledItems,
-                        def: def?.LeveledItems,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.LeveledItems.Specific);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if (copyMask?.Weathers.Overall ?? true)
-            {
-                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Weathers);
-                try
-                {
-                    GroupCommon.CopyFieldsFrom<Weather, Weather_CopyMask>(
-                        item: item.Weathers,
-                        rhs: rhs.Weathers,
-                        def: def?.Weathers,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.Weathers.Specific);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if (copyMask?.Climates.Overall ?? true)
-            {
-                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Climates);
-                try
-                {
-                    GroupCommon.CopyFieldsFrom<Climate, Climate_CopyMask>(
-                        item: item.Climates,
-                        rhs: rhs.Climates,
-                        def: def?.Climates,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.Climates.Specific);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if (copyMask?.Regions.Overall ?? true)
-            {
-                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Regions);
-                try
-                {
-                    GroupCommon.CopyFieldsFrom<Region, Region_CopyMask>(
-                        item: item.Regions,
-                        rhs: rhs.Regions,
-                        def: def?.Regions,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.Regions.Specific);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if (copyMask?.Cells.Overall ?? true)
-            {
-                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Cells);
-                try
-                {
-                    ListGroupCommon.CopyFieldsFrom<CellBlock, CellBlock_CopyMask>(
-                        item: item.Cells,
-                        rhs: rhs.Cells,
-                        def: def?.Cells,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.Cells.Specific);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if (copyMask?.Worldspaces.Overall ?? true)
-            {
-                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Worldspaces);
-                try
-                {
-                    GroupCommon.CopyFieldsFrom<Worldspace, Worldspace_CopyMask>(
-                        item: item.Worldspaces,
-                        rhs: rhs.Worldspaces,
-                        def: def?.Worldspaces,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.Worldspaces.Specific);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if (copyMask?.DialogTopics.Overall ?? true)
-            {
-                errorMask?.PushIndex((int)OblivionMod_FieldIndex.DialogTopics);
-                try
-                {
-                    GroupCommon.CopyFieldsFrom<DialogTopic, DialogTopic_CopyMask>(
-                        item: item.DialogTopics,
-                        rhs: rhs.DialogTopics,
-                        def: def?.DialogTopics,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.DialogTopics.Specific);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if (copyMask?.Quests.Overall ?? true)
-            {
-                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Quests);
-                try
-                {
-                    GroupCommon.CopyFieldsFrom<Quest, Quest_CopyMask>(
-                        item: item.Quests,
-                        rhs: rhs.Quests,
-                        def: def?.Quests,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.Quests.Specific);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if (copyMask?.IdleAnimations.Overall ?? true)
-            {
-                errorMask?.PushIndex((int)OblivionMod_FieldIndex.IdleAnimations);
-                try
-                {
-                    GroupCommon.CopyFieldsFrom<IdleAnimation, IdleAnimation_CopyMask>(
-                        item: item.IdleAnimations,
-                        rhs: rhs.IdleAnimations,
-                        def: def?.IdleAnimations,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.IdleAnimations.Specific);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if (copyMask?.AIPackages.Overall ?? true)
-            {
-                errorMask?.PushIndex((int)OblivionMod_FieldIndex.AIPackages);
-                try
-                {
-                    GroupCommon.CopyFieldsFrom<AIPackage, AIPackage_CopyMask>(
-                        item: item.AIPackages,
-                        rhs: rhs.AIPackages,
-                        def: def?.AIPackages,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.AIPackages.Specific);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if (copyMask?.CombatStyles.Overall ?? true)
-            {
-                errorMask?.PushIndex((int)OblivionMod_FieldIndex.CombatStyles);
-                try
-                {
-                    GroupCommon.CopyFieldsFrom<CombatStyle, CombatStyle_CopyMask>(
-                        item: item.CombatStyles,
-                        rhs: rhs.CombatStyles,
-                        def: def?.CombatStyles,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.CombatStyles.Specific);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if (copyMask?.LoadScreens.Overall ?? true)
-            {
-                errorMask?.PushIndex((int)OblivionMod_FieldIndex.LoadScreens);
-                try
-                {
-                    GroupCommon.CopyFieldsFrom<LoadScreen, LoadScreen_CopyMask>(
-                        item: item.LoadScreens,
-                        rhs: rhs.LoadScreens,
-                        def: def?.LoadScreens,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.LoadScreens.Specific);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if (copyMask?.LeveledSpells.Overall ?? true)
-            {
-                errorMask?.PushIndex((int)OblivionMod_FieldIndex.LeveledSpells);
-                try
-                {
-                    GroupCommon.CopyFieldsFrom<LeveledSpell, LeveledSpell_CopyMask>(
-                        item: item.LeveledSpells,
-                        rhs: rhs.LeveledSpells,
-                        def: def?.LeveledSpells,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.LeveledSpells.Specific);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if (copyMask?.AnimatedObjects.Overall ?? true)
-            {
-                errorMask?.PushIndex((int)OblivionMod_FieldIndex.AnimatedObjects);
-                try
-                {
-                    GroupCommon.CopyFieldsFrom<AnimatedObject, AnimatedObject_CopyMask>(
-                        item: item.AnimatedObjects,
-                        rhs: rhs.AnimatedObjects,
-                        def: def?.AnimatedObjects,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.AnimatedObjects.Specific);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if (copyMask?.Waters.Overall ?? true)
-            {
-                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Waters);
-                try
-                {
-                    GroupCommon.CopyFieldsFrom<Water, Water_CopyMask>(
-                        item: item.Waters,
-                        rhs: rhs.Waters,
-                        def: def?.Waters,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.Waters.Specific);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if (copyMask?.EffectShaders.Overall ?? true)
-            {
-                errorMask?.PushIndex((int)OblivionMod_FieldIndex.EffectShaders);
-                try
-                {
-                    GroupCommon.CopyFieldsFrom<EffectShader, EffectShader_CopyMask>(
-                        item: item.EffectShaders,
-                        rhs: rhs.EffectShaders,
-                        def: def?.EffectShaders,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.EffectShaders.Specific);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-        }
-
-        #endregion
-
-        partial void ClearPartial();
-
-        public virtual void Clear(IOblivionMod item)
-        {
-            ClearPartial();
-        }
-
         public OblivionMod_Mask<bool> GetEqualsMask(
-            IOblivionModGetter item,
-            IOblivionModGetter rhs,
+            IOblivionModInternalGetter item,
+            IOblivionModInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new OblivionMod_Mask<bool>();
-            ((OblivionModCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
+            ((OblivionModCommon)((IOblivionModInternalGetter)item).CommonInstance()).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
                 include: include);
             return ret;
         }
-
+        
         public void FillEqualsMask(
-            IOblivionModGetter item,
-            IOblivionModGetter rhs,
+            IOblivionModInternalGetter item,
+            IOblivionModInternalGetter rhs,
             OblivionMod_Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
@@ -8006,9 +6821,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Waters = MaskItemExt.Factory(item.Waters.GetEqualsMask(rhs.Waters, include), include);
             ret.EffectShaders = MaskItemExt.Factory(item.EffectShaders.GetEqualsMask(rhs.EffectShaders, include), include);
         }
-
+        
         public string ToString(
-            IOblivionModGetter item,
+            IOblivionModInternalGetter item,
             string name = null,
             OblivionMod_Mask<bool> printMask = null)
         {
@@ -8020,9 +6835,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 printMask: printMask);
             return fg.ToString();
         }
-
+        
         public void ToString(
-            IOblivionModGetter item,
+            IOblivionModInternalGetter item,
             FileGeneration fg,
             string name = null,
             OblivionMod_Mask<bool> printMask = null)
@@ -8045,9 +6860,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             fg.AppendLine("]");
         }
-
+        
         protected static void ToStringFields(
-            IOblivionModGetter item,
+            IOblivionModInternalGetter item,
             FileGeneration fg,
             OblivionMod_Mask<bool> printMask = null)
         {
@@ -8280,18 +7095,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item.EffectShaders?.ToString(fg, "EffectShaders");
             }
         }
-
+        
         public bool HasBeenSet(
-            IOblivionModGetter item,
+            IOblivionModInternalGetter item,
             OblivionMod_Mask<bool?> checkMask)
         {
             if (checkMask.ModHeader.Overall.HasValue && checkMask.ModHeader.Overall.Value != item.ModHeader_IsSet) return false;
             if (checkMask.ModHeader.Specific != null && (item.ModHeader == null || !item.ModHeader.HasBeenSet(checkMask.ModHeader.Specific))) return false;
             return true;
         }
-
+        
         public void FillHasBeenSetMask(
-            IOblivionModGetter item,
+            IOblivionModInternalGetter item,
             OblivionMod_Mask<bool> mask)
         {
             mask.ModHeader = new MaskItem<bool, ModHeader_Mask<bool>>(item.ModHeader_IsSet, item.ModHeader.GetHasBeenSetMask());
@@ -8352,11 +7167,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Waters = new MaskItem<bool, Group_Mask<bool>>(true, item.Waters.GetHasBeenSetMask());
             mask.EffectShaders = new MaskItem<bool, Group_Mask<bool>>(true, item.EffectShaders.GetHasBeenSetMask());
         }
-
+        
         #region Equals and Hash
         public virtual bool Equals(
-            IOblivionModGetter lhs,
-            IOblivionModGetter rhs)
+            IOblivionModInternalGetter lhs,
+            IOblivionModInternalGetter rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
@@ -8423,8 +7238,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!object.Equals(lhs.EffectShaders, rhs.EffectShaders)) return false;
             return true;
         }
-
-        public virtual int GetHashCode(IOblivionModGetter item)
+        
+        public virtual int GetHashCode(IOblivionModInternalGetter item)
         {
             int ret = 0;
             if (item.ModHeader_IsSet)
@@ -8489,12 +7304,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret = HashHelper.GetHashCode(item.EffectShaders).CombineHashCode(ret);
             return ret;
         }
-
+        
         #endregion
-
-
+        
+        
         #region Mutagen
-        public object GetGroup<T>(IOblivionModGetter obj)
+        public object GetGroup<T>(IOblivionModInternalGetter obj)
             where T : IMajorRecordInternalGetter
         {
             switch (typeof(T).Name)
@@ -8676,8 +7491,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IRegionInternal":
                     return obj.Regions.Items;
                 case "CellBlock":
-                case "ICellBlockGetter":
-                case "ICellBlock":
+                case "ICellBlockInternalGetter":
+                case "ICellBlockInternal":
                     return obj.Cells.Items;
                 case "Worldspace":
                 case "IWorldspaceInternalGetter":
@@ -8727,9 +7542,1282 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     throw new ArgumentException($"Unknown group type: {typeof(T)}");
             }
         }
-
+        
         #endregion
+        
+        
+    }
+    public partial class OblivionModSetterCopyCommon
+    {
+        public static readonly OblivionModSetterCopyCommon Instance = new OblivionModSetterCopyCommon();
 
+        #region Copy Fields From
+        public static void CopyFieldsFrom(
+            OblivionMod item,
+            OblivionMod rhs,
+            OblivionMod def,
+            ErrorMaskBuilder errorMask,
+            OblivionMod_CopyMask copyMask)
+        {
+            if (copyMask?.ModHeader.Overall ?? true)
+            {
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.ModHeader);
+                try
+                {
+                    ModHeaderSetterCopyCommon.CopyFieldsFrom(
+                        item: item.ModHeader,
+                        rhs: rhs.ModHeader,
+                        def: def?.ModHeader,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.ModHeader.Specific);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.GameSettings.Overall ?? true)
+            {
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.GameSettings);
+                try
+                {
+                    GroupSetterCopyCommon.CopyFieldsFrom(
+                        item: item.GameSettings,
+                        rhs: rhs.GameSettings,
+                        def: def?.GameSettings,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GameSettings.Specific);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.Globals.Overall ?? true)
+            {
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Globals);
+                try
+                {
+                    GroupSetterCopyCommon.CopyFieldsFrom(
+                        item: item.Globals,
+                        rhs: rhs.Globals,
+                        def: def?.Globals,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.Globals.Specific);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.Classes.Overall ?? true)
+            {
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Classes);
+                try
+                {
+                    GroupSetterCopyCommon.CopyFieldsFrom(
+                        item: item.Classes,
+                        rhs: rhs.Classes,
+                        def: def?.Classes,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.Classes.Specific);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.Factions.Overall ?? true)
+            {
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Factions);
+                try
+                {
+                    GroupSetterCopyCommon.CopyFieldsFrom(
+                        item: item.Factions,
+                        rhs: rhs.Factions,
+                        def: def?.Factions,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.Factions.Specific);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.Hairs.Overall ?? true)
+            {
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Hairs);
+                try
+                {
+                    GroupSetterCopyCommon.CopyFieldsFrom(
+                        item: item.Hairs,
+                        rhs: rhs.Hairs,
+                        def: def?.Hairs,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.Hairs.Specific);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.Eyes.Overall ?? true)
+            {
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Eyes);
+                try
+                {
+                    GroupSetterCopyCommon.CopyFieldsFrom(
+                        item: item.Eyes,
+                        rhs: rhs.Eyes,
+                        def: def?.Eyes,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.Eyes.Specific);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.Races.Overall ?? true)
+            {
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Races);
+                try
+                {
+                    GroupSetterCopyCommon.CopyFieldsFrom(
+                        item: item.Races,
+                        rhs: rhs.Races,
+                        def: def?.Races,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.Races.Specific);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.Sounds.Overall ?? true)
+            {
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Sounds);
+                try
+                {
+                    GroupSetterCopyCommon.CopyFieldsFrom(
+                        item: item.Sounds,
+                        rhs: rhs.Sounds,
+                        def: def?.Sounds,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.Sounds.Specific);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.Skills.Overall ?? true)
+            {
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Skills);
+                try
+                {
+                    GroupSetterCopyCommon.CopyFieldsFrom(
+                        item: item.Skills,
+                        rhs: rhs.Skills,
+                        def: def?.Skills,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.Skills.Specific);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.MagicEffects.Overall ?? true)
+            {
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.MagicEffects);
+                try
+                {
+                    GroupSetterCopyCommon.CopyFieldsFrom(
+                        item: item.MagicEffects,
+                        rhs: rhs.MagicEffects,
+                        def: def?.MagicEffects,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.MagicEffects.Specific);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.Scripts.Overall ?? true)
+            {
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Scripts);
+                try
+                {
+                    GroupSetterCopyCommon.CopyFieldsFrom(
+                        item: item.Scripts,
+                        rhs: rhs.Scripts,
+                        def: def?.Scripts,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.Scripts.Specific);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.LandTextures.Overall ?? true)
+            {
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.LandTextures);
+                try
+                {
+                    GroupSetterCopyCommon.CopyFieldsFrom(
+                        item: item.LandTextures,
+                        rhs: rhs.LandTextures,
+                        def: def?.LandTextures,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.LandTextures.Specific);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.Enchantments.Overall ?? true)
+            {
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Enchantments);
+                try
+                {
+                    GroupSetterCopyCommon.CopyFieldsFrom(
+                        item: item.Enchantments,
+                        rhs: rhs.Enchantments,
+                        def: def?.Enchantments,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.Enchantments.Specific);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.Spells.Overall ?? true)
+            {
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Spells);
+                try
+                {
+                    GroupSetterCopyCommon.CopyFieldsFrom(
+                        item: item.Spells,
+                        rhs: rhs.Spells,
+                        def: def?.Spells,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.Spells.Specific);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.Birthsigns.Overall ?? true)
+            {
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Birthsigns);
+                try
+                {
+                    GroupSetterCopyCommon.CopyFieldsFrom(
+                        item: item.Birthsigns,
+                        rhs: rhs.Birthsigns,
+                        def: def?.Birthsigns,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.Birthsigns.Specific);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.Activators.Overall ?? true)
+            {
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Activators);
+                try
+                {
+                    GroupSetterCopyCommon.CopyFieldsFrom(
+                        item: item.Activators,
+                        rhs: rhs.Activators,
+                        def: def?.Activators,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.Activators.Specific);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.AlchemicalApparatus.Overall ?? true)
+            {
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.AlchemicalApparatus);
+                try
+                {
+                    GroupSetterCopyCommon.CopyFieldsFrom(
+                        item: item.AlchemicalApparatus,
+                        rhs: rhs.AlchemicalApparatus,
+                        def: def?.AlchemicalApparatus,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.AlchemicalApparatus.Specific);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.Armors.Overall ?? true)
+            {
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Armors);
+                try
+                {
+                    GroupSetterCopyCommon.CopyFieldsFrom(
+                        item: item.Armors,
+                        rhs: rhs.Armors,
+                        def: def?.Armors,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.Armors.Specific);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.Books.Overall ?? true)
+            {
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Books);
+                try
+                {
+                    GroupSetterCopyCommon.CopyFieldsFrom(
+                        item: item.Books,
+                        rhs: rhs.Books,
+                        def: def?.Books,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.Books.Specific);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.Clothes.Overall ?? true)
+            {
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Clothes);
+                try
+                {
+                    GroupSetterCopyCommon.CopyFieldsFrom(
+                        item: item.Clothes,
+                        rhs: rhs.Clothes,
+                        def: def?.Clothes,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.Clothes.Specific);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.Containers.Overall ?? true)
+            {
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Containers);
+                try
+                {
+                    GroupSetterCopyCommon.CopyFieldsFrom(
+                        item: item.Containers,
+                        rhs: rhs.Containers,
+                        def: def?.Containers,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.Containers.Specific);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.Doors.Overall ?? true)
+            {
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Doors);
+                try
+                {
+                    GroupSetterCopyCommon.CopyFieldsFrom(
+                        item: item.Doors,
+                        rhs: rhs.Doors,
+                        def: def?.Doors,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.Doors.Specific);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.Ingredients.Overall ?? true)
+            {
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Ingredients);
+                try
+                {
+                    GroupSetterCopyCommon.CopyFieldsFrom(
+                        item: item.Ingredients,
+                        rhs: rhs.Ingredients,
+                        def: def?.Ingredients,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.Ingredients.Specific);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.Lights.Overall ?? true)
+            {
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Lights);
+                try
+                {
+                    GroupSetterCopyCommon.CopyFieldsFrom(
+                        item: item.Lights,
+                        rhs: rhs.Lights,
+                        def: def?.Lights,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.Lights.Specific);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.Miscellaneous.Overall ?? true)
+            {
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Miscellaneous);
+                try
+                {
+                    GroupSetterCopyCommon.CopyFieldsFrom(
+                        item: item.Miscellaneous,
+                        rhs: rhs.Miscellaneous,
+                        def: def?.Miscellaneous,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.Miscellaneous.Specific);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.Statics.Overall ?? true)
+            {
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Statics);
+                try
+                {
+                    GroupSetterCopyCommon.CopyFieldsFrom(
+                        item: item.Statics,
+                        rhs: rhs.Statics,
+                        def: def?.Statics,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.Statics.Specific);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.Grasses.Overall ?? true)
+            {
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Grasses);
+                try
+                {
+                    GroupSetterCopyCommon.CopyFieldsFrom(
+                        item: item.Grasses,
+                        rhs: rhs.Grasses,
+                        def: def?.Grasses,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.Grasses.Specific);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.Trees.Overall ?? true)
+            {
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Trees);
+                try
+                {
+                    GroupSetterCopyCommon.CopyFieldsFrom(
+                        item: item.Trees,
+                        rhs: rhs.Trees,
+                        def: def?.Trees,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.Trees.Specific);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.Flora.Overall ?? true)
+            {
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Flora);
+                try
+                {
+                    GroupSetterCopyCommon.CopyFieldsFrom(
+                        item: item.Flora,
+                        rhs: rhs.Flora,
+                        def: def?.Flora,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.Flora.Specific);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.Furnature.Overall ?? true)
+            {
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Furnature);
+                try
+                {
+                    GroupSetterCopyCommon.CopyFieldsFrom(
+                        item: item.Furnature,
+                        rhs: rhs.Furnature,
+                        def: def?.Furnature,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.Furnature.Specific);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.Weapons.Overall ?? true)
+            {
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Weapons);
+                try
+                {
+                    GroupSetterCopyCommon.CopyFieldsFrom(
+                        item: item.Weapons,
+                        rhs: rhs.Weapons,
+                        def: def?.Weapons,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.Weapons.Specific);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.Ammo.Overall ?? true)
+            {
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Ammo);
+                try
+                {
+                    GroupSetterCopyCommon.CopyFieldsFrom(
+                        item: item.Ammo,
+                        rhs: rhs.Ammo,
+                        def: def?.Ammo,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.Ammo.Specific);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.NPCs.Overall ?? true)
+            {
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.NPCs);
+                try
+                {
+                    GroupSetterCopyCommon.CopyFieldsFrom(
+                        item: item.NPCs,
+                        rhs: rhs.NPCs,
+                        def: def?.NPCs,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.NPCs.Specific);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.Creatures.Overall ?? true)
+            {
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Creatures);
+                try
+                {
+                    GroupSetterCopyCommon.CopyFieldsFrom(
+                        item: item.Creatures,
+                        rhs: rhs.Creatures,
+                        def: def?.Creatures,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.Creatures.Specific);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.LeveledCreatures.Overall ?? true)
+            {
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.LeveledCreatures);
+                try
+                {
+                    GroupSetterCopyCommon.CopyFieldsFrom(
+                        item: item.LeveledCreatures,
+                        rhs: rhs.LeveledCreatures,
+                        def: def?.LeveledCreatures,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.LeveledCreatures.Specific);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.SoulGems.Overall ?? true)
+            {
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.SoulGems);
+                try
+                {
+                    GroupSetterCopyCommon.CopyFieldsFrom(
+                        item: item.SoulGems,
+                        rhs: rhs.SoulGems,
+                        def: def?.SoulGems,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.SoulGems.Specific);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.Keys.Overall ?? true)
+            {
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Keys);
+                try
+                {
+                    GroupSetterCopyCommon.CopyFieldsFrom(
+                        item: item.Keys,
+                        rhs: rhs.Keys,
+                        def: def?.Keys,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.Keys.Specific);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.Potions.Overall ?? true)
+            {
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Potions);
+                try
+                {
+                    GroupSetterCopyCommon.CopyFieldsFrom(
+                        item: item.Potions,
+                        rhs: rhs.Potions,
+                        def: def?.Potions,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.Potions.Specific);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.Subspaces.Overall ?? true)
+            {
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Subspaces);
+                try
+                {
+                    GroupSetterCopyCommon.CopyFieldsFrom(
+                        item: item.Subspaces,
+                        rhs: rhs.Subspaces,
+                        def: def?.Subspaces,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.Subspaces.Specific);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.SigilStones.Overall ?? true)
+            {
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.SigilStones);
+                try
+                {
+                    GroupSetterCopyCommon.CopyFieldsFrom(
+                        item: item.SigilStones,
+                        rhs: rhs.SigilStones,
+                        def: def?.SigilStones,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.SigilStones.Specific);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.LeveledItems.Overall ?? true)
+            {
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.LeveledItems);
+                try
+                {
+                    GroupSetterCopyCommon.CopyFieldsFrom(
+                        item: item.LeveledItems,
+                        rhs: rhs.LeveledItems,
+                        def: def?.LeveledItems,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.LeveledItems.Specific);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.Weathers.Overall ?? true)
+            {
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Weathers);
+                try
+                {
+                    GroupSetterCopyCommon.CopyFieldsFrom(
+                        item: item.Weathers,
+                        rhs: rhs.Weathers,
+                        def: def?.Weathers,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.Weathers.Specific);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.Climates.Overall ?? true)
+            {
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Climates);
+                try
+                {
+                    GroupSetterCopyCommon.CopyFieldsFrom(
+                        item: item.Climates,
+                        rhs: rhs.Climates,
+                        def: def?.Climates,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.Climates.Specific);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.Regions.Overall ?? true)
+            {
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Regions);
+                try
+                {
+                    GroupSetterCopyCommon.CopyFieldsFrom(
+                        item: item.Regions,
+                        rhs: rhs.Regions,
+                        def: def?.Regions,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.Regions.Specific);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.Cells.Overall ?? true)
+            {
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Cells);
+                try
+                {
+                    ListGroupSetterCopyCommon.CopyFieldsFrom(
+                        item: item.Cells,
+                        rhs: rhs.Cells,
+                        def: def?.Cells,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.Cells.Specific);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.Worldspaces.Overall ?? true)
+            {
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Worldspaces);
+                try
+                {
+                    GroupSetterCopyCommon.CopyFieldsFrom(
+                        item: item.Worldspaces,
+                        rhs: rhs.Worldspaces,
+                        def: def?.Worldspaces,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.Worldspaces.Specific);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.DialogTopics.Overall ?? true)
+            {
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.DialogTopics);
+                try
+                {
+                    GroupSetterCopyCommon.CopyFieldsFrom(
+                        item: item.DialogTopics,
+                        rhs: rhs.DialogTopics,
+                        def: def?.DialogTopics,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.DialogTopics.Specific);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.Quests.Overall ?? true)
+            {
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Quests);
+                try
+                {
+                    GroupSetterCopyCommon.CopyFieldsFrom(
+                        item: item.Quests,
+                        rhs: rhs.Quests,
+                        def: def?.Quests,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.Quests.Specific);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.IdleAnimations.Overall ?? true)
+            {
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.IdleAnimations);
+                try
+                {
+                    GroupSetterCopyCommon.CopyFieldsFrom(
+                        item: item.IdleAnimations,
+                        rhs: rhs.IdleAnimations,
+                        def: def?.IdleAnimations,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.IdleAnimations.Specific);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.AIPackages.Overall ?? true)
+            {
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.AIPackages);
+                try
+                {
+                    GroupSetterCopyCommon.CopyFieldsFrom(
+                        item: item.AIPackages,
+                        rhs: rhs.AIPackages,
+                        def: def?.AIPackages,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.AIPackages.Specific);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.CombatStyles.Overall ?? true)
+            {
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.CombatStyles);
+                try
+                {
+                    GroupSetterCopyCommon.CopyFieldsFrom(
+                        item: item.CombatStyles,
+                        rhs: rhs.CombatStyles,
+                        def: def?.CombatStyles,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.CombatStyles.Specific);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.LoadScreens.Overall ?? true)
+            {
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.LoadScreens);
+                try
+                {
+                    GroupSetterCopyCommon.CopyFieldsFrom(
+                        item: item.LoadScreens,
+                        rhs: rhs.LoadScreens,
+                        def: def?.LoadScreens,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.LoadScreens.Specific);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.LeveledSpells.Overall ?? true)
+            {
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.LeveledSpells);
+                try
+                {
+                    GroupSetterCopyCommon.CopyFieldsFrom(
+                        item: item.LeveledSpells,
+                        rhs: rhs.LeveledSpells,
+                        def: def?.LeveledSpells,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.LeveledSpells.Specific);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.AnimatedObjects.Overall ?? true)
+            {
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.AnimatedObjects);
+                try
+                {
+                    GroupSetterCopyCommon.CopyFieldsFrom(
+                        item: item.AnimatedObjects,
+                        rhs: rhs.AnimatedObjects,
+                        def: def?.AnimatedObjects,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.AnimatedObjects.Specific);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.Waters.Overall ?? true)
+            {
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Waters);
+                try
+                {
+                    GroupSetterCopyCommon.CopyFieldsFrom(
+                        item: item.Waters,
+                        rhs: rhs.Waters,
+                        def: def?.Waters,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.Waters.Specific);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.EffectShaders.Overall ?? true)
+            {
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.EffectShaders);
+                try
+                {
+                    GroupSetterCopyCommon.CopyFieldsFrom(
+                        item: item.EffectShaders,
+                        rhs: rhs.EffectShaders,
+                        def: def?.EffectShaders,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.EffectShaders.Specific);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+        }
+        
+        #endregion
+        
+        
     }
     #endregion
 
@@ -8740,7 +8828,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static OblivionModXmlWriteTranslation Instance = new OblivionModXmlWriteTranslation();
 
         public static void WriteToNodeXml(
-            IOblivionModGetter item,
+            IOblivionModInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -9244,7 +9332,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Cells) ?? true))
             {
                 var loquiItem = item.Cells;
-                ((ListGroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<ICellBlockGetter>(
+                ((ListGroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<ICellBlockInternalGetter>(
                     item: loquiItem,
                     node: node,
                     name: nameof(item.Cells),
@@ -9377,7 +9465,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             XElement node,
-            IOblivionModGetter item,
+            IOblivionModInternalGetter item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)
@@ -9403,7 +9491,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             Write(
-                item: (IOblivionModGetter)item,
+                item: (IOblivionModInternalGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -9412,7 +9500,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             XElement node,
-            IOblivionModGetter item,
+            IOblivionModInternalGetter item,
             ErrorMaskBuilder errorMask,
             int fieldIndex,
             TranslationCrystal translationMask,
@@ -9422,7 +9510,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 errorMask?.PushIndex(fieldIndex);
                 Write(
-                    item: (IOblivionModGetter)item,
+                    item: (IOblivionModInternalGetter)item,
                     name: name,
                     node: node,
                     errorMask: errorMask,
@@ -9446,7 +9534,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static OblivionModXmlCreateTranslation Instance = new OblivionModXmlCreateTranslation();
 
         public static void FillPublicXml(
-            IOblivionMod item,
+            IOblivionModInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -9471,7 +9559,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElementXml(
-            IOblivionMod item,
+            IOblivionModInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -10755,7 +10843,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public static class OblivionModXmlTranslationMixIn
     {
         public static void WriteToXml(
-            this IOblivionModGetter item,
+            this IOblivionModInternalGetter item,
             XElement node,
             out OblivionMod_ErrorMask errorMask,
             bool doMasks = true,
@@ -10773,7 +10861,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IOblivionModGetter item,
+            this IOblivionModInternalGetter item,
             string path,
             out OblivionMod_ErrorMask errorMask,
             OblivionMod_TranslationMask translationMask = null,
@@ -10792,7 +10880,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IOblivionModGetter item,
+            this IOblivionModInternalGetter item,
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -10810,7 +10898,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IOblivionModGetter item,
+            this IOblivionModInternalGetter item,
             Stream stream,
             out OblivionMod_ErrorMask errorMask,
             OblivionMod_TranslationMask translationMask = null,
@@ -10829,7 +10917,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IOblivionModGetter item,
+            this IOblivionModInternalGetter item,
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -10847,7 +10935,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IOblivionModGetter item,
+            this IOblivionModInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -10862,7 +10950,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IOblivionModGetter item,
+            this IOblivionModInternalGetter item,
             XElement node,
             string name = null,
             OblivionMod_TranslationMask translationMask = null)
@@ -10876,7 +10964,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IOblivionModGetter item,
+            this IOblivionModInternalGetter item,
             string path,
             string name = null)
         {
@@ -10891,7 +10979,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IOblivionModGetter item,
+            this IOblivionModInternalGetter item,
             Stream stream,
             string name = null)
         {
@@ -13512,7 +13600,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static OblivionModBinaryWriteTranslation Instance = new OblivionModBinaryWriteTranslation();
 
         public static void Write_RecordTypes(
-            IOblivionModGetter item,
+            IOblivionModInternalGetter item,
             MutagenWriter writer,
             GroupMask importMask,
             ModKey modKey,
@@ -14107,7 +14195,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 if (item.Cells.Items.Count > 0)
                 {
                     var loquiItem = item.Cells;
-                    ((ListGroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<ICellBlockGetter>(
+                    ((ListGroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<ICellBlockInternalGetter>(
                         item: loquiItem,
                         writer: writer,
                         errorMask: errorMask,
@@ -14262,7 +14350,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             MutagenWriter writer,
-            IOblivionModGetter item,
+            IOblivionModInternalGetter item,
             ModKey modKey,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask,
@@ -14286,7 +14374,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             GroupMask importMask = null)
         {
             Write(
-                item: (IOblivionModGetter)item,
+                item: (IOblivionModInternalGetter)item,
                 importMask: importMask,
                 modKey: modKey,
                 writer: writer,
@@ -14306,7 +14394,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public static class OblivionModBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IOblivionModGetter item,
+            this IOblivionModInternalGetter item,
             MutagenWriter writer,
             ModKey modKey,
             out OblivionMod_ErrorMask errorMask,
@@ -14325,7 +14413,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToBinary(
-            this IOblivionModGetter item,
+            this IOblivionModInternalGetter item,
             string path,
             ModKey modKey,
             out OblivionMod_ErrorMask errorMask,
@@ -14353,7 +14441,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToBinary(
-            this IOblivionModGetter item,
+            this IOblivionModInternalGetter item,
             string path,
             ModKey modKey,
             ErrorMaskBuilder errorMask,
@@ -14380,7 +14468,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToBinary(
-            this IOblivionModGetter item,
+            this IOblivionModInternalGetter item,
             Stream stream,
             ModKey modKey,
             out OblivionMod_ErrorMask errorMask,
@@ -14400,7 +14488,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToBinary(
-            this IOblivionModGetter item,
+            this IOblivionModInternalGetter item,
             Stream stream,
             ModKey modKey,
             ErrorMaskBuilder errorMask,
@@ -14419,7 +14507,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToBinary(
-            this IOblivionModGetter item,
+            this IOblivionModInternalGetter item,
             MutagenWriter writer,
             ModKey modKey,
             ErrorMaskBuilder errorMask,
@@ -14435,7 +14523,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToBinary(
-            this IOblivionModGetter item,
+            this IOblivionModInternalGetter item,
             MutagenWriter writer,
             ModKey modKey,
             GroupMask importMask = null)
@@ -14450,7 +14538,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToBinary(
-            this IOblivionModGetter item,
+            this IOblivionModInternalGetter item,
             string path,
             ModKey modKey,
             GroupMask importMask = null)
@@ -14476,7 +14564,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToBinary(
-            this IOblivionModGetter item,
+            this IOblivionModInternalGetter item,
             Stream stream,
             ModKey modKey,
             GroupMask importMask = null)
@@ -14498,17 +14586,34 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     public partial class OblivionModBinaryWrapper :
         BinaryWrapper,
-        IOblivionModGetter
+        IOblivionModInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => OblivionMod_Registration.Instance;
         public static OblivionMod_Registration Registration => OblivionMod_Registration.Instance;
-        protected object CommonInstance => OblivionModCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
+        protected object CommonInstance()
+        {
+            return OblivionModCommon.Instance;
+        }
+        object IOblivionModInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IOblivionModInternalGetter.CommonSetterInstance()
+        {
+            return null;
+        }
+        object IOblivionModInternalGetter.CommonSetterCopyInstance()
+        {
+            return null;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IOblivionModGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IOblivionModInternalGetter)rhs, include);
 
         public GameMode GameMode => GameMode.Oblivion;
         IReadOnlyCache<T, FormKey> IModGetter.GetGroupGetter<T>() => this.GetGroupGetter<T>();
@@ -14524,236 +14629,249 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IReadOnlyCache<IMajorRecordInternalGetter, FormKey> IModGetter.MajorRecords => throw new NotImplementedException();
         protected object XmlWriteTranslator => OblivionModXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((OblivionModXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         public ModKey ModKey { get; }
 
         #region ModHeader
-        private IModHeaderGetter _ModHeader;
-        public IModHeaderGetter ModHeader => _ModHeader ?? new ModHeader();
+        private IModHeaderInternalGetter _ModHeader;
+        public IModHeaderInternalGetter ModHeader => _ModHeader ?? new ModHeader();
         public bool ModHeader_IsSet => ModHeader != null;
         #endregion
         #region GameSettings
-        private IGroupGetter<IGameSettingInternalGetter> _GameSettings;
-        public IGroupGetter<IGameSettingInternalGetter> GameSettings => _GameSettings ?? new Group<GameSetting>(this);
+        private IGroupInternalGetter<IGameSettingInternalGetter> _GameSettings;
+        public IGroupInternalGetter<IGameSettingInternalGetter> GameSettings => _GameSettings ?? new Group<GameSetting>(this);
         #endregion
         #region Globals
-        private IGroupGetter<IGlobalInternalGetter> _Globals;
-        public IGroupGetter<IGlobalInternalGetter> Globals => _Globals ?? new Group<Global>(this);
+        private IGroupInternalGetter<IGlobalInternalGetter> _Globals;
+        public IGroupInternalGetter<IGlobalInternalGetter> Globals => _Globals ?? new Group<Global>(this);
         #endregion
         #region Classes
-        private IGroupGetter<IClassInternalGetter> _Classes;
-        public IGroupGetter<IClassInternalGetter> Classes => _Classes ?? new Group<Class>(this);
+        private IGroupInternalGetter<IClassInternalGetter> _Classes;
+        public IGroupInternalGetter<IClassInternalGetter> Classes => _Classes ?? new Group<Class>(this);
         #endregion
         #region Factions
-        private IGroupGetter<IFactionInternalGetter> _Factions;
-        public IGroupGetter<IFactionInternalGetter> Factions => _Factions ?? new Group<Faction>(this);
+        private IGroupInternalGetter<IFactionInternalGetter> _Factions;
+        public IGroupInternalGetter<IFactionInternalGetter> Factions => _Factions ?? new Group<Faction>(this);
         #endregion
         #region Hairs
-        private IGroupGetter<IHairInternalGetter> _Hairs;
-        public IGroupGetter<IHairInternalGetter> Hairs => _Hairs ?? new Group<Hair>(this);
+        private IGroupInternalGetter<IHairInternalGetter> _Hairs;
+        public IGroupInternalGetter<IHairInternalGetter> Hairs => _Hairs ?? new Group<Hair>(this);
         #endregion
         #region Eyes
-        private IGroupGetter<IEyeInternalGetter> _Eyes;
-        public IGroupGetter<IEyeInternalGetter> Eyes => _Eyes ?? new Group<Eye>(this);
+        private IGroupInternalGetter<IEyeInternalGetter> _Eyes;
+        public IGroupInternalGetter<IEyeInternalGetter> Eyes => _Eyes ?? new Group<Eye>(this);
         #endregion
         #region Races
-        private IGroupGetter<IRaceInternalGetter> _Races;
-        public IGroupGetter<IRaceInternalGetter> Races => _Races ?? new Group<Race>(this);
+        private IGroupInternalGetter<IRaceInternalGetter> _Races;
+        public IGroupInternalGetter<IRaceInternalGetter> Races => _Races ?? new Group<Race>(this);
         #endregion
         #region Sounds
-        private IGroupGetter<ISoundInternalGetter> _Sounds;
-        public IGroupGetter<ISoundInternalGetter> Sounds => _Sounds ?? new Group<Sound>(this);
+        private IGroupInternalGetter<ISoundInternalGetter> _Sounds;
+        public IGroupInternalGetter<ISoundInternalGetter> Sounds => _Sounds ?? new Group<Sound>(this);
         #endregion
         #region Skills
-        private IGroupGetter<ISkillRecordInternalGetter> _Skills;
-        public IGroupGetter<ISkillRecordInternalGetter> Skills => _Skills ?? new Group<SkillRecord>(this);
+        private IGroupInternalGetter<ISkillRecordInternalGetter> _Skills;
+        public IGroupInternalGetter<ISkillRecordInternalGetter> Skills => _Skills ?? new Group<SkillRecord>(this);
         #endregion
         #region MagicEffects
-        private IGroupGetter<IMagicEffectInternalGetter> _MagicEffects;
-        public IGroupGetter<IMagicEffectInternalGetter> MagicEffects => _MagicEffects ?? new Group<MagicEffect>(this);
+        private IGroupInternalGetter<IMagicEffectInternalGetter> _MagicEffects;
+        public IGroupInternalGetter<IMagicEffectInternalGetter> MagicEffects => _MagicEffects ?? new Group<MagicEffect>(this);
         #endregion
         #region Scripts
-        private IGroupGetter<IScriptInternalGetter> _Scripts;
-        public IGroupGetter<IScriptInternalGetter> Scripts => _Scripts ?? new Group<Script>(this);
+        private IGroupInternalGetter<IScriptInternalGetter> _Scripts;
+        public IGroupInternalGetter<IScriptInternalGetter> Scripts => _Scripts ?? new Group<Script>(this);
         #endregion
         #region LandTextures
-        private IGroupGetter<ILandTextureInternalGetter> _LandTextures;
-        public IGroupGetter<ILandTextureInternalGetter> LandTextures => _LandTextures ?? new Group<LandTexture>(this);
+        private IGroupInternalGetter<ILandTextureInternalGetter> _LandTextures;
+        public IGroupInternalGetter<ILandTextureInternalGetter> LandTextures => _LandTextures ?? new Group<LandTexture>(this);
         #endregion
         #region Enchantments
-        private IGroupGetter<IEnchantmentInternalGetter> _Enchantments;
-        public IGroupGetter<IEnchantmentInternalGetter> Enchantments => _Enchantments ?? new Group<Enchantment>(this);
+        private IGroupInternalGetter<IEnchantmentInternalGetter> _Enchantments;
+        public IGroupInternalGetter<IEnchantmentInternalGetter> Enchantments => _Enchantments ?? new Group<Enchantment>(this);
         #endregion
         #region Spells
-        private IGroupGetter<ISpellUnleveledInternalGetter> _Spells;
-        public IGroupGetter<ISpellUnleveledInternalGetter> Spells => _Spells ?? new Group<SpellUnleveled>(this);
+        private IGroupInternalGetter<ISpellUnleveledInternalGetter> _Spells;
+        public IGroupInternalGetter<ISpellUnleveledInternalGetter> Spells => _Spells ?? new Group<SpellUnleveled>(this);
         #endregion
         #region Birthsigns
-        private IGroupGetter<IBirthsignInternalGetter> _Birthsigns;
-        public IGroupGetter<IBirthsignInternalGetter> Birthsigns => _Birthsigns ?? new Group<Birthsign>(this);
+        private IGroupInternalGetter<IBirthsignInternalGetter> _Birthsigns;
+        public IGroupInternalGetter<IBirthsignInternalGetter> Birthsigns => _Birthsigns ?? new Group<Birthsign>(this);
         #endregion
         #region Activators
-        private IGroupGetter<IActivatorInternalGetter> _Activators;
-        public IGroupGetter<IActivatorInternalGetter> Activators => _Activators ?? new Group<Activator>(this);
+        private IGroupInternalGetter<IActivatorInternalGetter> _Activators;
+        public IGroupInternalGetter<IActivatorInternalGetter> Activators => _Activators ?? new Group<Activator>(this);
         #endregion
         #region AlchemicalApparatus
-        private IGroupGetter<IAlchemicalApparatusInternalGetter> _AlchemicalApparatus;
-        public IGroupGetter<IAlchemicalApparatusInternalGetter> AlchemicalApparatus => _AlchemicalApparatus ?? new Group<AlchemicalApparatus>(this);
+        private IGroupInternalGetter<IAlchemicalApparatusInternalGetter> _AlchemicalApparatus;
+        public IGroupInternalGetter<IAlchemicalApparatusInternalGetter> AlchemicalApparatus => _AlchemicalApparatus ?? new Group<AlchemicalApparatus>(this);
         #endregion
         #region Armors
-        private IGroupGetter<IArmorInternalGetter> _Armors;
-        public IGroupGetter<IArmorInternalGetter> Armors => _Armors ?? new Group<Armor>(this);
+        private IGroupInternalGetter<IArmorInternalGetter> _Armors;
+        public IGroupInternalGetter<IArmorInternalGetter> Armors => _Armors ?? new Group<Armor>(this);
         #endregion
         #region Books
-        private IGroupGetter<IBookInternalGetter> _Books;
-        public IGroupGetter<IBookInternalGetter> Books => _Books ?? new Group<Book>(this);
+        private IGroupInternalGetter<IBookInternalGetter> _Books;
+        public IGroupInternalGetter<IBookInternalGetter> Books => _Books ?? new Group<Book>(this);
         #endregion
         #region Clothes
-        private IGroupGetter<IClothingInternalGetter> _Clothes;
-        public IGroupGetter<IClothingInternalGetter> Clothes => _Clothes ?? new Group<Clothing>(this);
+        private IGroupInternalGetter<IClothingInternalGetter> _Clothes;
+        public IGroupInternalGetter<IClothingInternalGetter> Clothes => _Clothes ?? new Group<Clothing>(this);
         #endregion
         #region Containers
-        private IGroupGetter<IContainerInternalGetter> _Containers;
-        public IGroupGetter<IContainerInternalGetter> Containers => _Containers ?? new Group<Container>(this);
+        private IGroupInternalGetter<IContainerInternalGetter> _Containers;
+        public IGroupInternalGetter<IContainerInternalGetter> Containers => _Containers ?? new Group<Container>(this);
         #endregion
         #region Doors
-        private IGroupGetter<IDoorInternalGetter> _Doors;
-        public IGroupGetter<IDoorInternalGetter> Doors => _Doors ?? new Group<Door>(this);
+        private IGroupInternalGetter<IDoorInternalGetter> _Doors;
+        public IGroupInternalGetter<IDoorInternalGetter> Doors => _Doors ?? new Group<Door>(this);
         #endregion
         #region Ingredients
-        private IGroupGetter<IIngredientInternalGetter> _Ingredients;
-        public IGroupGetter<IIngredientInternalGetter> Ingredients => _Ingredients ?? new Group<Ingredient>(this);
+        private IGroupInternalGetter<IIngredientInternalGetter> _Ingredients;
+        public IGroupInternalGetter<IIngredientInternalGetter> Ingredients => _Ingredients ?? new Group<Ingredient>(this);
         #endregion
         #region Lights
-        private IGroupGetter<ILightInternalGetter> _Lights;
-        public IGroupGetter<ILightInternalGetter> Lights => _Lights ?? new Group<Light>(this);
+        private IGroupInternalGetter<ILightInternalGetter> _Lights;
+        public IGroupInternalGetter<ILightInternalGetter> Lights => _Lights ?? new Group<Light>(this);
         #endregion
         #region Miscellaneous
-        private IGroupGetter<IMiscellaneousInternalGetter> _Miscellaneous;
-        public IGroupGetter<IMiscellaneousInternalGetter> Miscellaneous => _Miscellaneous ?? new Group<Miscellaneous>(this);
+        private IGroupInternalGetter<IMiscellaneousInternalGetter> _Miscellaneous;
+        public IGroupInternalGetter<IMiscellaneousInternalGetter> Miscellaneous => _Miscellaneous ?? new Group<Miscellaneous>(this);
         #endregion
         #region Statics
-        private IGroupGetter<IStaticInternalGetter> _Statics;
-        public IGroupGetter<IStaticInternalGetter> Statics => _Statics ?? new Group<Static>(this);
+        private IGroupInternalGetter<IStaticInternalGetter> _Statics;
+        public IGroupInternalGetter<IStaticInternalGetter> Statics => _Statics ?? new Group<Static>(this);
         #endregion
         #region Grasses
-        private IGroupGetter<IGrassInternalGetter> _Grasses;
-        public IGroupGetter<IGrassInternalGetter> Grasses => _Grasses ?? new Group<Grass>(this);
+        private IGroupInternalGetter<IGrassInternalGetter> _Grasses;
+        public IGroupInternalGetter<IGrassInternalGetter> Grasses => _Grasses ?? new Group<Grass>(this);
         #endregion
         #region Trees
-        private IGroupGetter<ITreeInternalGetter> _Trees;
-        public IGroupGetter<ITreeInternalGetter> Trees => _Trees ?? new Group<Tree>(this);
+        private IGroupInternalGetter<ITreeInternalGetter> _Trees;
+        public IGroupInternalGetter<ITreeInternalGetter> Trees => _Trees ?? new Group<Tree>(this);
         #endregion
         #region Flora
-        private IGroupGetter<IFloraInternalGetter> _Flora;
-        public IGroupGetter<IFloraInternalGetter> Flora => _Flora ?? new Group<Flora>(this);
+        private IGroupInternalGetter<IFloraInternalGetter> _Flora;
+        public IGroupInternalGetter<IFloraInternalGetter> Flora => _Flora ?? new Group<Flora>(this);
         #endregion
         #region Furnature
-        private IGroupGetter<IFurnatureInternalGetter> _Furnature;
-        public IGroupGetter<IFurnatureInternalGetter> Furnature => _Furnature ?? new Group<Furnature>(this);
+        private IGroupInternalGetter<IFurnatureInternalGetter> _Furnature;
+        public IGroupInternalGetter<IFurnatureInternalGetter> Furnature => _Furnature ?? new Group<Furnature>(this);
         #endregion
         #region Weapons
-        private IGroupGetter<IWeaponInternalGetter> _Weapons;
-        public IGroupGetter<IWeaponInternalGetter> Weapons => _Weapons ?? new Group<Weapon>(this);
+        private IGroupInternalGetter<IWeaponInternalGetter> _Weapons;
+        public IGroupInternalGetter<IWeaponInternalGetter> Weapons => _Weapons ?? new Group<Weapon>(this);
         #endregion
         #region Ammo
-        private IGroupGetter<IAmmoInternalGetter> _Ammo;
-        public IGroupGetter<IAmmoInternalGetter> Ammo => _Ammo ?? new Group<Ammo>(this);
+        private IGroupInternalGetter<IAmmoInternalGetter> _Ammo;
+        public IGroupInternalGetter<IAmmoInternalGetter> Ammo => _Ammo ?? new Group<Ammo>(this);
         #endregion
         #region NPCs
-        private IGroupGetter<INPCInternalGetter> _NPCs;
-        public IGroupGetter<INPCInternalGetter> NPCs => _NPCs ?? new Group<NPC>(this);
+        private IGroupInternalGetter<INPCInternalGetter> _NPCs;
+        public IGroupInternalGetter<INPCInternalGetter> NPCs => _NPCs ?? new Group<NPC>(this);
         #endregion
         #region Creatures
-        private IGroupGetter<ICreatureInternalGetter> _Creatures;
-        public IGroupGetter<ICreatureInternalGetter> Creatures => _Creatures ?? new Group<Creature>(this);
+        private IGroupInternalGetter<ICreatureInternalGetter> _Creatures;
+        public IGroupInternalGetter<ICreatureInternalGetter> Creatures => _Creatures ?? new Group<Creature>(this);
         #endregion
         #region LeveledCreatures
-        private IGroupGetter<ILeveledCreatureInternalGetter> _LeveledCreatures;
-        public IGroupGetter<ILeveledCreatureInternalGetter> LeveledCreatures => _LeveledCreatures ?? new Group<LeveledCreature>(this);
+        private IGroupInternalGetter<ILeveledCreatureInternalGetter> _LeveledCreatures;
+        public IGroupInternalGetter<ILeveledCreatureInternalGetter> LeveledCreatures => _LeveledCreatures ?? new Group<LeveledCreature>(this);
         #endregion
         #region SoulGems
-        private IGroupGetter<ISoulGemInternalGetter> _SoulGems;
-        public IGroupGetter<ISoulGemInternalGetter> SoulGems => _SoulGems ?? new Group<SoulGem>(this);
+        private IGroupInternalGetter<ISoulGemInternalGetter> _SoulGems;
+        public IGroupInternalGetter<ISoulGemInternalGetter> SoulGems => _SoulGems ?? new Group<SoulGem>(this);
         #endregion
         #region Keys
-        private IGroupGetter<IKeyInternalGetter> _Keys;
-        public IGroupGetter<IKeyInternalGetter> Keys => _Keys ?? new Group<Key>(this);
+        private IGroupInternalGetter<IKeyInternalGetter> _Keys;
+        public IGroupInternalGetter<IKeyInternalGetter> Keys => _Keys ?? new Group<Key>(this);
         #endregion
         #region Potions
-        private IGroupGetter<IPotionInternalGetter> _Potions;
-        public IGroupGetter<IPotionInternalGetter> Potions => _Potions ?? new Group<Potion>(this);
+        private IGroupInternalGetter<IPotionInternalGetter> _Potions;
+        public IGroupInternalGetter<IPotionInternalGetter> Potions => _Potions ?? new Group<Potion>(this);
         #endregion
         #region Subspaces
-        private IGroupGetter<ISubspaceInternalGetter> _Subspaces;
-        public IGroupGetter<ISubspaceInternalGetter> Subspaces => _Subspaces ?? new Group<Subspace>(this);
+        private IGroupInternalGetter<ISubspaceInternalGetter> _Subspaces;
+        public IGroupInternalGetter<ISubspaceInternalGetter> Subspaces => _Subspaces ?? new Group<Subspace>(this);
         #endregion
         #region SigilStones
-        private IGroupGetter<ISigilStoneInternalGetter> _SigilStones;
-        public IGroupGetter<ISigilStoneInternalGetter> SigilStones => _SigilStones ?? new Group<SigilStone>(this);
+        private IGroupInternalGetter<ISigilStoneInternalGetter> _SigilStones;
+        public IGroupInternalGetter<ISigilStoneInternalGetter> SigilStones => _SigilStones ?? new Group<SigilStone>(this);
         #endregion
         #region LeveledItems
-        private IGroupGetter<ILeveledItemInternalGetter> _LeveledItems;
-        public IGroupGetter<ILeveledItemInternalGetter> LeveledItems => _LeveledItems ?? new Group<LeveledItem>(this);
+        private IGroupInternalGetter<ILeveledItemInternalGetter> _LeveledItems;
+        public IGroupInternalGetter<ILeveledItemInternalGetter> LeveledItems => _LeveledItems ?? new Group<LeveledItem>(this);
         #endregion
         #region Weathers
-        private IGroupGetter<IWeatherInternalGetter> _Weathers;
-        public IGroupGetter<IWeatherInternalGetter> Weathers => _Weathers ?? new Group<Weather>(this);
+        private IGroupInternalGetter<IWeatherInternalGetter> _Weathers;
+        public IGroupInternalGetter<IWeatherInternalGetter> Weathers => _Weathers ?? new Group<Weather>(this);
         #endregion
         #region Climates
-        private IGroupGetter<IClimateInternalGetter> _Climates;
-        public IGroupGetter<IClimateInternalGetter> Climates => _Climates ?? new Group<Climate>(this);
+        private IGroupInternalGetter<IClimateInternalGetter> _Climates;
+        public IGroupInternalGetter<IClimateInternalGetter> Climates => _Climates ?? new Group<Climate>(this);
         #endregion
         #region Regions
-        private IGroupGetter<IRegionInternalGetter> _Regions;
-        public IGroupGetter<IRegionInternalGetter> Regions => _Regions ?? new Group<Region>(this);
+        private IGroupInternalGetter<IRegionInternalGetter> _Regions;
+        public IGroupInternalGetter<IRegionInternalGetter> Regions => _Regions ?? new Group<Region>(this);
         #endregion
         #region Cells
-        private IListGroupGetter<ICellBlockGetter> _Cells;
-        public IListGroupGetter<ICellBlockGetter> Cells => _Cells ?? new ListGroup<CellBlock>();
+        private IListGroupInternalGetter<ICellBlockInternalGetter> _Cells;
+        public IListGroupInternalGetter<ICellBlockInternalGetter> Cells => _Cells ?? new ListGroup<CellBlock>();
         #endregion
         #region Worldspaces
-        private IGroupGetter<IWorldspaceInternalGetter> _Worldspaces;
-        public IGroupGetter<IWorldspaceInternalGetter> Worldspaces => _Worldspaces ?? new Group<Worldspace>(this);
+        private IGroupInternalGetter<IWorldspaceInternalGetter> _Worldspaces;
+        public IGroupInternalGetter<IWorldspaceInternalGetter> Worldspaces => _Worldspaces ?? new Group<Worldspace>(this);
         #endregion
         #region DialogTopics
-        private IGroupGetter<IDialogTopicInternalGetter> _DialogTopics;
-        public IGroupGetter<IDialogTopicInternalGetter> DialogTopics => _DialogTopics ?? new Group<DialogTopic>(this);
+        private IGroupInternalGetter<IDialogTopicInternalGetter> _DialogTopics;
+        public IGroupInternalGetter<IDialogTopicInternalGetter> DialogTopics => _DialogTopics ?? new Group<DialogTopic>(this);
         #endregion
         #region Quests
-        private IGroupGetter<IQuestInternalGetter> _Quests;
-        public IGroupGetter<IQuestInternalGetter> Quests => _Quests ?? new Group<Quest>(this);
+        private IGroupInternalGetter<IQuestInternalGetter> _Quests;
+        public IGroupInternalGetter<IQuestInternalGetter> Quests => _Quests ?? new Group<Quest>(this);
         #endregion
         #region IdleAnimations
-        private IGroupGetter<IIdleAnimationInternalGetter> _IdleAnimations;
-        public IGroupGetter<IIdleAnimationInternalGetter> IdleAnimations => _IdleAnimations ?? new Group<IdleAnimation>(this);
+        private IGroupInternalGetter<IIdleAnimationInternalGetter> _IdleAnimations;
+        public IGroupInternalGetter<IIdleAnimationInternalGetter> IdleAnimations => _IdleAnimations ?? new Group<IdleAnimation>(this);
         #endregion
         #region AIPackages
-        private IGroupGetter<IAIPackageInternalGetter> _AIPackages;
-        public IGroupGetter<IAIPackageInternalGetter> AIPackages => _AIPackages ?? new Group<AIPackage>(this);
+        private IGroupInternalGetter<IAIPackageInternalGetter> _AIPackages;
+        public IGroupInternalGetter<IAIPackageInternalGetter> AIPackages => _AIPackages ?? new Group<AIPackage>(this);
         #endregion
         #region CombatStyles
-        private IGroupGetter<ICombatStyleInternalGetter> _CombatStyles;
-        public IGroupGetter<ICombatStyleInternalGetter> CombatStyles => _CombatStyles ?? new Group<CombatStyle>(this);
+        private IGroupInternalGetter<ICombatStyleInternalGetter> _CombatStyles;
+        public IGroupInternalGetter<ICombatStyleInternalGetter> CombatStyles => _CombatStyles ?? new Group<CombatStyle>(this);
         #endregion
         #region LoadScreens
-        private IGroupGetter<ILoadScreenInternalGetter> _LoadScreens;
-        public IGroupGetter<ILoadScreenInternalGetter> LoadScreens => _LoadScreens ?? new Group<LoadScreen>(this);
+        private IGroupInternalGetter<ILoadScreenInternalGetter> _LoadScreens;
+        public IGroupInternalGetter<ILoadScreenInternalGetter> LoadScreens => _LoadScreens ?? new Group<LoadScreen>(this);
         #endregion
         #region LeveledSpells
-        private IGroupGetter<ILeveledSpellInternalGetter> _LeveledSpells;
-        public IGroupGetter<ILeveledSpellInternalGetter> LeveledSpells => _LeveledSpells ?? new Group<LeveledSpell>(this);
+        private IGroupInternalGetter<ILeveledSpellInternalGetter> _LeveledSpells;
+        public IGroupInternalGetter<ILeveledSpellInternalGetter> LeveledSpells => _LeveledSpells ?? new Group<LeveledSpell>(this);
         #endregion
         #region AnimatedObjects
-        private IGroupGetter<IAnimatedObjectInternalGetter> _AnimatedObjects;
-        public IGroupGetter<IAnimatedObjectInternalGetter> AnimatedObjects => _AnimatedObjects ?? new Group<AnimatedObject>(this);
+        private IGroupInternalGetter<IAnimatedObjectInternalGetter> _AnimatedObjects;
+        public IGroupInternalGetter<IAnimatedObjectInternalGetter> AnimatedObjects => _AnimatedObjects ?? new Group<AnimatedObject>(this);
         #endregion
         #region Waters
-        private IGroupGetter<IWaterInternalGetter> _Waters;
-        public IGroupGetter<IWaterInternalGetter> Waters => _Waters ?? new Group<Water>(this);
+        private IGroupInternalGetter<IWaterInternalGetter> _Waters;
+        public IGroupInternalGetter<IWaterInternalGetter> Waters => _Waters ?? new Group<Water>(this);
         #endregion
         #region EffectShaders
-        private IGroupGetter<IEffectShaderInternalGetter> _EffectShaders;
-        public IGroupGetter<IEffectShaderInternalGetter> EffectShaders => _EffectShaders ?? new Group<EffectShader>(this);
+        private IGroupInternalGetter<IEffectShaderInternalGetter> _EffectShaders;
+        public IGroupInternalGetter<IEffectShaderInternalGetter> EffectShaders => _EffectShaders ?? new Group<EffectShader>(this);
         #endregion
         partial void CustomCtor(
             BinaryMemoryReadStream stream,
@@ -15176,7 +15294,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4C4C4543: // CELL
                 {
-                    this._Cells = ListGroupBinaryWrapper<ICellBlockGetter>.ListGroupFactory(
+                    this._Cells = ListGroupBinaryWrapper<ICellBlockInternalGetter>.ListGroupFactory(
                         stream: stream,
                         package: _package,
                         recordTypeConverter: null);
@@ -15280,4 +15398,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class OblivionMod
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => OblivionMod_Registration.Instance;
+        public static OblivionMod_Registration Registration => OblivionMod_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return OblivionModCommon.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return OblivionModSetterCommon.Instance;
+        }
+        protected object CommonSetterCopyInstance()
+        {
+            return OblivionModSetterCopyCommon.Instance;
+        }
+        object IOblivionModInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IOblivionModInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object IOblivionModInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
 }

@@ -36,17 +36,11 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class RegionArea :
         LoquiNotifyingObject,
-        IRegionArea,
+        IRegionAreaInternal,
         ILoquiObjectSetter<RegionArea>,
         IEquatable<RegionArea>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => RegionArea_Registration.Instance;
-        public static RegionArea_Registration Registration => RegionArea_Registration.Instance;
-        protected object CommonInstance => RegionAreaCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
-
         #region Ctor
         public RegionArea()
         {
@@ -95,7 +89,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRegionAreaGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRegionAreaInternalGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -113,22 +107,35 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is IRegionAreaGetter rhs)) return false;
-            return ((RegionAreaCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            if (!(obj is IRegionAreaInternalGetter rhs)) return false;
+            return ((RegionAreaCommon)((IRegionAreaInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(RegionArea obj)
         {
-            return ((RegionAreaCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((RegionAreaCommon)((IRegionAreaInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((RegionAreaCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((RegionAreaCommon)((IRegionAreaInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected object XmlWriteTranslator => RegionAreaXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((RegionAreaXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static RegionArea CreateFromXml(
@@ -298,6 +305,19 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Translation
         protected object BinaryWriteTranslator => RegionAreaBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((RegionAreaBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
         #region Binary Create
         [DebuggerStepThrough]
         public static RegionArea CreateFromBinary(
@@ -477,7 +497,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            RegionAreaCommon.CopyFieldsFrom(
+            RegionAreaSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -492,7 +512,7 @@ namespace Mutagen.Bethesda.Oblivion
             RegionArea_CopyMask copyMask = null,
             RegionArea def = null)
         {
-            RegionAreaCommon.CopyFieldsFrom(
+            RegionAreaSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -518,7 +538,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void Clear()
         {
-            RegionAreaCommon.Instance.Clear(this);
+            RegionAreaSetterCommon.Instance.Clear(this);
         }
 
         public static RegionArea Create(IEnumerable<KeyValuePair<ushort, object>> fields)
@@ -554,8 +574,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IRegionArea :
-        IRegionAreaGetter,
-        ILoquiObjectSetter<IRegionArea>
+        IRegionAreaInternalGetter,
+        ILoquiObjectSetter<IRegionAreaInternal>
     {
         new UInt32 EdgeFallOff { get; set; }
         new bool EdgeFallOff_IsSet { get; set; }
@@ -570,9 +590,15 @@ namespace Mutagen.Bethesda.Oblivion
             RegionArea def = null);
     }
 
+    public partial interface IRegionAreaInternal :
+        IRegionArea,
+        IRegionAreaInternalGetter
+    {
+    }
+
     public partial interface IRegionAreaGetter :
         ILoquiObject,
-        ILoquiObject<IRegionAreaGetter>,
+        ILoquiObject<IRegionAreaInternalGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -587,45 +613,53 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    public partial interface IRegionAreaInternalGetter : IRegionAreaGetter
+    {
+        object CommonInstance();
+        object CommonSetterInstance();
+        object CommonSetterCopyInstance();
+
+    }
+
     #endregion
 
     #region Common MixIn
     public static class RegionAreaMixIn
     {
-        public static void Clear(this IRegionArea item)
+        public static void Clear(this IRegionAreaInternal item)
         {
-            ((RegionAreaCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((RegionAreaSetterCommon)((IRegionAreaInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static RegionArea_Mask<bool> GetEqualsMask(
-            this IRegionAreaGetter item,
-            IRegionAreaGetter rhs,
+            this IRegionAreaInternalGetter item,
+            IRegionAreaInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((RegionAreaCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((RegionAreaCommon)((IRegionAreaInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IRegionAreaGetter item,
+            this IRegionAreaInternalGetter item,
             string name = null,
             RegionArea_Mask<bool> printMask = null)
         {
-            return ((RegionAreaCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((RegionAreaCommon)((IRegionAreaInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IRegionAreaGetter item,
+            this IRegionAreaInternalGetter item,
             FileGeneration fg,
             string name = null,
             RegionArea_Mask<bool> printMask = null)
         {
-            ((RegionAreaCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((RegionAreaCommon)((IRegionAreaInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -633,28 +667,28 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static bool HasBeenSet(
-            this IRegionAreaGetter item,
+            this IRegionAreaInternalGetter item,
             RegionArea_Mask<bool?> checkMask)
         {
-            return ((RegionAreaCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((RegionAreaCommon)((IRegionAreaInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static RegionArea_Mask<bool> GetHasBeenSetMask(this IRegionAreaGetter item)
+        public static RegionArea_Mask<bool> GetHasBeenSetMask(this IRegionAreaInternalGetter item)
         {
             var ret = new RegionArea_Mask<bool>();
-            ((RegionAreaCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((RegionAreaCommon)((IRegionAreaInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this IRegionAreaGetter item,
-            IRegionAreaGetter rhs)
+            this IRegionAreaInternalGetter item,
+            IRegionAreaInternalGetter rhs)
         {
-            return ((RegionAreaCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((RegionAreaCommon)((IRegionAreaInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -700,13 +734,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IRegionAreaGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type InternalGetterType = typeof(IRegionAreaInternalGetter);
 
         public static readonly Type SetterType = typeof(IRegionArea);
 
-        public static readonly Type InternalSetterType = null;
-
-        public static readonly Type CommonType = typeof(RegionAreaCommon);
+        public static readonly Type InternalSetterType = typeof(IRegionAreaInternal);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.RegionArea";
 
@@ -856,7 +888,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -876,9 +907,180 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
+    public partial class RegionAreaSetterCommon
+    {
+        public static readonly RegionAreaSetterCommon Instance = new RegionAreaSetterCommon();
+
+        partial void ClearPartial();
+        
+        public virtual void Clear(IRegionAreaInternal item)
+        {
+            ClearPartial();
+            item.EdgeFallOff_Unset();
+            item.RegionPoints.Unset();
+        }
+        
+        
+    }
     public partial class RegionAreaCommon
     {
         public static readonly RegionAreaCommon Instance = new RegionAreaCommon();
+
+        public RegionArea_Mask<bool> GetEqualsMask(
+            IRegionAreaInternalGetter item,
+            IRegionAreaInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new RegionArea_Mask<bool>();
+            ((RegionAreaCommon)((IRegionAreaInternalGetter)item).CommonInstance()).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+        
+        public void FillEqualsMask(
+            IRegionAreaInternalGetter item,
+            IRegionAreaInternalGetter rhs,
+            RegionArea_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            if (rhs == null) return;
+            ret.EdgeFallOff = item.EdgeFallOff_IsSet == rhs.EdgeFallOff_IsSet && item.EdgeFallOff == rhs.EdgeFallOff;
+            ret.RegionPoints = item.RegionPoints.CollectionEqualsHelper(
+                rhs.RegionPoints,
+                (l, r) => l.Equals(r),
+                include);
+        }
+        
+        public string ToString(
+            IRegionAreaInternalGetter item,
+            string name = null,
+            RegionArea_Mask<bool> printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+            return fg.ToString();
+        }
+        
+        public void ToString(
+            IRegionAreaInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            RegionArea_Mask<bool> printMask = null)
+        {
+            if (name == null)
+            {
+                fg.AppendLine($"RegionArea =>");
+            }
+            else
+            {
+                fg.AppendLine($"{name} (RegionArea) =>");
+            }
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
+            }
+            fg.AppendLine("]");
+        }
+        
+        protected static void ToStringFields(
+            IRegionAreaInternalGetter item,
+            FileGeneration fg,
+            RegionArea_Mask<bool> printMask = null)
+        {
+            if (printMask?.EdgeFallOff ?? true)
+            {
+                fg.AppendLine($"EdgeFallOff => {item.EdgeFallOff}");
+            }
+            if (printMask?.RegionPoints?.Overall ?? true)
+            {
+                fg.AppendLine("RegionPoints =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.RegionPoints)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"Item => {subItem}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+        }
+        
+        public bool HasBeenSet(
+            IRegionAreaInternalGetter item,
+            RegionArea_Mask<bool?> checkMask)
+        {
+            if (checkMask.EdgeFallOff.HasValue && checkMask.EdgeFallOff.Value != item.EdgeFallOff_IsSet) return false;
+            if (checkMask.RegionPoints.Overall.HasValue && checkMask.RegionPoints.Overall.Value != item.RegionPoints.HasBeenSet) return false;
+            return true;
+        }
+        
+        public void FillHasBeenSetMask(
+            IRegionAreaInternalGetter item,
+            RegionArea_Mask<bool> mask)
+        {
+            mask.EdgeFallOff = item.EdgeFallOff_IsSet;
+            mask.RegionPoints = new MaskItem<bool, IEnumerable<(int, bool)>>(item.RegionPoints.HasBeenSet, null);
+        }
+        
+        #region Equals and Hash
+        public virtual bool Equals(
+            IRegionAreaInternalGetter lhs,
+            IRegionAreaInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (lhs.EdgeFallOff_IsSet != rhs.EdgeFallOff_IsSet) return false;
+            if (lhs.EdgeFallOff_IsSet)
+            {
+                if (lhs.EdgeFallOff != rhs.EdgeFallOff) return false;
+            }
+            if (lhs.RegionPoints.HasBeenSet != rhs.RegionPoints.HasBeenSet) return false;
+            if (lhs.RegionPoints.HasBeenSet)
+            {
+                if (!lhs.RegionPoints.SequenceEqual(rhs.RegionPoints)) return false;
+            }
+            return true;
+        }
+        
+        public virtual int GetHashCode(IRegionAreaInternalGetter item)
+        {
+            int ret = 0;
+            if (item.EdgeFallOff_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.EdgeFallOff).CombineHashCode(ret);
+            }
+            if (item.RegionPoints.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.RegionPoints).CombineHashCode(ret);
+            }
+            return ret;
+        }
+        
+        #endregion
+        
+        
+        
+    }
+    public partial class RegionAreaSetterCopyCommon
+    {
+        public static readonly RegionAreaSetterCopyCommon Instance = new RegionAreaSetterCopyCommon();
 
         #region Copy Fields From
         public static void CopyFieldsFrom(
@@ -938,168 +1140,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
         }
-
+        
         #endregion
-
-        partial void ClearPartial();
-
-        public virtual void Clear(IRegionArea item)
-        {
-            ClearPartial();
-            item.EdgeFallOff_Unset();
-            item.RegionPoints.Unset();
-        }
-
-        public RegionArea_Mask<bool> GetEqualsMask(
-            IRegionAreaGetter item,
-            IRegionAreaGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new RegionArea_Mask<bool>();
-            ((RegionAreaCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public void FillEqualsMask(
-            IRegionAreaGetter item,
-            IRegionAreaGetter rhs,
-            RegionArea_Mask<bool> ret,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            if (rhs == null) return;
-            ret.EdgeFallOff = item.EdgeFallOff_IsSet == rhs.EdgeFallOff_IsSet && item.EdgeFallOff == rhs.EdgeFallOff;
-            ret.RegionPoints = item.RegionPoints.CollectionEqualsHelper(
-                rhs.RegionPoints,
-                (l, r) => l.Equals(r),
-                include);
-        }
-
-        public string ToString(
-            IRegionAreaGetter item,
-            string name = null,
-            RegionArea_Mask<bool> printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(
-                item: item,
-                fg: fg,
-                name: name,
-                printMask: printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(
-            IRegionAreaGetter item,
-            FileGeneration fg,
-            string name = null,
-            RegionArea_Mask<bool> printMask = null)
-        {
-            if (name == null)
-            {
-                fg.AppendLine($"RegionArea =>");
-            }
-            else
-            {
-                fg.AppendLine($"{name} (RegionArea) =>");
-            }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                ToStringFields(
-                    item: item,
-                    fg: fg,
-                    printMask: printMask);
-            }
-            fg.AppendLine("]");
-        }
-
-        protected static void ToStringFields(
-            IRegionAreaGetter item,
-            FileGeneration fg,
-            RegionArea_Mask<bool> printMask = null)
-        {
-            if (printMask?.EdgeFallOff ?? true)
-            {
-                fg.AppendLine($"EdgeFallOff => {item.EdgeFallOff}");
-            }
-            if (printMask?.RegionPoints?.Overall ?? true)
-            {
-                fg.AppendLine("RegionPoints =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
-                {
-                    foreach (var subItem in item.RegionPoints)
-                    {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            fg.AppendLine($"Item => {subItem}");
-                        }
-                        fg.AppendLine("]");
-                    }
-                }
-                fg.AppendLine("]");
-            }
-        }
-
-        public bool HasBeenSet(
-            IRegionAreaGetter item,
-            RegionArea_Mask<bool?> checkMask)
-        {
-            if (checkMask.EdgeFallOff.HasValue && checkMask.EdgeFallOff.Value != item.EdgeFallOff_IsSet) return false;
-            if (checkMask.RegionPoints.Overall.HasValue && checkMask.RegionPoints.Overall.Value != item.RegionPoints.HasBeenSet) return false;
-            return true;
-        }
-
-        public void FillHasBeenSetMask(
-            IRegionAreaGetter item,
-            RegionArea_Mask<bool> mask)
-        {
-            mask.EdgeFallOff = item.EdgeFallOff_IsSet;
-            mask.RegionPoints = new MaskItem<bool, IEnumerable<(int, bool)>>(item.RegionPoints.HasBeenSet, null);
-        }
-
-        #region Equals and Hash
-        public virtual bool Equals(
-            IRegionAreaGetter lhs,
-            IRegionAreaGetter rhs)
-        {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
-            if (lhs.EdgeFallOff_IsSet != rhs.EdgeFallOff_IsSet) return false;
-            if (lhs.EdgeFallOff_IsSet)
-            {
-                if (lhs.EdgeFallOff != rhs.EdgeFallOff) return false;
-            }
-            if (lhs.RegionPoints.HasBeenSet != rhs.RegionPoints.HasBeenSet) return false;
-            if (lhs.RegionPoints.HasBeenSet)
-            {
-                if (!lhs.RegionPoints.SequenceEqual(rhs.RegionPoints)) return false;
-            }
-            return true;
-        }
-
-        public virtual int GetHashCode(IRegionAreaGetter item)
-        {
-            int ret = 0;
-            if (item.EdgeFallOff_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.EdgeFallOff).CombineHashCode(ret);
-            }
-            if (item.RegionPoints.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.RegionPoints).CombineHashCode(ret);
-            }
-            return ret;
-        }
-
-        #endregion
-
-
+        
+        
     }
     #endregion
 
@@ -1110,7 +1154,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static RegionAreaXmlWriteTranslation Instance = new RegionAreaXmlWriteTranslation();
 
         public static void WriteToNodeXml(
-            IRegionAreaGetter item,
+            IRegionAreaInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1148,7 +1192,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             XElement node,
-            IRegionAreaGetter item,
+            IRegionAreaInternalGetter item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)
@@ -1174,7 +1218,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             Write(
-                item: (IRegionAreaGetter)item,
+                item: (IRegionAreaInternalGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1183,7 +1227,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             XElement node,
-            IRegionAreaGetter item,
+            IRegionAreaInternalGetter item,
             ErrorMaskBuilder errorMask,
             int fieldIndex,
             TranslationCrystal translationMask,
@@ -1193,7 +1237,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 errorMask?.PushIndex(fieldIndex);
                 Write(
-                    item: (IRegionAreaGetter)item,
+                    item: (IRegionAreaInternalGetter)item,
                     name: name,
                     node: node,
                     errorMask: errorMask,
@@ -1217,7 +1261,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static RegionAreaXmlCreateTranslation Instance = new RegionAreaXmlCreateTranslation();
 
         public static void FillPublicXml(
-            IRegionArea item,
+            IRegionAreaInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1242,7 +1286,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElementXml(
-            IRegionArea item,
+            IRegionAreaInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -1315,7 +1359,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public static class RegionAreaXmlTranslationMixIn
     {
         public static void WriteToXml(
-            this IRegionAreaGetter item,
+            this IRegionAreaInternalGetter item,
             XElement node,
             out RegionArea_ErrorMask errorMask,
             bool doMasks = true,
@@ -1333,7 +1377,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IRegionAreaGetter item,
+            this IRegionAreaInternalGetter item,
             string path,
             out RegionArea_ErrorMask errorMask,
             RegionArea_TranslationMask translationMask = null,
@@ -1352,7 +1396,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IRegionAreaGetter item,
+            this IRegionAreaInternalGetter item,
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1370,7 +1414,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IRegionAreaGetter item,
+            this IRegionAreaInternalGetter item,
             Stream stream,
             out RegionArea_ErrorMask errorMask,
             RegionArea_TranslationMask translationMask = null,
@@ -1389,7 +1433,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IRegionAreaGetter item,
+            this IRegionAreaInternalGetter item,
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1407,7 +1451,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IRegionAreaGetter item,
+            this IRegionAreaInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1422,7 +1466,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IRegionAreaGetter item,
+            this IRegionAreaInternalGetter item,
             XElement node,
             string name = null,
             RegionArea_TranslationMask translationMask = null)
@@ -1436,7 +1480,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IRegionAreaGetter item,
+            this IRegionAreaInternalGetter item,
             string path,
             string name = null)
         {
@@ -1451,7 +1495,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IRegionAreaGetter item,
+            this IRegionAreaInternalGetter item,
             Stream stream,
             string name = null)
         {
@@ -1848,7 +1892,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static RegionAreaBinaryWriteTranslation Instance = new RegionAreaBinaryWriteTranslation();
 
         public static void Write_RecordTypes(
-            IRegionAreaGetter item,
+            IRegionAreaInternalGetter item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask,
@@ -1874,7 +1918,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             MutagenWriter writer,
-            IRegionAreaGetter item,
+            IRegionAreaInternalGetter item,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
@@ -1895,7 +1939,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask)
         {
             Write(
-                item: (IRegionAreaGetter)item,
+                item: (IRegionAreaInternalGetter)item,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -1914,7 +1958,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public static class RegionAreaBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IRegionAreaGetter item,
+            this IRegionAreaInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
             out RegionArea_ErrorMask errorMask,
@@ -1931,7 +1975,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToBinary(
-            this IRegionAreaGetter item,
+            this IRegionAreaInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -1945,7 +1989,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToBinary(
-            this IRegionAreaGetter item,
+            this IRegionAreaInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
@@ -1962,22 +2006,65 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     public partial class RegionAreaBinaryWrapper :
         BinaryWrapper,
-        IRegionAreaGetter
+        IRegionAreaInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RegionArea_Registration.Instance;
         public static RegionArea_Registration Registration => RegionArea_Registration.Instance;
-        protected object CommonInstance => RegionAreaCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
+        protected object CommonInstance()
+        {
+            return RegionAreaCommon.Instance;
+        }
+        object IRegionAreaInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IRegionAreaInternalGetter.CommonSetterInstance()
+        {
+            return null;
+        }
+        object IRegionAreaInternalGetter.CommonSetterCopyInstance()
+        {
+            return null;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRegionAreaGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRegionAreaInternalGetter)rhs, include);
 
         protected object XmlWriteTranslator => RegionAreaXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((RegionAreaXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         protected object BinaryWriteTranslator => RegionAreaBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((RegionAreaBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
 
         #region EdgeFallOff
         private int? _EdgeFallOffLocation;
@@ -2062,4 +2149,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class RegionArea
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => RegionArea_Registration.Instance;
+        public static RegionArea_Registration Registration => RegionArea_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return RegionAreaCommon.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return RegionAreaSetterCommon.Instance;
+        }
+        protected object CommonSetterCopyInstance()
+        {
+            return RegionAreaSetterCopyCommon.Instance;
+        }
+        object IRegionAreaInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IRegionAreaInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object IRegionAreaInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
 }

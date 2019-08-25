@@ -48,7 +48,6 @@
     <Compile Include="Enums\GroupTypeEnum.cs" />
     <Compile Include="Extensions\IBinaryStreamExt.cs" />
     <Compile Include="Extensions\NoggogRxExt.cs" />
-    <Compile Include="Extensions\XmlExt.cs" />
     <Compile Include="Core\Structs\FormID.cs" />
     <Compile Include="Core\Structs\FormKey.cs" />
     <Compile Include="Interfaces\IDuplicatable.cs" />

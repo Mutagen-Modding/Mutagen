@@ -34,17 +34,11 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class ModStats :
         LoquiNotifyingObject,
-        IModStats,
+        IModStatsInternal,
         ILoquiObjectSetter<ModStats>,
         IEquatable<ModStats>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => ModStats_Registration.Instance;
-        public static ModStats_Registration Registration => ModStats_Registration.Instance;
-        protected object CommonInstance => ModStatsCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
-
         #region Ctor
         public ModStats()
         {
@@ -79,7 +73,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IModStatsGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IModStatsInternalGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -97,22 +91,35 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is IModStatsGetter rhs)) return false;
-            return ((ModStatsCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            if (!(obj is IModStatsInternalGetter rhs)) return false;
+            return ((ModStatsCommon)((IModStatsInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(ModStats obj)
         {
-            return ((ModStatsCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((ModStatsCommon)((IModStatsInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((ModStatsCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((ModStatsCommon)((IModStatsInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected object XmlWriteTranslator => ModStatsXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((ModStatsXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static ModStats CreateFromXml(
@@ -286,6 +293,19 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Translation
         protected object BinaryWriteTranslator => ModStatsBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((ModStatsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
         #region Binary Create
         [DebuggerStepThrough]
         public static ModStats CreateFromBinary(
@@ -444,7 +464,7 @@ namespace Mutagen.Bethesda.Skyrim
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ModStatsCommon.CopyFieldsFrom(
+            ModStatsSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -459,7 +479,7 @@ namespace Mutagen.Bethesda.Skyrim
             ModStats_CopyMask copyMask = null,
             ModStats def = null)
         {
-            ModStatsCommon.CopyFieldsFrom(
+            ModStatsSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -488,7 +508,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public void Clear()
         {
-            ModStatsCommon.Instance.Clear(this);
+            ModStatsSetterCommon.Instance.Clear(this);
         }
 
         public static ModStats Create(IEnumerable<KeyValuePair<ushort, object>> fields)
@@ -527,8 +547,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IModStats :
-        IModStatsGetter,
-        ILoquiObjectSetter<IModStats>
+        IModStatsInternalGetter,
+        ILoquiObjectSetter<IModStatsInternal>
     {
         new Single Version { get; set; }
 
@@ -543,9 +563,15 @@ namespace Mutagen.Bethesda.Skyrim
             ModStats def = null);
     }
 
+    public partial interface IModStatsInternal :
+        IModStats,
+        IModStatsInternalGetter
+    {
+    }
+
     public partial interface IModStatsGetter :
         ILoquiObject,
-        ILoquiObject<IModStatsGetter>,
+        ILoquiObject<IModStatsInternalGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -564,45 +590,53 @@ namespace Mutagen.Bethesda.Skyrim
 
     }
 
+    public partial interface IModStatsInternalGetter : IModStatsGetter
+    {
+        object CommonInstance();
+        object CommonSetterInstance();
+        object CommonSetterCopyInstance();
+
+    }
+
     #endregion
 
     #region Common MixIn
     public static class ModStatsMixIn
     {
-        public static void Clear(this IModStats item)
+        public static void Clear(this IModStatsInternal item)
         {
-            ((ModStatsCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((ModStatsSetterCommon)((IModStatsInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static ModStats_Mask<bool> GetEqualsMask(
-            this IModStatsGetter item,
-            IModStatsGetter rhs,
+            this IModStatsInternalGetter item,
+            IModStatsInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((ModStatsCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((ModStatsCommon)((IModStatsInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IModStatsGetter item,
+            this IModStatsInternalGetter item,
             string name = null,
             ModStats_Mask<bool> printMask = null)
         {
-            return ((ModStatsCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((ModStatsCommon)((IModStatsInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IModStatsGetter item,
+            this IModStatsInternalGetter item,
             FileGeneration fg,
             string name = null,
             ModStats_Mask<bool> printMask = null)
         {
-            ((ModStatsCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((ModStatsCommon)((IModStatsInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -610,28 +644,28 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static bool HasBeenSet(
-            this IModStatsGetter item,
+            this IModStatsInternalGetter item,
             ModStats_Mask<bool?> checkMask)
         {
-            return ((ModStatsCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((ModStatsCommon)((IModStatsInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static ModStats_Mask<bool> GetHasBeenSetMask(this IModStatsGetter item)
+        public static ModStats_Mask<bool> GetHasBeenSetMask(this IModStatsInternalGetter item)
         {
             var ret = new ModStats_Mask<bool>();
-            ((ModStatsCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((ModStatsCommon)((IModStatsInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this IModStatsGetter item,
-            IModStatsGetter rhs)
+            this IModStatsInternalGetter item,
+            IModStatsInternalGetter rhs)
         {
-            return ((ModStatsCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((ModStatsCommon)((IModStatsInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -678,13 +712,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type GetterType = typeof(IModStatsGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type InternalGetterType = typeof(IModStatsInternalGetter);
 
         public static readonly Type SetterType = typeof(IModStats);
 
-        public static readonly Type InternalSetterType = null;
-
-        public static readonly Type CommonType = typeof(ModStatsCommon);
+        public static readonly Type InternalSetterType = typeof(IModStatsInternal);
 
         public const string FullName = "Mutagen.Bethesda.Skyrim.ModStats";
 
@@ -832,7 +864,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -852,9 +883,156 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
+    public partial class ModStatsSetterCommon
+    {
+        public static readonly ModStatsSetterCommon Instance = new ModStatsSetterCommon();
+
+        partial void ClearPartial();
+        
+        public virtual void Clear(IModStatsInternal item)
+        {
+            ClearPartial();
+            item.Version = default(Single);
+            item.NumRecords = default(Int32);
+            item.NextObjectID = default(UInt32);
+        }
+        
+        
+    }
     public partial class ModStatsCommon
     {
         public static readonly ModStatsCommon Instance = new ModStatsCommon();
+
+        public ModStats_Mask<bool> GetEqualsMask(
+            IModStatsInternalGetter item,
+            IModStatsInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new ModStats_Mask<bool>();
+            ((ModStatsCommon)((IModStatsInternalGetter)item).CommonInstance()).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+        
+        public void FillEqualsMask(
+            IModStatsInternalGetter item,
+            IModStatsInternalGetter rhs,
+            ModStats_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            if (rhs == null) return;
+            ret.Version = item.Version.EqualsWithin(rhs.Version);
+            ret.NumRecords = item.NumRecords == rhs.NumRecords;
+            ret.NextObjectID = item.NextObjectID == rhs.NextObjectID;
+        }
+        
+        public string ToString(
+            IModStatsInternalGetter item,
+            string name = null,
+            ModStats_Mask<bool> printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+            return fg.ToString();
+        }
+        
+        public void ToString(
+            IModStatsInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            ModStats_Mask<bool> printMask = null)
+        {
+            if (name == null)
+            {
+                fg.AppendLine($"ModStats =>");
+            }
+            else
+            {
+                fg.AppendLine($"{name} (ModStats) =>");
+            }
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
+            }
+            fg.AppendLine("]");
+        }
+        
+        protected static void ToStringFields(
+            IModStatsInternalGetter item,
+            FileGeneration fg,
+            ModStats_Mask<bool> printMask = null)
+        {
+            if (printMask?.Version ?? true)
+            {
+                fg.AppendLine($"Version => {item.Version}");
+            }
+            if (printMask?.NumRecords ?? true)
+            {
+                fg.AppendLine($"NumRecords => {item.NumRecords}");
+            }
+            if (printMask?.NextObjectID ?? true)
+            {
+                fg.AppendLine($"NextObjectID => {item.NextObjectID}");
+            }
+        }
+        
+        public bool HasBeenSet(
+            IModStatsInternalGetter item,
+            ModStats_Mask<bool?> checkMask)
+        {
+            return true;
+        }
+        
+        public void FillHasBeenSetMask(
+            IModStatsInternalGetter item,
+            ModStats_Mask<bool> mask)
+        {
+            mask.Version = true;
+            mask.NumRecords = true;
+            mask.NextObjectID = true;
+        }
+        
+        #region Equals and Hash
+        public virtual bool Equals(
+            IModStatsInternalGetter lhs,
+            IModStatsInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!lhs.Version.EqualsWithin(rhs.Version)) return false;
+            if (lhs.NumRecords != rhs.NumRecords) return false;
+            if (lhs.NextObjectID != rhs.NextObjectID) return false;
+            return true;
+        }
+        
+        public virtual int GetHashCode(IModStatsInternalGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.Version).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.NumRecords).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.NextObjectID).CombineHashCode(ret);
+            return ret;
+        }
+        
+        #endregion
+        
+        
+        
+    }
+    public partial class ModStatsSetterCopyCommon
+    {
+        public static readonly ModStatsSetterCopyCommon Instance = new ModStatsSetterCopyCommon();
 
         #region Copy Fields From
         public static void CopyFieldsFrom(
@@ -916,144 +1094,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
             }
         }
-
+        
         #endregion
-
-        partial void ClearPartial();
-
-        public virtual void Clear(IModStats item)
-        {
-            ClearPartial();
-            item.Version = default(Single);
-            item.NumRecords = default(Int32);
-            item.NextObjectID = default(UInt32);
-        }
-
-        public ModStats_Mask<bool> GetEqualsMask(
-            IModStatsGetter item,
-            IModStatsGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new ModStats_Mask<bool>();
-            ((ModStatsCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public void FillEqualsMask(
-            IModStatsGetter item,
-            IModStatsGetter rhs,
-            ModStats_Mask<bool> ret,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            if (rhs == null) return;
-            ret.Version = item.Version.EqualsWithin(rhs.Version);
-            ret.NumRecords = item.NumRecords == rhs.NumRecords;
-            ret.NextObjectID = item.NextObjectID == rhs.NextObjectID;
-        }
-
-        public string ToString(
-            IModStatsGetter item,
-            string name = null,
-            ModStats_Mask<bool> printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(
-                item: item,
-                fg: fg,
-                name: name,
-                printMask: printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(
-            IModStatsGetter item,
-            FileGeneration fg,
-            string name = null,
-            ModStats_Mask<bool> printMask = null)
-        {
-            if (name == null)
-            {
-                fg.AppendLine($"ModStats =>");
-            }
-            else
-            {
-                fg.AppendLine($"{name} (ModStats) =>");
-            }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                ToStringFields(
-                    item: item,
-                    fg: fg,
-                    printMask: printMask);
-            }
-            fg.AppendLine("]");
-        }
-
-        protected static void ToStringFields(
-            IModStatsGetter item,
-            FileGeneration fg,
-            ModStats_Mask<bool> printMask = null)
-        {
-            if (printMask?.Version ?? true)
-            {
-                fg.AppendLine($"Version => {item.Version}");
-            }
-            if (printMask?.NumRecords ?? true)
-            {
-                fg.AppendLine($"NumRecords => {item.NumRecords}");
-            }
-            if (printMask?.NextObjectID ?? true)
-            {
-                fg.AppendLine($"NextObjectID => {item.NextObjectID}");
-            }
-        }
-
-        public bool HasBeenSet(
-            IModStatsGetter item,
-            ModStats_Mask<bool?> checkMask)
-        {
-            return true;
-        }
-
-        public void FillHasBeenSetMask(
-            IModStatsGetter item,
-            ModStats_Mask<bool> mask)
-        {
-            mask.Version = true;
-            mask.NumRecords = true;
-            mask.NextObjectID = true;
-        }
-
-        #region Equals and Hash
-        public virtual bool Equals(
-            IModStatsGetter lhs,
-            IModStatsGetter rhs)
-        {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
-            if (!lhs.Version.EqualsWithin(rhs.Version)) return false;
-            if (lhs.NumRecords != rhs.NumRecords) return false;
-            if (lhs.NextObjectID != rhs.NextObjectID) return false;
-            return true;
-        }
-
-        public virtual int GetHashCode(IModStatsGetter item)
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.Version).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.NumRecords).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.NextObjectID).CombineHashCode(ret);
-            return ret;
-        }
-
-        #endregion
-
-
+        
+        
     }
     #endregion
 
@@ -1064,7 +1108,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public readonly static ModStatsXmlWriteTranslation Instance = new ModStatsXmlWriteTranslation();
 
         public static void WriteToNodeXml(
-            IModStatsGetter item,
+            IModStatsInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1100,7 +1144,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public void Write(
             XElement node,
-            IModStatsGetter item,
+            IModStatsInternalGetter item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)
@@ -1126,7 +1170,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string name = null)
         {
             Write(
-                item: (IModStatsGetter)item,
+                item: (IModStatsInternalGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1135,7 +1179,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public void Write(
             XElement node,
-            IModStatsGetter item,
+            IModStatsInternalGetter item,
             ErrorMaskBuilder errorMask,
             int fieldIndex,
             TranslationCrystal translationMask,
@@ -1145,7 +1189,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 errorMask?.PushIndex(fieldIndex);
                 Write(
-                    item: (IModStatsGetter)item,
+                    item: (IModStatsInternalGetter)item,
                     name: name,
                     node: node,
                     errorMask: errorMask,
@@ -1169,7 +1213,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public readonly static ModStatsXmlCreateTranslation Instance = new ModStatsXmlCreateTranslation();
 
         public static void FillPublicXml(
-            IModStats item,
+            IModStatsInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1194,7 +1238,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static void FillPublicElementXml(
-            IModStats item,
+            IModStatsInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -1291,7 +1335,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public static class ModStatsXmlTranslationMixIn
     {
         public static void WriteToXml(
-            this IModStatsGetter item,
+            this IModStatsInternalGetter item,
             XElement node,
             out ModStats_ErrorMask errorMask,
             bool doMasks = true,
@@ -1309,7 +1353,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static void WriteToXml(
-            this IModStatsGetter item,
+            this IModStatsInternalGetter item,
             string path,
             out ModStats_ErrorMask errorMask,
             ModStats_TranslationMask translationMask = null,
@@ -1328,7 +1372,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static void WriteToXml(
-            this IModStatsGetter item,
+            this IModStatsInternalGetter item,
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1346,7 +1390,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static void WriteToXml(
-            this IModStatsGetter item,
+            this IModStatsInternalGetter item,
             Stream stream,
             out ModStats_ErrorMask errorMask,
             ModStats_TranslationMask translationMask = null,
@@ -1365,7 +1409,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static void WriteToXml(
-            this IModStatsGetter item,
+            this IModStatsInternalGetter item,
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1383,7 +1427,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static void WriteToXml(
-            this IModStatsGetter item,
+            this IModStatsInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1398,7 +1442,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static void WriteToXml(
-            this IModStatsGetter item,
+            this IModStatsInternalGetter item,
             XElement node,
             string name = null,
             ModStats_TranslationMask translationMask = null)
@@ -1412,7 +1456,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static void WriteToXml(
-            this IModStatsGetter item,
+            this IModStatsInternalGetter item,
             string path,
             string name = null)
         {
@@ -1427,7 +1471,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static void WriteToXml(
-            this IModStatsGetter item,
+            this IModStatsInternalGetter item,
             Stream stream,
             string name = null)
         {
@@ -1782,7 +1826,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public readonly static ModStatsBinaryWriteTranslation Instance = new ModStatsBinaryWriteTranslation();
 
         public static void Write_Embedded(
-            IModStatsGetter item,
+            IModStatsInternalGetter item,
             MutagenWriter writer,
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
@@ -1796,7 +1840,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public void Write(
             MutagenWriter writer,
-            IModStatsGetter item,
+            IModStatsInternalGetter item,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
@@ -1822,7 +1866,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ErrorMaskBuilder errorMask)
         {
             Write(
-                item: (IModStatsGetter)item,
+                item: (IModStatsInternalGetter)item,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -1841,7 +1885,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public static class ModStatsBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IModStatsGetter item,
+            this IModStatsInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
             out ModStats_ErrorMask errorMask,
@@ -1858,7 +1902,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static void WriteToBinary(
-            this IModStatsGetter item,
+            this IModStatsInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -1872,7 +1916,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static void WriteToBinary(
-            this IModStatsGetter item,
+            this IModStatsInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
@@ -1889,22 +1933,65 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     public partial class ModStatsBinaryWrapper :
         BinaryWrapper,
-        IModStatsGetter
+        IModStatsInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ModStats_Registration.Instance;
         public static ModStats_Registration Registration => ModStats_Registration.Instance;
-        protected object CommonInstance => ModStatsCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
+        protected object CommonInstance()
+        {
+            return ModStatsCommon.Instance;
+        }
+        object IModStatsInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IModStatsInternalGetter.CommonSetterInstance()
+        {
+            return null;
+        }
+        object IModStatsInternalGetter.CommonSetterCopyInstance()
+        {
+            return null;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IModStatsGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IModStatsInternalGetter)rhs, include);
 
         protected object XmlWriteTranslator => ModStatsXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((ModStatsXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         protected object BinaryWriteTranslator => ModStatsBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((ModStatsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
 
         public Single Version => SpanExt.GetFloat(_data.Span.Slice(0, 4));
         public Int32 NumRecords => BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(4, 4));
@@ -1948,4 +2035,42 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda.Skyrim
+{
+    public partial class ModStats
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => ModStats_Registration.Instance;
+        public static ModStats_Registration Registration => ModStats_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return ModStatsCommon.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return ModStatsSetterCommon.Instance;
+        }
+        protected object CommonSetterCopyInstance()
+        {
+            return ModStatsSetterCopyCommon.Instance;
+        }
+        object IModStatsInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IModStatsInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object IModStatsInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
 }

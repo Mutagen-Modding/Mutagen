@@ -34,18 +34,12 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class RegionDataObject :
         LoquiNotifyingObject,
-        IRegionDataObject,
+        IRegionDataObjectInternal,
         ILoquiObjectSetter<RegionDataObject>,
         ILinkSubContainer,
         IEquatable<RegionDataObject>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => RegionDataObject_Registration.Instance;
-        public static RegionDataObject_Registration Registration => RegionDataObject_Registration.Instance;
-        protected object CommonInstance => RegionDataObjectCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
-
         #region Ctor
         public RegionDataObject()
         {
@@ -208,7 +202,7 @@ namespace Mutagen.Bethesda.Oblivion
         ReadOnlySpan<Byte> IRegionDataObjectGetter.Unknown2 => this.Unknown2;
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRegionDataObjectGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRegionDataObjectInternalGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -226,22 +220,35 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is IRegionDataObjectGetter rhs)) return false;
-            return ((RegionDataObjectCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            if (!(obj is IRegionDataObjectInternalGetter rhs)) return false;
+            return ((RegionDataObjectCommon)((IRegionDataObjectInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(RegionDataObject obj)
         {
-            return ((RegionDataObjectCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((RegionDataObjectCommon)((IRegionDataObjectInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((RegionDataObjectCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((RegionDataObjectCommon)((IRegionDataObjectInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected object XmlWriteTranslator => RegionDataObjectXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((RegionDataObjectXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static RegionDataObject CreateFromXml(
@@ -445,6 +452,19 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Translation
         protected object BinaryWriteTranslator => RegionDataObjectBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((RegionDataObjectBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
         #region Binary Create
         [DebuggerStepThrough]
         public static RegionDataObject CreateFromBinary(
@@ -698,7 +718,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            RegionDataObjectCommon.CopyFieldsFrom(
+            RegionDataObjectSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -713,7 +733,7 @@ namespace Mutagen.Bethesda.Oblivion
             RegionDataObject_CopyMask copyMask = null,
             RegionDataObject def = null)
         {
-            RegionDataObjectCommon.CopyFieldsFrom(
+            RegionDataObjectSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -784,7 +804,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void Clear()
         {
-            RegionDataObjectCommon.Instance.Clear(this);
+            RegionDataObjectSetterCommon.Instance.Clear(this);
         }
 
         public static RegionDataObject Create(IEnumerable<KeyValuePair<ushort, object>> fields)
@@ -865,8 +885,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IRegionDataObject :
-        IRegionDataObjectGetter,
-        ILoquiObjectSetter<IRegionDataObject>
+        IRegionDataObjectInternalGetter,
+        ILoquiObjectSetter<IRegionDataObjectInternal>
     {
         new OblivionMajorRecord Object { get; set; }
         new IFormIDLink<OblivionMajorRecord> Object_Property { get; }
@@ -909,9 +929,17 @@ namespace Mutagen.Bethesda.Oblivion
             RegionDataObject def = null);
     }
 
+    public partial interface IRegionDataObjectInternal :
+        IRegionDataObject,
+        IRegionDataObjectInternalGetter
+    {
+        new OblivionMajorRecord Object { get; set; }
+        new IFormIDLink<OblivionMajorRecord> Object_Property { get; }
+    }
+
     public partial interface IRegionDataObjectGetter :
         ILoquiObject,
-        ILoquiObject<IRegionDataObjectGetter>,
+        ILoquiObject<IRegionDataObjectInternalGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -987,45 +1015,53 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    public partial interface IRegionDataObjectInternalGetter : IRegionDataObjectGetter
+    {
+        object CommonInstance();
+        object CommonSetterInstance();
+        object CommonSetterCopyInstance();
+
+    }
+
     #endregion
 
     #region Common MixIn
     public static class RegionDataObjectMixIn
     {
-        public static void Clear(this IRegionDataObject item)
+        public static void Clear(this IRegionDataObjectInternal item)
         {
-            ((RegionDataObjectCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((RegionDataObjectSetterCommon)((IRegionDataObjectInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static RegionDataObject_Mask<bool> GetEqualsMask(
-            this IRegionDataObjectGetter item,
-            IRegionDataObjectGetter rhs,
+            this IRegionDataObjectInternalGetter item,
+            IRegionDataObjectInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((RegionDataObjectCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((RegionDataObjectCommon)((IRegionDataObjectInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IRegionDataObjectGetter item,
+            this IRegionDataObjectInternalGetter item,
             string name = null,
             RegionDataObject_Mask<bool> printMask = null)
         {
-            return ((RegionDataObjectCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((RegionDataObjectCommon)((IRegionDataObjectInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IRegionDataObjectGetter item,
+            this IRegionDataObjectInternalGetter item,
             FileGeneration fg,
             string name = null,
             RegionDataObject_Mask<bool> printMask = null)
         {
-            ((RegionDataObjectCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((RegionDataObjectCommon)((IRegionDataObjectInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -1033,28 +1069,28 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static bool HasBeenSet(
-            this IRegionDataObjectGetter item,
+            this IRegionDataObjectInternalGetter item,
             RegionDataObject_Mask<bool?> checkMask)
         {
-            return ((RegionDataObjectCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((RegionDataObjectCommon)((IRegionDataObjectInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static RegionDataObject_Mask<bool> GetHasBeenSetMask(this IRegionDataObjectGetter item)
+        public static RegionDataObject_Mask<bool> GetHasBeenSetMask(this IRegionDataObjectInternalGetter item)
         {
             var ret = new RegionDataObject_Mask<bool>();
-            ((RegionDataObjectCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((RegionDataObjectCommon)((IRegionDataObjectInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this IRegionDataObjectGetter item,
-            IRegionDataObjectGetter rhs)
+            this IRegionDataObjectInternalGetter item,
+            IRegionDataObjectInternalGetter rhs)
         {
-            return ((RegionDataObjectCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((RegionDataObjectCommon)((IRegionDataObjectInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1115,13 +1151,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IRegionDataObjectGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type InternalGetterType = typeof(IRegionDataObjectInternalGetter);
 
         public static readonly Type SetterType = typeof(IRegionDataObject);
 
-        public static readonly Type InternalSetterType = null;
-
-        public static readonly Type CommonType = typeof(RegionDataObjectCommon);
+        public static readonly Type InternalSetterType = typeof(IRegionDataObjectInternal);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.RegionDataObject";
 
@@ -1421,7 +1455,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -1441,9 +1474,282 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
+    public partial class RegionDataObjectSetterCommon
+    {
+        public static readonly RegionDataObjectSetterCommon Instance = new RegionDataObjectSetterCommon();
+
+        partial void ClearPartial();
+        
+        public virtual void Clear(IRegionDataObjectInternal item)
+        {
+            ClearPartial();
+            item.Object = default(OblivionMajorRecord);
+            item.ParentIndex = default(UInt16);
+            item.Unknown1 = default(Byte[]);
+            item.Density = default(Single);
+            item.Clustering = default(Byte);
+            item.MinSlope = default(Byte);
+            item.MaxSlope = default(Byte);
+            item.Flags = default(RegionDataObject.Flag);
+            item.RadiusWrtPercent = default(UInt16);
+            item.Radius = default(UInt16);
+            item.MinHeight = default(Single);
+            item.MaxHeight = default(Single);
+            item.Sink = default(Single);
+            item.SinkVariance = default(Single);
+            item.SizeVariance = default(Single);
+            item.AngleVariance = default(P3UInt16);
+            item.Unknown2 = default(Byte[]);
+        }
+        
+        
+    }
     public partial class RegionDataObjectCommon
     {
         public static readonly RegionDataObjectCommon Instance = new RegionDataObjectCommon();
+
+        public RegionDataObject_Mask<bool> GetEqualsMask(
+            IRegionDataObjectInternalGetter item,
+            IRegionDataObjectInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new RegionDataObject_Mask<bool>();
+            ((RegionDataObjectCommon)((IRegionDataObjectInternalGetter)item).CommonInstance()).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+        
+        public void FillEqualsMask(
+            IRegionDataObjectInternalGetter item,
+            IRegionDataObjectInternalGetter rhs,
+            RegionDataObject_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            if (rhs == null) return;
+            ret.Object = item.Object_Property.FormKey == rhs.Object_Property.FormKey;
+            ret.ParentIndex = item.ParentIndex == rhs.ParentIndex;
+            ret.Unknown1 = MemoryExtensions.SequenceEqual(item.Unknown1, rhs.Unknown1);
+            ret.Density = item.Density.EqualsWithin(rhs.Density);
+            ret.Clustering = item.Clustering == rhs.Clustering;
+            ret.MinSlope = item.MinSlope == rhs.MinSlope;
+            ret.MaxSlope = item.MaxSlope == rhs.MaxSlope;
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.RadiusWrtPercent = item.RadiusWrtPercent == rhs.RadiusWrtPercent;
+            ret.Radius = item.Radius == rhs.Radius;
+            ret.MinHeight = item.MinHeight.EqualsWithin(rhs.MinHeight);
+            ret.MaxHeight = item.MaxHeight.EqualsWithin(rhs.MaxHeight);
+            ret.Sink = item.Sink.EqualsWithin(rhs.Sink);
+            ret.SinkVariance = item.SinkVariance.EqualsWithin(rhs.SinkVariance);
+            ret.SizeVariance = item.SizeVariance.EqualsWithin(rhs.SizeVariance);
+            ret.AngleVariance = item.AngleVariance.Equals(rhs.AngleVariance);
+            ret.Unknown2 = MemoryExtensions.SequenceEqual(item.Unknown2, rhs.Unknown2);
+        }
+        
+        public string ToString(
+            IRegionDataObjectInternalGetter item,
+            string name = null,
+            RegionDataObject_Mask<bool> printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+            return fg.ToString();
+        }
+        
+        public void ToString(
+            IRegionDataObjectInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            RegionDataObject_Mask<bool> printMask = null)
+        {
+            if (name == null)
+            {
+                fg.AppendLine($"RegionDataObject =>");
+            }
+            else
+            {
+                fg.AppendLine($"{name} (RegionDataObject) =>");
+            }
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
+            }
+            fg.AppendLine("]");
+        }
+        
+        protected static void ToStringFields(
+            IRegionDataObjectInternalGetter item,
+            FileGeneration fg,
+            RegionDataObject_Mask<bool> printMask = null)
+        {
+            if (printMask?.Object ?? true)
+            {
+                fg.AppendLine($"Object => {item.Object_Property}");
+            }
+            if (printMask?.ParentIndex ?? true)
+            {
+                fg.AppendLine($"ParentIndex => {item.ParentIndex}");
+            }
+            if (printMask?.Unknown1 ?? true)
+            {
+                fg.AppendLine($"Unknown1 => {SpanExt.ToHexString(item.Unknown1)}");
+            }
+            if (printMask?.Density ?? true)
+            {
+                fg.AppendLine($"Density => {item.Density}");
+            }
+            if (printMask?.Clustering ?? true)
+            {
+                fg.AppendLine($"Clustering => {item.Clustering}");
+            }
+            if (printMask?.MinSlope ?? true)
+            {
+                fg.AppendLine($"MinSlope => {item.MinSlope}");
+            }
+            if (printMask?.MaxSlope ?? true)
+            {
+                fg.AppendLine($"MaxSlope => {item.MaxSlope}");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                fg.AppendLine($"Flags => {item.Flags}");
+            }
+            if (printMask?.RadiusWrtPercent ?? true)
+            {
+                fg.AppendLine($"RadiusWrtPercent => {item.RadiusWrtPercent}");
+            }
+            if (printMask?.Radius ?? true)
+            {
+                fg.AppendLine($"Radius => {item.Radius}");
+            }
+            if (printMask?.MinHeight ?? true)
+            {
+                fg.AppendLine($"MinHeight => {item.MinHeight}");
+            }
+            if (printMask?.MaxHeight ?? true)
+            {
+                fg.AppendLine($"MaxHeight => {item.MaxHeight}");
+            }
+            if (printMask?.Sink ?? true)
+            {
+                fg.AppendLine($"Sink => {item.Sink}");
+            }
+            if (printMask?.SinkVariance ?? true)
+            {
+                fg.AppendLine($"SinkVariance => {item.SinkVariance}");
+            }
+            if (printMask?.SizeVariance ?? true)
+            {
+                fg.AppendLine($"SizeVariance => {item.SizeVariance}");
+            }
+            if (printMask?.AngleVariance ?? true)
+            {
+                fg.AppendLine($"AngleVariance => {item.AngleVariance}");
+            }
+            if (printMask?.Unknown2 ?? true)
+            {
+                fg.AppendLine($"Unknown2 => {SpanExt.ToHexString(item.Unknown2)}");
+            }
+        }
+        
+        public bool HasBeenSet(
+            IRegionDataObjectInternalGetter item,
+            RegionDataObject_Mask<bool?> checkMask)
+        {
+            return true;
+        }
+        
+        public void FillHasBeenSetMask(
+            IRegionDataObjectInternalGetter item,
+            RegionDataObject_Mask<bool> mask)
+        {
+            mask.Object = true;
+            mask.ParentIndex = true;
+            mask.Unknown1 = true;
+            mask.Density = true;
+            mask.Clustering = true;
+            mask.MinSlope = true;
+            mask.MaxSlope = true;
+            mask.Flags = true;
+            mask.RadiusWrtPercent = true;
+            mask.Radius = true;
+            mask.MinHeight = true;
+            mask.MaxHeight = true;
+            mask.Sink = true;
+            mask.SinkVariance = true;
+            mask.SizeVariance = true;
+            mask.AngleVariance = true;
+            mask.Unknown2 = true;
+        }
+        
+        #region Equals and Hash
+        public virtual bool Equals(
+            IRegionDataObjectInternalGetter lhs,
+            IRegionDataObjectInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!lhs.Object_Property.Equals(rhs.Object_Property)) return false;
+            if (lhs.ParentIndex != rhs.ParentIndex) return false;
+            if (!MemoryExtensions.SequenceEqual(lhs.Unknown1, rhs.Unknown1)) return false;
+            if (!lhs.Density.EqualsWithin(rhs.Density)) return false;
+            if (lhs.Clustering != rhs.Clustering) return false;
+            if (lhs.MinSlope != rhs.MinSlope) return false;
+            if (lhs.MaxSlope != rhs.MaxSlope) return false;
+            if (lhs.Flags != rhs.Flags) return false;
+            if (lhs.RadiusWrtPercent != rhs.RadiusWrtPercent) return false;
+            if (lhs.Radius != rhs.Radius) return false;
+            if (!lhs.MinHeight.EqualsWithin(rhs.MinHeight)) return false;
+            if (!lhs.MaxHeight.EqualsWithin(rhs.MaxHeight)) return false;
+            if (!lhs.Sink.EqualsWithin(rhs.Sink)) return false;
+            if (!lhs.SinkVariance.EqualsWithin(rhs.SinkVariance)) return false;
+            if (!lhs.SizeVariance.EqualsWithin(rhs.SizeVariance)) return false;
+            if (!lhs.AngleVariance.Equals(rhs.AngleVariance)) return false;
+            if (!MemoryExtensions.SequenceEqual(lhs.Unknown2, rhs.Unknown2)) return false;
+            return true;
+        }
+        
+        public virtual int GetHashCode(IRegionDataObjectInternalGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.Object).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.ParentIndex).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Unknown1).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Density).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Clustering).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.MinSlope).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.MaxSlope).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.RadiusWrtPercent).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Radius).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.MinHeight).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.MaxHeight).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Sink).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.SinkVariance).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.SizeVariance).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.AngleVariance).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Unknown2).CombineHashCode(ret);
+            return ret;
+        }
+        
+        #endregion
+        
+        
+        
+    }
+    public partial class RegionDataObjectSetterCopyCommon
+    {
+        public static readonly RegionDataObjectSetterCopyCommon Instance = new RegionDataObjectSetterCopyCommon();
 
         #region Copy Fields From
         public static void CopyFieldsFrom(
@@ -1743,270 +2049,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
         }
-
+        
         #endregion
-
-        partial void ClearPartial();
-
-        public virtual void Clear(IRegionDataObject item)
-        {
-            ClearPartial();
-            item.Object = default(OblivionMajorRecord);
-            item.ParentIndex = default(UInt16);
-            item.Unknown1 = default(Byte[]);
-            item.Density = default(Single);
-            item.Clustering = default(Byte);
-            item.MinSlope = default(Byte);
-            item.MaxSlope = default(Byte);
-            item.Flags = default(RegionDataObject.Flag);
-            item.RadiusWrtPercent = default(UInt16);
-            item.Radius = default(UInt16);
-            item.MinHeight = default(Single);
-            item.MaxHeight = default(Single);
-            item.Sink = default(Single);
-            item.SinkVariance = default(Single);
-            item.SizeVariance = default(Single);
-            item.AngleVariance = default(P3UInt16);
-            item.Unknown2 = default(Byte[]);
-        }
-
-        public RegionDataObject_Mask<bool> GetEqualsMask(
-            IRegionDataObjectGetter item,
-            IRegionDataObjectGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new RegionDataObject_Mask<bool>();
-            ((RegionDataObjectCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public void FillEqualsMask(
-            IRegionDataObjectGetter item,
-            IRegionDataObjectGetter rhs,
-            RegionDataObject_Mask<bool> ret,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            if (rhs == null) return;
-            ret.Object = item.Object_Property.FormKey == rhs.Object_Property.FormKey;
-            ret.ParentIndex = item.ParentIndex == rhs.ParentIndex;
-            ret.Unknown1 = MemoryExtensions.SequenceEqual(item.Unknown1, rhs.Unknown1);
-            ret.Density = item.Density.EqualsWithin(rhs.Density);
-            ret.Clustering = item.Clustering == rhs.Clustering;
-            ret.MinSlope = item.MinSlope == rhs.MinSlope;
-            ret.MaxSlope = item.MaxSlope == rhs.MaxSlope;
-            ret.Flags = item.Flags == rhs.Flags;
-            ret.RadiusWrtPercent = item.RadiusWrtPercent == rhs.RadiusWrtPercent;
-            ret.Radius = item.Radius == rhs.Radius;
-            ret.MinHeight = item.MinHeight.EqualsWithin(rhs.MinHeight);
-            ret.MaxHeight = item.MaxHeight.EqualsWithin(rhs.MaxHeight);
-            ret.Sink = item.Sink.EqualsWithin(rhs.Sink);
-            ret.SinkVariance = item.SinkVariance.EqualsWithin(rhs.SinkVariance);
-            ret.SizeVariance = item.SizeVariance.EqualsWithin(rhs.SizeVariance);
-            ret.AngleVariance = item.AngleVariance.Equals(rhs.AngleVariance);
-            ret.Unknown2 = MemoryExtensions.SequenceEqual(item.Unknown2, rhs.Unknown2);
-        }
-
-        public string ToString(
-            IRegionDataObjectGetter item,
-            string name = null,
-            RegionDataObject_Mask<bool> printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(
-                item: item,
-                fg: fg,
-                name: name,
-                printMask: printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(
-            IRegionDataObjectGetter item,
-            FileGeneration fg,
-            string name = null,
-            RegionDataObject_Mask<bool> printMask = null)
-        {
-            if (name == null)
-            {
-                fg.AppendLine($"RegionDataObject =>");
-            }
-            else
-            {
-                fg.AppendLine($"{name} (RegionDataObject) =>");
-            }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                ToStringFields(
-                    item: item,
-                    fg: fg,
-                    printMask: printMask);
-            }
-            fg.AppendLine("]");
-        }
-
-        protected static void ToStringFields(
-            IRegionDataObjectGetter item,
-            FileGeneration fg,
-            RegionDataObject_Mask<bool> printMask = null)
-        {
-            if (printMask?.Object ?? true)
-            {
-                fg.AppendLine($"Object => {item.Object_Property}");
-            }
-            if (printMask?.ParentIndex ?? true)
-            {
-                fg.AppendLine($"ParentIndex => {item.ParentIndex}");
-            }
-            if (printMask?.Unknown1 ?? true)
-            {
-                fg.AppendLine($"Unknown1 => {SpanExt.ToHexString(item.Unknown1)}");
-            }
-            if (printMask?.Density ?? true)
-            {
-                fg.AppendLine($"Density => {item.Density}");
-            }
-            if (printMask?.Clustering ?? true)
-            {
-                fg.AppendLine($"Clustering => {item.Clustering}");
-            }
-            if (printMask?.MinSlope ?? true)
-            {
-                fg.AppendLine($"MinSlope => {item.MinSlope}");
-            }
-            if (printMask?.MaxSlope ?? true)
-            {
-                fg.AppendLine($"MaxSlope => {item.MaxSlope}");
-            }
-            if (printMask?.Flags ?? true)
-            {
-                fg.AppendLine($"Flags => {item.Flags}");
-            }
-            if (printMask?.RadiusWrtPercent ?? true)
-            {
-                fg.AppendLine($"RadiusWrtPercent => {item.RadiusWrtPercent}");
-            }
-            if (printMask?.Radius ?? true)
-            {
-                fg.AppendLine($"Radius => {item.Radius}");
-            }
-            if (printMask?.MinHeight ?? true)
-            {
-                fg.AppendLine($"MinHeight => {item.MinHeight}");
-            }
-            if (printMask?.MaxHeight ?? true)
-            {
-                fg.AppendLine($"MaxHeight => {item.MaxHeight}");
-            }
-            if (printMask?.Sink ?? true)
-            {
-                fg.AppendLine($"Sink => {item.Sink}");
-            }
-            if (printMask?.SinkVariance ?? true)
-            {
-                fg.AppendLine($"SinkVariance => {item.SinkVariance}");
-            }
-            if (printMask?.SizeVariance ?? true)
-            {
-                fg.AppendLine($"SizeVariance => {item.SizeVariance}");
-            }
-            if (printMask?.AngleVariance ?? true)
-            {
-                fg.AppendLine($"AngleVariance => {item.AngleVariance}");
-            }
-            if (printMask?.Unknown2 ?? true)
-            {
-                fg.AppendLine($"Unknown2 => {SpanExt.ToHexString(item.Unknown2)}");
-            }
-        }
-
-        public bool HasBeenSet(
-            IRegionDataObjectGetter item,
-            RegionDataObject_Mask<bool?> checkMask)
-        {
-            return true;
-        }
-
-        public void FillHasBeenSetMask(
-            IRegionDataObjectGetter item,
-            RegionDataObject_Mask<bool> mask)
-        {
-            mask.Object = true;
-            mask.ParentIndex = true;
-            mask.Unknown1 = true;
-            mask.Density = true;
-            mask.Clustering = true;
-            mask.MinSlope = true;
-            mask.MaxSlope = true;
-            mask.Flags = true;
-            mask.RadiusWrtPercent = true;
-            mask.Radius = true;
-            mask.MinHeight = true;
-            mask.MaxHeight = true;
-            mask.Sink = true;
-            mask.SinkVariance = true;
-            mask.SizeVariance = true;
-            mask.AngleVariance = true;
-            mask.Unknown2 = true;
-        }
-
-        #region Equals and Hash
-        public virtual bool Equals(
-            IRegionDataObjectGetter lhs,
-            IRegionDataObjectGetter rhs)
-        {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
-            if (!lhs.Object_Property.Equals(rhs.Object_Property)) return false;
-            if (lhs.ParentIndex != rhs.ParentIndex) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Unknown1, rhs.Unknown1)) return false;
-            if (!lhs.Density.EqualsWithin(rhs.Density)) return false;
-            if (lhs.Clustering != rhs.Clustering) return false;
-            if (lhs.MinSlope != rhs.MinSlope) return false;
-            if (lhs.MaxSlope != rhs.MaxSlope) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (lhs.RadiusWrtPercent != rhs.RadiusWrtPercent) return false;
-            if (lhs.Radius != rhs.Radius) return false;
-            if (!lhs.MinHeight.EqualsWithin(rhs.MinHeight)) return false;
-            if (!lhs.MaxHeight.EqualsWithin(rhs.MaxHeight)) return false;
-            if (!lhs.Sink.EqualsWithin(rhs.Sink)) return false;
-            if (!lhs.SinkVariance.EqualsWithin(rhs.SinkVariance)) return false;
-            if (!lhs.SizeVariance.EqualsWithin(rhs.SizeVariance)) return false;
-            if (!lhs.AngleVariance.Equals(rhs.AngleVariance)) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Unknown2, rhs.Unknown2)) return false;
-            return true;
-        }
-
-        public virtual int GetHashCode(IRegionDataObjectGetter item)
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.Object).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.ParentIndex).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Unknown1).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Density).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Clustering).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.MinSlope).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.MaxSlope).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.RadiusWrtPercent).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Radius).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.MinHeight).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.MaxHeight).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Sink).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.SinkVariance).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.SizeVariance).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.AngleVariance).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Unknown2).CombineHashCode(ret);
-            return ret;
-        }
-
-        #endregion
-
-
+        
+        
     }
     #endregion
 
@@ -2017,7 +2063,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static RegionDataObjectXmlWriteTranslation Instance = new RegionDataObjectXmlWriteTranslation();
 
         public static void WriteToNodeXml(
-            IRegionDataObjectGetter item,
+            IRegionDataObjectInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -2179,7 +2225,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             XElement node,
-            IRegionDataObjectGetter item,
+            IRegionDataObjectInternalGetter item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)
@@ -2205,7 +2251,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             Write(
-                item: (IRegionDataObjectGetter)item,
+                item: (IRegionDataObjectInternalGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -2214,7 +2260,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             XElement node,
-            IRegionDataObjectGetter item,
+            IRegionDataObjectInternalGetter item,
             ErrorMaskBuilder errorMask,
             int fieldIndex,
             TranslationCrystal translationMask,
@@ -2224,7 +2270,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 errorMask?.PushIndex(fieldIndex);
                 Write(
-                    item: (IRegionDataObjectGetter)item,
+                    item: (IRegionDataObjectInternalGetter)item,
                     name: name,
                     node: node,
                     errorMask: errorMask,
@@ -2248,7 +2294,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static RegionDataObjectXmlCreateTranslation Instance = new RegionDataObjectXmlCreateTranslation();
 
         public static void FillPublicXml(
-            IRegionDataObject item,
+            IRegionDataObjectInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -2273,7 +2319,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElementXml(
-            IRegionDataObject item,
+            IRegionDataObjectInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -2715,7 +2761,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public static class RegionDataObjectXmlTranslationMixIn
     {
         public static void WriteToXml(
-            this IRegionDataObjectGetter item,
+            this IRegionDataObjectInternalGetter item,
             XElement node,
             out RegionDataObject_ErrorMask errorMask,
             bool doMasks = true,
@@ -2733,7 +2779,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IRegionDataObjectGetter item,
+            this IRegionDataObjectInternalGetter item,
             string path,
             out RegionDataObject_ErrorMask errorMask,
             RegionDataObject_TranslationMask translationMask = null,
@@ -2752,7 +2798,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IRegionDataObjectGetter item,
+            this IRegionDataObjectInternalGetter item,
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -2770,7 +2816,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IRegionDataObjectGetter item,
+            this IRegionDataObjectInternalGetter item,
             Stream stream,
             out RegionDataObject_ErrorMask errorMask,
             RegionDataObject_TranslationMask translationMask = null,
@@ -2789,7 +2835,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IRegionDataObjectGetter item,
+            this IRegionDataObjectInternalGetter item,
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -2807,7 +2853,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IRegionDataObjectGetter item,
+            this IRegionDataObjectInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -2822,7 +2868,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IRegionDataObjectGetter item,
+            this IRegionDataObjectInternalGetter item,
             XElement node,
             string name = null,
             RegionDataObject_TranslationMask translationMask = null)
@@ -2836,7 +2882,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IRegionDataObjectGetter item,
+            this IRegionDataObjectInternalGetter item,
             string path,
             string name = null)
         {
@@ -2851,7 +2897,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IRegionDataObjectGetter item,
+            this IRegionDataObjectInternalGetter item,
             Stream stream,
             string name = null)
         {
@@ -3584,7 +3630,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static RegionDataObjectBinaryWriteTranslation Instance = new RegionDataObjectBinaryWriteTranslation();
 
         public static void Write_Embedded(
-            IRegionDataObjectGetter item,
+            IRegionDataObjectInternalGetter item,
             MutagenWriter writer,
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
@@ -3634,7 +3680,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             MutagenWriter writer,
-            IRegionDataObjectGetter item,
+            IRegionDataObjectInternalGetter item,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
@@ -3654,7 +3700,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask)
         {
             Write(
-                item: (IRegionDataObjectGetter)item,
+                item: (IRegionDataObjectInternalGetter)item,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -3673,7 +3719,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public static class RegionDataObjectBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IRegionDataObjectGetter item,
+            this IRegionDataObjectInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
             out RegionDataObject_ErrorMask errorMask,
@@ -3690,7 +3736,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToBinary(
-            this IRegionDataObjectGetter item,
+            this IRegionDataObjectInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -3704,7 +3750,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToBinary(
-            this IRegionDataObjectGetter item,
+            this IRegionDataObjectInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
@@ -3721,22 +3767,65 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     public partial class RegionDataObjectBinaryWrapper :
         BinaryWrapper,
-        IRegionDataObjectGetter
+        IRegionDataObjectInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RegionDataObject_Registration.Instance;
         public static RegionDataObject_Registration Registration => RegionDataObject_Registration.Instance;
-        protected object CommonInstance => RegionDataObjectCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
+        protected object CommonInstance()
+        {
+            return RegionDataObjectCommon.Instance;
+        }
+        object IRegionDataObjectInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IRegionDataObjectInternalGetter.CommonSetterInstance()
+        {
+            return null;
+        }
+        object IRegionDataObjectInternalGetter.CommonSetterCopyInstance()
+        {
+            return null;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRegionDataObjectGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRegionDataObjectInternalGetter)rhs, include);
 
         protected object XmlWriteTranslator => RegionDataObjectXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((RegionDataObjectXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         protected object BinaryWriteTranslator => RegionDataObjectBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((RegionDataObjectBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
 
         #region Object
         public IFormIDLinkGetter<IOblivionMajorRecordInternalGetter> Object_Property => new FormIDLink<IOblivionMajorRecordInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
@@ -3795,4 +3884,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class RegionDataObject
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => RegionDataObject_Registration.Instance;
+        public static RegionDataObject_Registration Registration => RegionDataObject_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return RegionDataObjectCommon.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return RegionDataObjectSetterCommon.Instance;
+        }
+        protected object CommonSetterCopyInstance()
+        {
+            return RegionDataObjectSetterCopyCommon.Instance;
+        }
+        object IRegionDataObjectInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IRegionDataObjectInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object IRegionDataObjectInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
 }

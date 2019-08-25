@@ -44,11 +44,6 @@ namespace Mutagen.Bethesda.Oblivion
         IEquatable<LeveledItem>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => LeveledItem_Registration.Instance;
-        public new static LeveledItem_Registration Registration => LeveledItem_Registration.Instance;
-        protected override object CommonInstance => LeveledItemCommon.Instance;
-
         #region Ctor
         protected LeveledItem()
         {
@@ -117,7 +112,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<LeveledEntry<ItemAbstract>> ILeveledItem.Entries => _Entries;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<ILeveledEntryGetter<IItemAbstractInternalGetter>> ILeveledItemGetter.Entries => _Entries;
+        IReadOnlySetList<ILeveledEntryInternalGetter<IItemAbstractInternalGetter>> ILeveledItemGetter.Entries => _Entries;
         #endregion
 
         #endregion
@@ -141,20 +136,33 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is ILeveledItemInternalGetter rhs)) return false;
-            return ((LeveledItemCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            return ((LeveledItemCommon)((ILeveledItemInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(LeveledItem obj)
         {
-            return ((LeveledItemCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((LeveledItemCommon)((ILeveledItemInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((LeveledItemCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((LeveledItemCommon)((ILeveledItemInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected override object XmlWriteTranslator => LeveledItemXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((LeveledItemXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static LeveledItem CreateFromXml(
@@ -412,6 +420,19 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Binary Translation
         protected override object BinaryWriteTranslator => LeveledItemBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((LeveledItemBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
         #region Binary Create
         [DebuggerStepThrough]
         public static LeveledItem CreateFromBinary(
@@ -631,7 +652,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            LeveledItemCommon.CopyFieldsFrom(
+            LeveledItemSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -646,7 +667,7 @@ namespace Mutagen.Bethesda.Oblivion
             LeveledItem_CopyMask copyMask = null,
             LeveledItem def = null)
         {
-            LeveledItemCommon.CopyFieldsFrom(
+            LeveledItemSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -676,7 +697,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            LeveledItemCommon.Instance.Clear(this);
+            LeveledItemSetterCommon.Instance.Clear(this);
         }
 
         public new static LeveledItem Create(IEnumerable<KeyValuePair<ushort, object>> fields)
@@ -761,7 +782,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Entries
-        IReadOnlySetList<ILeveledEntryGetter<IItemAbstractInternalGetter>> Entries { get; }
+        IReadOnlySetList<ILeveledEntryInternalGetter<IItemAbstractInternalGetter>> Entries { get; }
         #endregion
 
     }
@@ -780,7 +801,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this ILeveledItemInternal item)
         {
-            ((LeveledItemCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((LeveledItemSetterCommon)((ILeveledItemInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static LeveledItem_Mask<bool> GetEqualsMask(
@@ -788,7 +809,7 @@ namespace Mutagen.Bethesda.Oblivion
             ILeveledItemInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((LeveledItemCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((LeveledItemCommon)((ILeveledItemInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -799,7 +820,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             LeveledItem_Mask<bool> printMask = null)
         {
-            return ((LeveledItemCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((LeveledItemCommon)((ILeveledItemInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -811,7 +832,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             LeveledItem_Mask<bool> printMask = null)
         {
-            ((LeveledItemCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((LeveledItemCommon)((ILeveledItemInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -822,7 +843,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ILeveledItemInternalGetter item,
             LeveledItem_Mask<bool?> checkMask)
         {
-            return ((LeveledItemCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((LeveledItemCommon)((ILeveledItemInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -830,7 +851,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static LeveledItem_Mask<bool> GetHasBeenSetMask(this ILeveledItemInternalGetter item)
         {
             var ret = new LeveledItem_Mask<bool>();
-            ((LeveledItemCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((LeveledItemCommon)((ILeveledItemInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -840,7 +861,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ILeveledItemInternalGetter item,
             ILeveledItemInternalGetter rhs)
         {
-            return ((LeveledItemCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((LeveledItemCommon)((ILeveledItemInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -897,8 +918,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type SetterType = typeof(ILeveledItem);
 
         public static readonly Type InternalSetterType = typeof(ILeveledItemInternal);
-
-        public static readonly Type CommonType = typeof(LeveledItemCommon);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.LeveledItem";
 
@@ -1052,7 +1071,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -1072,9 +1090,336 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
+    public partial class LeveledItemSetterCommon : ItemAbstractSetterCommon
+    {
+        public new static readonly LeveledItemSetterCommon Instance = new LeveledItemSetterCommon();
+
+        partial void ClearPartial();
+        
+        public virtual void Clear(ILeveledItemInternal item)
+        {
+            ClearPartial();
+            item.ChanceNone_Unset();
+            item.Flags_Unset();
+            item.Entries.Unset();
+            base.Clear(item);
+        }
+        
+        public override void Clear(IItemAbstractInternal item)
+        {
+            Clear(item: (ILeveledItemInternal)item);
+        }
+        
+        public override void Clear(IOblivionMajorRecordInternal item)
+        {
+            Clear(item: (ILeveledItemInternal)item);
+        }
+        
+        public override void Clear(IMajorRecordInternal item)
+        {
+            Clear(item: (ILeveledItemInternal)item);
+        }
+        
+        
+    }
     public partial class LeveledItemCommon : ItemAbstractCommon
     {
-        public static readonly LeveledItemCommon Instance = new LeveledItemCommon();
+        public new static readonly LeveledItemCommon Instance = new LeveledItemCommon();
+
+        public LeveledItem_Mask<bool> GetEqualsMask(
+            ILeveledItemInternalGetter item,
+            ILeveledItemInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new LeveledItem_Mask<bool>();
+            ((LeveledItemCommon)((ILeveledItemInternalGetter)item).CommonInstance()).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+        
+        public void FillEqualsMask(
+            ILeveledItemInternalGetter item,
+            ILeveledItemInternalGetter rhs,
+            LeveledItem_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            if (rhs == null) return;
+            ret.ChanceNone = item.ChanceNone_IsSet == rhs.ChanceNone_IsSet && item.ChanceNone == rhs.ChanceNone;
+            ret.Flags = item.Flags_IsSet == rhs.Flags_IsSet && item.Flags == rhs.Flags;
+            ret.Entries = item.Entries.CollectionEqualsHelper(
+                rhs.Entries,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            base.FillEqualsMask(item, rhs, ret, include);
+        }
+        
+        public string ToString(
+            ILeveledItemInternalGetter item,
+            string name = null,
+            LeveledItem_Mask<bool> printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+            return fg.ToString();
+        }
+        
+        public void ToString(
+            ILeveledItemInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            LeveledItem_Mask<bool> printMask = null)
+        {
+            if (name == null)
+            {
+                fg.AppendLine($"LeveledItem =>");
+            }
+            else
+            {
+                fg.AppendLine($"{name} (LeveledItem) =>");
+            }
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
+            }
+            fg.AppendLine("]");
+        }
+        
+        protected static void ToStringFields(
+            ILeveledItemInternalGetter item,
+            FileGeneration fg,
+            LeveledItem_Mask<bool> printMask = null)
+        {
+            ItemAbstractCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.ChanceNone ?? true)
+            {
+                fg.AppendLine($"ChanceNone => {item.ChanceNone}");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                fg.AppendLine($"Flags => {item.Flags}");
+            }
+            if (printMask?.Entries?.Overall ?? true)
+            {
+                fg.AppendLine("Entries =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Entries)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+        }
+        
+        public bool HasBeenSet(
+            ILeveledItemInternalGetter item,
+            LeveledItem_Mask<bool?> checkMask)
+        {
+            if (checkMask.ChanceNone.HasValue && checkMask.ChanceNone.Value != item.ChanceNone_IsSet) return false;
+            if (checkMask.Flags.HasValue && checkMask.Flags.Value != item.Flags_IsSet) return false;
+            if (checkMask.Entries.Overall.HasValue && checkMask.Entries.Overall.Value != item.Entries.HasBeenSet) return false;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+        
+        public void FillHasBeenSetMask(
+            ILeveledItemInternalGetter item,
+            LeveledItem_Mask<bool> mask)
+        {
+            mask.ChanceNone = item.ChanceNone_IsSet;
+            mask.Flags = item.Flags_IsSet;
+            mask.Entries = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, LeveledEntry_Mask<bool>>>>(item.Entries.HasBeenSet, item.Entries.WithIndex().Select((i) => new MaskItemIndexed<bool, LeveledEntry_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
+        }
+        
+        public static LeveledItem_FieldIndex ConvertFieldIndex(ItemAbstract_FieldIndex index)
+        {
+            switch (index)
+            {
+                case ItemAbstract_FieldIndex.MajorRecordFlagsRaw:
+                    return (LeveledItem_FieldIndex)((int)index);
+                case ItemAbstract_FieldIndex.FormKey:
+                    return (LeveledItem_FieldIndex)((int)index);
+                case ItemAbstract_FieldIndex.Version:
+                    return (LeveledItem_FieldIndex)((int)index);
+                case ItemAbstract_FieldIndex.EditorID:
+                    return (LeveledItem_FieldIndex)((int)index);
+                case ItemAbstract_FieldIndex.OblivionMajorRecordFlags:
+                    return (LeveledItem_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        public static LeveledItem_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (LeveledItem_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.FormKey:
+                    return (LeveledItem_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.Version:
+                    return (LeveledItem_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.EditorID:
+                    return (LeveledItem_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
+                    return (LeveledItem_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        public static LeveledItem_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (LeveledItem_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.FormKey:
+                    return (LeveledItem_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.Version:
+                    return (LeveledItem_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.EditorID:
+                    return (LeveledItem_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        #region Equals and Hash
+        public virtual bool Equals(
+            ILeveledItemInternalGetter lhs,
+            ILeveledItemInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.ChanceNone_IsSet != rhs.ChanceNone_IsSet) return false;
+            if (lhs.ChanceNone_IsSet)
+            {
+                if (lhs.ChanceNone != rhs.ChanceNone) return false;
+            }
+            if (lhs.Flags_IsSet != rhs.Flags_IsSet) return false;
+            if (lhs.Flags_IsSet)
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if (lhs.Entries.HasBeenSet != rhs.Entries.HasBeenSet) return false;
+            if (lhs.Entries.HasBeenSet)
+            {
+                if (!lhs.Entries.SequenceEqual(rhs.Entries)) return false;
+            }
+            return true;
+        }
+        
+        public override bool Equals(
+            IItemAbstractInternalGetter lhs,
+            IItemAbstractInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (ILeveledItemInternalGetter)lhs,
+                rhs: rhs as ILeveledItemInternalGetter);
+        }
+        
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (ILeveledItemInternalGetter)lhs,
+                rhs: rhs as ILeveledItemInternalGetter);
+        }
+        
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (ILeveledItemInternalGetter)lhs,
+                rhs: rhs as ILeveledItemInternalGetter);
+        }
+        
+        public virtual int GetHashCode(ILeveledItemInternalGetter item)
+        {
+            int ret = 0;
+            if (item.ChanceNone_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.ChanceNone).CombineHashCode(ret);
+            }
+            if (item.Flags_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
+            }
+            if (item.Entries.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Entries).CombineHashCode(ret);
+            }
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+        
+        public override int GetHashCode(IItemAbstractInternalGetter item)
+        {
+            return GetHashCode(item: (ILeveledItemInternalGetter)item);
+        }
+        
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (ILeveledItemInternalGetter)item);
+        }
+        
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (ILeveledItemInternalGetter)item);
+        }
+        
+        #endregion
+        
+        
+        #region Mutagen
+        partial void PostDuplicate(LeveledItem obj, LeveledItem rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+        
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new LeveledItem(getNextFormKey());
+            ret.CopyFieldsFrom((LeveledItem)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (LeveledItem)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+        
+        #endregion
+        
+        
+    }
+    public partial class LeveledItemSetterCopyCommon : ItemAbstractSetterCopyCommon
+    {
+        public new static readonly LeveledItemSetterCopyCommon Instance = new LeveledItemSetterCopyCommon();
 
         #region Copy Fields From
         public static void CopyFieldsFrom(
@@ -1084,7 +1429,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             LeveledItem_CopyMask copyMask)
         {
-            ItemAbstractCommon.CopyFieldsFrom(
+            ItemAbstractSetterCopyCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1185,324 +1530,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
         }
-
+        
         #endregion
-
-        partial void ClearPartial();
-
-        public virtual void Clear(ILeveledItemInternal item)
-        {
-            ClearPartial();
-            item.ChanceNone_Unset();
-            item.Flags_Unset();
-            item.Entries.Unset();
-            base.Clear(item);
-        }
-
-        public override void Clear(IItemAbstractInternal item)
-        {
-            Clear(item: (ILeveledItemInternal)item);
-        }
-
-        public override void Clear(IOblivionMajorRecordInternal item)
-        {
-            Clear(item: (ILeveledItemInternal)item);
-        }
-
-        public override void Clear(IMajorRecordInternal item)
-        {
-            Clear(item: (ILeveledItemInternal)item);
-        }
-
-        public LeveledItem_Mask<bool> GetEqualsMask(
-            ILeveledItemInternalGetter item,
-            ILeveledItemInternalGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new LeveledItem_Mask<bool>();
-            ((LeveledItemCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public void FillEqualsMask(
-            ILeveledItemInternalGetter item,
-            ILeveledItemInternalGetter rhs,
-            LeveledItem_Mask<bool> ret,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            if (rhs == null) return;
-            ret.ChanceNone = item.ChanceNone_IsSet == rhs.ChanceNone_IsSet && item.ChanceNone == rhs.ChanceNone;
-            ret.Flags = item.Flags_IsSet == rhs.Flags_IsSet && item.Flags == rhs.Flags;
-            ret.Entries = item.Entries.CollectionEqualsHelper(
-                rhs.Entries,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
-                include);
-            base.FillEqualsMask(item, rhs, ret, include);
-        }
-
-        public string ToString(
-            ILeveledItemInternalGetter item,
-            string name = null,
-            LeveledItem_Mask<bool> printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(
-                item: item,
-                fg: fg,
-                name: name,
-                printMask: printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(
-            ILeveledItemInternalGetter item,
-            FileGeneration fg,
-            string name = null,
-            LeveledItem_Mask<bool> printMask = null)
-        {
-            if (name == null)
-            {
-                fg.AppendLine($"LeveledItem =>");
-            }
-            else
-            {
-                fg.AppendLine($"{name} (LeveledItem) =>");
-            }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                ToStringFields(
-                    item: item,
-                    fg: fg,
-                    printMask: printMask);
-            }
-            fg.AppendLine("]");
-        }
-
-        protected static void ToStringFields(
-            ILeveledItemInternalGetter item,
-            FileGeneration fg,
-            LeveledItem_Mask<bool> printMask = null)
-        {
-            ItemAbstractCommon.ToStringFields(
-                item: item,
-                fg: fg,
-                printMask: printMask);
-            if (printMask?.ChanceNone ?? true)
-            {
-                fg.AppendLine($"ChanceNone => {item.ChanceNone}");
-            }
-            if (printMask?.Flags ?? true)
-            {
-                fg.AppendLine($"Flags => {item.Flags}");
-            }
-            if (printMask?.Entries?.Overall ?? true)
-            {
-                fg.AppendLine("Entries =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
-                {
-                    foreach (var subItem in item.Entries)
-                    {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            subItem?.ToString(fg, "Item");
-                        }
-                        fg.AppendLine("]");
-                    }
-                }
-                fg.AppendLine("]");
-            }
-        }
-
-        public bool HasBeenSet(
-            ILeveledItemInternalGetter item,
-            LeveledItem_Mask<bool?> checkMask)
-        {
-            if (checkMask.ChanceNone.HasValue && checkMask.ChanceNone.Value != item.ChanceNone_IsSet) return false;
-            if (checkMask.Flags.HasValue && checkMask.Flags.Value != item.Flags_IsSet) return false;
-            if (checkMask.Entries.Overall.HasValue && checkMask.Entries.Overall.Value != item.Entries.HasBeenSet) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public void FillHasBeenSetMask(
-            ILeveledItemInternalGetter item,
-            LeveledItem_Mask<bool> mask)
-        {
-            mask.ChanceNone = item.ChanceNone_IsSet;
-            mask.Flags = item.Flags_IsSet;
-            mask.Entries = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, LeveledEntry_Mask<bool>>>>(item.Entries.HasBeenSet, item.Entries.WithIndex().Select((i) => new MaskItemIndexed<bool, LeveledEntry_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-
-        public static LeveledItem_FieldIndex ConvertFieldIndex(ItemAbstract_FieldIndex index)
-        {
-            switch (index)
-            {
-                case ItemAbstract_FieldIndex.MajorRecordFlagsRaw:
-                    return (LeveledItem_FieldIndex)((int)index);
-                case ItemAbstract_FieldIndex.FormKey:
-                    return (LeveledItem_FieldIndex)((int)index);
-                case ItemAbstract_FieldIndex.Version:
-                    return (LeveledItem_FieldIndex)((int)index);
-                case ItemAbstract_FieldIndex.EditorID:
-                    return (LeveledItem_FieldIndex)((int)index);
-                case ItemAbstract_FieldIndex.OblivionMajorRecordFlags:
-                    return (LeveledItem_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        public static LeveledItem_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
-        {
-            switch (index)
-            {
-                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (LeveledItem_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.FormKey:
-                    return (LeveledItem_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.Version:
-                    return (LeveledItem_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.EditorID:
-                    return (LeveledItem_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
-                    return (LeveledItem_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        public static LeveledItem_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
-        {
-            switch (index)
-            {
-                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (LeveledItem_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.FormKey:
-                    return (LeveledItem_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
-                    return (LeveledItem_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.EditorID:
-                    return (LeveledItem_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        #region Equals and Hash
-        public virtual bool Equals(
-            ILeveledItemInternalGetter lhs,
-            ILeveledItemInternalGetter rhs)
-        {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (lhs.ChanceNone_IsSet != rhs.ChanceNone_IsSet) return false;
-            if (lhs.ChanceNone_IsSet)
-            {
-                if (lhs.ChanceNone != rhs.ChanceNone) return false;
-            }
-            if (lhs.Flags_IsSet != rhs.Flags_IsSet) return false;
-            if (lhs.Flags_IsSet)
-            {
-                if (lhs.Flags != rhs.Flags) return false;
-            }
-            if (lhs.Entries.HasBeenSet != rhs.Entries.HasBeenSet) return false;
-            if (lhs.Entries.HasBeenSet)
-            {
-                if (!lhs.Entries.SequenceEqual(rhs.Entries)) return false;
-            }
-            return true;
-        }
-
-        public override bool Equals(
-            IItemAbstractInternalGetter lhs,
-            IItemAbstractInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (ILeveledItemInternalGetter)lhs,
-                rhs: rhs as ILeveledItemInternalGetter);
-        }
-
-        public override bool Equals(
-            IOblivionMajorRecordInternalGetter lhs,
-            IOblivionMajorRecordInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (ILeveledItemInternalGetter)lhs,
-                rhs: rhs as ILeveledItemInternalGetter);
-        }
-
-        public override bool Equals(
-            IMajorRecordInternalGetter lhs,
-            IMajorRecordInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (ILeveledItemInternalGetter)lhs,
-                rhs: rhs as ILeveledItemInternalGetter);
-        }
-
-        public virtual int GetHashCode(ILeveledItemInternalGetter item)
-        {
-            int ret = 0;
-            if (item.ChanceNone_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.ChanceNone).CombineHashCode(ret);
-            }
-            if (item.Flags_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
-            }
-            if (item.Entries.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.Entries).CombineHashCode(ret);
-            }
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        public override int GetHashCode(IItemAbstractInternalGetter item)
-        {
-            return GetHashCode(item: (ILeveledItemInternalGetter)item);
-        }
-
-        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
-        {
-            return GetHashCode(item: (ILeveledItemInternalGetter)item);
-        }
-
-        public override int GetHashCode(IMajorRecordInternalGetter item)
-        {
-            return GetHashCode(item: (ILeveledItemInternalGetter)item);
-        }
-
-        #endregion
-
-
-        #region Mutagen
-        partial void PostDuplicate(LeveledItem obj, LeveledItem rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new LeveledItem(getNextFormKey());
-            ret.CopyFieldsFrom((LeveledItem)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (LeveledItem)item, getNextFormKey, duplicatedRecords);
-            return ret;
-        }
-
-        #endregion
-
+        
+        
     }
     #endregion
 
@@ -1548,14 +1579,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Entries.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.Entries) ?? true))
             {
-                ListXmlTranslation<ILeveledEntryGetter<IItemAbstractInternalGetter>>.Instance.Write(
+                ListXmlTranslation<ILeveledEntryInternalGetter<IItemAbstractInternalGetter>>.Instance.Write(
                     node: node,
                     name: nameof(item.Entries),
                     item: item.Entries,
                     fieldIndex: (int)LeveledItem_FieldIndex.Entries,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)LeveledItem_FieldIndex.Entries),
-                    transl: (XElement subNode, ILeveledEntryGetter<IItemAbstractInternalGetter> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    transl: (XElement subNode, ILeveledEntryInternalGetter<IItemAbstractInternalGetter> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         var loquiItem = subItem;
                         ((LeveledEntryXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<IItemAbstractInternalGetter>(
@@ -2277,12 +2308,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.Entries.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<ILeveledEntryGetter<IItemAbstractInternalGetter>>.Instance.Write(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<ILeveledEntryInternalGetter<IItemAbstractInternalGetter>>.Instance.Write(
                     writer: writer,
                     items: item.Entries,
                     fieldIndex: (int)LeveledItem_FieldIndex.Entries,
                     errorMask: errorMask,
-                    transl: (MutagenWriter subWriter, ILeveledEntryGetter<IItemAbstractInternalGetter> subItem, ErrorMaskBuilder listErrorMask) =>
+                    transl: (MutagenWriter subWriter, ILeveledEntryInternalGetter<IItemAbstractInternalGetter> subItem, ErrorMaskBuilder listErrorMask) =>
                     {
                         var loquiItem = subItem;
                         ((LeveledEntryBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IItemAbstractInternalGetter>(
@@ -2420,17 +2451,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         ItemAbstractBinaryWrapper,
         ILeveledItemInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LeveledItem_Registration.Instance;
         public new static LeveledItem_Registration Registration => LeveledItem_Registration.Instance;
-        protected override object CommonInstance => LeveledItemCommon.Instance;
+        protected override object CommonInstance()
+        {
+            return LeveledItemCommon.Instance;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILeveledItemInternalGetter)rhs, include);
 
         protected override object XmlWriteTranslator => LeveledItemXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((LeveledItemXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         protected override object BinaryWriteTranslator => LeveledItemBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((LeveledItemBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
 
         #region ChanceNone
         private int? _ChanceNoneLocation;
@@ -2445,7 +2508,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Flags_IsSet => GetFlagsIsSetCustom();
         public LeveledFlag Flags => GetFlagsCustom();
         #endregion
-        public IReadOnlySetList<ILeveledEntryGetter<IItemAbstractInternalGetter>> Entries { get; private set; } = EmptySetList<LeveledEntryBinaryWrapper<IItemAbstractInternalGetter>>.Instance;
+        public IReadOnlySetList<ILeveledEntryInternalGetter<IItemAbstractInternalGetter>> Entries { get; private set; } = EmptySetList<LeveledEntryBinaryWrapper<IItemAbstractInternalGetter>>.Instance;
         partial void CustomCtor(
             BinaryMemoryReadStream stream,
             long finalPos,
@@ -2549,4 +2612,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class LeveledItem
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => LeveledItem_Registration.Instance;
+        public new static LeveledItem_Registration Registration => LeveledItem_Registration.Instance;
+        protected override object CommonInstance()
+        {
+            return LeveledItemCommon.Instance;
+        }
+        protected override object CommonSetterInstance()
+        {
+            return LeveledItemSetterCommon.Instance;
+        }
+        protected override object CommonSetterCopyInstance()
+        {
+            return LeveledItemSetterCopyCommon.Instance;
+        }
+
+        #endregion
+
+    }
 }

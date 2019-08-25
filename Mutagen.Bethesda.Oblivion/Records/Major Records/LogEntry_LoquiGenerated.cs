@@ -37,18 +37,12 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class LogEntry :
         LoquiNotifyingObject,
-        ILogEntry,
+        ILogEntryInternal,
         ILoquiObjectSetter<LogEntry>,
         ILinkSubContainer,
         IEquatable<LogEntry>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => LogEntry_Registration.Instance;
-        public static LogEntry_Registration Registration => LogEntry_Registration.Instance;
-        protected object CommonInstance => LogEntryCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
-
         #region Ctor
         public LogEntry()
         {
@@ -92,7 +86,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<Condition> ILogEntry.Conditions => _Conditions;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IConditionGetter> ILogEntryGetter.Conditions => _Conditions;
+        IReadOnlySetList<IConditionInternalGetter> ILogEntryGetter.Conditions => _Conditions;
         #endregion
 
         #endregion
@@ -147,10 +141,10 @@ namespace Mutagen.Bethesda.Oblivion
             this.ResultScript_Set(default(ScriptFields), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IScriptFieldsGetter ILogEntryGetter.ResultScript => this.ResultScript;
+        IScriptFieldsInternalGetter ILogEntryGetter.ResultScript => this.ResultScript;
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILogEntryGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILogEntryInternalGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -168,22 +162,35 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is ILogEntryGetter rhs)) return false;
-            return ((LogEntryCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            if (!(obj is ILogEntryInternalGetter rhs)) return false;
+            return ((LogEntryCommon)((ILogEntryInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(LogEntry obj)
         {
-            return ((LogEntryCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((LogEntryCommon)((ILogEntryInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((LogEntryCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((LogEntryCommon)((ILogEntryInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected object XmlWriteTranslator => LogEntryXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((LogEntryXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static LogEntry CreateFromXml(
@@ -384,6 +391,19 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Translation
         protected object BinaryWriteTranslator => LogEntryBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((LogEntryBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
         #region Binary Create
         [DebuggerStepThrough]
         public static LogEntry CreateFromBinary(
@@ -624,7 +644,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            LogEntryCommon.CopyFieldsFrom(
+            LogEntrySetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -639,7 +659,7 @@ namespace Mutagen.Bethesda.Oblivion
             LogEntry_CopyMask copyMask = null,
             LogEntry def = null)
         {
-            LogEntryCommon.CopyFieldsFrom(
+            LogEntrySetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -671,7 +691,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void Clear()
         {
-            LogEntryCommon.Instance.Clear(this);
+            LogEntrySetterCommon.Instance.Clear(this);
         }
 
         public static LogEntry Create(IEnumerable<KeyValuePair<ushort, object>> fields)
@@ -713,8 +733,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface ILogEntry :
-        ILogEntryGetter,
-        ILoquiObjectSetter<ILogEntry>
+        ILogEntryInternalGetter,
+        ILoquiObjectSetter<ILogEntryInternal>
     {
         new LogEntry.Flag Flags { get; set; }
         new bool Flags_IsSet { get; set; }
@@ -739,9 +759,15 @@ namespace Mutagen.Bethesda.Oblivion
             LogEntry def = null);
     }
 
+    public partial interface ILogEntryInternal :
+        ILogEntry,
+        ILogEntryInternalGetter
+    {
+    }
+
     public partial interface ILogEntryGetter :
         ILoquiObject,
-        ILoquiObject<ILogEntryGetter>,
+        ILoquiObject<ILogEntryInternalGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -751,7 +777,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Conditions
-        IReadOnlySetList<IConditionGetter> Conditions { get; }
+        IReadOnlySetList<IConditionInternalGetter> Conditions { get; }
         #endregion
         #region Entry
         String Entry { get; }
@@ -759,10 +785,18 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region ResultScript
-        IScriptFieldsGetter ResultScript { get; }
+        IScriptFieldsInternalGetter ResultScript { get; }
         bool ResultScript_IsSet { get; }
 
         #endregion
+
+    }
+
+    public partial interface ILogEntryInternalGetter : ILogEntryGetter
+    {
+        object CommonInstance();
+        object CommonSetterInstance();
+        object CommonSetterCopyInstance();
 
     }
 
@@ -771,40 +805,40 @@ namespace Mutagen.Bethesda.Oblivion
     #region Common MixIn
     public static class LogEntryMixIn
     {
-        public static void Clear(this ILogEntry item)
+        public static void Clear(this ILogEntryInternal item)
         {
-            ((LogEntryCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((LogEntrySetterCommon)((ILogEntryInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static LogEntry_Mask<bool> GetEqualsMask(
-            this ILogEntryGetter item,
-            ILogEntryGetter rhs,
+            this ILogEntryInternalGetter item,
+            ILogEntryInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((LogEntryCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((LogEntryCommon)((ILogEntryInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this ILogEntryGetter item,
+            this ILogEntryInternalGetter item,
             string name = null,
             LogEntry_Mask<bool> printMask = null)
         {
-            return ((LogEntryCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((LogEntryCommon)((ILogEntryInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this ILogEntryGetter item,
+            this ILogEntryInternalGetter item,
             FileGeneration fg,
             string name = null,
             LogEntry_Mask<bool> printMask = null)
         {
-            ((LogEntryCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((LogEntryCommon)((ILogEntryInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -812,28 +846,28 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static bool HasBeenSet(
-            this ILogEntryGetter item,
+            this ILogEntryInternalGetter item,
             LogEntry_Mask<bool?> checkMask)
         {
-            return ((LogEntryCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((LogEntryCommon)((ILogEntryInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static LogEntry_Mask<bool> GetHasBeenSetMask(this ILogEntryGetter item)
+        public static LogEntry_Mask<bool> GetHasBeenSetMask(this ILogEntryInternalGetter item)
         {
             var ret = new LogEntry_Mask<bool>();
-            ((LogEntryCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((LogEntryCommon)((ILogEntryInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this ILogEntryGetter item,
-            ILogEntryGetter rhs)
+            this ILogEntryInternalGetter item,
+            ILogEntryInternalGetter rhs)
         {
-            return ((LogEntryCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((LogEntryCommon)((ILogEntryInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -881,13 +915,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(ILogEntryGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type InternalGetterType = typeof(ILogEntryInternalGetter);
 
         public static readonly Type SetterType = typeof(ILogEntry);
 
-        public static readonly Type InternalSetterType = null;
-
-        public static readonly Type CommonType = typeof(LogEntryCommon);
+        public static readonly Type InternalSetterType = typeof(ILogEntryInternal);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.LogEntry";
 
@@ -1068,7 +1100,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -1088,9 +1119,221 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
+    public partial class LogEntrySetterCommon
+    {
+        public static readonly LogEntrySetterCommon Instance = new LogEntrySetterCommon();
+
+        partial void ClearPartial();
+        
+        public virtual void Clear(ILogEntryInternal item)
+        {
+            ClearPartial();
+            item.Flags_Unset();
+            item.Conditions.Unset();
+            item.Entry_Unset();
+            item.ResultScript_Unset();
+        }
+        
+        
+    }
     public partial class LogEntryCommon
     {
         public static readonly LogEntryCommon Instance = new LogEntryCommon();
+
+        public LogEntry_Mask<bool> GetEqualsMask(
+            ILogEntryInternalGetter item,
+            ILogEntryInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new LogEntry_Mask<bool>();
+            ((LogEntryCommon)((ILogEntryInternalGetter)item).CommonInstance()).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+        
+        public void FillEqualsMask(
+            ILogEntryInternalGetter item,
+            ILogEntryInternalGetter rhs,
+            LogEntry_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            if (rhs == null) return;
+            ret.Flags = item.Flags_IsSet == rhs.Flags_IsSet && item.Flags == rhs.Flags;
+            ret.Conditions = item.Conditions.CollectionEqualsHelper(
+                rhs.Conditions,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Entry = item.Entry_IsSet == rhs.Entry_IsSet && string.Equals(item.Entry, rhs.Entry);
+            ret.ResultScript = EqualsMaskHelper.EqualsHelper(
+                item.ResultScript_IsSet,
+                rhs.ResultScript_IsSet,
+                item.ResultScript,
+                rhs.ResultScript,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
+        }
+        
+        public string ToString(
+            ILogEntryInternalGetter item,
+            string name = null,
+            LogEntry_Mask<bool> printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+            return fg.ToString();
+        }
+        
+        public void ToString(
+            ILogEntryInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            LogEntry_Mask<bool> printMask = null)
+        {
+            if (name == null)
+            {
+                fg.AppendLine($"LogEntry =>");
+            }
+            else
+            {
+                fg.AppendLine($"{name} (LogEntry) =>");
+            }
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
+            }
+            fg.AppendLine("]");
+        }
+        
+        protected static void ToStringFields(
+            ILogEntryInternalGetter item,
+            FileGeneration fg,
+            LogEntry_Mask<bool> printMask = null)
+        {
+            if (printMask?.Flags ?? true)
+            {
+                fg.AppendLine($"Flags => {item.Flags}");
+            }
+            if (printMask?.Conditions?.Overall ?? true)
+            {
+                fg.AppendLine("Conditions =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Conditions)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.Entry ?? true)
+            {
+                fg.AppendLine($"Entry => {item.Entry}");
+            }
+            if (printMask?.ResultScript?.Overall ?? true)
+            {
+                item.ResultScript?.ToString(fg, "ResultScript");
+            }
+        }
+        
+        public bool HasBeenSet(
+            ILogEntryInternalGetter item,
+            LogEntry_Mask<bool?> checkMask)
+        {
+            if (checkMask.Flags.HasValue && checkMask.Flags.Value != item.Flags_IsSet) return false;
+            if (checkMask.Conditions.Overall.HasValue && checkMask.Conditions.Overall.Value != item.Conditions.HasBeenSet) return false;
+            if (checkMask.Entry.HasValue && checkMask.Entry.Value != item.Entry_IsSet) return false;
+            if (checkMask.ResultScript.Overall.HasValue && checkMask.ResultScript.Overall.Value != item.ResultScript_IsSet) return false;
+            if (checkMask.ResultScript.Specific != null && (item.ResultScript == null || !item.ResultScript.HasBeenSet(checkMask.ResultScript.Specific))) return false;
+            return true;
+        }
+        
+        public void FillHasBeenSetMask(
+            ILogEntryInternalGetter item,
+            LogEntry_Mask<bool> mask)
+        {
+            mask.Flags = item.Flags_IsSet;
+            mask.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition_Mask<bool>>>>(item.Conditions.HasBeenSet, item.Conditions.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.Entry = item.Entry_IsSet;
+            mask.ResultScript = new MaskItem<bool, ScriptFields_Mask<bool>>(item.ResultScript_IsSet, item.ResultScript.GetHasBeenSetMask());
+        }
+        
+        #region Equals and Hash
+        public virtual bool Equals(
+            ILogEntryInternalGetter lhs,
+            ILogEntryInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (lhs.Flags_IsSet != rhs.Flags_IsSet) return false;
+            if (lhs.Flags_IsSet)
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if (lhs.Conditions.HasBeenSet != rhs.Conditions.HasBeenSet) return false;
+            if (lhs.Conditions.HasBeenSet)
+            {
+                if (!lhs.Conditions.SequenceEqual(rhs.Conditions)) return false;
+            }
+            if (lhs.Entry_IsSet != rhs.Entry_IsSet) return false;
+            if (lhs.Entry_IsSet)
+            {
+                if (!string.Equals(lhs.Entry, rhs.Entry)) return false;
+            }
+            if (lhs.ResultScript_IsSet != rhs.ResultScript_IsSet) return false;
+            if (lhs.ResultScript_IsSet)
+            {
+                if (!object.Equals(lhs.ResultScript, rhs.ResultScript)) return false;
+            }
+            return true;
+        }
+        
+        public virtual int GetHashCode(ILogEntryInternalGetter item)
+        {
+            int ret = 0;
+            if (item.Flags_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
+            }
+            if (item.Conditions.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Conditions).CombineHashCode(ret);
+            }
+            if (item.Entry_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Entry).CombineHashCode(ret);
+            }
+            if (item.ResultScript_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.ResultScript).CombineHashCode(ret);
+            }
+            return ret;
+        }
+        
+        #endregion
+        
+        
+        
+    }
+    public partial class LogEntrySetterCopyCommon
+    {
+        public static readonly LogEntrySetterCopyCommon Instance = new LogEntrySetterCopyCommon();
 
         #region Copy Fields From
         public static void CopyFieldsFrom(
@@ -1212,7 +1455,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             case CopyOption.Reference:
                                 throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
-                                ScriptFieldsCommon.CopyFieldsFrom(
+                                ScriptFieldsSetterCopyCommon.CopyFieldsFrom(
                                     item: item.ResultScript,
                                     rhs: rhs.ResultScript,
                                     def: def?.ResultScript,
@@ -1247,209 +1490,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
         }
-
+        
         #endregion
-
-        partial void ClearPartial();
-
-        public virtual void Clear(ILogEntry item)
-        {
-            ClearPartial();
-            item.Flags_Unset();
-            item.Conditions.Unset();
-            item.Entry_Unset();
-            item.ResultScript_Unset();
-        }
-
-        public LogEntry_Mask<bool> GetEqualsMask(
-            ILogEntryGetter item,
-            ILogEntryGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new LogEntry_Mask<bool>();
-            ((LogEntryCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public void FillEqualsMask(
-            ILogEntryGetter item,
-            ILogEntryGetter rhs,
-            LogEntry_Mask<bool> ret,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            if (rhs == null) return;
-            ret.Flags = item.Flags_IsSet == rhs.Flags_IsSet && item.Flags == rhs.Flags;
-            ret.Conditions = item.Conditions.CollectionEqualsHelper(
-                rhs.Conditions,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
-                include);
-            ret.Entry = item.Entry_IsSet == rhs.Entry_IsSet && string.Equals(item.Entry, rhs.Entry);
-            ret.ResultScript = EqualsMaskHelper.EqualsHelper(
-                item.ResultScript_IsSet,
-                rhs.ResultScript_IsSet,
-                item.ResultScript,
-                rhs.ResultScript,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
-                include);
-        }
-
-        public string ToString(
-            ILogEntryGetter item,
-            string name = null,
-            LogEntry_Mask<bool> printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(
-                item: item,
-                fg: fg,
-                name: name,
-                printMask: printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(
-            ILogEntryGetter item,
-            FileGeneration fg,
-            string name = null,
-            LogEntry_Mask<bool> printMask = null)
-        {
-            if (name == null)
-            {
-                fg.AppendLine($"LogEntry =>");
-            }
-            else
-            {
-                fg.AppendLine($"{name} (LogEntry) =>");
-            }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                ToStringFields(
-                    item: item,
-                    fg: fg,
-                    printMask: printMask);
-            }
-            fg.AppendLine("]");
-        }
-
-        protected static void ToStringFields(
-            ILogEntryGetter item,
-            FileGeneration fg,
-            LogEntry_Mask<bool> printMask = null)
-        {
-            if (printMask?.Flags ?? true)
-            {
-                fg.AppendLine($"Flags => {item.Flags}");
-            }
-            if (printMask?.Conditions?.Overall ?? true)
-            {
-                fg.AppendLine("Conditions =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
-                {
-                    foreach (var subItem in item.Conditions)
-                    {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            subItem?.ToString(fg, "Item");
-                        }
-                        fg.AppendLine("]");
-                    }
-                }
-                fg.AppendLine("]");
-            }
-            if (printMask?.Entry ?? true)
-            {
-                fg.AppendLine($"Entry => {item.Entry}");
-            }
-            if (printMask?.ResultScript?.Overall ?? true)
-            {
-                item.ResultScript?.ToString(fg, "ResultScript");
-            }
-        }
-
-        public bool HasBeenSet(
-            ILogEntryGetter item,
-            LogEntry_Mask<bool?> checkMask)
-        {
-            if (checkMask.Flags.HasValue && checkMask.Flags.Value != item.Flags_IsSet) return false;
-            if (checkMask.Conditions.Overall.HasValue && checkMask.Conditions.Overall.Value != item.Conditions.HasBeenSet) return false;
-            if (checkMask.Entry.HasValue && checkMask.Entry.Value != item.Entry_IsSet) return false;
-            if (checkMask.ResultScript.Overall.HasValue && checkMask.ResultScript.Overall.Value != item.ResultScript_IsSet) return false;
-            if (checkMask.ResultScript.Specific != null && (item.ResultScript == null || !item.ResultScript.HasBeenSet(checkMask.ResultScript.Specific))) return false;
-            return true;
-        }
-
-        public void FillHasBeenSetMask(
-            ILogEntryGetter item,
-            LogEntry_Mask<bool> mask)
-        {
-            mask.Flags = item.Flags_IsSet;
-            mask.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition_Mask<bool>>>>(item.Conditions.HasBeenSet, item.Conditions.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.Entry = item.Entry_IsSet;
-            mask.ResultScript = new MaskItem<bool, ScriptFields_Mask<bool>>(item.ResultScript_IsSet, item.ResultScript.GetHasBeenSetMask());
-        }
-
-        #region Equals and Hash
-        public virtual bool Equals(
-            ILogEntryGetter lhs,
-            ILogEntryGetter rhs)
-        {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
-            if (lhs.Flags_IsSet != rhs.Flags_IsSet) return false;
-            if (lhs.Flags_IsSet)
-            {
-                if (lhs.Flags != rhs.Flags) return false;
-            }
-            if (lhs.Conditions.HasBeenSet != rhs.Conditions.HasBeenSet) return false;
-            if (lhs.Conditions.HasBeenSet)
-            {
-                if (!lhs.Conditions.SequenceEqual(rhs.Conditions)) return false;
-            }
-            if (lhs.Entry_IsSet != rhs.Entry_IsSet) return false;
-            if (lhs.Entry_IsSet)
-            {
-                if (!string.Equals(lhs.Entry, rhs.Entry)) return false;
-            }
-            if (lhs.ResultScript_IsSet != rhs.ResultScript_IsSet) return false;
-            if (lhs.ResultScript_IsSet)
-            {
-                if (!object.Equals(lhs.ResultScript, rhs.ResultScript)) return false;
-            }
-            return true;
-        }
-
-        public virtual int GetHashCode(ILogEntryGetter item)
-        {
-            int ret = 0;
-            if (item.Flags_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
-            }
-            if (item.Conditions.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.Conditions).CombineHashCode(ret);
-            }
-            if (item.Entry_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Entry).CombineHashCode(ret);
-            }
-            if (item.ResultScript_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.ResultScript).CombineHashCode(ret);
-            }
-            return ret;
-        }
-
-        #endregion
-
-
+        
+        
     }
     #endregion
 
@@ -1460,7 +1504,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static LogEntryXmlWriteTranslation Instance = new LogEntryXmlWriteTranslation();
 
         public static void WriteToNodeXml(
-            ILogEntryGetter item,
+            ILogEntryInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1478,14 +1522,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Conditions.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)LogEntry_FieldIndex.Conditions) ?? true))
             {
-                ListXmlTranslation<IConditionGetter>.Instance.Write(
+                ListXmlTranslation<IConditionInternalGetter>.Instance.Write(
                     node: node,
                     name: nameof(item.Conditions),
                     item: item.Conditions,
                     fieldIndex: (int)LogEntry_FieldIndex.Conditions,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)LogEntry_FieldIndex.Conditions),
-                    transl: (XElement subNode, IConditionGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    transl: (XElement subNode, IConditionInternalGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         var loquiItem = subItem;
                         ((ConditionXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
@@ -1522,7 +1566,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             XElement node,
-            ILogEntryGetter item,
+            ILogEntryInternalGetter item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)
@@ -1548,7 +1592,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             Write(
-                item: (ILogEntryGetter)item,
+                item: (ILogEntryInternalGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1557,7 +1601,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             XElement node,
-            ILogEntryGetter item,
+            ILogEntryInternalGetter item,
             ErrorMaskBuilder errorMask,
             int fieldIndex,
             TranslationCrystal translationMask,
@@ -1567,7 +1611,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 errorMask?.PushIndex(fieldIndex);
                 Write(
-                    item: (ILogEntryGetter)item,
+                    item: (ILogEntryInternalGetter)item,
                     name: name,
                     node: node,
                     errorMask: errorMask,
@@ -1591,7 +1635,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static LogEntryXmlCreateTranslation Instance = new LogEntryXmlCreateTranslation();
 
         public static void FillPublicXml(
-            ILogEntry item,
+            ILogEntryInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1616,7 +1660,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElementXml(
-            ILogEntry item,
+            ILogEntryInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -1742,7 +1786,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public static class LogEntryXmlTranslationMixIn
     {
         public static void WriteToXml(
-            this ILogEntryGetter item,
+            this ILogEntryInternalGetter item,
             XElement node,
             out LogEntry_ErrorMask errorMask,
             bool doMasks = true,
@@ -1760,7 +1804,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this ILogEntryGetter item,
+            this ILogEntryInternalGetter item,
             string path,
             out LogEntry_ErrorMask errorMask,
             LogEntry_TranslationMask translationMask = null,
@@ -1779,7 +1823,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this ILogEntryGetter item,
+            this ILogEntryInternalGetter item,
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1797,7 +1841,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this ILogEntryGetter item,
+            this ILogEntryInternalGetter item,
             Stream stream,
             out LogEntry_ErrorMask errorMask,
             LogEntry_TranslationMask translationMask = null,
@@ -1816,7 +1860,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this ILogEntryGetter item,
+            this ILogEntryInternalGetter item,
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1834,7 +1878,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this ILogEntryGetter item,
+            this ILogEntryInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1849,7 +1893,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this ILogEntryGetter item,
+            this ILogEntryInternalGetter item,
             XElement node,
             string name = null,
             LogEntry_TranslationMask translationMask = null)
@@ -1863,7 +1907,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this ILogEntryGetter item,
+            this ILogEntryInternalGetter item,
             string path,
             string name = null)
         {
@@ -1878,7 +1922,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this ILogEntryGetter item,
+            this ILogEntryInternalGetter item,
             Stream stream,
             string name = null)
         {
@@ -2350,7 +2394,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static LogEntryBinaryWriteTranslation Instance = new LogEntryBinaryWriteTranslation();
 
         public static void Write_RecordTypes(
-            ILogEntryGetter item,
+            ILogEntryInternalGetter item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask,
@@ -2367,12 +2411,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.Conditions.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<IConditionGetter>.Instance.Write(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<IConditionInternalGetter>.Instance.Write(
                     writer: writer,
                     items: item.Conditions,
                     fieldIndex: (int)LogEntry_FieldIndex.Conditions,
                     errorMask: errorMask,
-                    transl: (MutagenWriter subWriter, IConditionGetter subItem, ErrorMaskBuilder listErrorMask) =>
+                    transl: (MutagenWriter subWriter, IConditionInternalGetter subItem, ErrorMaskBuilder listErrorMask) =>
                     {
                         var loquiItem = subItem;
                         ((ConditionBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
@@ -2405,7 +2449,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             MutagenWriter writer,
-            ILogEntryGetter item,
+            ILogEntryInternalGetter item,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
@@ -2426,7 +2470,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask)
         {
             Write(
-                item: (ILogEntryGetter)item,
+                item: (ILogEntryInternalGetter)item,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -2445,7 +2489,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public static class LogEntryBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this ILogEntryGetter item,
+            this ILogEntryInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
             out LogEntry_ErrorMask errorMask,
@@ -2462,7 +2506,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToBinary(
-            this ILogEntryGetter item,
+            this ILogEntryInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -2476,7 +2520,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToBinary(
-            this ILogEntryGetter item,
+            this ILogEntryInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
@@ -2493,36 +2537,79 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     public partial class LogEntryBinaryWrapper :
         BinaryWrapper,
-        ILogEntryGetter
+        ILogEntryInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LogEntry_Registration.Instance;
         public static LogEntry_Registration Registration => LogEntry_Registration.Instance;
-        protected object CommonInstance => LogEntryCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
+        protected object CommonInstance()
+        {
+            return LogEntryCommon.Instance;
+        }
+        object ILogEntryInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object ILogEntryInternalGetter.CommonSetterInstance()
+        {
+            return null;
+        }
+        object ILogEntryInternalGetter.CommonSetterCopyInstance()
+        {
+            return null;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILogEntryGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILogEntryInternalGetter)rhs, include);
 
         protected object XmlWriteTranslator => LogEntryXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((LogEntryXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         protected object BinaryWriteTranslator => LogEntryBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((LogEntryBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
 
         #region Flags
         private int? _FlagsLocation;
         public bool Flags_IsSet => _FlagsLocation.HasValue;
         public LogEntry.Flag Flags => (LogEntry.Flag)HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation.Value, _package.Meta)[0];
         #endregion
-        public IReadOnlySetList<IConditionGetter> Conditions { get; private set; } = EmptySetList<ConditionBinaryWrapper>.Instance;
+        public IReadOnlySetList<IConditionInternalGetter> Conditions { get; private set; } = EmptySetList<ConditionBinaryWrapper>.Instance;
         #region Entry
         private int? _EntryLocation;
         public bool Entry_IsSet => _EntryLocation.HasValue;
         public String Entry => _EntryLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _EntryLocation.Value, _package.Meta)) : default;
         #endregion
         #region ResultScript
-        public IScriptFieldsGetter ResultScript { get; private set; }
+        public IScriptFieldsInternalGetter ResultScript { get; private set; }
         public bool ResultScript_IsSet => ResultScript != null;
         #endregion
         partial void CustomCtor(
@@ -2622,4 +2709,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class LogEntry
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => LogEntry_Registration.Instance;
+        public static LogEntry_Registration Registration => LogEntry_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return LogEntryCommon.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return LogEntrySetterCommon.Instance;
+        }
+        protected object CommonSetterCopyInstance()
+        {
+            return LogEntrySetterCopyCommon.Instance;
+        }
+        object ILogEntryInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object ILogEntryInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object ILogEntryInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
 }

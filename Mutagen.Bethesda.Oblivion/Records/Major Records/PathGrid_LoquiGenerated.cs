@@ -44,11 +44,6 @@ namespace Mutagen.Bethesda.Oblivion
         IEquatable<PathGrid>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => PathGrid_Registration.Instance;
-        public new static PathGrid_Registration Registration => PathGrid_Registration.Instance;
-        protected override object CommonInstance => PathGridCommon.Instance;
-
         #region Ctor
         protected PathGrid()
         {
@@ -65,7 +60,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<PathGridPoint> IPathGrid.PointToPointConnections => _PointToPointConnections;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IPathGridPointGetter> IPathGridGetter.PointToPointConnections => _PointToPointConnections;
+        IReadOnlySetList<IPathGridPointInternalGetter> IPathGridGetter.PointToPointConnections => _PointToPointConnections;
         #endregion
 
         #endregion
@@ -105,7 +100,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<InterCellPoint> IPathGrid.InterCellConnections => _InterCellConnections;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IInterCellPointGetter> IPathGridGetter.InterCellConnections => _InterCellConnections;
+        IReadOnlySetList<IInterCellPointInternalGetter> IPathGridGetter.InterCellConnections => _InterCellConnections;
         #endregion
 
         #endregion
@@ -117,7 +112,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<PointToReferenceMapping> IPathGrid.PointToReferenceMappings => _PointToReferenceMappings;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IPointToReferenceMappingGetter> IPathGridGetter.PointToReferenceMappings => _PointToReferenceMappings;
+        IReadOnlySetList<IPointToReferenceMappingInternalGetter> IPathGridGetter.PointToReferenceMappings => _PointToReferenceMappings;
         #endregion
 
         #endregion
@@ -141,20 +136,33 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IPathGridInternalGetter rhs)) return false;
-            return ((PathGridCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            return ((PathGridCommon)((IPathGridInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(PathGrid obj)
         {
-            return ((PathGridCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((PathGridCommon)((IPathGridInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((PathGridCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((PathGridCommon)((IPathGridInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected override object XmlWriteTranslator => PathGridXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((PathGridXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static PathGrid CreateFromXml(
@@ -397,6 +405,19 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Binary Translation
         protected override object BinaryWriteTranslator => PathGridBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((PathGridBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
         #region Binary Create
         [DebuggerStepThrough]
         public static PathGrid CreateFromBinary(
@@ -618,7 +639,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            PathGridCommon.CopyFieldsFrom(
+            PathGridSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -633,7 +654,7 @@ namespace Mutagen.Bethesda.Oblivion
             PathGrid_CopyMask copyMask = null,
             PathGrid def = null)
         {
-            PathGridCommon.CopyFieldsFrom(
+            PathGridSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -666,7 +687,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            PathGridCommon.Instance.Clear(this);
+            PathGridSetterCommon.Instance.Clear(this);
         }
 
         public new static PathGrid Create(IEnumerable<KeyValuePair<ushort, object>> fields)
@@ -741,7 +762,7 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem
     {
         #region PointToPointConnections
-        IReadOnlySetList<IPathGridPointGetter> PointToPointConnections { get; }
+        IReadOnlySetList<IPathGridPointInternalGetter> PointToPointConnections { get; }
         #endregion
         #region Unknown
         ReadOnlySpan<Byte> Unknown { get; }
@@ -749,10 +770,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region InterCellConnections
-        IReadOnlySetList<IInterCellPointGetter> InterCellConnections { get; }
+        IReadOnlySetList<IInterCellPointInternalGetter> InterCellConnections { get; }
         #endregion
         #region PointToReferenceMappings
-        IReadOnlySetList<IPointToReferenceMappingGetter> PointToReferenceMappings { get; }
+        IReadOnlySetList<IPointToReferenceMappingInternalGetter> PointToReferenceMappings { get; }
         #endregion
 
     }
@@ -771,7 +792,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IPathGridInternal item)
         {
-            ((PathGridCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((PathGridSetterCommon)((IPathGridInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static PathGrid_Mask<bool> GetEqualsMask(
@@ -779,7 +800,7 @@ namespace Mutagen.Bethesda.Oblivion
             IPathGridInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((PathGridCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((PathGridCommon)((IPathGridInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -790,7 +811,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             PathGrid_Mask<bool> printMask = null)
         {
-            return ((PathGridCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((PathGridCommon)((IPathGridInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -802,7 +823,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             PathGrid_Mask<bool> printMask = null)
         {
-            ((PathGridCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((PathGridCommon)((IPathGridInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -813,7 +834,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IPathGridInternalGetter item,
             PathGrid_Mask<bool?> checkMask)
         {
-            return ((PathGridCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((PathGridCommon)((IPathGridInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -821,7 +842,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static PathGrid_Mask<bool> GetHasBeenSetMask(this IPathGridInternalGetter item)
         {
             var ret = new PathGrid_Mask<bool>();
-            ((PathGridCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((PathGridCommon)((IPathGridInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -831,7 +852,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IPathGridInternalGetter item,
             IPathGridInternalGetter rhs)
         {
-            return ((PathGridCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((PathGridCommon)((IPathGridInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -889,8 +910,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type SetterType = typeof(IPathGrid);
 
         public static readonly Type InternalSetterType = typeof(IPathGridInternal);
-
-        public static readonly Type CommonType = typeof(PathGridCommon);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.PathGrid";
 
@@ -1055,7 +1074,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -1075,9 +1093,349 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
+    public partial class PathGridSetterCommon : OblivionMajorRecordSetterCommon
+    {
+        public new static readonly PathGridSetterCommon Instance = new PathGridSetterCommon();
+
+        partial void ClearPartial();
+        
+        public virtual void Clear(IPathGridInternal item)
+        {
+            ClearPartial();
+            item.PointToPointConnections.Unset();
+            item.Unknown_Unset();
+            item.InterCellConnections.Unset();
+            item.PointToReferenceMappings.Unset();
+            base.Clear(item);
+        }
+        
+        public override void Clear(IOblivionMajorRecordInternal item)
+        {
+            Clear(item: (IPathGridInternal)item);
+        }
+        
+        public override void Clear(IMajorRecordInternal item)
+        {
+            Clear(item: (IPathGridInternal)item);
+        }
+        
+        
+    }
     public partial class PathGridCommon : OblivionMajorRecordCommon
     {
-        public static readonly PathGridCommon Instance = new PathGridCommon();
+        public new static readonly PathGridCommon Instance = new PathGridCommon();
+
+        public PathGrid_Mask<bool> GetEqualsMask(
+            IPathGridInternalGetter item,
+            IPathGridInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new PathGrid_Mask<bool>();
+            ((PathGridCommon)((IPathGridInternalGetter)item).CommonInstance()).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+        
+        public void FillEqualsMask(
+            IPathGridInternalGetter item,
+            IPathGridInternalGetter rhs,
+            PathGrid_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            if (rhs == null) return;
+            ret.PointToPointConnections = item.PointToPointConnections.CollectionEqualsHelper(
+                rhs.PointToPointConnections,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Unknown = item.Unknown_IsSet == rhs.Unknown_IsSet && MemoryExtensions.SequenceEqual(item.Unknown, rhs.Unknown);
+            ret.InterCellConnections = item.InterCellConnections.CollectionEqualsHelper(
+                rhs.InterCellConnections,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.PointToReferenceMappings = item.PointToReferenceMappings.CollectionEqualsHelper(
+                rhs.PointToReferenceMappings,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            base.FillEqualsMask(item, rhs, ret, include);
+        }
+        
+        public string ToString(
+            IPathGridInternalGetter item,
+            string name = null,
+            PathGrid_Mask<bool> printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+            return fg.ToString();
+        }
+        
+        public void ToString(
+            IPathGridInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            PathGrid_Mask<bool> printMask = null)
+        {
+            if (name == null)
+            {
+                fg.AppendLine($"PathGrid =>");
+            }
+            else
+            {
+                fg.AppendLine($"{name} (PathGrid) =>");
+            }
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
+            }
+            fg.AppendLine("]");
+        }
+        
+        protected static void ToStringFields(
+            IPathGridInternalGetter item,
+            FileGeneration fg,
+            PathGrid_Mask<bool> printMask = null)
+        {
+            OblivionMajorRecordCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.PointToPointConnections?.Overall ?? true)
+            {
+                fg.AppendLine("PointToPointConnections =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.PointToPointConnections)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.Unknown ?? true)
+            {
+                fg.AppendLine($"Unknown => {SpanExt.ToHexString(item.Unknown)}");
+            }
+            if (printMask?.InterCellConnections?.Overall ?? true)
+            {
+                fg.AppendLine("InterCellConnections =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.InterCellConnections)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.PointToReferenceMappings?.Overall ?? true)
+            {
+                fg.AppendLine("PointToReferenceMappings =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.PointToReferenceMappings)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+        }
+        
+        public bool HasBeenSet(
+            IPathGridInternalGetter item,
+            PathGrid_Mask<bool?> checkMask)
+        {
+            if (checkMask.PointToPointConnections.Overall.HasValue && checkMask.PointToPointConnections.Overall.Value != item.PointToPointConnections.HasBeenSet) return false;
+            if (checkMask.Unknown.HasValue && checkMask.Unknown.Value != item.Unknown_IsSet) return false;
+            if (checkMask.InterCellConnections.Overall.HasValue && checkMask.InterCellConnections.Overall.Value != item.InterCellConnections.HasBeenSet) return false;
+            if (checkMask.PointToReferenceMappings.Overall.HasValue && checkMask.PointToReferenceMappings.Overall.Value != item.PointToReferenceMappings.HasBeenSet) return false;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+        
+        public void FillHasBeenSetMask(
+            IPathGridInternalGetter item,
+            PathGrid_Mask<bool> mask)
+        {
+            mask.PointToPointConnections = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, PathGridPoint_Mask<bool>>>>(item.PointToPointConnections.HasBeenSet, item.PointToPointConnections.WithIndex().Select((i) => new MaskItemIndexed<bool, PathGridPoint_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.Unknown = item.Unknown_IsSet;
+            mask.InterCellConnections = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, InterCellPoint_Mask<bool>>>>(item.InterCellConnections.HasBeenSet, item.InterCellConnections.WithIndex().Select((i) => new MaskItemIndexed<bool, InterCellPoint_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.PointToReferenceMappings = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, PointToReferenceMapping_Mask<bool>>>>(item.PointToReferenceMappings.HasBeenSet, item.PointToReferenceMappings.WithIndex().Select((i) => new MaskItemIndexed<bool, PointToReferenceMapping_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
+        }
+        
+        public static PathGrid_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (PathGrid_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.FormKey:
+                    return (PathGrid_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.Version:
+                    return (PathGrid_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.EditorID:
+                    return (PathGrid_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
+                    return (PathGrid_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        public static PathGrid_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (PathGrid_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.FormKey:
+                    return (PathGrid_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.Version:
+                    return (PathGrid_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.EditorID:
+                    return (PathGrid_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        #region Equals and Hash
+        public virtual bool Equals(
+            IPathGridInternalGetter lhs,
+            IPathGridInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.PointToPointConnections.HasBeenSet != rhs.PointToPointConnections.HasBeenSet) return false;
+            if (lhs.PointToPointConnections.HasBeenSet)
+            {
+                if (!lhs.PointToPointConnections.SequenceEqual(rhs.PointToPointConnections)) return false;
+            }
+            if (lhs.Unknown_IsSet != rhs.Unknown_IsSet) return false;
+            if (lhs.Unknown_IsSet)
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.Unknown, rhs.Unknown)) return false;
+            }
+            if (lhs.InterCellConnections.HasBeenSet != rhs.InterCellConnections.HasBeenSet) return false;
+            if (lhs.InterCellConnections.HasBeenSet)
+            {
+                if (!lhs.InterCellConnections.SequenceEqual(rhs.InterCellConnections)) return false;
+            }
+            if (lhs.PointToReferenceMappings.HasBeenSet != rhs.PointToReferenceMappings.HasBeenSet) return false;
+            if (lhs.PointToReferenceMappings.HasBeenSet)
+            {
+                if (!lhs.PointToReferenceMappings.SequenceEqual(rhs.PointToReferenceMappings)) return false;
+            }
+            return true;
+        }
+        
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IPathGridInternalGetter)lhs,
+                rhs: rhs as IPathGridInternalGetter);
+        }
+        
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IPathGridInternalGetter)lhs,
+                rhs: rhs as IPathGridInternalGetter);
+        }
+        
+        public virtual int GetHashCode(IPathGridInternalGetter item)
+        {
+            int ret = 0;
+            if (item.PointToPointConnections.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.PointToPointConnections).CombineHashCode(ret);
+            }
+            if (item.Unknown_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Unknown).CombineHashCode(ret);
+            }
+            if (item.InterCellConnections.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.InterCellConnections).CombineHashCode(ret);
+            }
+            if (item.PointToReferenceMappings.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.PointToReferenceMappings).CombineHashCode(ret);
+            }
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+        
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IPathGridInternalGetter)item);
+        }
+        
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IPathGridInternalGetter)item);
+        }
+        
+        #endregion
+        
+        
+        #region Mutagen
+        partial void PostDuplicate(PathGrid obj, PathGrid rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+        
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new PathGrid(getNextFormKey());
+            ret.CopyFieldsFrom((PathGrid)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (PathGrid)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+        
+        #endregion
+        
+        
+    }
+    public partial class PathGridSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
+    {
+        public new static readonly PathGridSetterCopyCommon Instance = new PathGridSetterCopyCommon();
 
         #region Copy Fields From
         public static void CopyFieldsFrom(
@@ -1087,7 +1445,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             PathGrid_CopyMask copyMask)
         {
-            OblivionMajorRecordCommon.CopyFieldsFrom(
+            OblivionMajorRecordSetterCopyCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1226,337 +1584,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
         }
-
+        
         #endregion
-
-        partial void ClearPartial();
-
-        public virtual void Clear(IPathGridInternal item)
-        {
-            ClearPartial();
-            item.PointToPointConnections.Unset();
-            item.Unknown_Unset();
-            item.InterCellConnections.Unset();
-            item.PointToReferenceMappings.Unset();
-            base.Clear(item);
-        }
-
-        public override void Clear(IOblivionMajorRecordInternal item)
-        {
-            Clear(item: (IPathGridInternal)item);
-        }
-
-        public override void Clear(IMajorRecordInternal item)
-        {
-            Clear(item: (IPathGridInternal)item);
-        }
-
-        public PathGrid_Mask<bool> GetEqualsMask(
-            IPathGridInternalGetter item,
-            IPathGridInternalGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new PathGrid_Mask<bool>();
-            ((PathGridCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public void FillEqualsMask(
-            IPathGridInternalGetter item,
-            IPathGridInternalGetter rhs,
-            PathGrid_Mask<bool> ret,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            if (rhs == null) return;
-            ret.PointToPointConnections = item.PointToPointConnections.CollectionEqualsHelper(
-                rhs.PointToPointConnections,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
-                include);
-            ret.Unknown = item.Unknown_IsSet == rhs.Unknown_IsSet && MemoryExtensions.SequenceEqual(item.Unknown, rhs.Unknown);
-            ret.InterCellConnections = item.InterCellConnections.CollectionEqualsHelper(
-                rhs.InterCellConnections,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
-                include);
-            ret.PointToReferenceMappings = item.PointToReferenceMappings.CollectionEqualsHelper(
-                rhs.PointToReferenceMappings,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
-                include);
-            base.FillEqualsMask(item, rhs, ret, include);
-        }
-
-        public string ToString(
-            IPathGridInternalGetter item,
-            string name = null,
-            PathGrid_Mask<bool> printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(
-                item: item,
-                fg: fg,
-                name: name,
-                printMask: printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(
-            IPathGridInternalGetter item,
-            FileGeneration fg,
-            string name = null,
-            PathGrid_Mask<bool> printMask = null)
-        {
-            if (name == null)
-            {
-                fg.AppendLine($"PathGrid =>");
-            }
-            else
-            {
-                fg.AppendLine($"{name} (PathGrid) =>");
-            }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                ToStringFields(
-                    item: item,
-                    fg: fg,
-                    printMask: printMask);
-            }
-            fg.AppendLine("]");
-        }
-
-        protected static void ToStringFields(
-            IPathGridInternalGetter item,
-            FileGeneration fg,
-            PathGrid_Mask<bool> printMask = null)
-        {
-            OblivionMajorRecordCommon.ToStringFields(
-                item: item,
-                fg: fg,
-                printMask: printMask);
-            if (printMask?.PointToPointConnections?.Overall ?? true)
-            {
-                fg.AppendLine("PointToPointConnections =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
-                {
-                    foreach (var subItem in item.PointToPointConnections)
-                    {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            subItem?.ToString(fg, "Item");
-                        }
-                        fg.AppendLine("]");
-                    }
-                }
-                fg.AppendLine("]");
-            }
-            if (printMask?.Unknown ?? true)
-            {
-                fg.AppendLine($"Unknown => {SpanExt.ToHexString(item.Unknown)}");
-            }
-            if (printMask?.InterCellConnections?.Overall ?? true)
-            {
-                fg.AppendLine("InterCellConnections =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
-                {
-                    foreach (var subItem in item.InterCellConnections)
-                    {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            subItem?.ToString(fg, "Item");
-                        }
-                        fg.AppendLine("]");
-                    }
-                }
-                fg.AppendLine("]");
-            }
-            if (printMask?.PointToReferenceMappings?.Overall ?? true)
-            {
-                fg.AppendLine("PointToReferenceMappings =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
-                {
-                    foreach (var subItem in item.PointToReferenceMappings)
-                    {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            subItem?.ToString(fg, "Item");
-                        }
-                        fg.AppendLine("]");
-                    }
-                }
-                fg.AppendLine("]");
-            }
-        }
-
-        public bool HasBeenSet(
-            IPathGridInternalGetter item,
-            PathGrid_Mask<bool?> checkMask)
-        {
-            if (checkMask.PointToPointConnections.Overall.HasValue && checkMask.PointToPointConnections.Overall.Value != item.PointToPointConnections.HasBeenSet) return false;
-            if (checkMask.Unknown.HasValue && checkMask.Unknown.Value != item.Unknown_IsSet) return false;
-            if (checkMask.InterCellConnections.Overall.HasValue && checkMask.InterCellConnections.Overall.Value != item.InterCellConnections.HasBeenSet) return false;
-            if (checkMask.PointToReferenceMappings.Overall.HasValue && checkMask.PointToReferenceMappings.Overall.Value != item.PointToReferenceMappings.HasBeenSet) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public void FillHasBeenSetMask(
-            IPathGridInternalGetter item,
-            PathGrid_Mask<bool> mask)
-        {
-            mask.PointToPointConnections = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, PathGridPoint_Mask<bool>>>>(item.PointToPointConnections.HasBeenSet, item.PointToPointConnections.WithIndex().Select((i) => new MaskItemIndexed<bool, PathGridPoint_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.Unknown = item.Unknown_IsSet;
-            mask.InterCellConnections = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, InterCellPoint_Mask<bool>>>>(item.InterCellConnections.HasBeenSet, item.InterCellConnections.WithIndex().Select((i) => new MaskItemIndexed<bool, InterCellPoint_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.PointToReferenceMappings = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, PointToReferenceMapping_Mask<bool>>>>(item.PointToReferenceMappings.HasBeenSet, item.PointToReferenceMappings.WithIndex().Select((i) => new MaskItemIndexed<bool, PointToReferenceMapping_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-
-        public static PathGrid_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
-        {
-            switch (index)
-            {
-                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (PathGrid_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.FormKey:
-                    return (PathGrid_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.Version:
-                    return (PathGrid_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.EditorID:
-                    return (PathGrid_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
-                    return (PathGrid_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        public static PathGrid_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
-        {
-            switch (index)
-            {
-                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (PathGrid_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.FormKey:
-                    return (PathGrid_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
-                    return (PathGrid_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.EditorID:
-                    return (PathGrid_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        #region Equals and Hash
-        public virtual bool Equals(
-            IPathGridInternalGetter lhs,
-            IPathGridInternalGetter rhs)
-        {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (lhs.PointToPointConnections.HasBeenSet != rhs.PointToPointConnections.HasBeenSet) return false;
-            if (lhs.PointToPointConnections.HasBeenSet)
-            {
-                if (!lhs.PointToPointConnections.SequenceEqual(rhs.PointToPointConnections)) return false;
-            }
-            if (lhs.Unknown_IsSet != rhs.Unknown_IsSet) return false;
-            if (lhs.Unknown_IsSet)
-            {
-                if (!MemoryExtensions.SequenceEqual(lhs.Unknown, rhs.Unknown)) return false;
-            }
-            if (lhs.InterCellConnections.HasBeenSet != rhs.InterCellConnections.HasBeenSet) return false;
-            if (lhs.InterCellConnections.HasBeenSet)
-            {
-                if (!lhs.InterCellConnections.SequenceEqual(rhs.InterCellConnections)) return false;
-            }
-            if (lhs.PointToReferenceMappings.HasBeenSet != rhs.PointToReferenceMappings.HasBeenSet) return false;
-            if (lhs.PointToReferenceMappings.HasBeenSet)
-            {
-                if (!lhs.PointToReferenceMappings.SequenceEqual(rhs.PointToReferenceMappings)) return false;
-            }
-            return true;
-        }
-
-        public override bool Equals(
-            IOblivionMajorRecordInternalGetter lhs,
-            IOblivionMajorRecordInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (IPathGridInternalGetter)lhs,
-                rhs: rhs as IPathGridInternalGetter);
-        }
-
-        public override bool Equals(
-            IMajorRecordInternalGetter lhs,
-            IMajorRecordInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (IPathGridInternalGetter)lhs,
-                rhs: rhs as IPathGridInternalGetter);
-        }
-
-        public virtual int GetHashCode(IPathGridInternalGetter item)
-        {
-            int ret = 0;
-            if (item.PointToPointConnections.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.PointToPointConnections).CombineHashCode(ret);
-            }
-            if (item.Unknown_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Unknown).CombineHashCode(ret);
-            }
-            if (item.InterCellConnections.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.InterCellConnections).CombineHashCode(ret);
-            }
-            if (item.PointToReferenceMappings.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.PointToReferenceMappings).CombineHashCode(ret);
-            }
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
-        {
-            return GetHashCode(item: (IPathGridInternalGetter)item);
-        }
-
-        public override int GetHashCode(IMajorRecordInternalGetter item)
-        {
-            return GetHashCode(item: (IPathGridInternalGetter)item);
-        }
-
-        #endregion
-
-
-        #region Mutagen
-        partial void PostDuplicate(PathGrid obj, PathGrid rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new PathGrid(getNextFormKey());
-            ret.CopyFieldsFrom((PathGrid)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (PathGrid)item, getNextFormKey, duplicatedRecords);
-            return ret;
-        }
-
-        #endregion
-
+        
+        
     }
     #endregion
 
@@ -1582,14 +1613,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.PointToPointConnections.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)PathGrid_FieldIndex.PointToPointConnections) ?? true))
             {
-                ListXmlTranslation<IPathGridPointGetter>.Instance.Write(
+                ListXmlTranslation<IPathGridPointInternalGetter>.Instance.Write(
                     node: node,
                     name: nameof(item.PointToPointConnections),
                     item: item.PointToPointConnections,
                     fieldIndex: (int)PathGrid_FieldIndex.PointToPointConnections,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)PathGrid_FieldIndex.PointToPointConnections),
-                    transl: (XElement subNode, IPathGridPointGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    transl: (XElement subNode, IPathGridPointInternalGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         var loquiItem = subItem;
                         ((PathGridPointXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
@@ -1613,14 +1644,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.InterCellConnections.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)PathGrid_FieldIndex.InterCellConnections) ?? true))
             {
-                ListXmlTranslation<IInterCellPointGetter>.Instance.Write(
+                ListXmlTranslation<IInterCellPointInternalGetter>.Instance.Write(
                     node: node,
                     name: nameof(item.InterCellConnections),
                     item: item.InterCellConnections,
                     fieldIndex: (int)PathGrid_FieldIndex.InterCellConnections,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)PathGrid_FieldIndex.InterCellConnections),
-                    transl: (XElement subNode, IInterCellPointGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    transl: (XElement subNode, IInterCellPointInternalGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         var loquiItem = subItem;
                         ((InterCellPointXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
@@ -1634,14 +1665,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.PointToReferenceMappings.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)PathGrid_FieldIndex.PointToReferenceMappings) ?? true))
             {
-                ListXmlTranslation<IPointToReferenceMappingGetter>.Instance.Write(
+                ListXmlTranslation<IPointToReferenceMappingInternalGetter>.Instance.Write(
                     node: node,
                     name: nameof(item.PointToReferenceMappings),
                     item: item.PointToReferenceMappings,
                     fieldIndex: (int)PathGrid_FieldIndex.PointToReferenceMappings,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)PathGrid_FieldIndex.PointToReferenceMappings),
-                    transl: (XElement subNode, IPointToReferenceMappingGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    transl: (XElement subNode, IPointToReferenceMappingInternalGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         var loquiItem = subItem;
                         ((PointToReferenceMappingXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
@@ -2568,13 +2599,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask);
             if (item.InterCellConnections.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<IInterCellPointGetter>.Instance.Write(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<IInterCellPointInternalGetter>.Instance.Write(
                     writer: writer,
                     items: item.InterCellConnections,
                     fieldIndex: (int)PathGrid_FieldIndex.InterCellConnections,
                     recordType: PathGrid_Registration.PGRI_HEADER,
                     errorMask: errorMask,
-                    transl: (MutagenWriter subWriter, IInterCellPointGetter subItem, ErrorMaskBuilder listErrorMask) =>
+                    transl: (MutagenWriter subWriter, IInterCellPointInternalGetter subItem, ErrorMaskBuilder listErrorMask) =>
                     {
                         {
                             var loquiItem = subItem;
@@ -2589,12 +2620,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.PointToReferenceMappings.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<IPointToReferenceMappingGetter>.Instance.Write(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<IPointToReferenceMappingInternalGetter>.Instance.Write(
                     writer: writer,
                     items: item.PointToReferenceMappings,
                     fieldIndex: (int)PathGrid_FieldIndex.PointToReferenceMappings,
                     errorMask: errorMask,
-                    transl: (MutagenWriter subWriter, IPointToReferenceMappingGetter subItem, ErrorMaskBuilder listErrorMask) =>
+                    transl: (MutagenWriter subWriter, IPointToReferenceMappingInternalGetter subItem, ErrorMaskBuilder listErrorMask) =>
                     {
                         var loquiItem = subItem;
                         ((PointToReferenceMappingBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
@@ -2732,17 +2763,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         OblivionMajorRecordBinaryWrapper,
         IPathGridInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PathGrid_Registration.Instance;
         public new static PathGrid_Registration Registration => PathGrid_Registration.Instance;
-        protected override object CommonInstance => PathGridCommon.Instance;
+        protected override object CommonInstance()
+        {
+            return PathGridCommon.Instance;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPathGridInternalGetter)rhs, include);
 
         protected override object XmlWriteTranslator => PathGridXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((PathGridXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         protected override object BinaryWriteTranslator => PathGridBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((PathGridBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
 
         #region PointToPointConnections
         partial void PointToPointConnectionsCustomParse(
@@ -2752,8 +2815,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordType type,
             int? lastParsed);
         #endregion
-        public IReadOnlySetList<IInterCellPointGetter> InterCellConnections { get; private set; } = EmptySetList<InterCellPointBinaryWrapper>.Instance;
-        public IReadOnlySetList<IPointToReferenceMappingGetter> PointToReferenceMappings { get; private set; } = EmptySetList<PointToReferenceMappingBinaryWrapper>.Instance;
+        public IReadOnlySetList<IInterCellPointInternalGetter> InterCellConnections { get; private set; } = EmptySetList<InterCellPointBinaryWrapper>.Instance;
+        public IReadOnlySetList<IPointToReferenceMappingInternalGetter> PointToReferenceMappings { get; private set; } = EmptySetList<PointToReferenceMappingBinaryWrapper>.Instance;
         partial void CustomCtor(
             BinaryMemoryReadStream stream,
             long finalPos,
@@ -2861,4 +2924,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class PathGrid
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => PathGrid_Registration.Instance;
+        public new static PathGrid_Registration Registration => PathGrid_Registration.Instance;
+        protected override object CommonInstance()
+        {
+            return PathGridCommon.Instance;
+        }
+        protected override object CommonSetterInstance()
+        {
+            return PathGridSetterCommon.Instance;
+        }
+        protected override object CommonSetterCopyInstance()
+        {
+            return PathGridSetterCopyCommon.Instance;
+        }
+
+        #endregion
+
+    }
 }

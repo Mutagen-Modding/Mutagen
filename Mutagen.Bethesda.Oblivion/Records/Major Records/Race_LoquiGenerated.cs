@@ -45,11 +45,6 @@ namespace Mutagen.Bethesda.Oblivion
         IEquatable<Race>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Race_Registration.Instance;
-        public new static Race_Registration Registration => Race_Registration.Instance;
-        protected override object CommonInstance => RaceCommon.Instance;
-
         #region Ctor
         protected Race()
         {
@@ -130,7 +125,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<RaceRelation> IRace.Relations => _Relations;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IRaceRelationGetter> IRaceGetter.Relations => _Relations;
+        IReadOnlySetList<IRaceRelationInternalGetter> IRaceGetter.Relations => _Relations;
         #endregion
 
         #endregion
@@ -142,7 +137,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IList<SkillBoost> IRace.SkillBoosts => _SkillBoosts;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<ISkillBoostGetter> IRaceGetter.SkillBoosts => _SkillBoosts;
+        IReadOnlyList<ISkillBoostInternalGetter> IRaceGetter.SkillBoosts => _SkillBoosts;
         #endregion
 
         #endregion
@@ -247,7 +242,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Voices_Set(default(RaceVoices), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IRaceVoicesGetter IRaceGetter.Voices => this.Voices;
+        IRaceVoicesInternalGetter IRaceGetter.Voices => this.Voices;
         #endregion
         #region DefaultHair
         public bool DefaultHair_IsSet
@@ -274,7 +269,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.DefaultHair_Set(default(RaceHair), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IRaceHairGetter IRaceGetter.DefaultHair => this.DefaultHair;
+        IRaceHairInternalGetter IRaceGetter.DefaultHair => this.DefaultHair;
         #endregion
         #region DefaultHairColor
         public bool DefaultHairColor_IsSet
@@ -379,7 +374,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.RaceStats_Set(default(RaceStatsGendered), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IRaceStatsGenderedGetter IRaceGetter.RaceStats => this.RaceStats;
+        IRaceStatsGenderedInternalGetter IRaceGetter.RaceStats => this.RaceStats;
         #endregion
         #region FaceData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -389,7 +384,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<FacePart> IRace.FaceData => _FaceData;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IFacePartGetter> IRaceGetter.FaceData => _FaceData;
+        IReadOnlySetList<IFacePartInternalGetter> IRaceGetter.FaceData => _FaceData;
         #endregion
 
         #endregion
@@ -418,7 +413,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.BodyData_Set(default(GenderedBodyData), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGenderedBodyDataGetter IRaceGetter.BodyData => this.BodyData;
+        IGenderedBodyDataInternalGetter IRaceGetter.BodyData => this.BodyData;
         #endregion
         #region Hairs
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -469,7 +464,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.FaceGenData_Set(default(FaceGenData), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFaceGenDataGetter IRaceGetter.FaceGenData => this.FaceGenData;
+        IFaceGenDataInternalGetter IRaceGetter.FaceGenData => this.FaceGenData;
         #endregion
         #region Unknown
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -536,20 +531,33 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IRaceInternalGetter rhs)) return false;
-            return ((RaceCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            return ((RaceCommon)((IRaceInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(Race obj)
         {
-            return ((RaceCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((RaceCommon)((IRaceInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((RaceCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((RaceCommon)((IRaceInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected override object XmlWriteTranslator => RaceXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((RaceXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static Race CreateFromXml(
@@ -879,6 +887,19 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Binary Translation
         protected override object BinaryWriteTranslator => RaceBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((RaceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
         #region Binary Create
         [DebuggerStepThrough]
         public static Race CreateFromBinary(
@@ -1382,7 +1403,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            RaceCommon.CopyFieldsFrom(
+            RaceSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -1397,7 +1418,7 @@ namespace Mutagen.Bethesda.Oblivion
             Race_CopyMask copyMask = null,
             Race def = null)
         {
-            RaceCommon.CopyFieldsFrom(
+            RaceSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -1490,7 +1511,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            RaceCommon.Instance.Clear(this);
+            RaceSetterCommon.Instance.Clear(this);
         }
 
         public new static Race Create(IEnumerable<KeyValuePair<ushort, object>> fields)
@@ -1705,10 +1726,10 @@ namespace Mutagen.Bethesda.Oblivion
         IReadOnlySetList<IFormIDLinkGetter<ISpellInternalGetter>> Spells { get; }
         #endregion
         #region Relations
-        IReadOnlySetList<IRaceRelationGetter> Relations { get; }
+        IReadOnlySetList<IRaceRelationInternalGetter> Relations { get; }
         #endregion
         #region SkillBoosts
-        IReadOnlyList<ISkillBoostGetter> SkillBoosts { get; }
+        IReadOnlyList<ISkillBoostInternalGetter> SkillBoosts { get; }
         #endregion
         #region Fluff
         ReadOnlySpan<Byte> Fluff { get; }
@@ -1735,12 +1756,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Voices
-        IRaceVoicesGetter Voices { get; }
+        IRaceVoicesInternalGetter Voices { get; }
         bool Voices_IsSet { get; }
 
         #endregion
         #region DefaultHair
-        IRaceHairGetter DefaultHair { get; }
+        IRaceHairInternalGetter DefaultHair { get; }
         bool DefaultHair_IsSet { get; }
 
         #endregion
@@ -1760,15 +1781,15 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region RaceStats
-        IRaceStatsGenderedGetter RaceStats { get; }
+        IRaceStatsGenderedInternalGetter RaceStats { get; }
         bool RaceStats_IsSet { get; }
 
         #endregion
         #region FaceData
-        IReadOnlySetList<IFacePartGetter> FaceData { get; }
+        IReadOnlySetList<IFacePartInternalGetter> FaceData { get; }
         #endregion
         #region BodyData
-        IGenderedBodyDataGetter BodyData { get; }
+        IGenderedBodyDataInternalGetter BodyData { get; }
         bool BodyData_IsSet { get; }
 
         #endregion
@@ -1779,7 +1800,7 @@ namespace Mutagen.Bethesda.Oblivion
         IReadOnlySetList<IFormIDLinkGetter<IEyeInternalGetter>> Eyes { get; }
         #endregion
         #region FaceGenData
-        IFaceGenDataGetter FaceGenData { get; }
+        IFaceGenDataInternalGetter FaceGenData { get; }
         bool FaceGenData_IsSet { get; }
 
         #endregion
@@ -1809,7 +1830,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IRaceInternal item)
         {
-            ((RaceCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((RaceSetterCommon)((IRaceInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static Race_Mask<bool> GetEqualsMask(
@@ -1817,7 +1838,7 @@ namespace Mutagen.Bethesda.Oblivion
             IRaceInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((RaceCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((RaceCommon)((IRaceInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -1828,7 +1849,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Race_Mask<bool> printMask = null)
         {
-            return ((RaceCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((RaceCommon)((IRaceInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -1840,7 +1861,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Race_Mask<bool> printMask = null)
         {
-            ((RaceCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((RaceCommon)((IRaceInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -1851,7 +1872,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRaceInternalGetter item,
             Race_Mask<bool?> checkMask)
         {
-            return ((RaceCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((RaceCommon)((IRaceInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -1859,7 +1880,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Race_Mask<bool> GetHasBeenSetMask(this IRaceInternalGetter item)
         {
             var ret = new Race_Mask<bool>();
-            ((RaceCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((RaceCommon)((IRaceInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -1869,7 +1890,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRaceInternalGetter item,
             IRaceInternalGetter rhs)
         {
-            return ((RaceCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((RaceCommon)((IRaceInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1947,8 +1968,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type SetterType = typeof(IRace);
 
         public static readonly Type InternalSetterType = typeof(IRaceInternal);
-
-        public static readonly Type CommonType = typeof(RaceCommon);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.Race";
 
@@ -2351,7 +2370,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -2371,9 +2389,708 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
+    public partial class RaceSetterCommon : OblivionMajorRecordSetterCommon
+    {
+        public new static readonly RaceSetterCommon Instance = new RaceSetterCommon();
+
+        partial void ClearPartial();
+        
+        public virtual void Clear(IRaceInternal item)
+        {
+            ClearPartial();
+            item.Name_Unset();
+            item.Description_Unset();
+            item.Spells.Unset();
+            item.Relations.Unset();
+            item.SkillBoosts.Clear();
+            item.Fluff = default(Byte[]);
+            item.MaleHeight = default(Single);
+            item.FemaleHeight = default(Single);
+            item.MaleWeight = default(Single);
+            item.FemaleWeight = default(Single);
+            item.Flags = default(Race.Flag);
+            item.Voices_Unset();
+            item.DefaultHair_Unset();
+            item.DefaultHairColor_Unset();
+            item.FaceGenMainClamp_Unset();
+            item.FaceGenFaceClamp_Unset();
+            item.RaceStats_Unset();
+            item.FaceData.Unset();
+            item.BodyData_Unset();
+            item.Hairs.Unset();
+            item.Eyes.Unset();
+            item.FaceGenData_Unset();
+            item.Unknown_Unset();
+            base.Clear(item);
+        }
+        
+        public override void Clear(IOblivionMajorRecordInternal item)
+        {
+            Clear(item: (IRaceInternal)item);
+        }
+        
+        public override void Clear(IMajorRecordInternal item)
+        {
+            Clear(item: (IRaceInternal)item);
+        }
+        
+        
+    }
     public partial class RaceCommon : OblivionMajorRecordCommon
     {
-        public static readonly RaceCommon Instance = new RaceCommon();
+        public new static readonly RaceCommon Instance = new RaceCommon();
+
+        public Race_Mask<bool> GetEqualsMask(
+            IRaceInternalGetter item,
+            IRaceInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new Race_Mask<bool>();
+            ((RaceCommon)((IRaceInternalGetter)item).CommonInstance()).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+        
+        public void FillEqualsMask(
+            IRaceInternalGetter item,
+            IRaceInternalGetter rhs,
+            Race_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            if (rhs == null) return;
+            ret.Name = item.Name_IsSet == rhs.Name_IsSet && string.Equals(item.Name, rhs.Name);
+            ret.Description = item.Description_IsSet == rhs.Description_IsSet && string.Equals(item.Description, rhs.Description);
+            ret.Spells = item.Spells.CollectionEqualsHelper(
+                rhs.Spells,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.Relations = item.Relations.CollectionEqualsHelper(
+                rhs.Relations,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.SkillBoosts = item.SkillBoosts.CollectionEqualsHelper(
+                rhs.SkillBoosts,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Fluff = MemoryExtensions.SequenceEqual(item.Fluff, rhs.Fluff);
+            ret.MaleHeight = item.MaleHeight.EqualsWithin(rhs.MaleHeight);
+            ret.FemaleHeight = item.FemaleHeight.EqualsWithin(rhs.FemaleHeight);
+            ret.MaleWeight = item.MaleWeight.EqualsWithin(rhs.MaleWeight);
+            ret.FemaleWeight = item.FemaleWeight.EqualsWithin(rhs.FemaleWeight);
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.Voices = EqualsMaskHelper.EqualsHelper(
+                item.Voices_IsSet,
+                rhs.Voices_IsSet,
+                item.Voices,
+                rhs.Voices,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
+            ret.DefaultHair = EqualsMaskHelper.EqualsHelper(
+                item.DefaultHair_IsSet,
+                rhs.DefaultHair_IsSet,
+                item.DefaultHair,
+                rhs.DefaultHair,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
+            ret.DefaultHairColor = item.DefaultHairColor_IsSet == rhs.DefaultHairColor_IsSet && item.DefaultHairColor == rhs.DefaultHairColor;
+            ret.FaceGenMainClamp = item.FaceGenMainClamp_IsSet == rhs.FaceGenMainClamp_IsSet && item.FaceGenMainClamp == rhs.FaceGenMainClamp;
+            ret.FaceGenFaceClamp = item.FaceGenFaceClamp_IsSet == rhs.FaceGenFaceClamp_IsSet && item.FaceGenFaceClamp == rhs.FaceGenFaceClamp;
+            ret.RaceStats = EqualsMaskHelper.EqualsHelper(
+                item.RaceStats_IsSet,
+                rhs.RaceStats_IsSet,
+                item.RaceStats,
+                rhs.RaceStats,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
+            ret.FaceData = item.FaceData.CollectionEqualsHelper(
+                rhs.FaceData,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.BodyData = EqualsMaskHelper.EqualsHelper(
+                item.BodyData_IsSet,
+                rhs.BodyData_IsSet,
+                item.BodyData,
+                rhs.BodyData,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
+            ret.Hairs = item.Hairs.CollectionEqualsHelper(
+                rhs.Hairs,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.Eyes = item.Eyes.CollectionEqualsHelper(
+                rhs.Eyes,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.FaceGenData = EqualsMaskHelper.EqualsHelper(
+                item.FaceGenData_IsSet,
+                rhs.FaceGenData_IsSet,
+                item.FaceGenData,
+                rhs.FaceGenData,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
+            ret.Unknown = item.Unknown_IsSet == rhs.Unknown_IsSet && MemoryExtensions.SequenceEqual(item.Unknown, rhs.Unknown);
+            base.FillEqualsMask(item, rhs, ret, include);
+        }
+        
+        public string ToString(
+            IRaceInternalGetter item,
+            string name = null,
+            Race_Mask<bool> printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+            return fg.ToString();
+        }
+        
+        public void ToString(
+            IRaceInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            Race_Mask<bool> printMask = null)
+        {
+            if (name == null)
+            {
+                fg.AppendLine($"Race =>");
+            }
+            else
+            {
+                fg.AppendLine($"{name} (Race) =>");
+            }
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
+            }
+            fg.AppendLine("]");
+        }
+        
+        protected static void ToStringFields(
+            IRaceInternalGetter item,
+            FileGeneration fg,
+            Race_Mask<bool> printMask = null)
+        {
+            OblivionMajorRecordCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.Name ?? true)
+            {
+                fg.AppendLine($"Name => {item.Name}");
+            }
+            if (printMask?.Description ?? true)
+            {
+                fg.AppendLine($"Description => {item.Description}");
+            }
+            if (printMask?.Spells?.Overall ?? true)
+            {
+                fg.AppendLine("Spells =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Spells)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"Item => {subItem}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.Relations?.Overall ?? true)
+            {
+                fg.AppendLine("Relations =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Relations)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.SkillBoosts?.Overall ?? true)
+            {
+                fg.AppendLine("SkillBoosts =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.SkillBoosts)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.Fluff ?? true)
+            {
+                fg.AppendLine($"Fluff => {SpanExt.ToHexString(item.Fluff)}");
+            }
+            if (printMask?.MaleHeight ?? true)
+            {
+                fg.AppendLine($"MaleHeight => {item.MaleHeight}");
+            }
+            if (printMask?.FemaleHeight ?? true)
+            {
+                fg.AppendLine($"FemaleHeight => {item.FemaleHeight}");
+            }
+            if (printMask?.MaleWeight ?? true)
+            {
+                fg.AppendLine($"MaleWeight => {item.MaleWeight}");
+            }
+            if (printMask?.FemaleWeight ?? true)
+            {
+                fg.AppendLine($"FemaleWeight => {item.FemaleWeight}");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                fg.AppendLine($"Flags => {item.Flags}");
+            }
+            if (printMask?.Voices?.Overall ?? true)
+            {
+                item.Voices?.ToString(fg, "Voices");
+            }
+            if (printMask?.DefaultHair?.Overall ?? true)
+            {
+                item.DefaultHair?.ToString(fg, "DefaultHair");
+            }
+            if (printMask?.DefaultHairColor ?? true)
+            {
+                fg.AppendLine($"DefaultHairColor => {item.DefaultHairColor}");
+            }
+            if (printMask?.FaceGenMainClamp ?? true)
+            {
+                fg.AppendLine($"FaceGenMainClamp => {item.FaceGenMainClamp}");
+            }
+            if (printMask?.FaceGenFaceClamp ?? true)
+            {
+                fg.AppendLine($"FaceGenFaceClamp => {item.FaceGenFaceClamp}");
+            }
+            if (printMask?.RaceStats?.Overall ?? true)
+            {
+                item.RaceStats?.ToString(fg, "RaceStats");
+            }
+            if (printMask?.FaceData?.Overall ?? true)
+            {
+                fg.AppendLine("FaceData =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.FaceData)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.BodyData?.Overall ?? true)
+            {
+                item.BodyData?.ToString(fg, "BodyData");
+            }
+            if (printMask?.Hairs?.Overall ?? true)
+            {
+                fg.AppendLine("Hairs =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Hairs)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"Item => {subItem}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.Eyes?.Overall ?? true)
+            {
+                fg.AppendLine("Eyes =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Eyes)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"Item => {subItem}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.FaceGenData?.Overall ?? true)
+            {
+                item.FaceGenData?.ToString(fg, "FaceGenData");
+            }
+            if (printMask?.Unknown ?? true)
+            {
+                fg.AppendLine($"Unknown => {SpanExt.ToHexString(item.Unknown)}");
+            }
+            if (printMask?.DATADataTypeState ?? true)
+            {
+            }
+        }
+        
+        public bool HasBeenSet(
+            IRaceInternalGetter item,
+            Race_Mask<bool?> checkMask)
+        {
+            if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_IsSet) return false;
+            if (checkMask.Description.HasValue && checkMask.Description.Value != item.Description_IsSet) return false;
+            if (checkMask.Spells.Overall.HasValue && checkMask.Spells.Overall.Value != item.Spells.HasBeenSet) return false;
+            if (checkMask.Relations.Overall.HasValue && checkMask.Relations.Overall.Value != item.Relations.HasBeenSet) return false;
+            if (checkMask.Voices.Overall.HasValue && checkMask.Voices.Overall.Value != item.Voices_IsSet) return false;
+            if (checkMask.Voices.Specific != null && (item.Voices == null || !item.Voices.HasBeenSet(checkMask.Voices.Specific))) return false;
+            if (checkMask.DefaultHair.Overall.HasValue && checkMask.DefaultHair.Overall.Value != item.DefaultHair_IsSet) return false;
+            if (checkMask.DefaultHair.Specific != null && (item.DefaultHair == null || !item.DefaultHair.HasBeenSet(checkMask.DefaultHair.Specific))) return false;
+            if (checkMask.DefaultHairColor.HasValue && checkMask.DefaultHairColor.Value != item.DefaultHairColor_IsSet) return false;
+            if (checkMask.FaceGenMainClamp.HasValue && checkMask.FaceGenMainClamp.Value != item.FaceGenMainClamp_IsSet) return false;
+            if (checkMask.FaceGenFaceClamp.HasValue && checkMask.FaceGenFaceClamp.Value != item.FaceGenFaceClamp_IsSet) return false;
+            if (checkMask.RaceStats.Overall.HasValue && checkMask.RaceStats.Overall.Value != item.RaceStats_IsSet) return false;
+            if (checkMask.RaceStats.Specific != null && (item.RaceStats == null || !item.RaceStats.HasBeenSet(checkMask.RaceStats.Specific))) return false;
+            if (checkMask.FaceData.Overall.HasValue && checkMask.FaceData.Overall.Value != item.FaceData.HasBeenSet) return false;
+            if (checkMask.BodyData.Overall.HasValue && checkMask.BodyData.Overall.Value != item.BodyData_IsSet) return false;
+            if (checkMask.BodyData.Specific != null && (item.BodyData == null || !item.BodyData.HasBeenSet(checkMask.BodyData.Specific))) return false;
+            if (checkMask.Hairs.Overall.HasValue && checkMask.Hairs.Overall.Value != item.Hairs.HasBeenSet) return false;
+            if (checkMask.Eyes.Overall.HasValue && checkMask.Eyes.Overall.Value != item.Eyes.HasBeenSet) return false;
+            if (checkMask.FaceGenData.Overall.HasValue && checkMask.FaceGenData.Overall.Value != item.FaceGenData_IsSet) return false;
+            if (checkMask.FaceGenData.Specific != null && (item.FaceGenData == null || !item.FaceGenData.HasBeenSet(checkMask.FaceGenData.Specific))) return false;
+            if (checkMask.Unknown.HasValue && checkMask.Unknown.Value != item.Unknown_IsSet) return false;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+        
+        public void FillHasBeenSetMask(
+            IRaceInternalGetter item,
+            Race_Mask<bool> mask)
+        {
+            mask.Name = item.Name_IsSet;
+            mask.Description = item.Description_IsSet;
+            mask.Spells = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Spells.HasBeenSet, null);
+            mask.Relations = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, RaceRelation_Mask<bool>>>>(item.Relations.HasBeenSet, item.Relations.WithIndex().Select((i) => new MaskItemIndexed<bool, RaceRelation_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.SkillBoosts = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, SkillBoost_Mask<bool>>>>(true, item.SkillBoosts.WithIndex().Select((i) => new MaskItemIndexed<bool, SkillBoost_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.Fluff = true;
+            mask.MaleHeight = true;
+            mask.FemaleHeight = true;
+            mask.MaleWeight = true;
+            mask.FemaleWeight = true;
+            mask.Flags = true;
+            mask.Voices = new MaskItem<bool, RaceVoices_Mask<bool>>(item.Voices_IsSet, item.Voices.GetHasBeenSetMask());
+            mask.DefaultHair = new MaskItem<bool, RaceHair_Mask<bool>>(item.DefaultHair_IsSet, item.DefaultHair.GetHasBeenSetMask());
+            mask.DefaultHairColor = item.DefaultHairColor_IsSet;
+            mask.FaceGenMainClamp = item.FaceGenMainClamp_IsSet;
+            mask.FaceGenFaceClamp = item.FaceGenFaceClamp_IsSet;
+            mask.RaceStats = new MaskItem<bool, RaceStatsGendered_Mask<bool>>(item.RaceStats_IsSet, item.RaceStats.GetHasBeenSetMask());
+            mask.FaceData = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, FacePart_Mask<bool>>>>(item.FaceData.HasBeenSet, item.FaceData.WithIndex().Select((i) => new MaskItemIndexed<bool, FacePart_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.BodyData = new MaskItem<bool, GenderedBodyData_Mask<bool>>(item.BodyData_IsSet, item.BodyData.GetHasBeenSetMask());
+            mask.Hairs = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Hairs.HasBeenSet, null);
+            mask.Eyes = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Eyes.HasBeenSet, null);
+            mask.FaceGenData = new MaskItem<bool, FaceGenData_Mask<bool>>(item.FaceGenData_IsSet, item.FaceGenData.GetHasBeenSetMask());
+            mask.Unknown = item.Unknown_IsSet;
+            mask.DATADataTypeState = true;
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
+        }
+        
+        public static Race_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (Race_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.FormKey:
+                    return (Race_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.Version:
+                    return (Race_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.EditorID:
+                    return (Race_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
+                    return (Race_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        public static Race_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (Race_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.FormKey:
+                    return (Race_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.Version:
+                    return (Race_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.EditorID:
+                    return (Race_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        #region Equals and Hash
+        public virtual bool Equals(
+            IRaceInternalGetter lhs,
+            IRaceInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.Name_IsSet != rhs.Name_IsSet) return false;
+            if (lhs.Name_IsSet)
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if (lhs.Description_IsSet != rhs.Description_IsSet) return false;
+            if (lhs.Description_IsSet)
+            {
+                if (!string.Equals(lhs.Description, rhs.Description)) return false;
+            }
+            if (lhs.Spells.HasBeenSet != rhs.Spells.HasBeenSet) return false;
+            if (lhs.Spells.HasBeenSet)
+            {
+                if (!lhs.Spells.SequenceEqual(rhs.Spells)) return false;
+            }
+            if (lhs.Relations.HasBeenSet != rhs.Relations.HasBeenSet) return false;
+            if (lhs.Relations.HasBeenSet)
+            {
+                if (!lhs.Relations.SequenceEqual(rhs.Relations)) return false;
+            }
+            if (!lhs.SkillBoosts.SequenceEqual(rhs.SkillBoosts)) return false;
+            if (!MemoryExtensions.SequenceEqual(lhs.Fluff, rhs.Fluff)) return false;
+            if (!lhs.MaleHeight.EqualsWithin(rhs.MaleHeight)) return false;
+            if (!lhs.FemaleHeight.EqualsWithin(rhs.FemaleHeight)) return false;
+            if (!lhs.MaleWeight.EqualsWithin(rhs.MaleWeight)) return false;
+            if (!lhs.FemaleWeight.EqualsWithin(rhs.FemaleWeight)) return false;
+            if (lhs.Flags != rhs.Flags) return false;
+            if (lhs.Voices_IsSet != rhs.Voices_IsSet) return false;
+            if (lhs.Voices_IsSet)
+            {
+                if (!object.Equals(lhs.Voices, rhs.Voices)) return false;
+            }
+            if (lhs.DefaultHair_IsSet != rhs.DefaultHair_IsSet) return false;
+            if (lhs.DefaultHair_IsSet)
+            {
+                if (!object.Equals(lhs.DefaultHair, rhs.DefaultHair)) return false;
+            }
+            if (lhs.DefaultHairColor_IsSet != rhs.DefaultHairColor_IsSet) return false;
+            if (lhs.DefaultHairColor_IsSet)
+            {
+                if (lhs.DefaultHairColor != rhs.DefaultHairColor) return false;
+            }
+            if (lhs.FaceGenMainClamp_IsSet != rhs.FaceGenMainClamp_IsSet) return false;
+            if (lhs.FaceGenMainClamp_IsSet)
+            {
+                if (lhs.FaceGenMainClamp != rhs.FaceGenMainClamp) return false;
+            }
+            if (lhs.FaceGenFaceClamp_IsSet != rhs.FaceGenFaceClamp_IsSet) return false;
+            if (lhs.FaceGenFaceClamp_IsSet)
+            {
+                if (lhs.FaceGenFaceClamp != rhs.FaceGenFaceClamp) return false;
+            }
+            if (lhs.RaceStats_IsSet != rhs.RaceStats_IsSet) return false;
+            if (lhs.RaceStats_IsSet)
+            {
+                if (!object.Equals(lhs.RaceStats, rhs.RaceStats)) return false;
+            }
+            if (lhs.FaceData.HasBeenSet != rhs.FaceData.HasBeenSet) return false;
+            if (lhs.FaceData.HasBeenSet)
+            {
+                if (!lhs.FaceData.SequenceEqual(rhs.FaceData)) return false;
+            }
+            if (lhs.BodyData_IsSet != rhs.BodyData_IsSet) return false;
+            if (lhs.BodyData_IsSet)
+            {
+                if (!object.Equals(lhs.BodyData, rhs.BodyData)) return false;
+            }
+            if (lhs.Hairs.HasBeenSet != rhs.Hairs.HasBeenSet) return false;
+            if (lhs.Hairs.HasBeenSet)
+            {
+                if (!lhs.Hairs.SequenceEqual(rhs.Hairs)) return false;
+            }
+            if (lhs.Eyes.HasBeenSet != rhs.Eyes.HasBeenSet) return false;
+            if (lhs.Eyes.HasBeenSet)
+            {
+                if (!lhs.Eyes.SequenceEqual(rhs.Eyes)) return false;
+            }
+            if (lhs.FaceGenData_IsSet != rhs.FaceGenData_IsSet) return false;
+            if (lhs.FaceGenData_IsSet)
+            {
+                if (!object.Equals(lhs.FaceGenData, rhs.FaceGenData)) return false;
+            }
+            if (lhs.Unknown_IsSet != rhs.Unknown_IsSet) return false;
+            if (lhs.Unknown_IsSet)
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.Unknown, rhs.Unknown)) return false;
+            }
+            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            return true;
+        }
+        
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IRaceInternalGetter)lhs,
+                rhs: rhs as IRaceInternalGetter);
+        }
+        
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IRaceInternalGetter)lhs,
+                rhs: rhs as IRaceInternalGetter);
+        }
+        
+        public virtual int GetHashCode(IRaceInternalGetter item)
+        {
+            int ret = 0;
+            if (item.Name_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Name).CombineHashCode(ret);
+            }
+            if (item.Description_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Description).CombineHashCode(ret);
+            }
+            if (item.Spells.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Spells).CombineHashCode(ret);
+            }
+            if (item.Relations.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Relations).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.SkillBoosts).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Fluff).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.MaleHeight).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.FemaleHeight).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.MaleWeight).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.FemaleWeight).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
+            if (item.Voices_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Voices).CombineHashCode(ret);
+            }
+            if (item.DefaultHair_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.DefaultHair).CombineHashCode(ret);
+            }
+            if (item.DefaultHairColor_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.DefaultHairColor).CombineHashCode(ret);
+            }
+            if (item.FaceGenMainClamp_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.FaceGenMainClamp).CombineHashCode(ret);
+            }
+            if (item.FaceGenFaceClamp_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.FaceGenFaceClamp).CombineHashCode(ret);
+            }
+            if (item.RaceStats_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.RaceStats).CombineHashCode(ret);
+            }
+            if (item.FaceData.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.FaceData).CombineHashCode(ret);
+            }
+            if (item.BodyData_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.BodyData).CombineHashCode(ret);
+            }
+            if (item.Hairs.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Hairs).CombineHashCode(ret);
+            }
+            if (item.Eyes.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Eyes).CombineHashCode(ret);
+            }
+            if (item.FaceGenData_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.FaceGenData).CombineHashCode(ret);
+            }
+            if (item.Unknown_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Unknown).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.DATADataTypeState).CombineHashCode(ret);
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+        
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IRaceInternalGetter)item);
+        }
+        
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IRaceInternalGetter)item);
+        }
+        
+        #endregion
+        
+        
+        #region Mutagen
+        partial void PostDuplicate(Race obj, Race rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+        
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new Race(getNextFormKey());
+            ret.CopyFieldsFrom((Race)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (Race)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+        
+        #endregion
+        
+        
+    }
+    public partial class RaceSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
+    {
+        public new static readonly RaceSetterCopyCommon Instance = new RaceSetterCopyCommon();
 
         #region Copy Fields From
         public static void CopyFieldsFrom(
@@ -2383,7 +3100,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             Race_CopyMask copyMask)
         {
-            OblivionMajorRecordCommon.CopyFieldsFrom(
+            OblivionMajorRecordSetterCopyCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -2656,7 +3373,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             case CopyOption.Reference:
                                 throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
-                                RaceVoicesCommon.CopyFieldsFrom(
+                                RaceVoicesSetterCopyCommon.CopyFieldsFrom(
                                     item: item.Voices,
                                     rhs: rhs.Voices,
                                     def: def?.Voices,
@@ -2708,7 +3425,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             case CopyOption.Reference:
                                 throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
-                                RaceHairCommon.CopyFieldsFrom(
+                                RaceHairSetterCopyCommon.CopyFieldsFrom(
                                     item: item.DefaultHair,
                                     rhs: rhs.DefaultHair,
                                     def: def?.DefaultHair,
@@ -2850,7 +3567,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             case CopyOption.Reference:
                                 throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
-                                RaceStatsGenderedCommon.CopyFieldsFrom(
+                                RaceStatsGenderedSetterCopyCommon.CopyFieldsFrom(
                                     item: item.RaceStats,
                                     rhs: rhs.RaceStats,
                                     def: def?.RaceStats,
@@ -2936,7 +3653,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             case CopyOption.Reference:
                                 throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
-                                GenderedBodyDataCommon.CopyFieldsFrom(
+                                GenderedBodyDataSetterCopyCommon.CopyFieldsFrom(
                                     item: item.BodyData,
                                     rhs: rhs.BodyData,
                                     def: def?.BodyData,
@@ -3026,7 +3743,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             case CopyOption.Reference:
                                 throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
-                                FaceGenDataCommon.CopyFieldsFrom(
+                                FaceGenDataSetterCopyCommon.CopyFieldsFrom(
                                     item: item.FaceGenData,
                                     rhs: rhs.FaceGenData,
                                     def: def?.FaceGenData,
@@ -3091,696 +3808,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
         }
-
+        
         #endregion
-
-        partial void ClearPartial();
-
-        public virtual void Clear(IRaceInternal item)
-        {
-            ClearPartial();
-            item.Name_Unset();
-            item.Description_Unset();
-            item.Spells.Unset();
-            item.Relations.Unset();
-            item.SkillBoosts.Clear();
-            item.Fluff = default(Byte[]);
-            item.MaleHeight = default(Single);
-            item.FemaleHeight = default(Single);
-            item.MaleWeight = default(Single);
-            item.FemaleWeight = default(Single);
-            item.Flags = default(Race.Flag);
-            item.Voices_Unset();
-            item.DefaultHair_Unset();
-            item.DefaultHairColor_Unset();
-            item.FaceGenMainClamp_Unset();
-            item.FaceGenFaceClamp_Unset();
-            item.RaceStats_Unset();
-            item.FaceData.Unset();
-            item.BodyData_Unset();
-            item.Hairs.Unset();
-            item.Eyes.Unset();
-            item.FaceGenData_Unset();
-            item.Unknown_Unset();
-            base.Clear(item);
-        }
-
-        public override void Clear(IOblivionMajorRecordInternal item)
-        {
-            Clear(item: (IRaceInternal)item);
-        }
-
-        public override void Clear(IMajorRecordInternal item)
-        {
-            Clear(item: (IRaceInternal)item);
-        }
-
-        public Race_Mask<bool> GetEqualsMask(
-            IRaceInternalGetter item,
-            IRaceInternalGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new Race_Mask<bool>();
-            ((RaceCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public void FillEqualsMask(
-            IRaceInternalGetter item,
-            IRaceInternalGetter rhs,
-            Race_Mask<bool> ret,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            if (rhs == null) return;
-            ret.Name = item.Name_IsSet == rhs.Name_IsSet && string.Equals(item.Name, rhs.Name);
-            ret.Description = item.Description_IsSet == rhs.Description_IsSet && string.Equals(item.Description, rhs.Description);
-            ret.Spells = item.Spells.CollectionEqualsHelper(
-                rhs.Spells,
-                (l, r) => object.Equals(l, r),
-                include);
-            ret.Relations = item.Relations.CollectionEqualsHelper(
-                rhs.Relations,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
-                include);
-            ret.SkillBoosts = item.SkillBoosts.CollectionEqualsHelper(
-                rhs.SkillBoosts,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
-                include);
-            ret.Fluff = MemoryExtensions.SequenceEqual(item.Fluff, rhs.Fluff);
-            ret.MaleHeight = item.MaleHeight.EqualsWithin(rhs.MaleHeight);
-            ret.FemaleHeight = item.FemaleHeight.EqualsWithin(rhs.FemaleHeight);
-            ret.MaleWeight = item.MaleWeight.EqualsWithin(rhs.MaleWeight);
-            ret.FemaleWeight = item.FemaleWeight.EqualsWithin(rhs.FemaleWeight);
-            ret.Flags = item.Flags == rhs.Flags;
-            ret.Voices = EqualsMaskHelper.EqualsHelper(
-                item.Voices_IsSet,
-                rhs.Voices_IsSet,
-                item.Voices,
-                rhs.Voices,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
-                include);
-            ret.DefaultHair = EqualsMaskHelper.EqualsHelper(
-                item.DefaultHair_IsSet,
-                rhs.DefaultHair_IsSet,
-                item.DefaultHair,
-                rhs.DefaultHair,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
-                include);
-            ret.DefaultHairColor = item.DefaultHairColor_IsSet == rhs.DefaultHairColor_IsSet && item.DefaultHairColor == rhs.DefaultHairColor;
-            ret.FaceGenMainClamp = item.FaceGenMainClamp_IsSet == rhs.FaceGenMainClamp_IsSet && item.FaceGenMainClamp == rhs.FaceGenMainClamp;
-            ret.FaceGenFaceClamp = item.FaceGenFaceClamp_IsSet == rhs.FaceGenFaceClamp_IsSet && item.FaceGenFaceClamp == rhs.FaceGenFaceClamp;
-            ret.RaceStats = EqualsMaskHelper.EqualsHelper(
-                item.RaceStats_IsSet,
-                rhs.RaceStats_IsSet,
-                item.RaceStats,
-                rhs.RaceStats,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
-                include);
-            ret.FaceData = item.FaceData.CollectionEqualsHelper(
-                rhs.FaceData,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
-                include);
-            ret.BodyData = EqualsMaskHelper.EqualsHelper(
-                item.BodyData_IsSet,
-                rhs.BodyData_IsSet,
-                item.BodyData,
-                rhs.BodyData,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
-                include);
-            ret.Hairs = item.Hairs.CollectionEqualsHelper(
-                rhs.Hairs,
-                (l, r) => object.Equals(l, r),
-                include);
-            ret.Eyes = item.Eyes.CollectionEqualsHelper(
-                rhs.Eyes,
-                (l, r) => object.Equals(l, r),
-                include);
-            ret.FaceGenData = EqualsMaskHelper.EqualsHelper(
-                item.FaceGenData_IsSet,
-                rhs.FaceGenData_IsSet,
-                item.FaceGenData,
-                rhs.FaceGenData,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
-                include);
-            ret.Unknown = item.Unknown_IsSet == rhs.Unknown_IsSet && MemoryExtensions.SequenceEqual(item.Unknown, rhs.Unknown);
-            base.FillEqualsMask(item, rhs, ret, include);
-        }
-
-        public string ToString(
-            IRaceInternalGetter item,
-            string name = null,
-            Race_Mask<bool> printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(
-                item: item,
-                fg: fg,
-                name: name,
-                printMask: printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(
-            IRaceInternalGetter item,
-            FileGeneration fg,
-            string name = null,
-            Race_Mask<bool> printMask = null)
-        {
-            if (name == null)
-            {
-                fg.AppendLine($"Race =>");
-            }
-            else
-            {
-                fg.AppendLine($"{name} (Race) =>");
-            }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                ToStringFields(
-                    item: item,
-                    fg: fg,
-                    printMask: printMask);
-            }
-            fg.AppendLine("]");
-        }
-
-        protected static void ToStringFields(
-            IRaceInternalGetter item,
-            FileGeneration fg,
-            Race_Mask<bool> printMask = null)
-        {
-            OblivionMajorRecordCommon.ToStringFields(
-                item: item,
-                fg: fg,
-                printMask: printMask);
-            if (printMask?.Name ?? true)
-            {
-                fg.AppendLine($"Name => {item.Name}");
-            }
-            if (printMask?.Description ?? true)
-            {
-                fg.AppendLine($"Description => {item.Description}");
-            }
-            if (printMask?.Spells?.Overall ?? true)
-            {
-                fg.AppendLine("Spells =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
-                {
-                    foreach (var subItem in item.Spells)
-                    {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            fg.AppendLine($"Item => {subItem}");
-                        }
-                        fg.AppendLine("]");
-                    }
-                }
-                fg.AppendLine("]");
-            }
-            if (printMask?.Relations?.Overall ?? true)
-            {
-                fg.AppendLine("Relations =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
-                {
-                    foreach (var subItem in item.Relations)
-                    {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            subItem?.ToString(fg, "Item");
-                        }
-                        fg.AppendLine("]");
-                    }
-                }
-                fg.AppendLine("]");
-            }
-            if (printMask?.SkillBoosts?.Overall ?? true)
-            {
-                fg.AppendLine("SkillBoosts =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
-                {
-                    foreach (var subItem in item.SkillBoosts)
-                    {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            subItem?.ToString(fg, "Item");
-                        }
-                        fg.AppendLine("]");
-                    }
-                }
-                fg.AppendLine("]");
-            }
-            if (printMask?.Fluff ?? true)
-            {
-                fg.AppendLine($"Fluff => {SpanExt.ToHexString(item.Fluff)}");
-            }
-            if (printMask?.MaleHeight ?? true)
-            {
-                fg.AppendLine($"MaleHeight => {item.MaleHeight}");
-            }
-            if (printMask?.FemaleHeight ?? true)
-            {
-                fg.AppendLine($"FemaleHeight => {item.FemaleHeight}");
-            }
-            if (printMask?.MaleWeight ?? true)
-            {
-                fg.AppendLine($"MaleWeight => {item.MaleWeight}");
-            }
-            if (printMask?.FemaleWeight ?? true)
-            {
-                fg.AppendLine($"FemaleWeight => {item.FemaleWeight}");
-            }
-            if (printMask?.Flags ?? true)
-            {
-                fg.AppendLine($"Flags => {item.Flags}");
-            }
-            if (printMask?.Voices?.Overall ?? true)
-            {
-                item.Voices?.ToString(fg, "Voices");
-            }
-            if (printMask?.DefaultHair?.Overall ?? true)
-            {
-                item.DefaultHair?.ToString(fg, "DefaultHair");
-            }
-            if (printMask?.DefaultHairColor ?? true)
-            {
-                fg.AppendLine($"DefaultHairColor => {item.DefaultHairColor}");
-            }
-            if (printMask?.FaceGenMainClamp ?? true)
-            {
-                fg.AppendLine($"FaceGenMainClamp => {item.FaceGenMainClamp}");
-            }
-            if (printMask?.FaceGenFaceClamp ?? true)
-            {
-                fg.AppendLine($"FaceGenFaceClamp => {item.FaceGenFaceClamp}");
-            }
-            if (printMask?.RaceStats?.Overall ?? true)
-            {
-                item.RaceStats?.ToString(fg, "RaceStats");
-            }
-            if (printMask?.FaceData?.Overall ?? true)
-            {
-                fg.AppendLine("FaceData =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
-                {
-                    foreach (var subItem in item.FaceData)
-                    {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            subItem?.ToString(fg, "Item");
-                        }
-                        fg.AppendLine("]");
-                    }
-                }
-                fg.AppendLine("]");
-            }
-            if (printMask?.BodyData?.Overall ?? true)
-            {
-                item.BodyData?.ToString(fg, "BodyData");
-            }
-            if (printMask?.Hairs?.Overall ?? true)
-            {
-                fg.AppendLine("Hairs =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
-                {
-                    foreach (var subItem in item.Hairs)
-                    {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            fg.AppendLine($"Item => {subItem}");
-                        }
-                        fg.AppendLine("]");
-                    }
-                }
-                fg.AppendLine("]");
-            }
-            if (printMask?.Eyes?.Overall ?? true)
-            {
-                fg.AppendLine("Eyes =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
-                {
-                    foreach (var subItem in item.Eyes)
-                    {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            fg.AppendLine($"Item => {subItem}");
-                        }
-                        fg.AppendLine("]");
-                    }
-                }
-                fg.AppendLine("]");
-            }
-            if (printMask?.FaceGenData?.Overall ?? true)
-            {
-                item.FaceGenData?.ToString(fg, "FaceGenData");
-            }
-            if (printMask?.Unknown ?? true)
-            {
-                fg.AppendLine($"Unknown => {SpanExt.ToHexString(item.Unknown)}");
-            }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-            }
-        }
-
-        public bool HasBeenSet(
-            IRaceInternalGetter item,
-            Race_Mask<bool?> checkMask)
-        {
-            if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_IsSet) return false;
-            if (checkMask.Description.HasValue && checkMask.Description.Value != item.Description_IsSet) return false;
-            if (checkMask.Spells.Overall.HasValue && checkMask.Spells.Overall.Value != item.Spells.HasBeenSet) return false;
-            if (checkMask.Relations.Overall.HasValue && checkMask.Relations.Overall.Value != item.Relations.HasBeenSet) return false;
-            if (checkMask.Voices.Overall.HasValue && checkMask.Voices.Overall.Value != item.Voices_IsSet) return false;
-            if (checkMask.Voices.Specific != null && (item.Voices == null || !item.Voices.HasBeenSet(checkMask.Voices.Specific))) return false;
-            if (checkMask.DefaultHair.Overall.HasValue && checkMask.DefaultHair.Overall.Value != item.DefaultHair_IsSet) return false;
-            if (checkMask.DefaultHair.Specific != null && (item.DefaultHair == null || !item.DefaultHair.HasBeenSet(checkMask.DefaultHair.Specific))) return false;
-            if (checkMask.DefaultHairColor.HasValue && checkMask.DefaultHairColor.Value != item.DefaultHairColor_IsSet) return false;
-            if (checkMask.FaceGenMainClamp.HasValue && checkMask.FaceGenMainClamp.Value != item.FaceGenMainClamp_IsSet) return false;
-            if (checkMask.FaceGenFaceClamp.HasValue && checkMask.FaceGenFaceClamp.Value != item.FaceGenFaceClamp_IsSet) return false;
-            if (checkMask.RaceStats.Overall.HasValue && checkMask.RaceStats.Overall.Value != item.RaceStats_IsSet) return false;
-            if (checkMask.RaceStats.Specific != null && (item.RaceStats == null || !item.RaceStats.HasBeenSet(checkMask.RaceStats.Specific))) return false;
-            if (checkMask.FaceData.Overall.HasValue && checkMask.FaceData.Overall.Value != item.FaceData.HasBeenSet) return false;
-            if (checkMask.BodyData.Overall.HasValue && checkMask.BodyData.Overall.Value != item.BodyData_IsSet) return false;
-            if (checkMask.BodyData.Specific != null && (item.BodyData == null || !item.BodyData.HasBeenSet(checkMask.BodyData.Specific))) return false;
-            if (checkMask.Hairs.Overall.HasValue && checkMask.Hairs.Overall.Value != item.Hairs.HasBeenSet) return false;
-            if (checkMask.Eyes.Overall.HasValue && checkMask.Eyes.Overall.Value != item.Eyes.HasBeenSet) return false;
-            if (checkMask.FaceGenData.Overall.HasValue && checkMask.FaceGenData.Overall.Value != item.FaceGenData_IsSet) return false;
-            if (checkMask.FaceGenData.Specific != null && (item.FaceGenData == null || !item.FaceGenData.HasBeenSet(checkMask.FaceGenData.Specific))) return false;
-            if (checkMask.Unknown.HasValue && checkMask.Unknown.Value != item.Unknown_IsSet) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public void FillHasBeenSetMask(
-            IRaceInternalGetter item,
-            Race_Mask<bool> mask)
-        {
-            mask.Name = item.Name_IsSet;
-            mask.Description = item.Description_IsSet;
-            mask.Spells = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Spells.HasBeenSet, null);
-            mask.Relations = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, RaceRelation_Mask<bool>>>>(item.Relations.HasBeenSet, item.Relations.WithIndex().Select((i) => new MaskItemIndexed<bool, RaceRelation_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.SkillBoosts = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, SkillBoost_Mask<bool>>>>(true, item.SkillBoosts.WithIndex().Select((i) => new MaskItemIndexed<bool, SkillBoost_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.Fluff = true;
-            mask.MaleHeight = true;
-            mask.FemaleHeight = true;
-            mask.MaleWeight = true;
-            mask.FemaleWeight = true;
-            mask.Flags = true;
-            mask.Voices = new MaskItem<bool, RaceVoices_Mask<bool>>(item.Voices_IsSet, item.Voices.GetHasBeenSetMask());
-            mask.DefaultHair = new MaskItem<bool, RaceHair_Mask<bool>>(item.DefaultHair_IsSet, item.DefaultHair.GetHasBeenSetMask());
-            mask.DefaultHairColor = item.DefaultHairColor_IsSet;
-            mask.FaceGenMainClamp = item.FaceGenMainClamp_IsSet;
-            mask.FaceGenFaceClamp = item.FaceGenFaceClamp_IsSet;
-            mask.RaceStats = new MaskItem<bool, RaceStatsGendered_Mask<bool>>(item.RaceStats_IsSet, item.RaceStats.GetHasBeenSetMask());
-            mask.FaceData = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, FacePart_Mask<bool>>>>(item.FaceData.HasBeenSet, item.FaceData.WithIndex().Select((i) => new MaskItemIndexed<bool, FacePart_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.BodyData = new MaskItem<bool, GenderedBodyData_Mask<bool>>(item.BodyData_IsSet, item.BodyData.GetHasBeenSetMask());
-            mask.Hairs = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Hairs.HasBeenSet, null);
-            mask.Eyes = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Eyes.HasBeenSet, null);
-            mask.FaceGenData = new MaskItem<bool, FaceGenData_Mask<bool>>(item.FaceGenData_IsSet, item.FaceGenData.GetHasBeenSetMask());
-            mask.Unknown = item.Unknown_IsSet;
-            mask.DATADataTypeState = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-
-        public static Race_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
-        {
-            switch (index)
-            {
-                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Race_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.FormKey:
-                    return (Race_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.Version:
-                    return (Race_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.EditorID:
-                    return (Race_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
-                    return (Race_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        public static Race_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
-        {
-            switch (index)
-            {
-                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Race_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.FormKey:
-                    return (Race_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
-                    return (Race_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.EditorID:
-                    return (Race_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        #region Equals and Hash
-        public virtual bool Equals(
-            IRaceInternalGetter lhs,
-            IRaceInternalGetter rhs)
-        {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (lhs.Name_IsSet != rhs.Name_IsSet) return false;
-            if (lhs.Name_IsSet)
-            {
-                if (!string.Equals(lhs.Name, rhs.Name)) return false;
-            }
-            if (lhs.Description_IsSet != rhs.Description_IsSet) return false;
-            if (lhs.Description_IsSet)
-            {
-                if (!string.Equals(lhs.Description, rhs.Description)) return false;
-            }
-            if (lhs.Spells.HasBeenSet != rhs.Spells.HasBeenSet) return false;
-            if (lhs.Spells.HasBeenSet)
-            {
-                if (!lhs.Spells.SequenceEqual(rhs.Spells)) return false;
-            }
-            if (lhs.Relations.HasBeenSet != rhs.Relations.HasBeenSet) return false;
-            if (lhs.Relations.HasBeenSet)
-            {
-                if (!lhs.Relations.SequenceEqual(rhs.Relations)) return false;
-            }
-            if (!lhs.SkillBoosts.SequenceEqual(rhs.SkillBoosts)) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Fluff, rhs.Fluff)) return false;
-            if (!lhs.MaleHeight.EqualsWithin(rhs.MaleHeight)) return false;
-            if (!lhs.FemaleHeight.EqualsWithin(rhs.FemaleHeight)) return false;
-            if (!lhs.MaleWeight.EqualsWithin(rhs.MaleWeight)) return false;
-            if (!lhs.FemaleWeight.EqualsWithin(rhs.FemaleWeight)) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (lhs.Voices_IsSet != rhs.Voices_IsSet) return false;
-            if (lhs.Voices_IsSet)
-            {
-                if (!object.Equals(lhs.Voices, rhs.Voices)) return false;
-            }
-            if (lhs.DefaultHair_IsSet != rhs.DefaultHair_IsSet) return false;
-            if (lhs.DefaultHair_IsSet)
-            {
-                if (!object.Equals(lhs.DefaultHair, rhs.DefaultHair)) return false;
-            }
-            if (lhs.DefaultHairColor_IsSet != rhs.DefaultHairColor_IsSet) return false;
-            if (lhs.DefaultHairColor_IsSet)
-            {
-                if (lhs.DefaultHairColor != rhs.DefaultHairColor) return false;
-            }
-            if (lhs.FaceGenMainClamp_IsSet != rhs.FaceGenMainClamp_IsSet) return false;
-            if (lhs.FaceGenMainClamp_IsSet)
-            {
-                if (lhs.FaceGenMainClamp != rhs.FaceGenMainClamp) return false;
-            }
-            if (lhs.FaceGenFaceClamp_IsSet != rhs.FaceGenFaceClamp_IsSet) return false;
-            if (lhs.FaceGenFaceClamp_IsSet)
-            {
-                if (lhs.FaceGenFaceClamp != rhs.FaceGenFaceClamp) return false;
-            }
-            if (lhs.RaceStats_IsSet != rhs.RaceStats_IsSet) return false;
-            if (lhs.RaceStats_IsSet)
-            {
-                if (!object.Equals(lhs.RaceStats, rhs.RaceStats)) return false;
-            }
-            if (lhs.FaceData.HasBeenSet != rhs.FaceData.HasBeenSet) return false;
-            if (lhs.FaceData.HasBeenSet)
-            {
-                if (!lhs.FaceData.SequenceEqual(rhs.FaceData)) return false;
-            }
-            if (lhs.BodyData_IsSet != rhs.BodyData_IsSet) return false;
-            if (lhs.BodyData_IsSet)
-            {
-                if (!object.Equals(lhs.BodyData, rhs.BodyData)) return false;
-            }
-            if (lhs.Hairs.HasBeenSet != rhs.Hairs.HasBeenSet) return false;
-            if (lhs.Hairs.HasBeenSet)
-            {
-                if (!lhs.Hairs.SequenceEqual(rhs.Hairs)) return false;
-            }
-            if (lhs.Eyes.HasBeenSet != rhs.Eyes.HasBeenSet) return false;
-            if (lhs.Eyes.HasBeenSet)
-            {
-                if (!lhs.Eyes.SequenceEqual(rhs.Eyes)) return false;
-            }
-            if (lhs.FaceGenData_IsSet != rhs.FaceGenData_IsSet) return false;
-            if (lhs.FaceGenData_IsSet)
-            {
-                if (!object.Equals(lhs.FaceGenData, rhs.FaceGenData)) return false;
-            }
-            if (lhs.Unknown_IsSet != rhs.Unknown_IsSet) return false;
-            if (lhs.Unknown_IsSet)
-            {
-                if (!MemoryExtensions.SequenceEqual(lhs.Unknown, rhs.Unknown)) return false;
-            }
-            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
-            return true;
-        }
-
-        public override bool Equals(
-            IOblivionMajorRecordInternalGetter lhs,
-            IOblivionMajorRecordInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (IRaceInternalGetter)lhs,
-                rhs: rhs as IRaceInternalGetter);
-        }
-
-        public override bool Equals(
-            IMajorRecordInternalGetter lhs,
-            IMajorRecordInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (IRaceInternalGetter)lhs,
-                rhs: rhs as IRaceInternalGetter);
-        }
-
-        public virtual int GetHashCode(IRaceInternalGetter item)
-        {
-            int ret = 0;
-            if (item.Name_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Name).CombineHashCode(ret);
-            }
-            if (item.Description_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Description).CombineHashCode(ret);
-            }
-            if (item.Spells.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.Spells).CombineHashCode(ret);
-            }
-            if (item.Relations.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.Relations).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(item.SkillBoosts).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Fluff).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.MaleHeight).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.FemaleHeight).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.MaleWeight).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.FemaleWeight).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
-            if (item.Voices_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Voices).CombineHashCode(ret);
-            }
-            if (item.DefaultHair_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.DefaultHair).CombineHashCode(ret);
-            }
-            if (item.DefaultHairColor_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.DefaultHairColor).CombineHashCode(ret);
-            }
-            if (item.FaceGenMainClamp_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.FaceGenMainClamp).CombineHashCode(ret);
-            }
-            if (item.FaceGenFaceClamp_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.FaceGenFaceClamp).CombineHashCode(ret);
-            }
-            if (item.RaceStats_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.RaceStats).CombineHashCode(ret);
-            }
-            if (item.FaceData.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.FaceData).CombineHashCode(ret);
-            }
-            if (item.BodyData_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.BodyData).CombineHashCode(ret);
-            }
-            if (item.Hairs.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.Hairs).CombineHashCode(ret);
-            }
-            if (item.Eyes.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.Eyes).CombineHashCode(ret);
-            }
-            if (item.FaceGenData_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.FaceGenData).CombineHashCode(ret);
-            }
-            if (item.Unknown_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Unknown).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(item.DATADataTypeState).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
-        {
-            return GetHashCode(item: (IRaceInternalGetter)item);
-        }
-
-        public override int GetHashCode(IMajorRecordInternalGetter item)
-        {
-            return GetHashCode(item: (IRaceInternalGetter)item);
-        }
-
-        #endregion
-
-
-        #region Mutagen
-        partial void PostDuplicate(Race obj, Race rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new Race(getNextFormKey());
-            ret.CopyFieldsFrom((Race)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (Race)item, getNextFormKey, duplicatedRecords);
-            return ret;
-        }
-
-        #endregion
-
+        
+        
     }
     #endregion
 
@@ -3845,14 +3876,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Relations.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.Relations) ?? true))
             {
-                ListXmlTranslation<IRaceRelationGetter>.Instance.Write(
+                ListXmlTranslation<IRaceRelationInternalGetter>.Instance.Write(
                     node: node,
                     name: nameof(item.Relations),
                     item: item.Relations,
                     fieldIndex: (int)Race_FieldIndex.Relations,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.Relations),
-                    transl: (XElement subNode, IRaceRelationGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    transl: (XElement subNode, IRaceRelationInternalGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         var loquiItem = subItem;
                         ((RaceRelationXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
@@ -3867,14 +3898,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.SkillBoosts) ?? true))
                 {
-                    ListXmlTranslation<ISkillBoostGetter>.Instance.Write(
+                    ListXmlTranslation<ISkillBoostInternalGetter>.Instance.Write(
                         node: node,
                         name: nameof(item.SkillBoosts),
                         item: item.SkillBoosts,
                         fieldIndex: (int)Race_FieldIndex.SkillBoosts,
                         errorMask: errorMask,
                         translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoosts),
-                        transl: (XElement subNode, ISkillBoostGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                        transl: (XElement subNode, ISkillBoostInternalGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                         {
                             var loquiItem = subItem;
                             ((SkillBoostXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
@@ -4009,14 +4040,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.FaceData.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.FaceData) ?? true))
             {
-                ListXmlTranslation<IFacePartGetter>.Instance.Write(
+                ListXmlTranslation<IFacePartInternalGetter>.Instance.Write(
                     node: node,
                     name: nameof(item.FaceData),
                     item: item.FaceData,
                     fieldIndex: (int)Race_FieldIndex.FaceData,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.FaceData),
-                    transl: (XElement subNode, IFacePartGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    transl: (XElement subNode, IFacePartInternalGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         var loquiItem = subItem;
                         ((FacePartXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
@@ -6383,12 +6414,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.Relations.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<IRaceRelationGetter>.Instance.Write(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<IRaceRelationInternalGetter>.Instance.Write(
                     writer: writer,
                     items: item.Relations,
                     fieldIndex: (int)Race_FieldIndex.Relations,
                     errorMask: errorMask,
-                    transl: (MutagenWriter subWriter, IRaceRelationGetter subItem, ErrorMaskBuilder listErrorMask) =>
+                    transl: (MutagenWriter subWriter, IRaceRelationInternalGetter subItem, ErrorMaskBuilder listErrorMask) =>
                     {
                         var loquiItem = subItem;
                         ((RaceRelationBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
@@ -6403,12 +6434,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Race_Registration.DATA_HEADER)))
                 {
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<ISkillBoostGetter>.Instance.Write(
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<ISkillBoostInternalGetter>.Instance.Write(
                         writer: writer,
                         items: item.SkillBoosts,
                         fieldIndex: (int)Race_FieldIndex.SkillBoosts,
                         errorMask: errorMask,
-                        transl: (MutagenWriter subWriter, ISkillBoostGetter subItem, ErrorMaskBuilder listErrorMask) =>
+                        transl: (MutagenWriter subWriter, ISkillBoostInternalGetter subItem, ErrorMaskBuilder listErrorMask) =>
                         {
                             {
                                 var loquiItem = subItem;
@@ -6498,12 +6529,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.FaceData.HasBeenSet)
             {
                 using (HeaderExport.ExportHeader(writer, Race_Registration.NAM0_HEADER, ObjectType.Subrecord)) { }
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<IFacePartGetter>.Instance.Write(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<IFacePartInternalGetter>.Instance.Write(
                     writer: writer,
                     items: item.FaceData,
                     fieldIndex: (int)Race_FieldIndex.FaceData,
                     errorMask: errorMask,
-                    transl: (MutagenWriter subWriter, IFacePartGetter subItem, ErrorMaskBuilder listErrorMask) =>
+                    transl: (MutagenWriter subWriter, IFacePartInternalGetter subItem, ErrorMaskBuilder listErrorMask) =>
                     {
                         var loquiItem = subItem;
                         ((FacePartBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
@@ -6679,17 +6710,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         OblivionMajorRecordBinaryWrapper,
         IRaceInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Race_Registration.Instance;
         public new static Race_Registration Registration => Race_Registration.Instance;
-        protected override object CommonInstance => RaceCommon.Instance;
+        protected override object CommonInstance()
+        {
+            return RaceCommon.Instance;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRaceInternalGetter)rhs, include);
 
         protected override object XmlWriteTranslator => RaceXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((RaceXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         protected override object BinaryWriteTranslator => RaceBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((RaceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
 
         #region Name
         private int? _NameLocation;
@@ -6702,10 +6765,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public String Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _DescriptionLocation.Value, _package.Meta)) : default;
         #endregion
         public IReadOnlySetList<IFormIDLinkGetter<ISpellInternalGetter>> Spells { get; private set; } = EmptySetList<IFormIDLinkGetter<ISpellInternalGetter>>.Instance;
-        public IReadOnlySetList<IRaceRelationGetter> Relations { get; private set; } = EmptySetList<RaceRelationBinaryWrapper>.Instance;
+        public IReadOnlySetList<IRaceRelationInternalGetter> Relations { get; private set; } = EmptySetList<RaceRelationBinaryWrapper>.Instance;
         private int? _DATALocation;
         public Race.DATADataType DATADataTypeState { get; private set; }
-        public IReadOnlyList<ISkillBoostGetter> SkillBoosts => BinaryWrapperNumberedList.FactoryForLoqui<ISkillBoostGetter>(_DATALocation.HasValue ? _data.Slice(_DATALocation.Value + 0) : default, amount: 7, length: 2, _package, null, SkillBoostBinaryWrapper.SkillBoostFactory);
+        public IReadOnlyList<ISkillBoostInternalGetter> SkillBoosts => BinaryWrapperNumberedList.FactoryForLoqui<ISkillBoostInternalGetter>(_DATALocation.HasValue ? _data.Slice(_DATALocation.Value + 0) : default, amount: 7, length: 2, _package, null, SkillBoostBinaryWrapper.SkillBoostFactory);
         #region Fluff
         private int _FluffLocation => _DATALocation.Value + 0xE;
         private bool _Fluff_IsSet => _DATALocation.HasValue;
@@ -6737,11 +6800,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Race.Flag Flags => _Flags_IsSet ? (Race.Flag)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_FlagsLocation, 2)) : default;
         #endregion
         #region Voices
-        public IRaceVoicesGetter Voices { get; private set; }
+        public IRaceVoicesInternalGetter Voices { get; private set; }
         public bool Voices_IsSet => Voices != null;
         #endregion
         #region DefaultHair
-        public IRaceHairGetter DefaultHair { get; private set; }
+        public IRaceHairInternalGetter DefaultHair { get; private set; }
         public bool DefaultHair_IsSet => DefaultHair != null;
         #endregion
         #region DefaultHairColor
@@ -6760,18 +6823,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Int32 FaceGenFaceClamp => _FaceGenFaceClampLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _FaceGenFaceClampLocation.Value, _package.Meta)) : default;
         #endregion
         #region RaceStats
-        public IRaceStatsGenderedGetter RaceStats { get; private set; }
+        public IRaceStatsGenderedInternalGetter RaceStats { get; private set; }
         public bool RaceStats_IsSet => RaceStats != null;
         #endregion
-        public IReadOnlySetList<IFacePartGetter> FaceData { get; private set; } = EmptySetList<FacePartBinaryWrapper>.Instance;
+        public IReadOnlySetList<IFacePartInternalGetter> FaceData { get; private set; } = EmptySetList<FacePartBinaryWrapper>.Instance;
         #region BodyData
-        public IGenderedBodyDataGetter BodyData { get; private set; }
+        public IGenderedBodyDataInternalGetter BodyData { get; private set; }
         public bool BodyData_IsSet => BodyData != null;
         #endregion
         public IReadOnlySetList<IFormIDLinkGetter<IHairInternalGetter>> Hairs { get; private set; } = EmptySetList<IFormIDLinkGetter<IHairInternalGetter>>.Instance;
         public IReadOnlySetList<IFormIDLinkGetter<IEyeInternalGetter>> Eyes { get; private set; } = EmptySetList<IFormIDLinkGetter<IEyeInternalGetter>>.Instance;
         #region FaceGenData
-        public IFaceGenDataGetter FaceGenData { get; private set; }
+        public IFaceGenDataInternalGetter FaceGenData { get; private set; }
         public bool FaceGenData_IsSet => FaceGenData != null;
         #endregion
         #region Unknown
@@ -6987,4 +7050,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class Race
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Race_Registration.Instance;
+        public new static Race_Registration Registration => Race_Registration.Instance;
+        protected override object CommonInstance()
+        {
+            return RaceCommon.Instance;
+        }
+        protected override object CommonSetterInstance()
+        {
+            return RaceSetterCommon.Instance;
+        }
+        protected override object CommonSetterCopyInstance()
+        {
+            return RaceSetterCopyCommon.Instance;
+        }
+
+        #endregion
+
+    }
 }

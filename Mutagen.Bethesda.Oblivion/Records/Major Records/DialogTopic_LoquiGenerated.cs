@@ -45,11 +45,6 @@ namespace Mutagen.Bethesda.Oblivion
         IEquatable<DialogTopic>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => DialogTopic_Registration.Instance;
-        public new static DialogTopic_Registration Registration => DialogTopic_Registration.Instance;
-        protected override object CommonInstance => DialogTopicCommon.Instance;
-
         #region Ctor
         protected DialogTopic()
         {
@@ -170,20 +165,33 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IDialogTopicInternalGetter rhs)) return false;
-            return ((DialogTopicCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            return ((DialogTopicCommon)((IDialogTopicInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(DialogTopic obj)
         {
-            return ((DialogTopicCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((DialogTopicCommon)((IDialogTopicInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((DialogTopicCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((DialogTopicCommon)((IDialogTopicInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected override object XmlWriteTranslator => DialogTopicXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((DialogTopicXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static DialogTopic CreateFromXml(
@@ -437,6 +445,19 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Binary Translation
         protected override object BinaryWriteTranslator => DialogTopicBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((DialogTopicBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
         #region Binary Create
         [DebuggerStepThrough]
         public static DialogTopic CreateFromBinary(
@@ -664,7 +685,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            DialogTopicCommon.CopyFieldsFrom(
+            DialogTopicSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -679,7 +700,7 @@ namespace Mutagen.Bethesda.Oblivion
             DialogTopic_CopyMask copyMask = null,
             DialogTopic def = null)
         {
-            DialogTopicCommon.CopyFieldsFrom(
+            DialogTopicSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -715,7 +736,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            DialogTopicCommon.Instance.Clear(this);
+            DialogTopicSetterCommon.Instance.Clear(this);
         }
 
         public new static DialogTopic Create(IEnumerable<KeyValuePair<ushort, object>> fields)
@@ -835,7 +856,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IDialogTopicInternal item)
         {
-            ((DialogTopicCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((DialogTopicSetterCommon)((IDialogTopicInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static DialogTopic_Mask<bool> GetEqualsMask(
@@ -843,7 +864,7 @@ namespace Mutagen.Bethesda.Oblivion
             IDialogTopicInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((DialogTopicCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((DialogTopicCommon)((IDialogTopicInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -854,7 +875,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             DialogTopic_Mask<bool> printMask = null)
         {
-            return ((DialogTopicCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((DialogTopicCommon)((IDialogTopicInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -866,7 +887,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             DialogTopic_Mask<bool> printMask = null)
         {
-            ((DialogTopicCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((DialogTopicCommon)((IDialogTopicInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -877,7 +898,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IDialogTopicInternalGetter item,
             DialogTopic_Mask<bool?> checkMask)
         {
-            return ((DialogTopicCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((DialogTopicCommon)((IDialogTopicInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -885,7 +906,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static DialogTopic_Mask<bool> GetHasBeenSetMask(this IDialogTopicInternalGetter item)
         {
             var ret = new DialogTopic_Mask<bool>();
-            ((DialogTopicCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((DialogTopicCommon)((IDialogTopicInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -895,7 +916,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IDialogTopicInternalGetter item,
             IDialogTopicInternalGetter rhs)
         {
-            return ((DialogTopicCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((DialogTopicCommon)((IDialogTopicInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -954,8 +975,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type SetterType = typeof(IDialogTopic);
 
         public static readonly Type InternalSetterType = typeof(IDialogTopicInternal);
-
-        public static readonly Type CommonType = typeof(DialogTopicCommon);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.DialogTopic";
 
@@ -1131,7 +1150,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -1151,9 +1169,341 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
+    public partial class DialogTopicSetterCommon : OblivionMajorRecordSetterCommon
+    {
+        public new static readonly DialogTopicSetterCommon Instance = new DialogTopicSetterCommon();
+
+        partial void ClearPartial();
+        
+        public virtual void Clear(IDialogTopicInternal item)
+        {
+            ClearPartial();
+            item.Quests.Unset();
+            item.Name_Unset();
+            item.DialogType_Unset();
+            item.Timestamp = default(Byte[]);
+            item.Items.Unset();
+            base.Clear(item);
+        }
+        
+        public override void Clear(IOblivionMajorRecordInternal item)
+        {
+            Clear(item: (IDialogTopicInternal)item);
+        }
+        
+        public override void Clear(IMajorRecordInternal item)
+        {
+            Clear(item: (IDialogTopicInternal)item);
+        }
+        
+        
+    }
     public partial class DialogTopicCommon : OblivionMajorRecordCommon
     {
-        public static readonly DialogTopicCommon Instance = new DialogTopicCommon();
+        public new static readonly DialogTopicCommon Instance = new DialogTopicCommon();
+
+        public DialogTopic_Mask<bool> GetEqualsMask(
+            IDialogTopicInternalGetter item,
+            IDialogTopicInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new DialogTopic_Mask<bool>();
+            ((DialogTopicCommon)((IDialogTopicInternalGetter)item).CommonInstance()).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+        
+        public void FillEqualsMask(
+            IDialogTopicInternalGetter item,
+            IDialogTopicInternalGetter rhs,
+            DialogTopic_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            if (rhs == null) return;
+            ret.Quests = item.Quests.CollectionEqualsHelper(
+                rhs.Quests,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.Name = item.Name_IsSet == rhs.Name_IsSet && string.Equals(item.Name, rhs.Name);
+            ret.DialogType = item.DialogType_IsSet == rhs.DialogType_IsSet && item.DialogType == rhs.DialogType;
+            ret.Timestamp = MemoryExtensions.SequenceEqual(item.Timestamp, rhs.Timestamp);
+            ret.Items = item.Items.CollectionEqualsHelper(
+                rhs.Items,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            base.FillEqualsMask(item, rhs, ret, include);
+        }
+        
+        public string ToString(
+            IDialogTopicInternalGetter item,
+            string name = null,
+            DialogTopic_Mask<bool> printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+            return fg.ToString();
+        }
+        
+        public void ToString(
+            IDialogTopicInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            DialogTopic_Mask<bool> printMask = null)
+        {
+            if (name == null)
+            {
+                fg.AppendLine($"DialogTopic =>");
+            }
+            else
+            {
+                fg.AppendLine($"{name} (DialogTopic) =>");
+            }
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
+            }
+            fg.AppendLine("]");
+        }
+        
+        protected static void ToStringFields(
+            IDialogTopicInternalGetter item,
+            FileGeneration fg,
+            DialogTopic_Mask<bool> printMask = null)
+        {
+            OblivionMajorRecordCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.Quests?.Overall ?? true)
+            {
+                fg.AppendLine("Quests =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Quests)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"Item => {subItem}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.Name ?? true)
+            {
+                fg.AppendLine($"Name => {item.Name}");
+            }
+            if (printMask?.DialogType ?? true)
+            {
+                fg.AppendLine($"DialogType => {item.DialogType}");
+            }
+            if (printMask?.Timestamp ?? true)
+            {
+                fg.AppendLine($"Timestamp => {SpanExt.ToHexString(item.Timestamp)}");
+            }
+            if (printMask?.Items?.Overall ?? true)
+            {
+                fg.AppendLine("Items =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Items)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+        }
+        
+        public bool HasBeenSet(
+            IDialogTopicInternalGetter item,
+            DialogTopic_Mask<bool?> checkMask)
+        {
+            if (checkMask.Quests.Overall.HasValue && checkMask.Quests.Overall.Value != item.Quests.HasBeenSet) return false;
+            if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_IsSet) return false;
+            if (checkMask.DialogType.HasValue && checkMask.DialogType.Value != item.DialogType_IsSet) return false;
+            if (checkMask.Items.Overall.HasValue && checkMask.Items.Overall.Value != item.Items.HasBeenSet) return false;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+        
+        public void FillHasBeenSetMask(
+            IDialogTopicInternalGetter item,
+            DialogTopic_Mask<bool> mask)
+        {
+            mask.Quests = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Quests.HasBeenSet, null);
+            mask.Name = item.Name_IsSet;
+            mask.DialogType = item.DialogType_IsSet;
+            mask.Timestamp = true;
+            mask.Items = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, DialogItem_Mask<bool>>>>(item.Items.HasBeenSet, item.Items.WithIndex().Select((i) => new MaskItemIndexed<bool, DialogItem_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
+        }
+        
+        public static DialogTopic_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (DialogTopic_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.FormKey:
+                    return (DialogTopic_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.Version:
+                    return (DialogTopic_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.EditorID:
+                    return (DialogTopic_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
+                    return (DialogTopic_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        public static DialogTopic_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (DialogTopic_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.FormKey:
+                    return (DialogTopic_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.Version:
+                    return (DialogTopic_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.EditorID:
+                    return (DialogTopic_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        #region Equals and Hash
+        public virtual bool Equals(
+            IDialogTopicInternalGetter lhs,
+            IDialogTopicInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.Quests.HasBeenSet != rhs.Quests.HasBeenSet) return false;
+            if (lhs.Quests.HasBeenSet)
+            {
+                if (!lhs.Quests.SequenceEqual(rhs.Quests)) return false;
+            }
+            if (lhs.Name_IsSet != rhs.Name_IsSet) return false;
+            if (lhs.Name_IsSet)
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if (lhs.DialogType_IsSet != rhs.DialogType_IsSet) return false;
+            if (lhs.DialogType_IsSet)
+            {
+                if (lhs.DialogType != rhs.DialogType) return false;
+            }
+            if (!MemoryExtensions.SequenceEqual(lhs.Timestamp, rhs.Timestamp)) return false;
+            if (lhs.Items.HasBeenSet != rhs.Items.HasBeenSet) return false;
+            if (lhs.Items.HasBeenSet)
+            {
+                if (!lhs.Items.SequenceEqual(rhs.Items)) return false;
+            }
+            return true;
+        }
+        
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IDialogTopicInternalGetter)lhs,
+                rhs: rhs as IDialogTopicInternalGetter);
+        }
+        
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IDialogTopicInternalGetter)lhs,
+                rhs: rhs as IDialogTopicInternalGetter);
+        }
+        
+        public virtual int GetHashCode(IDialogTopicInternalGetter item)
+        {
+            int ret = 0;
+            if (item.Quests.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Quests).CombineHashCode(ret);
+            }
+            if (item.Name_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Name).CombineHashCode(ret);
+            }
+            if (item.DialogType_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.DialogType).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.Timestamp).CombineHashCode(ret);
+            if (item.Items.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Items).CombineHashCode(ret);
+            }
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+        
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IDialogTopicInternalGetter)item);
+        }
+        
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IDialogTopicInternalGetter)item);
+        }
+        
+        #endregion
+        
+        
+        #region Mutagen
+        partial void PostDuplicate(DialogTopic obj, DialogTopic rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+        
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new DialogTopic(getNextFormKey());
+            ret.CopyFieldsFrom((DialogTopic)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (DialogTopic)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+        
+        #endregion
+        
+        
+    }
+    public partial class DialogTopicSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
+    {
+        public new static readonly DialogTopicSetterCopyCommon Instance = new DialogTopicSetterCopyCommon();
 
         #region Copy Fields From
         public static void CopyFieldsFrom(
@@ -1163,7 +1513,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             DialogTopic_CopyMask copyMask)
         {
-            OblivionMajorRecordCommon.CopyFieldsFrom(
+            OblivionMajorRecordSetterCopyCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1300,329 +1650,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
         }
-
+        
         #endregion
-
-        partial void ClearPartial();
-
-        public virtual void Clear(IDialogTopicInternal item)
-        {
-            ClearPartial();
-            item.Quests.Unset();
-            item.Name_Unset();
-            item.DialogType_Unset();
-            item.Timestamp = default(Byte[]);
-            item.Items.Unset();
-            base.Clear(item);
-        }
-
-        public override void Clear(IOblivionMajorRecordInternal item)
-        {
-            Clear(item: (IDialogTopicInternal)item);
-        }
-
-        public override void Clear(IMajorRecordInternal item)
-        {
-            Clear(item: (IDialogTopicInternal)item);
-        }
-
-        public DialogTopic_Mask<bool> GetEqualsMask(
-            IDialogTopicInternalGetter item,
-            IDialogTopicInternalGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new DialogTopic_Mask<bool>();
-            ((DialogTopicCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public void FillEqualsMask(
-            IDialogTopicInternalGetter item,
-            IDialogTopicInternalGetter rhs,
-            DialogTopic_Mask<bool> ret,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            if (rhs == null) return;
-            ret.Quests = item.Quests.CollectionEqualsHelper(
-                rhs.Quests,
-                (l, r) => object.Equals(l, r),
-                include);
-            ret.Name = item.Name_IsSet == rhs.Name_IsSet && string.Equals(item.Name, rhs.Name);
-            ret.DialogType = item.DialogType_IsSet == rhs.DialogType_IsSet && item.DialogType == rhs.DialogType;
-            ret.Timestamp = MemoryExtensions.SequenceEqual(item.Timestamp, rhs.Timestamp);
-            ret.Items = item.Items.CollectionEqualsHelper(
-                rhs.Items,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
-                include);
-            base.FillEqualsMask(item, rhs, ret, include);
-        }
-
-        public string ToString(
-            IDialogTopicInternalGetter item,
-            string name = null,
-            DialogTopic_Mask<bool> printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(
-                item: item,
-                fg: fg,
-                name: name,
-                printMask: printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(
-            IDialogTopicInternalGetter item,
-            FileGeneration fg,
-            string name = null,
-            DialogTopic_Mask<bool> printMask = null)
-        {
-            if (name == null)
-            {
-                fg.AppendLine($"DialogTopic =>");
-            }
-            else
-            {
-                fg.AppendLine($"{name} (DialogTopic) =>");
-            }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                ToStringFields(
-                    item: item,
-                    fg: fg,
-                    printMask: printMask);
-            }
-            fg.AppendLine("]");
-        }
-
-        protected static void ToStringFields(
-            IDialogTopicInternalGetter item,
-            FileGeneration fg,
-            DialogTopic_Mask<bool> printMask = null)
-        {
-            OblivionMajorRecordCommon.ToStringFields(
-                item: item,
-                fg: fg,
-                printMask: printMask);
-            if (printMask?.Quests?.Overall ?? true)
-            {
-                fg.AppendLine("Quests =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
-                {
-                    foreach (var subItem in item.Quests)
-                    {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            fg.AppendLine($"Item => {subItem}");
-                        }
-                        fg.AppendLine("]");
-                    }
-                }
-                fg.AppendLine("]");
-            }
-            if (printMask?.Name ?? true)
-            {
-                fg.AppendLine($"Name => {item.Name}");
-            }
-            if (printMask?.DialogType ?? true)
-            {
-                fg.AppendLine($"DialogType => {item.DialogType}");
-            }
-            if (printMask?.Timestamp ?? true)
-            {
-                fg.AppendLine($"Timestamp => {SpanExt.ToHexString(item.Timestamp)}");
-            }
-            if (printMask?.Items?.Overall ?? true)
-            {
-                fg.AppendLine("Items =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
-                {
-                    foreach (var subItem in item.Items)
-                    {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            subItem?.ToString(fg, "Item");
-                        }
-                        fg.AppendLine("]");
-                    }
-                }
-                fg.AppendLine("]");
-            }
-        }
-
-        public bool HasBeenSet(
-            IDialogTopicInternalGetter item,
-            DialogTopic_Mask<bool?> checkMask)
-        {
-            if (checkMask.Quests.Overall.HasValue && checkMask.Quests.Overall.Value != item.Quests.HasBeenSet) return false;
-            if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_IsSet) return false;
-            if (checkMask.DialogType.HasValue && checkMask.DialogType.Value != item.DialogType_IsSet) return false;
-            if (checkMask.Items.Overall.HasValue && checkMask.Items.Overall.Value != item.Items.HasBeenSet) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public void FillHasBeenSetMask(
-            IDialogTopicInternalGetter item,
-            DialogTopic_Mask<bool> mask)
-        {
-            mask.Quests = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Quests.HasBeenSet, null);
-            mask.Name = item.Name_IsSet;
-            mask.DialogType = item.DialogType_IsSet;
-            mask.Timestamp = true;
-            mask.Items = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, DialogItem_Mask<bool>>>>(item.Items.HasBeenSet, item.Items.WithIndex().Select((i) => new MaskItemIndexed<bool, DialogItem_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-
-        public static DialogTopic_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
-        {
-            switch (index)
-            {
-                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (DialogTopic_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.FormKey:
-                    return (DialogTopic_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.Version:
-                    return (DialogTopic_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.EditorID:
-                    return (DialogTopic_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
-                    return (DialogTopic_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        public static DialogTopic_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
-        {
-            switch (index)
-            {
-                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (DialogTopic_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.FormKey:
-                    return (DialogTopic_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
-                    return (DialogTopic_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.EditorID:
-                    return (DialogTopic_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        #region Equals and Hash
-        public virtual bool Equals(
-            IDialogTopicInternalGetter lhs,
-            IDialogTopicInternalGetter rhs)
-        {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (lhs.Quests.HasBeenSet != rhs.Quests.HasBeenSet) return false;
-            if (lhs.Quests.HasBeenSet)
-            {
-                if (!lhs.Quests.SequenceEqual(rhs.Quests)) return false;
-            }
-            if (lhs.Name_IsSet != rhs.Name_IsSet) return false;
-            if (lhs.Name_IsSet)
-            {
-                if (!string.Equals(lhs.Name, rhs.Name)) return false;
-            }
-            if (lhs.DialogType_IsSet != rhs.DialogType_IsSet) return false;
-            if (lhs.DialogType_IsSet)
-            {
-                if (lhs.DialogType != rhs.DialogType) return false;
-            }
-            if (!MemoryExtensions.SequenceEqual(lhs.Timestamp, rhs.Timestamp)) return false;
-            if (lhs.Items.HasBeenSet != rhs.Items.HasBeenSet) return false;
-            if (lhs.Items.HasBeenSet)
-            {
-                if (!lhs.Items.SequenceEqual(rhs.Items)) return false;
-            }
-            return true;
-        }
-
-        public override bool Equals(
-            IOblivionMajorRecordInternalGetter lhs,
-            IOblivionMajorRecordInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (IDialogTopicInternalGetter)lhs,
-                rhs: rhs as IDialogTopicInternalGetter);
-        }
-
-        public override bool Equals(
-            IMajorRecordInternalGetter lhs,
-            IMajorRecordInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (IDialogTopicInternalGetter)lhs,
-                rhs: rhs as IDialogTopicInternalGetter);
-        }
-
-        public virtual int GetHashCode(IDialogTopicInternalGetter item)
-        {
-            int ret = 0;
-            if (item.Quests.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.Quests).CombineHashCode(ret);
-            }
-            if (item.Name_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Name).CombineHashCode(ret);
-            }
-            if (item.DialogType_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.DialogType).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(item.Timestamp).CombineHashCode(ret);
-            if (item.Items.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.Items).CombineHashCode(ret);
-            }
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
-        {
-            return GetHashCode(item: (IDialogTopicInternalGetter)item);
-        }
-
-        public override int GetHashCode(IMajorRecordInternalGetter item)
-        {
-            return GetHashCode(item: (IDialogTopicInternalGetter)item);
-        }
-
-        #endregion
-
-
-        #region Mutagen
-        partial void PostDuplicate(DialogTopic obj, DialogTopic rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new DialogTopic(getNextFormKey());
-            ret.CopyFieldsFrom((DialogTopic)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (DialogTopic)item, getNextFormKey, duplicatedRecords);
-            return ret;
-        }
-
-        #endregion
-
+        
+        
     }
     #endregion
 
@@ -2760,17 +2791,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         OblivionMajorRecordBinaryWrapper,
         IDialogTopicInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DialogTopic_Registration.Instance;
         public new static DialogTopic_Registration Registration => DialogTopic_Registration.Instance;
-        protected override object CommonInstance => DialogTopicCommon.Instance;
+        protected override object CommonInstance()
+        {
+            return DialogTopicCommon.Instance;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDialogTopicInternalGetter)rhs, include);
 
         protected override object XmlWriteTranslator => DialogTopicXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((DialogTopicXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         protected override object BinaryWriteTranslator => DialogTopicBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((DialogTopicBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
 
         public IReadOnlySetList<IFormIDLinkGetter<IQuestInternalGetter>> Quests { get; private set; } = EmptySetList<IFormIDLinkGetter<IQuestInternalGetter>>.Instance;
         #region Name
@@ -2881,4 +2944,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class DialogTopic
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => DialogTopic_Registration.Instance;
+        public new static DialogTopic_Registration Registration => DialogTopic_Registration.Instance;
+        protected override object CommonInstance()
+        {
+            return DialogTopicCommon.Instance;
+        }
+        protected override object CommonSetterInstance()
+        {
+            return DialogTopicSetterCommon.Instance;
+        }
+        protected override object CommonSetterCopyInstance()
+        {
+            return DialogTopicSetterCopyCommon.Instance;
+        }
+
+        #endregion
+
+    }
 }

@@ -34,17 +34,11 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class AIPackageTarget :
         LoquiNotifyingObject,
-        IAIPackageTarget,
+        IAIPackageTargetInternal,
         ILoquiObjectSetter<AIPackageTarget>,
         IEquatable<AIPackageTarget>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => AIPackageTarget_Registration.Instance;
-        public static AIPackageTarget_Registration Registration => AIPackageTarget_Registration.Instance;
-        protected object CommonInstance => AIPackageTargetCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
-
         #region Ctor
         public AIPackageTarget()
         {
@@ -79,7 +73,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAIPackageTargetGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAIPackageTargetInternalGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -97,22 +91,35 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is IAIPackageTargetGetter rhs)) return false;
-            return ((AIPackageTargetCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            if (!(obj is IAIPackageTargetInternalGetter rhs)) return false;
+            return ((AIPackageTargetCommon)((IAIPackageTargetInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(AIPackageTarget obj)
         {
-            return ((AIPackageTargetCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((AIPackageTargetCommon)((IAIPackageTargetInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((AIPackageTargetCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((AIPackageTargetCommon)((IAIPackageTargetInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected object XmlWriteTranslator => AIPackageTargetXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((AIPackageTargetXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static AIPackageTarget CreateFromXml(
@@ -286,6 +293,19 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Translation
         protected object BinaryWriteTranslator => AIPackageTargetBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((AIPackageTargetBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
         #region Binary Create
         [DebuggerStepThrough]
         public static AIPackageTarget CreateFromBinary(
@@ -444,7 +464,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            AIPackageTargetCommon.CopyFieldsFrom(
+            AIPackageTargetSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -459,7 +479,7 @@ namespace Mutagen.Bethesda.Oblivion
             AIPackageTarget_CopyMask copyMask = null,
             AIPackageTarget def = null)
         {
-            AIPackageTargetCommon.CopyFieldsFrom(
+            AIPackageTargetSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -488,7 +508,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void Clear()
         {
-            AIPackageTargetCommon.Instance.Clear(this);
+            AIPackageTargetSetterCommon.Instance.Clear(this);
         }
 
         public static AIPackageTarget Create(IEnumerable<KeyValuePair<ushort, object>> fields)
@@ -527,8 +547,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IAIPackageTarget :
-        IAIPackageTargetGetter,
-        ILoquiObjectSetter<IAIPackageTarget>
+        IAIPackageTargetInternalGetter,
+        ILoquiObjectSetter<IAIPackageTargetInternal>
     {
         new AIPackageTarget.ObjectTypeEnum ObjectType { get; set; }
 
@@ -543,9 +563,15 @@ namespace Mutagen.Bethesda.Oblivion
             AIPackageTarget def = null);
     }
 
+    public partial interface IAIPackageTargetInternal :
+        IAIPackageTarget,
+        IAIPackageTargetInternalGetter
+    {
+    }
+
     public partial interface IAIPackageTargetGetter :
         ILoquiObject,
-        ILoquiObject<IAIPackageTargetGetter>,
+        ILoquiObject<IAIPackageTargetInternalGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -564,45 +590,53 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    public partial interface IAIPackageTargetInternalGetter : IAIPackageTargetGetter
+    {
+        object CommonInstance();
+        object CommonSetterInstance();
+        object CommonSetterCopyInstance();
+
+    }
+
     #endregion
 
     #region Common MixIn
     public static class AIPackageTargetMixIn
     {
-        public static void Clear(this IAIPackageTarget item)
+        public static void Clear(this IAIPackageTargetInternal item)
         {
-            ((AIPackageTargetCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((AIPackageTargetSetterCommon)((IAIPackageTargetInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static AIPackageTarget_Mask<bool> GetEqualsMask(
-            this IAIPackageTargetGetter item,
-            IAIPackageTargetGetter rhs,
+            this IAIPackageTargetInternalGetter item,
+            IAIPackageTargetInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((AIPackageTargetCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((AIPackageTargetCommon)((IAIPackageTargetInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IAIPackageTargetGetter item,
+            this IAIPackageTargetInternalGetter item,
             string name = null,
             AIPackageTarget_Mask<bool> printMask = null)
         {
-            return ((AIPackageTargetCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((AIPackageTargetCommon)((IAIPackageTargetInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IAIPackageTargetGetter item,
+            this IAIPackageTargetInternalGetter item,
             FileGeneration fg,
             string name = null,
             AIPackageTarget_Mask<bool> printMask = null)
         {
-            ((AIPackageTargetCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((AIPackageTargetCommon)((IAIPackageTargetInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -610,28 +644,28 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static bool HasBeenSet(
-            this IAIPackageTargetGetter item,
+            this IAIPackageTargetInternalGetter item,
             AIPackageTarget_Mask<bool?> checkMask)
         {
-            return ((AIPackageTargetCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((AIPackageTargetCommon)((IAIPackageTargetInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static AIPackageTarget_Mask<bool> GetHasBeenSetMask(this IAIPackageTargetGetter item)
+        public static AIPackageTarget_Mask<bool> GetHasBeenSetMask(this IAIPackageTargetInternalGetter item)
         {
             var ret = new AIPackageTarget_Mask<bool>();
-            ((AIPackageTargetCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((AIPackageTargetCommon)((IAIPackageTargetInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this IAIPackageTargetGetter item,
-            IAIPackageTargetGetter rhs)
+            this IAIPackageTargetInternalGetter item,
+            IAIPackageTargetInternalGetter rhs)
         {
-            return ((AIPackageTargetCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((AIPackageTargetCommon)((IAIPackageTargetInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -678,13 +712,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IAIPackageTargetGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type InternalGetterType = typeof(IAIPackageTargetInternalGetter);
 
         public static readonly Type SetterType = typeof(IAIPackageTarget);
 
-        public static readonly Type InternalSetterType = null;
-
-        public static readonly Type CommonType = typeof(AIPackageTargetCommon);
+        public static readonly Type InternalSetterType = typeof(IAIPackageTargetInternal);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.AIPackageTarget";
 
@@ -832,7 +864,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -852,9 +883,156 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
+    public partial class AIPackageTargetSetterCommon
+    {
+        public static readonly AIPackageTargetSetterCommon Instance = new AIPackageTargetSetterCommon();
+
+        partial void ClearPartial();
+        
+        public virtual void Clear(IAIPackageTargetInternal item)
+        {
+            ClearPartial();
+            item.ObjectType = default(AIPackageTarget.ObjectTypeEnum);
+            item.Object = default(Int32);
+            item.Count = default(Int32);
+        }
+        
+        
+    }
     public partial class AIPackageTargetCommon
     {
         public static readonly AIPackageTargetCommon Instance = new AIPackageTargetCommon();
+
+        public AIPackageTarget_Mask<bool> GetEqualsMask(
+            IAIPackageTargetInternalGetter item,
+            IAIPackageTargetInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new AIPackageTarget_Mask<bool>();
+            ((AIPackageTargetCommon)((IAIPackageTargetInternalGetter)item).CommonInstance()).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+        
+        public void FillEqualsMask(
+            IAIPackageTargetInternalGetter item,
+            IAIPackageTargetInternalGetter rhs,
+            AIPackageTarget_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            if (rhs == null) return;
+            ret.ObjectType = item.ObjectType == rhs.ObjectType;
+            ret.Object = item.Object == rhs.Object;
+            ret.Count = item.Count == rhs.Count;
+        }
+        
+        public string ToString(
+            IAIPackageTargetInternalGetter item,
+            string name = null,
+            AIPackageTarget_Mask<bool> printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+            return fg.ToString();
+        }
+        
+        public void ToString(
+            IAIPackageTargetInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            AIPackageTarget_Mask<bool> printMask = null)
+        {
+            if (name == null)
+            {
+                fg.AppendLine($"AIPackageTarget =>");
+            }
+            else
+            {
+                fg.AppendLine($"{name} (AIPackageTarget) =>");
+            }
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
+            }
+            fg.AppendLine("]");
+        }
+        
+        protected static void ToStringFields(
+            IAIPackageTargetInternalGetter item,
+            FileGeneration fg,
+            AIPackageTarget_Mask<bool> printMask = null)
+        {
+            if (printMask?.ObjectType ?? true)
+            {
+                fg.AppendLine($"ObjectType => {item.ObjectType}");
+            }
+            if (printMask?.Object ?? true)
+            {
+                fg.AppendLine($"Object => {item.Object}");
+            }
+            if (printMask?.Count ?? true)
+            {
+                fg.AppendLine($"Count => {item.Count}");
+            }
+        }
+        
+        public bool HasBeenSet(
+            IAIPackageTargetInternalGetter item,
+            AIPackageTarget_Mask<bool?> checkMask)
+        {
+            return true;
+        }
+        
+        public void FillHasBeenSetMask(
+            IAIPackageTargetInternalGetter item,
+            AIPackageTarget_Mask<bool> mask)
+        {
+            mask.ObjectType = true;
+            mask.Object = true;
+            mask.Count = true;
+        }
+        
+        #region Equals and Hash
+        public virtual bool Equals(
+            IAIPackageTargetInternalGetter lhs,
+            IAIPackageTargetInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (lhs.ObjectType != rhs.ObjectType) return false;
+            if (lhs.Object != rhs.Object) return false;
+            if (lhs.Count != rhs.Count) return false;
+            return true;
+        }
+        
+        public virtual int GetHashCode(IAIPackageTargetInternalGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.ObjectType).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Object).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Count).CombineHashCode(ret);
+            return ret;
+        }
+        
+        #endregion
+        
+        
+        
+    }
+    public partial class AIPackageTargetSetterCopyCommon
+    {
+        public static readonly AIPackageTargetSetterCopyCommon Instance = new AIPackageTargetSetterCopyCommon();
 
         #region Copy Fields From
         public static void CopyFieldsFrom(
@@ -916,144 +1094,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
         }
-
+        
         #endregion
-
-        partial void ClearPartial();
-
-        public virtual void Clear(IAIPackageTarget item)
-        {
-            ClearPartial();
-            item.ObjectType = default(AIPackageTarget.ObjectTypeEnum);
-            item.Object = default(Int32);
-            item.Count = default(Int32);
-        }
-
-        public AIPackageTarget_Mask<bool> GetEqualsMask(
-            IAIPackageTargetGetter item,
-            IAIPackageTargetGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new AIPackageTarget_Mask<bool>();
-            ((AIPackageTargetCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public void FillEqualsMask(
-            IAIPackageTargetGetter item,
-            IAIPackageTargetGetter rhs,
-            AIPackageTarget_Mask<bool> ret,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            if (rhs == null) return;
-            ret.ObjectType = item.ObjectType == rhs.ObjectType;
-            ret.Object = item.Object == rhs.Object;
-            ret.Count = item.Count == rhs.Count;
-        }
-
-        public string ToString(
-            IAIPackageTargetGetter item,
-            string name = null,
-            AIPackageTarget_Mask<bool> printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(
-                item: item,
-                fg: fg,
-                name: name,
-                printMask: printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(
-            IAIPackageTargetGetter item,
-            FileGeneration fg,
-            string name = null,
-            AIPackageTarget_Mask<bool> printMask = null)
-        {
-            if (name == null)
-            {
-                fg.AppendLine($"AIPackageTarget =>");
-            }
-            else
-            {
-                fg.AppendLine($"{name} (AIPackageTarget) =>");
-            }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                ToStringFields(
-                    item: item,
-                    fg: fg,
-                    printMask: printMask);
-            }
-            fg.AppendLine("]");
-        }
-
-        protected static void ToStringFields(
-            IAIPackageTargetGetter item,
-            FileGeneration fg,
-            AIPackageTarget_Mask<bool> printMask = null)
-        {
-            if (printMask?.ObjectType ?? true)
-            {
-                fg.AppendLine($"ObjectType => {item.ObjectType}");
-            }
-            if (printMask?.Object ?? true)
-            {
-                fg.AppendLine($"Object => {item.Object}");
-            }
-            if (printMask?.Count ?? true)
-            {
-                fg.AppendLine($"Count => {item.Count}");
-            }
-        }
-
-        public bool HasBeenSet(
-            IAIPackageTargetGetter item,
-            AIPackageTarget_Mask<bool?> checkMask)
-        {
-            return true;
-        }
-
-        public void FillHasBeenSetMask(
-            IAIPackageTargetGetter item,
-            AIPackageTarget_Mask<bool> mask)
-        {
-            mask.ObjectType = true;
-            mask.Object = true;
-            mask.Count = true;
-        }
-
-        #region Equals and Hash
-        public virtual bool Equals(
-            IAIPackageTargetGetter lhs,
-            IAIPackageTargetGetter rhs)
-        {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
-            if (lhs.ObjectType != rhs.ObjectType) return false;
-            if (lhs.Object != rhs.Object) return false;
-            if (lhs.Count != rhs.Count) return false;
-            return true;
-        }
-
-        public virtual int GetHashCode(IAIPackageTargetGetter item)
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.ObjectType).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Object).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Count).CombineHashCode(ret);
-            return ret;
-        }
-
-        #endregion
-
-
+        
+        
     }
     #endregion
 
@@ -1064,7 +1108,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static AIPackageTargetXmlWriteTranslation Instance = new AIPackageTargetXmlWriteTranslation();
 
         public static void WriteToNodeXml(
-            IAIPackageTargetGetter item,
+            IAIPackageTargetInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1100,7 +1144,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             XElement node,
-            IAIPackageTargetGetter item,
+            IAIPackageTargetInternalGetter item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)
@@ -1126,7 +1170,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             Write(
-                item: (IAIPackageTargetGetter)item,
+                item: (IAIPackageTargetInternalGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1135,7 +1179,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             XElement node,
-            IAIPackageTargetGetter item,
+            IAIPackageTargetInternalGetter item,
             ErrorMaskBuilder errorMask,
             int fieldIndex,
             TranslationCrystal translationMask,
@@ -1145,7 +1189,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 errorMask?.PushIndex(fieldIndex);
                 Write(
-                    item: (IAIPackageTargetGetter)item,
+                    item: (IAIPackageTargetInternalGetter)item,
                     name: name,
                     node: node,
                     errorMask: errorMask,
@@ -1169,7 +1213,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static AIPackageTargetXmlCreateTranslation Instance = new AIPackageTargetXmlCreateTranslation();
 
         public static void FillPublicXml(
-            IAIPackageTarget item,
+            IAIPackageTargetInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1194,7 +1238,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElementXml(
-            IAIPackageTarget item,
+            IAIPackageTargetInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -1291,7 +1335,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public static class AIPackageTargetXmlTranslationMixIn
     {
         public static void WriteToXml(
-            this IAIPackageTargetGetter item,
+            this IAIPackageTargetInternalGetter item,
             XElement node,
             out AIPackageTarget_ErrorMask errorMask,
             bool doMasks = true,
@@ -1309,7 +1353,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IAIPackageTargetGetter item,
+            this IAIPackageTargetInternalGetter item,
             string path,
             out AIPackageTarget_ErrorMask errorMask,
             AIPackageTarget_TranslationMask translationMask = null,
@@ -1328,7 +1372,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IAIPackageTargetGetter item,
+            this IAIPackageTargetInternalGetter item,
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1346,7 +1390,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IAIPackageTargetGetter item,
+            this IAIPackageTargetInternalGetter item,
             Stream stream,
             out AIPackageTarget_ErrorMask errorMask,
             AIPackageTarget_TranslationMask translationMask = null,
@@ -1365,7 +1409,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IAIPackageTargetGetter item,
+            this IAIPackageTargetInternalGetter item,
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1383,7 +1427,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IAIPackageTargetGetter item,
+            this IAIPackageTargetInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1398,7 +1442,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IAIPackageTargetGetter item,
+            this IAIPackageTargetInternalGetter item,
             XElement node,
             string name = null,
             AIPackageTarget_TranslationMask translationMask = null)
@@ -1412,7 +1456,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IAIPackageTargetGetter item,
+            this IAIPackageTargetInternalGetter item,
             string path,
             string name = null)
         {
@@ -1427,7 +1471,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IAIPackageTargetGetter item,
+            this IAIPackageTargetInternalGetter item,
             Stream stream,
             string name = null)
         {
@@ -1782,7 +1826,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static AIPackageTargetBinaryWriteTranslation Instance = new AIPackageTargetBinaryWriteTranslation();
 
         public static void Write_Embedded(
-            IAIPackageTargetGetter item,
+            IAIPackageTargetInternalGetter item,
             MutagenWriter writer,
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
@@ -1797,7 +1841,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             MutagenWriter writer,
-            IAIPackageTargetGetter item,
+            IAIPackageTargetInternalGetter item,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
@@ -1823,7 +1867,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask)
         {
             Write(
-                item: (IAIPackageTargetGetter)item,
+                item: (IAIPackageTargetInternalGetter)item,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -1842,7 +1886,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public static class AIPackageTargetBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IAIPackageTargetGetter item,
+            this IAIPackageTargetInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
             out AIPackageTarget_ErrorMask errorMask,
@@ -1859,7 +1903,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToBinary(
-            this IAIPackageTargetGetter item,
+            this IAIPackageTargetInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -1873,7 +1917,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToBinary(
-            this IAIPackageTargetGetter item,
+            this IAIPackageTargetInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
@@ -1890,22 +1934,65 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     public partial class AIPackageTargetBinaryWrapper :
         BinaryWrapper,
-        IAIPackageTargetGetter
+        IAIPackageTargetInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AIPackageTarget_Registration.Instance;
         public static AIPackageTarget_Registration Registration => AIPackageTarget_Registration.Instance;
-        protected object CommonInstance => AIPackageTargetCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
+        protected object CommonInstance()
+        {
+            return AIPackageTargetCommon.Instance;
+        }
+        object IAIPackageTargetInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IAIPackageTargetInternalGetter.CommonSetterInstance()
+        {
+            return null;
+        }
+        object IAIPackageTargetInternalGetter.CommonSetterCopyInstance()
+        {
+            return null;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAIPackageTargetGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAIPackageTargetInternalGetter)rhs, include);
 
         protected object XmlWriteTranslator => AIPackageTargetXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((AIPackageTargetXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         protected object BinaryWriteTranslator => AIPackageTargetBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((AIPackageTargetBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
 
         public AIPackageTarget.ObjectTypeEnum ObjectType => (AIPackageTarget.ObjectTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0, 4));
         public Int32 Object => BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(4, 4));
@@ -1949,4 +2036,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class AIPackageTarget
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => AIPackageTarget_Registration.Instance;
+        public static AIPackageTarget_Registration Registration => AIPackageTarget_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return AIPackageTargetCommon.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return AIPackageTargetSetterCommon.Instance;
+        }
+        protected object CommonSetterCopyInstance()
+        {
+            return AIPackageTargetSetterCopyCommon.Instance;
+        }
+        object IAIPackageTargetInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IAIPackageTargetInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object IAIPackageTargetInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
 }

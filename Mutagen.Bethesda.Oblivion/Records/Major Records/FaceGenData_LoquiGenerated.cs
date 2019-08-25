@@ -34,17 +34,11 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class FaceGenData :
         LoquiNotifyingObject,
-        IFaceGenData,
+        IFaceGenDataInternal,
         ILoquiObjectSetter<FaceGenData>,
         IEquatable<FaceGenData>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => FaceGenData_Registration.Instance;
-        public static FaceGenData_Registration Registration => FaceGenData_Registration.Instance;
-        protected object CommonInstance => FaceGenDataCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
-
         #region Ctor
         public FaceGenData()
         {
@@ -139,7 +133,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IFaceGenDataGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IFaceGenDataInternalGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -157,22 +151,35 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is IFaceGenDataGetter rhs)) return false;
-            return ((FaceGenDataCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            if (!(obj is IFaceGenDataInternalGetter rhs)) return false;
+            return ((FaceGenDataCommon)((IFaceGenDataInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(FaceGenData obj)
         {
-            return ((FaceGenDataCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((FaceGenDataCommon)((IFaceGenDataInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((FaceGenDataCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((FaceGenDataCommon)((IFaceGenDataInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected object XmlWriteTranslator => FaceGenDataXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((FaceGenDataXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static FaceGenData CreateFromXml(
@@ -342,6 +349,19 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Translation
         protected object BinaryWriteTranslator => FaceGenDataBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((FaceGenDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
         #region Binary Create
         [DebuggerStepThrough]
         public static FaceGenData CreateFromBinary(
@@ -552,7 +572,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            FaceGenDataCommon.CopyFieldsFrom(
+            FaceGenDataSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -567,7 +587,7 @@ namespace Mutagen.Bethesda.Oblivion
             FaceGenData_CopyMask copyMask = null,
             FaceGenData def = null)
         {
-            FaceGenDataCommon.CopyFieldsFrom(
+            FaceGenDataSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -596,7 +616,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void Clear()
         {
-            FaceGenDataCommon.Instance.Clear(this);
+            FaceGenDataSetterCommon.Instance.Clear(this);
         }
 
         public static FaceGenData Create(IEnumerable<KeyValuePair<ushort, object>> fields)
@@ -635,8 +655,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IFaceGenData :
-        IFaceGenDataGetter,
-        ILoquiObjectSetter<IFaceGenData>
+        IFaceGenDataInternalGetter,
+        ILoquiObjectSetter<IFaceGenDataInternal>
     {
         new Byte[] SymmetricGeometry { get; set; }
         new bool SymmetricGeometry_IsSet { get; set; }
@@ -660,9 +680,15 @@ namespace Mutagen.Bethesda.Oblivion
             FaceGenData def = null);
     }
 
+    public partial interface IFaceGenDataInternal :
+        IFaceGenData,
+        IFaceGenDataInternalGetter
+    {
+    }
+
     public partial interface IFaceGenDataGetter :
         ILoquiObject,
-        ILoquiObject<IFaceGenDataGetter>,
+        ILoquiObject<IFaceGenDataInternalGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -684,45 +710,53 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    public partial interface IFaceGenDataInternalGetter : IFaceGenDataGetter
+    {
+        object CommonInstance();
+        object CommonSetterInstance();
+        object CommonSetterCopyInstance();
+
+    }
+
     #endregion
 
     #region Common MixIn
     public static class FaceGenDataMixIn
     {
-        public static void Clear(this IFaceGenData item)
+        public static void Clear(this IFaceGenDataInternal item)
         {
-            ((FaceGenDataCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((FaceGenDataSetterCommon)((IFaceGenDataInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static FaceGenData_Mask<bool> GetEqualsMask(
-            this IFaceGenDataGetter item,
-            IFaceGenDataGetter rhs,
+            this IFaceGenDataInternalGetter item,
+            IFaceGenDataInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((FaceGenDataCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((FaceGenDataCommon)((IFaceGenDataInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IFaceGenDataGetter item,
+            this IFaceGenDataInternalGetter item,
             string name = null,
             FaceGenData_Mask<bool> printMask = null)
         {
-            return ((FaceGenDataCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((FaceGenDataCommon)((IFaceGenDataInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IFaceGenDataGetter item,
+            this IFaceGenDataInternalGetter item,
             FileGeneration fg,
             string name = null,
             FaceGenData_Mask<bool> printMask = null)
         {
-            ((FaceGenDataCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((FaceGenDataCommon)((IFaceGenDataInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -730,28 +764,28 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static bool HasBeenSet(
-            this IFaceGenDataGetter item,
+            this IFaceGenDataInternalGetter item,
             FaceGenData_Mask<bool?> checkMask)
         {
-            return ((FaceGenDataCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((FaceGenDataCommon)((IFaceGenDataInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static FaceGenData_Mask<bool> GetHasBeenSetMask(this IFaceGenDataGetter item)
+        public static FaceGenData_Mask<bool> GetHasBeenSetMask(this IFaceGenDataInternalGetter item)
         {
             var ret = new FaceGenData_Mask<bool>();
-            ((FaceGenDataCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((FaceGenDataCommon)((IFaceGenDataInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this IFaceGenDataGetter item,
-            IFaceGenDataGetter rhs)
+            this IFaceGenDataInternalGetter item,
+            IFaceGenDataInternalGetter rhs)
         {
-            return ((FaceGenDataCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((FaceGenDataCommon)((IFaceGenDataInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -798,13 +832,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IFaceGenDataGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type InternalGetterType = typeof(IFaceGenDataInternalGetter);
 
         public static readonly Type SetterType = typeof(IFaceGenData);
 
-        public static readonly Type InternalSetterType = null;
-
-        public static readonly Type CommonType = typeof(FaceGenDataCommon);
+        public static readonly Type InternalSetterType = typeof(IFaceGenDataInternal);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.FaceGenData";
 
@@ -966,7 +998,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -986,9 +1017,180 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
+    public partial class FaceGenDataSetterCommon
+    {
+        public static readonly FaceGenDataSetterCommon Instance = new FaceGenDataSetterCommon();
+
+        partial void ClearPartial();
+        
+        public virtual void Clear(IFaceGenDataInternal item)
+        {
+            ClearPartial();
+            item.SymmetricGeometry_Unset();
+            item.AsymmetricGeometry_Unset();
+            item.SymmetricTexture_Unset();
+        }
+        
+        
+    }
     public partial class FaceGenDataCommon
     {
         public static readonly FaceGenDataCommon Instance = new FaceGenDataCommon();
+
+        public FaceGenData_Mask<bool> GetEqualsMask(
+            IFaceGenDataInternalGetter item,
+            IFaceGenDataInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new FaceGenData_Mask<bool>();
+            ((FaceGenDataCommon)((IFaceGenDataInternalGetter)item).CommonInstance()).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+        
+        public void FillEqualsMask(
+            IFaceGenDataInternalGetter item,
+            IFaceGenDataInternalGetter rhs,
+            FaceGenData_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            if (rhs == null) return;
+            ret.SymmetricGeometry = item.SymmetricGeometry_IsSet == rhs.SymmetricGeometry_IsSet && MemoryExtensions.SequenceEqual(item.SymmetricGeometry, rhs.SymmetricGeometry);
+            ret.AsymmetricGeometry = item.AsymmetricGeometry_IsSet == rhs.AsymmetricGeometry_IsSet && MemoryExtensions.SequenceEqual(item.AsymmetricGeometry, rhs.AsymmetricGeometry);
+            ret.SymmetricTexture = item.SymmetricTexture_IsSet == rhs.SymmetricTexture_IsSet && MemoryExtensions.SequenceEqual(item.SymmetricTexture, rhs.SymmetricTexture);
+        }
+        
+        public string ToString(
+            IFaceGenDataInternalGetter item,
+            string name = null,
+            FaceGenData_Mask<bool> printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+            return fg.ToString();
+        }
+        
+        public void ToString(
+            IFaceGenDataInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            FaceGenData_Mask<bool> printMask = null)
+        {
+            if (name == null)
+            {
+                fg.AppendLine($"FaceGenData =>");
+            }
+            else
+            {
+                fg.AppendLine($"{name} (FaceGenData) =>");
+            }
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
+            }
+            fg.AppendLine("]");
+        }
+        
+        protected static void ToStringFields(
+            IFaceGenDataInternalGetter item,
+            FileGeneration fg,
+            FaceGenData_Mask<bool> printMask = null)
+        {
+            if (printMask?.SymmetricGeometry ?? true)
+            {
+                fg.AppendLine($"SymmetricGeometry => {SpanExt.ToHexString(item.SymmetricGeometry)}");
+            }
+            if (printMask?.AsymmetricGeometry ?? true)
+            {
+                fg.AppendLine($"AsymmetricGeometry => {SpanExt.ToHexString(item.AsymmetricGeometry)}");
+            }
+            if (printMask?.SymmetricTexture ?? true)
+            {
+                fg.AppendLine($"SymmetricTexture => {SpanExt.ToHexString(item.SymmetricTexture)}");
+            }
+        }
+        
+        public bool HasBeenSet(
+            IFaceGenDataInternalGetter item,
+            FaceGenData_Mask<bool?> checkMask)
+        {
+            if (checkMask.SymmetricGeometry.HasValue && checkMask.SymmetricGeometry.Value != item.SymmetricGeometry_IsSet) return false;
+            if (checkMask.AsymmetricGeometry.HasValue && checkMask.AsymmetricGeometry.Value != item.AsymmetricGeometry_IsSet) return false;
+            if (checkMask.SymmetricTexture.HasValue && checkMask.SymmetricTexture.Value != item.SymmetricTexture_IsSet) return false;
+            return true;
+        }
+        
+        public void FillHasBeenSetMask(
+            IFaceGenDataInternalGetter item,
+            FaceGenData_Mask<bool> mask)
+        {
+            mask.SymmetricGeometry = item.SymmetricGeometry_IsSet;
+            mask.AsymmetricGeometry = item.AsymmetricGeometry_IsSet;
+            mask.SymmetricTexture = item.SymmetricTexture_IsSet;
+        }
+        
+        #region Equals and Hash
+        public virtual bool Equals(
+            IFaceGenDataInternalGetter lhs,
+            IFaceGenDataInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (lhs.SymmetricGeometry_IsSet != rhs.SymmetricGeometry_IsSet) return false;
+            if (lhs.SymmetricGeometry_IsSet)
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.SymmetricGeometry, rhs.SymmetricGeometry)) return false;
+            }
+            if (lhs.AsymmetricGeometry_IsSet != rhs.AsymmetricGeometry_IsSet) return false;
+            if (lhs.AsymmetricGeometry_IsSet)
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.AsymmetricGeometry, rhs.AsymmetricGeometry)) return false;
+            }
+            if (lhs.SymmetricTexture_IsSet != rhs.SymmetricTexture_IsSet) return false;
+            if (lhs.SymmetricTexture_IsSet)
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.SymmetricTexture, rhs.SymmetricTexture)) return false;
+            }
+            return true;
+        }
+        
+        public virtual int GetHashCode(IFaceGenDataInternalGetter item)
+        {
+            int ret = 0;
+            if (item.SymmetricGeometry_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.SymmetricGeometry).CombineHashCode(ret);
+            }
+            if (item.AsymmetricGeometry_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.AsymmetricGeometry).CombineHashCode(ret);
+            }
+            if (item.SymmetricTexture_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.SymmetricTexture).CombineHashCode(ret);
+            }
+            return ret;
+        }
+        
+        #endregion
+        
+        
+        
+    }
+    public partial class FaceGenDataSetterCopyCommon
+    {
+        public static readonly FaceGenDataSetterCopyCommon Instance = new FaceGenDataSetterCopyCommon();
 
         #region Copy Fields From
         public static void CopyFieldsFrom(
@@ -1089,168 +1291,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
         }
-
+        
         #endregion
-
-        partial void ClearPartial();
-
-        public virtual void Clear(IFaceGenData item)
-        {
-            ClearPartial();
-            item.SymmetricGeometry_Unset();
-            item.AsymmetricGeometry_Unset();
-            item.SymmetricTexture_Unset();
-        }
-
-        public FaceGenData_Mask<bool> GetEqualsMask(
-            IFaceGenDataGetter item,
-            IFaceGenDataGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new FaceGenData_Mask<bool>();
-            ((FaceGenDataCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public void FillEqualsMask(
-            IFaceGenDataGetter item,
-            IFaceGenDataGetter rhs,
-            FaceGenData_Mask<bool> ret,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            if (rhs == null) return;
-            ret.SymmetricGeometry = item.SymmetricGeometry_IsSet == rhs.SymmetricGeometry_IsSet && MemoryExtensions.SequenceEqual(item.SymmetricGeometry, rhs.SymmetricGeometry);
-            ret.AsymmetricGeometry = item.AsymmetricGeometry_IsSet == rhs.AsymmetricGeometry_IsSet && MemoryExtensions.SequenceEqual(item.AsymmetricGeometry, rhs.AsymmetricGeometry);
-            ret.SymmetricTexture = item.SymmetricTexture_IsSet == rhs.SymmetricTexture_IsSet && MemoryExtensions.SequenceEqual(item.SymmetricTexture, rhs.SymmetricTexture);
-        }
-
-        public string ToString(
-            IFaceGenDataGetter item,
-            string name = null,
-            FaceGenData_Mask<bool> printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(
-                item: item,
-                fg: fg,
-                name: name,
-                printMask: printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(
-            IFaceGenDataGetter item,
-            FileGeneration fg,
-            string name = null,
-            FaceGenData_Mask<bool> printMask = null)
-        {
-            if (name == null)
-            {
-                fg.AppendLine($"FaceGenData =>");
-            }
-            else
-            {
-                fg.AppendLine($"{name} (FaceGenData) =>");
-            }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                ToStringFields(
-                    item: item,
-                    fg: fg,
-                    printMask: printMask);
-            }
-            fg.AppendLine("]");
-        }
-
-        protected static void ToStringFields(
-            IFaceGenDataGetter item,
-            FileGeneration fg,
-            FaceGenData_Mask<bool> printMask = null)
-        {
-            if (printMask?.SymmetricGeometry ?? true)
-            {
-                fg.AppendLine($"SymmetricGeometry => {SpanExt.ToHexString(item.SymmetricGeometry)}");
-            }
-            if (printMask?.AsymmetricGeometry ?? true)
-            {
-                fg.AppendLine($"AsymmetricGeometry => {SpanExt.ToHexString(item.AsymmetricGeometry)}");
-            }
-            if (printMask?.SymmetricTexture ?? true)
-            {
-                fg.AppendLine($"SymmetricTexture => {SpanExt.ToHexString(item.SymmetricTexture)}");
-            }
-        }
-
-        public bool HasBeenSet(
-            IFaceGenDataGetter item,
-            FaceGenData_Mask<bool?> checkMask)
-        {
-            if (checkMask.SymmetricGeometry.HasValue && checkMask.SymmetricGeometry.Value != item.SymmetricGeometry_IsSet) return false;
-            if (checkMask.AsymmetricGeometry.HasValue && checkMask.AsymmetricGeometry.Value != item.AsymmetricGeometry_IsSet) return false;
-            if (checkMask.SymmetricTexture.HasValue && checkMask.SymmetricTexture.Value != item.SymmetricTexture_IsSet) return false;
-            return true;
-        }
-
-        public void FillHasBeenSetMask(
-            IFaceGenDataGetter item,
-            FaceGenData_Mask<bool> mask)
-        {
-            mask.SymmetricGeometry = item.SymmetricGeometry_IsSet;
-            mask.AsymmetricGeometry = item.AsymmetricGeometry_IsSet;
-            mask.SymmetricTexture = item.SymmetricTexture_IsSet;
-        }
-
-        #region Equals and Hash
-        public virtual bool Equals(
-            IFaceGenDataGetter lhs,
-            IFaceGenDataGetter rhs)
-        {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
-            if (lhs.SymmetricGeometry_IsSet != rhs.SymmetricGeometry_IsSet) return false;
-            if (lhs.SymmetricGeometry_IsSet)
-            {
-                if (!MemoryExtensions.SequenceEqual(lhs.SymmetricGeometry, rhs.SymmetricGeometry)) return false;
-            }
-            if (lhs.AsymmetricGeometry_IsSet != rhs.AsymmetricGeometry_IsSet) return false;
-            if (lhs.AsymmetricGeometry_IsSet)
-            {
-                if (!MemoryExtensions.SequenceEqual(lhs.AsymmetricGeometry, rhs.AsymmetricGeometry)) return false;
-            }
-            if (lhs.SymmetricTexture_IsSet != rhs.SymmetricTexture_IsSet) return false;
-            if (lhs.SymmetricTexture_IsSet)
-            {
-                if (!MemoryExtensions.SequenceEqual(lhs.SymmetricTexture, rhs.SymmetricTexture)) return false;
-            }
-            return true;
-        }
-
-        public virtual int GetHashCode(IFaceGenDataGetter item)
-        {
-            int ret = 0;
-            if (item.SymmetricGeometry_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.SymmetricGeometry).CombineHashCode(ret);
-            }
-            if (item.AsymmetricGeometry_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.AsymmetricGeometry).CombineHashCode(ret);
-            }
-            if (item.SymmetricTexture_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.SymmetricTexture).CombineHashCode(ret);
-            }
-            return ret;
-        }
-
-        #endregion
-
-
+        
+        
     }
     #endregion
 
@@ -1261,7 +1305,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static FaceGenDataXmlWriteTranslation Instance = new FaceGenDataXmlWriteTranslation();
 
         public static void WriteToNodeXml(
-            IFaceGenDataGetter item,
+            IFaceGenDataInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1300,7 +1344,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             XElement node,
-            IFaceGenDataGetter item,
+            IFaceGenDataInternalGetter item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)
@@ -1326,7 +1370,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             Write(
-                item: (IFaceGenDataGetter)item,
+                item: (IFaceGenDataInternalGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1335,7 +1379,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             XElement node,
-            IFaceGenDataGetter item,
+            IFaceGenDataInternalGetter item,
             ErrorMaskBuilder errorMask,
             int fieldIndex,
             TranslationCrystal translationMask,
@@ -1345,7 +1389,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 errorMask?.PushIndex(fieldIndex);
                 Write(
-                    item: (IFaceGenDataGetter)item,
+                    item: (IFaceGenDataInternalGetter)item,
                     name: name,
                     node: node,
                     errorMask: errorMask,
@@ -1369,7 +1413,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static FaceGenDataXmlCreateTranslation Instance = new FaceGenDataXmlCreateTranslation();
 
         public static void FillPublicXml(
-            IFaceGenData item,
+            IFaceGenDataInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1394,7 +1438,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElementXml(
-            IFaceGenData item,
+            IFaceGenDataInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -1491,7 +1535,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public static class FaceGenDataXmlTranslationMixIn
     {
         public static void WriteToXml(
-            this IFaceGenDataGetter item,
+            this IFaceGenDataInternalGetter item,
             XElement node,
             out FaceGenData_ErrorMask errorMask,
             bool doMasks = true,
@@ -1509,7 +1553,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IFaceGenDataGetter item,
+            this IFaceGenDataInternalGetter item,
             string path,
             out FaceGenData_ErrorMask errorMask,
             FaceGenData_TranslationMask translationMask = null,
@@ -1528,7 +1572,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IFaceGenDataGetter item,
+            this IFaceGenDataInternalGetter item,
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1546,7 +1590,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IFaceGenDataGetter item,
+            this IFaceGenDataInternalGetter item,
             Stream stream,
             out FaceGenData_ErrorMask errorMask,
             FaceGenData_TranslationMask translationMask = null,
@@ -1565,7 +1609,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IFaceGenDataGetter item,
+            this IFaceGenDataInternalGetter item,
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1583,7 +1627,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IFaceGenDataGetter item,
+            this IFaceGenDataInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1598,7 +1642,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IFaceGenDataGetter item,
+            this IFaceGenDataInternalGetter item,
             XElement node,
             string name = null,
             FaceGenData_TranslationMask translationMask = null)
@@ -1612,7 +1656,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IFaceGenDataGetter item,
+            this IFaceGenDataInternalGetter item,
             string path,
             string name = null)
         {
@@ -1627,7 +1671,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IFaceGenDataGetter item,
+            this IFaceGenDataInternalGetter item,
             Stream stream,
             string name = null)
         {
@@ -1982,7 +2026,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static FaceGenDataBinaryWriteTranslation Instance = new FaceGenDataBinaryWriteTranslation();
 
         public static void Write_RecordTypes(
-            IFaceGenDataGetter item,
+            IFaceGenDataInternalGetter item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask,
@@ -2016,7 +2060,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             MutagenWriter writer,
-            IFaceGenDataGetter item,
+            IFaceGenDataInternalGetter item,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
@@ -2037,7 +2081,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask)
         {
             Write(
-                item: (IFaceGenDataGetter)item,
+                item: (IFaceGenDataInternalGetter)item,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -2056,7 +2100,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public static class FaceGenDataBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IFaceGenDataGetter item,
+            this IFaceGenDataInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
             out FaceGenData_ErrorMask errorMask,
@@ -2073,7 +2117,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToBinary(
-            this IFaceGenDataGetter item,
+            this IFaceGenDataInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -2087,7 +2131,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToBinary(
-            this IFaceGenDataGetter item,
+            this IFaceGenDataInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
@@ -2104,22 +2148,65 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     public partial class FaceGenDataBinaryWrapper :
         BinaryWrapper,
-        IFaceGenDataGetter
+        IFaceGenDataInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FaceGenData_Registration.Instance;
         public static FaceGenData_Registration Registration => FaceGenData_Registration.Instance;
-        protected object CommonInstance => FaceGenDataCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
+        protected object CommonInstance()
+        {
+            return FaceGenDataCommon.Instance;
+        }
+        object IFaceGenDataInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IFaceGenDataInternalGetter.CommonSetterInstance()
+        {
+            return null;
+        }
+        object IFaceGenDataInternalGetter.CommonSetterCopyInstance()
+        {
+            return null;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IFaceGenDataGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IFaceGenDataInternalGetter)rhs, include);
 
         protected object XmlWriteTranslator => FaceGenDataXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((FaceGenDataXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         protected object BinaryWriteTranslator => FaceGenDataBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((FaceGenDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
 
         #region SymmetricGeometry
         private int? _SymmetricGeometryLocation;
@@ -2212,4 +2299,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class FaceGenData
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => FaceGenData_Registration.Instance;
+        public static FaceGenData_Registration Registration => FaceGenData_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return FaceGenDataCommon.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return FaceGenDataSetterCommon.Instance;
+        }
+        protected object CommonSetterCopyInstance()
+        {
+            return FaceGenDataSetterCopyCommon.Instance;
+        }
+        object IFaceGenDataInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IFaceGenDataInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object IFaceGenDataInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
 }

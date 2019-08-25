@@ -129,7 +129,7 @@ namespace Mutagen.Bethesda.Internals
 
         object IDuplicatable.Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecordTracker)
         {
-            return ((MajorRecordCommon)this.CommonInstance).Duplicate(this, getNextFormKey, duplicatedRecordTracker);
+            return ((MajorRecordCommon)this.CommonInstance()).Duplicate(this, getNextFormKey, duplicatedRecordTracker);
         }
     }
 }

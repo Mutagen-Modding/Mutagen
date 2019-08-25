@@ -36,18 +36,12 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class WorldspaceSubBlock :
         LoquiNotifyingObject,
-        IWorldspaceSubBlock,
+        IWorldspaceSubBlockInternal,
         ILoquiObjectSetter<WorldspaceSubBlock>,
         ILinkSubContainer,
         IEquatable<WorldspaceSubBlock>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => WorldspaceSubBlock_Registration.Instance;
-        public static WorldspaceSubBlock_Registration Registration => WorldspaceSubBlock_Registration.Instance;
-        protected object CommonInstance => WorldspaceSubBlockCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
-
         #region Ctor
         public WorldspaceSubBlock()
         {
@@ -110,7 +104,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWorldspaceSubBlockGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWorldspaceSubBlockInternalGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -128,22 +122,35 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is IWorldspaceSubBlockGetter rhs)) return false;
-            return ((WorldspaceSubBlockCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            if (!(obj is IWorldspaceSubBlockInternalGetter rhs)) return false;
+            return ((WorldspaceSubBlockCommon)((IWorldspaceSubBlockInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(WorldspaceSubBlock obj)
         {
-            return ((WorldspaceSubBlockCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((WorldspaceSubBlockCommon)((IWorldspaceSubBlockInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((WorldspaceSubBlockCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((WorldspaceSubBlockCommon)((IWorldspaceSubBlockInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected object XmlWriteTranslator => WorldspaceSubBlockXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((WorldspaceSubBlockXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static WorldspaceSubBlock CreateFromXml(
@@ -343,6 +350,19 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Translation
         protected object BinaryWriteTranslator => WorldspaceSubBlockBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((WorldspaceSubBlockBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
         #region Binary Create
         [DebuggerStepThrough]
         public static async Task<WorldspaceSubBlock> CreateFromBinary(
@@ -543,7 +563,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            WorldspaceSubBlockCommon.CopyFieldsFrom(
+            WorldspaceSubBlockSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -558,7 +578,7 @@ namespace Mutagen.Bethesda.Oblivion
             WorldspaceSubBlock_CopyMask copyMask = null,
             WorldspaceSubBlock def = null)
         {
-            WorldspaceSubBlockCommon.CopyFieldsFrom(
+            WorldspaceSubBlockSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -593,7 +613,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void Clear()
         {
-            WorldspaceSubBlockCommon.Instance.Clear(this);
+            WorldspaceSubBlockSetterCommon.Instance.Clear(this);
         }
 
         public static WorldspaceSubBlock Create(IEnumerable<KeyValuePair<ushort, object>> fields)
@@ -638,8 +658,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IWorldspaceSubBlock :
-        IWorldspaceSubBlockGetter,
-        ILoquiObjectSetter<IWorldspaceSubBlock>
+        IWorldspaceSubBlockInternalGetter,
+        ILoquiObjectSetter<IWorldspaceSubBlockInternal>
     {
         new Int16 BlockNumberY { get; set; }
 
@@ -657,9 +677,15 @@ namespace Mutagen.Bethesda.Oblivion
             WorldspaceSubBlock def = null);
     }
 
+    public partial interface IWorldspaceSubBlockInternal :
+        IWorldspaceSubBlock,
+        IWorldspaceSubBlockInternalGetter
+    {
+    }
+
     public partial interface IWorldspaceSubBlockGetter :
         ILoquiObject,
-        ILoquiObject<IWorldspaceSubBlockGetter>,
+        ILoquiObject<IWorldspaceSubBlockInternalGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -685,45 +711,53 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    public partial interface IWorldspaceSubBlockInternalGetter : IWorldspaceSubBlockGetter
+    {
+        object CommonInstance();
+        object CommonSetterInstance();
+        object CommonSetterCopyInstance();
+
+    }
+
     #endregion
 
     #region Common MixIn
     public static class WorldspaceSubBlockMixIn
     {
-        public static void Clear(this IWorldspaceSubBlock item)
+        public static void Clear(this IWorldspaceSubBlockInternal item)
         {
-            ((WorldspaceSubBlockCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((WorldspaceSubBlockSetterCommon)((IWorldspaceSubBlockInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static WorldspaceSubBlock_Mask<bool> GetEqualsMask(
-            this IWorldspaceSubBlockGetter item,
-            IWorldspaceSubBlockGetter rhs,
+            this IWorldspaceSubBlockInternalGetter item,
+            IWorldspaceSubBlockInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((WorldspaceSubBlockCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((WorldspaceSubBlockCommon)((IWorldspaceSubBlockInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IWorldspaceSubBlockGetter item,
+            this IWorldspaceSubBlockInternalGetter item,
             string name = null,
             WorldspaceSubBlock_Mask<bool> printMask = null)
         {
-            return ((WorldspaceSubBlockCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((WorldspaceSubBlockCommon)((IWorldspaceSubBlockInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IWorldspaceSubBlockGetter item,
+            this IWorldspaceSubBlockInternalGetter item,
             FileGeneration fg,
             string name = null,
             WorldspaceSubBlock_Mask<bool> printMask = null)
         {
-            ((WorldspaceSubBlockCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((WorldspaceSubBlockCommon)((IWorldspaceSubBlockInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -731,28 +765,28 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static bool HasBeenSet(
-            this IWorldspaceSubBlockGetter item,
+            this IWorldspaceSubBlockInternalGetter item,
             WorldspaceSubBlock_Mask<bool?> checkMask)
         {
-            return ((WorldspaceSubBlockCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((WorldspaceSubBlockCommon)((IWorldspaceSubBlockInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static WorldspaceSubBlock_Mask<bool> GetHasBeenSetMask(this IWorldspaceSubBlockGetter item)
+        public static WorldspaceSubBlock_Mask<bool> GetHasBeenSetMask(this IWorldspaceSubBlockInternalGetter item)
         {
             var ret = new WorldspaceSubBlock_Mask<bool>();
-            ((WorldspaceSubBlockCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((WorldspaceSubBlockCommon)((IWorldspaceSubBlockInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this IWorldspaceSubBlockGetter item,
-            IWorldspaceSubBlockGetter rhs)
+            this IWorldspaceSubBlockInternalGetter item,
+            IWorldspaceSubBlockInternalGetter rhs)
         {
-            return ((WorldspaceSubBlockCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((WorldspaceSubBlockCommon)((IWorldspaceSubBlockInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -801,13 +835,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IWorldspaceSubBlockGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type InternalGetterType = typeof(IWorldspaceSubBlockInternalGetter);
 
         public static readonly Type SetterType = typeof(IWorldspaceSubBlock);
 
-        public static readonly Type InternalSetterType = null;
-
-        public static readonly Type CommonType = typeof(WorldspaceSubBlockCommon);
+        public static readonly Type InternalSetterType = typeof(IWorldspaceSubBlockInternal);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.WorldspaceSubBlock";
 
@@ -980,7 +1012,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -1000,9 +1031,199 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
+    public partial class WorldspaceSubBlockSetterCommon
+    {
+        public static readonly WorldspaceSubBlockSetterCommon Instance = new WorldspaceSubBlockSetterCommon();
+
+        partial void ClearPartial();
+        
+        public virtual void Clear(IWorldspaceSubBlockInternal item)
+        {
+            ClearPartial();
+            item.BlockNumberY = default(Int16);
+            item.BlockNumberX = default(Int16);
+            item.GroupType = default(GroupTypeEnum);
+            item.LastModified = default(Byte[]);
+            item.Items.Unset();
+        }
+        
+        
+    }
     public partial class WorldspaceSubBlockCommon
     {
         public static readonly WorldspaceSubBlockCommon Instance = new WorldspaceSubBlockCommon();
+
+        public WorldspaceSubBlock_Mask<bool> GetEqualsMask(
+            IWorldspaceSubBlockInternalGetter item,
+            IWorldspaceSubBlockInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new WorldspaceSubBlock_Mask<bool>();
+            ((WorldspaceSubBlockCommon)((IWorldspaceSubBlockInternalGetter)item).CommonInstance()).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+        
+        public void FillEqualsMask(
+            IWorldspaceSubBlockInternalGetter item,
+            IWorldspaceSubBlockInternalGetter rhs,
+            WorldspaceSubBlock_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            if (rhs == null) return;
+            ret.BlockNumberY = item.BlockNumberY == rhs.BlockNumberY;
+            ret.BlockNumberX = item.BlockNumberX == rhs.BlockNumberX;
+            ret.GroupType = item.GroupType == rhs.GroupType;
+            ret.LastModified = MemoryExtensions.SequenceEqual(item.LastModified, rhs.LastModified);
+            ret.Items = item.Items.CollectionEqualsHelper(
+                rhs.Items,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+        }
+        
+        public string ToString(
+            IWorldspaceSubBlockInternalGetter item,
+            string name = null,
+            WorldspaceSubBlock_Mask<bool> printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+            return fg.ToString();
+        }
+        
+        public void ToString(
+            IWorldspaceSubBlockInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            WorldspaceSubBlock_Mask<bool> printMask = null)
+        {
+            if (name == null)
+            {
+                fg.AppendLine($"WorldspaceSubBlock =>");
+            }
+            else
+            {
+                fg.AppendLine($"{name} (WorldspaceSubBlock) =>");
+            }
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
+            }
+            fg.AppendLine("]");
+        }
+        
+        protected static void ToStringFields(
+            IWorldspaceSubBlockInternalGetter item,
+            FileGeneration fg,
+            WorldspaceSubBlock_Mask<bool> printMask = null)
+        {
+            if (printMask?.BlockNumberY ?? true)
+            {
+                fg.AppendLine($"BlockNumberY => {item.BlockNumberY}");
+            }
+            if (printMask?.BlockNumberX ?? true)
+            {
+                fg.AppendLine($"BlockNumberX => {item.BlockNumberX}");
+            }
+            if (printMask?.GroupType ?? true)
+            {
+                fg.AppendLine($"GroupType => {item.GroupType}");
+            }
+            if (printMask?.LastModified ?? true)
+            {
+                fg.AppendLine($"LastModified => {SpanExt.ToHexString(item.LastModified)}");
+            }
+            if (printMask?.Items?.Overall ?? true)
+            {
+                fg.AppendLine("Items =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Items)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+        }
+        
+        public bool HasBeenSet(
+            IWorldspaceSubBlockInternalGetter item,
+            WorldspaceSubBlock_Mask<bool?> checkMask)
+        {
+            if (checkMask.Items.Overall.HasValue && checkMask.Items.Overall.Value != item.Items.HasBeenSet) return false;
+            return true;
+        }
+        
+        public void FillHasBeenSetMask(
+            IWorldspaceSubBlockInternalGetter item,
+            WorldspaceSubBlock_Mask<bool> mask)
+        {
+            mask.BlockNumberY = true;
+            mask.BlockNumberX = true;
+            mask.GroupType = true;
+            mask.LastModified = true;
+            mask.Items = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Cell_Mask<bool>>>>(item.Items.HasBeenSet, item.Items.WithIndex().Select((i) => new MaskItemIndexed<bool, Cell_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
+        }
+        
+        #region Equals and Hash
+        public virtual bool Equals(
+            IWorldspaceSubBlockInternalGetter lhs,
+            IWorldspaceSubBlockInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (lhs.BlockNumberY != rhs.BlockNumberY) return false;
+            if (lhs.BlockNumberX != rhs.BlockNumberX) return false;
+            if (lhs.GroupType != rhs.GroupType) return false;
+            if (!MemoryExtensions.SequenceEqual(lhs.LastModified, rhs.LastModified)) return false;
+            if (lhs.Items.HasBeenSet != rhs.Items.HasBeenSet) return false;
+            if (lhs.Items.HasBeenSet)
+            {
+                if (!lhs.Items.SequenceEqual(rhs.Items)) return false;
+            }
+            return true;
+        }
+        
+        public virtual int GetHashCode(IWorldspaceSubBlockInternalGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.BlockNumberY).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.BlockNumberX).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.GroupType).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.LastModified).CombineHashCode(ret);
+            if (item.Items.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Items).CombineHashCode(ret);
+            }
+            return ret;
+        }
+        
+        #endregion
+        
+        
+        
+    }
+    public partial class WorldspaceSubBlockSetterCopyCommon
+    {
+        public static readonly WorldspaceSubBlockSetterCopyCommon Instance = new WorldspaceSubBlockSetterCopyCommon();
 
         #region Copy Fields From
         public static void CopyFieldsFrom(
@@ -1115,187 +1336,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
         }
-
+        
         #endregion
-
-        partial void ClearPartial();
-
-        public virtual void Clear(IWorldspaceSubBlock item)
-        {
-            ClearPartial();
-            item.BlockNumberY = default(Int16);
-            item.BlockNumberX = default(Int16);
-            item.GroupType = default(GroupTypeEnum);
-            item.LastModified = default(Byte[]);
-            item.Items.Unset();
-        }
-
-        public WorldspaceSubBlock_Mask<bool> GetEqualsMask(
-            IWorldspaceSubBlockGetter item,
-            IWorldspaceSubBlockGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new WorldspaceSubBlock_Mask<bool>();
-            ((WorldspaceSubBlockCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public void FillEqualsMask(
-            IWorldspaceSubBlockGetter item,
-            IWorldspaceSubBlockGetter rhs,
-            WorldspaceSubBlock_Mask<bool> ret,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            if (rhs == null) return;
-            ret.BlockNumberY = item.BlockNumberY == rhs.BlockNumberY;
-            ret.BlockNumberX = item.BlockNumberX == rhs.BlockNumberX;
-            ret.GroupType = item.GroupType == rhs.GroupType;
-            ret.LastModified = MemoryExtensions.SequenceEqual(item.LastModified, rhs.LastModified);
-            ret.Items = item.Items.CollectionEqualsHelper(
-                rhs.Items,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
-                include);
-        }
-
-        public string ToString(
-            IWorldspaceSubBlockGetter item,
-            string name = null,
-            WorldspaceSubBlock_Mask<bool> printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(
-                item: item,
-                fg: fg,
-                name: name,
-                printMask: printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(
-            IWorldspaceSubBlockGetter item,
-            FileGeneration fg,
-            string name = null,
-            WorldspaceSubBlock_Mask<bool> printMask = null)
-        {
-            if (name == null)
-            {
-                fg.AppendLine($"WorldspaceSubBlock =>");
-            }
-            else
-            {
-                fg.AppendLine($"{name} (WorldspaceSubBlock) =>");
-            }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                ToStringFields(
-                    item: item,
-                    fg: fg,
-                    printMask: printMask);
-            }
-            fg.AppendLine("]");
-        }
-
-        protected static void ToStringFields(
-            IWorldspaceSubBlockGetter item,
-            FileGeneration fg,
-            WorldspaceSubBlock_Mask<bool> printMask = null)
-        {
-            if (printMask?.BlockNumberY ?? true)
-            {
-                fg.AppendLine($"BlockNumberY => {item.BlockNumberY}");
-            }
-            if (printMask?.BlockNumberX ?? true)
-            {
-                fg.AppendLine($"BlockNumberX => {item.BlockNumberX}");
-            }
-            if (printMask?.GroupType ?? true)
-            {
-                fg.AppendLine($"GroupType => {item.GroupType}");
-            }
-            if (printMask?.LastModified ?? true)
-            {
-                fg.AppendLine($"LastModified => {SpanExt.ToHexString(item.LastModified)}");
-            }
-            if (printMask?.Items?.Overall ?? true)
-            {
-                fg.AppendLine("Items =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
-                {
-                    foreach (var subItem in item.Items)
-                    {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            subItem?.ToString(fg, "Item");
-                        }
-                        fg.AppendLine("]");
-                    }
-                }
-                fg.AppendLine("]");
-            }
-        }
-
-        public bool HasBeenSet(
-            IWorldspaceSubBlockGetter item,
-            WorldspaceSubBlock_Mask<bool?> checkMask)
-        {
-            if (checkMask.Items.Overall.HasValue && checkMask.Items.Overall.Value != item.Items.HasBeenSet) return false;
-            return true;
-        }
-
-        public void FillHasBeenSetMask(
-            IWorldspaceSubBlockGetter item,
-            WorldspaceSubBlock_Mask<bool> mask)
-        {
-            mask.BlockNumberY = true;
-            mask.BlockNumberX = true;
-            mask.GroupType = true;
-            mask.LastModified = true;
-            mask.Items = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Cell_Mask<bool>>>>(item.Items.HasBeenSet, item.Items.WithIndex().Select((i) => new MaskItemIndexed<bool, Cell_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
-        }
-
-        #region Equals and Hash
-        public virtual bool Equals(
-            IWorldspaceSubBlockGetter lhs,
-            IWorldspaceSubBlockGetter rhs)
-        {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
-            if (lhs.BlockNumberY != rhs.BlockNumberY) return false;
-            if (lhs.BlockNumberX != rhs.BlockNumberX) return false;
-            if (lhs.GroupType != rhs.GroupType) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.LastModified, rhs.LastModified)) return false;
-            if (lhs.Items.HasBeenSet != rhs.Items.HasBeenSet) return false;
-            if (lhs.Items.HasBeenSet)
-            {
-                if (!lhs.Items.SequenceEqual(rhs.Items)) return false;
-            }
-            return true;
-        }
-
-        public virtual int GetHashCode(IWorldspaceSubBlockGetter item)
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.BlockNumberY).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.BlockNumberX).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.GroupType).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.LastModified).CombineHashCode(ret);
-            if (item.Items.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.Items).CombineHashCode(ret);
-            }
-            return ret;
-        }
-
-        #endregion
-
-
+        
+        
     }
     #endregion
 
@@ -1306,7 +1350,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static WorldspaceSubBlockXmlWriteTranslation Instance = new WorldspaceSubBlockXmlWriteTranslation();
 
         public static void WriteToNodeXml(
-            IWorldspaceSubBlockGetter item,
+            IWorldspaceSubBlockInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1372,7 +1416,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             XElement node,
-            IWorldspaceSubBlockGetter item,
+            IWorldspaceSubBlockInternalGetter item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)
@@ -1398,7 +1442,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             Write(
-                item: (IWorldspaceSubBlockGetter)item,
+                item: (IWorldspaceSubBlockInternalGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1407,7 +1451,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             XElement node,
-            IWorldspaceSubBlockGetter item,
+            IWorldspaceSubBlockInternalGetter item,
             ErrorMaskBuilder errorMask,
             int fieldIndex,
             TranslationCrystal translationMask,
@@ -1417,7 +1461,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 errorMask?.PushIndex(fieldIndex);
                 Write(
-                    item: (IWorldspaceSubBlockGetter)item,
+                    item: (IWorldspaceSubBlockInternalGetter)item,
                     name: name,
                     node: node,
                     errorMask: errorMask,
@@ -1441,7 +1485,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static WorldspaceSubBlockXmlCreateTranslation Instance = new WorldspaceSubBlockXmlCreateTranslation();
 
         public static void FillPublicXml(
-            IWorldspaceSubBlock item,
+            IWorldspaceSubBlockInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1466,7 +1510,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElementXml(
-            IWorldspaceSubBlock item,
+            IWorldspaceSubBlockInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -1617,7 +1661,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public static class WorldspaceSubBlockXmlTranslationMixIn
     {
         public static void WriteToXml(
-            this IWorldspaceSubBlockGetter item,
+            this IWorldspaceSubBlockInternalGetter item,
             XElement node,
             out WorldspaceSubBlock_ErrorMask errorMask,
             bool doMasks = true,
@@ -1635,7 +1679,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IWorldspaceSubBlockGetter item,
+            this IWorldspaceSubBlockInternalGetter item,
             string path,
             out WorldspaceSubBlock_ErrorMask errorMask,
             WorldspaceSubBlock_TranslationMask translationMask = null,
@@ -1654,7 +1698,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IWorldspaceSubBlockGetter item,
+            this IWorldspaceSubBlockInternalGetter item,
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1672,7 +1716,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IWorldspaceSubBlockGetter item,
+            this IWorldspaceSubBlockInternalGetter item,
             Stream stream,
             out WorldspaceSubBlock_ErrorMask errorMask,
             WorldspaceSubBlock_TranslationMask translationMask = null,
@@ -1691,7 +1735,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IWorldspaceSubBlockGetter item,
+            this IWorldspaceSubBlockInternalGetter item,
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1709,7 +1753,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IWorldspaceSubBlockGetter item,
+            this IWorldspaceSubBlockInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1724,7 +1768,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IWorldspaceSubBlockGetter item,
+            this IWorldspaceSubBlockInternalGetter item,
             XElement node,
             string name = null,
             WorldspaceSubBlock_TranslationMask translationMask = null)
@@ -1738,7 +1782,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IWorldspaceSubBlockGetter item,
+            this IWorldspaceSubBlockInternalGetter item,
             string path,
             string name = null)
         {
@@ -1753,7 +1797,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IWorldspaceSubBlockGetter item,
+            this IWorldspaceSubBlockInternalGetter item,
             Stream stream,
             string name = null)
         {
@@ -2240,7 +2284,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static WorldspaceSubBlockBinaryWriteTranslation Instance = new WorldspaceSubBlockBinaryWriteTranslation();
 
         public static void Write_Embedded(
-            IWorldspaceSubBlockGetter item,
+            IWorldspaceSubBlockInternalGetter item,
             MutagenWriter writer,
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
@@ -2257,7 +2301,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void Write_RecordTypes(
-            IWorldspaceSubBlockGetter item,
+            IWorldspaceSubBlockInternalGetter item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask,
@@ -2285,7 +2329,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             MutagenWriter writer,
-            IWorldspaceSubBlockGetter item,
+            IWorldspaceSubBlockInternalGetter item,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
@@ -2317,7 +2361,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask)
         {
             Write(
-                item: (IWorldspaceSubBlockGetter)item,
+                item: (IWorldspaceSubBlockInternalGetter)item,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -2336,7 +2380,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public static class WorldspaceSubBlockBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IWorldspaceSubBlockGetter item,
+            this IWorldspaceSubBlockInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
             out WorldspaceSubBlock_ErrorMask errorMask,
@@ -2353,7 +2397,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToBinary(
-            this IWorldspaceSubBlockGetter item,
+            this IWorldspaceSubBlockInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -2367,7 +2411,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToBinary(
-            this IWorldspaceSubBlockGetter item,
+            this IWorldspaceSubBlockInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
@@ -2384,22 +2428,65 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     public partial class WorldspaceSubBlockBinaryWrapper :
         BinaryWrapper,
-        IWorldspaceSubBlockGetter
+        IWorldspaceSubBlockInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorldspaceSubBlock_Registration.Instance;
         public static WorldspaceSubBlock_Registration Registration => WorldspaceSubBlock_Registration.Instance;
-        protected object CommonInstance => WorldspaceSubBlockCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
+        protected object CommonInstance()
+        {
+            return WorldspaceSubBlockCommon.Instance;
+        }
+        object IWorldspaceSubBlockInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IWorldspaceSubBlockInternalGetter.CommonSetterInstance()
+        {
+            return null;
+        }
+        object IWorldspaceSubBlockInternalGetter.CommonSetterCopyInstance()
+        {
+            return null;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWorldspaceSubBlockGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWorldspaceSubBlockInternalGetter)rhs, include);
 
         protected object XmlWriteTranslator => WorldspaceSubBlockXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((WorldspaceSubBlockXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         protected object BinaryWriteTranslator => WorldspaceSubBlockBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((WorldspaceSubBlockBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
 
         public Int16 BlockNumberY => BinaryPrimitives.ReadInt16LittleEndian(_data.Span.Slice(0, 2));
         public Int16 BlockNumberX => BinaryPrimitives.ReadInt16LittleEndian(_data.Span.Slice(2, 2));
@@ -2483,4 +2570,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class WorldspaceSubBlock
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => WorldspaceSubBlock_Registration.Instance;
+        public static WorldspaceSubBlock_Registration Registration => WorldspaceSubBlock_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return WorldspaceSubBlockCommon.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return WorldspaceSubBlockSetterCommon.Instance;
+        }
+        protected object CommonSetterCopyInstance()
+        {
+            return WorldspaceSubBlockSetterCopyCommon.Instance;
+        }
+        object IWorldspaceSubBlockInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IWorldspaceSubBlockInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object IWorldspaceSubBlockInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
 }

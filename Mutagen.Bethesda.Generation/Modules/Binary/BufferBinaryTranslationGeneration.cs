@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda.Generation
                 args.Add($"writer: {writerAccessor}");
                 if (zero.Static)
                 {
-                    args.Add($"item: {objGen.CommonClassName}.{typeGen.Name}");
+                    args.Add($"item: {objGen.CommonClassName(LoquiInterfaceType.IGetter, MaskType.Normal)}.{typeGen.Name}");
                 }
                 else
                 {

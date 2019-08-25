@@ -272,15 +272,15 @@ namespace Mutagen.Bethesda.Generation
 
             if (obj.GetObjectType() != ObjectType.Mod) return;
             using (var args = new FunctionWrapper(fg,
-                "public static IReadOnlyCache<T, FormKey> GetGroupGetter<T>",
-                wheres: $"where T : {nameof(IMajorRecordInternalGetter)}"))
+                "public static IReadOnlyCache<T, FormKey> GetGroupGetter<T>"))
             {
+                args.Wheres.Add($"where T : {nameof(IMajorRecordInternalGetter)}");
                 args.Add($"this {obj.Interface(getter: true)} obj");
             }
             using (new BraceWrapper(fg))
             {
                 using (var args = new ArgsWrapper(fg,
-                    $"return (IReadOnlyCache<T, FormKey>){obj.CommonClassInstance("obj")}.GetGroup<T>"))
+                    $"return (IReadOnlyCache<T, FormKey>){obj.CommonClassInstance("obj", LoquiInterfaceType.IGetter, CommonGenerics.Class, MaskType.Normal)}.GetGroup<T>"))
                 {
                     args.AddPassArg("obj");
                 }
@@ -288,30 +288,30 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine();
 
             using (var args = new FunctionWrapper(fg,
-                "public static ISourceCache<T, FormKey> GetGroup<T>",
-                wheres: $"where T : {nameof(IMajorRecordInternal)}"))
+                "public static ISourceCache<T, FormKey> GetGroup<T>"))
             {
+                args.Wheres.Add($"where T : {nameof(IMajorRecordInternal)}");
                 args.Add($"this {obj.Interface(getter: false)} obj");
             }
             using (new BraceWrapper(fg))
             {
                 using (var args = new ArgsWrapper(fg,
-                    $"return (ISourceCache<T, FormKey>){obj.CommonClassInstance("obj")}.GetGroup<T>"))
+                    $"return (ISourceCache<T, FormKey>){obj.CommonClassInstance("obj", LoquiInterfaceType.IGetter, CommonGenerics.Class, MaskType.Normal)}.GetGroup<T>"))
                 {
                     args.AddPassArg("obj");
                 }
             }
         }
 
-        public override async Task GenerateInCommon(ObjectGeneration obj, FileGeneration fg)
+        public override async Task GenerateInCommon(ObjectGeneration obj, FileGeneration fg, MaskTypeSet maskTypes)
         {
-            await base.GenerateInCommon(obj, fg);
-
+            await base.GenerateInCommon(obj, fg, maskTypes);
             if (obj.GetObjectType() != ObjectType.Mod) return;
+            if (!maskTypes.Applicable(LoquiInterfaceType.IGetter, CommonGenerics.Class, MaskType.Normal)) return;
             using (var args = new FunctionWrapper(fg,
-                "public object GetGroup<T>",
-                wheres: $"where T : {nameof(IMajorRecordInternalGetter)}"))
+                "public object GetGroup<T>"))
             {
+                args.Wheres.Add($"where T : {nameof(IMajorRecordInternalGetter)}");
                 args.Add($"{obj.Interface(getter: true)} obj");
             }
             using (new BraceWrapper(fg))

@@ -43,11 +43,6 @@ namespace Mutagen.Bethesda.Skyrim
         IEquatable<LocationReferenceType>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => LocationReferenceType_Registration.Instance;
-        public new static LocationReferenceType_Registration Registration => LocationReferenceType_Registration.Instance;
-        protected override object CommonInstance => LocationReferenceTypeCommon.Instance;
-
         #region Ctor
         protected LocationReferenceType()
         {
@@ -102,20 +97,33 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object obj)
         {
             if (!(obj is ILocationReferenceTypeInternalGetter rhs)) return false;
-            return ((LocationReferenceTypeCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            return ((LocationReferenceTypeCommon)((ILocationReferenceTypeInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(LocationReferenceType obj)
         {
-            return ((LocationReferenceTypeCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((LocationReferenceTypeCommon)((ILocationReferenceTypeInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((LocationReferenceTypeCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((LocationReferenceTypeCommon)((ILocationReferenceTypeInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected override object XmlWriteTranslator => LocationReferenceTypeXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((LocationReferenceTypeXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static LocationReferenceType CreateFromXml(
@@ -322,6 +330,19 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Binary Translation
         protected override object BinaryWriteTranslator => LocationReferenceTypeBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((LocationReferenceTypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
         #region Binary Create
         [DebuggerStepThrough]
         public static LocationReferenceType CreateFromBinary(
@@ -509,7 +530,7 @@ namespace Mutagen.Bethesda.Skyrim
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            LocationReferenceTypeCommon.CopyFieldsFrom(
+            LocationReferenceTypeSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -524,7 +545,7 @@ namespace Mutagen.Bethesda.Skyrim
             LocationReferenceType_CopyMask copyMask = null,
             LocationReferenceType def = null)
         {
-            LocationReferenceTypeCommon.CopyFieldsFrom(
+            LocationReferenceTypeSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -548,7 +569,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public override void Clear()
         {
-            LocationReferenceTypeCommon.Instance.Clear(this);
+            LocationReferenceTypeSetterCommon.Instance.Clear(this);
         }
 
         public new static LocationReferenceType Create(IEnumerable<KeyValuePair<ushort, object>> fields)
@@ -632,7 +653,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void Clear(this ILocationReferenceTypeInternal item)
         {
-            ((LocationReferenceTypeCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((LocationReferenceTypeSetterCommon)((ILocationReferenceTypeInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static LocationReferenceType_Mask<bool> GetEqualsMask(
@@ -640,7 +661,7 @@ namespace Mutagen.Bethesda.Skyrim
             ILocationReferenceTypeInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((LocationReferenceTypeCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((LocationReferenceTypeCommon)((ILocationReferenceTypeInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -651,7 +672,7 @@ namespace Mutagen.Bethesda.Skyrim
             string name = null,
             LocationReferenceType_Mask<bool> printMask = null)
         {
-            return ((LocationReferenceTypeCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((LocationReferenceTypeCommon)((ILocationReferenceTypeInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -663,7 +684,7 @@ namespace Mutagen.Bethesda.Skyrim
             string name = null,
             LocationReferenceType_Mask<bool> printMask = null)
         {
-            ((LocationReferenceTypeCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((LocationReferenceTypeCommon)((ILocationReferenceTypeInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -674,7 +695,7 @@ namespace Mutagen.Bethesda.Skyrim
             this ILocationReferenceTypeInternalGetter item,
             LocationReferenceType_Mask<bool?> checkMask)
         {
-            return ((LocationReferenceTypeCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((LocationReferenceTypeCommon)((ILocationReferenceTypeInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -682,7 +703,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static LocationReferenceType_Mask<bool> GetHasBeenSetMask(this ILocationReferenceTypeInternalGetter item)
         {
             var ret = new LocationReferenceType_Mask<bool>();
-            ((LocationReferenceTypeCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((LocationReferenceTypeCommon)((ILocationReferenceTypeInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -692,7 +713,7 @@ namespace Mutagen.Bethesda.Skyrim
             this ILocationReferenceTypeInternalGetter item,
             ILocationReferenceTypeInternalGetter rhs)
         {
-            return ((LocationReferenceTypeCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((LocationReferenceTypeCommon)((ILocationReferenceTypeInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -749,8 +770,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type SetterType = typeof(ILocationReferenceType);
 
         public static readonly Type InternalSetterType = typeof(ILocationReferenceTypeInternal);
-
-        public static readonly Type CommonType = typeof(LocationReferenceTypeCommon);
 
         public const string FullName = "Mutagen.Bethesda.Skyrim.LocationReferenceType";
 
@@ -877,7 +896,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -897,9 +915,251 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
+    public partial class LocationReferenceTypeSetterCommon : SkyrimMajorRecordSetterCommon
+    {
+        public new static readonly LocationReferenceTypeSetterCommon Instance = new LocationReferenceTypeSetterCommon();
+
+        partial void ClearPartial();
+        
+        public virtual void Clear(ILocationReferenceTypeInternal item)
+        {
+            ClearPartial();
+            item.Color_Unset();
+            base.Clear(item);
+        }
+        
+        public override void Clear(ISkyrimMajorRecordInternal item)
+        {
+            Clear(item: (ILocationReferenceTypeInternal)item);
+        }
+        
+        public override void Clear(IMajorRecordInternal item)
+        {
+            Clear(item: (ILocationReferenceTypeInternal)item);
+        }
+        
+        
+    }
     public partial class LocationReferenceTypeCommon : SkyrimMajorRecordCommon
     {
-        public static readonly LocationReferenceTypeCommon Instance = new LocationReferenceTypeCommon();
+        public new static readonly LocationReferenceTypeCommon Instance = new LocationReferenceTypeCommon();
+
+        public LocationReferenceType_Mask<bool> GetEqualsMask(
+            ILocationReferenceTypeInternalGetter item,
+            ILocationReferenceTypeInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new LocationReferenceType_Mask<bool>();
+            ((LocationReferenceTypeCommon)((ILocationReferenceTypeInternalGetter)item).CommonInstance()).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+        
+        public void FillEqualsMask(
+            ILocationReferenceTypeInternalGetter item,
+            ILocationReferenceTypeInternalGetter rhs,
+            LocationReferenceType_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            if (rhs == null) return;
+            ret.Color = item.Color_IsSet == rhs.Color_IsSet && item.Color.ColorOnlyEquals(rhs.Color);
+            base.FillEqualsMask(item, rhs, ret, include);
+        }
+        
+        public string ToString(
+            ILocationReferenceTypeInternalGetter item,
+            string name = null,
+            LocationReferenceType_Mask<bool> printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+            return fg.ToString();
+        }
+        
+        public void ToString(
+            ILocationReferenceTypeInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            LocationReferenceType_Mask<bool> printMask = null)
+        {
+            if (name == null)
+            {
+                fg.AppendLine($"LocationReferenceType =>");
+            }
+            else
+            {
+                fg.AppendLine($"{name} (LocationReferenceType) =>");
+            }
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
+            }
+            fg.AppendLine("]");
+        }
+        
+        protected static void ToStringFields(
+            ILocationReferenceTypeInternalGetter item,
+            FileGeneration fg,
+            LocationReferenceType_Mask<bool> printMask = null)
+        {
+            SkyrimMajorRecordCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.Color ?? true)
+            {
+                fg.AppendLine($"Color => {item.Color}");
+            }
+        }
+        
+        public bool HasBeenSet(
+            ILocationReferenceTypeInternalGetter item,
+            LocationReferenceType_Mask<bool?> checkMask)
+        {
+            if (checkMask.Color.HasValue && checkMask.Color.Value != item.Color_IsSet) return false;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+        
+        public void FillHasBeenSetMask(
+            ILocationReferenceTypeInternalGetter item,
+            LocationReferenceType_Mask<bool> mask)
+        {
+            mask.Color = item.Color_IsSet;
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
+        }
+        
+        public static LocationReferenceType_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case SkyrimMajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (LocationReferenceType_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.FormKey:
+                    return (LocationReferenceType_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.Version:
+                    return (LocationReferenceType_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.EditorID:
+                    return (LocationReferenceType_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
+                    return (LocationReferenceType_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.FormVersion:
+                    return (LocationReferenceType_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.Version2:
+                    return (LocationReferenceType_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        public static LocationReferenceType_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (LocationReferenceType_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.FormKey:
+                    return (LocationReferenceType_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.Version:
+                    return (LocationReferenceType_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.EditorID:
+                    return (LocationReferenceType_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        #region Equals and Hash
+        public virtual bool Equals(
+            ILocationReferenceTypeInternalGetter lhs,
+            ILocationReferenceTypeInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.Color_IsSet != rhs.Color_IsSet) return false;
+            if (lhs.Color_IsSet)
+            {
+                if (!lhs.Color.ColorOnlyEquals(rhs.Color)) return false;
+            }
+            return true;
+        }
+        
+        public override bool Equals(
+            ISkyrimMajorRecordInternalGetter lhs,
+            ISkyrimMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (ILocationReferenceTypeInternalGetter)lhs,
+                rhs: rhs as ILocationReferenceTypeInternalGetter);
+        }
+        
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (ILocationReferenceTypeInternalGetter)lhs,
+                rhs: rhs as ILocationReferenceTypeInternalGetter);
+        }
+        
+        public virtual int GetHashCode(ILocationReferenceTypeInternalGetter item)
+        {
+            int ret = 0;
+            if (item.Color_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Color).CombineHashCode(ret);
+            }
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+        
+        public override int GetHashCode(ISkyrimMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (ILocationReferenceTypeInternalGetter)item);
+        }
+        
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (ILocationReferenceTypeInternalGetter)item);
+        }
+        
+        #endregion
+        
+        
+        #region Mutagen
+        partial void PostDuplicate(LocationReferenceType obj, LocationReferenceType rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+        
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new LocationReferenceType(getNextFormKey());
+            ret.CopyFieldsFrom((LocationReferenceType)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (LocationReferenceType)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+        
+        #endregion
+        
+        
+    }
+    public partial class LocationReferenceTypeSetterCopyCommon : SkyrimMajorRecordSetterCopyCommon
+    {
+        public new static readonly LocationReferenceTypeSetterCopyCommon Instance = new LocationReferenceTypeSetterCopyCommon();
 
         #region Copy Fields From
         public static void CopyFieldsFrom(
@@ -909,7 +1169,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ErrorMaskBuilder errorMask,
             LocationReferenceType_CopyMask copyMask)
         {
-            SkyrimMajorRecordCommon.CopyFieldsFrom(
+            SkyrimMajorRecordSetterCopyCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -946,239 +1206,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
             }
         }
-
+        
         #endregion
-
-        partial void ClearPartial();
-
-        public virtual void Clear(ILocationReferenceTypeInternal item)
-        {
-            ClearPartial();
-            item.Color_Unset();
-            base.Clear(item);
-        }
-
-        public override void Clear(ISkyrimMajorRecordInternal item)
-        {
-            Clear(item: (ILocationReferenceTypeInternal)item);
-        }
-
-        public override void Clear(IMajorRecordInternal item)
-        {
-            Clear(item: (ILocationReferenceTypeInternal)item);
-        }
-
-        public LocationReferenceType_Mask<bool> GetEqualsMask(
-            ILocationReferenceTypeInternalGetter item,
-            ILocationReferenceTypeInternalGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new LocationReferenceType_Mask<bool>();
-            ((LocationReferenceTypeCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public void FillEqualsMask(
-            ILocationReferenceTypeInternalGetter item,
-            ILocationReferenceTypeInternalGetter rhs,
-            LocationReferenceType_Mask<bool> ret,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            if (rhs == null) return;
-            ret.Color = item.Color_IsSet == rhs.Color_IsSet && item.Color.ColorOnlyEquals(rhs.Color);
-            base.FillEqualsMask(item, rhs, ret, include);
-        }
-
-        public string ToString(
-            ILocationReferenceTypeInternalGetter item,
-            string name = null,
-            LocationReferenceType_Mask<bool> printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(
-                item: item,
-                fg: fg,
-                name: name,
-                printMask: printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(
-            ILocationReferenceTypeInternalGetter item,
-            FileGeneration fg,
-            string name = null,
-            LocationReferenceType_Mask<bool> printMask = null)
-        {
-            if (name == null)
-            {
-                fg.AppendLine($"LocationReferenceType =>");
-            }
-            else
-            {
-                fg.AppendLine($"{name} (LocationReferenceType) =>");
-            }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                ToStringFields(
-                    item: item,
-                    fg: fg,
-                    printMask: printMask);
-            }
-            fg.AppendLine("]");
-        }
-
-        protected static void ToStringFields(
-            ILocationReferenceTypeInternalGetter item,
-            FileGeneration fg,
-            LocationReferenceType_Mask<bool> printMask = null)
-        {
-            SkyrimMajorRecordCommon.ToStringFields(
-                item: item,
-                fg: fg,
-                printMask: printMask);
-            if (printMask?.Color ?? true)
-            {
-                fg.AppendLine($"Color => {item.Color}");
-            }
-        }
-
-        public bool HasBeenSet(
-            ILocationReferenceTypeInternalGetter item,
-            LocationReferenceType_Mask<bool?> checkMask)
-        {
-            if (checkMask.Color.HasValue && checkMask.Color.Value != item.Color_IsSet) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public void FillHasBeenSetMask(
-            ILocationReferenceTypeInternalGetter item,
-            LocationReferenceType_Mask<bool> mask)
-        {
-            mask.Color = item.Color_IsSet;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-
-        public static LocationReferenceType_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
-        {
-            switch (index)
-            {
-                case SkyrimMajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (LocationReferenceType_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.FormKey:
-                    return (LocationReferenceType_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.Version:
-                    return (LocationReferenceType_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.EditorID:
-                    return (LocationReferenceType_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
-                    return (LocationReferenceType_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.FormVersion:
-                    return (LocationReferenceType_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.Version2:
-                    return (LocationReferenceType_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        public static LocationReferenceType_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
-        {
-            switch (index)
-            {
-                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (LocationReferenceType_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.FormKey:
-                    return (LocationReferenceType_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
-                    return (LocationReferenceType_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.EditorID:
-                    return (LocationReferenceType_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        #region Equals and Hash
-        public virtual bool Equals(
-            ILocationReferenceTypeInternalGetter lhs,
-            ILocationReferenceTypeInternalGetter rhs)
-        {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (lhs.Color_IsSet != rhs.Color_IsSet) return false;
-            if (lhs.Color_IsSet)
-            {
-                if (!lhs.Color.ColorOnlyEquals(rhs.Color)) return false;
-            }
-            return true;
-        }
-
-        public override bool Equals(
-            ISkyrimMajorRecordInternalGetter lhs,
-            ISkyrimMajorRecordInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (ILocationReferenceTypeInternalGetter)lhs,
-                rhs: rhs as ILocationReferenceTypeInternalGetter);
-        }
-
-        public override bool Equals(
-            IMajorRecordInternalGetter lhs,
-            IMajorRecordInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (ILocationReferenceTypeInternalGetter)lhs,
-                rhs: rhs as ILocationReferenceTypeInternalGetter);
-        }
-
-        public virtual int GetHashCode(ILocationReferenceTypeInternalGetter item)
-        {
-            int ret = 0;
-            if (item.Color_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Color).CombineHashCode(ret);
-            }
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        public override int GetHashCode(ISkyrimMajorRecordInternalGetter item)
-        {
-            return GetHashCode(item: (ILocationReferenceTypeInternalGetter)item);
-        }
-
-        public override int GetHashCode(IMajorRecordInternalGetter item)
-        {
-            return GetHashCode(item: (ILocationReferenceTypeInternalGetter)item);
-        }
-
-        #endregion
-
-
-        #region Mutagen
-        partial void PostDuplicate(LocationReferenceType obj, LocationReferenceType rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new LocationReferenceType(getNextFormKey());
-            ret.CopyFieldsFrom((LocationReferenceType)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (LocationReferenceType)item, getNextFormKey, duplicatedRecords);
-            return ret;
-        }
-
-        #endregion
-
+        
+        
     }
     #endregion
 
@@ -1819,17 +1850,49 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         SkyrimMajorRecordBinaryWrapper,
         ILocationReferenceTypeInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocationReferenceType_Registration.Instance;
         public new static LocationReferenceType_Registration Registration => LocationReferenceType_Registration.Instance;
-        protected override object CommonInstance => LocationReferenceTypeCommon.Instance;
+        protected override object CommonInstance()
+        {
+            return LocationReferenceTypeCommon.Instance;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILocationReferenceTypeInternalGetter)rhs, include);
 
         protected override object XmlWriteTranslator => LocationReferenceTypeXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((LocationReferenceTypeXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         protected override object BinaryWriteTranslator => LocationReferenceTypeBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((LocationReferenceTypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
 
         #region Color
         private int? _ColorLocation;
@@ -1907,4 +1970,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda.Skyrim
+{
+    public partial class LocationReferenceType
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => LocationReferenceType_Registration.Instance;
+        public new static LocationReferenceType_Registration Registration => LocationReferenceType_Registration.Instance;
+        protected override object CommonInstance()
+        {
+            return LocationReferenceTypeCommon.Instance;
+        }
+        protected override object CommonSetterInstance()
+        {
+            return LocationReferenceTypeSetterCommon.Instance;
+        }
+        protected override object CommonSetterCopyInstance()
+        {
+            return LocationReferenceTypeSetterCopyCommon.Instance;
+        }
+
+        #endregion
+
+    }
 }

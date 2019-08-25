@@ -34,18 +34,12 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public abstract partial class ScriptReference :
         LoquiNotifyingObject,
-        IScriptReference,
+        IScriptReferenceInternal,
         ILoquiObjectSetter<ScriptReference>,
         ILinkSubContainer,
         IEquatable<ScriptReference>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => ScriptReference_Registration.Instance;
-        public static ScriptReference_Registration Registration => ScriptReference_Registration.Instance;
-        protected virtual object CommonInstance => ScriptReferenceCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
-
         #region Ctor
         public ScriptReference()
         {
@@ -55,7 +49,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IScriptReferenceGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IScriptReferenceInternalGetter)rhs, include);
         #region To String
 
         public virtual void ToString(
@@ -73,22 +67,35 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is IScriptReferenceGetter rhs)) return false;
-            return ((ScriptReferenceCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            if (!(obj is IScriptReferenceInternalGetter rhs)) return false;
+            return ((ScriptReferenceCommon)((IScriptReferenceInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(ScriptReference obj)
         {
-            return ((ScriptReferenceCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((ScriptReferenceCommon)((IScriptReferenceInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((ScriptReferenceCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((ScriptReferenceCommon)((IScriptReferenceInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected virtual object XmlWriteTranslator => ScriptReferenceXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((ScriptReferenceXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static ScriptReference CreateFromXml(
@@ -247,6 +254,19 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Translation
         protected virtual object BinaryWriteTranslator => ScriptReferenceBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((ScriptReferenceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
         #endregion
 
         public ScriptReference Copy(
@@ -316,7 +336,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ScriptReferenceCommon.CopyFieldsFrom(
+            ScriptReferenceSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -331,7 +351,7 @@ namespace Mutagen.Bethesda.Oblivion
             ScriptReference_CopyMask copyMask = null,
             ScriptReference def = null)
         {
-            ScriptReferenceCommon.CopyFieldsFrom(
+            ScriptReferenceSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -351,7 +371,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Clear()
         {
-            ScriptReferenceCommon.Instance.Clear(this);
+            ScriptReferenceSetterCommon.Instance.Clear(this);
         }
 
         protected static void CopyInInternal_ScriptReference(ScriptReference obj, KeyValuePair<ushort, object> pair)
@@ -371,8 +391,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IScriptReference :
-        IScriptReferenceGetter,
-        ILoquiObjectSetter<IScriptReference>
+        IScriptReferenceInternalGetter,
+        ILoquiObjectSetter<IScriptReferenceInternal>
     {
         void CopyFieldsFrom(
             ScriptReference rhs,
@@ -381,12 +401,26 @@ namespace Mutagen.Bethesda.Oblivion
             ScriptReference def = null);
     }
 
+    public partial interface IScriptReferenceInternal :
+        IScriptReference,
+        IScriptReferenceInternalGetter
+    {
+    }
+
     public partial interface IScriptReferenceGetter :
         ILoquiObject,
-        ILoquiObject<IScriptReferenceGetter>,
+        ILoquiObject<IScriptReferenceInternalGetter>,
         IXmlItem,
         IBinaryItem
     {
+
+    }
+
+    public partial interface IScriptReferenceInternalGetter : IScriptReferenceGetter
+    {
+        object CommonInstance();
+        object CommonSetterInstance();
+        object CommonSetterCopyInstance();
 
     }
 
@@ -395,40 +429,40 @@ namespace Mutagen.Bethesda.Oblivion
     #region Common MixIn
     public static class ScriptReferenceMixIn
     {
-        public static void Clear(this IScriptReference item)
+        public static void Clear(this IScriptReferenceInternal item)
         {
-            ((ScriptReferenceCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((ScriptReferenceSetterCommon)((IScriptReferenceInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static ScriptReference_Mask<bool> GetEqualsMask(
-            this IScriptReferenceGetter item,
-            IScriptReferenceGetter rhs,
+            this IScriptReferenceInternalGetter item,
+            IScriptReferenceInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((ScriptReferenceCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((ScriptReferenceCommon)((IScriptReferenceInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IScriptReferenceGetter item,
+            this IScriptReferenceInternalGetter item,
             string name = null,
             ScriptReference_Mask<bool> printMask = null)
         {
-            return ((ScriptReferenceCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((ScriptReferenceCommon)((IScriptReferenceInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IScriptReferenceGetter item,
+            this IScriptReferenceInternalGetter item,
             FileGeneration fg,
             string name = null,
             ScriptReference_Mask<bool> printMask = null)
         {
-            ((ScriptReferenceCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((ScriptReferenceCommon)((IScriptReferenceInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -436,28 +470,28 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static bool HasBeenSet(
-            this IScriptReferenceGetter item,
+            this IScriptReferenceInternalGetter item,
             ScriptReference_Mask<bool?> checkMask)
         {
-            return ((ScriptReferenceCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((ScriptReferenceCommon)((IScriptReferenceInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static ScriptReference_Mask<bool> GetHasBeenSetMask(this IScriptReferenceGetter item)
+        public static ScriptReference_Mask<bool> GetHasBeenSetMask(this IScriptReferenceInternalGetter item)
         {
             var ret = new ScriptReference_Mask<bool>();
-            ((ScriptReferenceCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((ScriptReferenceCommon)((IScriptReferenceInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this IScriptReferenceGetter item,
-            IScriptReferenceGetter rhs)
+            this IScriptReferenceInternalGetter item,
+            IScriptReferenceInternalGetter rhs)
         {
-            return ((ScriptReferenceCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((ScriptReferenceCommon)((IScriptReferenceInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -501,13 +535,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IScriptReferenceGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type InternalGetterType = typeof(IScriptReferenceInternalGetter);
 
         public static readonly Type SetterType = typeof(IScriptReference);
 
-        public static readonly Type InternalSetterType = null;
-
-        public static readonly Type CommonType = typeof(ScriptReferenceCommon);
+        public static readonly Type InternalSetterType = typeof(IScriptReferenceInternal);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.ScriptReference";
 
@@ -629,7 +661,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -649,54 +680,48 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
+    public partial class ScriptReferenceSetterCommon
+    {
+        public static readonly ScriptReferenceSetterCommon Instance = new ScriptReferenceSetterCommon();
+
+        partial void ClearPartial();
+        
+        public virtual void Clear(IScriptReferenceInternal item)
+        {
+            ClearPartial();
+        }
+        
+        
+    }
     public partial class ScriptReferenceCommon
     {
         public static readonly ScriptReferenceCommon Instance = new ScriptReferenceCommon();
 
-        #region Copy Fields From
-        public static void CopyFieldsFrom(
-            ScriptReference item,
-            ScriptReference rhs,
-            ScriptReference def,
-            ErrorMaskBuilder errorMask,
-            ScriptReference_CopyMask copyMask)
-        {
-        }
-
-        #endregion
-
-        partial void ClearPartial();
-
-        public virtual void Clear(IScriptReference item)
-        {
-            ClearPartial();
-        }
-
         public ScriptReference_Mask<bool> GetEqualsMask(
-            IScriptReferenceGetter item,
-            IScriptReferenceGetter rhs,
+            IScriptReferenceInternalGetter item,
+            IScriptReferenceInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new ScriptReference_Mask<bool>();
-            ((ScriptReferenceCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
+            ((ScriptReferenceCommon)((IScriptReferenceInternalGetter)item).CommonInstance()).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
                 include: include);
             return ret;
         }
-
+        
         public void FillEqualsMask(
-            IScriptReferenceGetter item,
-            IScriptReferenceGetter rhs,
+            IScriptReferenceInternalGetter item,
+            IScriptReferenceInternalGetter rhs,
             ScriptReference_Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
         }
-
+        
         public string ToString(
-            IScriptReferenceGetter item,
+            IScriptReferenceInternalGetter item,
             string name = null,
             ScriptReference_Mask<bool> printMask = null)
         {
@@ -708,9 +733,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 printMask: printMask);
             return fg.ToString();
         }
-
+        
         public void ToString(
-            IScriptReferenceGetter item,
+            IScriptReferenceInternalGetter item,
             FileGeneration fg,
             string name = null,
             ScriptReference_Mask<bool> printMask = null)
@@ -733,46 +758,65 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             fg.AppendLine("]");
         }
-
+        
         protected static void ToStringFields(
-            IScriptReferenceGetter item,
+            IScriptReferenceInternalGetter item,
             FileGeneration fg,
             ScriptReference_Mask<bool> printMask = null)
         {
         }
-
+        
         public bool HasBeenSet(
-            IScriptReferenceGetter item,
+            IScriptReferenceInternalGetter item,
             ScriptReference_Mask<bool?> checkMask)
         {
             return true;
         }
-
+        
         public void FillHasBeenSetMask(
-            IScriptReferenceGetter item,
+            IScriptReferenceInternalGetter item,
             ScriptReference_Mask<bool> mask)
         {
         }
-
+        
         #region Equals and Hash
         public virtual bool Equals(
-            IScriptReferenceGetter lhs,
-            IScriptReferenceGetter rhs)
+            IScriptReferenceInternalGetter lhs,
+            IScriptReferenceInternalGetter rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             return true;
         }
-
-        public virtual int GetHashCode(IScriptReferenceGetter item)
+        
+        public virtual int GetHashCode(IScriptReferenceInternalGetter item)
         {
             int ret = 0;
             return ret;
         }
-
+        
         #endregion
+        
+        
+        
+    }
+    public partial class ScriptReferenceSetterCopyCommon
+    {
+        public static readonly ScriptReferenceSetterCopyCommon Instance = new ScriptReferenceSetterCopyCommon();
 
-
+        #region Copy Fields From
+        public static void CopyFieldsFrom(
+            ScriptReference item,
+            ScriptReference rhs,
+            ScriptReference def,
+            ErrorMaskBuilder errorMask,
+            ScriptReference_CopyMask copyMask)
+        {
+        }
+        
+        #endregion
+        
+        
     }
     #endregion
 
@@ -783,7 +827,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static ScriptReferenceXmlWriteTranslation Instance = new ScriptReferenceXmlWriteTranslation();
 
         public static void WriteToNodeXml(
-            IScriptReferenceGetter item,
+            IScriptReferenceInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -792,7 +836,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public virtual void Write(
             XElement node,
-            IScriptReferenceGetter item,
+            IScriptReferenceInternalGetter item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)
@@ -818,7 +862,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             Write(
-                item: (IScriptReferenceGetter)item,
+                item: (IScriptReferenceInternalGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -827,7 +871,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             XElement node,
-            IScriptReferenceGetter item,
+            IScriptReferenceInternalGetter item,
             ErrorMaskBuilder errorMask,
             int fieldIndex,
             TranslationCrystal translationMask,
@@ -837,7 +881,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 errorMask?.PushIndex(fieldIndex);
                 Write(
-                    item: (IScriptReferenceGetter)item,
+                    item: (IScriptReferenceInternalGetter)item,
                     name: name,
                     node: node,
                     errorMask: errorMask,
@@ -861,7 +905,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static ScriptReferenceXmlCreateTranslation Instance = new ScriptReferenceXmlCreateTranslation();
 
         public static void FillPublicXml(
-            IScriptReference item,
+            IScriptReferenceInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -886,7 +930,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElementXml(
-            IScriptReference item,
+            IScriptReferenceInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -905,7 +949,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public static class ScriptReferenceXmlTranslationMixIn
     {
         public static void WriteToXml(
-            this IScriptReferenceGetter item,
+            this IScriptReferenceInternalGetter item,
             XElement node,
             out ScriptReference_ErrorMask errorMask,
             bool doMasks = true,
@@ -923,7 +967,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IScriptReferenceGetter item,
+            this IScriptReferenceInternalGetter item,
             string path,
             out ScriptReference_ErrorMask errorMask,
             ScriptReference_TranslationMask translationMask = null,
@@ -942,7 +986,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IScriptReferenceGetter item,
+            this IScriptReferenceInternalGetter item,
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -960,7 +1004,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IScriptReferenceGetter item,
+            this IScriptReferenceInternalGetter item,
             Stream stream,
             out ScriptReference_ErrorMask errorMask,
             ScriptReference_TranslationMask translationMask = null,
@@ -979,7 +1023,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IScriptReferenceGetter item,
+            this IScriptReferenceInternalGetter item,
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -997,7 +1041,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IScriptReferenceGetter item,
+            this IScriptReferenceInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1012,7 +1056,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IScriptReferenceGetter item,
+            this IScriptReferenceInternalGetter item,
             XElement node,
             string name = null,
             ScriptReference_TranslationMask translationMask = null)
@@ -1026,7 +1070,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IScriptReferenceGetter item,
+            this IScriptReferenceInternalGetter item,
             string path,
             string name = null)
         {
@@ -1041,7 +1085,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IScriptReferenceGetter item,
+            this IScriptReferenceInternalGetter item,
             Stream stream,
             string name = null)
         {
@@ -1310,7 +1354,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public virtual void Write(
             MutagenWriter writer,
-            IScriptReferenceGetter item,
+            IScriptReferenceInternalGetter item,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
@@ -1325,7 +1369,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask)
         {
             Write(
-                item: (IScriptReferenceGetter)item,
+                item: (IScriptReferenceInternalGetter)item,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -1344,7 +1388,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public static class ScriptReferenceBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IScriptReferenceGetter item,
+            this IScriptReferenceInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
             out ScriptReference_ErrorMask errorMask,
@@ -1361,7 +1405,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToBinary(
-            this IScriptReferenceGetter item,
+            this IScriptReferenceInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -1375,7 +1419,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToBinary(
-            this IScriptReferenceGetter item,
+            this IScriptReferenceInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
@@ -1392,22 +1436,65 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     public partial class ScriptReferenceBinaryWrapper :
         BinaryWrapper,
-        IScriptReferenceGetter
+        IScriptReferenceInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScriptReference_Registration.Instance;
         public static ScriptReference_Registration Registration => ScriptReference_Registration.Instance;
-        protected virtual object CommonInstance => ScriptReferenceCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
+        protected virtual object CommonInstance()
+        {
+            return ScriptReferenceCommon.Instance;
+        }
+        object IScriptReferenceInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IScriptReferenceInternalGetter.CommonSetterInstance()
+        {
+            return null;
+        }
+        object IScriptReferenceInternalGetter.CommonSetterCopyInstance()
+        {
+            return null;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IScriptReferenceGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IScriptReferenceInternalGetter)rhs, include);
 
         protected virtual object XmlWriteTranslator => ScriptReferenceXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((ScriptReferenceXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         protected virtual object BinaryWriteTranslator => ScriptReferenceBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((ScriptReferenceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
 
         partial void CustomCtor(
             BinaryMemoryReadStream stream,
@@ -1430,4 +1517,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class ScriptReference
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => ScriptReference_Registration.Instance;
+        public static ScriptReference_Registration Registration => ScriptReference_Registration.Instance;
+        protected virtual object CommonInstance()
+        {
+            return ScriptReferenceCommon.Instance;
+        }
+        protected virtual object CommonSetterInstance()
+        {
+            return ScriptReferenceSetterCommon.Instance;
+        }
+        protected virtual object CommonSetterCopyInstance()
+        {
+            return ScriptReferenceSetterCopyCommon.Instance;
+        }
+        object IScriptReferenceInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IScriptReferenceInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object IScriptReferenceInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
 }

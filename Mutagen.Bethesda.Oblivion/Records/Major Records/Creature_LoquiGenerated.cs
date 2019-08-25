@@ -45,11 +45,6 @@ namespace Mutagen.Bethesda.Oblivion
         IEquatable<Creature>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Creature_Registration.Instance;
-        public new static Creature_Registration Registration => Creature_Registration.Instance;
-        protected override object CommonInstance => CreatureCommon.Instance;
-
         #region Ctor
         protected Creature()
         {
@@ -109,7 +104,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Model_Set(default(Model), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IModelGetter ICreatureGetter.Model => this.Model;
+        IModelInternalGetter ICreatureGetter.Model => this.Model;
         #endregion
         #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -119,7 +114,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<ItemEntry> ICreature.Items => _Items;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IItemEntryGetter> ICreatureGetter.Items => _Items;
+        IReadOnlySetList<IItemEntryInternalGetter> ICreatureGetter.Items => _Items;
         #endregion
 
         #endregion
@@ -267,7 +262,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<RankPlacement> ICreature.Factions => _Factions;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IRankPlacementGetter> ICreatureGetter.Factions => _Factions;
+        IReadOnlySetList<IRankPlacementInternalGetter> ICreatureGetter.Factions => _Factions;
         #endregion
 
         #endregion
@@ -755,7 +750,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<CreatureSound> ICreature.Sounds => _Sounds;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<ICreatureSoundGetter> ICreatureGetter.Sounds => _Sounds;
+        IReadOnlySetList<ICreatureSoundInternalGetter> ICreatureGetter.Sounds => _Sounds;
         #endregion
 
         #endregion
@@ -830,20 +825,33 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is ICreatureInternalGetter rhs)) return false;
-            return ((CreatureCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            return ((CreatureCommon)((ICreatureInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(Creature obj)
         {
-            return ((CreatureCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((CreatureCommon)((ICreatureInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((CreatureCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((CreatureCommon)((ICreatureInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected override object XmlWriteTranslator => CreatureXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((CreatureXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static Creature CreateFromXml(
@@ -1223,6 +1231,19 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Binary Translation
         protected override object BinaryWriteTranslator => CreatureBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((CreatureBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
         #region Binary Create
         [DebuggerStepThrough]
         public static Creature CreateFromBinary(
@@ -1782,7 +1803,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            CreatureCommon.CopyFieldsFrom(
+            CreatureSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -1797,7 +1818,7 @@ namespace Mutagen.Bethesda.Oblivion
             Creature_CopyMask copyMask = null,
             Creature def = null)
         {
-            CreatureCommon.CopyFieldsFrom(
+            CreatureSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -1974,7 +1995,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            CreatureCommon.Instance.Clear(this);
+            CreatureSetterCommon.Instance.Clear(this);
         }
 
         public new static Creature Create(IEnumerable<KeyValuePair<ushort, object>> fields)
@@ -2322,12 +2343,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Model
-        IModelGetter Model { get; }
+        IModelInternalGetter Model { get; }
         bool Model_IsSet { get; }
 
         #endregion
         #region Items
-        IReadOnlySetList<IItemEntryGetter> Items { get; }
+        IReadOnlySetList<IItemEntryInternalGetter> Items { get; }
         #endregion
         #region Spells
         IReadOnlySetList<IFormIDLinkGetter<ISpellAbstractInternalGetter>> Spells { get; }
@@ -2369,7 +2390,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Factions
-        IReadOnlySetList<IRankPlacementGetter> Factions { get; }
+        IReadOnlySetList<IRankPlacementInternalGetter> Factions { get; }
         #endregion
         #region DeathItem
         IItemAbstractInternalGetter DeathItem { get; }
@@ -2516,7 +2537,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Sounds
-        IReadOnlySetList<ICreatureSoundGetter> Sounds { get; }
+        IReadOnlySetList<ICreatureSoundInternalGetter> Sounds { get; }
         #endregion
 
     }
@@ -2547,7 +2568,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this ICreatureInternal item)
         {
-            ((CreatureCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((CreatureSetterCommon)((ICreatureInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static Creature_Mask<bool> GetEqualsMask(
@@ -2555,7 +2576,7 @@ namespace Mutagen.Bethesda.Oblivion
             ICreatureInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((CreatureCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((CreatureCommon)((ICreatureInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -2566,7 +2587,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Creature_Mask<bool> printMask = null)
         {
-            return ((CreatureCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((CreatureCommon)((ICreatureInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -2578,7 +2599,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Creature_Mask<bool> printMask = null)
         {
-            ((CreatureCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((CreatureCommon)((ICreatureInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -2589,7 +2610,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ICreatureInternalGetter item,
             Creature_Mask<bool?> checkMask)
         {
-            return ((CreatureCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((CreatureCommon)((ICreatureInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -2597,7 +2618,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Creature_Mask<bool> GetHasBeenSetMask(this ICreatureInternalGetter item)
         {
             var ret = new Creature_Mask<bool>();
-            ((CreatureCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((CreatureCommon)((ICreatureInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -2607,7 +2628,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ICreatureInternalGetter item,
             ICreatureInternalGetter rhs)
         {
-            return ((CreatureCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((CreatureCommon)((ICreatureInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -2713,8 +2734,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type SetterType = typeof(ICreature);
 
         public static readonly Type InternalSetterType = typeof(ICreatureInternal);
-
-        public static readonly Type CommonType = typeof(CreatureCommon);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.Creature";
 
@@ -3428,7 +3447,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -3448,9 +3466,1051 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
+    public partial class CreatureSetterCommon : NPCAbstractSetterCommon
+    {
+        public new static readonly CreatureSetterCommon Instance = new CreatureSetterCommon();
+
+        partial void ClearPartial();
+        
+        public virtual void Clear(ICreatureInternal item)
+        {
+            ClearPartial();
+            item.Name_Unset();
+            item.Model_Unset();
+            item.Items.Unset();
+            item.Spells.Unset();
+            item.Models.Unset();
+            item.NIFT_Unset();
+            item.Flags = default(Creature.CreatureFlag);
+            item.BaseSpellPoints = default(UInt16);
+            item.Fatigue = default(UInt16);
+            item.BarterGold = default(UInt16);
+            item.LevelOffset = default(Int16);
+            item.CalcMin = default(UInt16);
+            item.CalcMax = default(UInt16);
+            item.Factions.Unset();
+            item.DeathItem_Property.Unset();
+            item.Script_Property.Unset();
+            item.Aggression = default(Byte);
+            item.Confidence = default(Byte);
+            item.EnergyLevel = default(Byte);
+            item.Responsibility = default(Byte);
+            item.BuySellServices = default(NPC.BuySellServiceFlag);
+            item.Teaches = default(Skill);
+            item.MaximumTrainingLevel = default(Byte);
+            item.AIPackages.Unset();
+            item.Animations.Unset();
+            item.CreatureType = default(Creature.CreatureTypeEnum);
+            item.CombatSkill = default(Byte);
+            item.MagicSkill = default(Byte);
+            item.StealthSkill = default(Byte);
+            item.SoulLevel = default(SoulLevel);
+            item.Health = default(UInt32);
+            item.AttackDamage = default(UInt16);
+            item.Strength = default(Byte);
+            item.Intelligence = default(Byte);
+            item.Willpower = default(Byte);
+            item.Agility = default(Byte);
+            item.Speed = default(Byte);
+            item.Endurance = default(Byte);
+            item.Personality = default(Byte);
+            item.Luck = default(Byte);
+            item.AttackReach_Unset();
+            item.CombatStyle_Property.Unset();
+            item.TurningSpeed_Unset();
+            item.BaseScale_Unset();
+            item.FootWeight_Unset();
+            item.BloodSpray_Unset();
+            item.BloodDecal_Unset();
+            item.InheritsSoundFrom_Property.Unset();
+            item.Sounds.Unset();
+            base.Clear(item);
+        }
+        
+        public override void Clear(INPCAbstractInternal item)
+        {
+            Clear(item: (ICreatureInternal)item);
+        }
+        
+        public override void Clear(INPCSpawnInternal item)
+        {
+            Clear(item: (ICreatureInternal)item);
+        }
+        
+        public override void Clear(IOblivionMajorRecordInternal item)
+        {
+            Clear(item: (ICreatureInternal)item);
+        }
+        
+        public override void Clear(IMajorRecordInternal item)
+        {
+            Clear(item: (ICreatureInternal)item);
+        }
+        
+        
+    }
     public partial class CreatureCommon : NPCAbstractCommon
     {
-        public static readonly CreatureCommon Instance = new CreatureCommon();
+        public new static readonly CreatureCommon Instance = new CreatureCommon();
+
+        public Creature_Mask<bool> GetEqualsMask(
+            ICreatureInternalGetter item,
+            ICreatureInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new Creature_Mask<bool>();
+            ((CreatureCommon)((ICreatureInternalGetter)item).CommonInstance()).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+        
+        public void FillEqualsMask(
+            ICreatureInternalGetter item,
+            ICreatureInternalGetter rhs,
+            Creature_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            if (rhs == null) return;
+            ret.Name = item.Name_IsSet == rhs.Name_IsSet && string.Equals(item.Name, rhs.Name);
+            ret.Model = EqualsMaskHelper.EqualsHelper(
+                item.Model_IsSet,
+                rhs.Model_IsSet,
+                item.Model,
+                rhs.Model,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
+            ret.Items = item.Items.CollectionEqualsHelper(
+                rhs.Items,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Spells = item.Spells.CollectionEqualsHelper(
+                rhs.Spells,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.Models = item.Models.CollectionEqualsHelper(
+                rhs.Models,
+                (l, r) => string.Equals(l, r),
+                include);
+            ret.NIFT = item.NIFT_IsSet == rhs.NIFT_IsSet && MemoryExtensions.SequenceEqual(item.NIFT, rhs.NIFT);
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.BaseSpellPoints = item.BaseSpellPoints == rhs.BaseSpellPoints;
+            ret.Fatigue = item.Fatigue == rhs.Fatigue;
+            ret.BarterGold = item.BarterGold == rhs.BarterGold;
+            ret.LevelOffset = item.LevelOffset == rhs.LevelOffset;
+            ret.CalcMin = item.CalcMin == rhs.CalcMin;
+            ret.CalcMax = item.CalcMax == rhs.CalcMax;
+            ret.Factions = item.Factions.CollectionEqualsHelper(
+                rhs.Factions,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.DeathItem = item.DeathItem_Property.FormKey == rhs.DeathItem_Property.FormKey;
+            ret.Script = item.Script_Property.FormKey == rhs.Script_Property.FormKey;
+            ret.Aggression = item.Aggression == rhs.Aggression;
+            ret.Confidence = item.Confidence == rhs.Confidence;
+            ret.EnergyLevel = item.EnergyLevel == rhs.EnergyLevel;
+            ret.Responsibility = item.Responsibility == rhs.Responsibility;
+            ret.BuySellServices = item.BuySellServices == rhs.BuySellServices;
+            ret.Teaches = item.Teaches == rhs.Teaches;
+            ret.MaximumTrainingLevel = item.MaximumTrainingLevel == rhs.MaximumTrainingLevel;
+            ret.AIPackages = item.AIPackages.CollectionEqualsHelper(
+                rhs.AIPackages,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.Animations = item.Animations.CollectionEqualsHelper(
+                rhs.Animations,
+                (l, r) => string.Equals(l, r),
+                include);
+            ret.CreatureType = item.CreatureType == rhs.CreatureType;
+            ret.CombatSkill = item.CombatSkill == rhs.CombatSkill;
+            ret.MagicSkill = item.MagicSkill == rhs.MagicSkill;
+            ret.StealthSkill = item.StealthSkill == rhs.StealthSkill;
+            ret.SoulLevel = item.SoulLevel == rhs.SoulLevel;
+            ret.Health = item.Health == rhs.Health;
+            ret.AttackDamage = item.AttackDamage == rhs.AttackDamage;
+            ret.Strength = item.Strength == rhs.Strength;
+            ret.Intelligence = item.Intelligence == rhs.Intelligence;
+            ret.Willpower = item.Willpower == rhs.Willpower;
+            ret.Agility = item.Agility == rhs.Agility;
+            ret.Speed = item.Speed == rhs.Speed;
+            ret.Endurance = item.Endurance == rhs.Endurance;
+            ret.Personality = item.Personality == rhs.Personality;
+            ret.Luck = item.Luck == rhs.Luck;
+            ret.AttackReach = item.AttackReach_IsSet == rhs.AttackReach_IsSet && item.AttackReach == rhs.AttackReach;
+            ret.CombatStyle = item.CombatStyle_Property.FormKey == rhs.CombatStyle_Property.FormKey;
+            ret.TurningSpeed = item.TurningSpeed_IsSet == rhs.TurningSpeed_IsSet && item.TurningSpeed.EqualsWithin(rhs.TurningSpeed);
+            ret.BaseScale = item.BaseScale_IsSet == rhs.BaseScale_IsSet && item.BaseScale.EqualsWithin(rhs.BaseScale);
+            ret.FootWeight = item.FootWeight_IsSet == rhs.FootWeight_IsSet && item.FootWeight.EqualsWithin(rhs.FootWeight);
+            ret.BloodSpray = item.BloodSpray_IsSet == rhs.BloodSpray_IsSet && string.Equals(item.BloodSpray, rhs.BloodSpray);
+            ret.BloodDecal = item.BloodDecal_IsSet == rhs.BloodDecal_IsSet && string.Equals(item.BloodDecal, rhs.BloodDecal);
+            ret.InheritsSoundFrom = item.InheritsSoundFrom_Property.FormKey == rhs.InheritsSoundFrom_Property.FormKey;
+            ret.Sounds = item.Sounds.CollectionEqualsHelper(
+                rhs.Sounds,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            base.FillEqualsMask(item, rhs, ret, include);
+        }
+        
+        public string ToString(
+            ICreatureInternalGetter item,
+            string name = null,
+            Creature_Mask<bool> printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+            return fg.ToString();
+        }
+        
+        public void ToString(
+            ICreatureInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            Creature_Mask<bool> printMask = null)
+        {
+            if (name == null)
+            {
+                fg.AppendLine($"Creature =>");
+            }
+            else
+            {
+                fg.AppendLine($"{name} (Creature) =>");
+            }
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
+            }
+            fg.AppendLine("]");
+        }
+        
+        protected static void ToStringFields(
+            ICreatureInternalGetter item,
+            FileGeneration fg,
+            Creature_Mask<bool> printMask = null)
+        {
+            NPCAbstractCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.Name ?? true)
+            {
+                fg.AppendLine($"Name => {item.Name}");
+            }
+            if (printMask?.Model?.Overall ?? true)
+            {
+                item.Model?.ToString(fg, "Model");
+            }
+            if (printMask?.Items?.Overall ?? true)
+            {
+                fg.AppendLine("Items =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Items)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.Spells?.Overall ?? true)
+            {
+                fg.AppendLine("Spells =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Spells)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"Item => {subItem}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.Models?.Overall ?? true)
+            {
+                fg.AppendLine("Models =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Models)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"Item => {subItem}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.NIFT ?? true)
+            {
+                fg.AppendLine($"NIFT => {SpanExt.ToHexString(item.NIFT)}");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                fg.AppendLine($"Flags => {item.Flags}");
+            }
+            if (printMask?.BaseSpellPoints ?? true)
+            {
+                fg.AppendLine($"BaseSpellPoints => {item.BaseSpellPoints}");
+            }
+            if (printMask?.Fatigue ?? true)
+            {
+                fg.AppendLine($"Fatigue => {item.Fatigue}");
+            }
+            if (printMask?.BarterGold ?? true)
+            {
+                fg.AppendLine($"BarterGold => {item.BarterGold}");
+            }
+            if (printMask?.LevelOffset ?? true)
+            {
+                fg.AppendLine($"LevelOffset => {item.LevelOffset}");
+            }
+            if (printMask?.CalcMin ?? true)
+            {
+                fg.AppendLine($"CalcMin => {item.CalcMin}");
+            }
+            if (printMask?.CalcMax ?? true)
+            {
+                fg.AppendLine($"CalcMax => {item.CalcMax}");
+            }
+            if (printMask?.Factions?.Overall ?? true)
+            {
+                fg.AppendLine("Factions =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Factions)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.DeathItem ?? true)
+            {
+                fg.AppendLine($"DeathItem => {item.DeathItem_Property}");
+            }
+            if (printMask?.Script ?? true)
+            {
+                fg.AppendLine($"Script => {item.Script_Property}");
+            }
+            if (printMask?.Aggression ?? true)
+            {
+                fg.AppendLine($"Aggression => {item.Aggression}");
+            }
+            if (printMask?.Confidence ?? true)
+            {
+                fg.AppendLine($"Confidence => {item.Confidence}");
+            }
+            if (printMask?.EnergyLevel ?? true)
+            {
+                fg.AppendLine($"EnergyLevel => {item.EnergyLevel}");
+            }
+            if (printMask?.Responsibility ?? true)
+            {
+                fg.AppendLine($"Responsibility => {item.Responsibility}");
+            }
+            if (printMask?.BuySellServices ?? true)
+            {
+                fg.AppendLine($"BuySellServices => {item.BuySellServices}");
+            }
+            if (printMask?.Teaches ?? true)
+            {
+                fg.AppendLine($"Teaches => {item.Teaches}");
+            }
+            if (printMask?.MaximumTrainingLevel ?? true)
+            {
+                fg.AppendLine($"MaximumTrainingLevel => {item.MaximumTrainingLevel}");
+            }
+            if (printMask?.AIPackages?.Overall ?? true)
+            {
+                fg.AppendLine("AIPackages =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.AIPackages)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"Item => {subItem}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.Animations?.Overall ?? true)
+            {
+                fg.AppendLine("Animations =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Animations)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"Item => {subItem}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.CreatureType ?? true)
+            {
+                fg.AppendLine($"CreatureType => {item.CreatureType}");
+            }
+            if (printMask?.CombatSkill ?? true)
+            {
+                fg.AppendLine($"CombatSkill => {item.CombatSkill}");
+            }
+            if (printMask?.MagicSkill ?? true)
+            {
+                fg.AppendLine($"MagicSkill => {item.MagicSkill}");
+            }
+            if (printMask?.StealthSkill ?? true)
+            {
+                fg.AppendLine($"StealthSkill => {item.StealthSkill}");
+            }
+            if (printMask?.SoulLevel ?? true)
+            {
+                fg.AppendLine($"SoulLevel => {item.SoulLevel}");
+            }
+            if (printMask?.Health ?? true)
+            {
+                fg.AppendLine($"Health => {item.Health}");
+            }
+            if (printMask?.AttackDamage ?? true)
+            {
+                fg.AppendLine($"AttackDamage => {item.AttackDamage}");
+            }
+            if (printMask?.Strength ?? true)
+            {
+                fg.AppendLine($"Strength => {item.Strength}");
+            }
+            if (printMask?.Intelligence ?? true)
+            {
+                fg.AppendLine($"Intelligence => {item.Intelligence}");
+            }
+            if (printMask?.Willpower ?? true)
+            {
+                fg.AppendLine($"Willpower => {item.Willpower}");
+            }
+            if (printMask?.Agility ?? true)
+            {
+                fg.AppendLine($"Agility => {item.Agility}");
+            }
+            if (printMask?.Speed ?? true)
+            {
+                fg.AppendLine($"Speed => {item.Speed}");
+            }
+            if (printMask?.Endurance ?? true)
+            {
+                fg.AppendLine($"Endurance => {item.Endurance}");
+            }
+            if (printMask?.Personality ?? true)
+            {
+                fg.AppendLine($"Personality => {item.Personality}");
+            }
+            if (printMask?.Luck ?? true)
+            {
+                fg.AppendLine($"Luck => {item.Luck}");
+            }
+            if (printMask?.AttackReach ?? true)
+            {
+                fg.AppendLine($"AttackReach => {item.AttackReach}");
+            }
+            if (printMask?.CombatStyle ?? true)
+            {
+                fg.AppendLine($"CombatStyle => {item.CombatStyle_Property}");
+            }
+            if (printMask?.TurningSpeed ?? true)
+            {
+                fg.AppendLine($"TurningSpeed => {item.TurningSpeed}");
+            }
+            if (printMask?.BaseScale ?? true)
+            {
+                fg.AppendLine($"BaseScale => {item.BaseScale}");
+            }
+            if (printMask?.FootWeight ?? true)
+            {
+                fg.AppendLine($"FootWeight => {item.FootWeight}");
+            }
+            if (printMask?.BloodSpray ?? true)
+            {
+                fg.AppendLine($"BloodSpray => {item.BloodSpray}");
+            }
+            if (printMask?.BloodDecal ?? true)
+            {
+                fg.AppendLine($"BloodDecal => {item.BloodDecal}");
+            }
+            if (printMask?.InheritsSoundFrom ?? true)
+            {
+                fg.AppendLine($"InheritsSoundFrom => {item.InheritsSoundFrom_Property}");
+            }
+            if (printMask?.Sounds?.Overall ?? true)
+            {
+                fg.AppendLine("Sounds =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Sounds)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.ACBSDataTypeState ?? true)
+            {
+            }
+            if (printMask?.AIDTDataTypeState ?? true)
+            {
+            }
+            if (printMask?.DATADataTypeState ?? true)
+            {
+            }
+        }
+        
+        public bool HasBeenSet(
+            ICreatureInternalGetter item,
+            Creature_Mask<bool?> checkMask)
+        {
+            if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_IsSet) return false;
+            if (checkMask.Model.Overall.HasValue && checkMask.Model.Overall.Value != item.Model_IsSet) return false;
+            if (checkMask.Model.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
+            if (checkMask.Items.Overall.HasValue && checkMask.Items.Overall.Value != item.Items.HasBeenSet) return false;
+            if (checkMask.Spells.Overall.HasValue && checkMask.Spells.Overall.Value != item.Spells.HasBeenSet) return false;
+            if (checkMask.Models.Overall.HasValue && checkMask.Models.Overall.Value != item.Models.HasBeenSet) return false;
+            if (checkMask.NIFT.HasValue && checkMask.NIFT.Value != item.NIFT_IsSet) return false;
+            if (checkMask.Factions.Overall.HasValue && checkMask.Factions.Overall.Value != item.Factions.HasBeenSet) return false;
+            if (checkMask.DeathItem.HasValue && checkMask.DeathItem.Value != item.DeathItem_Property.HasBeenSet) return false;
+            if (checkMask.Script.HasValue && checkMask.Script.Value != item.Script_Property.HasBeenSet) return false;
+            if (checkMask.AIPackages.Overall.HasValue && checkMask.AIPackages.Overall.Value != item.AIPackages.HasBeenSet) return false;
+            if (checkMask.Animations.Overall.HasValue && checkMask.Animations.Overall.Value != item.Animations.HasBeenSet) return false;
+            if (checkMask.AttackReach.HasValue && checkMask.AttackReach.Value != item.AttackReach_IsSet) return false;
+            if (checkMask.CombatStyle.HasValue && checkMask.CombatStyle.Value != item.CombatStyle_Property.HasBeenSet) return false;
+            if (checkMask.TurningSpeed.HasValue && checkMask.TurningSpeed.Value != item.TurningSpeed_IsSet) return false;
+            if (checkMask.BaseScale.HasValue && checkMask.BaseScale.Value != item.BaseScale_IsSet) return false;
+            if (checkMask.FootWeight.HasValue && checkMask.FootWeight.Value != item.FootWeight_IsSet) return false;
+            if (checkMask.BloodSpray.HasValue && checkMask.BloodSpray.Value != item.BloodSpray_IsSet) return false;
+            if (checkMask.BloodDecal.HasValue && checkMask.BloodDecal.Value != item.BloodDecal_IsSet) return false;
+            if (checkMask.InheritsSoundFrom.HasValue && checkMask.InheritsSoundFrom.Value != item.InheritsSoundFrom_Property.HasBeenSet) return false;
+            if (checkMask.Sounds.Overall.HasValue && checkMask.Sounds.Overall.Value != item.Sounds.HasBeenSet) return false;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+        
+        public void FillHasBeenSetMask(
+            ICreatureInternalGetter item,
+            Creature_Mask<bool> mask)
+        {
+            mask.Name = item.Name_IsSet;
+            mask.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, item.Model.GetHasBeenSetMask());
+            mask.Items = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, ItemEntry_Mask<bool>>>>(item.Items.HasBeenSet, item.Items.WithIndex().Select((i) => new MaskItemIndexed<bool, ItemEntry_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.Spells = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Spells.HasBeenSet, null);
+            mask.Models = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Models.HasBeenSet, null);
+            mask.NIFT = item.NIFT_IsSet;
+            mask.Flags = true;
+            mask.BaseSpellPoints = true;
+            mask.Fatigue = true;
+            mask.BarterGold = true;
+            mask.LevelOffset = true;
+            mask.CalcMin = true;
+            mask.CalcMax = true;
+            mask.Factions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, RankPlacement_Mask<bool>>>>(item.Factions.HasBeenSet, item.Factions.WithIndex().Select((i) => new MaskItemIndexed<bool, RankPlacement_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.DeathItem = item.DeathItem_Property.HasBeenSet;
+            mask.Script = item.Script_Property.HasBeenSet;
+            mask.Aggression = true;
+            mask.Confidence = true;
+            mask.EnergyLevel = true;
+            mask.Responsibility = true;
+            mask.BuySellServices = true;
+            mask.Teaches = true;
+            mask.MaximumTrainingLevel = true;
+            mask.AIPackages = new MaskItem<bool, IEnumerable<(int, bool)>>(item.AIPackages.HasBeenSet, null);
+            mask.Animations = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Animations.HasBeenSet, null);
+            mask.CreatureType = true;
+            mask.CombatSkill = true;
+            mask.MagicSkill = true;
+            mask.StealthSkill = true;
+            mask.SoulLevel = true;
+            mask.Health = true;
+            mask.AttackDamage = true;
+            mask.Strength = true;
+            mask.Intelligence = true;
+            mask.Willpower = true;
+            mask.Agility = true;
+            mask.Speed = true;
+            mask.Endurance = true;
+            mask.Personality = true;
+            mask.Luck = true;
+            mask.AttackReach = item.AttackReach_IsSet;
+            mask.CombatStyle = item.CombatStyle_Property.HasBeenSet;
+            mask.TurningSpeed = item.TurningSpeed_IsSet;
+            mask.BaseScale = item.BaseScale_IsSet;
+            mask.FootWeight = item.FootWeight_IsSet;
+            mask.BloodSpray = item.BloodSpray_IsSet;
+            mask.BloodDecal = item.BloodDecal_IsSet;
+            mask.InheritsSoundFrom = item.InheritsSoundFrom_Property.HasBeenSet;
+            mask.Sounds = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, CreatureSound_Mask<bool>>>>(item.Sounds.HasBeenSet, item.Sounds.WithIndex().Select((i) => new MaskItemIndexed<bool, CreatureSound_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.ACBSDataTypeState = true;
+            mask.AIDTDataTypeState = true;
+            mask.DATADataTypeState = true;
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
+        }
+        
+        public static Creature_FieldIndex ConvertFieldIndex(NPCAbstract_FieldIndex index)
+        {
+            switch (index)
+            {
+                case NPCAbstract_FieldIndex.MajorRecordFlagsRaw:
+                    return (Creature_FieldIndex)((int)index);
+                case NPCAbstract_FieldIndex.FormKey:
+                    return (Creature_FieldIndex)((int)index);
+                case NPCAbstract_FieldIndex.Version:
+                    return (Creature_FieldIndex)((int)index);
+                case NPCAbstract_FieldIndex.EditorID:
+                    return (Creature_FieldIndex)((int)index);
+                case NPCAbstract_FieldIndex.OblivionMajorRecordFlags:
+                    return (Creature_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        public static Creature_FieldIndex ConvertFieldIndex(NPCSpawn_FieldIndex index)
+        {
+            switch (index)
+            {
+                case NPCSpawn_FieldIndex.MajorRecordFlagsRaw:
+                    return (Creature_FieldIndex)((int)index);
+                case NPCSpawn_FieldIndex.FormKey:
+                    return (Creature_FieldIndex)((int)index);
+                case NPCSpawn_FieldIndex.Version:
+                    return (Creature_FieldIndex)((int)index);
+                case NPCSpawn_FieldIndex.EditorID:
+                    return (Creature_FieldIndex)((int)index);
+                case NPCSpawn_FieldIndex.OblivionMajorRecordFlags:
+                    return (Creature_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        public static Creature_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (Creature_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.FormKey:
+                    return (Creature_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.Version:
+                    return (Creature_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.EditorID:
+                    return (Creature_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
+                    return (Creature_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        public static Creature_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (Creature_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.FormKey:
+                    return (Creature_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.Version:
+                    return (Creature_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.EditorID:
+                    return (Creature_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        #region Equals and Hash
+        public virtual bool Equals(
+            ICreatureInternalGetter lhs,
+            ICreatureInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.Name_IsSet != rhs.Name_IsSet) return false;
+            if (lhs.Name_IsSet)
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if (lhs.Model_IsSet != rhs.Model_IsSet) return false;
+            if (lhs.Model_IsSet)
+            {
+                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            }
+            if (lhs.Items.HasBeenSet != rhs.Items.HasBeenSet) return false;
+            if (lhs.Items.HasBeenSet)
+            {
+                if (!lhs.Items.SequenceEqual(rhs.Items)) return false;
+            }
+            if (lhs.Spells.HasBeenSet != rhs.Spells.HasBeenSet) return false;
+            if (lhs.Spells.HasBeenSet)
+            {
+                if (!lhs.Spells.SequenceEqual(rhs.Spells)) return false;
+            }
+            if (lhs.Models.HasBeenSet != rhs.Models.HasBeenSet) return false;
+            if (lhs.Models.HasBeenSet)
+            {
+                if (!lhs.Models.SequenceEqual(rhs.Models)) return false;
+            }
+            if (lhs.NIFT_IsSet != rhs.NIFT_IsSet) return false;
+            if (lhs.NIFT_IsSet)
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.NIFT, rhs.NIFT)) return false;
+            }
+            if (lhs.Flags != rhs.Flags) return false;
+            if (lhs.BaseSpellPoints != rhs.BaseSpellPoints) return false;
+            if (lhs.Fatigue != rhs.Fatigue) return false;
+            if (lhs.BarterGold != rhs.BarterGold) return false;
+            if (lhs.LevelOffset != rhs.LevelOffset) return false;
+            if (lhs.CalcMin != rhs.CalcMin) return false;
+            if (lhs.CalcMax != rhs.CalcMax) return false;
+            if (lhs.Factions.HasBeenSet != rhs.Factions.HasBeenSet) return false;
+            if (lhs.Factions.HasBeenSet)
+            {
+                if (!lhs.Factions.SequenceEqual(rhs.Factions)) return false;
+            }
+            if (lhs.DeathItem_Property.HasBeenSet != rhs.DeathItem_Property.HasBeenSet) return false;
+            if (lhs.DeathItem_Property.HasBeenSet)
+            {
+                if (!lhs.DeathItem_Property.Equals(rhs.DeathItem_Property)) return false;
+            }
+            if (lhs.Script_Property.HasBeenSet != rhs.Script_Property.HasBeenSet) return false;
+            if (lhs.Script_Property.HasBeenSet)
+            {
+                if (!lhs.Script_Property.Equals(rhs.Script_Property)) return false;
+            }
+            if (lhs.Aggression != rhs.Aggression) return false;
+            if (lhs.Confidence != rhs.Confidence) return false;
+            if (lhs.EnergyLevel != rhs.EnergyLevel) return false;
+            if (lhs.Responsibility != rhs.Responsibility) return false;
+            if (lhs.BuySellServices != rhs.BuySellServices) return false;
+            if (lhs.Teaches != rhs.Teaches) return false;
+            if (lhs.MaximumTrainingLevel != rhs.MaximumTrainingLevel) return false;
+            if (lhs.AIPackages.HasBeenSet != rhs.AIPackages.HasBeenSet) return false;
+            if (lhs.AIPackages.HasBeenSet)
+            {
+                if (!lhs.AIPackages.SequenceEqual(rhs.AIPackages)) return false;
+            }
+            if (lhs.Animations.HasBeenSet != rhs.Animations.HasBeenSet) return false;
+            if (lhs.Animations.HasBeenSet)
+            {
+                if (!lhs.Animations.SequenceEqual(rhs.Animations)) return false;
+            }
+            if (lhs.CreatureType != rhs.CreatureType) return false;
+            if (lhs.CombatSkill != rhs.CombatSkill) return false;
+            if (lhs.MagicSkill != rhs.MagicSkill) return false;
+            if (lhs.StealthSkill != rhs.StealthSkill) return false;
+            if (lhs.SoulLevel != rhs.SoulLevel) return false;
+            if (lhs.Health != rhs.Health) return false;
+            if (lhs.AttackDamage != rhs.AttackDamage) return false;
+            if (lhs.Strength != rhs.Strength) return false;
+            if (lhs.Intelligence != rhs.Intelligence) return false;
+            if (lhs.Willpower != rhs.Willpower) return false;
+            if (lhs.Agility != rhs.Agility) return false;
+            if (lhs.Speed != rhs.Speed) return false;
+            if (lhs.Endurance != rhs.Endurance) return false;
+            if (lhs.Personality != rhs.Personality) return false;
+            if (lhs.Luck != rhs.Luck) return false;
+            if (lhs.AttackReach_IsSet != rhs.AttackReach_IsSet) return false;
+            if (lhs.AttackReach_IsSet)
+            {
+                if (lhs.AttackReach != rhs.AttackReach) return false;
+            }
+            if (lhs.CombatStyle_Property.HasBeenSet != rhs.CombatStyle_Property.HasBeenSet) return false;
+            if (lhs.CombatStyle_Property.HasBeenSet)
+            {
+                if (!lhs.CombatStyle_Property.Equals(rhs.CombatStyle_Property)) return false;
+            }
+            if (lhs.TurningSpeed_IsSet != rhs.TurningSpeed_IsSet) return false;
+            if (lhs.TurningSpeed_IsSet)
+            {
+                if (!lhs.TurningSpeed.EqualsWithin(rhs.TurningSpeed)) return false;
+            }
+            if (lhs.BaseScale_IsSet != rhs.BaseScale_IsSet) return false;
+            if (lhs.BaseScale_IsSet)
+            {
+                if (!lhs.BaseScale.EqualsWithin(rhs.BaseScale)) return false;
+            }
+            if (lhs.FootWeight_IsSet != rhs.FootWeight_IsSet) return false;
+            if (lhs.FootWeight_IsSet)
+            {
+                if (!lhs.FootWeight.EqualsWithin(rhs.FootWeight)) return false;
+            }
+            if (lhs.BloodSpray_IsSet != rhs.BloodSpray_IsSet) return false;
+            if (lhs.BloodSpray_IsSet)
+            {
+                if (!string.Equals(lhs.BloodSpray, rhs.BloodSpray)) return false;
+            }
+            if (lhs.BloodDecal_IsSet != rhs.BloodDecal_IsSet) return false;
+            if (lhs.BloodDecal_IsSet)
+            {
+                if (!string.Equals(lhs.BloodDecal, rhs.BloodDecal)) return false;
+            }
+            if (lhs.InheritsSoundFrom_Property.HasBeenSet != rhs.InheritsSoundFrom_Property.HasBeenSet) return false;
+            if (lhs.InheritsSoundFrom_Property.HasBeenSet)
+            {
+                if (!lhs.InheritsSoundFrom_Property.Equals(rhs.InheritsSoundFrom_Property)) return false;
+            }
+            if (lhs.Sounds.HasBeenSet != rhs.Sounds.HasBeenSet) return false;
+            if (lhs.Sounds.HasBeenSet)
+            {
+                if (!lhs.Sounds.SequenceEqual(rhs.Sounds)) return false;
+            }
+            if (lhs.ACBSDataTypeState != rhs.ACBSDataTypeState) return false;
+            if (lhs.AIDTDataTypeState != rhs.AIDTDataTypeState) return false;
+            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            return true;
+        }
+        
+        public override bool Equals(
+            INPCAbstractInternalGetter lhs,
+            INPCAbstractInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (ICreatureInternalGetter)lhs,
+                rhs: rhs as ICreatureInternalGetter);
+        }
+        
+        public override bool Equals(
+            INPCSpawnInternalGetter lhs,
+            INPCSpawnInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (ICreatureInternalGetter)lhs,
+                rhs: rhs as ICreatureInternalGetter);
+        }
+        
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (ICreatureInternalGetter)lhs,
+                rhs: rhs as ICreatureInternalGetter);
+        }
+        
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (ICreatureInternalGetter)lhs,
+                rhs: rhs as ICreatureInternalGetter);
+        }
+        
+        public virtual int GetHashCode(ICreatureInternalGetter item)
+        {
+            int ret = 0;
+            if (item.Name_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Name).CombineHashCode(ret);
+            }
+            if (item.Model_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Model).CombineHashCode(ret);
+            }
+            if (item.Items.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Items).CombineHashCode(ret);
+            }
+            if (item.Spells.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Spells).CombineHashCode(ret);
+            }
+            if (item.Models.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Models).CombineHashCode(ret);
+            }
+            if (item.NIFT_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.NIFT).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.BaseSpellPoints).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Fatigue).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.BarterGold).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.LevelOffset).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.CalcMin).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.CalcMax).CombineHashCode(ret);
+            if (item.Factions.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Factions).CombineHashCode(ret);
+            }
+            if (item.DeathItem_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.DeathItem).CombineHashCode(ret);
+            }
+            if (item.Script_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Script).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.Aggression).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Confidence).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.EnergyLevel).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Responsibility).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.BuySellServices).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Teaches).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.MaximumTrainingLevel).CombineHashCode(ret);
+            if (item.AIPackages.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.AIPackages).CombineHashCode(ret);
+            }
+            if (item.Animations.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Animations).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.CreatureType).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.CombatSkill).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.MagicSkill).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.StealthSkill).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.SoulLevel).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Health).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.AttackDamage).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Strength).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Intelligence).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Willpower).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Agility).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Speed).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Endurance).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Personality).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Luck).CombineHashCode(ret);
+            if (item.AttackReach_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.AttackReach).CombineHashCode(ret);
+            }
+            if (item.CombatStyle_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.CombatStyle).CombineHashCode(ret);
+            }
+            if (item.TurningSpeed_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.TurningSpeed).CombineHashCode(ret);
+            }
+            if (item.BaseScale_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.BaseScale).CombineHashCode(ret);
+            }
+            if (item.FootWeight_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.FootWeight).CombineHashCode(ret);
+            }
+            if (item.BloodSpray_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.BloodSpray).CombineHashCode(ret);
+            }
+            if (item.BloodDecal_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.BloodDecal).CombineHashCode(ret);
+            }
+            if (item.InheritsSoundFrom_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.InheritsSoundFrom).CombineHashCode(ret);
+            }
+            if (item.Sounds.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Sounds).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.ACBSDataTypeState).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.AIDTDataTypeState).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.DATADataTypeState).CombineHashCode(ret);
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+        
+        public override int GetHashCode(INPCAbstractInternalGetter item)
+        {
+            return GetHashCode(item: (ICreatureInternalGetter)item);
+        }
+        
+        public override int GetHashCode(INPCSpawnInternalGetter item)
+        {
+            return GetHashCode(item: (ICreatureInternalGetter)item);
+        }
+        
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (ICreatureInternalGetter)item);
+        }
+        
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (ICreatureInternalGetter)item);
+        }
+        
+        #endregion
+        
+        
+        #region Mutagen
+        partial void PostDuplicate(Creature obj, Creature rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+        
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new Creature(getNextFormKey());
+            ret.CopyFieldsFrom((Creature)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (Creature)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+        
+        #endregion
+        
+        
+    }
+    public partial class CreatureSetterCopyCommon : NPCAbstractSetterCopyCommon
+    {
+        public new static readonly CreatureSetterCopyCommon Instance = new CreatureSetterCopyCommon();
 
         #region Copy Fields From
         public static void CopyFieldsFrom(
@@ -3460,7 +4520,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             Creature_CopyMask copyMask)
         {
-            NPCAbstractCommon.CopyFieldsFrom(
+            NPCAbstractSetterCopyCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -3514,7 +4574,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             case CopyOption.Reference:
                                 throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
-                                ModelCommon.CopyFieldsFrom(
+                                ModelSetterCopyCommon.CopyFieldsFrom(
                                     item: item.Model,
                                     rhs: rhs.Model,
                                     def: def?.Model,
@@ -4506,1039 +5566,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
         }
-
+        
         #endregion
-
-        partial void ClearPartial();
-
-        public virtual void Clear(ICreatureInternal item)
-        {
-            ClearPartial();
-            item.Name_Unset();
-            item.Model_Unset();
-            item.Items.Unset();
-            item.Spells.Unset();
-            item.Models.Unset();
-            item.NIFT_Unset();
-            item.Flags = default(Creature.CreatureFlag);
-            item.BaseSpellPoints = default(UInt16);
-            item.Fatigue = default(UInt16);
-            item.BarterGold = default(UInt16);
-            item.LevelOffset = default(Int16);
-            item.CalcMin = default(UInt16);
-            item.CalcMax = default(UInt16);
-            item.Factions.Unset();
-            item.DeathItem_Property.Unset();
-            item.Script_Property.Unset();
-            item.Aggression = default(Byte);
-            item.Confidence = default(Byte);
-            item.EnergyLevel = default(Byte);
-            item.Responsibility = default(Byte);
-            item.BuySellServices = default(NPC.BuySellServiceFlag);
-            item.Teaches = default(Skill);
-            item.MaximumTrainingLevel = default(Byte);
-            item.AIPackages.Unset();
-            item.Animations.Unset();
-            item.CreatureType = default(Creature.CreatureTypeEnum);
-            item.CombatSkill = default(Byte);
-            item.MagicSkill = default(Byte);
-            item.StealthSkill = default(Byte);
-            item.SoulLevel = default(SoulLevel);
-            item.Health = default(UInt32);
-            item.AttackDamage = default(UInt16);
-            item.Strength = default(Byte);
-            item.Intelligence = default(Byte);
-            item.Willpower = default(Byte);
-            item.Agility = default(Byte);
-            item.Speed = default(Byte);
-            item.Endurance = default(Byte);
-            item.Personality = default(Byte);
-            item.Luck = default(Byte);
-            item.AttackReach_Unset();
-            item.CombatStyle_Property.Unset();
-            item.TurningSpeed_Unset();
-            item.BaseScale_Unset();
-            item.FootWeight_Unset();
-            item.BloodSpray_Unset();
-            item.BloodDecal_Unset();
-            item.InheritsSoundFrom_Property.Unset();
-            item.Sounds.Unset();
-            base.Clear(item);
-        }
-
-        public override void Clear(INPCAbstractInternal item)
-        {
-            Clear(item: (ICreatureInternal)item);
-        }
-
-        public override void Clear(INPCSpawnInternal item)
-        {
-            Clear(item: (ICreatureInternal)item);
-        }
-
-        public override void Clear(IOblivionMajorRecordInternal item)
-        {
-            Clear(item: (ICreatureInternal)item);
-        }
-
-        public override void Clear(IMajorRecordInternal item)
-        {
-            Clear(item: (ICreatureInternal)item);
-        }
-
-        public Creature_Mask<bool> GetEqualsMask(
-            ICreatureInternalGetter item,
-            ICreatureInternalGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new Creature_Mask<bool>();
-            ((CreatureCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public void FillEqualsMask(
-            ICreatureInternalGetter item,
-            ICreatureInternalGetter rhs,
-            Creature_Mask<bool> ret,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            if (rhs == null) return;
-            ret.Name = item.Name_IsSet == rhs.Name_IsSet && string.Equals(item.Name, rhs.Name);
-            ret.Model = EqualsMaskHelper.EqualsHelper(
-                item.Model_IsSet,
-                rhs.Model_IsSet,
-                item.Model,
-                rhs.Model,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
-                include);
-            ret.Items = item.Items.CollectionEqualsHelper(
-                rhs.Items,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
-                include);
-            ret.Spells = item.Spells.CollectionEqualsHelper(
-                rhs.Spells,
-                (l, r) => object.Equals(l, r),
-                include);
-            ret.Models = item.Models.CollectionEqualsHelper(
-                rhs.Models,
-                (l, r) => string.Equals(l, r),
-                include);
-            ret.NIFT = item.NIFT_IsSet == rhs.NIFT_IsSet && MemoryExtensions.SequenceEqual(item.NIFT, rhs.NIFT);
-            ret.Flags = item.Flags == rhs.Flags;
-            ret.BaseSpellPoints = item.BaseSpellPoints == rhs.BaseSpellPoints;
-            ret.Fatigue = item.Fatigue == rhs.Fatigue;
-            ret.BarterGold = item.BarterGold == rhs.BarterGold;
-            ret.LevelOffset = item.LevelOffset == rhs.LevelOffset;
-            ret.CalcMin = item.CalcMin == rhs.CalcMin;
-            ret.CalcMax = item.CalcMax == rhs.CalcMax;
-            ret.Factions = item.Factions.CollectionEqualsHelper(
-                rhs.Factions,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
-                include);
-            ret.DeathItem = item.DeathItem_Property.FormKey == rhs.DeathItem_Property.FormKey;
-            ret.Script = item.Script_Property.FormKey == rhs.Script_Property.FormKey;
-            ret.Aggression = item.Aggression == rhs.Aggression;
-            ret.Confidence = item.Confidence == rhs.Confidence;
-            ret.EnergyLevel = item.EnergyLevel == rhs.EnergyLevel;
-            ret.Responsibility = item.Responsibility == rhs.Responsibility;
-            ret.BuySellServices = item.BuySellServices == rhs.BuySellServices;
-            ret.Teaches = item.Teaches == rhs.Teaches;
-            ret.MaximumTrainingLevel = item.MaximumTrainingLevel == rhs.MaximumTrainingLevel;
-            ret.AIPackages = item.AIPackages.CollectionEqualsHelper(
-                rhs.AIPackages,
-                (l, r) => object.Equals(l, r),
-                include);
-            ret.Animations = item.Animations.CollectionEqualsHelper(
-                rhs.Animations,
-                (l, r) => string.Equals(l, r),
-                include);
-            ret.CreatureType = item.CreatureType == rhs.CreatureType;
-            ret.CombatSkill = item.CombatSkill == rhs.CombatSkill;
-            ret.MagicSkill = item.MagicSkill == rhs.MagicSkill;
-            ret.StealthSkill = item.StealthSkill == rhs.StealthSkill;
-            ret.SoulLevel = item.SoulLevel == rhs.SoulLevel;
-            ret.Health = item.Health == rhs.Health;
-            ret.AttackDamage = item.AttackDamage == rhs.AttackDamage;
-            ret.Strength = item.Strength == rhs.Strength;
-            ret.Intelligence = item.Intelligence == rhs.Intelligence;
-            ret.Willpower = item.Willpower == rhs.Willpower;
-            ret.Agility = item.Agility == rhs.Agility;
-            ret.Speed = item.Speed == rhs.Speed;
-            ret.Endurance = item.Endurance == rhs.Endurance;
-            ret.Personality = item.Personality == rhs.Personality;
-            ret.Luck = item.Luck == rhs.Luck;
-            ret.AttackReach = item.AttackReach_IsSet == rhs.AttackReach_IsSet && item.AttackReach == rhs.AttackReach;
-            ret.CombatStyle = item.CombatStyle_Property.FormKey == rhs.CombatStyle_Property.FormKey;
-            ret.TurningSpeed = item.TurningSpeed_IsSet == rhs.TurningSpeed_IsSet && item.TurningSpeed.EqualsWithin(rhs.TurningSpeed);
-            ret.BaseScale = item.BaseScale_IsSet == rhs.BaseScale_IsSet && item.BaseScale.EqualsWithin(rhs.BaseScale);
-            ret.FootWeight = item.FootWeight_IsSet == rhs.FootWeight_IsSet && item.FootWeight.EqualsWithin(rhs.FootWeight);
-            ret.BloodSpray = item.BloodSpray_IsSet == rhs.BloodSpray_IsSet && string.Equals(item.BloodSpray, rhs.BloodSpray);
-            ret.BloodDecal = item.BloodDecal_IsSet == rhs.BloodDecal_IsSet && string.Equals(item.BloodDecal, rhs.BloodDecal);
-            ret.InheritsSoundFrom = item.InheritsSoundFrom_Property.FormKey == rhs.InheritsSoundFrom_Property.FormKey;
-            ret.Sounds = item.Sounds.CollectionEqualsHelper(
-                rhs.Sounds,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
-                include);
-            base.FillEqualsMask(item, rhs, ret, include);
-        }
-
-        public string ToString(
-            ICreatureInternalGetter item,
-            string name = null,
-            Creature_Mask<bool> printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(
-                item: item,
-                fg: fg,
-                name: name,
-                printMask: printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(
-            ICreatureInternalGetter item,
-            FileGeneration fg,
-            string name = null,
-            Creature_Mask<bool> printMask = null)
-        {
-            if (name == null)
-            {
-                fg.AppendLine($"Creature =>");
-            }
-            else
-            {
-                fg.AppendLine($"{name} (Creature) =>");
-            }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                ToStringFields(
-                    item: item,
-                    fg: fg,
-                    printMask: printMask);
-            }
-            fg.AppendLine("]");
-        }
-
-        protected static void ToStringFields(
-            ICreatureInternalGetter item,
-            FileGeneration fg,
-            Creature_Mask<bool> printMask = null)
-        {
-            NPCAbstractCommon.ToStringFields(
-                item: item,
-                fg: fg,
-                printMask: printMask);
-            if (printMask?.Name ?? true)
-            {
-                fg.AppendLine($"Name => {item.Name}");
-            }
-            if (printMask?.Model?.Overall ?? true)
-            {
-                item.Model?.ToString(fg, "Model");
-            }
-            if (printMask?.Items?.Overall ?? true)
-            {
-                fg.AppendLine("Items =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
-                {
-                    foreach (var subItem in item.Items)
-                    {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            subItem?.ToString(fg, "Item");
-                        }
-                        fg.AppendLine("]");
-                    }
-                }
-                fg.AppendLine("]");
-            }
-            if (printMask?.Spells?.Overall ?? true)
-            {
-                fg.AppendLine("Spells =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
-                {
-                    foreach (var subItem in item.Spells)
-                    {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            fg.AppendLine($"Item => {subItem}");
-                        }
-                        fg.AppendLine("]");
-                    }
-                }
-                fg.AppendLine("]");
-            }
-            if (printMask?.Models?.Overall ?? true)
-            {
-                fg.AppendLine("Models =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
-                {
-                    foreach (var subItem in item.Models)
-                    {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            fg.AppendLine($"Item => {subItem}");
-                        }
-                        fg.AppendLine("]");
-                    }
-                }
-                fg.AppendLine("]");
-            }
-            if (printMask?.NIFT ?? true)
-            {
-                fg.AppendLine($"NIFT => {SpanExt.ToHexString(item.NIFT)}");
-            }
-            if (printMask?.Flags ?? true)
-            {
-                fg.AppendLine($"Flags => {item.Flags}");
-            }
-            if (printMask?.BaseSpellPoints ?? true)
-            {
-                fg.AppendLine($"BaseSpellPoints => {item.BaseSpellPoints}");
-            }
-            if (printMask?.Fatigue ?? true)
-            {
-                fg.AppendLine($"Fatigue => {item.Fatigue}");
-            }
-            if (printMask?.BarterGold ?? true)
-            {
-                fg.AppendLine($"BarterGold => {item.BarterGold}");
-            }
-            if (printMask?.LevelOffset ?? true)
-            {
-                fg.AppendLine($"LevelOffset => {item.LevelOffset}");
-            }
-            if (printMask?.CalcMin ?? true)
-            {
-                fg.AppendLine($"CalcMin => {item.CalcMin}");
-            }
-            if (printMask?.CalcMax ?? true)
-            {
-                fg.AppendLine($"CalcMax => {item.CalcMax}");
-            }
-            if (printMask?.Factions?.Overall ?? true)
-            {
-                fg.AppendLine("Factions =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
-                {
-                    foreach (var subItem in item.Factions)
-                    {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            subItem?.ToString(fg, "Item");
-                        }
-                        fg.AppendLine("]");
-                    }
-                }
-                fg.AppendLine("]");
-            }
-            if (printMask?.DeathItem ?? true)
-            {
-                fg.AppendLine($"DeathItem => {item.DeathItem_Property}");
-            }
-            if (printMask?.Script ?? true)
-            {
-                fg.AppendLine($"Script => {item.Script_Property}");
-            }
-            if (printMask?.Aggression ?? true)
-            {
-                fg.AppendLine($"Aggression => {item.Aggression}");
-            }
-            if (printMask?.Confidence ?? true)
-            {
-                fg.AppendLine($"Confidence => {item.Confidence}");
-            }
-            if (printMask?.EnergyLevel ?? true)
-            {
-                fg.AppendLine($"EnergyLevel => {item.EnergyLevel}");
-            }
-            if (printMask?.Responsibility ?? true)
-            {
-                fg.AppendLine($"Responsibility => {item.Responsibility}");
-            }
-            if (printMask?.BuySellServices ?? true)
-            {
-                fg.AppendLine($"BuySellServices => {item.BuySellServices}");
-            }
-            if (printMask?.Teaches ?? true)
-            {
-                fg.AppendLine($"Teaches => {item.Teaches}");
-            }
-            if (printMask?.MaximumTrainingLevel ?? true)
-            {
-                fg.AppendLine($"MaximumTrainingLevel => {item.MaximumTrainingLevel}");
-            }
-            if (printMask?.AIPackages?.Overall ?? true)
-            {
-                fg.AppendLine("AIPackages =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
-                {
-                    foreach (var subItem in item.AIPackages)
-                    {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            fg.AppendLine($"Item => {subItem}");
-                        }
-                        fg.AppendLine("]");
-                    }
-                }
-                fg.AppendLine("]");
-            }
-            if (printMask?.Animations?.Overall ?? true)
-            {
-                fg.AppendLine("Animations =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
-                {
-                    foreach (var subItem in item.Animations)
-                    {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            fg.AppendLine($"Item => {subItem}");
-                        }
-                        fg.AppendLine("]");
-                    }
-                }
-                fg.AppendLine("]");
-            }
-            if (printMask?.CreatureType ?? true)
-            {
-                fg.AppendLine($"CreatureType => {item.CreatureType}");
-            }
-            if (printMask?.CombatSkill ?? true)
-            {
-                fg.AppendLine($"CombatSkill => {item.CombatSkill}");
-            }
-            if (printMask?.MagicSkill ?? true)
-            {
-                fg.AppendLine($"MagicSkill => {item.MagicSkill}");
-            }
-            if (printMask?.StealthSkill ?? true)
-            {
-                fg.AppendLine($"StealthSkill => {item.StealthSkill}");
-            }
-            if (printMask?.SoulLevel ?? true)
-            {
-                fg.AppendLine($"SoulLevel => {item.SoulLevel}");
-            }
-            if (printMask?.Health ?? true)
-            {
-                fg.AppendLine($"Health => {item.Health}");
-            }
-            if (printMask?.AttackDamage ?? true)
-            {
-                fg.AppendLine($"AttackDamage => {item.AttackDamage}");
-            }
-            if (printMask?.Strength ?? true)
-            {
-                fg.AppendLine($"Strength => {item.Strength}");
-            }
-            if (printMask?.Intelligence ?? true)
-            {
-                fg.AppendLine($"Intelligence => {item.Intelligence}");
-            }
-            if (printMask?.Willpower ?? true)
-            {
-                fg.AppendLine($"Willpower => {item.Willpower}");
-            }
-            if (printMask?.Agility ?? true)
-            {
-                fg.AppendLine($"Agility => {item.Agility}");
-            }
-            if (printMask?.Speed ?? true)
-            {
-                fg.AppendLine($"Speed => {item.Speed}");
-            }
-            if (printMask?.Endurance ?? true)
-            {
-                fg.AppendLine($"Endurance => {item.Endurance}");
-            }
-            if (printMask?.Personality ?? true)
-            {
-                fg.AppendLine($"Personality => {item.Personality}");
-            }
-            if (printMask?.Luck ?? true)
-            {
-                fg.AppendLine($"Luck => {item.Luck}");
-            }
-            if (printMask?.AttackReach ?? true)
-            {
-                fg.AppendLine($"AttackReach => {item.AttackReach}");
-            }
-            if (printMask?.CombatStyle ?? true)
-            {
-                fg.AppendLine($"CombatStyle => {item.CombatStyle_Property}");
-            }
-            if (printMask?.TurningSpeed ?? true)
-            {
-                fg.AppendLine($"TurningSpeed => {item.TurningSpeed}");
-            }
-            if (printMask?.BaseScale ?? true)
-            {
-                fg.AppendLine($"BaseScale => {item.BaseScale}");
-            }
-            if (printMask?.FootWeight ?? true)
-            {
-                fg.AppendLine($"FootWeight => {item.FootWeight}");
-            }
-            if (printMask?.BloodSpray ?? true)
-            {
-                fg.AppendLine($"BloodSpray => {item.BloodSpray}");
-            }
-            if (printMask?.BloodDecal ?? true)
-            {
-                fg.AppendLine($"BloodDecal => {item.BloodDecal}");
-            }
-            if (printMask?.InheritsSoundFrom ?? true)
-            {
-                fg.AppendLine($"InheritsSoundFrom => {item.InheritsSoundFrom_Property}");
-            }
-            if (printMask?.Sounds?.Overall ?? true)
-            {
-                fg.AppendLine("Sounds =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
-                {
-                    foreach (var subItem in item.Sounds)
-                    {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            subItem?.ToString(fg, "Item");
-                        }
-                        fg.AppendLine("]");
-                    }
-                }
-                fg.AppendLine("]");
-            }
-            if (printMask?.ACBSDataTypeState ?? true)
-            {
-            }
-            if (printMask?.AIDTDataTypeState ?? true)
-            {
-            }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-            }
-        }
-
-        public bool HasBeenSet(
-            ICreatureInternalGetter item,
-            Creature_Mask<bool?> checkMask)
-        {
-            if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_IsSet) return false;
-            if (checkMask.Model.Overall.HasValue && checkMask.Model.Overall.Value != item.Model_IsSet) return false;
-            if (checkMask.Model.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
-            if (checkMask.Items.Overall.HasValue && checkMask.Items.Overall.Value != item.Items.HasBeenSet) return false;
-            if (checkMask.Spells.Overall.HasValue && checkMask.Spells.Overall.Value != item.Spells.HasBeenSet) return false;
-            if (checkMask.Models.Overall.HasValue && checkMask.Models.Overall.Value != item.Models.HasBeenSet) return false;
-            if (checkMask.NIFT.HasValue && checkMask.NIFT.Value != item.NIFT_IsSet) return false;
-            if (checkMask.Factions.Overall.HasValue && checkMask.Factions.Overall.Value != item.Factions.HasBeenSet) return false;
-            if (checkMask.DeathItem.HasValue && checkMask.DeathItem.Value != item.DeathItem_Property.HasBeenSet) return false;
-            if (checkMask.Script.HasValue && checkMask.Script.Value != item.Script_Property.HasBeenSet) return false;
-            if (checkMask.AIPackages.Overall.HasValue && checkMask.AIPackages.Overall.Value != item.AIPackages.HasBeenSet) return false;
-            if (checkMask.Animations.Overall.HasValue && checkMask.Animations.Overall.Value != item.Animations.HasBeenSet) return false;
-            if (checkMask.AttackReach.HasValue && checkMask.AttackReach.Value != item.AttackReach_IsSet) return false;
-            if (checkMask.CombatStyle.HasValue && checkMask.CombatStyle.Value != item.CombatStyle_Property.HasBeenSet) return false;
-            if (checkMask.TurningSpeed.HasValue && checkMask.TurningSpeed.Value != item.TurningSpeed_IsSet) return false;
-            if (checkMask.BaseScale.HasValue && checkMask.BaseScale.Value != item.BaseScale_IsSet) return false;
-            if (checkMask.FootWeight.HasValue && checkMask.FootWeight.Value != item.FootWeight_IsSet) return false;
-            if (checkMask.BloodSpray.HasValue && checkMask.BloodSpray.Value != item.BloodSpray_IsSet) return false;
-            if (checkMask.BloodDecal.HasValue && checkMask.BloodDecal.Value != item.BloodDecal_IsSet) return false;
-            if (checkMask.InheritsSoundFrom.HasValue && checkMask.InheritsSoundFrom.Value != item.InheritsSoundFrom_Property.HasBeenSet) return false;
-            if (checkMask.Sounds.Overall.HasValue && checkMask.Sounds.Overall.Value != item.Sounds.HasBeenSet) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public void FillHasBeenSetMask(
-            ICreatureInternalGetter item,
-            Creature_Mask<bool> mask)
-        {
-            mask.Name = item.Name_IsSet;
-            mask.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, item.Model.GetHasBeenSetMask());
-            mask.Items = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, ItemEntry_Mask<bool>>>>(item.Items.HasBeenSet, item.Items.WithIndex().Select((i) => new MaskItemIndexed<bool, ItemEntry_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.Spells = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Spells.HasBeenSet, null);
-            mask.Models = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Models.HasBeenSet, null);
-            mask.NIFT = item.NIFT_IsSet;
-            mask.Flags = true;
-            mask.BaseSpellPoints = true;
-            mask.Fatigue = true;
-            mask.BarterGold = true;
-            mask.LevelOffset = true;
-            mask.CalcMin = true;
-            mask.CalcMax = true;
-            mask.Factions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, RankPlacement_Mask<bool>>>>(item.Factions.HasBeenSet, item.Factions.WithIndex().Select((i) => new MaskItemIndexed<bool, RankPlacement_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.DeathItem = item.DeathItem_Property.HasBeenSet;
-            mask.Script = item.Script_Property.HasBeenSet;
-            mask.Aggression = true;
-            mask.Confidence = true;
-            mask.EnergyLevel = true;
-            mask.Responsibility = true;
-            mask.BuySellServices = true;
-            mask.Teaches = true;
-            mask.MaximumTrainingLevel = true;
-            mask.AIPackages = new MaskItem<bool, IEnumerable<(int, bool)>>(item.AIPackages.HasBeenSet, null);
-            mask.Animations = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Animations.HasBeenSet, null);
-            mask.CreatureType = true;
-            mask.CombatSkill = true;
-            mask.MagicSkill = true;
-            mask.StealthSkill = true;
-            mask.SoulLevel = true;
-            mask.Health = true;
-            mask.AttackDamage = true;
-            mask.Strength = true;
-            mask.Intelligence = true;
-            mask.Willpower = true;
-            mask.Agility = true;
-            mask.Speed = true;
-            mask.Endurance = true;
-            mask.Personality = true;
-            mask.Luck = true;
-            mask.AttackReach = item.AttackReach_IsSet;
-            mask.CombatStyle = item.CombatStyle_Property.HasBeenSet;
-            mask.TurningSpeed = item.TurningSpeed_IsSet;
-            mask.BaseScale = item.BaseScale_IsSet;
-            mask.FootWeight = item.FootWeight_IsSet;
-            mask.BloodSpray = item.BloodSpray_IsSet;
-            mask.BloodDecal = item.BloodDecal_IsSet;
-            mask.InheritsSoundFrom = item.InheritsSoundFrom_Property.HasBeenSet;
-            mask.Sounds = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, CreatureSound_Mask<bool>>>>(item.Sounds.HasBeenSet, item.Sounds.WithIndex().Select((i) => new MaskItemIndexed<bool, CreatureSound_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.ACBSDataTypeState = true;
-            mask.AIDTDataTypeState = true;
-            mask.DATADataTypeState = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-
-        public static Creature_FieldIndex ConvertFieldIndex(NPCAbstract_FieldIndex index)
-        {
-            switch (index)
-            {
-                case NPCAbstract_FieldIndex.MajorRecordFlagsRaw:
-                    return (Creature_FieldIndex)((int)index);
-                case NPCAbstract_FieldIndex.FormKey:
-                    return (Creature_FieldIndex)((int)index);
-                case NPCAbstract_FieldIndex.Version:
-                    return (Creature_FieldIndex)((int)index);
-                case NPCAbstract_FieldIndex.EditorID:
-                    return (Creature_FieldIndex)((int)index);
-                case NPCAbstract_FieldIndex.OblivionMajorRecordFlags:
-                    return (Creature_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        public static Creature_FieldIndex ConvertFieldIndex(NPCSpawn_FieldIndex index)
-        {
-            switch (index)
-            {
-                case NPCSpawn_FieldIndex.MajorRecordFlagsRaw:
-                    return (Creature_FieldIndex)((int)index);
-                case NPCSpawn_FieldIndex.FormKey:
-                    return (Creature_FieldIndex)((int)index);
-                case NPCSpawn_FieldIndex.Version:
-                    return (Creature_FieldIndex)((int)index);
-                case NPCSpawn_FieldIndex.EditorID:
-                    return (Creature_FieldIndex)((int)index);
-                case NPCSpawn_FieldIndex.OblivionMajorRecordFlags:
-                    return (Creature_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        public static Creature_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
-        {
-            switch (index)
-            {
-                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Creature_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.FormKey:
-                    return (Creature_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.Version:
-                    return (Creature_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.EditorID:
-                    return (Creature_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
-                    return (Creature_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        public static Creature_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
-        {
-            switch (index)
-            {
-                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Creature_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.FormKey:
-                    return (Creature_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
-                    return (Creature_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.EditorID:
-                    return (Creature_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        #region Equals and Hash
-        public virtual bool Equals(
-            ICreatureInternalGetter lhs,
-            ICreatureInternalGetter rhs)
-        {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (lhs.Name_IsSet != rhs.Name_IsSet) return false;
-            if (lhs.Name_IsSet)
-            {
-                if (!string.Equals(lhs.Name, rhs.Name)) return false;
-            }
-            if (lhs.Model_IsSet != rhs.Model_IsSet) return false;
-            if (lhs.Model_IsSet)
-            {
-                if (!object.Equals(lhs.Model, rhs.Model)) return false;
-            }
-            if (lhs.Items.HasBeenSet != rhs.Items.HasBeenSet) return false;
-            if (lhs.Items.HasBeenSet)
-            {
-                if (!lhs.Items.SequenceEqual(rhs.Items)) return false;
-            }
-            if (lhs.Spells.HasBeenSet != rhs.Spells.HasBeenSet) return false;
-            if (lhs.Spells.HasBeenSet)
-            {
-                if (!lhs.Spells.SequenceEqual(rhs.Spells)) return false;
-            }
-            if (lhs.Models.HasBeenSet != rhs.Models.HasBeenSet) return false;
-            if (lhs.Models.HasBeenSet)
-            {
-                if (!lhs.Models.SequenceEqual(rhs.Models)) return false;
-            }
-            if (lhs.NIFT_IsSet != rhs.NIFT_IsSet) return false;
-            if (lhs.NIFT_IsSet)
-            {
-                if (!MemoryExtensions.SequenceEqual(lhs.NIFT, rhs.NIFT)) return false;
-            }
-            if (lhs.Flags != rhs.Flags) return false;
-            if (lhs.BaseSpellPoints != rhs.BaseSpellPoints) return false;
-            if (lhs.Fatigue != rhs.Fatigue) return false;
-            if (lhs.BarterGold != rhs.BarterGold) return false;
-            if (lhs.LevelOffset != rhs.LevelOffset) return false;
-            if (lhs.CalcMin != rhs.CalcMin) return false;
-            if (lhs.CalcMax != rhs.CalcMax) return false;
-            if (lhs.Factions.HasBeenSet != rhs.Factions.HasBeenSet) return false;
-            if (lhs.Factions.HasBeenSet)
-            {
-                if (!lhs.Factions.SequenceEqual(rhs.Factions)) return false;
-            }
-            if (lhs.DeathItem_Property.HasBeenSet != rhs.DeathItem_Property.HasBeenSet) return false;
-            if (lhs.DeathItem_Property.HasBeenSet)
-            {
-                if (!lhs.DeathItem_Property.Equals(rhs.DeathItem_Property)) return false;
-            }
-            if (lhs.Script_Property.HasBeenSet != rhs.Script_Property.HasBeenSet) return false;
-            if (lhs.Script_Property.HasBeenSet)
-            {
-                if (!lhs.Script_Property.Equals(rhs.Script_Property)) return false;
-            }
-            if (lhs.Aggression != rhs.Aggression) return false;
-            if (lhs.Confidence != rhs.Confidence) return false;
-            if (lhs.EnergyLevel != rhs.EnergyLevel) return false;
-            if (lhs.Responsibility != rhs.Responsibility) return false;
-            if (lhs.BuySellServices != rhs.BuySellServices) return false;
-            if (lhs.Teaches != rhs.Teaches) return false;
-            if (lhs.MaximumTrainingLevel != rhs.MaximumTrainingLevel) return false;
-            if (lhs.AIPackages.HasBeenSet != rhs.AIPackages.HasBeenSet) return false;
-            if (lhs.AIPackages.HasBeenSet)
-            {
-                if (!lhs.AIPackages.SequenceEqual(rhs.AIPackages)) return false;
-            }
-            if (lhs.Animations.HasBeenSet != rhs.Animations.HasBeenSet) return false;
-            if (lhs.Animations.HasBeenSet)
-            {
-                if (!lhs.Animations.SequenceEqual(rhs.Animations)) return false;
-            }
-            if (lhs.CreatureType != rhs.CreatureType) return false;
-            if (lhs.CombatSkill != rhs.CombatSkill) return false;
-            if (lhs.MagicSkill != rhs.MagicSkill) return false;
-            if (lhs.StealthSkill != rhs.StealthSkill) return false;
-            if (lhs.SoulLevel != rhs.SoulLevel) return false;
-            if (lhs.Health != rhs.Health) return false;
-            if (lhs.AttackDamage != rhs.AttackDamage) return false;
-            if (lhs.Strength != rhs.Strength) return false;
-            if (lhs.Intelligence != rhs.Intelligence) return false;
-            if (lhs.Willpower != rhs.Willpower) return false;
-            if (lhs.Agility != rhs.Agility) return false;
-            if (lhs.Speed != rhs.Speed) return false;
-            if (lhs.Endurance != rhs.Endurance) return false;
-            if (lhs.Personality != rhs.Personality) return false;
-            if (lhs.Luck != rhs.Luck) return false;
-            if (lhs.AttackReach_IsSet != rhs.AttackReach_IsSet) return false;
-            if (lhs.AttackReach_IsSet)
-            {
-                if (lhs.AttackReach != rhs.AttackReach) return false;
-            }
-            if (lhs.CombatStyle_Property.HasBeenSet != rhs.CombatStyle_Property.HasBeenSet) return false;
-            if (lhs.CombatStyle_Property.HasBeenSet)
-            {
-                if (!lhs.CombatStyle_Property.Equals(rhs.CombatStyle_Property)) return false;
-            }
-            if (lhs.TurningSpeed_IsSet != rhs.TurningSpeed_IsSet) return false;
-            if (lhs.TurningSpeed_IsSet)
-            {
-                if (!lhs.TurningSpeed.EqualsWithin(rhs.TurningSpeed)) return false;
-            }
-            if (lhs.BaseScale_IsSet != rhs.BaseScale_IsSet) return false;
-            if (lhs.BaseScale_IsSet)
-            {
-                if (!lhs.BaseScale.EqualsWithin(rhs.BaseScale)) return false;
-            }
-            if (lhs.FootWeight_IsSet != rhs.FootWeight_IsSet) return false;
-            if (lhs.FootWeight_IsSet)
-            {
-                if (!lhs.FootWeight.EqualsWithin(rhs.FootWeight)) return false;
-            }
-            if (lhs.BloodSpray_IsSet != rhs.BloodSpray_IsSet) return false;
-            if (lhs.BloodSpray_IsSet)
-            {
-                if (!string.Equals(lhs.BloodSpray, rhs.BloodSpray)) return false;
-            }
-            if (lhs.BloodDecal_IsSet != rhs.BloodDecal_IsSet) return false;
-            if (lhs.BloodDecal_IsSet)
-            {
-                if (!string.Equals(lhs.BloodDecal, rhs.BloodDecal)) return false;
-            }
-            if (lhs.InheritsSoundFrom_Property.HasBeenSet != rhs.InheritsSoundFrom_Property.HasBeenSet) return false;
-            if (lhs.InheritsSoundFrom_Property.HasBeenSet)
-            {
-                if (!lhs.InheritsSoundFrom_Property.Equals(rhs.InheritsSoundFrom_Property)) return false;
-            }
-            if (lhs.Sounds.HasBeenSet != rhs.Sounds.HasBeenSet) return false;
-            if (lhs.Sounds.HasBeenSet)
-            {
-                if (!lhs.Sounds.SequenceEqual(rhs.Sounds)) return false;
-            }
-            if (lhs.ACBSDataTypeState != rhs.ACBSDataTypeState) return false;
-            if (lhs.AIDTDataTypeState != rhs.AIDTDataTypeState) return false;
-            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
-            return true;
-        }
-
-        public override bool Equals(
-            INPCAbstractInternalGetter lhs,
-            INPCAbstractInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (ICreatureInternalGetter)lhs,
-                rhs: rhs as ICreatureInternalGetter);
-        }
-
-        public override bool Equals(
-            INPCSpawnInternalGetter lhs,
-            INPCSpawnInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (ICreatureInternalGetter)lhs,
-                rhs: rhs as ICreatureInternalGetter);
-        }
-
-        public override bool Equals(
-            IOblivionMajorRecordInternalGetter lhs,
-            IOblivionMajorRecordInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (ICreatureInternalGetter)lhs,
-                rhs: rhs as ICreatureInternalGetter);
-        }
-
-        public override bool Equals(
-            IMajorRecordInternalGetter lhs,
-            IMajorRecordInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (ICreatureInternalGetter)lhs,
-                rhs: rhs as ICreatureInternalGetter);
-        }
-
-        public virtual int GetHashCode(ICreatureInternalGetter item)
-        {
-            int ret = 0;
-            if (item.Name_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Name).CombineHashCode(ret);
-            }
-            if (item.Model_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Model).CombineHashCode(ret);
-            }
-            if (item.Items.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.Items).CombineHashCode(ret);
-            }
-            if (item.Spells.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.Spells).CombineHashCode(ret);
-            }
-            if (item.Models.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.Models).CombineHashCode(ret);
-            }
-            if (item.NIFT_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.NIFT).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.BaseSpellPoints).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Fatigue).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.BarterGold).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.LevelOffset).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.CalcMin).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.CalcMax).CombineHashCode(ret);
-            if (item.Factions.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.Factions).CombineHashCode(ret);
-            }
-            if (item.DeathItem_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.DeathItem).CombineHashCode(ret);
-            }
-            if (item.Script_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.Script).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(item.Aggression).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Confidence).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.EnergyLevel).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Responsibility).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.BuySellServices).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Teaches).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.MaximumTrainingLevel).CombineHashCode(ret);
-            if (item.AIPackages.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.AIPackages).CombineHashCode(ret);
-            }
-            if (item.Animations.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.Animations).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(item.CreatureType).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.CombatSkill).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.MagicSkill).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.StealthSkill).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.SoulLevel).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Health).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.AttackDamage).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Strength).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Intelligence).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Willpower).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Agility).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Speed).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Endurance).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Personality).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Luck).CombineHashCode(ret);
-            if (item.AttackReach_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.AttackReach).CombineHashCode(ret);
-            }
-            if (item.CombatStyle_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.CombatStyle).CombineHashCode(ret);
-            }
-            if (item.TurningSpeed_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.TurningSpeed).CombineHashCode(ret);
-            }
-            if (item.BaseScale_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.BaseScale).CombineHashCode(ret);
-            }
-            if (item.FootWeight_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.FootWeight).CombineHashCode(ret);
-            }
-            if (item.BloodSpray_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.BloodSpray).CombineHashCode(ret);
-            }
-            if (item.BloodDecal_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.BloodDecal).CombineHashCode(ret);
-            }
-            if (item.InheritsSoundFrom_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.InheritsSoundFrom).CombineHashCode(ret);
-            }
-            if (item.Sounds.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.Sounds).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(item.ACBSDataTypeState).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.AIDTDataTypeState).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.DATADataTypeState).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        public override int GetHashCode(INPCAbstractInternalGetter item)
-        {
-            return GetHashCode(item: (ICreatureInternalGetter)item);
-        }
-
-        public override int GetHashCode(INPCSpawnInternalGetter item)
-        {
-            return GetHashCode(item: (ICreatureInternalGetter)item);
-        }
-
-        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
-        {
-            return GetHashCode(item: (ICreatureInternalGetter)item);
-        }
-
-        public override int GetHashCode(IMajorRecordInternalGetter item)
-        {
-            return GetHashCode(item: (ICreatureInternalGetter)item);
-        }
-
-        #endregion
-
-
-        #region Mutagen
-        partial void PostDuplicate(Creature obj, Creature rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new Creature(getNextFormKey());
-            ret.CopyFieldsFrom((Creature)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (Creature)item, getNextFormKey, duplicatedRecords);
-            return ret;
-        }
-
-        #endregion
-
+        
+        
     }
     #endregion
 
@@ -5586,14 +5617,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Items.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Creature_FieldIndex.Items) ?? true))
             {
-                ListXmlTranslation<IItemEntryGetter>.Instance.Write(
+                ListXmlTranslation<IItemEntryInternalGetter>.Instance.Write(
                     node: node,
                     name: nameof(item.Items),
                     item: item.Items,
                     fieldIndex: (int)Creature_FieldIndex.Items,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)Creature_FieldIndex.Items),
-                    transl: (XElement subNode, IItemEntryGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    transl: (XElement subNode, IItemEntryInternalGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         var loquiItem = subItem;
                         ((ItemEntryXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
@@ -5721,14 +5752,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Factions.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Creature_FieldIndex.Factions) ?? true))
             {
-                ListXmlTranslation<IRankPlacementGetter>.Instance.Write(
+                ListXmlTranslation<IRankPlacementInternalGetter>.Instance.Write(
                     node: node,
                     name: nameof(item.Factions),
                     item: item.Factions,
                     fieldIndex: (int)Creature_FieldIndex.Factions,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)Creature_FieldIndex.Factions),
-                    transl: (XElement subNode, IRankPlacementGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    transl: (XElement subNode, IRankPlacementInternalGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         var loquiItem = subItem;
                         ((RankPlacementXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
@@ -6084,14 +6115,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Sounds.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Creature_FieldIndex.Sounds) ?? true))
             {
-                ListXmlTranslation<ICreatureSoundGetter>.Instance.Write(
+                ListXmlTranslation<ICreatureSoundInternalGetter>.Instance.Write(
                     node: node,
                     name: nameof(item.Sounds),
                     item: item.Sounds,
                     fieldIndex: (int)Creature_FieldIndex.Sounds,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)Creature_FieldIndex.Sounds),
-                    transl: (XElement subNode, ICreatureSoundGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    transl: (XElement subNode, ICreatureSoundInternalGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         var loquiItem = subItem;
                         ((CreatureSoundXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
@@ -9850,12 +9881,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.Items.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<IItemEntryGetter>.Instance.Write(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<IItemEntryInternalGetter>.Instance.Write(
                     writer: writer,
                     items: item.Items,
                     fieldIndex: (int)Creature_FieldIndex.Items,
                     errorMask: errorMask,
-                    transl: (MutagenWriter subWriter, IItemEntryGetter subItem, ErrorMaskBuilder listErrorMask) =>
+                    transl: (MutagenWriter subWriter, IItemEntryInternalGetter subItem, ErrorMaskBuilder listErrorMask) =>
                     {
                         var loquiItem = subItem;
                         ((ItemEntryBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
@@ -9915,12 +9946,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.Factions.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<IRankPlacementGetter>.Instance.Write(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<IRankPlacementInternalGetter>.Instance.Write(
                     writer: writer,
                     items: item.Factions,
                     fieldIndex: (int)Creature_FieldIndex.Factions,
                     errorMask: errorMask,
-                    transl: (MutagenWriter subWriter, IRankPlacementGetter subItem, ErrorMaskBuilder listErrorMask) =>
+                    transl: (MutagenWriter subWriter, IRankPlacementInternalGetter subItem, ErrorMaskBuilder listErrorMask) =>
                     {
                         var loquiItem = subItem;
                         ((RankPlacementBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
@@ -10087,12 +10118,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.Sounds.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<ICreatureSoundGetter>.Instance.Write(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<ICreatureSoundInternalGetter>.Instance.Write(
                     writer: writer,
                     items: item.Sounds,
                     fieldIndex: (int)Creature_FieldIndex.Sounds,
                     errorMask: errorMask,
-                    transl: (MutagenWriter subWriter, ICreatureSoundGetter subItem, ErrorMaskBuilder listErrorMask) =>
+                    transl: (MutagenWriter subWriter, ICreatureSoundInternalGetter subItem, ErrorMaskBuilder listErrorMask) =>
                     {
                         var loquiItem = subItem;
                         ((CreatureSoundBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
@@ -10241,17 +10272,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         NPCAbstractBinaryWrapper,
         ICreatureInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Creature_Registration.Instance;
         public new static Creature_Registration Registration => Creature_Registration.Instance;
-        protected override object CommonInstance => CreatureCommon.Instance;
+        protected override object CommonInstance()
+        {
+            return CreatureCommon.Instance;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICreatureInternalGetter)rhs, include);
 
         protected override object XmlWriteTranslator => CreatureXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((CreatureXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         protected override object BinaryWriteTranslator => CreatureBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((CreatureBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
 
         #region Name
         private int? _NameLocation;
@@ -10259,10 +10322,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public String Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _NameLocation.Value, _package.Meta)) : default;
         #endregion
         #region Model
-        public IModelGetter Model { get; private set; }
+        public IModelInternalGetter Model { get; private set; }
         public bool Model_IsSet => Model != null;
         #endregion
-        public IReadOnlySetList<IItemEntryGetter> Items { get; private set; } = EmptySetList<ItemEntryBinaryWrapper>.Instance;
+        public IReadOnlySetList<IItemEntryInternalGetter> Items { get; private set; } = EmptySetList<ItemEntryBinaryWrapper>.Instance;
         public IReadOnlySetList<IFormIDLinkGetter<ISpellAbstractInternalGetter>> Spells { get; private set; } = EmptySetList<IFormIDLinkGetter<ISpellAbstractInternalGetter>>.Instance;
         public IReadOnlySetList<String> Models { get; private set; } = EmptySetList<String>.Instance;
         #region NIFT
@@ -10307,7 +10370,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private bool _CalcMax_IsSet => _ACBSLocation.HasValue;
         public UInt16 CalcMax => _CalcMax_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_CalcMaxLocation, 2)) : default;
         #endregion
-        public IReadOnlySetList<IRankPlacementGetter> Factions { get; private set; } = EmptySetList<RankPlacementBinaryWrapper>.Instance;
+        public IReadOnlySetList<IRankPlacementInternalGetter> Factions { get; private set; } = EmptySetList<RankPlacementBinaryWrapper>.Instance;
         #region DeathItem
         private int? _DeathItemLocation;
         public bool DeathItem_IsSet => _DeathItemLocation.HasValue;
@@ -10414,7 +10477,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IFormIDSetLinkGetter<ICreatureInternalGetter> InheritsSoundFrom_Property => _InheritsSoundFromLocation.HasValue ? new FormIDSetLink<ICreatureInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _InheritsSoundFromLocation.Value, _package.Meta)))) : FormIDSetLink<ICreatureInternalGetter>.Empty;
         public ICreatureInternalGetter InheritsSoundFrom => default;
         #endregion
-        public IReadOnlySetList<ICreatureSoundGetter> Sounds { get; private set; } = EmptySetList<CreatureSoundBinaryWrapper>.Instance;
+        public IReadOnlySetList<ICreatureSoundInternalGetter> Sounds { get; private set; } = EmptySetList<CreatureSoundBinaryWrapper>.Instance;
         partial void CustomCtor(
             BinaryMemoryReadStream stream,
             long finalPos,
@@ -10658,4 +10721,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class Creature
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Creature_Registration.Instance;
+        public new static Creature_Registration Registration => Creature_Registration.Instance;
+        protected override object CommonInstance()
+        {
+            return CreatureCommon.Instance;
+        }
+        protected override object CommonSetterInstance()
+        {
+            return CreatureSetterCommon.Instance;
+        }
+        protected override object CommonSetterCopyInstance()
+        {
+            return CreatureSetterCopyCommon.Instance;
+        }
+
+        #endregion
+
+    }
 }

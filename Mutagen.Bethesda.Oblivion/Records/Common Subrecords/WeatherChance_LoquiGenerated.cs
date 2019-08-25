@@ -34,18 +34,12 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class WeatherChance :
         LoquiNotifyingObject,
-        IWeatherChance,
+        IWeatherChanceInternal,
         ILoquiObjectSetter<WeatherChance>,
         ILinkSubContainer,
         IEquatable<WeatherChance>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => WeatherChance_Registration.Instance;
-        public static WeatherChance_Registration Registration => WeatherChance_Registration.Instance;
-        protected object CommonInstance => WeatherChanceCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
-
         #region Ctor
         public WeatherChance()
         {
@@ -72,7 +66,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWeatherChanceGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWeatherChanceInternalGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -90,22 +84,35 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is IWeatherChanceGetter rhs)) return false;
-            return ((WeatherChanceCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            if (!(obj is IWeatherChanceInternalGetter rhs)) return false;
+            return ((WeatherChanceCommon)((IWeatherChanceInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(WeatherChance obj)
         {
-            return ((WeatherChanceCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((WeatherChanceCommon)((IWeatherChanceInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((WeatherChanceCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((WeatherChanceCommon)((IWeatherChanceInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected object XmlWriteTranslator => WeatherChanceXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((WeatherChanceXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static WeatherChance CreateFromXml(
@@ -294,6 +301,19 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Translation
         protected object BinaryWriteTranslator => WeatherChanceBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((WeatherChanceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
         #region Binary Create
         [DebuggerStepThrough]
         public static WeatherChance CreateFromBinary(
@@ -442,7 +462,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            WeatherChanceCommon.CopyFieldsFrom(
+            WeatherChanceSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -457,7 +477,7 @@ namespace Mutagen.Bethesda.Oblivion
             WeatherChance_CopyMask copyMask = null,
             WeatherChance def = null)
         {
-            WeatherChanceCommon.CopyFieldsFrom(
+            WeatherChanceSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -483,7 +503,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void Clear()
         {
-            WeatherChanceCommon.Instance.Clear(this);
+            WeatherChanceSetterCommon.Instance.Clear(this);
         }
 
         public static WeatherChance Create(IEnumerable<KeyValuePair<ushort, object>> fields)
@@ -519,8 +539,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IWeatherChance :
-        IWeatherChanceGetter,
-        ILoquiObjectSetter<IWeatherChance>
+        IWeatherChanceInternalGetter,
+        ILoquiObjectSetter<IWeatherChanceInternal>
     {
         new Weather Weather { get; set; }
         new IFormIDLink<Weather> Weather_Property { get; }
@@ -533,9 +553,17 @@ namespace Mutagen.Bethesda.Oblivion
             WeatherChance def = null);
     }
 
+    public partial interface IWeatherChanceInternal :
+        IWeatherChance,
+        IWeatherChanceInternalGetter
+    {
+        new Weather Weather { get; set; }
+        new IFormIDLink<Weather> Weather_Property { get; }
+    }
+
     public partial interface IWeatherChanceGetter :
         ILoquiObject,
-        ILoquiObject<IWeatherChanceGetter>,
+        ILoquiObject<IWeatherChanceInternalGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -551,45 +579,53 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    public partial interface IWeatherChanceInternalGetter : IWeatherChanceGetter
+    {
+        object CommonInstance();
+        object CommonSetterInstance();
+        object CommonSetterCopyInstance();
+
+    }
+
     #endregion
 
     #region Common MixIn
     public static class WeatherChanceMixIn
     {
-        public static void Clear(this IWeatherChance item)
+        public static void Clear(this IWeatherChanceInternal item)
         {
-            ((WeatherChanceCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((WeatherChanceSetterCommon)((IWeatherChanceInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static WeatherChance_Mask<bool> GetEqualsMask(
-            this IWeatherChanceGetter item,
-            IWeatherChanceGetter rhs,
+            this IWeatherChanceInternalGetter item,
+            IWeatherChanceInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((WeatherChanceCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((WeatherChanceCommon)((IWeatherChanceInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IWeatherChanceGetter item,
+            this IWeatherChanceInternalGetter item,
             string name = null,
             WeatherChance_Mask<bool> printMask = null)
         {
-            return ((WeatherChanceCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((WeatherChanceCommon)((IWeatherChanceInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IWeatherChanceGetter item,
+            this IWeatherChanceInternalGetter item,
             FileGeneration fg,
             string name = null,
             WeatherChance_Mask<bool> printMask = null)
         {
-            ((WeatherChanceCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((WeatherChanceCommon)((IWeatherChanceInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -597,28 +633,28 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static bool HasBeenSet(
-            this IWeatherChanceGetter item,
+            this IWeatherChanceInternalGetter item,
             WeatherChance_Mask<bool?> checkMask)
         {
-            return ((WeatherChanceCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((WeatherChanceCommon)((IWeatherChanceInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static WeatherChance_Mask<bool> GetHasBeenSetMask(this IWeatherChanceGetter item)
+        public static WeatherChance_Mask<bool> GetHasBeenSetMask(this IWeatherChanceInternalGetter item)
         {
             var ret = new WeatherChance_Mask<bool>();
-            ((WeatherChanceCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((WeatherChanceCommon)((IWeatherChanceInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this IWeatherChanceGetter item,
-            IWeatherChanceGetter rhs)
+            this IWeatherChanceInternalGetter item,
+            IWeatherChanceInternalGetter rhs)
         {
-            return ((WeatherChanceCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((WeatherChanceCommon)((IWeatherChanceInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -664,13 +700,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IWeatherChanceGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type InternalGetterType = typeof(IWeatherChanceInternalGetter);
 
         public static readonly Type SetterType = typeof(IWeatherChance);
 
-        public static readonly Type InternalSetterType = null;
-
-        public static readonly Type CommonType = typeof(WeatherChanceCommon);
+        public static readonly Type InternalSetterType = typeof(IWeatherChanceInternal);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.WeatherChance";
 
@@ -805,7 +839,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -825,9 +858,147 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
+    public partial class WeatherChanceSetterCommon
+    {
+        public static readonly WeatherChanceSetterCommon Instance = new WeatherChanceSetterCommon();
+
+        partial void ClearPartial();
+        
+        public virtual void Clear(IWeatherChanceInternal item)
+        {
+            ClearPartial();
+            item.Weather = default(Weather);
+            item.Chance = default(Int32);
+        }
+        
+        
+    }
     public partial class WeatherChanceCommon
     {
         public static readonly WeatherChanceCommon Instance = new WeatherChanceCommon();
+
+        public WeatherChance_Mask<bool> GetEqualsMask(
+            IWeatherChanceInternalGetter item,
+            IWeatherChanceInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new WeatherChance_Mask<bool>();
+            ((WeatherChanceCommon)((IWeatherChanceInternalGetter)item).CommonInstance()).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+        
+        public void FillEqualsMask(
+            IWeatherChanceInternalGetter item,
+            IWeatherChanceInternalGetter rhs,
+            WeatherChance_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            if (rhs == null) return;
+            ret.Weather = item.Weather_Property.FormKey == rhs.Weather_Property.FormKey;
+            ret.Chance = item.Chance == rhs.Chance;
+        }
+        
+        public string ToString(
+            IWeatherChanceInternalGetter item,
+            string name = null,
+            WeatherChance_Mask<bool> printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+            return fg.ToString();
+        }
+        
+        public void ToString(
+            IWeatherChanceInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            WeatherChance_Mask<bool> printMask = null)
+        {
+            if (name == null)
+            {
+                fg.AppendLine($"WeatherChance =>");
+            }
+            else
+            {
+                fg.AppendLine($"{name} (WeatherChance) =>");
+            }
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
+            }
+            fg.AppendLine("]");
+        }
+        
+        protected static void ToStringFields(
+            IWeatherChanceInternalGetter item,
+            FileGeneration fg,
+            WeatherChance_Mask<bool> printMask = null)
+        {
+            if (printMask?.Weather ?? true)
+            {
+                fg.AppendLine($"Weather => {item.Weather_Property}");
+            }
+            if (printMask?.Chance ?? true)
+            {
+                fg.AppendLine($"Chance => {item.Chance}");
+            }
+        }
+        
+        public bool HasBeenSet(
+            IWeatherChanceInternalGetter item,
+            WeatherChance_Mask<bool?> checkMask)
+        {
+            return true;
+        }
+        
+        public void FillHasBeenSetMask(
+            IWeatherChanceInternalGetter item,
+            WeatherChance_Mask<bool> mask)
+        {
+            mask.Weather = true;
+            mask.Chance = true;
+        }
+        
+        #region Equals and Hash
+        public virtual bool Equals(
+            IWeatherChanceInternalGetter lhs,
+            IWeatherChanceInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!lhs.Weather_Property.Equals(rhs.Weather_Property)) return false;
+            if (lhs.Chance != rhs.Chance) return false;
+            return true;
+        }
+        
+        public virtual int GetHashCode(IWeatherChanceInternalGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.Weather).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Chance).CombineHashCode(ret);
+            return ret;
+        }
+        
+        #endregion
+        
+        
+        
+    }
+    public partial class WeatherChanceSetterCopyCommon
+    {
+        public static readonly WeatherChanceSetterCopyCommon Instance = new WeatherChanceSetterCopyCommon();
 
         #region Copy Fields From
         public static void CopyFieldsFrom(
@@ -872,135 +1043,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
         }
-
+        
         #endregion
-
-        partial void ClearPartial();
-
-        public virtual void Clear(IWeatherChance item)
-        {
-            ClearPartial();
-            item.Weather = default(Weather);
-            item.Chance = default(Int32);
-        }
-
-        public WeatherChance_Mask<bool> GetEqualsMask(
-            IWeatherChanceGetter item,
-            IWeatherChanceGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new WeatherChance_Mask<bool>();
-            ((WeatherChanceCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public void FillEqualsMask(
-            IWeatherChanceGetter item,
-            IWeatherChanceGetter rhs,
-            WeatherChance_Mask<bool> ret,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            if (rhs == null) return;
-            ret.Weather = item.Weather_Property.FormKey == rhs.Weather_Property.FormKey;
-            ret.Chance = item.Chance == rhs.Chance;
-        }
-
-        public string ToString(
-            IWeatherChanceGetter item,
-            string name = null,
-            WeatherChance_Mask<bool> printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(
-                item: item,
-                fg: fg,
-                name: name,
-                printMask: printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(
-            IWeatherChanceGetter item,
-            FileGeneration fg,
-            string name = null,
-            WeatherChance_Mask<bool> printMask = null)
-        {
-            if (name == null)
-            {
-                fg.AppendLine($"WeatherChance =>");
-            }
-            else
-            {
-                fg.AppendLine($"{name} (WeatherChance) =>");
-            }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                ToStringFields(
-                    item: item,
-                    fg: fg,
-                    printMask: printMask);
-            }
-            fg.AppendLine("]");
-        }
-
-        protected static void ToStringFields(
-            IWeatherChanceGetter item,
-            FileGeneration fg,
-            WeatherChance_Mask<bool> printMask = null)
-        {
-            if (printMask?.Weather ?? true)
-            {
-                fg.AppendLine($"Weather => {item.Weather_Property}");
-            }
-            if (printMask?.Chance ?? true)
-            {
-                fg.AppendLine($"Chance => {item.Chance}");
-            }
-        }
-
-        public bool HasBeenSet(
-            IWeatherChanceGetter item,
-            WeatherChance_Mask<bool?> checkMask)
-        {
-            return true;
-        }
-
-        public void FillHasBeenSetMask(
-            IWeatherChanceGetter item,
-            WeatherChance_Mask<bool> mask)
-        {
-            mask.Weather = true;
-            mask.Chance = true;
-        }
-
-        #region Equals and Hash
-        public virtual bool Equals(
-            IWeatherChanceGetter lhs,
-            IWeatherChanceGetter rhs)
-        {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
-            if (!lhs.Weather_Property.Equals(rhs.Weather_Property)) return false;
-            if (lhs.Chance != rhs.Chance) return false;
-            return true;
-        }
-
-        public virtual int GetHashCode(IWeatherChanceGetter item)
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.Weather).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Chance).CombineHashCode(ret);
-            return ret;
-        }
-
-        #endregion
-
-
+        
+        
     }
     #endregion
 
@@ -1011,7 +1057,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static WeatherChanceXmlWriteTranslation Instance = new WeatherChanceXmlWriteTranslation();
 
         public static void WriteToNodeXml(
-            IWeatherChanceGetter item,
+            IWeatherChanceInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1038,7 +1084,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             XElement node,
-            IWeatherChanceGetter item,
+            IWeatherChanceInternalGetter item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)
@@ -1064,7 +1110,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             Write(
-                item: (IWeatherChanceGetter)item,
+                item: (IWeatherChanceInternalGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1073,7 +1119,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             XElement node,
-            IWeatherChanceGetter item,
+            IWeatherChanceInternalGetter item,
             ErrorMaskBuilder errorMask,
             int fieldIndex,
             TranslationCrystal translationMask,
@@ -1083,7 +1129,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 errorMask?.PushIndex(fieldIndex);
                 Write(
-                    item: (IWeatherChanceGetter)item,
+                    item: (IWeatherChanceInternalGetter)item,
                     name: name,
                     node: node,
                     errorMask: errorMask,
@@ -1107,7 +1153,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static WeatherChanceXmlCreateTranslation Instance = new WeatherChanceXmlCreateTranslation();
 
         public static void FillPublicXml(
-            IWeatherChance item,
+            IWeatherChanceInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1132,7 +1178,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElementXml(
-            IWeatherChance item,
+            IWeatherChanceInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -1184,7 +1230,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public static class WeatherChanceXmlTranslationMixIn
     {
         public static void WriteToXml(
-            this IWeatherChanceGetter item,
+            this IWeatherChanceInternalGetter item,
             XElement node,
             out WeatherChance_ErrorMask errorMask,
             bool doMasks = true,
@@ -1202,7 +1248,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IWeatherChanceGetter item,
+            this IWeatherChanceInternalGetter item,
             string path,
             out WeatherChance_ErrorMask errorMask,
             WeatherChance_TranslationMask translationMask = null,
@@ -1221,7 +1267,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IWeatherChanceGetter item,
+            this IWeatherChanceInternalGetter item,
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1239,7 +1285,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IWeatherChanceGetter item,
+            this IWeatherChanceInternalGetter item,
             Stream stream,
             out WeatherChance_ErrorMask errorMask,
             WeatherChance_TranslationMask translationMask = null,
@@ -1258,7 +1304,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IWeatherChanceGetter item,
+            this IWeatherChanceInternalGetter item,
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1276,7 +1322,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IWeatherChanceGetter item,
+            this IWeatherChanceInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1291,7 +1337,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IWeatherChanceGetter item,
+            this IWeatherChanceInternalGetter item,
             XElement node,
             string name = null,
             WeatherChance_TranslationMask translationMask = null)
@@ -1305,7 +1351,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IWeatherChanceGetter item,
+            this IWeatherChanceInternalGetter item,
             string path,
             string name = null)
         {
@@ -1320,7 +1366,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IWeatherChanceGetter item,
+            this IWeatherChanceInternalGetter item,
             Stream stream,
             string name = null)
         {
@@ -1648,7 +1694,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static WeatherChanceBinaryWriteTranslation Instance = new WeatherChanceBinaryWriteTranslation();
 
         public static void Write_Embedded(
-            IWeatherChanceGetter item,
+            IWeatherChanceInternalGetter item,
             MutagenWriter writer,
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
@@ -1662,7 +1708,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             MutagenWriter writer,
-            IWeatherChanceGetter item,
+            IWeatherChanceInternalGetter item,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
@@ -1682,7 +1728,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask)
         {
             Write(
-                item: (IWeatherChanceGetter)item,
+                item: (IWeatherChanceInternalGetter)item,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -1701,7 +1747,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public static class WeatherChanceBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IWeatherChanceGetter item,
+            this IWeatherChanceInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
             out WeatherChance_ErrorMask errorMask,
@@ -1718,7 +1764,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToBinary(
-            this IWeatherChanceGetter item,
+            this IWeatherChanceInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -1732,7 +1778,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToBinary(
-            this IWeatherChanceGetter item,
+            this IWeatherChanceInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
@@ -1749,22 +1795,65 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     public partial class WeatherChanceBinaryWrapper :
         BinaryWrapper,
-        IWeatherChanceGetter
+        IWeatherChanceInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeatherChance_Registration.Instance;
         public static WeatherChance_Registration Registration => WeatherChance_Registration.Instance;
-        protected object CommonInstance => WeatherChanceCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
+        protected object CommonInstance()
+        {
+            return WeatherChanceCommon.Instance;
+        }
+        object IWeatherChanceInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IWeatherChanceInternalGetter.CommonSetterInstance()
+        {
+            return null;
+        }
+        object IWeatherChanceInternalGetter.CommonSetterCopyInstance()
+        {
+            return null;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWeatherChanceGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWeatherChanceInternalGetter)rhs, include);
 
         protected object XmlWriteTranslator => WeatherChanceXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((WeatherChanceXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         protected object BinaryWriteTranslator => WeatherChanceBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((WeatherChanceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
 
         #region Weather
         public IFormIDLinkGetter<IWeatherInternalGetter> Weather_Property => new FormIDLink<IWeatherInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
@@ -1808,4 +1897,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class WeatherChance
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => WeatherChance_Registration.Instance;
+        public static WeatherChance_Registration Registration => WeatherChance_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return WeatherChanceCommon.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return WeatherChanceSetterCommon.Instance;
+        }
+        protected object CommonSetterCopyInstance()
+        {
+            return WeatherChanceSetterCopyCommon.Instance;
+        }
+        object IWeatherChanceInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IWeatherChanceInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object IWeatherChanceInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
 }

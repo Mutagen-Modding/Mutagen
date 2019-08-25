@@ -43,11 +43,6 @@ namespace Mutagen.Bethesda.Skyrim
         IEquatable<Keyword>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Keyword_Registration.Instance;
-        public new static Keyword_Registration Registration => Keyword_Registration.Instance;
-        protected override object CommonInstance => KeywordCommon.Instance;
-
         #region Ctor
         protected Keyword()
         {
@@ -102,20 +97,33 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object obj)
         {
             if (!(obj is IKeywordInternalGetter rhs)) return false;
-            return ((KeywordCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            return ((KeywordCommon)((IKeywordInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(Keyword obj)
         {
-            return ((KeywordCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((KeywordCommon)((IKeywordInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((KeywordCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((KeywordCommon)((IKeywordInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected override object XmlWriteTranslator => KeywordXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((KeywordXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static Keyword CreateFromXml(
@@ -322,6 +330,19 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Binary Translation
         protected override object BinaryWriteTranslator => KeywordBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((KeywordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
         #region Binary Create
         [DebuggerStepThrough]
         public static Keyword CreateFromBinary(
@@ -509,7 +530,7 @@ namespace Mutagen.Bethesda.Skyrim
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            KeywordCommon.CopyFieldsFrom(
+            KeywordSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -524,7 +545,7 @@ namespace Mutagen.Bethesda.Skyrim
             Keyword_CopyMask copyMask = null,
             Keyword def = null)
         {
-            KeywordCommon.CopyFieldsFrom(
+            KeywordSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -548,7 +569,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public override void Clear()
         {
-            KeywordCommon.Instance.Clear(this);
+            KeywordSetterCommon.Instance.Clear(this);
         }
 
         public new static Keyword Create(IEnumerable<KeyValuePair<ushort, object>> fields)
@@ -632,7 +653,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void Clear(this IKeywordInternal item)
         {
-            ((KeywordCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((KeywordSetterCommon)((IKeywordInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static Keyword_Mask<bool> GetEqualsMask(
@@ -640,7 +661,7 @@ namespace Mutagen.Bethesda.Skyrim
             IKeywordInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((KeywordCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((KeywordCommon)((IKeywordInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -651,7 +672,7 @@ namespace Mutagen.Bethesda.Skyrim
             string name = null,
             Keyword_Mask<bool> printMask = null)
         {
-            return ((KeywordCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((KeywordCommon)((IKeywordInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -663,7 +684,7 @@ namespace Mutagen.Bethesda.Skyrim
             string name = null,
             Keyword_Mask<bool> printMask = null)
         {
-            ((KeywordCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((KeywordCommon)((IKeywordInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -674,7 +695,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IKeywordInternalGetter item,
             Keyword_Mask<bool?> checkMask)
         {
-            return ((KeywordCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((KeywordCommon)((IKeywordInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -682,7 +703,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static Keyword_Mask<bool> GetHasBeenSetMask(this IKeywordInternalGetter item)
         {
             var ret = new Keyword_Mask<bool>();
-            ((KeywordCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((KeywordCommon)((IKeywordInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -692,7 +713,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IKeywordInternalGetter item,
             IKeywordInternalGetter rhs)
         {
-            return ((KeywordCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((KeywordCommon)((IKeywordInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -749,8 +770,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type SetterType = typeof(IKeyword);
 
         public static readonly Type InternalSetterType = typeof(IKeywordInternal);
-
-        public static readonly Type CommonType = typeof(KeywordCommon);
 
         public const string FullName = "Mutagen.Bethesda.Skyrim.Keyword";
 
@@ -877,7 +896,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -897,9 +915,251 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
+    public partial class KeywordSetterCommon : SkyrimMajorRecordSetterCommon
+    {
+        public new static readonly KeywordSetterCommon Instance = new KeywordSetterCommon();
+
+        partial void ClearPartial();
+        
+        public virtual void Clear(IKeywordInternal item)
+        {
+            ClearPartial();
+            item.Color_Unset();
+            base.Clear(item);
+        }
+        
+        public override void Clear(ISkyrimMajorRecordInternal item)
+        {
+            Clear(item: (IKeywordInternal)item);
+        }
+        
+        public override void Clear(IMajorRecordInternal item)
+        {
+            Clear(item: (IKeywordInternal)item);
+        }
+        
+        
+    }
     public partial class KeywordCommon : SkyrimMajorRecordCommon
     {
-        public static readonly KeywordCommon Instance = new KeywordCommon();
+        public new static readonly KeywordCommon Instance = new KeywordCommon();
+
+        public Keyword_Mask<bool> GetEqualsMask(
+            IKeywordInternalGetter item,
+            IKeywordInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new Keyword_Mask<bool>();
+            ((KeywordCommon)((IKeywordInternalGetter)item).CommonInstance()).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+        
+        public void FillEqualsMask(
+            IKeywordInternalGetter item,
+            IKeywordInternalGetter rhs,
+            Keyword_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            if (rhs == null) return;
+            ret.Color = item.Color_IsSet == rhs.Color_IsSet && item.Color.ColorOnlyEquals(rhs.Color);
+            base.FillEqualsMask(item, rhs, ret, include);
+        }
+        
+        public string ToString(
+            IKeywordInternalGetter item,
+            string name = null,
+            Keyword_Mask<bool> printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+            return fg.ToString();
+        }
+        
+        public void ToString(
+            IKeywordInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            Keyword_Mask<bool> printMask = null)
+        {
+            if (name == null)
+            {
+                fg.AppendLine($"Keyword =>");
+            }
+            else
+            {
+                fg.AppendLine($"{name} (Keyword) =>");
+            }
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
+            }
+            fg.AppendLine("]");
+        }
+        
+        protected static void ToStringFields(
+            IKeywordInternalGetter item,
+            FileGeneration fg,
+            Keyword_Mask<bool> printMask = null)
+        {
+            SkyrimMajorRecordCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.Color ?? true)
+            {
+                fg.AppendLine($"Color => {item.Color}");
+            }
+        }
+        
+        public bool HasBeenSet(
+            IKeywordInternalGetter item,
+            Keyword_Mask<bool?> checkMask)
+        {
+            if (checkMask.Color.HasValue && checkMask.Color.Value != item.Color_IsSet) return false;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+        
+        public void FillHasBeenSetMask(
+            IKeywordInternalGetter item,
+            Keyword_Mask<bool> mask)
+        {
+            mask.Color = item.Color_IsSet;
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
+        }
+        
+        public static Keyword_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case SkyrimMajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (Keyword_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.FormKey:
+                    return (Keyword_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.Version:
+                    return (Keyword_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.EditorID:
+                    return (Keyword_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
+                    return (Keyword_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.FormVersion:
+                    return (Keyword_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.Version2:
+                    return (Keyword_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        public static Keyword_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (Keyword_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.FormKey:
+                    return (Keyword_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.Version:
+                    return (Keyword_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.EditorID:
+                    return (Keyword_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        #region Equals and Hash
+        public virtual bool Equals(
+            IKeywordInternalGetter lhs,
+            IKeywordInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.Color_IsSet != rhs.Color_IsSet) return false;
+            if (lhs.Color_IsSet)
+            {
+                if (!lhs.Color.ColorOnlyEquals(rhs.Color)) return false;
+            }
+            return true;
+        }
+        
+        public override bool Equals(
+            ISkyrimMajorRecordInternalGetter lhs,
+            ISkyrimMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IKeywordInternalGetter)lhs,
+                rhs: rhs as IKeywordInternalGetter);
+        }
+        
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IKeywordInternalGetter)lhs,
+                rhs: rhs as IKeywordInternalGetter);
+        }
+        
+        public virtual int GetHashCode(IKeywordInternalGetter item)
+        {
+            int ret = 0;
+            if (item.Color_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Color).CombineHashCode(ret);
+            }
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+        
+        public override int GetHashCode(ISkyrimMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IKeywordInternalGetter)item);
+        }
+        
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IKeywordInternalGetter)item);
+        }
+        
+        #endregion
+        
+        
+        #region Mutagen
+        partial void PostDuplicate(Keyword obj, Keyword rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+        
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new Keyword(getNextFormKey());
+            ret.CopyFieldsFrom((Keyword)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (Keyword)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+        
+        #endregion
+        
+        
+    }
+    public partial class KeywordSetterCopyCommon : SkyrimMajorRecordSetterCopyCommon
+    {
+        public new static readonly KeywordSetterCopyCommon Instance = new KeywordSetterCopyCommon();
 
         #region Copy Fields From
         public static void CopyFieldsFrom(
@@ -909,7 +1169,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ErrorMaskBuilder errorMask,
             Keyword_CopyMask copyMask)
         {
-            SkyrimMajorRecordCommon.CopyFieldsFrom(
+            SkyrimMajorRecordSetterCopyCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -946,239 +1206,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
             }
         }
-
+        
         #endregion
-
-        partial void ClearPartial();
-
-        public virtual void Clear(IKeywordInternal item)
-        {
-            ClearPartial();
-            item.Color_Unset();
-            base.Clear(item);
-        }
-
-        public override void Clear(ISkyrimMajorRecordInternal item)
-        {
-            Clear(item: (IKeywordInternal)item);
-        }
-
-        public override void Clear(IMajorRecordInternal item)
-        {
-            Clear(item: (IKeywordInternal)item);
-        }
-
-        public Keyword_Mask<bool> GetEqualsMask(
-            IKeywordInternalGetter item,
-            IKeywordInternalGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new Keyword_Mask<bool>();
-            ((KeywordCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public void FillEqualsMask(
-            IKeywordInternalGetter item,
-            IKeywordInternalGetter rhs,
-            Keyword_Mask<bool> ret,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            if (rhs == null) return;
-            ret.Color = item.Color_IsSet == rhs.Color_IsSet && item.Color.ColorOnlyEquals(rhs.Color);
-            base.FillEqualsMask(item, rhs, ret, include);
-        }
-
-        public string ToString(
-            IKeywordInternalGetter item,
-            string name = null,
-            Keyword_Mask<bool> printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(
-                item: item,
-                fg: fg,
-                name: name,
-                printMask: printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(
-            IKeywordInternalGetter item,
-            FileGeneration fg,
-            string name = null,
-            Keyword_Mask<bool> printMask = null)
-        {
-            if (name == null)
-            {
-                fg.AppendLine($"Keyword =>");
-            }
-            else
-            {
-                fg.AppendLine($"{name} (Keyword) =>");
-            }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                ToStringFields(
-                    item: item,
-                    fg: fg,
-                    printMask: printMask);
-            }
-            fg.AppendLine("]");
-        }
-
-        protected static void ToStringFields(
-            IKeywordInternalGetter item,
-            FileGeneration fg,
-            Keyword_Mask<bool> printMask = null)
-        {
-            SkyrimMajorRecordCommon.ToStringFields(
-                item: item,
-                fg: fg,
-                printMask: printMask);
-            if (printMask?.Color ?? true)
-            {
-                fg.AppendLine($"Color => {item.Color}");
-            }
-        }
-
-        public bool HasBeenSet(
-            IKeywordInternalGetter item,
-            Keyword_Mask<bool?> checkMask)
-        {
-            if (checkMask.Color.HasValue && checkMask.Color.Value != item.Color_IsSet) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public void FillHasBeenSetMask(
-            IKeywordInternalGetter item,
-            Keyword_Mask<bool> mask)
-        {
-            mask.Color = item.Color_IsSet;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-
-        public static Keyword_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
-        {
-            switch (index)
-            {
-                case SkyrimMajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Keyword_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.FormKey:
-                    return (Keyword_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.Version:
-                    return (Keyword_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.EditorID:
-                    return (Keyword_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
-                    return (Keyword_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.FormVersion:
-                    return (Keyword_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.Version2:
-                    return (Keyword_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        public static Keyword_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
-        {
-            switch (index)
-            {
-                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Keyword_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.FormKey:
-                    return (Keyword_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
-                    return (Keyword_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.EditorID:
-                    return (Keyword_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        #region Equals and Hash
-        public virtual bool Equals(
-            IKeywordInternalGetter lhs,
-            IKeywordInternalGetter rhs)
-        {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (lhs.Color_IsSet != rhs.Color_IsSet) return false;
-            if (lhs.Color_IsSet)
-            {
-                if (!lhs.Color.ColorOnlyEquals(rhs.Color)) return false;
-            }
-            return true;
-        }
-
-        public override bool Equals(
-            ISkyrimMajorRecordInternalGetter lhs,
-            ISkyrimMajorRecordInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (IKeywordInternalGetter)lhs,
-                rhs: rhs as IKeywordInternalGetter);
-        }
-
-        public override bool Equals(
-            IMajorRecordInternalGetter lhs,
-            IMajorRecordInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (IKeywordInternalGetter)lhs,
-                rhs: rhs as IKeywordInternalGetter);
-        }
-
-        public virtual int GetHashCode(IKeywordInternalGetter item)
-        {
-            int ret = 0;
-            if (item.Color_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Color).CombineHashCode(ret);
-            }
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        public override int GetHashCode(ISkyrimMajorRecordInternalGetter item)
-        {
-            return GetHashCode(item: (IKeywordInternalGetter)item);
-        }
-
-        public override int GetHashCode(IMajorRecordInternalGetter item)
-        {
-            return GetHashCode(item: (IKeywordInternalGetter)item);
-        }
-
-        #endregion
-
-
-        #region Mutagen
-        partial void PostDuplicate(Keyword obj, Keyword rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new Keyword(getNextFormKey());
-            ret.CopyFieldsFrom((Keyword)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (Keyword)item, getNextFormKey, duplicatedRecords);
-            return ret;
-        }
-
-        #endregion
-
+        
+        
     }
     #endregion
 
@@ -1819,17 +1850,49 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         SkyrimMajorRecordBinaryWrapper,
         IKeywordInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Keyword_Registration.Instance;
         public new static Keyword_Registration Registration => Keyword_Registration.Instance;
-        protected override object CommonInstance => KeywordCommon.Instance;
+        protected override object CommonInstance()
+        {
+            return KeywordCommon.Instance;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IKeywordInternalGetter)rhs, include);
 
         protected override object XmlWriteTranslator => KeywordXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((KeywordXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         protected override object BinaryWriteTranslator => KeywordBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((KeywordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
 
         #region Color
         private int? _ColorLocation;
@@ -1907,4 +1970,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda.Skyrim
+{
+    public partial class Keyword
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Keyword_Registration.Instance;
+        public new static Keyword_Registration Registration => Keyword_Registration.Instance;
+        protected override object CommonInstance()
+        {
+            return KeywordCommon.Instance;
+        }
+        protected override object CommonSetterInstance()
+        {
+            return KeywordSetterCommon.Instance;
+        }
+        protected override object CommonSetterCopyInstance()
+        {
+            return KeywordSetterCopyCommon.Instance;
+        }
+
+        #endregion
+
+    }
 }

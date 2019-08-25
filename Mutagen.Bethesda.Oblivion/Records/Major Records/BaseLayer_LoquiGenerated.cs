@@ -40,12 +40,6 @@ namespace Mutagen.Bethesda.Oblivion
         IEquatable<BaseLayer>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => BaseLayer_Registration.Instance;
-        public static BaseLayer_Registration Registration => BaseLayer_Registration.Instance;
-        protected virtual object CommonInstance => BaseLayerCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
-
         #region Ctor
         public BaseLayer()
         {
@@ -124,21 +118,34 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IBaseLayerInternalGetter rhs)) return false;
-            return ((BaseLayerCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            return ((BaseLayerCommon)((IBaseLayerInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(BaseLayer obj)
         {
-            return ((BaseLayerCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((BaseLayerCommon)((IBaseLayerInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((BaseLayerCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((BaseLayerCommon)((IBaseLayerInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected virtual object XmlWriteTranslator => BaseLayerXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((BaseLayerXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static BaseLayer CreateFromXml(
@@ -383,6 +390,19 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Translation
         protected virtual object BinaryWriteTranslator => BaseLayerBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((BaseLayerBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
         #region Binary Create
         [DebuggerStepThrough]
         public static BaseLayer CreateFromBinary(
@@ -571,7 +591,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            BaseLayerCommon.CopyFieldsFrom(
+            BaseLayerSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -586,7 +606,7 @@ namespace Mutagen.Bethesda.Oblivion
             BaseLayer_CopyMask copyMask = null,
             BaseLayer def = null)
         {
-            BaseLayerCommon.CopyFieldsFrom(
+            BaseLayerSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -618,7 +638,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Clear()
         {
-            BaseLayerCommon.Instance.Clear(this);
+            BaseLayerSetterCommon.Instance.Clear(this);
         }
 
         public static BaseLayer Create(IEnumerable<KeyValuePair<ushort, object>> fields)
@@ -708,6 +728,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IBaseLayerInternalGetter : IBaseLayerGetter
     {
+        object CommonInstance();
+        object CommonSetterInstance();
+        object CommonSetterCopyInstance();
         #region BTXTDataTypeState
         BaseLayer.BTXTDataType BTXTDataTypeState { get; }
 
@@ -722,7 +745,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IBaseLayerInternal item)
         {
-            ((BaseLayerCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((BaseLayerSetterCommon)((IBaseLayerInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static BaseLayer_Mask<bool> GetEqualsMask(
@@ -730,7 +753,7 @@ namespace Mutagen.Bethesda.Oblivion
             IBaseLayerInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((BaseLayerCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((BaseLayerCommon)((IBaseLayerInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -741,7 +764,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             BaseLayer_Mask<bool> printMask = null)
         {
-            return ((BaseLayerCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((BaseLayerCommon)((IBaseLayerInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -753,7 +776,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             BaseLayer_Mask<bool> printMask = null)
         {
-            ((BaseLayerCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((BaseLayerCommon)((IBaseLayerInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -764,7 +787,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IBaseLayerInternalGetter item,
             BaseLayer_Mask<bool?> checkMask)
         {
-            return ((BaseLayerCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((BaseLayerCommon)((IBaseLayerInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -772,7 +795,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static BaseLayer_Mask<bool> GetHasBeenSetMask(this IBaseLayerInternalGetter item)
         {
             var ret = new BaseLayer_Mask<bool>();
-            ((BaseLayerCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((BaseLayerCommon)((IBaseLayerInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -782,7 +805,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IBaseLayerInternalGetter item,
             IBaseLayerInternalGetter rhs)
         {
-            return ((BaseLayerCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((BaseLayerCommon)((IBaseLayerInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -835,8 +858,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type SetterType = typeof(IBaseLayer);
 
         public static readonly Type InternalSetterType = typeof(IBaseLayerInternal);
-
-        public static readonly Type CommonType = typeof(BaseLayerCommon);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.BaseLayer";
 
@@ -1008,7 +1029,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -1028,9 +1048,161 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
+    public partial class BaseLayerSetterCommon
+    {
+        public static readonly BaseLayerSetterCommon Instance = new BaseLayerSetterCommon();
+
+        partial void ClearPartial();
+        
+        public virtual void Clear(IBaseLayerInternal item)
+        {
+            ClearPartial();
+            item.Texture = default(LandTexture);
+            item.Quadrant = default(AlphaLayer.QuadrantEnum);
+        }
+        
+        
+    }
     public partial class BaseLayerCommon
     {
         public static readonly BaseLayerCommon Instance = new BaseLayerCommon();
+
+        public BaseLayer_Mask<bool> GetEqualsMask(
+            IBaseLayerInternalGetter item,
+            IBaseLayerInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new BaseLayer_Mask<bool>();
+            ((BaseLayerCommon)((IBaseLayerInternalGetter)item).CommonInstance()).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+        
+        public void FillEqualsMask(
+            IBaseLayerInternalGetter item,
+            IBaseLayerInternalGetter rhs,
+            BaseLayer_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            if (rhs == null) return;
+            ret.Texture = item.Texture_Property.FormKey == rhs.Texture_Property.FormKey;
+            ret.Quadrant = item.Quadrant == rhs.Quadrant;
+            ret.LayerNumber = item.LayerNumber == rhs.LayerNumber;
+        }
+        
+        public string ToString(
+            IBaseLayerInternalGetter item,
+            string name = null,
+            BaseLayer_Mask<bool> printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+            return fg.ToString();
+        }
+        
+        public void ToString(
+            IBaseLayerInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            BaseLayer_Mask<bool> printMask = null)
+        {
+            if (name == null)
+            {
+                fg.AppendLine($"BaseLayer =>");
+            }
+            else
+            {
+                fg.AppendLine($"{name} (BaseLayer) =>");
+            }
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
+            }
+            fg.AppendLine("]");
+        }
+        
+        protected static void ToStringFields(
+            IBaseLayerInternalGetter item,
+            FileGeneration fg,
+            BaseLayer_Mask<bool> printMask = null)
+        {
+            if (printMask?.Texture ?? true)
+            {
+                fg.AppendLine($"Texture => {item.Texture_Property}");
+            }
+            if (printMask?.Quadrant ?? true)
+            {
+                fg.AppendLine($"Quadrant => {item.Quadrant}");
+            }
+            if (printMask?.LayerNumber ?? true)
+            {
+                fg.AppendLine($"LayerNumber => {item.LayerNumber}");
+            }
+            if (printMask?.BTXTDataTypeState ?? true)
+            {
+            }
+        }
+        
+        public bool HasBeenSet(
+            IBaseLayerInternalGetter item,
+            BaseLayer_Mask<bool?> checkMask)
+        {
+            return true;
+        }
+        
+        public void FillHasBeenSetMask(
+            IBaseLayerInternalGetter item,
+            BaseLayer_Mask<bool> mask)
+        {
+            mask.Texture = true;
+            mask.Quadrant = true;
+            mask.LayerNumber = true;
+            mask.BTXTDataTypeState = true;
+        }
+        
+        #region Equals and Hash
+        public virtual bool Equals(
+            IBaseLayerInternalGetter lhs,
+            IBaseLayerInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!lhs.Texture_Property.Equals(rhs.Texture_Property)) return false;
+            if (lhs.Quadrant != rhs.Quadrant) return false;
+            if (lhs.LayerNumber != rhs.LayerNumber) return false;
+            if (lhs.BTXTDataTypeState != rhs.BTXTDataTypeState) return false;
+            return true;
+        }
+        
+        public virtual int GetHashCode(IBaseLayerInternalGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.Texture).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Quadrant).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.LayerNumber).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.BTXTDataTypeState).CombineHashCode(ret);
+            return ret;
+        }
+        
+        #endregion
+        
+        
+        
+    }
+    public partial class BaseLayerSetterCopyCommon
+    {
+        public static readonly BaseLayerSetterCopyCommon Instance = new BaseLayerSetterCopyCommon();
 
         #region Copy Fields From
         public static void CopyFieldsFrom(
@@ -1075,149 +1247,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
         }
-
+        
         #endregion
-
-        partial void ClearPartial();
-
-        public virtual void Clear(IBaseLayerInternal item)
-        {
-            ClearPartial();
-            item.Texture = default(LandTexture);
-            item.Quadrant = default(AlphaLayer.QuadrantEnum);
-        }
-
-        public BaseLayer_Mask<bool> GetEqualsMask(
-            IBaseLayerInternalGetter item,
-            IBaseLayerInternalGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new BaseLayer_Mask<bool>();
-            ((BaseLayerCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public void FillEqualsMask(
-            IBaseLayerInternalGetter item,
-            IBaseLayerInternalGetter rhs,
-            BaseLayer_Mask<bool> ret,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            if (rhs == null) return;
-            ret.Texture = item.Texture_Property.FormKey == rhs.Texture_Property.FormKey;
-            ret.Quadrant = item.Quadrant == rhs.Quadrant;
-            ret.LayerNumber = item.LayerNumber == rhs.LayerNumber;
-        }
-
-        public string ToString(
-            IBaseLayerInternalGetter item,
-            string name = null,
-            BaseLayer_Mask<bool> printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(
-                item: item,
-                fg: fg,
-                name: name,
-                printMask: printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(
-            IBaseLayerInternalGetter item,
-            FileGeneration fg,
-            string name = null,
-            BaseLayer_Mask<bool> printMask = null)
-        {
-            if (name == null)
-            {
-                fg.AppendLine($"BaseLayer =>");
-            }
-            else
-            {
-                fg.AppendLine($"{name} (BaseLayer) =>");
-            }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                ToStringFields(
-                    item: item,
-                    fg: fg,
-                    printMask: printMask);
-            }
-            fg.AppendLine("]");
-        }
-
-        protected static void ToStringFields(
-            IBaseLayerInternalGetter item,
-            FileGeneration fg,
-            BaseLayer_Mask<bool> printMask = null)
-        {
-            if (printMask?.Texture ?? true)
-            {
-                fg.AppendLine($"Texture => {item.Texture_Property}");
-            }
-            if (printMask?.Quadrant ?? true)
-            {
-                fg.AppendLine($"Quadrant => {item.Quadrant}");
-            }
-            if (printMask?.LayerNumber ?? true)
-            {
-                fg.AppendLine($"LayerNumber => {item.LayerNumber}");
-            }
-            if (printMask?.BTXTDataTypeState ?? true)
-            {
-            }
-        }
-
-        public bool HasBeenSet(
-            IBaseLayerInternalGetter item,
-            BaseLayer_Mask<bool?> checkMask)
-        {
-            return true;
-        }
-
-        public void FillHasBeenSetMask(
-            IBaseLayerInternalGetter item,
-            BaseLayer_Mask<bool> mask)
-        {
-            mask.Texture = true;
-            mask.Quadrant = true;
-            mask.LayerNumber = true;
-            mask.BTXTDataTypeState = true;
-        }
-
-        #region Equals and Hash
-        public virtual bool Equals(
-            IBaseLayerInternalGetter lhs,
-            IBaseLayerInternalGetter rhs)
-        {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
-            if (!lhs.Texture_Property.Equals(rhs.Texture_Property)) return false;
-            if (lhs.Quadrant != rhs.Quadrant) return false;
-            if (lhs.LayerNumber != rhs.LayerNumber) return false;
-            if (lhs.BTXTDataTypeState != rhs.BTXTDataTypeState) return false;
-            return true;
-        }
-
-        public virtual int GetHashCode(IBaseLayerInternalGetter item)
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.Texture).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Quadrant).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.LayerNumber).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.BTXTDataTypeState).CombineHashCode(ret);
-            return ret;
-        }
-
-        #endregion
-
-
+        
+        
     }
     #endregion
 
@@ -2095,11 +2128,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         BinaryWrapper,
         IBaseLayerInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BaseLayer_Registration.Instance;
         public static BaseLayer_Registration Registration => BaseLayer_Registration.Instance;
-        protected virtual object CommonInstance => BaseLayerCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
+        protected virtual object CommonInstance()
+        {
+            return BaseLayerCommon.Instance;
+        }
+        object IBaseLayerInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IBaseLayerInternalGetter.CommonSetterInstance()
+        {
+            return null;
+        }
+        object IBaseLayerInternalGetter.CommonSetterCopyInstance()
+        {
+            return null;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
@@ -2107,8 +2157,34 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         protected virtual object XmlWriteTranslator => BaseLayerXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((BaseLayerXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         protected virtual object BinaryWriteTranslator => BaseLayerBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((BaseLayerBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
 
         private int? _BTXTLocation;
         public BaseLayer.BTXTDataType BTXTDataTypeState { get; private set; }
@@ -2193,4 +2269,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class BaseLayer
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => BaseLayer_Registration.Instance;
+        public static BaseLayer_Registration Registration => BaseLayer_Registration.Instance;
+        protected virtual object CommonInstance()
+        {
+            return BaseLayerCommon.Instance;
+        }
+        protected virtual object CommonSetterInstance()
+        {
+            return BaseLayerSetterCommon.Instance;
+        }
+        protected virtual object CommonSetterCopyInstance()
+        {
+            return BaseLayerSetterCopyCommon.Instance;
+        }
+        object IBaseLayerInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IBaseLayerInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object IBaseLayerInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
 }

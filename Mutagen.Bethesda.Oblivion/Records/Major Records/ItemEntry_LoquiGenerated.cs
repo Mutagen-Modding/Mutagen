@@ -34,18 +34,12 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class ItemEntry :
         LoquiNotifyingObject,
-        IItemEntry,
+        IItemEntryInternal,
         ILoquiObjectSetter<ItemEntry>,
         ILinkSubContainer,
         IEquatable<ItemEntry>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => ItemEntry_Registration.Instance;
-        public static ItemEntry_Registration Registration => ItemEntry_Registration.Instance;
-        protected object CommonInstance => ItemEntryCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
-
         #region Ctor
         public ItemEntry()
         {
@@ -90,7 +84,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IItemEntryGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IItemEntryInternalGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -108,22 +102,35 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is IItemEntryGetter rhs)) return false;
-            return ((ItemEntryCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            if (!(obj is IItemEntryInternalGetter rhs)) return false;
+            return ((ItemEntryCommon)((IItemEntryInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(ItemEntry obj)
         {
-            return ((ItemEntryCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((ItemEntryCommon)((IItemEntryInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((ItemEntryCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((ItemEntryCommon)((IItemEntryInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected object XmlWriteTranslator => ItemEntryXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((ItemEntryXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static ItemEntry CreateFromXml(
@@ -314,6 +321,19 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Translation
         protected object BinaryWriteTranslator => ItemEntryBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((ItemEntryBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
         #region Binary Create
         [DebuggerStepThrough]
         public static ItemEntry CreateFromBinary(
@@ -466,7 +486,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ItemEntryCommon.CopyFieldsFrom(
+            ItemEntrySetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -481,7 +501,7 @@ namespace Mutagen.Bethesda.Oblivion
             ItemEntry_CopyMask copyMask = null,
             ItemEntry def = null)
         {
-            ItemEntryCommon.CopyFieldsFrom(
+            ItemEntrySetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -507,7 +527,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void Clear()
         {
-            ItemEntryCommon.Instance.Clear(this);
+            ItemEntrySetterCommon.Instance.Clear(this);
         }
 
         public static ItemEntry Create(IEnumerable<KeyValuePair<ushort, object>> fields)
@@ -543,8 +563,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IItemEntry :
-        IItemEntryGetter,
-        ILoquiObjectSetter<IItemEntry>
+        IItemEntryInternalGetter,
+        ILoquiObjectSetter<IItemEntryInternal>
     {
         new ItemAbstract Item { get; set; }
         new IFormIDLink<ItemAbstract> Item_Property { get; }
@@ -560,9 +580,17 @@ namespace Mutagen.Bethesda.Oblivion
             ItemEntry def = null);
     }
 
+    public partial interface IItemEntryInternal :
+        IItemEntry,
+        IItemEntryInternalGetter
+    {
+        new ItemAbstract Item { get; set; }
+        new IFormIDLink<ItemAbstract> Item_Property { get; }
+    }
+
     public partial interface IItemEntryGetter :
         ILoquiObject,
-        ILoquiObject<IItemEntryGetter>,
+        ILoquiObject<IItemEntryInternalGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -579,45 +607,53 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    public partial interface IItemEntryInternalGetter : IItemEntryGetter
+    {
+        object CommonInstance();
+        object CommonSetterInstance();
+        object CommonSetterCopyInstance();
+
+    }
+
     #endregion
 
     #region Common MixIn
     public static class ItemEntryMixIn
     {
-        public static void Clear(this IItemEntry item)
+        public static void Clear(this IItemEntryInternal item)
         {
-            ((ItemEntryCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((ItemEntrySetterCommon)((IItemEntryInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static ItemEntry_Mask<bool> GetEqualsMask(
-            this IItemEntryGetter item,
-            IItemEntryGetter rhs,
+            this IItemEntryInternalGetter item,
+            IItemEntryInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((ItemEntryCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((ItemEntryCommon)((IItemEntryInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IItemEntryGetter item,
+            this IItemEntryInternalGetter item,
             string name = null,
             ItemEntry_Mask<bool> printMask = null)
         {
-            return ((ItemEntryCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((ItemEntryCommon)((IItemEntryInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IItemEntryGetter item,
+            this IItemEntryInternalGetter item,
             FileGeneration fg,
             string name = null,
             ItemEntry_Mask<bool> printMask = null)
         {
-            ((ItemEntryCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((ItemEntryCommon)((IItemEntryInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -625,28 +661,28 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static bool HasBeenSet(
-            this IItemEntryGetter item,
+            this IItemEntryInternalGetter item,
             ItemEntry_Mask<bool?> checkMask)
         {
-            return ((ItemEntryCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((ItemEntryCommon)((IItemEntryInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static ItemEntry_Mask<bool> GetHasBeenSetMask(this IItemEntryGetter item)
+        public static ItemEntry_Mask<bool> GetHasBeenSetMask(this IItemEntryInternalGetter item)
         {
             var ret = new ItemEntry_Mask<bool>();
-            ((ItemEntryCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((ItemEntryCommon)((IItemEntryInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this IItemEntryGetter item,
-            IItemEntryGetter rhs)
+            this IItemEntryInternalGetter item,
+            IItemEntryInternalGetter rhs)
         {
-            return ((ItemEntryCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((ItemEntryCommon)((IItemEntryInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -692,13 +728,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IItemEntryGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type InternalGetterType = typeof(IItemEntryInternalGetter);
 
         public static readonly Type SetterType = typeof(IItemEntry);
 
-        public static readonly Type InternalSetterType = null;
-
-        public static readonly Type CommonType = typeof(ItemEntryCommon);
+        public static readonly Type InternalSetterType = typeof(IItemEntryInternal);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.ItemEntry";
 
@@ -835,7 +869,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -855,9 +888,155 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
+    public partial class ItemEntrySetterCommon
+    {
+        public static readonly ItemEntrySetterCommon Instance = new ItemEntrySetterCommon();
+
+        partial void ClearPartial();
+        
+        public virtual void Clear(IItemEntryInternal item)
+        {
+            ClearPartial();
+            item.Item = default(ItemAbstract);
+            item.Count_Unset();
+        }
+        
+        
+    }
     public partial class ItemEntryCommon
     {
         public static readonly ItemEntryCommon Instance = new ItemEntryCommon();
+
+        public ItemEntry_Mask<bool> GetEqualsMask(
+            IItemEntryInternalGetter item,
+            IItemEntryInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new ItemEntry_Mask<bool>();
+            ((ItemEntryCommon)((IItemEntryInternalGetter)item).CommonInstance()).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+        
+        public void FillEqualsMask(
+            IItemEntryInternalGetter item,
+            IItemEntryInternalGetter rhs,
+            ItemEntry_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            if (rhs == null) return;
+            ret.Item = item.Item_Property.FormKey == rhs.Item_Property.FormKey;
+            ret.Count = item.Count_IsSet == rhs.Count_IsSet && item.Count == rhs.Count;
+        }
+        
+        public string ToString(
+            IItemEntryInternalGetter item,
+            string name = null,
+            ItemEntry_Mask<bool> printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+            return fg.ToString();
+        }
+        
+        public void ToString(
+            IItemEntryInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            ItemEntry_Mask<bool> printMask = null)
+        {
+            if (name == null)
+            {
+                fg.AppendLine($"ItemEntry =>");
+            }
+            else
+            {
+                fg.AppendLine($"{name} (ItemEntry) =>");
+            }
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
+            }
+            fg.AppendLine("]");
+        }
+        
+        protected static void ToStringFields(
+            IItemEntryInternalGetter item,
+            FileGeneration fg,
+            ItemEntry_Mask<bool> printMask = null)
+        {
+            if (printMask?.Item ?? true)
+            {
+                fg.AppendLine($"Item => {item.Item_Property}");
+            }
+            if (printMask?.Count ?? true)
+            {
+                fg.AppendLine($"Count => {item.Count}");
+            }
+        }
+        
+        public bool HasBeenSet(
+            IItemEntryInternalGetter item,
+            ItemEntry_Mask<bool?> checkMask)
+        {
+            if (checkMask.Count.HasValue && checkMask.Count.Value != item.Count_IsSet) return false;
+            return true;
+        }
+        
+        public void FillHasBeenSetMask(
+            IItemEntryInternalGetter item,
+            ItemEntry_Mask<bool> mask)
+        {
+            mask.Item = true;
+            mask.Count = item.Count_IsSet;
+        }
+        
+        #region Equals and Hash
+        public virtual bool Equals(
+            IItemEntryInternalGetter lhs,
+            IItemEntryInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!lhs.Item_Property.Equals(rhs.Item_Property)) return false;
+            if (lhs.Count_IsSet != rhs.Count_IsSet) return false;
+            if (lhs.Count_IsSet)
+            {
+                if (lhs.Count != rhs.Count) return false;
+            }
+            return true;
+        }
+        
+        public virtual int GetHashCode(IItemEntryInternalGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.Item).CombineHashCode(ret);
+            if (item.Count_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Count).CombineHashCode(ret);
+            }
+            return ret;
+        }
+        
+        #endregion
+        
+        
+        
+    }
+    public partial class ItemEntrySetterCopyCommon
+    {
+        public static readonly ItemEntrySetterCopyCommon Instance = new ItemEntrySetterCopyCommon();
 
         #region Copy Fields From
         public static void CopyFieldsFrom(
@@ -915,143 +1094,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
         }
-
+        
         #endregion
-
-        partial void ClearPartial();
-
-        public virtual void Clear(IItemEntry item)
-        {
-            ClearPartial();
-            item.Item = default(ItemAbstract);
-            item.Count_Unset();
-        }
-
-        public ItemEntry_Mask<bool> GetEqualsMask(
-            IItemEntryGetter item,
-            IItemEntryGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new ItemEntry_Mask<bool>();
-            ((ItemEntryCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public void FillEqualsMask(
-            IItemEntryGetter item,
-            IItemEntryGetter rhs,
-            ItemEntry_Mask<bool> ret,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            if (rhs == null) return;
-            ret.Item = item.Item_Property.FormKey == rhs.Item_Property.FormKey;
-            ret.Count = item.Count_IsSet == rhs.Count_IsSet && item.Count == rhs.Count;
-        }
-
-        public string ToString(
-            IItemEntryGetter item,
-            string name = null,
-            ItemEntry_Mask<bool> printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(
-                item: item,
-                fg: fg,
-                name: name,
-                printMask: printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(
-            IItemEntryGetter item,
-            FileGeneration fg,
-            string name = null,
-            ItemEntry_Mask<bool> printMask = null)
-        {
-            if (name == null)
-            {
-                fg.AppendLine($"ItemEntry =>");
-            }
-            else
-            {
-                fg.AppendLine($"{name} (ItemEntry) =>");
-            }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                ToStringFields(
-                    item: item,
-                    fg: fg,
-                    printMask: printMask);
-            }
-            fg.AppendLine("]");
-        }
-
-        protected static void ToStringFields(
-            IItemEntryGetter item,
-            FileGeneration fg,
-            ItemEntry_Mask<bool> printMask = null)
-        {
-            if (printMask?.Item ?? true)
-            {
-                fg.AppendLine($"Item => {item.Item_Property}");
-            }
-            if (printMask?.Count ?? true)
-            {
-                fg.AppendLine($"Count => {item.Count}");
-            }
-        }
-
-        public bool HasBeenSet(
-            IItemEntryGetter item,
-            ItemEntry_Mask<bool?> checkMask)
-        {
-            if (checkMask.Count.HasValue && checkMask.Count.Value != item.Count_IsSet) return false;
-            return true;
-        }
-
-        public void FillHasBeenSetMask(
-            IItemEntryGetter item,
-            ItemEntry_Mask<bool> mask)
-        {
-            mask.Item = true;
-            mask.Count = item.Count_IsSet;
-        }
-
-        #region Equals and Hash
-        public virtual bool Equals(
-            IItemEntryGetter lhs,
-            IItemEntryGetter rhs)
-        {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
-            if (!lhs.Item_Property.Equals(rhs.Item_Property)) return false;
-            if (lhs.Count_IsSet != rhs.Count_IsSet) return false;
-            if (lhs.Count_IsSet)
-            {
-                if (lhs.Count != rhs.Count) return false;
-            }
-            return true;
-        }
-
-        public virtual int GetHashCode(IItemEntryGetter item)
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.Item).CombineHashCode(ret);
-            if (item.Count_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Count).CombineHashCode(ret);
-            }
-            return ret;
-        }
-
-        #endregion
-
-
+        
+        
     }
     #endregion
 
@@ -1062,7 +1108,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static ItemEntryXmlWriteTranslation Instance = new ItemEntryXmlWriteTranslation();
 
         public static void WriteToNodeXml(
-            IItemEntryGetter item,
+            IItemEntryInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1090,7 +1136,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             XElement node,
-            IItemEntryGetter item,
+            IItemEntryInternalGetter item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)
@@ -1116,7 +1162,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             Write(
-                item: (IItemEntryGetter)item,
+                item: (IItemEntryInternalGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1125,7 +1171,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             XElement node,
-            IItemEntryGetter item,
+            IItemEntryInternalGetter item,
             ErrorMaskBuilder errorMask,
             int fieldIndex,
             TranslationCrystal translationMask,
@@ -1135,7 +1181,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 errorMask?.PushIndex(fieldIndex);
                 Write(
-                    item: (IItemEntryGetter)item,
+                    item: (IItemEntryInternalGetter)item,
                     name: name,
                     node: node,
                     errorMask: errorMask,
@@ -1159,7 +1205,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static ItemEntryXmlCreateTranslation Instance = new ItemEntryXmlCreateTranslation();
 
         public static void FillPublicXml(
-            IItemEntry item,
+            IItemEntryInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1184,7 +1230,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElementXml(
-            IItemEntry item,
+            IItemEntryInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -1236,7 +1282,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public static class ItemEntryXmlTranslationMixIn
     {
         public static void WriteToXml(
-            this IItemEntryGetter item,
+            this IItemEntryInternalGetter item,
             XElement node,
             out ItemEntry_ErrorMask errorMask,
             bool doMasks = true,
@@ -1254,7 +1300,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IItemEntryGetter item,
+            this IItemEntryInternalGetter item,
             string path,
             out ItemEntry_ErrorMask errorMask,
             ItemEntry_TranslationMask translationMask = null,
@@ -1273,7 +1319,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IItemEntryGetter item,
+            this IItemEntryInternalGetter item,
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1291,7 +1337,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IItemEntryGetter item,
+            this IItemEntryInternalGetter item,
             Stream stream,
             out ItemEntry_ErrorMask errorMask,
             ItemEntry_TranslationMask translationMask = null,
@@ -1310,7 +1356,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IItemEntryGetter item,
+            this IItemEntryInternalGetter item,
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1328,7 +1374,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IItemEntryGetter item,
+            this IItemEntryInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1343,7 +1389,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IItemEntryGetter item,
+            this IItemEntryInternalGetter item,
             XElement node,
             string name = null,
             ItemEntry_TranslationMask translationMask = null)
@@ -1357,7 +1403,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IItemEntryGetter item,
+            this IItemEntryInternalGetter item,
             string path,
             string name = null)
         {
@@ -1372,7 +1418,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IItemEntryGetter item,
+            this IItemEntryInternalGetter item,
             Stream stream,
             string name = null)
         {
@@ -1700,7 +1746,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static ItemEntryBinaryWriteTranslation Instance = new ItemEntryBinaryWriteTranslation();
 
         public static void Write_Embedded(
-            IItemEntryGetter item,
+            IItemEntryInternalGetter item,
             MutagenWriter writer,
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
@@ -1717,7 +1763,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             MutagenWriter writer,
-            IItemEntryGetter item,
+            IItemEntryInternalGetter item,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
@@ -1743,7 +1789,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask)
         {
             Write(
-                item: (IItemEntryGetter)item,
+                item: (IItemEntryInternalGetter)item,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -1762,7 +1808,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public static class ItemEntryBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IItemEntryGetter item,
+            this IItemEntryInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
             out ItemEntry_ErrorMask errorMask,
@@ -1779,7 +1825,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToBinary(
-            this IItemEntryGetter item,
+            this IItemEntryInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -1793,7 +1839,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToBinary(
-            this IItemEntryGetter item,
+            this IItemEntryInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
@@ -1810,22 +1856,65 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     public partial class ItemEntryBinaryWrapper :
         BinaryWrapper,
-        IItemEntryGetter
+        IItemEntryInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ItemEntry_Registration.Instance;
         public static ItemEntry_Registration Registration => ItemEntry_Registration.Instance;
-        protected object CommonInstance => ItemEntryCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
+        protected object CommonInstance()
+        {
+            return ItemEntryCommon.Instance;
+        }
+        object IItemEntryInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IItemEntryInternalGetter.CommonSetterInstance()
+        {
+            return null;
+        }
+        object IItemEntryInternalGetter.CommonSetterCopyInstance()
+        {
+            return null;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IItemEntryGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IItemEntryInternalGetter)rhs, include);
 
         protected object XmlWriteTranslator => ItemEntryXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((ItemEntryXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         protected object BinaryWriteTranslator => ItemEntryBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((ItemEntryBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
 
         #region Item
         public IFormIDLinkGetter<IItemAbstractInternalGetter> Item_Property => new FormIDLink<IItemAbstractInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
@@ -1874,4 +1963,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class ItemEntry
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => ItemEntry_Registration.Instance;
+        public static ItemEntry_Registration Registration => ItemEntry_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return ItemEntryCommon.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return ItemEntrySetterCommon.Instance;
+        }
+        protected object CommonSetterCopyInstance()
+        {
+            return ItemEntrySetterCopyCommon.Instance;
+        }
+        object IItemEntryInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IItemEntryInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object IItemEntryInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
 }

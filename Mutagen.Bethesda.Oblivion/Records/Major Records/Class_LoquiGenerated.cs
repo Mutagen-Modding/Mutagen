@@ -44,11 +44,6 @@ namespace Mutagen.Bethesda.Oblivion
         IEquatable<Class>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Class_Registration.Instance;
-        public new static Class_Registration Registration => Class_Registration.Instance;
-        protected override object CommonInstance => ClassCommon.Instance;
-
         #region Ctor
         protected Class()
         {
@@ -203,7 +198,7 @@ namespace Mutagen.Bethesda.Oblivion
             get => _Training;
             set => _Training = value ?? new ClassTraining();
         }
-        IClassTrainingGetter IClassGetter.Training => _Training;
+        IClassTrainingInternalGetter IClassGetter.Training => _Training;
         #endregion
         #region DATADataTypeState
         private Class.DATADataType _DATADataTypeState;
@@ -242,20 +237,33 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IClassInternalGetter rhs)) return false;
-            return ((ClassCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            return ((ClassCommon)((IClassInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(Class obj)
         {
-            return ((ClassCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((ClassCommon)((IClassInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((ClassCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((ClassCommon)((IClassInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected override object XmlWriteTranslator => ClassXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((ClassXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static Class CreateFromXml(
@@ -482,6 +490,19 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Binary Translation
         protected override object BinaryWriteTranslator => ClassBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((ClassBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
         #region Binary Create
         [DebuggerStepThrough]
         public static Class CreateFromBinary(
@@ -784,7 +805,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ClassCommon.CopyFieldsFrom(
+            ClassSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -799,7 +820,7 @@ namespace Mutagen.Bethesda.Oblivion
             Class_CopyMask copyMask = null,
             Class def = null)
         {
-            ClassCommon.CopyFieldsFrom(
+            ClassSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -850,7 +871,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            ClassCommon.Instance.Clear(this);
+            ClassSetterCommon.Instance.Clear(this);
         }
 
         public new static Class Create(IEnumerable<KeyValuePair<ushort, object>> fields)
@@ -995,7 +1016,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Training
-        IClassTrainingGetter Training { get; }
+        IClassTrainingInternalGetter Training { get; }
 
         #endregion
 
@@ -1019,7 +1040,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IClassInternal item)
         {
-            ((ClassCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((ClassSetterCommon)((IClassInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static Class_Mask<bool> GetEqualsMask(
@@ -1027,7 +1048,7 @@ namespace Mutagen.Bethesda.Oblivion
             IClassInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((ClassCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((ClassCommon)((IClassInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -1038,7 +1059,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Class_Mask<bool> printMask = null)
         {
-            return ((ClassCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((ClassCommon)((IClassInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -1050,7 +1071,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Class_Mask<bool> printMask = null)
         {
-            ((ClassCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((ClassCommon)((IClassInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -1061,7 +1082,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IClassInternalGetter item,
             Class_Mask<bool?> checkMask)
         {
-            return ((ClassCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((ClassCommon)((IClassInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -1069,7 +1090,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Class_Mask<bool> GetHasBeenSetMask(this IClassInternalGetter item)
         {
             var ret = new Class_Mask<bool>();
-            ((ClassCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((ClassCommon)((IClassInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -1079,7 +1100,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IClassInternalGetter item,
             IClassInternalGetter rhs)
         {
-            return ((ClassCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((ClassCommon)((IClassInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1143,8 +1164,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type SetterType = typeof(IClass);
 
         public static readonly Type InternalSetterType = typeof(IClassInternal);
-
-        public static readonly Type CommonType = typeof(ClassCommon);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.Class";
 
@@ -1375,7 +1394,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -1395,9 +1413,375 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
+    public partial class ClassSetterCommon : OblivionMajorRecordSetterCommon
+    {
+        public new static readonly ClassSetterCommon Instance = new ClassSetterCommon();
+
+        partial void ClearPartial();
+        
+        public virtual void Clear(IClassInternal item)
+        {
+            ClearPartial();
+            item.Name_Unset();
+            item.Description_Unset();
+            item.Icon_Unset();
+            item.PrimaryAttributes.Clear();
+            item.Specialization = default(Class.SpecializationFlag);
+            item.SecondaryAttributes.Clear();
+            item.Flags = default(ClassFlag);
+            item.ClassServices = default(ClassService);
+            item.Training = default(ClassTraining);
+            base.Clear(item);
+        }
+        
+        public override void Clear(IOblivionMajorRecordInternal item)
+        {
+            Clear(item: (IClassInternal)item);
+        }
+        
+        public override void Clear(IMajorRecordInternal item)
+        {
+            Clear(item: (IClassInternal)item);
+        }
+        
+        
+    }
     public partial class ClassCommon : OblivionMajorRecordCommon
     {
-        public static readonly ClassCommon Instance = new ClassCommon();
+        public new static readonly ClassCommon Instance = new ClassCommon();
+
+        public Class_Mask<bool> GetEqualsMask(
+            IClassInternalGetter item,
+            IClassInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new Class_Mask<bool>();
+            ((ClassCommon)((IClassInternalGetter)item).CommonInstance()).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+        
+        public void FillEqualsMask(
+            IClassInternalGetter item,
+            IClassInternalGetter rhs,
+            Class_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            if (rhs == null) return;
+            ret.Name = item.Name_IsSet == rhs.Name_IsSet && string.Equals(item.Name, rhs.Name);
+            ret.Description = item.Description_IsSet == rhs.Description_IsSet && string.Equals(item.Description, rhs.Description);
+            ret.Icon = item.Icon_IsSet == rhs.Icon_IsSet && string.Equals(item.Icon, rhs.Icon);
+            ret.PrimaryAttributes = item.PrimaryAttributes.CollectionEqualsHelper(
+                rhs.PrimaryAttributes,
+                (l, r) => l == r,
+                include);
+            ret.Specialization = item.Specialization == rhs.Specialization;
+            ret.SecondaryAttributes = item.SecondaryAttributes.CollectionEqualsHelper(
+                rhs.SecondaryAttributes,
+                (l, r) => l == r,
+                include);
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.ClassServices = item.ClassServices == rhs.ClassServices;
+            ret.Training = MaskItemExt.Factory(item.Training.GetEqualsMask(rhs.Training, include), include);
+            base.FillEqualsMask(item, rhs, ret, include);
+        }
+        
+        public string ToString(
+            IClassInternalGetter item,
+            string name = null,
+            Class_Mask<bool> printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+            return fg.ToString();
+        }
+        
+        public void ToString(
+            IClassInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            Class_Mask<bool> printMask = null)
+        {
+            if (name == null)
+            {
+                fg.AppendLine($"Class =>");
+            }
+            else
+            {
+                fg.AppendLine($"{name} (Class) =>");
+            }
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
+            }
+            fg.AppendLine("]");
+        }
+        
+        protected static void ToStringFields(
+            IClassInternalGetter item,
+            FileGeneration fg,
+            Class_Mask<bool> printMask = null)
+        {
+            OblivionMajorRecordCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.Name ?? true)
+            {
+                fg.AppendLine($"Name => {item.Name}");
+            }
+            if (printMask?.Description ?? true)
+            {
+                fg.AppendLine($"Description => {item.Description}");
+            }
+            if (printMask?.Icon ?? true)
+            {
+                fg.AppendLine($"Icon => {item.Icon}");
+            }
+            if (printMask?.PrimaryAttributes?.Overall ?? true)
+            {
+                fg.AppendLine("PrimaryAttributes =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.PrimaryAttributes)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"Item => {subItem}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.Specialization ?? true)
+            {
+                fg.AppendLine($"Specialization => {item.Specialization}");
+            }
+            if (printMask?.SecondaryAttributes?.Overall ?? true)
+            {
+                fg.AppendLine("SecondaryAttributes =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.SecondaryAttributes)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"Item => {subItem}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                fg.AppendLine($"Flags => {item.Flags}");
+            }
+            if (printMask?.ClassServices ?? true)
+            {
+                fg.AppendLine($"ClassServices => {item.ClassServices}");
+            }
+            if (printMask?.Training?.Overall ?? true)
+            {
+                item.Training?.ToString(fg, "Training");
+            }
+            if (printMask?.DATADataTypeState ?? true)
+            {
+            }
+        }
+        
+        public bool HasBeenSet(
+            IClassInternalGetter item,
+            Class_Mask<bool?> checkMask)
+        {
+            if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_IsSet) return false;
+            if (checkMask.Description.HasValue && checkMask.Description.Value != item.Description_IsSet) return false;
+            if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_IsSet) return false;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+        
+        public void FillHasBeenSetMask(
+            IClassInternalGetter item,
+            Class_Mask<bool> mask)
+        {
+            mask.Name = item.Name_IsSet;
+            mask.Description = item.Description_IsSet;
+            mask.Icon = item.Icon_IsSet;
+            mask.PrimaryAttributes = new MaskItem<bool, IEnumerable<(int, bool)>>(true, null);
+            mask.Specialization = true;
+            mask.SecondaryAttributes = new MaskItem<bool, IEnumerable<(int, bool)>>(true, null);
+            mask.Flags = true;
+            mask.ClassServices = true;
+            mask.Training = new MaskItem<bool, ClassTraining_Mask<bool>>(true, item.Training.GetHasBeenSetMask());
+            mask.DATADataTypeState = true;
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
+        }
+        
+        public static Class_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (Class_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.FormKey:
+                    return (Class_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.Version:
+                    return (Class_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.EditorID:
+                    return (Class_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
+                    return (Class_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        public static Class_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (Class_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.FormKey:
+                    return (Class_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.Version:
+                    return (Class_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.EditorID:
+                    return (Class_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        #region Equals and Hash
+        public virtual bool Equals(
+            IClassInternalGetter lhs,
+            IClassInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.Name_IsSet != rhs.Name_IsSet) return false;
+            if (lhs.Name_IsSet)
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if (lhs.Description_IsSet != rhs.Description_IsSet) return false;
+            if (lhs.Description_IsSet)
+            {
+                if (!string.Equals(lhs.Description, rhs.Description)) return false;
+            }
+            if (lhs.Icon_IsSet != rhs.Icon_IsSet) return false;
+            if (lhs.Icon_IsSet)
+            {
+                if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
+            }
+            if (!lhs.PrimaryAttributes.SequenceEqual(rhs.PrimaryAttributes)) return false;
+            if (lhs.Specialization != rhs.Specialization) return false;
+            if (!lhs.SecondaryAttributes.SequenceEqual(rhs.SecondaryAttributes)) return false;
+            if (lhs.Flags != rhs.Flags) return false;
+            if (lhs.ClassServices != rhs.ClassServices) return false;
+            if (!object.Equals(lhs.Training, rhs.Training)) return false;
+            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            return true;
+        }
+        
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IClassInternalGetter)lhs,
+                rhs: rhs as IClassInternalGetter);
+        }
+        
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IClassInternalGetter)lhs,
+                rhs: rhs as IClassInternalGetter);
+        }
+        
+        public virtual int GetHashCode(IClassInternalGetter item)
+        {
+            int ret = 0;
+            if (item.Name_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Name).CombineHashCode(ret);
+            }
+            if (item.Description_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Description).CombineHashCode(ret);
+            }
+            if (item.Icon_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Icon).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.PrimaryAttributes).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Specialization).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.SecondaryAttributes).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.ClassServices).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Training).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.DATADataTypeState).CombineHashCode(ret);
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+        
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IClassInternalGetter)item);
+        }
+        
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IClassInternalGetter)item);
+        }
+        
+        #endregion
+        
+        
+        #region Mutagen
+        partial void PostDuplicate(Class obj, Class rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+        
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new Class(getNextFormKey());
+            ret.CopyFieldsFrom((Class)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (Class)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+        
+        #endregion
+        
+        
+    }
+    public partial class ClassSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
+    {
+        public new static readonly ClassSetterCopyCommon Instance = new ClassSetterCopyCommon();
 
         #region Copy Fields From
         public static void CopyFieldsFrom(
@@ -1407,7 +1791,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             Class_CopyMask copyMask)
         {
-            OblivionMajorRecordCommon.CopyFieldsFrom(
+            OblivionMajorRecordSetterCopyCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1603,7 +1987,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             item.Training = Utility.GetGetterInterfaceReference<ClassTraining>(rhs.Training);
                             break;
                         case CopyOption.CopyIn:
-                            ClassTrainingCommon.CopyFieldsFrom(
+                            ClassTrainingSetterCopyCommon.CopyFieldsFrom(
                                 item: item.Training,
                                 rhs: rhs.Training,
                                 def: def?.Training,
@@ -1638,363 +2022,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
         }
-
+        
         #endregion
-
-        partial void ClearPartial();
-
-        public virtual void Clear(IClassInternal item)
-        {
-            ClearPartial();
-            item.Name_Unset();
-            item.Description_Unset();
-            item.Icon_Unset();
-            item.PrimaryAttributes.Clear();
-            item.Specialization = default(Class.SpecializationFlag);
-            item.SecondaryAttributes.Clear();
-            item.Flags = default(ClassFlag);
-            item.ClassServices = default(ClassService);
-            item.Training = default(ClassTraining);
-            base.Clear(item);
-        }
-
-        public override void Clear(IOblivionMajorRecordInternal item)
-        {
-            Clear(item: (IClassInternal)item);
-        }
-
-        public override void Clear(IMajorRecordInternal item)
-        {
-            Clear(item: (IClassInternal)item);
-        }
-
-        public Class_Mask<bool> GetEqualsMask(
-            IClassInternalGetter item,
-            IClassInternalGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new Class_Mask<bool>();
-            ((ClassCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public void FillEqualsMask(
-            IClassInternalGetter item,
-            IClassInternalGetter rhs,
-            Class_Mask<bool> ret,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            if (rhs == null) return;
-            ret.Name = item.Name_IsSet == rhs.Name_IsSet && string.Equals(item.Name, rhs.Name);
-            ret.Description = item.Description_IsSet == rhs.Description_IsSet && string.Equals(item.Description, rhs.Description);
-            ret.Icon = item.Icon_IsSet == rhs.Icon_IsSet && string.Equals(item.Icon, rhs.Icon);
-            ret.PrimaryAttributes = item.PrimaryAttributes.CollectionEqualsHelper(
-                rhs.PrimaryAttributes,
-                (l, r) => l == r,
-                include);
-            ret.Specialization = item.Specialization == rhs.Specialization;
-            ret.SecondaryAttributes = item.SecondaryAttributes.CollectionEqualsHelper(
-                rhs.SecondaryAttributes,
-                (l, r) => l == r,
-                include);
-            ret.Flags = item.Flags == rhs.Flags;
-            ret.ClassServices = item.ClassServices == rhs.ClassServices;
-            ret.Training = MaskItemExt.Factory(item.Training.GetEqualsMask(rhs.Training, include), include);
-            base.FillEqualsMask(item, rhs, ret, include);
-        }
-
-        public string ToString(
-            IClassInternalGetter item,
-            string name = null,
-            Class_Mask<bool> printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(
-                item: item,
-                fg: fg,
-                name: name,
-                printMask: printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(
-            IClassInternalGetter item,
-            FileGeneration fg,
-            string name = null,
-            Class_Mask<bool> printMask = null)
-        {
-            if (name == null)
-            {
-                fg.AppendLine($"Class =>");
-            }
-            else
-            {
-                fg.AppendLine($"{name} (Class) =>");
-            }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                ToStringFields(
-                    item: item,
-                    fg: fg,
-                    printMask: printMask);
-            }
-            fg.AppendLine("]");
-        }
-
-        protected static void ToStringFields(
-            IClassInternalGetter item,
-            FileGeneration fg,
-            Class_Mask<bool> printMask = null)
-        {
-            OblivionMajorRecordCommon.ToStringFields(
-                item: item,
-                fg: fg,
-                printMask: printMask);
-            if (printMask?.Name ?? true)
-            {
-                fg.AppendLine($"Name => {item.Name}");
-            }
-            if (printMask?.Description ?? true)
-            {
-                fg.AppendLine($"Description => {item.Description}");
-            }
-            if (printMask?.Icon ?? true)
-            {
-                fg.AppendLine($"Icon => {item.Icon}");
-            }
-            if (printMask?.PrimaryAttributes?.Overall ?? true)
-            {
-                fg.AppendLine("PrimaryAttributes =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
-                {
-                    foreach (var subItem in item.PrimaryAttributes)
-                    {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            fg.AppendLine($"Item => {subItem}");
-                        }
-                        fg.AppendLine("]");
-                    }
-                }
-                fg.AppendLine("]");
-            }
-            if (printMask?.Specialization ?? true)
-            {
-                fg.AppendLine($"Specialization => {item.Specialization}");
-            }
-            if (printMask?.SecondaryAttributes?.Overall ?? true)
-            {
-                fg.AppendLine("SecondaryAttributes =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
-                {
-                    foreach (var subItem in item.SecondaryAttributes)
-                    {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            fg.AppendLine($"Item => {subItem}");
-                        }
-                        fg.AppendLine("]");
-                    }
-                }
-                fg.AppendLine("]");
-            }
-            if (printMask?.Flags ?? true)
-            {
-                fg.AppendLine($"Flags => {item.Flags}");
-            }
-            if (printMask?.ClassServices ?? true)
-            {
-                fg.AppendLine($"ClassServices => {item.ClassServices}");
-            }
-            if (printMask?.Training?.Overall ?? true)
-            {
-                item.Training?.ToString(fg, "Training");
-            }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-            }
-        }
-
-        public bool HasBeenSet(
-            IClassInternalGetter item,
-            Class_Mask<bool?> checkMask)
-        {
-            if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_IsSet) return false;
-            if (checkMask.Description.HasValue && checkMask.Description.Value != item.Description_IsSet) return false;
-            if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_IsSet) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public void FillHasBeenSetMask(
-            IClassInternalGetter item,
-            Class_Mask<bool> mask)
-        {
-            mask.Name = item.Name_IsSet;
-            mask.Description = item.Description_IsSet;
-            mask.Icon = item.Icon_IsSet;
-            mask.PrimaryAttributes = new MaskItem<bool, IEnumerable<(int, bool)>>(true, null);
-            mask.Specialization = true;
-            mask.SecondaryAttributes = new MaskItem<bool, IEnumerable<(int, bool)>>(true, null);
-            mask.Flags = true;
-            mask.ClassServices = true;
-            mask.Training = new MaskItem<bool, ClassTraining_Mask<bool>>(true, item.Training.GetHasBeenSetMask());
-            mask.DATADataTypeState = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-
-        public static Class_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
-        {
-            switch (index)
-            {
-                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Class_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.FormKey:
-                    return (Class_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.Version:
-                    return (Class_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.EditorID:
-                    return (Class_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
-                    return (Class_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        public static Class_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
-        {
-            switch (index)
-            {
-                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Class_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.FormKey:
-                    return (Class_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
-                    return (Class_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.EditorID:
-                    return (Class_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        #region Equals and Hash
-        public virtual bool Equals(
-            IClassInternalGetter lhs,
-            IClassInternalGetter rhs)
-        {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (lhs.Name_IsSet != rhs.Name_IsSet) return false;
-            if (lhs.Name_IsSet)
-            {
-                if (!string.Equals(lhs.Name, rhs.Name)) return false;
-            }
-            if (lhs.Description_IsSet != rhs.Description_IsSet) return false;
-            if (lhs.Description_IsSet)
-            {
-                if (!string.Equals(lhs.Description, rhs.Description)) return false;
-            }
-            if (lhs.Icon_IsSet != rhs.Icon_IsSet) return false;
-            if (lhs.Icon_IsSet)
-            {
-                if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
-            }
-            if (!lhs.PrimaryAttributes.SequenceEqual(rhs.PrimaryAttributes)) return false;
-            if (lhs.Specialization != rhs.Specialization) return false;
-            if (!lhs.SecondaryAttributes.SequenceEqual(rhs.SecondaryAttributes)) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (lhs.ClassServices != rhs.ClassServices) return false;
-            if (!object.Equals(lhs.Training, rhs.Training)) return false;
-            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
-            return true;
-        }
-
-        public override bool Equals(
-            IOblivionMajorRecordInternalGetter lhs,
-            IOblivionMajorRecordInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (IClassInternalGetter)lhs,
-                rhs: rhs as IClassInternalGetter);
-        }
-
-        public override bool Equals(
-            IMajorRecordInternalGetter lhs,
-            IMajorRecordInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (IClassInternalGetter)lhs,
-                rhs: rhs as IClassInternalGetter);
-        }
-
-        public virtual int GetHashCode(IClassInternalGetter item)
-        {
-            int ret = 0;
-            if (item.Name_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Name).CombineHashCode(ret);
-            }
-            if (item.Description_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Description).CombineHashCode(ret);
-            }
-            if (item.Icon_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Icon).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(item.PrimaryAttributes).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Specialization).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.SecondaryAttributes).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.ClassServices).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Training).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.DATADataTypeState).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
-        {
-            return GetHashCode(item: (IClassInternalGetter)item);
-        }
-
-        public override int GetHashCode(IMajorRecordInternalGetter item)
-        {
-            return GetHashCode(item: (IClassInternalGetter)item);
-        }
-
-        #endregion
-
-
-        #region Mutagen
-        partial void PostDuplicate(Class obj, Class rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new Class(getNextFormKey());
-            ret.CopyFieldsFrom((Class)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (Class)item, getNextFormKey, duplicatedRecords);
-            return ret;
-        }
-
-        #endregion
-
+        
+        
     }
     #endregion
 
@@ -3460,17 +3491,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         OblivionMajorRecordBinaryWrapper,
         IClassInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Class_Registration.Instance;
         public new static Class_Registration Registration => Class_Registration.Instance;
-        protected override object CommonInstance => ClassCommon.Instance;
+        protected override object CommonInstance()
+        {
+            return ClassCommon.Instance;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IClassInternalGetter)rhs, include);
 
         protected override object XmlWriteTranslator => ClassXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((ClassXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         protected override object BinaryWriteTranslator => ClassBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((ClassBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
 
         #region Name
         private int? _NameLocation;
@@ -3509,8 +3572,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Training
         private int _TrainingLocation => _DATALocation.Value + 0x30;
         private bool _Training_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Class.DATADataType.Break0);
-        private IClassTrainingGetter _Training => _Training_IsSet ? ClassTrainingBinaryWrapper.ClassTrainingFactory(new BinaryMemoryReadStream(_data.Slice(_TrainingLocation)), _package) : default;
-        public IClassTrainingGetter Training => _Training ?? new ClassTraining();
+        private IClassTrainingInternalGetter _Training => _Training_IsSet ? ClassTrainingBinaryWrapper.ClassTrainingFactory(new BinaryMemoryReadStream(_data.Slice(_TrainingLocation)), _package) : default;
+        public IClassTrainingInternalGetter Training => _Training ?? new ClassTraining();
         #endregion
         partial void CustomCtor(
             BinaryMemoryReadStream stream,
@@ -3604,4 +3667,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class Class
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Class_Registration.Instance;
+        public new static Class_Registration Registration => Class_Registration.Instance;
+        protected override object CommonInstance()
+        {
+            return ClassCommon.Instance;
+        }
+        protected override object CommonSetterInstance()
+        {
+            return ClassSetterCommon.Instance;
+        }
+        protected override object CommonSetterCopyInstance()
+        {
+            return ClassSetterCopyCommon.Instance;
+        }
+
+        #endregion
+
+    }
 }

@@ -45,11 +45,6 @@ namespace Mutagen.Bethesda.Oblivion
         IEquatable<Door>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Door_Registration.Instance;
-        public new static Door_Registration Registration => Door_Registration.Instance;
-        protected override object CommonInstance => DoorCommon.Instance;
-
         #region Ctor
         protected Door()
         {
@@ -109,7 +104,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Model_Set(default(Model), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IModelGetter IDoorGetter.Model => this.Model;
+        IModelInternalGetter IDoorGetter.Model => this.Model;
         #endregion
         #region Script
         public IFormIDSetLink<Script> Script_Property { get; } = new FormIDSetLink<Script>();
@@ -201,20 +196,33 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IDoorInternalGetter rhs)) return false;
-            return ((DoorCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            return ((DoorCommon)((IDoorInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(Door obj)
         {
-            return ((DoorCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((DoorCommon)((IDoorInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((DoorCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((DoorCommon)((IDoorInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected override object XmlWriteTranslator => DoorXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((DoorXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static Door CreateFromXml(
@@ -479,6 +487,19 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Binary Translation
         protected override object BinaryWriteTranslator => DoorBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((DoorBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
         #region Binary Create
         [DebuggerStepThrough]
         public static Door CreateFromBinary(
@@ -750,7 +771,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            DoorCommon.CopyFieldsFrom(
+            DoorSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -765,7 +786,7 @@ namespace Mutagen.Bethesda.Oblivion
             Door_CopyMask copyMask = null,
             Door def = null)
         {
-            DoorCommon.CopyFieldsFrom(
+            DoorSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -810,7 +831,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            DoorCommon.Instance.Clear(this);
+            DoorSetterCommon.Instance.Clear(this);
         }
 
         public new static Door Create(IEnumerable<KeyValuePair<ushort, object>> fields)
@@ -926,7 +947,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Model
-        IModelGetter Model { get; }
+        IModelInternalGetter Model { get; }
         bool Model_IsSet { get; }
 
         #endregion
@@ -975,7 +996,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IDoorInternal item)
         {
-            ((DoorCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((DoorSetterCommon)((IDoorInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static Door_Mask<bool> GetEqualsMask(
@@ -983,7 +1004,7 @@ namespace Mutagen.Bethesda.Oblivion
             IDoorInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((DoorCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((DoorCommon)((IDoorInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -994,7 +1015,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Door_Mask<bool> printMask = null)
         {
-            return ((DoorCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((DoorCommon)((IDoorInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -1006,7 +1027,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Door_Mask<bool> printMask = null)
         {
-            ((DoorCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((DoorCommon)((IDoorInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -1017,7 +1038,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IDoorInternalGetter item,
             Door_Mask<bool?> checkMask)
         {
-            return ((DoorCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((DoorCommon)((IDoorInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -1025,7 +1046,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Door_Mask<bool> GetHasBeenSetMask(this IDoorInternalGetter item)
         {
             var ret = new Door_Mask<bool>();
-            ((DoorCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((DoorCommon)((IDoorInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -1035,7 +1056,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IDoorInternalGetter item,
             IDoorInternalGetter rhs)
         {
-            return ((DoorCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((DoorCommon)((IDoorInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1097,8 +1118,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type SetterType = typeof(IDoor);
 
         public static readonly Type InternalSetterType = typeof(IDoorInternal);
-
-        public static readonly Type CommonType = typeof(DoorCommon);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.Door";
 
@@ -1311,7 +1330,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -1331,9 +1349,390 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
+    public partial class DoorSetterCommon : OblivionMajorRecordSetterCommon
+    {
+        public new static readonly DoorSetterCommon Instance = new DoorSetterCommon();
+
+        partial void ClearPartial();
+        
+        public virtual void Clear(IDoorInternal item)
+        {
+            ClearPartial();
+            item.Name_Unset();
+            item.Model_Unset();
+            item.Script_Property.Unset();
+            item.OpenSound_Property.Unset();
+            item.CloseSound_Property.Unset();
+            item.LoopSound_Property.Unset();
+            item.Flags_Unset();
+            item.RandomTeleportDestinations.Unset();
+            base.Clear(item);
+        }
+        
+        public override void Clear(IOblivionMajorRecordInternal item)
+        {
+            Clear(item: (IDoorInternal)item);
+        }
+        
+        public override void Clear(IMajorRecordInternal item)
+        {
+            Clear(item: (IDoorInternal)item);
+        }
+        
+        
+    }
     public partial class DoorCommon : OblivionMajorRecordCommon
     {
-        public static readonly DoorCommon Instance = new DoorCommon();
+        public new static readonly DoorCommon Instance = new DoorCommon();
+
+        public Door_Mask<bool> GetEqualsMask(
+            IDoorInternalGetter item,
+            IDoorInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new Door_Mask<bool>();
+            ((DoorCommon)((IDoorInternalGetter)item).CommonInstance()).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+        
+        public void FillEqualsMask(
+            IDoorInternalGetter item,
+            IDoorInternalGetter rhs,
+            Door_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            if (rhs == null) return;
+            ret.Name = item.Name_IsSet == rhs.Name_IsSet && string.Equals(item.Name, rhs.Name);
+            ret.Model = EqualsMaskHelper.EqualsHelper(
+                item.Model_IsSet,
+                rhs.Model_IsSet,
+                item.Model,
+                rhs.Model,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
+            ret.Script = item.Script_Property.FormKey == rhs.Script_Property.FormKey;
+            ret.OpenSound = item.OpenSound_Property.FormKey == rhs.OpenSound_Property.FormKey;
+            ret.CloseSound = item.CloseSound_Property.FormKey == rhs.CloseSound_Property.FormKey;
+            ret.LoopSound = item.LoopSound_Property.FormKey == rhs.LoopSound_Property.FormKey;
+            ret.Flags = item.Flags_IsSet == rhs.Flags_IsSet && item.Flags == rhs.Flags;
+            ret.RandomTeleportDestinations = item.RandomTeleportDestinations.CollectionEqualsHelper(
+                rhs.RandomTeleportDestinations,
+                (l, r) => object.Equals(l, r),
+                include);
+            base.FillEqualsMask(item, rhs, ret, include);
+        }
+        
+        public string ToString(
+            IDoorInternalGetter item,
+            string name = null,
+            Door_Mask<bool> printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+            return fg.ToString();
+        }
+        
+        public void ToString(
+            IDoorInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            Door_Mask<bool> printMask = null)
+        {
+            if (name == null)
+            {
+                fg.AppendLine($"Door =>");
+            }
+            else
+            {
+                fg.AppendLine($"{name} (Door) =>");
+            }
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
+            }
+            fg.AppendLine("]");
+        }
+        
+        protected static void ToStringFields(
+            IDoorInternalGetter item,
+            FileGeneration fg,
+            Door_Mask<bool> printMask = null)
+        {
+            OblivionMajorRecordCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.Name ?? true)
+            {
+                fg.AppendLine($"Name => {item.Name}");
+            }
+            if (printMask?.Model?.Overall ?? true)
+            {
+                item.Model?.ToString(fg, "Model");
+            }
+            if (printMask?.Script ?? true)
+            {
+                fg.AppendLine($"Script => {item.Script_Property}");
+            }
+            if (printMask?.OpenSound ?? true)
+            {
+                fg.AppendLine($"OpenSound => {item.OpenSound_Property}");
+            }
+            if (printMask?.CloseSound ?? true)
+            {
+                fg.AppendLine($"CloseSound => {item.CloseSound_Property}");
+            }
+            if (printMask?.LoopSound ?? true)
+            {
+                fg.AppendLine($"LoopSound => {item.LoopSound_Property}");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                fg.AppendLine($"Flags => {item.Flags}");
+            }
+            if (printMask?.RandomTeleportDestinations?.Overall ?? true)
+            {
+                fg.AppendLine("RandomTeleportDestinations =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.RandomTeleportDestinations)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"Item => {subItem}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+        }
+        
+        public bool HasBeenSet(
+            IDoorInternalGetter item,
+            Door_Mask<bool?> checkMask)
+        {
+            if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_IsSet) return false;
+            if (checkMask.Model.Overall.HasValue && checkMask.Model.Overall.Value != item.Model_IsSet) return false;
+            if (checkMask.Model.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
+            if (checkMask.Script.HasValue && checkMask.Script.Value != item.Script_Property.HasBeenSet) return false;
+            if (checkMask.OpenSound.HasValue && checkMask.OpenSound.Value != item.OpenSound_Property.HasBeenSet) return false;
+            if (checkMask.CloseSound.HasValue && checkMask.CloseSound.Value != item.CloseSound_Property.HasBeenSet) return false;
+            if (checkMask.LoopSound.HasValue && checkMask.LoopSound.Value != item.LoopSound_Property.HasBeenSet) return false;
+            if (checkMask.Flags.HasValue && checkMask.Flags.Value != item.Flags_IsSet) return false;
+            if (checkMask.RandomTeleportDestinations.Overall.HasValue && checkMask.RandomTeleportDestinations.Overall.Value != item.RandomTeleportDestinations.HasBeenSet) return false;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+        
+        public void FillHasBeenSetMask(
+            IDoorInternalGetter item,
+            Door_Mask<bool> mask)
+        {
+            mask.Name = item.Name_IsSet;
+            mask.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, item.Model.GetHasBeenSetMask());
+            mask.Script = item.Script_Property.HasBeenSet;
+            mask.OpenSound = item.OpenSound_Property.HasBeenSet;
+            mask.CloseSound = item.CloseSound_Property.HasBeenSet;
+            mask.LoopSound = item.LoopSound_Property.HasBeenSet;
+            mask.Flags = item.Flags_IsSet;
+            mask.RandomTeleportDestinations = new MaskItem<bool, IEnumerable<(int, bool)>>(item.RandomTeleportDestinations.HasBeenSet, null);
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
+        }
+        
+        public static Door_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (Door_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.FormKey:
+                    return (Door_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.Version:
+                    return (Door_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.EditorID:
+                    return (Door_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
+                    return (Door_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        public static Door_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (Door_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.FormKey:
+                    return (Door_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.Version:
+                    return (Door_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.EditorID:
+                    return (Door_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        #region Equals and Hash
+        public virtual bool Equals(
+            IDoorInternalGetter lhs,
+            IDoorInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.Name_IsSet != rhs.Name_IsSet) return false;
+            if (lhs.Name_IsSet)
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if (lhs.Model_IsSet != rhs.Model_IsSet) return false;
+            if (lhs.Model_IsSet)
+            {
+                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            }
+            if (lhs.Script_Property.HasBeenSet != rhs.Script_Property.HasBeenSet) return false;
+            if (lhs.Script_Property.HasBeenSet)
+            {
+                if (!lhs.Script_Property.Equals(rhs.Script_Property)) return false;
+            }
+            if (lhs.OpenSound_Property.HasBeenSet != rhs.OpenSound_Property.HasBeenSet) return false;
+            if (lhs.OpenSound_Property.HasBeenSet)
+            {
+                if (!lhs.OpenSound_Property.Equals(rhs.OpenSound_Property)) return false;
+            }
+            if (lhs.CloseSound_Property.HasBeenSet != rhs.CloseSound_Property.HasBeenSet) return false;
+            if (lhs.CloseSound_Property.HasBeenSet)
+            {
+                if (!lhs.CloseSound_Property.Equals(rhs.CloseSound_Property)) return false;
+            }
+            if (lhs.LoopSound_Property.HasBeenSet != rhs.LoopSound_Property.HasBeenSet) return false;
+            if (lhs.LoopSound_Property.HasBeenSet)
+            {
+                if (!lhs.LoopSound_Property.Equals(rhs.LoopSound_Property)) return false;
+            }
+            if (lhs.Flags_IsSet != rhs.Flags_IsSet) return false;
+            if (lhs.Flags_IsSet)
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if (lhs.RandomTeleportDestinations.HasBeenSet != rhs.RandomTeleportDestinations.HasBeenSet) return false;
+            if (lhs.RandomTeleportDestinations.HasBeenSet)
+            {
+                if (!lhs.RandomTeleportDestinations.SequenceEqual(rhs.RandomTeleportDestinations)) return false;
+            }
+            return true;
+        }
+        
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IDoorInternalGetter)lhs,
+                rhs: rhs as IDoorInternalGetter);
+        }
+        
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IDoorInternalGetter)lhs,
+                rhs: rhs as IDoorInternalGetter);
+        }
+        
+        public virtual int GetHashCode(IDoorInternalGetter item)
+        {
+            int ret = 0;
+            if (item.Name_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Name).CombineHashCode(ret);
+            }
+            if (item.Model_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Model).CombineHashCode(ret);
+            }
+            if (item.Script_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Script).CombineHashCode(ret);
+            }
+            if (item.OpenSound_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.OpenSound).CombineHashCode(ret);
+            }
+            if (item.CloseSound_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.CloseSound).CombineHashCode(ret);
+            }
+            if (item.LoopSound_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.LoopSound).CombineHashCode(ret);
+            }
+            if (item.Flags_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
+            }
+            if (item.RandomTeleportDestinations.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.RandomTeleportDestinations).CombineHashCode(ret);
+            }
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+        
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IDoorInternalGetter)item);
+        }
+        
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IDoorInternalGetter)item);
+        }
+        
+        #endregion
+        
+        
+        #region Mutagen
+        partial void PostDuplicate(Door obj, Door rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+        
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new Door(getNextFormKey());
+            ret.CopyFieldsFrom((Door)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (Door)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+        
+        #endregion
+        
+        
+    }
+    public partial class DoorSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
+    {
+        public new static readonly DoorSetterCopyCommon Instance = new DoorSetterCopyCommon();
 
         #region Copy Fields From
         public static void CopyFieldsFrom(
@@ -1343,7 +1742,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             Door_CopyMask copyMask)
         {
-            OblivionMajorRecordCommon.CopyFieldsFrom(
+            OblivionMajorRecordSetterCopyCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1397,7 +1796,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             case CopyOption.Reference:
                                 throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
-                                ModelCommon.CopyFieldsFrom(
+                                ModelSetterCopyCommon.CopyFieldsFrom(
                                     item: item.Model,
                                     rhs: rhs.Model,
                                     def: def?.Model,
@@ -1557,378 +1956,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
         }
-
+        
         #endregion
-
-        partial void ClearPartial();
-
-        public virtual void Clear(IDoorInternal item)
-        {
-            ClearPartial();
-            item.Name_Unset();
-            item.Model_Unset();
-            item.Script_Property.Unset();
-            item.OpenSound_Property.Unset();
-            item.CloseSound_Property.Unset();
-            item.LoopSound_Property.Unset();
-            item.Flags_Unset();
-            item.RandomTeleportDestinations.Unset();
-            base.Clear(item);
-        }
-
-        public override void Clear(IOblivionMajorRecordInternal item)
-        {
-            Clear(item: (IDoorInternal)item);
-        }
-
-        public override void Clear(IMajorRecordInternal item)
-        {
-            Clear(item: (IDoorInternal)item);
-        }
-
-        public Door_Mask<bool> GetEqualsMask(
-            IDoorInternalGetter item,
-            IDoorInternalGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new Door_Mask<bool>();
-            ((DoorCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public void FillEqualsMask(
-            IDoorInternalGetter item,
-            IDoorInternalGetter rhs,
-            Door_Mask<bool> ret,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            if (rhs == null) return;
-            ret.Name = item.Name_IsSet == rhs.Name_IsSet && string.Equals(item.Name, rhs.Name);
-            ret.Model = EqualsMaskHelper.EqualsHelper(
-                item.Model_IsSet,
-                rhs.Model_IsSet,
-                item.Model,
-                rhs.Model,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
-                include);
-            ret.Script = item.Script_Property.FormKey == rhs.Script_Property.FormKey;
-            ret.OpenSound = item.OpenSound_Property.FormKey == rhs.OpenSound_Property.FormKey;
-            ret.CloseSound = item.CloseSound_Property.FormKey == rhs.CloseSound_Property.FormKey;
-            ret.LoopSound = item.LoopSound_Property.FormKey == rhs.LoopSound_Property.FormKey;
-            ret.Flags = item.Flags_IsSet == rhs.Flags_IsSet && item.Flags == rhs.Flags;
-            ret.RandomTeleportDestinations = item.RandomTeleportDestinations.CollectionEqualsHelper(
-                rhs.RandomTeleportDestinations,
-                (l, r) => object.Equals(l, r),
-                include);
-            base.FillEqualsMask(item, rhs, ret, include);
-        }
-
-        public string ToString(
-            IDoorInternalGetter item,
-            string name = null,
-            Door_Mask<bool> printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(
-                item: item,
-                fg: fg,
-                name: name,
-                printMask: printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(
-            IDoorInternalGetter item,
-            FileGeneration fg,
-            string name = null,
-            Door_Mask<bool> printMask = null)
-        {
-            if (name == null)
-            {
-                fg.AppendLine($"Door =>");
-            }
-            else
-            {
-                fg.AppendLine($"{name} (Door) =>");
-            }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                ToStringFields(
-                    item: item,
-                    fg: fg,
-                    printMask: printMask);
-            }
-            fg.AppendLine("]");
-        }
-
-        protected static void ToStringFields(
-            IDoorInternalGetter item,
-            FileGeneration fg,
-            Door_Mask<bool> printMask = null)
-        {
-            OblivionMajorRecordCommon.ToStringFields(
-                item: item,
-                fg: fg,
-                printMask: printMask);
-            if (printMask?.Name ?? true)
-            {
-                fg.AppendLine($"Name => {item.Name}");
-            }
-            if (printMask?.Model?.Overall ?? true)
-            {
-                item.Model?.ToString(fg, "Model");
-            }
-            if (printMask?.Script ?? true)
-            {
-                fg.AppendLine($"Script => {item.Script_Property}");
-            }
-            if (printMask?.OpenSound ?? true)
-            {
-                fg.AppendLine($"OpenSound => {item.OpenSound_Property}");
-            }
-            if (printMask?.CloseSound ?? true)
-            {
-                fg.AppendLine($"CloseSound => {item.CloseSound_Property}");
-            }
-            if (printMask?.LoopSound ?? true)
-            {
-                fg.AppendLine($"LoopSound => {item.LoopSound_Property}");
-            }
-            if (printMask?.Flags ?? true)
-            {
-                fg.AppendLine($"Flags => {item.Flags}");
-            }
-            if (printMask?.RandomTeleportDestinations?.Overall ?? true)
-            {
-                fg.AppendLine("RandomTeleportDestinations =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
-                {
-                    foreach (var subItem in item.RandomTeleportDestinations)
-                    {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            fg.AppendLine($"Item => {subItem}");
-                        }
-                        fg.AppendLine("]");
-                    }
-                }
-                fg.AppendLine("]");
-            }
-        }
-
-        public bool HasBeenSet(
-            IDoorInternalGetter item,
-            Door_Mask<bool?> checkMask)
-        {
-            if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_IsSet) return false;
-            if (checkMask.Model.Overall.HasValue && checkMask.Model.Overall.Value != item.Model_IsSet) return false;
-            if (checkMask.Model.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
-            if (checkMask.Script.HasValue && checkMask.Script.Value != item.Script_Property.HasBeenSet) return false;
-            if (checkMask.OpenSound.HasValue && checkMask.OpenSound.Value != item.OpenSound_Property.HasBeenSet) return false;
-            if (checkMask.CloseSound.HasValue && checkMask.CloseSound.Value != item.CloseSound_Property.HasBeenSet) return false;
-            if (checkMask.LoopSound.HasValue && checkMask.LoopSound.Value != item.LoopSound_Property.HasBeenSet) return false;
-            if (checkMask.Flags.HasValue && checkMask.Flags.Value != item.Flags_IsSet) return false;
-            if (checkMask.RandomTeleportDestinations.Overall.HasValue && checkMask.RandomTeleportDestinations.Overall.Value != item.RandomTeleportDestinations.HasBeenSet) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public void FillHasBeenSetMask(
-            IDoorInternalGetter item,
-            Door_Mask<bool> mask)
-        {
-            mask.Name = item.Name_IsSet;
-            mask.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, item.Model.GetHasBeenSetMask());
-            mask.Script = item.Script_Property.HasBeenSet;
-            mask.OpenSound = item.OpenSound_Property.HasBeenSet;
-            mask.CloseSound = item.CloseSound_Property.HasBeenSet;
-            mask.LoopSound = item.LoopSound_Property.HasBeenSet;
-            mask.Flags = item.Flags_IsSet;
-            mask.RandomTeleportDestinations = new MaskItem<bool, IEnumerable<(int, bool)>>(item.RandomTeleportDestinations.HasBeenSet, null);
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-
-        public static Door_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
-        {
-            switch (index)
-            {
-                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Door_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.FormKey:
-                    return (Door_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.Version:
-                    return (Door_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.EditorID:
-                    return (Door_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
-                    return (Door_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        public static Door_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
-        {
-            switch (index)
-            {
-                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Door_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.FormKey:
-                    return (Door_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
-                    return (Door_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.EditorID:
-                    return (Door_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        #region Equals and Hash
-        public virtual bool Equals(
-            IDoorInternalGetter lhs,
-            IDoorInternalGetter rhs)
-        {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (lhs.Name_IsSet != rhs.Name_IsSet) return false;
-            if (lhs.Name_IsSet)
-            {
-                if (!string.Equals(lhs.Name, rhs.Name)) return false;
-            }
-            if (lhs.Model_IsSet != rhs.Model_IsSet) return false;
-            if (lhs.Model_IsSet)
-            {
-                if (!object.Equals(lhs.Model, rhs.Model)) return false;
-            }
-            if (lhs.Script_Property.HasBeenSet != rhs.Script_Property.HasBeenSet) return false;
-            if (lhs.Script_Property.HasBeenSet)
-            {
-                if (!lhs.Script_Property.Equals(rhs.Script_Property)) return false;
-            }
-            if (lhs.OpenSound_Property.HasBeenSet != rhs.OpenSound_Property.HasBeenSet) return false;
-            if (lhs.OpenSound_Property.HasBeenSet)
-            {
-                if (!lhs.OpenSound_Property.Equals(rhs.OpenSound_Property)) return false;
-            }
-            if (lhs.CloseSound_Property.HasBeenSet != rhs.CloseSound_Property.HasBeenSet) return false;
-            if (lhs.CloseSound_Property.HasBeenSet)
-            {
-                if (!lhs.CloseSound_Property.Equals(rhs.CloseSound_Property)) return false;
-            }
-            if (lhs.LoopSound_Property.HasBeenSet != rhs.LoopSound_Property.HasBeenSet) return false;
-            if (lhs.LoopSound_Property.HasBeenSet)
-            {
-                if (!lhs.LoopSound_Property.Equals(rhs.LoopSound_Property)) return false;
-            }
-            if (lhs.Flags_IsSet != rhs.Flags_IsSet) return false;
-            if (lhs.Flags_IsSet)
-            {
-                if (lhs.Flags != rhs.Flags) return false;
-            }
-            if (lhs.RandomTeleportDestinations.HasBeenSet != rhs.RandomTeleportDestinations.HasBeenSet) return false;
-            if (lhs.RandomTeleportDestinations.HasBeenSet)
-            {
-                if (!lhs.RandomTeleportDestinations.SequenceEqual(rhs.RandomTeleportDestinations)) return false;
-            }
-            return true;
-        }
-
-        public override bool Equals(
-            IOblivionMajorRecordInternalGetter lhs,
-            IOblivionMajorRecordInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (IDoorInternalGetter)lhs,
-                rhs: rhs as IDoorInternalGetter);
-        }
-
-        public override bool Equals(
-            IMajorRecordInternalGetter lhs,
-            IMajorRecordInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (IDoorInternalGetter)lhs,
-                rhs: rhs as IDoorInternalGetter);
-        }
-
-        public virtual int GetHashCode(IDoorInternalGetter item)
-        {
-            int ret = 0;
-            if (item.Name_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Name).CombineHashCode(ret);
-            }
-            if (item.Model_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Model).CombineHashCode(ret);
-            }
-            if (item.Script_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.Script).CombineHashCode(ret);
-            }
-            if (item.OpenSound_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.OpenSound).CombineHashCode(ret);
-            }
-            if (item.CloseSound_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.CloseSound).CombineHashCode(ret);
-            }
-            if (item.LoopSound_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.LoopSound).CombineHashCode(ret);
-            }
-            if (item.Flags_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
-            }
-            if (item.RandomTeleportDestinations.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.RandomTeleportDestinations).CombineHashCode(ret);
-            }
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
-        {
-            return GetHashCode(item: (IDoorInternalGetter)item);
-        }
-
-        public override int GetHashCode(IMajorRecordInternalGetter item)
-        {
-            return GetHashCode(item: (IDoorInternalGetter)item);
-        }
-
-        #endregion
-
-
-        #region Mutagen
-        partial void PostDuplicate(Door obj, Door rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new Door(getNextFormKey());
-            ret.CopyFieldsFrom((Door)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (Door)item, getNextFormKey, duplicatedRecords);
-            return ret;
-        }
-
-        #endregion
-
+        
+        
     }
     #endregion
 
@@ -3098,17 +3129,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         OblivionMajorRecordBinaryWrapper,
         IDoorInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Door_Registration.Instance;
         public new static Door_Registration Registration => Door_Registration.Instance;
-        protected override object CommonInstance => DoorCommon.Instance;
+        protected override object CommonInstance()
+        {
+            return DoorCommon.Instance;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDoorInternalGetter)rhs, include);
 
         protected override object XmlWriteTranslator => DoorXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((DoorXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         protected override object BinaryWriteTranslator => DoorBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((DoorBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
 
         #region Name
         private int? _NameLocation;
@@ -3116,7 +3179,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public String Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _NameLocation.Value, _package.Meta)) : default;
         #endregion
         #region Model
-        public IModelGetter Model { get; private set; }
+        public IModelInternalGetter Model { get; private set; }
         public bool Model_IsSet => Model != null;
         #endregion
         #region Script
@@ -3267,4 +3330,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class Door
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Door_Registration.Instance;
+        public new static Door_Registration Registration => Door_Registration.Instance;
+        protected override object CommonInstance()
+        {
+            return DoorCommon.Instance;
+        }
+        protected override object CommonSetterInstance()
+        {
+            return DoorSetterCommon.Instance;
+        }
+        protected override object CommonSetterCopyInstance()
+        {
+            return DoorSetterCopyCommon.Instance;
+        }
+
+        #endregion
+
+    }
 }

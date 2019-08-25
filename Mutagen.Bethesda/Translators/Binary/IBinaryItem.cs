@@ -18,5 +18,10 @@ namespace Mutagen.Bethesda.Binary
     public interface IBinaryItem
     {
         object BinaryWriteTranslator { get; }
+        void WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter = null,
+            ErrorMaskBuilder errorMask = null);
     }
 }

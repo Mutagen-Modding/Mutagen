@@ -37,17 +37,11 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class BodyData :
         LoquiNotifyingObject,
-        IBodyData,
+        IBodyDataInternal,
         ILoquiObjectSetter<BodyData>,
         IEquatable<BodyData>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => BodyData_Registration.Instance;
-        public static BodyData_Registration Registration => BodyData_Registration.Instance;
-        protected object CommonInstance => BodyDataCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
-
         #region Ctor
         public BodyData()
         {
@@ -82,7 +76,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Model_Set(default(Model), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IModelGetter IBodyDataGetter.Model => this.Model;
+        IModelInternalGetter IBodyDataGetter.Model => this.Model;
         #endregion
         #region BodyParts
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -92,12 +86,12 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<BodyPart> IBodyData.BodyParts => _BodyParts;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IBodyPartGetter> IBodyDataGetter.BodyParts => _BodyParts;
+        IReadOnlySetList<IBodyPartInternalGetter> IBodyDataGetter.BodyParts => _BodyParts;
         #endregion
 
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IBodyDataGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IBodyDataInternalGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -115,22 +109,35 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is IBodyDataGetter rhs)) return false;
-            return ((BodyDataCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            if (!(obj is IBodyDataInternalGetter rhs)) return false;
+            return ((BodyDataCommon)((IBodyDataInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(BodyData obj)
         {
-            return ((BodyDataCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((BodyDataCommon)((IBodyDataInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((BodyDataCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((BodyDataCommon)((IBodyDataInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected object XmlWriteTranslator => BodyDataXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((BodyDataXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static BodyData CreateFromXml(
@@ -300,6 +307,19 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Translation
         protected object BinaryWriteTranslator => BodyDataBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((BodyDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
         #region Binary Create
         [DebuggerStepThrough]
         public static BodyData CreateFromBinary(
@@ -506,7 +526,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            BodyDataCommon.CopyFieldsFrom(
+            BodyDataSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -521,7 +541,7 @@ namespace Mutagen.Bethesda.Oblivion
             BodyData_CopyMask copyMask = null,
             BodyData def = null)
         {
-            BodyDataCommon.CopyFieldsFrom(
+            BodyDataSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -547,7 +567,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void Clear()
         {
-            BodyDataCommon.Instance.Clear(this);
+            BodyDataSetterCommon.Instance.Clear(this);
         }
 
         public static BodyData Create(IEnumerable<KeyValuePair<ushort, object>> fields)
@@ -583,8 +603,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IBodyData :
-        IBodyDataGetter,
-        ILoquiObjectSetter<IBodyData>
+        IBodyDataInternalGetter,
+        ILoquiObjectSetter<IBodyDataInternal>
     {
         new Model Model { get; set; }
         new bool Model_IsSet { get; set; }
@@ -599,20 +619,34 @@ namespace Mutagen.Bethesda.Oblivion
             BodyData def = null);
     }
 
+    public partial interface IBodyDataInternal :
+        IBodyData,
+        IBodyDataInternalGetter
+    {
+    }
+
     public partial interface IBodyDataGetter :
         ILoquiObject,
-        ILoquiObject<IBodyDataGetter>,
+        ILoquiObject<IBodyDataInternalGetter>,
         IXmlItem,
         IBinaryItem
     {
         #region Model
-        IModelGetter Model { get; }
+        IModelInternalGetter Model { get; }
         bool Model_IsSet { get; }
 
         #endregion
         #region BodyParts
-        IReadOnlySetList<IBodyPartGetter> BodyParts { get; }
+        IReadOnlySetList<IBodyPartInternalGetter> BodyParts { get; }
         #endregion
+
+    }
+
+    public partial interface IBodyDataInternalGetter : IBodyDataGetter
+    {
+        object CommonInstance();
+        object CommonSetterInstance();
+        object CommonSetterCopyInstance();
 
     }
 
@@ -621,40 +655,40 @@ namespace Mutagen.Bethesda.Oblivion
     #region Common MixIn
     public static class BodyDataMixIn
     {
-        public static void Clear(this IBodyData item)
+        public static void Clear(this IBodyDataInternal item)
         {
-            ((BodyDataCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((BodyDataSetterCommon)((IBodyDataInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static BodyData_Mask<bool> GetEqualsMask(
-            this IBodyDataGetter item,
-            IBodyDataGetter rhs,
+            this IBodyDataInternalGetter item,
+            IBodyDataInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((BodyDataCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((BodyDataCommon)((IBodyDataInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IBodyDataGetter item,
+            this IBodyDataInternalGetter item,
             string name = null,
             BodyData_Mask<bool> printMask = null)
         {
-            return ((BodyDataCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((BodyDataCommon)((IBodyDataInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IBodyDataGetter item,
+            this IBodyDataInternalGetter item,
             FileGeneration fg,
             string name = null,
             BodyData_Mask<bool> printMask = null)
         {
-            ((BodyDataCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((BodyDataCommon)((IBodyDataInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -662,28 +696,28 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static bool HasBeenSet(
-            this IBodyDataGetter item,
+            this IBodyDataInternalGetter item,
             BodyData_Mask<bool?> checkMask)
         {
-            return ((BodyDataCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((BodyDataCommon)((IBodyDataInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static BodyData_Mask<bool> GetHasBeenSetMask(this IBodyDataGetter item)
+        public static BodyData_Mask<bool> GetHasBeenSetMask(this IBodyDataInternalGetter item)
         {
             var ret = new BodyData_Mask<bool>();
-            ((BodyDataCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((BodyDataCommon)((IBodyDataInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this IBodyDataGetter item,
-            IBodyDataGetter rhs)
+            this IBodyDataInternalGetter item,
+            IBodyDataInternalGetter rhs)
         {
-            return ((BodyDataCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((BodyDataCommon)((IBodyDataInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -729,13 +763,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IBodyDataGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type InternalGetterType = typeof(IBodyDataInternalGetter);
 
         public static readonly Type SetterType = typeof(IBodyData);
 
-        public static readonly Type InternalSetterType = null;
-
-        public static readonly Type CommonType = typeof(BodyDataCommon);
+        public static readonly Type InternalSetterType = typeof(IBodyDataInternal);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.BodyData";
 
@@ -887,7 +919,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -907,9 +938,187 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
+    public partial class BodyDataSetterCommon
+    {
+        public static readonly BodyDataSetterCommon Instance = new BodyDataSetterCommon();
+
+        partial void ClearPartial();
+        
+        public virtual void Clear(IBodyDataInternal item)
+        {
+            ClearPartial();
+            item.Model_Unset();
+            item.BodyParts.Unset();
+        }
+        
+        
+    }
     public partial class BodyDataCommon
     {
         public static readonly BodyDataCommon Instance = new BodyDataCommon();
+
+        public BodyData_Mask<bool> GetEqualsMask(
+            IBodyDataInternalGetter item,
+            IBodyDataInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new BodyData_Mask<bool>();
+            ((BodyDataCommon)((IBodyDataInternalGetter)item).CommonInstance()).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+        
+        public void FillEqualsMask(
+            IBodyDataInternalGetter item,
+            IBodyDataInternalGetter rhs,
+            BodyData_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            if (rhs == null) return;
+            ret.Model = EqualsMaskHelper.EqualsHelper(
+                item.Model_IsSet,
+                rhs.Model_IsSet,
+                item.Model,
+                rhs.Model,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
+            ret.BodyParts = item.BodyParts.CollectionEqualsHelper(
+                rhs.BodyParts,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+        }
+        
+        public string ToString(
+            IBodyDataInternalGetter item,
+            string name = null,
+            BodyData_Mask<bool> printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+            return fg.ToString();
+        }
+        
+        public void ToString(
+            IBodyDataInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            BodyData_Mask<bool> printMask = null)
+        {
+            if (name == null)
+            {
+                fg.AppendLine($"BodyData =>");
+            }
+            else
+            {
+                fg.AppendLine($"{name} (BodyData) =>");
+            }
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
+            }
+            fg.AppendLine("]");
+        }
+        
+        protected static void ToStringFields(
+            IBodyDataInternalGetter item,
+            FileGeneration fg,
+            BodyData_Mask<bool> printMask = null)
+        {
+            if (printMask?.Model?.Overall ?? true)
+            {
+                item.Model?.ToString(fg, "Model");
+            }
+            if (printMask?.BodyParts?.Overall ?? true)
+            {
+                fg.AppendLine("BodyParts =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.BodyParts)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+        }
+        
+        public bool HasBeenSet(
+            IBodyDataInternalGetter item,
+            BodyData_Mask<bool?> checkMask)
+        {
+            if (checkMask.Model.Overall.HasValue && checkMask.Model.Overall.Value != item.Model_IsSet) return false;
+            if (checkMask.Model.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
+            if (checkMask.BodyParts.Overall.HasValue && checkMask.BodyParts.Overall.Value != item.BodyParts.HasBeenSet) return false;
+            return true;
+        }
+        
+        public void FillHasBeenSetMask(
+            IBodyDataInternalGetter item,
+            BodyData_Mask<bool> mask)
+        {
+            mask.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, item.Model.GetHasBeenSetMask());
+            mask.BodyParts = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, BodyPart_Mask<bool>>>>(item.BodyParts.HasBeenSet, item.BodyParts.WithIndex().Select((i) => new MaskItemIndexed<bool, BodyPart_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
+        }
+        
+        #region Equals and Hash
+        public virtual bool Equals(
+            IBodyDataInternalGetter lhs,
+            IBodyDataInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (lhs.Model_IsSet != rhs.Model_IsSet) return false;
+            if (lhs.Model_IsSet)
+            {
+                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            }
+            if (lhs.BodyParts.HasBeenSet != rhs.BodyParts.HasBeenSet) return false;
+            if (lhs.BodyParts.HasBeenSet)
+            {
+                if (!lhs.BodyParts.SequenceEqual(rhs.BodyParts)) return false;
+            }
+            return true;
+        }
+        
+        public virtual int GetHashCode(IBodyDataInternalGetter item)
+        {
+            int ret = 0;
+            if (item.Model_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Model).CombineHashCode(ret);
+            }
+            if (item.BodyParts.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.BodyParts).CombineHashCode(ret);
+            }
+            return ret;
+        }
+        
+        #endregion
+        
+        
+        
+    }
+    public partial class BodyDataSetterCopyCommon
+    {
+        public static readonly BodyDataSetterCopyCommon Instance = new BodyDataSetterCopyCommon();
 
         #region Copy Fields From
         public static void CopyFieldsFrom(
@@ -937,7 +1146,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             case CopyOption.Reference:
                                 throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
-                                ModelCommon.CopyFieldsFrom(
+                                ModelSetterCopyCommon.CopyFieldsFrom(
                                     item: item.Model,
                                     rhs: rhs.Model,
                                     def: def?.Model,
@@ -1006,175 +1215,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
         }
-
+        
         #endregion
-
-        partial void ClearPartial();
-
-        public virtual void Clear(IBodyData item)
-        {
-            ClearPartial();
-            item.Model_Unset();
-            item.BodyParts.Unset();
-        }
-
-        public BodyData_Mask<bool> GetEqualsMask(
-            IBodyDataGetter item,
-            IBodyDataGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new BodyData_Mask<bool>();
-            ((BodyDataCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public void FillEqualsMask(
-            IBodyDataGetter item,
-            IBodyDataGetter rhs,
-            BodyData_Mask<bool> ret,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            if (rhs == null) return;
-            ret.Model = EqualsMaskHelper.EqualsHelper(
-                item.Model_IsSet,
-                rhs.Model_IsSet,
-                item.Model,
-                rhs.Model,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
-                include);
-            ret.BodyParts = item.BodyParts.CollectionEqualsHelper(
-                rhs.BodyParts,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
-                include);
-        }
-
-        public string ToString(
-            IBodyDataGetter item,
-            string name = null,
-            BodyData_Mask<bool> printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(
-                item: item,
-                fg: fg,
-                name: name,
-                printMask: printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(
-            IBodyDataGetter item,
-            FileGeneration fg,
-            string name = null,
-            BodyData_Mask<bool> printMask = null)
-        {
-            if (name == null)
-            {
-                fg.AppendLine($"BodyData =>");
-            }
-            else
-            {
-                fg.AppendLine($"{name} (BodyData) =>");
-            }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                ToStringFields(
-                    item: item,
-                    fg: fg,
-                    printMask: printMask);
-            }
-            fg.AppendLine("]");
-        }
-
-        protected static void ToStringFields(
-            IBodyDataGetter item,
-            FileGeneration fg,
-            BodyData_Mask<bool> printMask = null)
-        {
-            if (printMask?.Model?.Overall ?? true)
-            {
-                item.Model?.ToString(fg, "Model");
-            }
-            if (printMask?.BodyParts?.Overall ?? true)
-            {
-                fg.AppendLine("BodyParts =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
-                {
-                    foreach (var subItem in item.BodyParts)
-                    {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            subItem?.ToString(fg, "Item");
-                        }
-                        fg.AppendLine("]");
-                    }
-                }
-                fg.AppendLine("]");
-            }
-        }
-
-        public bool HasBeenSet(
-            IBodyDataGetter item,
-            BodyData_Mask<bool?> checkMask)
-        {
-            if (checkMask.Model.Overall.HasValue && checkMask.Model.Overall.Value != item.Model_IsSet) return false;
-            if (checkMask.Model.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
-            if (checkMask.BodyParts.Overall.HasValue && checkMask.BodyParts.Overall.Value != item.BodyParts.HasBeenSet) return false;
-            return true;
-        }
-
-        public void FillHasBeenSetMask(
-            IBodyDataGetter item,
-            BodyData_Mask<bool> mask)
-        {
-            mask.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, item.Model.GetHasBeenSetMask());
-            mask.BodyParts = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, BodyPart_Mask<bool>>>>(item.BodyParts.HasBeenSet, item.BodyParts.WithIndex().Select((i) => new MaskItemIndexed<bool, BodyPart_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
-        }
-
-        #region Equals and Hash
-        public virtual bool Equals(
-            IBodyDataGetter lhs,
-            IBodyDataGetter rhs)
-        {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
-            if (lhs.Model_IsSet != rhs.Model_IsSet) return false;
-            if (lhs.Model_IsSet)
-            {
-                if (!object.Equals(lhs.Model, rhs.Model)) return false;
-            }
-            if (lhs.BodyParts.HasBeenSet != rhs.BodyParts.HasBeenSet) return false;
-            if (lhs.BodyParts.HasBeenSet)
-            {
-                if (!lhs.BodyParts.SequenceEqual(rhs.BodyParts)) return false;
-            }
-            return true;
-        }
-
-        public virtual int GetHashCode(IBodyDataGetter item)
-        {
-            int ret = 0;
-            if (item.Model_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Model).CombineHashCode(ret);
-            }
-            if (item.BodyParts.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.BodyParts).CombineHashCode(ret);
-            }
-            return ret;
-        }
-
-        #endregion
-
-
+        
+        
     }
     #endregion
 
@@ -1185,7 +1229,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static BodyDataXmlWriteTranslation Instance = new BodyDataXmlWriteTranslation();
 
         public static void WriteToNodeXml(
-            IBodyDataGetter item,
+            IBodyDataInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1205,14 +1249,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.BodyParts.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)BodyData_FieldIndex.BodyParts) ?? true))
             {
-                ListXmlTranslation<IBodyPartGetter>.Instance.Write(
+                ListXmlTranslation<IBodyPartInternalGetter>.Instance.Write(
                     node: node,
                     name: nameof(item.BodyParts),
                     item: item.BodyParts,
                     fieldIndex: (int)BodyData_FieldIndex.BodyParts,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)BodyData_FieldIndex.BodyParts),
-                    transl: (XElement subNode, IBodyPartGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    transl: (XElement subNode, IBodyPartInternalGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         var loquiItem = subItem;
                         ((BodyPartXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
@@ -1227,7 +1271,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             XElement node,
-            IBodyDataGetter item,
+            IBodyDataInternalGetter item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)
@@ -1253,7 +1297,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             Write(
-                item: (IBodyDataGetter)item,
+                item: (IBodyDataInternalGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1262,7 +1306,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             XElement node,
-            IBodyDataGetter item,
+            IBodyDataInternalGetter item,
             ErrorMaskBuilder errorMask,
             int fieldIndex,
             TranslationCrystal translationMask,
@@ -1272,7 +1316,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 errorMask?.PushIndex(fieldIndex);
                 Write(
-                    item: (IBodyDataGetter)item,
+                    item: (IBodyDataInternalGetter)item,
                     name: name,
                     node: node,
                     errorMask: errorMask,
@@ -1296,7 +1340,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static BodyDataXmlCreateTranslation Instance = new BodyDataXmlCreateTranslation();
 
         public static void FillPublicXml(
-            IBodyData item,
+            IBodyDataInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1321,7 +1365,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElementXml(
-            IBodyData item,
+            IBodyDataInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -1395,7 +1439,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public static class BodyDataXmlTranslationMixIn
     {
         public static void WriteToXml(
-            this IBodyDataGetter item,
+            this IBodyDataInternalGetter item,
             XElement node,
             out BodyData_ErrorMask errorMask,
             bool doMasks = true,
@@ -1413,7 +1457,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IBodyDataGetter item,
+            this IBodyDataInternalGetter item,
             string path,
             out BodyData_ErrorMask errorMask,
             BodyData_TranslationMask translationMask = null,
@@ -1432,7 +1476,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IBodyDataGetter item,
+            this IBodyDataInternalGetter item,
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1450,7 +1494,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IBodyDataGetter item,
+            this IBodyDataInternalGetter item,
             Stream stream,
             out BodyData_ErrorMask errorMask,
             BodyData_TranslationMask translationMask = null,
@@ -1469,7 +1513,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IBodyDataGetter item,
+            this IBodyDataInternalGetter item,
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1487,7 +1531,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IBodyDataGetter item,
+            this IBodyDataInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1502,7 +1546,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IBodyDataGetter item,
+            this IBodyDataInternalGetter item,
             XElement node,
             string name = null,
             BodyData_TranslationMask translationMask = null)
@@ -1516,7 +1560,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IBodyDataGetter item,
+            this IBodyDataInternalGetter item,
             string path,
             string name = null)
         {
@@ -1531,7 +1575,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IBodyDataGetter item,
+            this IBodyDataInternalGetter item,
             Stream stream,
             string name = null)
         {
@@ -1949,7 +1993,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static BodyDataBinaryWriteTranslation Instance = new BodyDataBinaryWriteTranslation();
 
         public static void Write_RecordTypes(
-            IBodyDataGetter item,
+            IBodyDataInternalGetter item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask,
@@ -1967,12 +2011,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.BodyParts.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<IBodyPartGetter>.Instance.Write(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<IBodyPartInternalGetter>.Instance.Write(
                     writer: writer,
                     items: item.BodyParts,
                     fieldIndex: (int)BodyData_FieldIndex.BodyParts,
                     errorMask: errorMask,
-                    transl: (MutagenWriter subWriter, IBodyPartGetter subItem, ErrorMaskBuilder listErrorMask) =>
+                    transl: (MutagenWriter subWriter, IBodyPartInternalGetter subItem, ErrorMaskBuilder listErrorMask) =>
                     {
                         var loquiItem = subItem;
                         ((BodyPartBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
@@ -1987,7 +2031,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             MutagenWriter writer,
-            IBodyDataGetter item,
+            IBodyDataInternalGetter item,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
@@ -2008,7 +2052,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask)
         {
             Write(
-                item: (IBodyDataGetter)item,
+                item: (IBodyDataInternalGetter)item,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -2027,7 +2071,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public static class BodyDataBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IBodyDataGetter item,
+            this IBodyDataInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
             out BodyData_ErrorMask errorMask,
@@ -2044,7 +2088,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToBinary(
-            this IBodyDataGetter item,
+            this IBodyDataInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -2058,7 +2102,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToBinary(
-            this IBodyDataGetter item,
+            this IBodyDataInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
@@ -2075,28 +2119,71 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     public partial class BodyDataBinaryWrapper :
         BinaryWrapper,
-        IBodyDataGetter
+        IBodyDataInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BodyData_Registration.Instance;
         public static BodyData_Registration Registration => BodyData_Registration.Instance;
-        protected object CommonInstance => BodyDataCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
+        protected object CommonInstance()
+        {
+            return BodyDataCommon.Instance;
+        }
+        object IBodyDataInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IBodyDataInternalGetter.CommonSetterInstance()
+        {
+            return null;
+        }
+        object IBodyDataInternalGetter.CommonSetterCopyInstance()
+        {
+            return null;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IBodyDataGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IBodyDataInternalGetter)rhs, include);
 
         protected object XmlWriteTranslator => BodyDataXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((BodyDataXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         protected object BinaryWriteTranslator => BodyDataBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((BodyDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
 
         #region Model
-        public IModelGetter Model { get; private set; }
+        public IModelInternalGetter Model { get; private set; }
         public bool Model_IsSet => Model != null;
         #endregion
-        public IReadOnlySetList<IBodyPartGetter> BodyParts { get; private set; } = EmptySetList<BodyPartBinaryWrapper>.Instance;
+        public IReadOnlySetList<IBodyPartInternalGetter> BodyParts { get; private set; } = EmptySetList<BodyPartBinaryWrapper>.Instance;
         partial void CustomCtor(
             BinaryMemoryReadStream stream,
             long finalPos,
@@ -2175,4 +2262,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class BodyData
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => BodyData_Registration.Instance;
+        public static BodyData_Registration Registration => BodyData_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return BodyDataCommon.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return BodyDataSetterCommon.Instance;
+        }
+        protected object CommonSetterCopyInstance()
+        {
+            return BodyDataSetterCopyCommon.Instance;
+        }
+        object IBodyDataInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IBodyDataInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object IBodyDataInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
 }

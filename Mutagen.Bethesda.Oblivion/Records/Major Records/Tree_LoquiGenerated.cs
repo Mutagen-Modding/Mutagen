@@ -43,11 +43,6 @@ namespace Mutagen.Bethesda.Oblivion
         IEquatable<Tree>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Tree_Registration.Instance;
-        public new static Tree_Registration Registration => Tree_Registration.Instance;
-        protected override object CommonInstance => TreeCommon.Instance;
-
         #region Ctor
         protected Tree()
         {
@@ -81,7 +76,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Model_Set(default(Model), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IModelGetter ITreeGetter.Model => this.Model;
+        IModelInternalGetter ITreeGetter.Model => this.Model;
         #endregion
         #region Icon
         public bool Icon_IsSet
@@ -295,20 +290,33 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is ITreeInternalGetter rhs)) return false;
-            return ((TreeCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            return ((TreeCommon)((ITreeInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(Tree obj)
         {
-            return ((TreeCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((TreeCommon)((ITreeInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((TreeCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((TreeCommon)((ITreeInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected override object XmlWriteTranslator => TreeXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((TreeXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static Tree CreateFromXml(
@@ -547,6 +555,19 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Binary Translation
         protected override object BinaryWriteTranslator => TreeBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((TreeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
         #region Binary Create
         [DebuggerStepThrough]
         public static Tree CreateFromBinary(
@@ -876,7 +897,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            TreeCommon.CopyFieldsFrom(
+            TreeSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -891,7 +912,7 @@ namespace Mutagen.Bethesda.Oblivion
             Tree_CopyMask copyMask = null,
             Tree def = null)
         {
-            TreeCommon.CopyFieldsFrom(
+            TreeSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -957,7 +978,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            TreeCommon.Instance.Clear(this);
+            TreeSetterCommon.Instance.Clear(this);
         }
 
         public new static Tree Create(IEnumerable<KeyValuePair<ushort, object>> fields)
@@ -1092,7 +1113,7 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem
     {
         #region Model
-        IModelGetter Model { get; }
+        IModelInternalGetter Model { get; }
         bool Model_IsSet { get; }
 
         #endregion
@@ -1169,7 +1190,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this ITreeInternal item)
         {
-            ((TreeCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((TreeSetterCommon)((ITreeInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static Tree_Mask<bool> GetEqualsMask(
@@ -1177,7 +1198,7 @@ namespace Mutagen.Bethesda.Oblivion
             ITreeInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((TreeCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((TreeCommon)((ITreeInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -1188,7 +1209,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Tree_Mask<bool> printMask = null)
         {
-            return ((TreeCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((TreeCommon)((ITreeInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -1200,7 +1221,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Tree_Mask<bool> printMask = null)
         {
-            ((TreeCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((TreeCommon)((ITreeInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -1211,7 +1232,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ITreeInternalGetter item,
             Tree_Mask<bool?> checkMask)
         {
-            return ((TreeCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((TreeCommon)((ITreeInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -1219,7 +1240,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Tree_Mask<bool> GetHasBeenSetMask(this ITreeInternalGetter item)
         {
             var ret = new Tree_Mask<bool>();
-            ((TreeCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((TreeCommon)((ITreeInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -1229,7 +1250,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ITreeInternalGetter item,
             ITreeInternalGetter rhs)
         {
-            return ((TreeCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((TreeCommon)((ITreeInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1298,8 +1319,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type SetterType = typeof(ITree);
 
         public static readonly Type InternalSetterType = typeof(ITreeInternal);
-
-        public static readonly Type CommonType = typeof(TreeCommon);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.Tree";
 
@@ -1586,7 +1605,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -1606,9 +1624,407 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
+    public partial class TreeSetterCommon : OblivionMajorRecordSetterCommon
+    {
+        public new static readonly TreeSetterCommon Instance = new TreeSetterCommon();
+
+        partial void ClearPartial();
+        
+        public virtual void Clear(ITreeInternal item)
+        {
+            ClearPartial();
+            item.Model_Unset();
+            item.Icon_Unset();
+            item.SpeedTreeSeeds.Unset();
+            item.LeafCurvature = default(Single);
+            item.MinimumLeafAngle = default(Single);
+            item.MaximumLeafAngle = default(Single);
+            item.BranchDimmingValue = default(Single);
+            item.LeafDimmingValue = default(Single);
+            item.ShadowRadius = default(Int32);
+            item.RockingSpeed = default(Single);
+            item.RustleSpeed = default(Single);
+            item.BillboardWidth = default(Single);
+            item.BillboardHeight = default(Single);
+            base.Clear(item);
+        }
+        
+        public override void Clear(IOblivionMajorRecordInternal item)
+        {
+            Clear(item: (ITreeInternal)item);
+        }
+        
+        public override void Clear(IMajorRecordInternal item)
+        {
+            Clear(item: (ITreeInternal)item);
+        }
+        
+        
+    }
     public partial class TreeCommon : OblivionMajorRecordCommon
     {
-        public static readonly TreeCommon Instance = new TreeCommon();
+        public new static readonly TreeCommon Instance = new TreeCommon();
+
+        public Tree_Mask<bool> GetEqualsMask(
+            ITreeInternalGetter item,
+            ITreeInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new Tree_Mask<bool>();
+            ((TreeCommon)((ITreeInternalGetter)item).CommonInstance()).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+        
+        public void FillEqualsMask(
+            ITreeInternalGetter item,
+            ITreeInternalGetter rhs,
+            Tree_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            if (rhs == null) return;
+            ret.Model = EqualsMaskHelper.EqualsHelper(
+                item.Model_IsSet,
+                rhs.Model_IsSet,
+                item.Model,
+                rhs.Model,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
+            ret.Icon = item.Icon_IsSet == rhs.Icon_IsSet && string.Equals(item.Icon, rhs.Icon);
+            ret.SpeedTreeSeeds = item.SpeedTreeSeeds.CollectionEqualsHelper(
+                rhs.SpeedTreeSeeds,
+                (l, r) => l == r,
+                include);
+            ret.LeafCurvature = item.LeafCurvature.EqualsWithin(rhs.LeafCurvature);
+            ret.MinimumLeafAngle = item.MinimumLeafAngle.EqualsWithin(rhs.MinimumLeafAngle);
+            ret.MaximumLeafAngle = item.MaximumLeafAngle.EqualsWithin(rhs.MaximumLeafAngle);
+            ret.BranchDimmingValue = item.BranchDimmingValue.EqualsWithin(rhs.BranchDimmingValue);
+            ret.LeafDimmingValue = item.LeafDimmingValue.EqualsWithin(rhs.LeafDimmingValue);
+            ret.ShadowRadius = item.ShadowRadius == rhs.ShadowRadius;
+            ret.RockingSpeed = item.RockingSpeed.EqualsWithin(rhs.RockingSpeed);
+            ret.RustleSpeed = item.RustleSpeed.EqualsWithin(rhs.RustleSpeed);
+            ret.BillboardWidth = item.BillboardWidth.EqualsWithin(rhs.BillboardWidth);
+            ret.BillboardHeight = item.BillboardHeight.EqualsWithin(rhs.BillboardHeight);
+            base.FillEqualsMask(item, rhs, ret, include);
+        }
+        
+        public string ToString(
+            ITreeInternalGetter item,
+            string name = null,
+            Tree_Mask<bool> printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+            return fg.ToString();
+        }
+        
+        public void ToString(
+            ITreeInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            Tree_Mask<bool> printMask = null)
+        {
+            if (name == null)
+            {
+                fg.AppendLine($"Tree =>");
+            }
+            else
+            {
+                fg.AppendLine($"{name} (Tree) =>");
+            }
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
+            }
+            fg.AppendLine("]");
+        }
+        
+        protected static void ToStringFields(
+            ITreeInternalGetter item,
+            FileGeneration fg,
+            Tree_Mask<bool> printMask = null)
+        {
+            OblivionMajorRecordCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.Model?.Overall ?? true)
+            {
+                item.Model?.ToString(fg, "Model");
+            }
+            if (printMask?.Icon ?? true)
+            {
+                fg.AppendLine($"Icon => {item.Icon}");
+            }
+            if (printMask?.SpeedTreeSeeds?.Overall ?? true)
+            {
+                fg.AppendLine("SpeedTreeSeeds =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.SpeedTreeSeeds)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"Item => {subItem}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.LeafCurvature ?? true)
+            {
+                fg.AppendLine($"LeafCurvature => {item.LeafCurvature}");
+            }
+            if (printMask?.MinimumLeafAngle ?? true)
+            {
+                fg.AppendLine($"MinimumLeafAngle => {item.MinimumLeafAngle}");
+            }
+            if (printMask?.MaximumLeafAngle ?? true)
+            {
+                fg.AppendLine($"MaximumLeafAngle => {item.MaximumLeafAngle}");
+            }
+            if (printMask?.BranchDimmingValue ?? true)
+            {
+                fg.AppendLine($"BranchDimmingValue => {item.BranchDimmingValue}");
+            }
+            if (printMask?.LeafDimmingValue ?? true)
+            {
+                fg.AppendLine($"LeafDimmingValue => {item.LeafDimmingValue}");
+            }
+            if (printMask?.ShadowRadius ?? true)
+            {
+                fg.AppendLine($"ShadowRadius => {item.ShadowRadius}");
+            }
+            if (printMask?.RockingSpeed ?? true)
+            {
+                fg.AppendLine($"RockingSpeed => {item.RockingSpeed}");
+            }
+            if (printMask?.RustleSpeed ?? true)
+            {
+                fg.AppendLine($"RustleSpeed => {item.RustleSpeed}");
+            }
+            if (printMask?.BillboardWidth ?? true)
+            {
+                fg.AppendLine($"BillboardWidth => {item.BillboardWidth}");
+            }
+            if (printMask?.BillboardHeight ?? true)
+            {
+                fg.AppendLine($"BillboardHeight => {item.BillboardHeight}");
+            }
+            if (printMask?.CNAMDataTypeState ?? true)
+            {
+            }
+            if (printMask?.BNAMDataTypeState ?? true)
+            {
+            }
+        }
+        
+        public bool HasBeenSet(
+            ITreeInternalGetter item,
+            Tree_Mask<bool?> checkMask)
+        {
+            if (checkMask.Model.Overall.HasValue && checkMask.Model.Overall.Value != item.Model_IsSet) return false;
+            if (checkMask.Model.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
+            if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_IsSet) return false;
+            if (checkMask.SpeedTreeSeeds.Overall.HasValue && checkMask.SpeedTreeSeeds.Overall.Value != item.SpeedTreeSeeds.HasBeenSet) return false;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+        
+        public void FillHasBeenSetMask(
+            ITreeInternalGetter item,
+            Tree_Mask<bool> mask)
+        {
+            mask.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, item.Model.GetHasBeenSetMask());
+            mask.Icon = item.Icon_IsSet;
+            mask.SpeedTreeSeeds = new MaskItem<bool, IEnumerable<(int, bool)>>(item.SpeedTreeSeeds.HasBeenSet, null);
+            mask.LeafCurvature = true;
+            mask.MinimumLeafAngle = true;
+            mask.MaximumLeafAngle = true;
+            mask.BranchDimmingValue = true;
+            mask.LeafDimmingValue = true;
+            mask.ShadowRadius = true;
+            mask.RockingSpeed = true;
+            mask.RustleSpeed = true;
+            mask.BillboardWidth = true;
+            mask.BillboardHeight = true;
+            mask.CNAMDataTypeState = true;
+            mask.BNAMDataTypeState = true;
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
+        }
+        
+        public static Tree_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (Tree_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.FormKey:
+                    return (Tree_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.Version:
+                    return (Tree_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.EditorID:
+                    return (Tree_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
+                    return (Tree_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        public static Tree_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (Tree_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.FormKey:
+                    return (Tree_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.Version:
+                    return (Tree_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.EditorID:
+                    return (Tree_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        #region Equals and Hash
+        public virtual bool Equals(
+            ITreeInternalGetter lhs,
+            ITreeInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.Model_IsSet != rhs.Model_IsSet) return false;
+            if (lhs.Model_IsSet)
+            {
+                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            }
+            if (lhs.Icon_IsSet != rhs.Icon_IsSet) return false;
+            if (lhs.Icon_IsSet)
+            {
+                if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
+            }
+            if (lhs.SpeedTreeSeeds.HasBeenSet != rhs.SpeedTreeSeeds.HasBeenSet) return false;
+            if (lhs.SpeedTreeSeeds.HasBeenSet)
+            {
+                if (!lhs.SpeedTreeSeeds.SequenceEqual(rhs.SpeedTreeSeeds)) return false;
+            }
+            if (!lhs.LeafCurvature.EqualsWithin(rhs.LeafCurvature)) return false;
+            if (!lhs.MinimumLeafAngle.EqualsWithin(rhs.MinimumLeafAngle)) return false;
+            if (!lhs.MaximumLeafAngle.EqualsWithin(rhs.MaximumLeafAngle)) return false;
+            if (!lhs.BranchDimmingValue.EqualsWithin(rhs.BranchDimmingValue)) return false;
+            if (!lhs.LeafDimmingValue.EqualsWithin(rhs.LeafDimmingValue)) return false;
+            if (lhs.ShadowRadius != rhs.ShadowRadius) return false;
+            if (!lhs.RockingSpeed.EqualsWithin(rhs.RockingSpeed)) return false;
+            if (!lhs.RustleSpeed.EqualsWithin(rhs.RustleSpeed)) return false;
+            if (!lhs.BillboardWidth.EqualsWithin(rhs.BillboardWidth)) return false;
+            if (!lhs.BillboardHeight.EqualsWithin(rhs.BillboardHeight)) return false;
+            if (lhs.CNAMDataTypeState != rhs.CNAMDataTypeState) return false;
+            if (lhs.BNAMDataTypeState != rhs.BNAMDataTypeState) return false;
+            return true;
+        }
+        
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (ITreeInternalGetter)lhs,
+                rhs: rhs as ITreeInternalGetter);
+        }
+        
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (ITreeInternalGetter)lhs,
+                rhs: rhs as ITreeInternalGetter);
+        }
+        
+        public virtual int GetHashCode(ITreeInternalGetter item)
+        {
+            int ret = 0;
+            if (item.Model_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Model).CombineHashCode(ret);
+            }
+            if (item.Icon_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Icon).CombineHashCode(ret);
+            }
+            if (item.SpeedTreeSeeds.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.SpeedTreeSeeds).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.LeafCurvature).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.MinimumLeafAngle).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.MaximumLeafAngle).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.BranchDimmingValue).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.LeafDimmingValue).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.ShadowRadius).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.RockingSpeed).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.RustleSpeed).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.BillboardWidth).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.BillboardHeight).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.CNAMDataTypeState).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.BNAMDataTypeState).CombineHashCode(ret);
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+        
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (ITreeInternalGetter)item);
+        }
+        
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (ITreeInternalGetter)item);
+        }
+        
+        #endregion
+        
+        
+        #region Mutagen
+        partial void PostDuplicate(Tree obj, Tree rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+        
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new Tree(getNextFormKey());
+            ret.CopyFieldsFrom((Tree)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (Tree)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+        
+        #endregion
+        
+        
+    }
+    public partial class TreeSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
+    {
+        public new static readonly TreeSetterCopyCommon Instance = new TreeSetterCopyCommon();
 
         #region Copy Fields From
         public static void CopyFieldsFrom(
@@ -1618,7 +2034,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             Tree_CopyMask copyMask)
         {
-            OblivionMajorRecordCommon.CopyFieldsFrom(
+            OblivionMajorRecordSetterCopyCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1642,7 +2058,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             case CopyOption.Reference:
                                 throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
-                                ModelCommon.CopyFieldsFrom(
+                                ModelSetterCopyCommon.CopyFieldsFrom(
                                     item: item.Model,
                                     rhs: rhs.Model,
                                     def: def?.Model,
@@ -1896,395 +2312,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
         }
-
+        
         #endregion
-
-        partial void ClearPartial();
-
-        public virtual void Clear(ITreeInternal item)
-        {
-            ClearPartial();
-            item.Model_Unset();
-            item.Icon_Unset();
-            item.SpeedTreeSeeds.Unset();
-            item.LeafCurvature = default(Single);
-            item.MinimumLeafAngle = default(Single);
-            item.MaximumLeafAngle = default(Single);
-            item.BranchDimmingValue = default(Single);
-            item.LeafDimmingValue = default(Single);
-            item.ShadowRadius = default(Int32);
-            item.RockingSpeed = default(Single);
-            item.RustleSpeed = default(Single);
-            item.BillboardWidth = default(Single);
-            item.BillboardHeight = default(Single);
-            base.Clear(item);
-        }
-
-        public override void Clear(IOblivionMajorRecordInternal item)
-        {
-            Clear(item: (ITreeInternal)item);
-        }
-
-        public override void Clear(IMajorRecordInternal item)
-        {
-            Clear(item: (ITreeInternal)item);
-        }
-
-        public Tree_Mask<bool> GetEqualsMask(
-            ITreeInternalGetter item,
-            ITreeInternalGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new Tree_Mask<bool>();
-            ((TreeCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public void FillEqualsMask(
-            ITreeInternalGetter item,
-            ITreeInternalGetter rhs,
-            Tree_Mask<bool> ret,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            if (rhs == null) return;
-            ret.Model = EqualsMaskHelper.EqualsHelper(
-                item.Model_IsSet,
-                rhs.Model_IsSet,
-                item.Model,
-                rhs.Model,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
-                include);
-            ret.Icon = item.Icon_IsSet == rhs.Icon_IsSet && string.Equals(item.Icon, rhs.Icon);
-            ret.SpeedTreeSeeds = item.SpeedTreeSeeds.CollectionEqualsHelper(
-                rhs.SpeedTreeSeeds,
-                (l, r) => l == r,
-                include);
-            ret.LeafCurvature = item.LeafCurvature.EqualsWithin(rhs.LeafCurvature);
-            ret.MinimumLeafAngle = item.MinimumLeafAngle.EqualsWithin(rhs.MinimumLeafAngle);
-            ret.MaximumLeafAngle = item.MaximumLeafAngle.EqualsWithin(rhs.MaximumLeafAngle);
-            ret.BranchDimmingValue = item.BranchDimmingValue.EqualsWithin(rhs.BranchDimmingValue);
-            ret.LeafDimmingValue = item.LeafDimmingValue.EqualsWithin(rhs.LeafDimmingValue);
-            ret.ShadowRadius = item.ShadowRadius == rhs.ShadowRadius;
-            ret.RockingSpeed = item.RockingSpeed.EqualsWithin(rhs.RockingSpeed);
-            ret.RustleSpeed = item.RustleSpeed.EqualsWithin(rhs.RustleSpeed);
-            ret.BillboardWidth = item.BillboardWidth.EqualsWithin(rhs.BillboardWidth);
-            ret.BillboardHeight = item.BillboardHeight.EqualsWithin(rhs.BillboardHeight);
-            base.FillEqualsMask(item, rhs, ret, include);
-        }
-
-        public string ToString(
-            ITreeInternalGetter item,
-            string name = null,
-            Tree_Mask<bool> printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(
-                item: item,
-                fg: fg,
-                name: name,
-                printMask: printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(
-            ITreeInternalGetter item,
-            FileGeneration fg,
-            string name = null,
-            Tree_Mask<bool> printMask = null)
-        {
-            if (name == null)
-            {
-                fg.AppendLine($"Tree =>");
-            }
-            else
-            {
-                fg.AppendLine($"{name} (Tree) =>");
-            }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                ToStringFields(
-                    item: item,
-                    fg: fg,
-                    printMask: printMask);
-            }
-            fg.AppendLine("]");
-        }
-
-        protected static void ToStringFields(
-            ITreeInternalGetter item,
-            FileGeneration fg,
-            Tree_Mask<bool> printMask = null)
-        {
-            OblivionMajorRecordCommon.ToStringFields(
-                item: item,
-                fg: fg,
-                printMask: printMask);
-            if (printMask?.Model?.Overall ?? true)
-            {
-                item.Model?.ToString(fg, "Model");
-            }
-            if (printMask?.Icon ?? true)
-            {
-                fg.AppendLine($"Icon => {item.Icon}");
-            }
-            if (printMask?.SpeedTreeSeeds?.Overall ?? true)
-            {
-                fg.AppendLine("SpeedTreeSeeds =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
-                {
-                    foreach (var subItem in item.SpeedTreeSeeds)
-                    {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            fg.AppendLine($"Item => {subItem}");
-                        }
-                        fg.AppendLine("]");
-                    }
-                }
-                fg.AppendLine("]");
-            }
-            if (printMask?.LeafCurvature ?? true)
-            {
-                fg.AppendLine($"LeafCurvature => {item.LeafCurvature}");
-            }
-            if (printMask?.MinimumLeafAngle ?? true)
-            {
-                fg.AppendLine($"MinimumLeafAngle => {item.MinimumLeafAngle}");
-            }
-            if (printMask?.MaximumLeafAngle ?? true)
-            {
-                fg.AppendLine($"MaximumLeafAngle => {item.MaximumLeafAngle}");
-            }
-            if (printMask?.BranchDimmingValue ?? true)
-            {
-                fg.AppendLine($"BranchDimmingValue => {item.BranchDimmingValue}");
-            }
-            if (printMask?.LeafDimmingValue ?? true)
-            {
-                fg.AppendLine($"LeafDimmingValue => {item.LeafDimmingValue}");
-            }
-            if (printMask?.ShadowRadius ?? true)
-            {
-                fg.AppendLine($"ShadowRadius => {item.ShadowRadius}");
-            }
-            if (printMask?.RockingSpeed ?? true)
-            {
-                fg.AppendLine($"RockingSpeed => {item.RockingSpeed}");
-            }
-            if (printMask?.RustleSpeed ?? true)
-            {
-                fg.AppendLine($"RustleSpeed => {item.RustleSpeed}");
-            }
-            if (printMask?.BillboardWidth ?? true)
-            {
-                fg.AppendLine($"BillboardWidth => {item.BillboardWidth}");
-            }
-            if (printMask?.BillboardHeight ?? true)
-            {
-                fg.AppendLine($"BillboardHeight => {item.BillboardHeight}");
-            }
-            if (printMask?.CNAMDataTypeState ?? true)
-            {
-            }
-            if (printMask?.BNAMDataTypeState ?? true)
-            {
-            }
-        }
-
-        public bool HasBeenSet(
-            ITreeInternalGetter item,
-            Tree_Mask<bool?> checkMask)
-        {
-            if (checkMask.Model.Overall.HasValue && checkMask.Model.Overall.Value != item.Model_IsSet) return false;
-            if (checkMask.Model.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
-            if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_IsSet) return false;
-            if (checkMask.SpeedTreeSeeds.Overall.HasValue && checkMask.SpeedTreeSeeds.Overall.Value != item.SpeedTreeSeeds.HasBeenSet) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public void FillHasBeenSetMask(
-            ITreeInternalGetter item,
-            Tree_Mask<bool> mask)
-        {
-            mask.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, item.Model.GetHasBeenSetMask());
-            mask.Icon = item.Icon_IsSet;
-            mask.SpeedTreeSeeds = new MaskItem<bool, IEnumerable<(int, bool)>>(item.SpeedTreeSeeds.HasBeenSet, null);
-            mask.LeafCurvature = true;
-            mask.MinimumLeafAngle = true;
-            mask.MaximumLeafAngle = true;
-            mask.BranchDimmingValue = true;
-            mask.LeafDimmingValue = true;
-            mask.ShadowRadius = true;
-            mask.RockingSpeed = true;
-            mask.RustleSpeed = true;
-            mask.BillboardWidth = true;
-            mask.BillboardHeight = true;
-            mask.CNAMDataTypeState = true;
-            mask.BNAMDataTypeState = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-
-        public static Tree_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
-        {
-            switch (index)
-            {
-                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Tree_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.FormKey:
-                    return (Tree_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.Version:
-                    return (Tree_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.EditorID:
-                    return (Tree_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
-                    return (Tree_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        public static Tree_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
-        {
-            switch (index)
-            {
-                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Tree_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.FormKey:
-                    return (Tree_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
-                    return (Tree_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.EditorID:
-                    return (Tree_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        #region Equals and Hash
-        public virtual bool Equals(
-            ITreeInternalGetter lhs,
-            ITreeInternalGetter rhs)
-        {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (lhs.Model_IsSet != rhs.Model_IsSet) return false;
-            if (lhs.Model_IsSet)
-            {
-                if (!object.Equals(lhs.Model, rhs.Model)) return false;
-            }
-            if (lhs.Icon_IsSet != rhs.Icon_IsSet) return false;
-            if (lhs.Icon_IsSet)
-            {
-                if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
-            }
-            if (lhs.SpeedTreeSeeds.HasBeenSet != rhs.SpeedTreeSeeds.HasBeenSet) return false;
-            if (lhs.SpeedTreeSeeds.HasBeenSet)
-            {
-                if (!lhs.SpeedTreeSeeds.SequenceEqual(rhs.SpeedTreeSeeds)) return false;
-            }
-            if (!lhs.LeafCurvature.EqualsWithin(rhs.LeafCurvature)) return false;
-            if (!lhs.MinimumLeafAngle.EqualsWithin(rhs.MinimumLeafAngle)) return false;
-            if (!lhs.MaximumLeafAngle.EqualsWithin(rhs.MaximumLeafAngle)) return false;
-            if (!lhs.BranchDimmingValue.EqualsWithin(rhs.BranchDimmingValue)) return false;
-            if (!lhs.LeafDimmingValue.EqualsWithin(rhs.LeafDimmingValue)) return false;
-            if (lhs.ShadowRadius != rhs.ShadowRadius) return false;
-            if (!lhs.RockingSpeed.EqualsWithin(rhs.RockingSpeed)) return false;
-            if (!lhs.RustleSpeed.EqualsWithin(rhs.RustleSpeed)) return false;
-            if (!lhs.BillboardWidth.EqualsWithin(rhs.BillboardWidth)) return false;
-            if (!lhs.BillboardHeight.EqualsWithin(rhs.BillboardHeight)) return false;
-            if (lhs.CNAMDataTypeState != rhs.CNAMDataTypeState) return false;
-            if (lhs.BNAMDataTypeState != rhs.BNAMDataTypeState) return false;
-            return true;
-        }
-
-        public override bool Equals(
-            IOblivionMajorRecordInternalGetter lhs,
-            IOblivionMajorRecordInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (ITreeInternalGetter)lhs,
-                rhs: rhs as ITreeInternalGetter);
-        }
-
-        public override bool Equals(
-            IMajorRecordInternalGetter lhs,
-            IMajorRecordInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (ITreeInternalGetter)lhs,
-                rhs: rhs as ITreeInternalGetter);
-        }
-
-        public virtual int GetHashCode(ITreeInternalGetter item)
-        {
-            int ret = 0;
-            if (item.Model_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Model).CombineHashCode(ret);
-            }
-            if (item.Icon_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Icon).CombineHashCode(ret);
-            }
-            if (item.SpeedTreeSeeds.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.SpeedTreeSeeds).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(item.LeafCurvature).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.MinimumLeafAngle).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.MaximumLeafAngle).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.BranchDimmingValue).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.LeafDimmingValue).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.ShadowRadius).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.RockingSpeed).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.RustleSpeed).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.BillboardWidth).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.BillboardHeight).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.CNAMDataTypeState).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.BNAMDataTypeState).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
-        {
-            return GetHashCode(item: (ITreeInternalGetter)item);
-        }
-
-        public override int GetHashCode(IMajorRecordInternalGetter item)
-        {
-            return GetHashCode(item: (ITreeInternalGetter)item);
-        }
-
-        #endregion
-
-
-        #region Mutagen
-        partial void PostDuplicate(Tree obj, Tree rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new Tree(getNextFormKey());
-            ret.CopyFieldsFrom((Tree)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (Tree)item, getNextFormKey, duplicatedRecords);
-            return ret;
-        }
-
-        #endregion
-
+        
+        
     }
     #endregion
 
@@ -3968,20 +3999,52 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         OblivionMajorRecordBinaryWrapper,
         ITreeInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Tree_Registration.Instance;
         public new static Tree_Registration Registration => Tree_Registration.Instance;
-        protected override object CommonInstance => TreeCommon.Instance;
+        protected override object CommonInstance()
+        {
+            return TreeCommon.Instance;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ITreeInternalGetter)rhs, include);
 
         protected override object XmlWriteTranslator => TreeXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((TreeXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         protected override object BinaryWriteTranslator => TreeBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((TreeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
 
         #region Model
-        public IModelGetter Model { get; private set; }
+        public IModelInternalGetter Model { get; private set; }
         public bool Model_IsSet => Model != null;
         #endregion
         #region Icon
@@ -4147,4 +4210,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class Tree
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Tree_Registration.Instance;
+        public new static Tree_Registration Registration => Tree_Registration.Instance;
+        protected override object CommonInstance()
+        {
+            return TreeCommon.Instance;
+        }
+        protected override object CommonSetterInstance()
+        {
+            return TreeSetterCommon.Instance;
+        }
+        protected override object CommonSetterCopyInstance()
+        {
+            return TreeSetterCopyCommon.Instance;
+        }
+
+        #endregion
+
+    }
 }

@@ -41,11 +41,6 @@ namespace Mutagen.Bethesda.Oblivion
         IEquatable<SkillRecord>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => SkillRecord_Registration.Instance;
-        public new static SkillRecord_Registration Registration => SkillRecord_Registration.Instance;
-        protected override object CommonInstance => SkillRecordCommon.Instance;
-
         #region Ctor
         protected SkillRecord()
         {
@@ -333,20 +328,33 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is ISkillRecordInternalGetter rhs)) return false;
-            return ((SkillRecordCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            return ((SkillRecordCommon)((ISkillRecordInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(SkillRecord obj)
         {
-            return ((SkillRecordCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((SkillRecordCommon)((ISkillRecordInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((SkillRecordCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((SkillRecordCommon)((ISkillRecordInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected override object XmlWriteTranslator => SkillRecordXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((SkillRecordXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static SkillRecord CreateFromXml(
@@ -574,6 +582,19 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Binary Translation
         protected override object BinaryWriteTranslator => SkillRecordBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((SkillRecordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
         #region Binary Create
         [DebuggerStepThrough]
         public static SkillRecord CreateFromBinary(
@@ -916,7 +937,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            SkillRecordCommon.CopyFieldsFrom(
+            SkillRecordSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -931,7 +952,7 @@ namespace Mutagen.Bethesda.Oblivion
             SkillRecord_CopyMask copyMask = null,
             SkillRecord def = null)
         {
-            SkillRecordCommon.CopyFieldsFrom(
+            SkillRecordSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -991,7 +1012,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            SkillRecordCommon.Instance.Clear(this);
+            SkillRecordSetterCommon.Instance.Clear(this);
         }
 
         public new static SkillRecord Create(IEnumerable<KeyValuePair<ushort, object>> fields)
@@ -1207,7 +1228,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this ISkillRecordInternal item)
         {
-            ((SkillRecordCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((SkillRecordSetterCommon)((ISkillRecordInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static SkillRecord_Mask<bool> GetEqualsMask(
@@ -1215,7 +1236,7 @@ namespace Mutagen.Bethesda.Oblivion
             ISkillRecordInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((SkillRecordCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((SkillRecordCommon)((ISkillRecordInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -1226,7 +1247,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             SkillRecord_Mask<bool> printMask = null)
         {
-            return ((SkillRecordCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((SkillRecordCommon)((ISkillRecordInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -1238,7 +1259,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             SkillRecord_Mask<bool> printMask = null)
         {
-            ((SkillRecordCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((SkillRecordCommon)((ISkillRecordInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -1249,7 +1270,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ISkillRecordInternalGetter item,
             SkillRecord_Mask<bool?> checkMask)
         {
-            return ((SkillRecordCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((SkillRecordCommon)((ISkillRecordInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -1257,7 +1278,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static SkillRecord_Mask<bool> GetHasBeenSetMask(this ISkillRecordInternalGetter item)
         {
             var ret = new SkillRecord_Mask<bool>();
-            ((SkillRecordCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((SkillRecordCommon)((ISkillRecordInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -1267,7 +1288,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ISkillRecordInternalGetter item,
             ISkillRecordInternalGetter rhs)
         {
-            return ((SkillRecordCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((SkillRecordCommon)((ISkillRecordInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1334,8 +1355,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type SetterType = typeof(ISkillRecord);
 
         public static readonly Type InternalSetterType = typeof(ISkillRecordInternal);
-
-        public static readonly Type CommonType = typeof(SkillRecordCommon);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.SkillRecord";
 
@@ -1601,7 +1620,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -1621,9 +1639,400 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
+    public partial class SkillRecordSetterCommon : OblivionMajorRecordSetterCommon
+    {
+        public new static readonly SkillRecordSetterCommon Instance = new SkillRecordSetterCommon();
+
+        partial void ClearPartial();
+        
+        public virtual void Clear(ISkillRecordInternal item)
+        {
+            ClearPartial();
+            item.Skill_Unset();
+            item.Description_Unset();
+            item.Icon_Unset();
+            item.Action = default(ActorValue);
+            item.Attribute = default(ActorValue);
+            item.Specialization = default(Specialization);
+            item.UseValueFirst = default(Single);
+            item.UseValueSecond = default(Single);
+            item.ApprenticeText_Unset();
+            item.JourneymanText_Unset();
+            item.ExpertText_Unset();
+            item.MasterText_Unset();
+            base.Clear(item);
+        }
+        
+        public override void Clear(IOblivionMajorRecordInternal item)
+        {
+            Clear(item: (ISkillRecordInternal)item);
+        }
+        
+        public override void Clear(IMajorRecordInternal item)
+        {
+            Clear(item: (ISkillRecordInternal)item);
+        }
+        
+        
+    }
     public partial class SkillRecordCommon : OblivionMajorRecordCommon
     {
-        public static readonly SkillRecordCommon Instance = new SkillRecordCommon();
+        public new static readonly SkillRecordCommon Instance = new SkillRecordCommon();
+
+        public SkillRecord_Mask<bool> GetEqualsMask(
+            ISkillRecordInternalGetter item,
+            ISkillRecordInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new SkillRecord_Mask<bool>();
+            ((SkillRecordCommon)((ISkillRecordInternalGetter)item).CommonInstance()).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+        
+        public void FillEqualsMask(
+            ISkillRecordInternalGetter item,
+            ISkillRecordInternalGetter rhs,
+            SkillRecord_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            if (rhs == null) return;
+            ret.Skill = item.Skill_IsSet == rhs.Skill_IsSet && item.Skill == rhs.Skill;
+            ret.Description = item.Description_IsSet == rhs.Description_IsSet && string.Equals(item.Description, rhs.Description);
+            ret.Icon = item.Icon_IsSet == rhs.Icon_IsSet && string.Equals(item.Icon, rhs.Icon);
+            ret.Action = item.Action == rhs.Action;
+            ret.Attribute = item.Attribute == rhs.Attribute;
+            ret.Specialization = item.Specialization == rhs.Specialization;
+            ret.UseValueFirst = item.UseValueFirst.EqualsWithin(rhs.UseValueFirst);
+            ret.UseValueSecond = item.UseValueSecond.EqualsWithin(rhs.UseValueSecond);
+            ret.ApprenticeText = item.ApprenticeText_IsSet == rhs.ApprenticeText_IsSet && string.Equals(item.ApprenticeText, rhs.ApprenticeText);
+            ret.JourneymanText = item.JourneymanText_IsSet == rhs.JourneymanText_IsSet && string.Equals(item.JourneymanText, rhs.JourneymanText);
+            ret.ExpertText = item.ExpertText_IsSet == rhs.ExpertText_IsSet && string.Equals(item.ExpertText, rhs.ExpertText);
+            ret.MasterText = item.MasterText_IsSet == rhs.MasterText_IsSet && string.Equals(item.MasterText, rhs.MasterText);
+            base.FillEqualsMask(item, rhs, ret, include);
+        }
+        
+        public string ToString(
+            ISkillRecordInternalGetter item,
+            string name = null,
+            SkillRecord_Mask<bool> printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+            return fg.ToString();
+        }
+        
+        public void ToString(
+            ISkillRecordInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            SkillRecord_Mask<bool> printMask = null)
+        {
+            if (name == null)
+            {
+                fg.AppendLine($"SkillRecord =>");
+            }
+            else
+            {
+                fg.AppendLine($"{name} (SkillRecord) =>");
+            }
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
+            }
+            fg.AppendLine("]");
+        }
+        
+        protected static void ToStringFields(
+            ISkillRecordInternalGetter item,
+            FileGeneration fg,
+            SkillRecord_Mask<bool> printMask = null)
+        {
+            OblivionMajorRecordCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.Skill ?? true)
+            {
+                fg.AppendLine($"Skill => {item.Skill}");
+            }
+            if (printMask?.Description ?? true)
+            {
+                fg.AppendLine($"Description => {item.Description}");
+            }
+            if (printMask?.Icon ?? true)
+            {
+                fg.AppendLine($"Icon => {item.Icon}");
+            }
+            if (printMask?.Action ?? true)
+            {
+                fg.AppendLine($"Action => {item.Action}");
+            }
+            if (printMask?.Attribute ?? true)
+            {
+                fg.AppendLine($"Attribute => {item.Attribute}");
+            }
+            if (printMask?.Specialization ?? true)
+            {
+                fg.AppendLine($"Specialization => {item.Specialization}");
+            }
+            if (printMask?.UseValueFirst ?? true)
+            {
+                fg.AppendLine($"UseValueFirst => {item.UseValueFirst}");
+            }
+            if (printMask?.UseValueSecond ?? true)
+            {
+                fg.AppendLine($"UseValueSecond => {item.UseValueSecond}");
+            }
+            if (printMask?.ApprenticeText ?? true)
+            {
+                fg.AppendLine($"ApprenticeText => {item.ApprenticeText}");
+            }
+            if (printMask?.JourneymanText ?? true)
+            {
+                fg.AppendLine($"JourneymanText => {item.JourneymanText}");
+            }
+            if (printMask?.ExpertText ?? true)
+            {
+                fg.AppendLine($"ExpertText => {item.ExpertText}");
+            }
+            if (printMask?.MasterText ?? true)
+            {
+                fg.AppendLine($"MasterText => {item.MasterText}");
+            }
+            if (printMask?.DATADataTypeState ?? true)
+            {
+            }
+        }
+        
+        public bool HasBeenSet(
+            ISkillRecordInternalGetter item,
+            SkillRecord_Mask<bool?> checkMask)
+        {
+            if (checkMask.Skill.HasValue && checkMask.Skill.Value != item.Skill_IsSet) return false;
+            if (checkMask.Description.HasValue && checkMask.Description.Value != item.Description_IsSet) return false;
+            if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_IsSet) return false;
+            if (checkMask.ApprenticeText.HasValue && checkMask.ApprenticeText.Value != item.ApprenticeText_IsSet) return false;
+            if (checkMask.JourneymanText.HasValue && checkMask.JourneymanText.Value != item.JourneymanText_IsSet) return false;
+            if (checkMask.ExpertText.HasValue && checkMask.ExpertText.Value != item.ExpertText_IsSet) return false;
+            if (checkMask.MasterText.HasValue && checkMask.MasterText.Value != item.MasterText_IsSet) return false;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+        
+        public void FillHasBeenSetMask(
+            ISkillRecordInternalGetter item,
+            SkillRecord_Mask<bool> mask)
+        {
+            mask.Skill = item.Skill_IsSet;
+            mask.Description = item.Description_IsSet;
+            mask.Icon = item.Icon_IsSet;
+            mask.Action = true;
+            mask.Attribute = true;
+            mask.Specialization = true;
+            mask.UseValueFirst = true;
+            mask.UseValueSecond = true;
+            mask.ApprenticeText = item.ApprenticeText_IsSet;
+            mask.JourneymanText = item.JourneymanText_IsSet;
+            mask.ExpertText = item.ExpertText_IsSet;
+            mask.MasterText = item.MasterText_IsSet;
+            mask.DATADataTypeState = true;
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
+        }
+        
+        public static SkillRecord_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (SkillRecord_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.FormKey:
+                    return (SkillRecord_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.Version:
+                    return (SkillRecord_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.EditorID:
+                    return (SkillRecord_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
+                    return (SkillRecord_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        public static SkillRecord_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (SkillRecord_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.FormKey:
+                    return (SkillRecord_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.Version:
+                    return (SkillRecord_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.EditorID:
+                    return (SkillRecord_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        #region Equals and Hash
+        public virtual bool Equals(
+            ISkillRecordInternalGetter lhs,
+            ISkillRecordInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.Skill_IsSet != rhs.Skill_IsSet) return false;
+            if (lhs.Skill_IsSet)
+            {
+                if (lhs.Skill != rhs.Skill) return false;
+            }
+            if (lhs.Description_IsSet != rhs.Description_IsSet) return false;
+            if (lhs.Description_IsSet)
+            {
+                if (!string.Equals(lhs.Description, rhs.Description)) return false;
+            }
+            if (lhs.Icon_IsSet != rhs.Icon_IsSet) return false;
+            if (lhs.Icon_IsSet)
+            {
+                if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
+            }
+            if (lhs.Action != rhs.Action) return false;
+            if (lhs.Attribute != rhs.Attribute) return false;
+            if (lhs.Specialization != rhs.Specialization) return false;
+            if (!lhs.UseValueFirst.EqualsWithin(rhs.UseValueFirst)) return false;
+            if (!lhs.UseValueSecond.EqualsWithin(rhs.UseValueSecond)) return false;
+            if (lhs.ApprenticeText_IsSet != rhs.ApprenticeText_IsSet) return false;
+            if (lhs.ApprenticeText_IsSet)
+            {
+                if (!string.Equals(lhs.ApprenticeText, rhs.ApprenticeText)) return false;
+            }
+            if (lhs.JourneymanText_IsSet != rhs.JourneymanText_IsSet) return false;
+            if (lhs.JourneymanText_IsSet)
+            {
+                if (!string.Equals(lhs.JourneymanText, rhs.JourneymanText)) return false;
+            }
+            if (lhs.ExpertText_IsSet != rhs.ExpertText_IsSet) return false;
+            if (lhs.ExpertText_IsSet)
+            {
+                if (!string.Equals(lhs.ExpertText, rhs.ExpertText)) return false;
+            }
+            if (lhs.MasterText_IsSet != rhs.MasterText_IsSet) return false;
+            if (lhs.MasterText_IsSet)
+            {
+                if (!string.Equals(lhs.MasterText, rhs.MasterText)) return false;
+            }
+            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            return true;
+        }
+        
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (ISkillRecordInternalGetter)lhs,
+                rhs: rhs as ISkillRecordInternalGetter);
+        }
+        
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (ISkillRecordInternalGetter)lhs,
+                rhs: rhs as ISkillRecordInternalGetter);
+        }
+        
+        public virtual int GetHashCode(ISkillRecordInternalGetter item)
+        {
+            int ret = 0;
+            if (item.Skill_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Skill).CombineHashCode(ret);
+            }
+            if (item.Description_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Description).CombineHashCode(ret);
+            }
+            if (item.Icon_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Icon).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.Action).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Attribute).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Specialization).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.UseValueFirst).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.UseValueSecond).CombineHashCode(ret);
+            if (item.ApprenticeText_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.ApprenticeText).CombineHashCode(ret);
+            }
+            if (item.JourneymanText_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.JourneymanText).CombineHashCode(ret);
+            }
+            if (item.ExpertText_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.ExpertText).CombineHashCode(ret);
+            }
+            if (item.MasterText_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.MasterText).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.DATADataTypeState).CombineHashCode(ret);
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+        
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (ISkillRecordInternalGetter)item);
+        }
+        
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (ISkillRecordInternalGetter)item);
+        }
+        
+        #endregion
+        
+        
+        #region Mutagen
+        partial void PostDuplicate(SkillRecord obj, SkillRecord rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+        
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new SkillRecord(getNextFormKey());
+            ret.CopyFieldsFrom((SkillRecord)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (SkillRecord)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+        
+        #endregion
+        
+        
+    }
+    public partial class SkillRecordSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
+    {
+        public new static readonly SkillRecordSetterCopyCommon Instance = new SkillRecordSetterCopyCommon();
 
         #region Copy Fields From
         public static void CopyFieldsFrom(
@@ -1633,7 +2042,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             SkillRecord_CopyMask copyMask)
         {
-            OblivionMajorRecordCommon.CopyFieldsFrom(
+            OblivionMajorRecordSetterCopyCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1935,388 +2344,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
         }
-
+        
         #endregion
-
-        partial void ClearPartial();
-
-        public virtual void Clear(ISkillRecordInternal item)
-        {
-            ClearPartial();
-            item.Skill_Unset();
-            item.Description_Unset();
-            item.Icon_Unset();
-            item.Action = default(ActorValue);
-            item.Attribute = default(ActorValue);
-            item.Specialization = default(Specialization);
-            item.UseValueFirst = default(Single);
-            item.UseValueSecond = default(Single);
-            item.ApprenticeText_Unset();
-            item.JourneymanText_Unset();
-            item.ExpertText_Unset();
-            item.MasterText_Unset();
-            base.Clear(item);
-        }
-
-        public override void Clear(IOblivionMajorRecordInternal item)
-        {
-            Clear(item: (ISkillRecordInternal)item);
-        }
-
-        public override void Clear(IMajorRecordInternal item)
-        {
-            Clear(item: (ISkillRecordInternal)item);
-        }
-
-        public SkillRecord_Mask<bool> GetEqualsMask(
-            ISkillRecordInternalGetter item,
-            ISkillRecordInternalGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new SkillRecord_Mask<bool>();
-            ((SkillRecordCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public void FillEqualsMask(
-            ISkillRecordInternalGetter item,
-            ISkillRecordInternalGetter rhs,
-            SkillRecord_Mask<bool> ret,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            if (rhs == null) return;
-            ret.Skill = item.Skill_IsSet == rhs.Skill_IsSet && item.Skill == rhs.Skill;
-            ret.Description = item.Description_IsSet == rhs.Description_IsSet && string.Equals(item.Description, rhs.Description);
-            ret.Icon = item.Icon_IsSet == rhs.Icon_IsSet && string.Equals(item.Icon, rhs.Icon);
-            ret.Action = item.Action == rhs.Action;
-            ret.Attribute = item.Attribute == rhs.Attribute;
-            ret.Specialization = item.Specialization == rhs.Specialization;
-            ret.UseValueFirst = item.UseValueFirst.EqualsWithin(rhs.UseValueFirst);
-            ret.UseValueSecond = item.UseValueSecond.EqualsWithin(rhs.UseValueSecond);
-            ret.ApprenticeText = item.ApprenticeText_IsSet == rhs.ApprenticeText_IsSet && string.Equals(item.ApprenticeText, rhs.ApprenticeText);
-            ret.JourneymanText = item.JourneymanText_IsSet == rhs.JourneymanText_IsSet && string.Equals(item.JourneymanText, rhs.JourneymanText);
-            ret.ExpertText = item.ExpertText_IsSet == rhs.ExpertText_IsSet && string.Equals(item.ExpertText, rhs.ExpertText);
-            ret.MasterText = item.MasterText_IsSet == rhs.MasterText_IsSet && string.Equals(item.MasterText, rhs.MasterText);
-            base.FillEqualsMask(item, rhs, ret, include);
-        }
-
-        public string ToString(
-            ISkillRecordInternalGetter item,
-            string name = null,
-            SkillRecord_Mask<bool> printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(
-                item: item,
-                fg: fg,
-                name: name,
-                printMask: printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(
-            ISkillRecordInternalGetter item,
-            FileGeneration fg,
-            string name = null,
-            SkillRecord_Mask<bool> printMask = null)
-        {
-            if (name == null)
-            {
-                fg.AppendLine($"SkillRecord =>");
-            }
-            else
-            {
-                fg.AppendLine($"{name} (SkillRecord) =>");
-            }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                ToStringFields(
-                    item: item,
-                    fg: fg,
-                    printMask: printMask);
-            }
-            fg.AppendLine("]");
-        }
-
-        protected static void ToStringFields(
-            ISkillRecordInternalGetter item,
-            FileGeneration fg,
-            SkillRecord_Mask<bool> printMask = null)
-        {
-            OblivionMajorRecordCommon.ToStringFields(
-                item: item,
-                fg: fg,
-                printMask: printMask);
-            if (printMask?.Skill ?? true)
-            {
-                fg.AppendLine($"Skill => {item.Skill}");
-            }
-            if (printMask?.Description ?? true)
-            {
-                fg.AppendLine($"Description => {item.Description}");
-            }
-            if (printMask?.Icon ?? true)
-            {
-                fg.AppendLine($"Icon => {item.Icon}");
-            }
-            if (printMask?.Action ?? true)
-            {
-                fg.AppendLine($"Action => {item.Action}");
-            }
-            if (printMask?.Attribute ?? true)
-            {
-                fg.AppendLine($"Attribute => {item.Attribute}");
-            }
-            if (printMask?.Specialization ?? true)
-            {
-                fg.AppendLine($"Specialization => {item.Specialization}");
-            }
-            if (printMask?.UseValueFirst ?? true)
-            {
-                fg.AppendLine($"UseValueFirst => {item.UseValueFirst}");
-            }
-            if (printMask?.UseValueSecond ?? true)
-            {
-                fg.AppendLine($"UseValueSecond => {item.UseValueSecond}");
-            }
-            if (printMask?.ApprenticeText ?? true)
-            {
-                fg.AppendLine($"ApprenticeText => {item.ApprenticeText}");
-            }
-            if (printMask?.JourneymanText ?? true)
-            {
-                fg.AppendLine($"JourneymanText => {item.JourneymanText}");
-            }
-            if (printMask?.ExpertText ?? true)
-            {
-                fg.AppendLine($"ExpertText => {item.ExpertText}");
-            }
-            if (printMask?.MasterText ?? true)
-            {
-                fg.AppendLine($"MasterText => {item.MasterText}");
-            }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-            }
-        }
-
-        public bool HasBeenSet(
-            ISkillRecordInternalGetter item,
-            SkillRecord_Mask<bool?> checkMask)
-        {
-            if (checkMask.Skill.HasValue && checkMask.Skill.Value != item.Skill_IsSet) return false;
-            if (checkMask.Description.HasValue && checkMask.Description.Value != item.Description_IsSet) return false;
-            if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_IsSet) return false;
-            if (checkMask.ApprenticeText.HasValue && checkMask.ApprenticeText.Value != item.ApprenticeText_IsSet) return false;
-            if (checkMask.JourneymanText.HasValue && checkMask.JourneymanText.Value != item.JourneymanText_IsSet) return false;
-            if (checkMask.ExpertText.HasValue && checkMask.ExpertText.Value != item.ExpertText_IsSet) return false;
-            if (checkMask.MasterText.HasValue && checkMask.MasterText.Value != item.MasterText_IsSet) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public void FillHasBeenSetMask(
-            ISkillRecordInternalGetter item,
-            SkillRecord_Mask<bool> mask)
-        {
-            mask.Skill = item.Skill_IsSet;
-            mask.Description = item.Description_IsSet;
-            mask.Icon = item.Icon_IsSet;
-            mask.Action = true;
-            mask.Attribute = true;
-            mask.Specialization = true;
-            mask.UseValueFirst = true;
-            mask.UseValueSecond = true;
-            mask.ApprenticeText = item.ApprenticeText_IsSet;
-            mask.JourneymanText = item.JourneymanText_IsSet;
-            mask.ExpertText = item.ExpertText_IsSet;
-            mask.MasterText = item.MasterText_IsSet;
-            mask.DATADataTypeState = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-
-        public static SkillRecord_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
-        {
-            switch (index)
-            {
-                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (SkillRecord_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.FormKey:
-                    return (SkillRecord_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.Version:
-                    return (SkillRecord_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.EditorID:
-                    return (SkillRecord_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
-                    return (SkillRecord_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        public static SkillRecord_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
-        {
-            switch (index)
-            {
-                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (SkillRecord_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.FormKey:
-                    return (SkillRecord_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
-                    return (SkillRecord_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.EditorID:
-                    return (SkillRecord_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        #region Equals and Hash
-        public virtual bool Equals(
-            ISkillRecordInternalGetter lhs,
-            ISkillRecordInternalGetter rhs)
-        {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (lhs.Skill_IsSet != rhs.Skill_IsSet) return false;
-            if (lhs.Skill_IsSet)
-            {
-                if (lhs.Skill != rhs.Skill) return false;
-            }
-            if (lhs.Description_IsSet != rhs.Description_IsSet) return false;
-            if (lhs.Description_IsSet)
-            {
-                if (!string.Equals(lhs.Description, rhs.Description)) return false;
-            }
-            if (lhs.Icon_IsSet != rhs.Icon_IsSet) return false;
-            if (lhs.Icon_IsSet)
-            {
-                if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
-            }
-            if (lhs.Action != rhs.Action) return false;
-            if (lhs.Attribute != rhs.Attribute) return false;
-            if (lhs.Specialization != rhs.Specialization) return false;
-            if (!lhs.UseValueFirst.EqualsWithin(rhs.UseValueFirst)) return false;
-            if (!lhs.UseValueSecond.EqualsWithin(rhs.UseValueSecond)) return false;
-            if (lhs.ApprenticeText_IsSet != rhs.ApprenticeText_IsSet) return false;
-            if (lhs.ApprenticeText_IsSet)
-            {
-                if (!string.Equals(lhs.ApprenticeText, rhs.ApprenticeText)) return false;
-            }
-            if (lhs.JourneymanText_IsSet != rhs.JourneymanText_IsSet) return false;
-            if (lhs.JourneymanText_IsSet)
-            {
-                if (!string.Equals(lhs.JourneymanText, rhs.JourneymanText)) return false;
-            }
-            if (lhs.ExpertText_IsSet != rhs.ExpertText_IsSet) return false;
-            if (lhs.ExpertText_IsSet)
-            {
-                if (!string.Equals(lhs.ExpertText, rhs.ExpertText)) return false;
-            }
-            if (lhs.MasterText_IsSet != rhs.MasterText_IsSet) return false;
-            if (lhs.MasterText_IsSet)
-            {
-                if (!string.Equals(lhs.MasterText, rhs.MasterText)) return false;
-            }
-            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
-            return true;
-        }
-
-        public override bool Equals(
-            IOblivionMajorRecordInternalGetter lhs,
-            IOblivionMajorRecordInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (ISkillRecordInternalGetter)lhs,
-                rhs: rhs as ISkillRecordInternalGetter);
-        }
-
-        public override bool Equals(
-            IMajorRecordInternalGetter lhs,
-            IMajorRecordInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (ISkillRecordInternalGetter)lhs,
-                rhs: rhs as ISkillRecordInternalGetter);
-        }
-
-        public virtual int GetHashCode(ISkillRecordInternalGetter item)
-        {
-            int ret = 0;
-            if (item.Skill_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Skill).CombineHashCode(ret);
-            }
-            if (item.Description_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Description).CombineHashCode(ret);
-            }
-            if (item.Icon_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Icon).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(item.Action).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Attribute).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Specialization).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.UseValueFirst).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.UseValueSecond).CombineHashCode(ret);
-            if (item.ApprenticeText_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.ApprenticeText).CombineHashCode(ret);
-            }
-            if (item.JourneymanText_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.JourneymanText).CombineHashCode(ret);
-            }
-            if (item.ExpertText_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.ExpertText).CombineHashCode(ret);
-            }
-            if (item.MasterText_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.MasterText).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(item.DATADataTypeState).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
-        {
-            return GetHashCode(item: (ISkillRecordInternalGetter)item);
-        }
-
-        public override int GetHashCode(IMajorRecordInternalGetter item)
-        {
-            return GetHashCode(item: (ISkillRecordInternalGetter)item);
-        }
-
-        #endregion
-
-
-        #region Mutagen
-        partial void PostDuplicate(SkillRecord obj, SkillRecord rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new SkillRecord(getNextFormKey());
-            ret.CopyFieldsFrom((SkillRecord)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (SkillRecord)item, getNextFormKey, duplicatedRecords);
-            return ret;
-        }
-
-        #endregion
-
+        
+        
     }
     #endregion
 
@@ -3796,17 +3827,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         OblivionMajorRecordBinaryWrapper,
         ISkillRecordInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SkillRecord_Registration.Instance;
         public new static SkillRecord_Registration Registration => SkillRecord_Registration.Instance;
-        protected override object CommonInstance => SkillRecordCommon.Instance;
+        protected override object CommonInstance()
+        {
+            return SkillRecordCommon.Instance;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISkillRecordInternalGetter)rhs, include);
 
         protected override object XmlWriteTranslator => SkillRecordXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((SkillRecordXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         protected override object BinaryWriteTranslator => SkillRecordBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((SkillRecordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
 
         #region Skill
         private int? _SkillLocation;
@@ -3977,4 +4040,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class SkillRecord
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => SkillRecord_Registration.Instance;
+        public new static SkillRecord_Registration Registration => SkillRecord_Registration.Instance;
+        protected override object CommonInstance()
+        {
+            return SkillRecordCommon.Instance;
+        }
+        protected override object CommonSetterInstance()
+        {
+            return SkillRecordSetterCommon.Instance;
+        }
+        protected override object CommonSetterCopyInstance()
+        {
+            return SkillRecordSetterCopyCommon.Instance;
+        }
+
+        #endregion
+
+    }
 }

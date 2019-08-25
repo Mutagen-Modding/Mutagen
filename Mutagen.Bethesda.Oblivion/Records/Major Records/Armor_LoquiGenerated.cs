@@ -41,11 +41,6 @@ namespace Mutagen.Bethesda.Oblivion
         IEquatable<Armor>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Armor_Registration.Instance;
-        public new static Armor_Registration Registration => Armor_Registration.Instance;
-        protected override object CommonInstance => ArmorCommon.Instance;
-
         #region Ctor
         protected Armor()
         {
@@ -139,20 +134,33 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IArmorInternalGetter rhs)) return false;
-            return ((ArmorCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            return ((ArmorCommon)((IArmorInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(Armor obj)
         {
-            return ((ArmorCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((ArmorCommon)((IArmorInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((ArmorCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((ArmorCommon)((IArmorInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected override object XmlWriteTranslator => ArmorXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((ArmorXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static Armor CreateFromXml(
@@ -371,6 +379,19 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Binary Translation
         protected override object BinaryWriteTranslator => ArmorBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((ArmorBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
         #region Binary Create
         [DebuggerStepThrough]
         public static Armor CreateFromBinary(
@@ -569,7 +590,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ArmorCommon.CopyFieldsFrom(
+            ArmorSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -584,7 +605,7 @@ namespace Mutagen.Bethesda.Oblivion
             Armor_CopyMask copyMask = null,
             Armor def = null)
         {
-            ArmorCommon.CopyFieldsFrom(
+            ArmorSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -620,7 +641,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            ArmorCommon.Instance.Clear(this);
+            ArmorSetterCommon.Instance.Clear(this);
         }
 
         public new static Armor Create(IEnumerable<KeyValuePair<ushort, object>> fields)
@@ -736,7 +757,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IArmorInternal item)
         {
-            ((ArmorCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((ArmorSetterCommon)((IArmorInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static Armor_Mask<bool> GetEqualsMask(
@@ -744,7 +765,7 @@ namespace Mutagen.Bethesda.Oblivion
             IArmorInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((ArmorCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((ArmorCommon)((IArmorInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -755,7 +776,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Armor_Mask<bool> printMask = null)
         {
-            return ((ArmorCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((ArmorCommon)((IArmorInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -767,7 +788,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Armor_Mask<bool> printMask = null)
         {
-            ((ArmorCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((ArmorCommon)((IArmorInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -778,7 +799,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IArmorInternalGetter item,
             Armor_Mask<bool?> checkMask)
         {
-            return ((ArmorCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((ArmorCommon)((IArmorInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -786,7 +807,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Armor_Mask<bool> GetHasBeenSetMask(this IArmorInternalGetter item)
         {
             var ret = new Armor_Mask<bool>();
-            ((ArmorCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((ArmorCommon)((IArmorInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -796,7 +817,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IArmorInternalGetter item,
             IArmorInternalGetter rhs)
         {
-            return ((ArmorCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((ArmorCommon)((IArmorInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -868,8 +889,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type SetterType = typeof(IArmor);
 
         public static readonly Type InternalSetterType = typeof(IArmorInternal);
-
-        public static readonly Type CommonType = typeof(ArmorCommon);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.Armor";
 
@@ -1040,7 +1059,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -1060,9 +1078,374 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
+    public partial class ArmorSetterCommon : ClothingAbstractSetterCommon
+    {
+        public new static readonly ArmorSetterCommon Instance = new ArmorSetterCommon();
+
+        partial void ClearPartial();
+        
+        public virtual void Clear(IArmorInternal item)
+        {
+            ClearPartial();
+            item.ArmorValue = default(Single);
+            item.Value = default(UInt32);
+            item.Health = default(UInt32);
+            item.Weight = default(Single);
+            base.Clear(item);
+        }
+        
+        public override void Clear(IClothingAbstractInternal item)
+        {
+            Clear(item: (IArmorInternal)item);
+        }
+        
+        public override void Clear(IItemAbstractInternal item)
+        {
+            Clear(item: (IArmorInternal)item);
+        }
+        
+        public override void Clear(IOblivionMajorRecordInternal item)
+        {
+            Clear(item: (IArmorInternal)item);
+        }
+        
+        public override void Clear(IMajorRecordInternal item)
+        {
+            Clear(item: (IArmorInternal)item);
+        }
+        
+        
+    }
     public partial class ArmorCommon : ClothingAbstractCommon
     {
-        public static readonly ArmorCommon Instance = new ArmorCommon();
+        public new static readonly ArmorCommon Instance = new ArmorCommon();
+
+        public Armor_Mask<bool> GetEqualsMask(
+            IArmorInternalGetter item,
+            IArmorInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new Armor_Mask<bool>();
+            ((ArmorCommon)((IArmorInternalGetter)item).CommonInstance()).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+        
+        public void FillEqualsMask(
+            IArmorInternalGetter item,
+            IArmorInternalGetter rhs,
+            Armor_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            if (rhs == null) return;
+            ret.ArmorValue = item.ArmorValue.EqualsWithin(rhs.ArmorValue);
+            ret.Value = item.Value == rhs.Value;
+            ret.Health = item.Health == rhs.Health;
+            ret.Weight = item.Weight.EqualsWithin(rhs.Weight);
+            base.FillEqualsMask(item, rhs, ret, include);
+        }
+        
+        public string ToString(
+            IArmorInternalGetter item,
+            string name = null,
+            Armor_Mask<bool> printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+            return fg.ToString();
+        }
+        
+        public void ToString(
+            IArmorInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            Armor_Mask<bool> printMask = null)
+        {
+            if (name == null)
+            {
+                fg.AppendLine($"Armor =>");
+            }
+            else
+            {
+                fg.AppendLine($"{name} (Armor) =>");
+            }
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
+            }
+            fg.AppendLine("]");
+        }
+        
+        protected static void ToStringFields(
+            IArmorInternalGetter item,
+            FileGeneration fg,
+            Armor_Mask<bool> printMask = null)
+        {
+            ClothingAbstractCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.ArmorValue ?? true)
+            {
+                fg.AppendLine($"ArmorValue => {item.ArmorValue}");
+            }
+            if (printMask?.Value ?? true)
+            {
+                fg.AppendLine($"Value => {item.Value}");
+            }
+            if (printMask?.Health ?? true)
+            {
+                fg.AppendLine($"Health => {item.Health}");
+            }
+            if (printMask?.Weight ?? true)
+            {
+                fg.AppendLine($"Weight => {item.Weight}");
+            }
+            if (printMask?.DATADataTypeState ?? true)
+            {
+            }
+        }
+        
+        public bool HasBeenSet(
+            IArmorInternalGetter item,
+            Armor_Mask<bool?> checkMask)
+        {
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+        
+        public void FillHasBeenSetMask(
+            IArmorInternalGetter item,
+            Armor_Mask<bool> mask)
+        {
+            mask.ArmorValue = true;
+            mask.Value = true;
+            mask.Health = true;
+            mask.Weight = true;
+            mask.DATADataTypeState = true;
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
+        }
+        
+        public static Armor_FieldIndex ConvertFieldIndex(ClothingAbstract_FieldIndex index)
+        {
+            switch (index)
+            {
+                case ClothingAbstract_FieldIndex.MajorRecordFlagsRaw:
+                    return (Armor_FieldIndex)((int)index);
+                case ClothingAbstract_FieldIndex.FormKey:
+                    return (Armor_FieldIndex)((int)index);
+                case ClothingAbstract_FieldIndex.Version:
+                    return (Armor_FieldIndex)((int)index);
+                case ClothingAbstract_FieldIndex.EditorID:
+                    return (Armor_FieldIndex)((int)index);
+                case ClothingAbstract_FieldIndex.OblivionMajorRecordFlags:
+                    return (Armor_FieldIndex)((int)index);
+                case ClothingAbstract_FieldIndex.Name:
+                    return (Armor_FieldIndex)((int)index);
+                case ClothingAbstract_FieldIndex.Script:
+                    return (Armor_FieldIndex)((int)index);
+                case ClothingAbstract_FieldIndex.Enchantment:
+                    return (Armor_FieldIndex)((int)index);
+                case ClothingAbstract_FieldIndex.EnchantmentPoints:
+                    return (Armor_FieldIndex)((int)index);
+                case ClothingAbstract_FieldIndex.BipedFlags:
+                    return (Armor_FieldIndex)((int)index);
+                case ClothingAbstract_FieldIndex.Flags:
+                    return (Armor_FieldIndex)((int)index);
+                case ClothingAbstract_FieldIndex.MaleBipedModel:
+                    return (Armor_FieldIndex)((int)index);
+                case ClothingAbstract_FieldIndex.MaleWorldModel:
+                    return (Armor_FieldIndex)((int)index);
+                case ClothingAbstract_FieldIndex.MaleIcon:
+                    return (Armor_FieldIndex)((int)index);
+                case ClothingAbstract_FieldIndex.FemaleBipedModel:
+                    return (Armor_FieldIndex)((int)index);
+                case ClothingAbstract_FieldIndex.FemaleWorldModel:
+                    return (Armor_FieldIndex)((int)index);
+                case ClothingAbstract_FieldIndex.FemaleIcon:
+                    return (Armor_FieldIndex)((int)index);
+                case ClothingAbstract_FieldIndex.BMDTDataTypeState:
+                    return (Armor_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        public static Armor_FieldIndex ConvertFieldIndex(ItemAbstract_FieldIndex index)
+        {
+            switch (index)
+            {
+                case ItemAbstract_FieldIndex.MajorRecordFlagsRaw:
+                    return (Armor_FieldIndex)((int)index);
+                case ItemAbstract_FieldIndex.FormKey:
+                    return (Armor_FieldIndex)((int)index);
+                case ItemAbstract_FieldIndex.Version:
+                    return (Armor_FieldIndex)((int)index);
+                case ItemAbstract_FieldIndex.EditorID:
+                    return (Armor_FieldIndex)((int)index);
+                case ItemAbstract_FieldIndex.OblivionMajorRecordFlags:
+                    return (Armor_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        public static Armor_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (Armor_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.FormKey:
+                    return (Armor_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.Version:
+                    return (Armor_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.EditorID:
+                    return (Armor_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
+                    return (Armor_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        public static Armor_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (Armor_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.FormKey:
+                    return (Armor_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.Version:
+                    return (Armor_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.EditorID:
+                    return (Armor_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        #region Equals and Hash
+        public virtual bool Equals(
+            IArmorInternalGetter lhs,
+            IArmorInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (!lhs.ArmorValue.EqualsWithin(rhs.ArmorValue)) return false;
+            if (lhs.Value != rhs.Value) return false;
+            if (lhs.Health != rhs.Health) return false;
+            if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
+            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            return true;
+        }
+        
+        public override bool Equals(
+            IClothingAbstractInternalGetter lhs,
+            IClothingAbstractInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IArmorInternalGetter)lhs,
+                rhs: rhs as IArmorInternalGetter);
+        }
+        
+        public override bool Equals(
+            IItemAbstractInternalGetter lhs,
+            IItemAbstractInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IArmorInternalGetter)lhs,
+                rhs: rhs as IArmorInternalGetter);
+        }
+        
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IArmorInternalGetter)lhs,
+                rhs: rhs as IArmorInternalGetter);
+        }
+        
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IArmorInternalGetter)lhs,
+                rhs: rhs as IArmorInternalGetter);
+        }
+        
+        public virtual int GetHashCode(IArmorInternalGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.ArmorValue).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Value).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Health).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Weight).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.DATADataTypeState).CombineHashCode(ret);
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+        
+        public override int GetHashCode(IClothingAbstractInternalGetter item)
+        {
+            return GetHashCode(item: (IArmorInternalGetter)item);
+        }
+        
+        public override int GetHashCode(IItemAbstractInternalGetter item)
+        {
+            return GetHashCode(item: (IArmorInternalGetter)item);
+        }
+        
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IArmorInternalGetter)item);
+        }
+        
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IArmorInternalGetter)item);
+        }
+        
+        #endregion
+        
+        
+        #region Mutagen
+        partial void PostDuplicate(Armor obj, Armor rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+        
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new Armor(getNextFormKey());
+            ret.CopyFieldsFrom((Armor)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (Armor)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+        
+        #endregion
+        
+        
+    }
+    public partial class ArmorSetterCopyCommon : ClothingAbstractSetterCopyCommon
+    {
+        public new static readonly ArmorSetterCopyCommon Instance = new ArmorSetterCopyCommon();
 
         #region Copy Fields From
         public static void CopyFieldsFrom(
@@ -1072,7 +1455,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             Armor_CopyMask copyMask)
         {
-            ClothingAbstractCommon.CopyFieldsFrom(
+            ClothingAbstractSetterCopyCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1147,362 +1530,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
         }
-
+        
         #endregion
-
-        partial void ClearPartial();
-
-        public virtual void Clear(IArmorInternal item)
-        {
-            ClearPartial();
-            item.ArmorValue = default(Single);
-            item.Value = default(UInt32);
-            item.Health = default(UInt32);
-            item.Weight = default(Single);
-            base.Clear(item);
-        }
-
-        public override void Clear(IClothingAbstractInternal item)
-        {
-            Clear(item: (IArmorInternal)item);
-        }
-
-        public override void Clear(IItemAbstractInternal item)
-        {
-            Clear(item: (IArmorInternal)item);
-        }
-
-        public override void Clear(IOblivionMajorRecordInternal item)
-        {
-            Clear(item: (IArmorInternal)item);
-        }
-
-        public override void Clear(IMajorRecordInternal item)
-        {
-            Clear(item: (IArmorInternal)item);
-        }
-
-        public Armor_Mask<bool> GetEqualsMask(
-            IArmorInternalGetter item,
-            IArmorInternalGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new Armor_Mask<bool>();
-            ((ArmorCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public void FillEqualsMask(
-            IArmorInternalGetter item,
-            IArmorInternalGetter rhs,
-            Armor_Mask<bool> ret,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            if (rhs == null) return;
-            ret.ArmorValue = item.ArmorValue.EqualsWithin(rhs.ArmorValue);
-            ret.Value = item.Value == rhs.Value;
-            ret.Health = item.Health == rhs.Health;
-            ret.Weight = item.Weight.EqualsWithin(rhs.Weight);
-            base.FillEqualsMask(item, rhs, ret, include);
-        }
-
-        public string ToString(
-            IArmorInternalGetter item,
-            string name = null,
-            Armor_Mask<bool> printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(
-                item: item,
-                fg: fg,
-                name: name,
-                printMask: printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(
-            IArmorInternalGetter item,
-            FileGeneration fg,
-            string name = null,
-            Armor_Mask<bool> printMask = null)
-        {
-            if (name == null)
-            {
-                fg.AppendLine($"Armor =>");
-            }
-            else
-            {
-                fg.AppendLine($"{name} (Armor) =>");
-            }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                ToStringFields(
-                    item: item,
-                    fg: fg,
-                    printMask: printMask);
-            }
-            fg.AppendLine("]");
-        }
-
-        protected static void ToStringFields(
-            IArmorInternalGetter item,
-            FileGeneration fg,
-            Armor_Mask<bool> printMask = null)
-        {
-            ClothingAbstractCommon.ToStringFields(
-                item: item,
-                fg: fg,
-                printMask: printMask);
-            if (printMask?.ArmorValue ?? true)
-            {
-                fg.AppendLine($"ArmorValue => {item.ArmorValue}");
-            }
-            if (printMask?.Value ?? true)
-            {
-                fg.AppendLine($"Value => {item.Value}");
-            }
-            if (printMask?.Health ?? true)
-            {
-                fg.AppendLine($"Health => {item.Health}");
-            }
-            if (printMask?.Weight ?? true)
-            {
-                fg.AppendLine($"Weight => {item.Weight}");
-            }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-            }
-        }
-
-        public bool HasBeenSet(
-            IArmorInternalGetter item,
-            Armor_Mask<bool?> checkMask)
-        {
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public void FillHasBeenSetMask(
-            IArmorInternalGetter item,
-            Armor_Mask<bool> mask)
-        {
-            mask.ArmorValue = true;
-            mask.Value = true;
-            mask.Health = true;
-            mask.Weight = true;
-            mask.DATADataTypeState = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-
-        public static Armor_FieldIndex ConvertFieldIndex(ClothingAbstract_FieldIndex index)
-        {
-            switch (index)
-            {
-                case ClothingAbstract_FieldIndex.MajorRecordFlagsRaw:
-                    return (Armor_FieldIndex)((int)index);
-                case ClothingAbstract_FieldIndex.FormKey:
-                    return (Armor_FieldIndex)((int)index);
-                case ClothingAbstract_FieldIndex.Version:
-                    return (Armor_FieldIndex)((int)index);
-                case ClothingAbstract_FieldIndex.EditorID:
-                    return (Armor_FieldIndex)((int)index);
-                case ClothingAbstract_FieldIndex.OblivionMajorRecordFlags:
-                    return (Armor_FieldIndex)((int)index);
-                case ClothingAbstract_FieldIndex.Name:
-                    return (Armor_FieldIndex)((int)index);
-                case ClothingAbstract_FieldIndex.Script:
-                    return (Armor_FieldIndex)((int)index);
-                case ClothingAbstract_FieldIndex.Enchantment:
-                    return (Armor_FieldIndex)((int)index);
-                case ClothingAbstract_FieldIndex.EnchantmentPoints:
-                    return (Armor_FieldIndex)((int)index);
-                case ClothingAbstract_FieldIndex.BipedFlags:
-                    return (Armor_FieldIndex)((int)index);
-                case ClothingAbstract_FieldIndex.Flags:
-                    return (Armor_FieldIndex)((int)index);
-                case ClothingAbstract_FieldIndex.MaleBipedModel:
-                    return (Armor_FieldIndex)((int)index);
-                case ClothingAbstract_FieldIndex.MaleWorldModel:
-                    return (Armor_FieldIndex)((int)index);
-                case ClothingAbstract_FieldIndex.MaleIcon:
-                    return (Armor_FieldIndex)((int)index);
-                case ClothingAbstract_FieldIndex.FemaleBipedModel:
-                    return (Armor_FieldIndex)((int)index);
-                case ClothingAbstract_FieldIndex.FemaleWorldModel:
-                    return (Armor_FieldIndex)((int)index);
-                case ClothingAbstract_FieldIndex.FemaleIcon:
-                    return (Armor_FieldIndex)((int)index);
-                case ClothingAbstract_FieldIndex.BMDTDataTypeState:
-                    return (Armor_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        public static Armor_FieldIndex ConvertFieldIndex(ItemAbstract_FieldIndex index)
-        {
-            switch (index)
-            {
-                case ItemAbstract_FieldIndex.MajorRecordFlagsRaw:
-                    return (Armor_FieldIndex)((int)index);
-                case ItemAbstract_FieldIndex.FormKey:
-                    return (Armor_FieldIndex)((int)index);
-                case ItemAbstract_FieldIndex.Version:
-                    return (Armor_FieldIndex)((int)index);
-                case ItemAbstract_FieldIndex.EditorID:
-                    return (Armor_FieldIndex)((int)index);
-                case ItemAbstract_FieldIndex.OblivionMajorRecordFlags:
-                    return (Armor_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        public static Armor_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
-        {
-            switch (index)
-            {
-                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Armor_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.FormKey:
-                    return (Armor_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.Version:
-                    return (Armor_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.EditorID:
-                    return (Armor_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
-                    return (Armor_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        public static Armor_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
-        {
-            switch (index)
-            {
-                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Armor_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.FormKey:
-                    return (Armor_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
-                    return (Armor_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.EditorID:
-                    return (Armor_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        #region Equals and Hash
-        public virtual bool Equals(
-            IArmorInternalGetter lhs,
-            IArmorInternalGetter rhs)
-        {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!lhs.ArmorValue.EqualsWithin(rhs.ArmorValue)) return false;
-            if (lhs.Value != rhs.Value) return false;
-            if (lhs.Health != rhs.Health) return false;
-            if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
-            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
-            return true;
-        }
-
-        public override bool Equals(
-            IClothingAbstractInternalGetter lhs,
-            IClothingAbstractInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (IArmorInternalGetter)lhs,
-                rhs: rhs as IArmorInternalGetter);
-        }
-
-        public override bool Equals(
-            IItemAbstractInternalGetter lhs,
-            IItemAbstractInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (IArmorInternalGetter)lhs,
-                rhs: rhs as IArmorInternalGetter);
-        }
-
-        public override bool Equals(
-            IOblivionMajorRecordInternalGetter lhs,
-            IOblivionMajorRecordInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (IArmorInternalGetter)lhs,
-                rhs: rhs as IArmorInternalGetter);
-        }
-
-        public override bool Equals(
-            IMajorRecordInternalGetter lhs,
-            IMajorRecordInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (IArmorInternalGetter)lhs,
-                rhs: rhs as IArmorInternalGetter);
-        }
-
-        public virtual int GetHashCode(IArmorInternalGetter item)
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.ArmorValue).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Value).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Health).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Weight).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.DATADataTypeState).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        public override int GetHashCode(IClothingAbstractInternalGetter item)
-        {
-            return GetHashCode(item: (IArmorInternalGetter)item);
-        }
-
-        public override int GetHashCode(IItemAbstractInternalGetter item)
-        {
-            return GetHashCode(item: (IArmorInternalGetter)item);
-        }
-
-        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
-        {
-            return GetHashCode(item: (IArmorInternalGetter)item);
-        }
-
-        public override int GetHashCode(IMajorRecordInternalGetter item)
-        {
-            return GetHashCode(item: (IArmorInternalGetter)item);
-        }
-
-        #endregion
-
-
-        #region Mutagen
-        partial void PostDuplicate(Armor obj, Armor rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new Armor(getNextFormKey());
-            ret.CopyFieldsFrom((Armor)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (Armor)item, getNextFormKey, duplicatedRecords);
-            return ret;
-        }
-
-        #endregion
-
+        
+        
     }
     #endregion
 
@@ -2512,17 +2543,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         ClothingAbstractBinaryWrapper,
         IArmorInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Armor_Registration.Instance;
         public new static Armor_Registration Registration => Armor_Registration.Instance;
-        protected override object CommonInstance => ArmorCommon.Instance;
+        protected override object CommonInstance()
+        {
+            return ArmorCommon.Instance;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IArmorInternalGetter)rhs, include);
 
         protected override object XmlWriteTranslator => ArmorXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((ArmorXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         protected override object BinaryWriteTranslator => ArmorBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((ArmorBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
 
         private int? _DATALocation;
         public Armor.DATADataType DATADataTypeState { get; private set; }
@@ -2618,4 +2681,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class Armor
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Armor_Registration.Instance;
+        public new static Armor_Registration Registration => Armor_Registration.Instance;
+        protected override object CommonInstance()
+        {
+            return ArmorCommon.Instance;
+        }
+        protected override object CommonSetterInstance()
+        {
+            return ArmorSetterCommon.Instance;
+        }
+        protected override object CommonSetterCopyInstance()
+        {
+            return ArmorSetterCopyCommon.Instance;
+        }
+
+        #endregion
+
+    }
 }

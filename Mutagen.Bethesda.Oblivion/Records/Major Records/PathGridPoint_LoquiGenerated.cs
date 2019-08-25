@@ -36,17 +36,11 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class PathGridPoint :
         LoquiNotifyingObject,
-        IPathGridPoint,
+        IPathGridPointInternal,
         ILoquiObjectSetter<PathGridPoint>,
         IEquatable<PathGridPoint>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => PathGridPoint_Registration.Instance;
-        public static PathGridPoint_Registration Registration => PathGridPoint_Registration.Instance;
-        protected object CommonInstance => PathGridPointCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
-
         #region Ctor
         public PathGridPoint()
         {
@@ -93,7 +87,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPathGridPointGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPathGridPointInternalGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -111,22 +105,35 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is IPathGridPointGetter rhs)) return false;
-            return ((PathGridPointCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            if (!(obj is IPathGridPointInternalGetter rhs)) return false;
+            return ((PathGridPointCommon)((IPathGridPointInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(PathGridPoint obj)
         {
-            return ((PathGridPointCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((PathGridPointCommon)((IPathGridPointInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((PathGridPointCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((PathGridPointCommon)((IPathGridPointInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected object XmlWriteTranslator => PathGridPointXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((PathGridPointXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static PathGridPoint CreateFromXml(
@@ -296,6 +303,19 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Translation
         protected object BinaryWriteTranslator => PathGridPointBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((PathGridPointBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
         #region Binary Create
         [DebuggerStepThrough]
         public static PathGridPoint CreateFromBinary(
@@ -463,7 +483,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            PathGridPointCommon.CopyFieldsFrom(
+            PathGridPointSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -478,7 +498,7 @@ namespace Mutagen.Bethesda.Oblivion
             PathGridPoint_CopyMask copyMask = null,
             PathGridPoint def = null)
         {
-            PathGridPointCommon.CopyFieldsFrom(
+            PathGridPointSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -507,7 +527,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void Clear()
         {
-            PathGridPointCommon.Instance.Clear(this);
+            PathGridPointSetterCommon.Instance.Clear(this);
         }
 
         public static PathGridPoint Create(IEnumerable<KeyValuePair<ushort, object>> fields)
@@ -546,8 +566,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IPathGridPoint :
-        IPathGridPointGetter,
-        ILoquiObjectSetter<IPathGridPoint>
+        IPathGridPointInternalGetter,
+        ILoquiObjectSetter<IPathGridPointInternal>
     {
         new P3Float Point { get; set; }
 
@@ -561,9 +581,15 @@ namespace Mutagen.Bethesda.Oblivion
             PathGridPoint def = null);
     }
 
+    public partial interface IPathGridPointInternal :
+        IPathGridPoint,
+        IPathGridPointInternalGetter
+    {
+    }
+
     public partial interface IPathGridPointGetter :
         ILoquiObject,
-        ILoquiObject<IPathGridPointGetter>,
+        ILoquiObject<IPathGridPointInternalGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -581,45 +607,53 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    public partial interface IPathGridPointInternalGetter : IPathGridPointGetter
+    {
+        object CommonInstance();
+        object CommonSetterInstance();
+        object CommonSetterCopyInstance();
+
+    }
+
     #endregion
 
     #region Common MixIn
     public static class PathGridPointMixIn
     {
-        public static void Clear(this IPathGridPoint item)
+        public static void Clear(this IPathGridPointInternal item)
         {
-            ((PathGridPointCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((PathGridPointSetterCommon)((IPathGridPointInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static PathGridPoint_Mask<bool> GetEqualsMask(
-            this IPathGridPointGetter item,
-            IPathGridPointGetter rhs,
+            this IPathGridPointInternalGetter item,
+            IPathGridPointInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((PathGridPointCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((PathGridPointCommon)((IPathGridPointInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IPathGridPointGetter item,
+            this IPathGridPointInternalGetter item,
             string name = null,
             PathGridPoint_Mask<bool> printMask = null)
         {
-            return ((PathGridPointCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((PathGridPointCommon)((IPathGridPointInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IPathGridPointGetter item,
+            this IPathGridPointInternalGetter item,
             FileGeneration fg,
             string name = null,
             PathGridPoint_Mask<bool> printMask = null)
         {
-            ((PathGridPointCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((PathGridPointCommon)((IPathGridPointInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -627,28 +661,28 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static bool HasBeenSet(
-            this IPathGridPointGetter item,
+            this IPathGridPointInternalGetter item,
             PathGridPoint_Mask<bool?> checkMask)
         {
-            return ((PathGridPointCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((PathGridPointCommon)((IPathGridPointInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static PathGridPoint_Mask<bool> GetHasBeenSetMask(this IPathGridPointGetter item)
+        public static PathGridPoint_Mask<bool> GetHasBeenSetMask(this IPathGridPointInternalGetter item)
         {
             var ret = new PathGridPoint_Mask<bool>();
-            ((PathGridPointCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((PathGridPointCommon)((IPathGridPointInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this IPathGridPointGetter item,
-            IPathGridPointGetter rhs)
+            this IPathGridPointInternalGetter item,
+            IPathGridPointInternalGetter rhs)
         {
-            return ((PathGridPointCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((PathGridPointCommon)((IPathGridPointInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -695,13 +729,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IPathGridPointGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type InternalGetterType = typeof(IPathGridPointInternalGetter);
 
         public static readonly Type SetterType = typeof(IPathGridPoint);
 
-        public static readonly Type InternalSetterType = null;
-
-        public static readonly Type CommonType = typeof(PathGridPointCommon);
+        public static readonly Type InternalSetterType = typeof(IPathGridPointInternal);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.PathGridPoint";
 
@@ -848,7 +880,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -868,9 +899,173 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
+    public partial class PathGridPointSetterCommon
+    {
+        public static readonly PathGridPointSetterCommon Instance = new PathGridPointSetterCommon();
+
+        partial void ClearPartial();
+        
+        public virtual void Clear(IPathGridPointInternal item)
+        {
+            ClearPartial();
+            item.Point = default(P3Float);
+            item.NumConnectionsFluffBytes = default(Byte[]);
+            item.Connections.Clear();
+        }
+        
+        
+    }
     public partial class PathGridPointCommon
     {
         public static readonly PathGridPointCommon Instance = new PathGridPointCommon();
+
+        public PathGridPoint_Mask<bool> GetEqualsMask(
+            IPathGridPointInternalGetter item,
+            IPathGridPointInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new PathGridPoint_Mask<bool>();
+            ((PathGridPointCommon)((IPathGridPointInternalGetter)item).CommonInstance()).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+        
+        public void FillEqualsMask(
+            IPathGridPointInternalGetter item,
+            IPathGridPointInternalGetter rhs,
+            PathGridPoint_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            if (rhs == null) return;
+            ret.Point = item.Point.Equals(rhs.Point);
+            ret.NumConnectionsFluffBytes = MemoryExtensions.SequenceEqual(item.NumConnectionsFluffBytes, rhs.NumConnectionsFluffBytes);
+            ret.Connections = item.Connections.CollectionEqualsHelper(
+                rhs.Connections,
+                (l, r) => l == r,
+                include);
+        }
+        
+        public string ToString(
+            IPathGridPointInternalGetter item,
+            string name = null,
+            PathGridPoint_Mask<bool> printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+            return fg.ToString();
+        }
+        
+        public void ToString(
+            IPathGridPointInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            PathGridPoint_Mask<bool> printMask = null)
+        {
+            if (name == null)
+            {
+                fg.AppendLine($"PathGridPoint =>");
+            }
+            else
+            {
+                fg.AppendLine($"{name} (PathGridPoint) =>");
+            }
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
+            }
+            fg.AppendLine("]");
+        }
+        
+        protected static void ToStringFields(
+            IPathGridPointInternalGetter item,
+            FileGeneration fg,
+            PathGridPoint_Mask<bool> printMask = null)
+        {
+            if (printMask?.Point ?? true)
+            {
+                fg.AppendLine($"Point => {item.Point}");
+            }
+            if (printMask?.NumConnectionsFluffBytes ?? true)
+            {
+                fg.AppendLine($"NumConnectionsFluffBytes => {SpanExt.ToHexString(item.NumConnectionsFluffBytes)}");
+            }
+            if (printMask?.Connections?.Overall ?? true)
+            {
+                fg.AppendLine("Connections =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Connections)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"Item => {subItem}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+        }
+        
+        public bool HasBeenSet(
+            IPathGridPointInternalGetter item,
+            PathGridPoint_Mask<bool?> checkMask)
+        {
+            return true;
+        }
+        
+        public void FillHasBeenSetMask(
+            IPathGridPointInternalGetter item,
+            PathGridPoint_Mask<bool> mask)
+        {
+            mask.Point = true;
+            mask.NumConnectionsFluffBytes = true;
+            mask.Connections = new MaskItem<bool, IEnumerable<(int, bool)>>(true, null);
+        }
+        
+        #region Equals and Hash
+        public virtual bool Equals(
+            IPathGridPointInternalGetter lhs,
+            IPathGridPointInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!lhs.Point.Equals(rhs.Point)) return false;
+            if (!MemoryExtensions.SequenceEqual(lhs.NumConnectionsFluffBytes, rhs.NumConnectionsFluffBytes)) return false;
+            if (!lhs.Connections.SequenceEqual(rhs.Connections)) return false;
+            return true;
+        }
+        
+        public virtual int GetHashCode(IPathGridPointInternalGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.Point).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.NumConnectionsFluffBytes).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Connections).CombineHashCode(ret);
+            return ret;
+        }
+        
+        #endregion
+        
+        
+        
+    }
+    public partial class PathGridPointSetterCopyCommon
+    {
+        public static readonly PathGridPointSetterCopyCommon Instance = new PathGridPointSetterCopyCommon();
 
         #region Copy Fields From
         public static void CopyFieldsFrom(
@@ -934,161 +1129,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
         }
-
+        
         #endregion
-
-        partial void ClearPartial();
-
-        public virtual void Clear(IPathGridPoint item)
-        {
-            ClearPartial();
-            item.Point = default(P3Float);
-            item.NumConnectionsFluffBytes = default(Byte[]);
-            item.Connections.Clear();
-        }
-
-        public PathGridPoint_Mask<bool> GetEqualsMask(
-            IPathGridPointGetter item,
-            IPathGridPointGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new PathGridPoint_Mask<bool>();
-            ((PathGridPointCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public void FillEqualsMask(
-            IPathGridPointGetter item,
-            IPathGridPointGetter rhs,
-            PathGridPoint_Mask<bool> ret,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            if (rhs == null) return;
-            ret.Point = item.Point.Equals(rhs.Point);
-            ret.NumConnectionsFluffBytes = MemoryExtensions.SequenceEqual(item.NumConnectionsFluffBytes, rhs.NumConnectionsFluffBytes);
-            ret.Connections = item.Connections.CollectionEqualsHelper(
-                rhs.Connections,
-                (l, r) => l == r,
-                include);
-        }
-
-        public string ToString(
-            IPathGridPointGetter item,
-            string name = null,
-            PathGridPoint_Mask<bool> printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(
-                item: item,
-                fg: fg,
-                name: name,
-                printMask: printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(
-            IPathGridPointGetter item,
-            FileGeneration fg,
-            string name = null,
-            PathGridPoint_Mask<bool> printMask = null)
-        {
-            if (name == null)
-            {
-                fg.AppendLine($"PathGridPoint =>");
-            }
-            else
-            {
-                fg.AppendLine($"{name} (PathGridPoint) =>");
-            }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                ToStringFields(
-                    item: item,
-                    fg: fg,
-                    printMask: printMask);
-            }
-            fg.AppendLine("]");
-        }
-
-        protected static void ToStringFields(
-            IPathGridPointGetter item,
-            FileGeneration fg,
-            PathGridPoint_Mask<bool> printMask = null)
-        {
-            if (printMask?.Point ?? true)
-            {
-                fg.AppendLine($"Point => {item.Point}");
-            }
-            if (printMask?.NumConnectionsFluffBytes ?? true)
-            {
-                fg.AppendLine($"NumConnectionsFluffBytes => {SpanExt.ToHexString(item.NumConnectionsFluffBytes)}");
-            }
-            if (printMask?.Connections?.Overall ?? true)
-            {
-                fg.AppendLine("Connections =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
-                {
-                    foreach (var subItem in item.Connections)
-                    {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            fg.AppendLine($"Item => {subItem}");
-                        }
-                        fg.AppendLine("]");
-                    }
-                }
-                fg.AppendLine("]");
-            }
-        }
-
-        public bool HasBeenSet(
-            IPathGridPointGetter item,
-            PathGridPoint_Mask<bool?> checkMask)
-        {
-            return true;
-        }
-
-        public void FillHasBeenSetMask(
-            IPathGridPointGetter item,
-            PathGridPoint_Mask<bool> mask)
-        {
-            mask.Point = true;
-            mask.NumConnectionsFluffBytes = true;
-            mask.Connections = new MaskItem<bool, IEnumerable<(int, bool)>>(true, null);
-        }
-
-        #region Equals and Hash
-        public virtual bool Equals(
-            IPathGridPointGetter lhs,
-            IPathGridPointGetter rhs)
-        {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
-            if (!lhs.Point.Equals(rhs.Point)) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.NumConnectionsFluffBytes, rhs.NumConnectionsFluffBytes)) return false;
-            if (!lhs.Connections.SequenceEqual(rhs.Connections)) return false;
-            return true;
-        }
-
-        public virtual int GetHashCode(IPathGridPointGetter item)
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.Point).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.NumConnectionsFluffBytes).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Connections).CombineHashCode(ret);
-            return ret;
-        }
-
-        #endregion
-
-
+        
+        
     }
     #endregion
 
@@ -1099,7 +1143,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static PathGridPointXmlWriteTranslation Instance = new PathGridPointXmlWriteTranslation();
 
         public static void WriteToNodeXml(
-            IPathGridPointGetter item,
+            IPathGridPointInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1144,7 +1188,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             XElement node,
-            IPathGridPointGetter item,
+            IPathGridPointInternalGetter item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)
@@ -1170,7 +1214,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             Write(
-                item: (IPathGridPointGetter)item,
+                item: (IPathGridPointInternalGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1179,7 +1223,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             XElement node,
-            IPathGridPointGetter item,
+            IPathGridPointInternalGetter item,
             ErrorMaskBuilder errorMask,
             int fieldIndex,
             TranslationCrystal translationMask,
@@ -1189,7 +1233,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 errorMask?.PushIndex(fieldIndex);
                 Write(
-                    item: (IPathGridPointGetter)item,
+                    item: (IPathGridPointInternalGetter)item,
                     name: name,
                     node: node,
                     errorMask: errorMask,
@@ -1213,7 +1257,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static PathGridPointXmlCreateTranslation Instance = new PathGridPointXmlCreateTranslation();
 
         public static void FillPublicXml(
-            IPathGridPoint item,
+            IPathGridPointInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1238,7 +1282,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElementXml(
-            IPathGridPoint item,
+            IPathGridPointInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -1337,7 +1381,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public static class PathGridPointXmlTranslationMixIn
     {
         public static void WriteToXml(
-            this IPathGridPointGetter item,
+            this IPathGridPointInternalGetter item,
             XElement node,
             out PathGridPoint_ErrorMask errorMask,
             bool doMasks = true,
@@ -1355,7 +1399,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IPathGridPointGetter item,
+            this IPathGridPointInternalGetter item,
             string path,
             out PathGridPoint_ErrorMask errorMask,
             PathGridPoint_TranslationMask translationMask = null,
@@ -1374,7 +1418,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IPathGridPointGetter item,
+            this IPathGridPointInternalGetter item,
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1392,7 +1436,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IPathGridPointGetter item,
+            this IPathGridPointInternalGetter item,
             Stream stream,
             out PathGridPoint_ErrorMask errorMask,
             PathGridPoint_TranslationMask translationMask = null,
@@ -1411,7 +1455,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IPathGridPointGetter item,
+            this IPathGridPointInternalGetter item,
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1429,7 +1473,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IPathGridPointGetter item,
+            this IPathGridPointInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1444,7 +1488,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IPathGridPointGetter item,
+            this IPathGridPointInternalGetter item,
             XElement node,
             string name = null,
             PathGridPoint_TranslationMask translationMask = null)
@@ -1458,7 +1502,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IPathGridPointGetter item,
+            this IPathGridPointInternalGetter item,
             string path,
             string name = null)
         {
@@ -1473,7 +1517,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IPathGridPointGetter item,
+            this IPathGridPointInternalGetter item,
             Stream stream,
             string name = null)
         {
@@ -1897,7 +1941,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static PathGridPointBinaryWriteTranslation Instance = new PathGridPointBinaryWriteTranslation();
 
         public static void Write_Embedded(
-            IPathGridPointGetter item,
+            IPathGridPointInternalGetter item,
             MutagenWriter writer,
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
@@ -1916,7 +1960,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             MutagenWriter writer,
-            IPathGridPointGetter item,
+            IPathGridPointInternalGetter item,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
@@ -1936,7 +1980,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask)
         {
             Write(
-                item: (IPathGridPointGetter)item,
+                item: (IPathGridPointInternalGetter)item,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -1955,7 +1999,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public static class PathGridPointBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IPathGridPointGetter item,
+            this IPathGridPointInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
             out PathGridPoint_ErrorMask errorMask,
@@ -1972,7 +2016,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToBinary(
-            this IPathGridPointGetter item,
+            this IPathGridPointInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -1986,7 +2030,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToBinary(
-            this IPathGridPointGetter item,
+            this IPathGridPointInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
@@ -2003,22 +2047,65 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     public partial class PathGridPointBinaryWrapper :
         BinaryWrapper,
-        IPathGridPointGetter
+        IPathGridPointInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PathGridPoint_Registration.Instance;
         public static PathGridPoint_Registration Registration => PathGridPoint_Registration.Instance;
-        protected object CommonInstance => PathGridPointCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
+        protected object CommonInstance()
+        {
+            return PathGridPointCommon.Instance;
+        }
+        object IPathGridPointInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IPathGridPointInternalGetter.CommonSetterInstance()
+        {
+            return null;
+        }
+        object IPathGridPointInternalGetter.CommonSetterCopyInstance()
+        {
+            return null;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPathGridPointGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPathGridPointInternalGetter)rhs, include);
 
         protected object XmlWriteTranslator => PathGridPointXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((PathGridPointXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         protected object BinaryWriteTranslator => PathGridPointBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((PathGridPointBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
 
         public P3Float Point => P3FloatBinaryTranslation.Read(_data.Span.Slice(0, 12));
         public ReadOnlySpan<Byte> NumConnectionsFluffBytes => _data.Span.Slice(12, 3).ToArray();
@@ -2060,4 +2147,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class PathGridPoint
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => PathGridPoint_Registration.Instance;
+        public static PathGridPoint_Registration Registration => PathGridPoint_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return PathGridPointCommon.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return PathGridPointSetterCommon.Instance;
+        }
+        protected object CommonSetterCopyInstance()
+        {
+            return PathGridPointSetterCopyCommon.Instance;
+        }
+        object IPathGridPointInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IPathGridPointInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object IPathGridPointInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
 }

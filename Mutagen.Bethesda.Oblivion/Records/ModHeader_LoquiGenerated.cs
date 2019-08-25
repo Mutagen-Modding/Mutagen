@@ -37,17 +37,11 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class ModHeader :
         LoquiNotifyingObject,
-        IModHeader,
+        IModHeaderInternal,
         ILoquiObjectSetter<ModHeader>,
         IEquatable<ModHeader>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => ModHeader_Registration.Instance;
-        public static ModHeader_Registration Registration => ModHeader_Registration.Instance;
-        protected object CommonInstance => ModHeaderCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
-
         #region Ctor
         public ModHeader()
         {
@@ -89,7 +83,7 @@ namespace Mutagen.Bethesda.Oblivion
             get => _Stats;
             set => _Stats = value ?? new ModStats();
         }
-        IModStatsGetter IModHeaderGetter.Stats => _Stats;
+        IModStatsInternalGetter IModHeaderGetter.Stats => _Stats;
         #endregion
         #region TypeOffsets
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -207,7 +201,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<MasterReference> IModHeader.MasterReferences => _MasterReferences;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IMasterReferenceGetter> IModHeaderGetter.MasterReferences => _MasterReferences;
+        IReadOnlySetList<IMasterReferenceInternalGetter> IModHeaderGetter.MasterReferences => _MasterReferences;
         #endregion
 
         #endregion
@@ -238,7 +232,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IModHeaderGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IModHeaderInternalGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -256,22 +250,35 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is IModHeaderGetter rhs)) return false;
-            return ((ModHeaderCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            if (!(obj is IModHeaderInternalGetter rhs)) return false;
+            return ((ModHeaderCommon)((IModHeaderInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(ModHeader obj)
         {
-            return ((ModHeaderCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((ModHeaderCommon)((IModHeaderInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((ModHeaderCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((ModHeaderCommon)((IModHeaderInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected object XmlWriteTranslator => ModHeaderXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((ModHeaderXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static ModHeader CreateFromXml(
@@ -466,6 +473,19 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Translation
         protected object BinaryWriteTranslator => ModHeaderBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((ModHeaderBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
         #region Binary Create
         [DebuggerStepThrough]
         public static ModHeader CreateFromBinary(
@@ -753,7 +773,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ModHeaderCommon.CopyFieldsFrom(
+            ModHeaderSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -768,7 +788,7 @@ namespace Mutagen.Bethesda.Oblivion
             ModHeader_CopyMask copyMask = null,
             ModHeader def = null)
         {
-            ModHeaderCommon.CopyFieldsFrom(
+            ModHeaderSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -818,7 +838,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void Clear()
         {
-            ModHeaderCommon.Instance.Clear(this);
+            ModHeaderSetterCommon.Instance.Clear(this);
         }
 
         public static ModHeader Create(IEnumerable<KeyValuePair<ushort, object>> fields)
@@ -878,8 +898,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IModHeader :
-        IModHeaderGetter,
-        ILoquiObjectSetter<IModHeader>
+        IModHeaderInternalGetter,
+        ILoquiObjectSetter<IModHeaderInternal>
     {
         new ModHeader.HeaderFlag Flags { get; set; }
 
@@ -922,9 +942,15 @@ namespace Mutagen.Bethesda.Oblivion
             ModHeader def = null);
     }
 
+    public partial interface IModHeaderInternal :
+        IModHeader,
+        IModHeaderInternalGetter
+    {
+    }
+
     public partial interface IModHeaderGetter :
         ILoquiObject,
-        ILoquiObject<IModHeaderGetter>,
+        ILoquiObject<IModHeaderInternalGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -941,7 +967,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Stats
-        IModStatsGetter Stats { get; }
+        IModStatsInternalGetter Stats { get; }
 
         #endregion
         #region TypeOffsets
@@ -965,7 +991,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region MasterReferences
-        IReadOnlySetList<IMasterReferenceGetter> MasterReferences { get; }
+        IReadOnlySetList<IMasterReferenceInternalGetter> MasterReferences { get; }
         #endregion
         #region VestigialData
         UInt64 VestigialData { get; }
@@ -975,45 +1001,53 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    public partial interface IModHeaderInternalGetter : IModHeaderGetter
+    {
+        object CommonInstance();
+        object CommonSetterInstance();
+        object CommonSetterCopyInstance();
+
+    }
+
     #endregion
 
     #region Common MixIn
     public static class ModHeaderMixIn
     {
-        public static void Clear(this IModHeader item)
+        public static void Clear(this IModHeaderInternal item)
         {
-            ((ModHeaderCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((ModHeaderSetterCommon)((IModHeaderInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static ModHeader_Mask<bool> GetEqualsMask(
-            this IModHeaderGetter item,
-            IModHeaderGetter rhs,
+            this IModHeaderInternalGetter item,
+            IModHeaderInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((ModHeaderCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((ModHeaderCommon)((IModHeaderInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IModHeaderGetter item,
+            this IModHeaderInternalGetter item,
             string name = null,
             ModHeader_Mask<bool> printMask = null)
         {
-            return ((ModHeaderCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((ModHeaderCommon)((IModHeaderInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IModHeaderGetter item,
+            this IModHeaderInternalGetter item,
             FileGeneration fg,
             string name = null,
             ModHeader_Mask<bool> printMask = null)
         {
-            ((ModHeaderCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((ModHeaderCommon)((IModHeaderInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -1021,28 +1055,28 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static bool HasBeenSet(
-            this IModHeaderGetter item,
+            this IModHeaderInternalGetter item,
             ModHeader_Mask<bool?> checkMask)
         {
-            return ((ModHeaderCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((ModHeaderCommon)((IModHeaderInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static ModHeader_Mask<bool> GetHasBeenSetMask(this IModHeaderGetter item)
+        public static ModHeader_Mask<bool> GetHasBeenSetMask(this IModHeaderInternalGetter item)
         {
             var ret = new ModHeader_Mask<bool>();
-            ((ModHeaderCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((ModHeaderCommon)((IModHeaderInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this IModHeaderGetter item,
-            IModHeaderGetter rhs)
+            this IModHeaderInternalGetter item,
+            IModHeaderInternalGetter rhs)
         {
-            return ((ModHeaderCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((ModHeaderCommon)((IModHeaderInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1096,13 +1130,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IModHeaderGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type InternalGetterType = typeof(IModHeaderInternalGetter);
 
         public static readonly Type SetterType = typeof(IModHeader);
 
-        public static readonly Type InternalSetterType = null;
-
-        public static readonly Type CommonType = typeof(ModHeaderCommon);
+        public static readonly Type InternalSetterType = typeof(IModHeaderInternal);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.ModHeader";
 
@@ -1336,7 +1368,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -1356,9 +1387,284 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
+    public partial class ModHeaderSetterCommon
+    {
+        public static readonly ModHeaderSetterCommon Instance = new ModHeaderSetterCommon();
+
+        partial void ClearPartial();
+        
+        public virtual void Clear(IModHeaderInternal item)
+        {
+            ClearPartial();
+            item.Flags = default(ModHeader.HeaderFlag);
+            item.FormID = default(UInt32);
+            item.Version = default(Int32);
+            item.Stats = default(ModStats);
+            item.TypeOffsets_Unset();
+            item.Deleted_Unset();
+            item.Author_Unset();
+            item.Description_Unset();
+            item.MasterReferences.Unset();
+            item.VestigialData_Unset();
+        }
+        
+        
+    }
     public partial class ModHeaderCommon
     {
         public static readonly ModHeaderCommon Instance = new ModHeaderCommon();
+
+        public ModHeader_Mask<bool> GetEqualsMask(
+            IModHeaderInternalGetter item,
+            IModHeaderInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new ModHeader_Mask<bool>();
+            ((ModHeaderCommon)((IModHeaderInternalGetter)item).CommonInstance()).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+        
+        public void FillEqualsMask(
+            IModHeaderInternalGetter item,
+            IModHeaderInternalGetter rhs,
+            ModHeader_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            if (rhs == null) return;
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.FormID = item.FormID == rhs.FormID;
+            ret.Version = item.Version == rhs.Version;
+            ret.Stats = MaskItemExt.Factory(item.Stats.GetEqualsMask(rhs.Stats, include), include);
+            ret.TypeOffsets = item.TypeOffsets_IsSet == rhs.TypeOffsets_IsSet && MemoryExtensions.SequenceEqual(item.TypeOffsets, rhs.TypeOffsets);
+            ret.Deleted = item.Deleted_IsSet == rhs.Deleted_IsSet && MemoryExtensions.SequenceEqual(item.Deleted, rhs.Deleted);
+            ret.Author = item.Author_IsSet == rhs.Author_IsSet && string.Equals(item.Author, rhs.Author);
+            ret.Description = item.Description_IsSet == rhs.Description_IsSet && string.Equals(item.Description, rhs.Description);
+            ret.MasterReferences = item.MasterReferences.CollectionEqualsHelper(
+                rhs.MasterReferences,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.VestigialData = item.VestigialData_IsSet == rhs.VestigialData_IsSet && item.VestigialData == rhs.VestigialData;
+        }
+        
+        public string ToString(
+            IModHeaderInternalGetter item,
+            string name = null,
+            ModHeader_Mask<bool> printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+            return fg.ToString();
+        }
+        
+        public void ToString(
+            IModHeaderInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            ModHeader_Mask<bool> printMask = null)
+        {
+            if (name == null)
+            {
+                fg.AppendLine($"ModHeader =>");
+            }
+            else
+            {
+                fg.AppendLine($"{name} (ModHeader) =>");
+            }
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
+            }
+            fg.AppendLine("]");
+        }
+        
+        protected static void ToStringFields(
+            IModHeaderInternalGetter item,
+            FileGeneration fg,
+            ModHeader_Mask<bool> printMask = null)
+        {
+            if (printMask?.Flags ?? true)
+            {
+                fg.AppendLine($"Flags => {item.Flags}");
+            }
+            if (printMask?.FormID ?? true)
+            {
+                fg.AppendLine($"FormID => {item.FormID}");
+            }
+            if (printMask?.Version ?? true)
+            {
+                fg.AppendLine($"Version => {item.Version}");
+            }
+            if (printMask?.Stats?.Overall ?? true)
+            {
+                item.Stats?.ToString(fg, "Stats");
+            }
+            if (printMask?.TypeOffsets ?? true)
+            {
+                fg.AppendLine($"TypeOffsets => {SpanExt.ToHexString(item.TypeOffsets)}");
+            }
+            if (printMask?.Deleted ?? true)
+            {
+                fg.AppendLine($"Deleted => {SpanExt.ToHexString(item.Deleted)}");
+            }
+            if (printMask?.Author ?? true)
+            {
+                fg.AppendLine($"Author => {item.Author}");
+            }
+            if (printMask?.Description ?? true)
+            {
+                fg.AppendLine($"Description => {item.Description}");
+            }
+            if (printMask?.MasterReferences?.Overall ?? true)
+            {
+                fg.AppendLine("MasterReferences =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.MasterReferences)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.VestigialData ?? true)
+            {
+                fg.AppendLine($"VestigialData => {item.VestigialData}");
+            }
+        }
+        
+        public bool HasBeenSet(
+            IModHeaderInternalGetter item,
+            ModHeader_Mask<bool?> checkMask)
+        {
+            if (checkMask.TypeOffsets.HasValue && checkMask.TypeOffsets.Value != item.TypeOffsets_IsSet) return false;
+            if (checkMask.Deleted.HasValue && checkMask.Deleted.Value != item.Deleted_IsSet) return false;
+            if (checkMask.Author.HasValue && checkMask.Author.Value != item.Author_IsSet) return false;
+            if (checkMask.Description.HasValue && checkMask.Description.Value != item.Description_IsSet) return false;
+            if (checkMask.MasterReferences.Overall.HasValue && checkMask.MasterReferences.Overall.Value != item.MasterReferences.HasBeenSet) return false;
+            if (checkMask.VestigialData.HasValue && checkMask.VestigialData.Value != item.VestigialData_IsSet) return false;
+            return true;
+        }
+        
+        public void FillHasBeenSetMask(
+            IModHeaderInternalGetter item,
+            ModHeader_Mask<bool> mask)
+        {
+            mask.Flags = true;
+            mask.FormID = true;
+            mask.Version = true;
+            mask.Stats = new MaskItem<bool, ModStats_Mask<bool>>(true, item.Stats.GetHasBeenSetMask());
+            mask.TypeOffsets = item.TypeOffsets_IsSet;
+            mask.Deleted = item.Deleted_IsSet;
+            mask.Author = item.Author_IsSet;
+            mask.Description = item.Description_IsSet;
+            mask.MasterReferences = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, MasterReference_Mask<bool>>>>(item.MasterReferences.HasBeenSet, item.MasterReferences.WithIndex().Select((i) => new MaskItemIndexed<bool, MasterReference_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.VestigialData = item.VestigialData_IsSet;
+        }
+        
+        #region Equals and Hash
+        public virtual bool Equals(
+            IModHeaderInternalGetter lhs,
+            IModHeaderInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (lhs.Flags != rhs.Flags) return false;
+            if (lhs.FormID != rhs.FormID) return false;
+            if (lhs.Version != rhs.Version) return false;
+            if (!object.Equals(lhs.Stats, rhs.Stats)) return false;
+            if (lhs.TypeOffsets_IsSet != rhs.TypeOffsets_IsSet) return false;
+            if (lhs.TypeOffsets_IsSet)
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.TypeOffsets, rhs.TypeOffsets)) return false;
+            }
+            if (lhs.Deleted_IsSet != rhs.Deleted_IsSet) return false;
+            if (lhs.Deleted_IsSet)
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.Deleted, rhs.Deleted)) return false;
+            }
+            if (lhs.Author_IsSet != rhs.Author_IsSet) return false;
+            if (lhs.Author_IsSet)
+            {
+                if (!string.Equals(lhs.Author, rhs.Author)) return false;
+            }
+            if (lhs.Description_IsSet != rhs.Description_IsSet) return false;
+            if (lhs.Description_IsSet)
+            {
+                if (!string.Equals(lhs.Description, rhs.Description)) return false;
+            }
+            if (lhs.MasterReferences.HasBeenSet != rhs.MasterReferences.HasBeenSet) return false;
+            if (lhs.MasterReferences.HasBeenSet)
+            {
+                if (!lhs.MasterReferences.SequenceEqual(rhs.MasterReferences)) return false;
+            }
+            if (lhs.VestigialData_IsSet != rhs.VestigialData_IsSet) return false;
+            if (lhs.VestigialData_IsSet)
+            {
+                if (lhs.VestigialData != rhs.VestigialData) return false;
+            }
+            return true;
+        }
+        
+        public virtual int GetHashCode(IModHeaderInternalGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.FormID).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Version).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Stats).CombineHashCode(ret);
+            if (item.TypeOffsets_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.TypeOffsets).CombineHashCode(ret);
+            }
+            if (item.Deleted_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Deleted).CombineHashCode(ret);
+            }
+            if (item.Author_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Author).CombineHashCode(ret);
+            }
+            if (item.Description_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Description).CombineHashCode(ret);
+            }
+            if (item.MasterReferences.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.MasterReferences).CombineHashCode(ret);
+            }
+            if (item.VestigialData_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.VestigialData).CombineHashCode(ret);
+            }
+            return ret;
+        }
+        
+        #endregion
+        
+        
+        
+    }
+    public partial class ModHeaderSetterCopyCommon
+    {
+        public static readonly ModHeaderSetterCopyCommon Instance = new ModHeaderSetterCopyCommon();
 
         #region Copy Fields From
         public static void CopyFieldsFrom(
@@ -1430,7 +1736,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             item.Stats = Utility.GetGetterInterfaceReference<ModStats>(rhs.Stats);
                             break;
                         case CopyOption.CopyIn:
-                            ModStatsCommon.CopyFieldsFrom(
+                            ModStatsSetterCopyCommon.CopyFieldsFrom(
                                 item: item.Stats,
                                 rhs: rhs.Stats,
                                 def: def?.Stats,
@@ -1649,272 +1955,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
         }
-
+        
         #endregion
-
-        partial void ClearPartial();
-
-        public virtual void Clear(IModHeader item)
-        {
-            ClearPartial();
-            item.Flags = default(ModHeader.HeaderFlag);
-            item.FormID = default(UInt32);
-            item.Version = default(Int32);
-            item.Stats = default(ModStats);
-            item.TypeOffsets_Unset();
-            item.Deleted_Unset();
-            item.Author_Unset();
-            item.Description_Unset();
-            item.MasterReferences.Unset();
-            item.VestigialData_Unset();
-        }
-
-        public ModHeader_Mask<bool> GetEqualsMask(
-            IModHeaderGetter item,
-            IModHeaderGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new ModHeader_Mask<bool>();
-            ((ModHeaderCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public void FillEqualsMask(
-            IModHeaderGetter item,
-            IModHeaderGetter rhs,
-            ModHeader_Mask<bool> ret,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            if (rhs == null) return;
-            ret.Flags = item.Flags == rhs.Flags;
-            ret.FormID = item.FormID == rhs.FormID;
-            ret.Version = item.Version == rhs.Version;
-            ret.Stats = MaskItemExt.Factory(item.Stats.GetEqualsMask(rhs.Stats, include), include);
-            ret.TypeOffsets = item.TypeOffsets_IsSet == rhs.TypeOffsets_IsSet && MemoryExtensions.SequenceEqual(item.TypeOffsets, rhs.TypeOffsets);
-            ret.Deleted = item.Deleted_IsSet == rhs.Deleted_IsSet && MemoryExtensions.SequenceEqual(item.Deleted, rhs.Deleted);
-            ret.Author = item.Author_IsSet == rhs.Author_IsSet && string.Equals(item.Author, rhs.Author);
-            ret.Description = item.Description_IsSet == rhs.Description_IsSet && string.Equals(item.Description, rhs.Description);
-            ret.MasterReferences = item.MasterReferences.CollectionEqualsHelper(
-                rhs.MasterReferences,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
-                include);
-            ret.VestigialData = item.VestigialData_IsSet == rhs.VestigialData_IsSet && item.VestigialData == rhs.VestigialData;
-        }
-
-        public string ToString(
-            IModHeaderGetter item,
-            string name = null,
-            ModHeader_Mask<bool> printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(
-                item: item,
-                fg: fg,
-                name: name,
-                printMask: printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(
-            IModHeaderGetter item,
-            FileGeneration fg,
-            string name = null,
-            ModHeader_Mask<bool> printMask = null)
-        {
-            if (name == null)
-            {
-                fg.AppendLine($"ModHeader =>");
-            }
-            else
-            {
-                fg.AppendLine($"{name} (ModHeader) =>");
-            }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                ToStringFields(
-                    item: item,
-                    fg: fg,
-                    printMask: printMask);
-            }
-            fg.AppendLine("]");
-        }
-
-        protected static void ToStringFields(
-            IModHeaderGetter item,
-            FileGeneration fg,
-            ModHeader_Mask<bool> printMask = null)
-        {
-            if (printMask?.Flags ?? true)
-            {
-                fg.AppendLine($"Flags => {item.Flags}");
-            }
-            if (printMask?.FormID ?? true)
-            {
-                fg.AppendLine($"FormID => {item.FormID}");
-            }
-            if (printMask?.Version ?? true)
-            {
-                fg.AppendLine($"Version => {item.Version}");
-            }
-            if (printMask?.Stats?.Overall ?? true)
-            {
-                item.Stats?.ToString(fg, "Stats");
-            }
-            if (printMask?.TypeOffsets ?? true)
-            {
-                fg.AppendLine($"TypeOffsets => {SpanExt.ToHexString(item.TypeOffsets)}");
-            }
-            if (printMask?.Deleted ?? true)
-            {
-                fg.AppendLine($"Deleted => {SpanExt.ToHexString(item.Deleted)}");
-            }
-            if (printMask?.Author ?? true)
-            {
-                fg.AppendLine($"Author => {item.Author}");
-            }
-            if (printMask?.Description ?? true)
-            {
-                fg.AppendLine($"Description => {item.Description}");
-            }
-            if (printMask?.MasterReferences?.Overall ?? true)
-            {
-                fg.AppendLine("MasterReferences =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
-                {
-                    foreach (var subItem in item.MasterReferences)
-                    {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            subItem?.ToString(fg, "Item");
-                        }
-                        fg.AppendLine("]");
-                    }
-                }
-                fg.AppendLine("]");
-            }
-            if (printMask?.VestigialData ?? true)
-            {
-                fg.AppendLine($"VestigialData => {item.VestigialData}");
-            }
-        }
-
-        public bool HasBeenSet(
-            IModHeaderGetter item,
-            ModHeader_Mask<bool?> checkMask)
-        {
-            if (checkMask.TypeOffsets.HasValue && checkMask.TypeOffsets.Value != item.TypeOffsets_IsSet) return false;
-            if (checkMask.Deleted.HasValue && checkMask.Deleted.Value != item.Deleted_IsSet) return false;
-            if (checkMask.Author.HasValue && checkMask.Author.Value != item.Author_IsSet) return false;
-            if (checkMask.Description.HasValue && checkMask.Description.Value != item.Description_IsSet) return false;
-            if (checkMask.MasterReferences.Overall.HasValue && checkMask.MasterReferences.Overall.Value != item.MasterReferences.HasBeenSet) return false;
-            if (checkMask.VestigialData.HasValue && checkMask.VestigialData.Value != item.VestigialData_IsSet) return false;
-            return true;
-        }
-
-        public void FillHasBeenSetMask(
-            IModHeaderGetter item,
-            ModHeader_Mask<bool> mask)
-        {
-            mask.Flags = true;
-            mask.FormID = true;
-            mask.Version = true;
-            mask.Stats = new MaskItem<bool, ModStats_Mask<bool>>(true, item.Stats.GetHasBeenSetMask());
-            mask.TypeOffsets = item.TypeOffsets_IsSet;
-            mask.Deleted = item.Deleted_IsSet;
-            mask.Author = item.Author_IsSet;
-            mask.Description = item.Description_IsSet;
-            mask.MasterReferences = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, MasterReference_Mask<bool>>>>(item.MasterReferences.HasBeenSet, item.MasterReferences.WithIndex().Select((i) => new MaskItemIndexed<bool, MasterReference_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.VestigialData = item.VestigialData_IsSet;
-        }
-
-        #region Equals and Hash
-        public virtual bool Equals(
-            IModHeaderGetter lhs,
-            IModHeaderGetter rhs)
-        {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (lhs.FormID != rhs.FormID) return false;
-            if (lhs.Version != rhs.Version) return false;
-            if (!object.Equals(lhs.Stats, rhs.Stats)) return false;
-            if (lhs.TypeOffsets_IsSet != rhs.TypeOffsets_IsSet) return false;
-            if (lhs.TypeOffsets_IsSet)
-            {
-                if (!MemoryExtensions.SequenceEqual(lhs.TypeOffsets, rhs.TypeOffsets)) return false;
-            }
-            if (lhs.Deleted_IsSet != rhs.Deleted_IsSet) return false;
-            if (lhs.Deleted_IsSet)
-            {
-                if (!MemoryExtensions.SequenceEqual(lhs.Deleted, rhs.Deleted)) return false;
-            }
-            if (lhs.Author_IsSet != rhs.Author_IsSet) return false;
-            if (lhs.Author_IsSet)
-            {
-                if (!string.Equals(lhs.Author, rhs.Author)) return false;
-            }
-            if (lhs.Description_IsSet != rhs.Description_IsSet) return false;
-            if (lhs.Description_IsSet)
-            {
-                if (!string.Equals(lhs.Description, rhs.Description)) return false;
-            }
-            if (lhs.MasterReferences.HasBeenSet != rhs.MasterReferences.HasBeenSet) return false;
-            if (lhs.MasterReferences.HasBeenSet)
-            {
-                if (!lhs.MasterReferences.SequenceEqual(rhs.MasterReferences)) return false;
-            }
-            if (lhs.VestigialData_IsSet != rhs.VestigialData_IsSet) return false;
-            if (lhs.VestigialData_IsSet)
-            {
-                if (lhs.VestigialData != rhs.VestigialData) return false;
-            }
-            return true;
-        }
-
-        public virtual int GetHashCode(IModHeaderGetter item)
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.FormID).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Version).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Stats).CombineHashCode(ret);
-            if (item.TypeOffsets_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.TypeOffsets).CombineHashCode(ret);
-            }
-            if (item.Deleted_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Deleted).CombineHashCode(ret);
-            }
-            if (item.Author_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Author).CombineHashCode(ret);
-            }
-            if (item.Description_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Description).CombineHashCode(ret);
-            }
-            if (item.MasterReferences.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.MasterReferences).CombineHashCode(ret);
-            }
-            if (item.VestigialData_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.VestigialData).CombineHashCode(ret);
-            }
-            return ret;
-        }
-
-        #endregion
-
-
+        
+        
     }
     #endregion
 
@@ -1925,7 +1969,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static ModHeaderXmlWriteTranslation Instance = new ModHeaderXmlWriteTranslation();
 
         public static void WriteToNodeXml(
-            IModHeaderGetter item,
+            IModHeaderInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -2011,14 +2055,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.MasterReferences.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)ModHeader_FieldIndex.MasterReferences) ?? true))
             {
-                ListXmlTranslation<IMasterReferenceGetter>.Instance.Write(
+                ListXmlTranslation<IMasterReferenceInternalGetter>.Instance.Write(
                     node: node,
                     name: nameof(item.MasterReferences),
                     item: item.MasterReferences,
                     fieldIndex: (int)ModHeader_FieldIndex.MasterReferences,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)ModHeader_FieldIndex.MasterReferences),
-                    transl: (XElement subNode, IMasterReferenceGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    transl: (XElement subNode, IMasterReferenceInternalGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         var loquiItem = subItem;
                         ((MasterReferenceXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
@@ -2043,7 +2087,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             XElement node,
-            IModHeaderGetter item,
+            IModHeaderInternalGetter item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)
@@ -2069,7 +2113,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             Write(
-                item: (IModHeaderGetter)item,
+                item: (IModHeaderInternalGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -2078,7 +2122,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             XElement node,
-            IModHeaderGetter item,
+            IModHeaderInternalGetter item,
             ErrorMaskBuilder errorMask,
             int fieldIndex,
             TranslationCrystal translationMask,
@@ -2088,7 +2132,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 errorMask?.PushIndex(fieldIndex);
                 Write(
-                    item: (IModHeaderGetter)item,
+                    item: (IModHeaderInternalGetter)item,
                     name: name,
                     node: node,
                     errorMask: errorMask,
@@ -2112,7 +2156,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static ModHeaderXmlCreateTranslation Instance = new ModHeaderXmlCreateTranslation();
 
         public static void FillPublicXml(
-            IModHeader item,
+            IModHeaderInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -2137,7 +2181,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElementXml(
-            IModHeader item,
+            IModHeaderInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -2419,7 +2463,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public static class ModHeaderXmlTranslationMixIn
     {
         public static void WriteToXml(
-            this IModHeaderGetter item,
+            this IModHeaderInternalGetter item,
             XElement node,
             out ModHeader_ErrorMask errorMask,
             bool doMasks = true,
@@ -2437,7 +2481,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IModHeaderGetter item,
+            this IModHeaderInternalGetter item,
             string path,
             out ModHeader_ErrorMask errorMask,
             ModHeader_TranslationMask translationMask = null,
@@ -2456,7 +2500,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IModHeaderGetter item,
+            this IModHeaderInternalGetter item,
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -2474,7 +2518,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IModHeaderGetter item,
+            this IModHeaderInternalGetter item,
             Stream stream,
             out ModHeader_ErrorMask errorMask,
             ModHeader_TranslationMask translationMask = null,
@@ -2493,7 +2537,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IModHeaderGetter item,
+            this IModHeaderInternalGetter item,
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -2511,7 +2555,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IModHeaderGetter item,
+            this IModHeaderInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -2526,7 +2570,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IModHeaderGetter item,
+            this IModHeaderInternalGetter item,
             XElement node,
             string name = null,
             ModHeader_TranslationMask translationMask = null)
@@ -2540,7 +2584,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IModHeaderGetter item,
+            this IModHeaderInternalGetter item,
             string path,
             string name = null)
         {
@@ -2555,7 +2599,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IModHeaderGetter item,
+            this IModHeaderInternalGetter item,
             Stream stream,
             string name = null)
         {
@@ -3189,7 +3233,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static ModHeaderBinaryWriteTranslation Instance = new ModHeaderBinaryWriteTranslation();
 
         public static void Write_Embedded(
-            IModHeaderGetter item,
+            IModHeaderInternalGetter item,
             MutagenWriter writer,
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
@@ -3203,7 +3247,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void Write_RecordTypes(
-            IModHeaderGetter item,
+            IModHeaderInternalGetter item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask,
@@ -3252,12 +3296,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.MasterReferences.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<IMasterReferenceGetter>.Instance.Write(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<IMasterReferenceInternalGetter>.Instance.Write(
                     writer: writer,
                     items: item.MasterReferences,
                     fieldIndex: (int)ModHeader_FieldIndex.MasterReferences,
                     errorMask: errorMask,
-                    transl: (MutagenWriter subWriter, IMasterReferenceGetter subItem, ErrorMaskBuilder listErrorMask) =>
+                    transl: (MutagenWriter subWriter, IMasterReferenceInternalGetter subItem, ErrorMaskBuilder listErrorMask) =>
                     {
                         var loquiItem = subItem;
                         ((MasterReferenceBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
@@ -3280,7 +3324,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             MutagenWriter writer,
-            IModHeaderGetter item,
+            IModHeaderInternalGetter item,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
@@ -3312,7 +3356,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask)
         {
             Write(
-                item: (IModHeaderGetter)item,
+                item: (IModHeaderInternalGetter)item,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -3331,7 +3375,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public static class ModHeaderBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IModHeaderGetter item,
+            this IModHeaderInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
             out ModHeader_ErrorMask errorMask,
@@ -3348,7 +3392,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToBinary(
-            this IModHeaderGetter item,
+            this IModHeaderInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -3362,7 +3406,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToBinary(
-            this IModHeaderGetter item,
+            this IModHeaderInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
@@ -3379,29 +3423,72 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     public partial class ModHeaderBinaryWrapper :
         BinaryWrapper,
-        IModHeaderGetter
+        IModHeaderInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ModHeader_Registration.Instance;
         public static ModHeader_Registration Registration => ModHeader_Registration.Instance;
-        protected object CommonInstance => ModHeaderCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
+        protected object CommonInstance()
+        {
+            return ModHeaderCommon.Instance;
+        }
+        object IModHeaderInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IModHeaderInternalGetter.CommonSetterInstance()
+        {
+            return null;
+        }
+        object IModHeaderInternalGetter.CommonSetterCopyInstance()
+        {
+            return null;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IModHeaderGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IModHeaderInternalGetter)rhs, include);
 
         protected object XmlWriteTranslator => ModHeaderXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((ModHeaderXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         protected object BinaryWriteTranslator => ModHeaderBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((ModHeaderBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
 
         public ModHeader.HeaderFlag Flags => (ModHeader.HeaderFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0, 4));
         public UInt32 FormID => BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(4, 4));
         public Int32 Version => BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(8, 4));
         #region Stats
-        private IModStatsGetter _Stats;
-        public IModStatsGetter Stats => _Stats ?? new ModStats();
+        private IModStatsInternalGetter _Stats;
+        public IModStatsInternalGetter Stats => _Stats ?? new ModStats();
         #endregion
         #region TypeOffsets
         private int? _TypeOffsetsLocation;
@@ -3423,7 +3510,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Description_IsSet => _DescriptionLocation.HasValue;
         public String Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _DescriptionLocation.Value, _package.Meta)) : default;
         #endregion
-        public IReadOnlySetList<IMasterReferenceGetter> MasterReferences { get; private set; } = EmptySetList<MasterReferenceBinaryWrapper>.Instance;
+        public IReadOnlySetList<IMasterReferenceInternalGetter> MasterReferences { get; private set; } = EmptySetList<MasterReferenceBinaryWrapper>.Instance;
         #region VestigialData
         private int? _VestigialDataLocation;
         public bool VestigialData_IsSet => _VestigialDataLocation.HasValue;
@@ -3532,4 +3619,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class ModHeader
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => ModHeader_Registration.Instance;
+        public static ModHeader_Registration Registration => ModHeader_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return ModHeaderCommon.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return ModHeaderSetterCommon.Instance;
+        }
+        protected object CommonSetterCopyInstance()
+        {
+            return ModHeaderSetterCopyCommon.Instance;
+        }
+        object IModHeaderInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IModHeaderInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object IModHeaderInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
 }

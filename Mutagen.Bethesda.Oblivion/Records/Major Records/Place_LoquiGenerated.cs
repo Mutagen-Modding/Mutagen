@@ -42,11 +42,6 @@ namespace Mutagen.Bethesda.Oblivion
         IEquatable<Place>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Place_Registration.Instance;
-        public new static Place_Registration Registration => Place_Registration.Instance;
-        protected override object CommonInstance => PlaceCommon.Instance;
-
         #region Ctor
         protected Place()
         {
@@ -75,20 +70,33 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IPlaceInternalGetter rhs)) return false;
-            return ((PlaceCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            return ((PlaceCommon)((IPlaceInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(Place obj)
         {
-            return ((PlaceCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((PlaceCommon)((IPlaceInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((PlaceCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((PlaceCommon)((IPlaceInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected override object XmlWriteTranslator => PlaceXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((PlaceXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static Place CreateFromXml(
@@ -284,6 +292,19 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Binary Translation
         protected override object BinaryWriteTranslator => PlaceBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((PlaceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
         #endregion
 
         public Place Copy(
@@ -353,7 +374,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            PlaceCommon.CopyFieldsFrom(
+            PlaceSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -368,7 +389,7 @@ namespace Mutagen.Bethesda.Oblivion
             Place_CopyMask copyMask = null,
             Place def = null)
         {
-            PlaceCommon.CopyFieldsFrom(
+            PlaceSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -389,7 +410,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            PlaceCommon.Instance.Clear(this);
+            PlaceSetterCommon.Instance.Clear(this);
         }
 
         protected new static void CopyInInternal_Place(Place obj, KeyValuePair<ushort, object> pair)
@@ -450,7 +471,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IPlaceInternal item)
         {
-            ((PlaceCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((PlaceSetterCommon)((IPlaceInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static Place_Mask<bool> GetEqualsMask(
@@ -458,7 +479,7 @@ namespace Mutagen.Bethesda.Oblivion
             IPlaceInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((PlaceCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((PlaceCommon)((IPlaceInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -469,7 +490,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Place_Mask<bool> printMask = null)
         {
-            return ((PlaceCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((PlaceCommon)((IPlaceInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -481,7 +502,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Place_Mask<bool> printMask = null)
         {
-            ((PlaceCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((PlaceCommon)((IPlaceInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -492,7 +513,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IPlaceInternalGetter item,
             Place_Mask<bool?> checkMask)
         {
-            return ((PlaceCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((PlaceCommon)((IPlaceInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -500,7 +521,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Place_Mask<bool> GetHasBeenSetMask(this IPlaceInternalGetter item)
         {
             var ret = new Place_Mask<bool>();
-            ((PlaceCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((PlaceCommon)((IPlaceInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -510,7 +531,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IPlaceInternalGetter item,
             IPlaceInternalGetter rhs)
         {
-            return ((PlaceCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((PlaceCommon)((IPlaceInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -564,8 +585,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type SetterType = typeof(IPlace);
 
         public static readonly Type InternalSetterType = typeof(IPlaceInternal);
-
-        public static readonly Type CommonType = typeof(PlaceCommon);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.Place";
 
@@ -687,7 +706,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -707,45 +725,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class PlaceCommon : OblivionMajorRecordCommon
+    public partial class PlaceSetterCommon : OblivionMajorRecordSetterCommon
     {
-        public static readonly PlaceCommon Instance = new PlaceCommon();
-
-        #region Copy Fields From
-        public static void CopyFieldsFrom(
-            Place item,
-            Place rhs,
-            Place def,
-            ErrorMaskBuilder errorMask,
-            Place_CopyMask copyMask)
-        {
-            OblivionMajorRecordCommon.CopyFieldsFrom(
-                item,
-                rhs,
-                def,
-                errorMask,
-                copyMask);
-        }
-
-        #endregion
+        public new static readonly PlaceSetterCommon Instance = new PlaceSetterCommon();
 
         partial void ClearPartial();
-
+        
         public virtual void Clear(IPlaceInternal item)
         {
             ClearPartial();
             base.Clear(item);
         }
-
+        
         public override void Clear(IOblivionMajorRecordInternal item)
         {
             Clear(item: (IPlaceInternal)item);
         }
-
+        
         public override void Clear(IMajorRecordInternal item)
         {
             Clear(item: (IPlaceInternal)item);
         }
+        
+        
+    }
+    public partial class PlaceCommon : OblivionMajorRecordCommon
+    {
+        public new static readonly PlaceCommon Instance = new PlaceCommon();
 
         public Place_Mask<bool> GetEqualsMask(
             IPlaceInternalGetter item,
@@ -753,14 +759,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new Place_Mask<bool>();
-            ((PlaceCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
+            ((PlaceCommon)((IPlaceInternalGetter)item).CommonInstance()).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
                 include: include);
             return ret;
         }
-
+        
         public void FillEqualsMask(
             IPlaceInternalGetter item,
             IPlaceInternalGetter rhs,
@@ -770,7 +776,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (rhs == null) return;
             base.FillEqualsMask(item, rhs, ret, include);
         }
-
+        
         public string ToString(
             IPlaceInternalGetter item,
             string name = null,
@@ -784,7 +790,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 printMask: printMask);
             return fg.ToString();
         }
-
+        
         public void ToString(
             IPlaceInternalGetter item,
             FileGeneration fg,
@@ -809,7 +815,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             fg.AppendLine("]");
         }
-
+        
         protected static void ToStringFields(
             IPlaceInternalGetter item,
             FileGeneration fg,
@@ -820,7 +826,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg: fg,
                 printMask: printMask);
         }
-
+        
         public bool HasBeenSet(
             IPlaceInternalGetter item,
             Place_Mask<bool?> checkMask)
@@ -829,7 +835,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 checkMask: checkMask);
         }
-
+        
         public void FillHasBeenSetMask(
             IPlaceInternalGetter item,
             Place_Mask<bool> mask)
@@ -838,7 +844,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 mask: mask);
         }
-
+        
         public static Place_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
         {
             switch (index)
@@ -857,7 +863,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
-
+        
         public static Place_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
@@ -874,7 +880,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
-
+        
         #region Equals and Hash
         public virtual bool Equals(
             IPlaceInternalGetter lhs,
@@ -885,7 +891,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!base.Equals(rhs)) return false;
             return true;
         }
-
+        
         public override bool Equals(
             IOblivionMajorRecordInternalGetter lhs,
             IOblivionMajorRecordInternalGetter rhs)
@@ -894,7 +900,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 lhs: (IPlaceInternalGetter)lhs,
                 rhs: rhs as IPlaceInternalGetter);
         }
-
+        
         public override bool Equals(
             IMajorRecordInternalGetter lhs,
             IMajorRecordInternalGetter rhs)
@@ -903,37 +909,62 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 lhs: (IPlaceInternalGetter)lhs,
                 rhs: rhs as IPlaceInternalGetter);
         }
-
+        
         public virtual int GetHashCode(IPlaceInternalGetter item)
         {
             int ret = 0;
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
-
+        
         public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
         {
             return GetHashCode(item: (IPlaceInternalGetter)item);
         }
-
+        
         public override int GetHashCode(IMajorRecordInternalGetter item)
         {
             return GetHashCode(item: (IPlaceInternalGetter)item);
         }
-
+        
         #endregion
-
-
+        
+        
         #region Mutagen
         partial void PostDuplicate(Place obj, Place rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
+        
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             throw new NotImplementedException();
         }
-
+        
         #endregion
+        
+        
+    }
+    public partial class PlaceSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
+    {
+        public new static readonly PlaceSetterCopyCommon Instance = new PlaceSetterCopyCommon();
 
+        #region Copy Fields From
+        public static void CopyFieldsFrom(
+            Place item,
+            Place rhs,
+            Place def,
+            ErrorMaskBuilder errorMask,
+            Place_CopyMask copyMask)
+        {
+            OblivionMajorRecordSetterCopyCommon.CopyFieldsFrom(
+                item,
+                rhs,
+                def,
+                errorMask,
+                copyMask);
+        }
+        
+        #endregion
+        
+        
     }
     #endregion
 
@@ -1465,17 +1496,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         OblivionMajorRecordBinaryWrapper,
         IPlaceInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Place_Registration.Instance;
         public new static Place_Registration Registration => Place_Registration.Instance;
-        protected override object CommonInstance => PlaceCommon.Instance;
+        protected override object CommonInstance()
+        {
+            return PlaceCommon.Instance;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPlaceInternalGetter)rhs, include);
 
         protected override object XmlWriteTranslator => PlaceXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((PlaceXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         protected override object BinaryWriteTranslator => PlaceBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((PlaceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
 
         partial void CustomCtor(
             BinaryMemoryReadStream stream,
@@ -1497,4 +1560,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class Place
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Place_Registration.Instance;
+        public new static Place_Registration Registration => Place_Registration.Instance;
+        protected override object CommonInstance()
+        {
+            return PlaceCommon.Instance;
+        }
+        protected override object CommonSetterInstance()
+        {
+            return PlaceSetterCommon.Instance;
+        }
+        protected override object CommonSetterCopyInstance()
+        {
+            return PlaceSetterCopyCommon.Instance;
+        }
+
+        #endregion
+
+    }
 }

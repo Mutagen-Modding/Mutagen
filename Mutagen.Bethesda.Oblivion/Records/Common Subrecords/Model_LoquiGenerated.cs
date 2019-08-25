@@ -34,17 +34,11 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Model :
         LoquiNotifyingObject,
-        IModel,
+        IModelInternal,
         ILoquiObjectSetter<Model>,
         IEquatable<Model>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Model_Registration.Instance;
-        public static Model_Registration Registration => Model_Registration.Instance;
-        protected object CommonInstance => ModelCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
-
         #region Ctor
         public Model()
         {
@@ -99,7 +93,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IModelGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IModelInternalGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -117,22 +111,35 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is IModelGetter rhs)) return false;
-            return ((ModelCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            if (!(obj is IModelInternalGetter rhs)) return false;
+            return ((ModelCommon)((IModelInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(Model obj)
         {
-            return ((ModelCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((ModelCommon)((IModelInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((ModelCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((ModelCommon)((IModelInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected object XmlWriteTranslator => ModelXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((ModelXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static Model CreateFromXml(
@@ -307,6 +314,19 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Translation
         protected object BinaryWriteTranslator => ModelBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((ModelBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
         #region Binary Create
         [DebuggerStepThrough]
         public static Model CreateFromBinary(
@@ -516,7 +536,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ModelCommon.CopyFieldsFrom(
+            ModelSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -531,7 +551,7 @@ namespace Mutagen.Bethesda.Oblivion
             Model_CopyMask copyMask = null,
             Model def = null)
         {
-            ModelCommon.CopyFieldsFrom(
+            ModelSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -560,7 +580,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void Clear()
         {
-            ModelCommon.Instance.Clear(this);
+            ModelSetterCommon.Instance.Clear(this);
         }
 
         public static Model Create(IEnumerable<KeyValuePair<ushort, object>> fields)
@@ -599,8 +619,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IModel :
-        IModelGetter,
-        ILoquiObjectSetter<IModel>
+        IModelInternalGetter,
+        ILoquiObjectSetter<IModelInternal>
     {
         new String File { get; set; }
 
@@ -618,9 +638,15 @@ namespace Mutagen.Bethesda.Oblivion
             Model def = null);
     }
 
+    public partial interface IModelInternal :
+        IModel,
+        IModelInternalGetter
+    {
+    }
+
     public partial interface IModelGetter :
         ILoquiObject,
-        ILoquiObject<IModelGetter>,
+        ILoquiObject<IModelInternalGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -640,45 +666,53 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    public partial interface IModelInternalGetter : IModelGetter
+    {
+        object CommonInstance();
+        object CommonSetterInstance();
+        object CommonSetterCopyInstance();
+
+    }
+
     #endregion
 
     #region Common MixIn
     public static class ModelMixIn
     {
-        public static void Clear(this IModel item)
+        public static void Clear(this IModelInternal item)
         {
-            ((ModelCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((ModelSetterCommon)((IModelInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static Model_Mask<bool> GetEqualsMask(
-            this IModelGetter item,
-            IModelGetter rhs,
+            this IModelInternalGetter item,
+            IModelInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((ModelCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((ModelCommon)((IModelInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IModelGetter item,
+            this IModelInternalGetter item,
             string name = null,
             Model_Mask<bool> printMask = null)
         {
-            return ((ModelCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((ModelCommon)((IModelInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IModelGetter item,
+            this IModelInternalGetter item,
             FileGeneration fg,
             string name = null,
             Model_Mask<bool> printMask = null)
         {
-            ((ModelCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((ModelCommon)((IModelInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -686,28 +720,28 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static bool HasBeenSet(
-            this IModelGetter item,
+            this IModelInternalGetter item,
             Model_Mask<bool?> checkMask)
         {
-            return ((ModelCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((ModelCommon)((IModelInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static Model_Mask<bool> GetHasBeenSetMask(this IModelGetter item)
+        public static Model_Mask<bool> GetHasBeenSetMask(this IModelInternalGetter item)
         {
             var ret = new Model_Mask<bool>();
-            ((ModelCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((ModelCommon)((IModelInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this IModelGetter item,
-            IModelGetter rhs)
+            this IModelInternalGetter item,
+            IModelInternalGetter rhs)
         {
-            return ((ModelCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((ModelCommon)((IModelInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -754,13 +788,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IModelGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type InternalGetterType = typeof(IModelInternalGetter);
 
         public static readonly Type SetterType = typeof(IModel);
 
-        public static readonly Type InternalSetterType = null;
-
-        public static readonly Type CommonType = typeof(ModelCommon);
+        public static readonly Type InternalSetterType = typeof(IModelInternal);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.Model";
 
@@ -910,7 +942,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -930,9 +961,164 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
+    public partial class ModelSetterCommon
+    {
+        public static readonly ModelSetterCommon Instance = new ModelSetterCommon();
+
+        partial void ClearPartial();
+        
+        public virtual void Clear(IModelInternal item)
+        {
+            ClearPartial();
+            item.File = default(String);
+            item.BoundRadius = default(Single);
+            item.Hashes_Unset();
+        }
+        
+        
+    }
     public partial class ModelCommon
     {
         public static readonly ModelCommon Instance = new ModelCommon();
+
+        public Model_Mask<bool> GetEqualsMask(
+            IModelInternalGetter item,
+            IModelInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new Model_Mask<bool>();
+            ((ModelCommon)((IModelInternalGetter)item).CommonInstance()).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+        
+        public void FillEqualsMask(
+            IModelInternalGetter item,
+            IModelInternalGetter rhs,
+            Model_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            if (rhs == null) return;
+            ret.File = string.Equals(item.File, rhs.File);
+            ret.BoundRadius = item.BoundRadius.EqualsWithin(rhs.BoundRadius);
+            ret.Hashes = item.Hashes_IsSet == rhs.Hashes_IsSet && MemoryExtensions.SequenceEqual(item.Hashes, rhs.Hashes);
+        }
+        
+        public string ToString(
+            IModelInternalGetter item,
+            string name = null,
+            Model_Mask<bool> printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+            return fg.ToString();
+        }
+        
+        public void ToString(
+            IModelInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            Model_Mask<bool> printMask = null)
+        {
+            if (name == null)
+            {
+                fg.AppendLine($"Model =>");
+            }
+            else
+            {
+                fg.AppendLine($"{name} (Model) =>");
+            }
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
+            }
+            fg.AppendLine("]");
+        }
+        
+        protected static void ToStringFields(
+            IModelInternalGetter item,
+            FileGeneration fg,
+            Model_Mask<bool> printMask = null)
+        {
+            if (printMask?.File ?? true)
+            {
+                fg.AppendLine($"File => {item.File}");
+            }
+            if (printMask?.BoundRadius ?? true)
+            {
+                fg.AppendLine($"BoundRadius => {item.BoundRadius}");
+            }
+            if (printMask?.Hashes ?? true)
+            {
+                fg.AppendLine($"Hashes => {SpanExt.ToHexString(item.Hashes)}");
+            }
+        }
+        
+        public bool HasBeenSet(
+            IModelInternalGetter item,
+            Model_Mask<bool?> checkMask)
+        {
+            if (checkMask.Hashes.HasValue && checkMask.Hashes.Value != item.Hashes_IsSet) return false;
+            return true;
+        }
+        
+        public void FillHasBeenSetMask(
+            IModelInternalGetter item,
+            Model_Mask<bool> mask)
+        {
+            mask.File = true;
+            mask.BoundRadius = true;
+            mask.Hashes = item.Hashes_IsSet;
+        }
+        
+        #region Equals and Hash
+        public virtual bool Equals(
+            IModelInternalGetter lhs,
+            IModelInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!string.Equals(lhs.File, rhs.File)) return false;
+            if (!lhs.BoundRadius.EqualsWithin(rhs.BoundRadius)) return false;
+            if (lhs.Hashes_IsSet != rhs.Hashes_IsSet) return false;
+            if (lhs.Hashes_IsSet)
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.Hashes, rhs.Hashes)) return false;
+            }
+            return true;
+        }
+        
+        public virtual int GetHashCode(IModelInternalGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.File).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.BoundRadius).CombineHashCode(ret);
+            if (item.Hashes_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Hashes).CombineHashCode(ret);
+            }
+            return ret;
+        }
+        
+        #endregion
+        
+        
+        
+    }
+    public partial class ModelSetterCopyCommon
+    {
+        public static readonly ModelSetterCopyCommon Instance = new ModelSetterCopyCommon();
 
         #region Copy Fields From
         public static void CopyFieldsFrom(
@@ -1007,152 +1193,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
         }
-
+        
         #endregion
-
-        partial void ClearPartial();
-
-        public virtual void Clear(IModel item)
-        {
-            ClearPartial();
-            item.File = default(String);
-            item.BoundRadius = default(Single);
-            item.Hashes_Unset();
-        }
-
-        public Model_Mask<bool> GetEqualsMask(
-            IModelGetter item,
-            IModelGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new Model_Mask<bool>();
-            ((ModelCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public void FillEqualsMask(
-            IModelGetter item,
-            IModelGetter rhs,
-            Model_Mask<bool> ret,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            if (rhs == null) return;
-            ret.File = string.Equals(item.File, rhs.File);
-            ret.BoundRadius = item.BoundRadius.EqualsWithin(rhs.BoundRadius);
-            ret.Hashes = item.Hashes_IsSet == rhs.Hashes_IsSet && MemoryExtensions.SequenceEqual(item.Hashes, rhs.Hashes);
-        }
-
-        public string ToString(
-            IModelGetter item,
-            string name = null,
-            Model_Mask<bool> printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(
-                item: item,
-                fg: fg,
-                name: name,
-                printMask: printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(
-            IModelGetter item,
-            FileGeneration fg,
-            string name = null,
-            Model_Mask<bool> printMask = null)
-        {
-            if (name == null)
-            {
-                fg.AppendLine($"Model =>");
-            }
-            else
-            {
-                fg.AppendLine($"{name} (Model) =>");
-            }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                ToStringFields(
-                    item: item,
-                    fg: fg,
-                    printMask: printMask);
-            }
-            fg.AppendLine("]");
-        }
-
-        protected static void ToStringFields(
-            IModelGetter item,
-            FileGeneration fg,
-            Model_Mask<bool> printMask = null)
-        {
-            if (printMask?.File ?? true)
-            {
-                fg.AppendLine($"File => {item.File}");
-            }
-            if (printMask?.BoundRadius ?? true)
-            {
-                fg.AppendLine($"BoundRadius => {item.BoundRadius}");
-            }
-            if (printMask?.Hashes ?? true)
-            {
-                fg.AppendLine($"Hashes => {SpanExt.ToHexString(item.Hashes)}");
-            }
-        }
-
-        public bool HasBeenSet(
-            IModelGetter item,
-            Model_Mask<bool?> checkMask)
-        {
-            if (checkMask.Hashes.HasValue && checkMask.Hashes.Value != item.Hashes_IsSet) return false;
-            return true;
-        }
-
-        public void FillHasBeenSetMask(
-            IModelGetter item,
-            Model_Mask<bool> mask)
-        {
-            mask.File = true;
-            mask.BoundRadius = true;
-            mask.Hashes = item.Hashes_IsSet;
-        }
-
-        #region Equals and Hash
-        public virtual bool Equals(
-            IModelGetter lhs,
-            IModelGetter rhs)
-        {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
-            if (!string.Equals(lhs.File, rhs.File)) return false;
-            if (!lhs.BoundRadius.EqualsWithin(rhs.BoundRadius)) return false;
-            if (lhs.Hashes_IsSet != rhs.Hashes_IsSet) return false;
-            if (lhs.Hashes_IsSet)
-            {
-                if (!MemoryExtensions.SequenceEqual(lhs.Hashes, rhs.Hashes)) return false;
-            }
-            return true;
-        }
-
-        public virtual int GetHashCode(IModelGetter item)
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.File).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.BoundRadius).CombineHashCode(ret);
-            if (item.Hashes_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Hashes).CombineHashCode(ret);
-            }
-            return ret;
-        }
-
-        #endregion
-
-
+        
+        
     }
     #endregion
 
@@ -1163,7 +1207,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static ModelXmlWriteTranslation Instance = new ModelXmlWriteTranslation();
 
         public static void WriteToNodeXml(
-            IModelGetter item,
+            IModelInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1200,7 +1244,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             XElement node,
-            IModelGetter item,
+            IModelInternalGetter item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)
@@ -1226,7 +1270,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             Write(
-                item: (IModelGetter)item,
+                item: (IModelInternalGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1235,7 +1279,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             XElement node,
-            IModelGetter item,
+            IModelInternalGetter item,
             ErrorMaskBuilder errorMask,
             int fieldIndex,
             TranslationCrystal translationMask,
@@ -1245,7 +1289,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 errorMask?.PushIndex(fieldIndex);
                 Write(
-                    item: (IModelGetter)item,
+                    item: (IModelInternalGetter)item,
                     name: name,
                     node: node,
                     errorMask: errorMask,
@@ -1269,7 +1313,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static ModelXmlCreateTranslation Instance = new ModelXmlCreateTranslation();
 
         public static void FillPublicXml(
-            IModel item,
+            IModelInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1294,7 +1338,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElementXml(
-            IModel item,
+            IModelInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -1391,7 +1435,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public static class ModelXmlTranslationMixIn
     {
         public static void WriteToXml(
-            this IModelGetter item,
+            this IModelInternalGetter item,
             XElement node,
             out Model_ErrorMask errorMask,
             bool doMasks = true,
@@ -1409,7 +1453,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IModelGetter item,
+            this IModelInternalGetter item,
             string path,
             out Model_ErrorMask errorMask,
             Model_TranslationMask translationMask = null,
@@ -1428,7 +1472,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IModelGetter item,
+            this IModelInternalGetter item,
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1446,7 +1490,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IModelGetter item,
+            this IModelInternalGetter item,
             Stream stream,
             out Model_ErrorMask errorMask,
             Model_TranslationMask translationMask = null,
@@ -1465,7 +1509,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IModelGetter item,
+            this IModelInternalGetter item,
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1483,7 +1527,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IModelGetter item,
+            this IModelInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1498,7 +1542,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IModelGetter item,
+            this IModelInternalGetter item,
             XElement node,
             string name = null,
             Model_TranslationMask translationMask = null)
@@ -1512,7 +1556,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IModelGetter item,
+            this IModelInternalGetter item,
             string path,
             string name = null)
         {
@@ -1527,7 +1571,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IModelGetter item,
+            this IModelInternalGetter item,
             Stream stream,
             string name = null)
         {
@@ -1882,7 +1926,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static ModelBinaryWriteTranslation Instance = new ModelBinaryWriteTranslation();
 
         public static void Write_RecordTypes(
-            IModelGetter item,
+            IModelInternalGetter item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask,
@@ -1910,7 +1954,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             MutagenWriter writer,
-            IModelGetter item,
+            IModelInternalGetter item,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
@@ -1931,7 +1975,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask)
         {
             Write(
-                item: (IModelGetter)item,
+                item: (IModelInternalGetter)item,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -1950,7 +1994,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public static class ModelBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IModelGetter item,
+            this IModelInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
             out Model_ErrorMask errorMask,
@@ -1967,7 +2011,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToBinary(
-            this IModelGetter item,
+            this IModelInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -1981,7 +2025,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToBinary(
-            this IModelGetter item,
+            this IModelInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
@@ -1998,22 +2042,65 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     public partial class ModelBinaryWrapper :
         BinaryWrapper,
-        IModelGetter
+        IModelInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Model_Registration.Instance;
         public static Model_Registration Registration => Model_Registration.Instance;
-        protected object CommonInstance => ModelCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
+        protected object CommonInstance()
+        {
+            return ModelCommon.Instance;
+        }
+        object IModelInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IModelInternalGetter.CommonSetterInstance()
+        {
+            return null;
+        }
+        object IModelInternalGetter.CommonSetterCopyInstance()
+        {
+            return null;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IModelGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IModelInternalGetter)rhs, include);
 
         protected object XmlWriteTranslator => ModelXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((ModelXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         protected object BinaryWriteTranslator => ModelBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((ModelBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
 
         #region File
         private int? _FileLocation;
@@ -2102,4 +2189,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class Model
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Model_Registration.Instance;
+        public static Model_Registration Registration => Model_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return ModelCommon.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return ModelSetterCommon.Instance;
+        }
+        protected object CommonSetterCopyInstance()
+        {
+            return ModelSetterCopyCommon.Instance;
+        }
+        object IModelInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IModelInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object IModelInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
 }

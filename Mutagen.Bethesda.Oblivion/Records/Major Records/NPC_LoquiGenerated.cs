@@ -48,11 +48,6 @@ namespace Mutagen.Bethesda.Oblivion
         IEquatable<NPC>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => NPC_Registration.Instance;
-        public new static NPC_Registration Registration => NPC_Registration.Instance;
-        protected override object CommonInstance => NPCCommon.Instance;
-
         #region Ctor
         protected NPC()
         {
@@ -112,7 +107,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Model_Set(default(Model), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IModelGetter INPCGetter.Model => this.Model;
+        IModelInternalGetter INPCGetter.Model => this.Model;
         #endregion
         #region Flags
         private NPC.NPCFlag _Flags;
@@ -206,7 +201,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<RankPlacement> INPC.Factions => _Factions;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IRankPlacementGetter> INPCGetter.Factions => _Factions;
+        IReadOnlySetList<IRankPlacementInternalGetter> INPCGetter.Factions => _Factions;
         #endregion
 
         #endregion
@@ -254,7 +249,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<ItemEntry> INPC.Items => _Items;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IItemEntryGetter> INPCGetter.Items => _Items;
+        IReadOnlySetList<IItemEntryInternalGetter> INPCGetter.Items => _Items;
         #endregion
 
         #endregion
@@ -1013,20 +1008,33 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is INPCInternalGetter rhs)) return false;
-            return ((NPCCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            return ((NPCCommon)((INPCInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(NPC obj)
         {
-            return ((NPCCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((NPCCommon)((INPCInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((NPCCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((NPCCommon)((INPCInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected override object XmlWriteTranslator => NPCXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((NPCXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static NPC CreateFromXml(
@@ -1431,6 +1439,19 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Binary Translation
         protected override object BinaryWriteTranslator => NPCBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((NPCBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
         #region Binary Create
         [DebuggerStepThrough]
         public static NPC CreateFromBinary(
@@ -1981,7 +2002,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            NPCCommon.CopyFieldsFrom(
+            NPCSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -1996,7 +2017,7 @@ namespace Mutagen.Bethesda.Oblivion
             NPC_CopyMask copyMask = null,
             NPC def = null)
         {
-            NPCCommon.CopyFieldsFrom(
+            NPCSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -2221,7 +2242,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            NPCCommon.Instance.Clear(this);
+            NPCSetterCommon.Instance.Clear(this);
         }
 
         public new static NPC Create(IEnumerable<KeyValuePair<ushort, object>> fields)
@@ -2651,7 +2672,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Model
-        IModelGetter Model { get; }
+        IModelInternalGetter Model { get; }
         bool Model_IsSet { get; }
 
         #endregion
@@ -2684,7 +2705,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Factions
-        IReadOnlySetList<IRankPlacementGetter> Factions { get; }
+        IReadOnlySetList<IRankPlacementInternalGetter> Factions { get; }
         #endregion
         #region DeathItem
         IItemAbstractInternalGetter DeathItem { get; }
@@ -2705,7 +2726,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Items
-        IReadOnlySetList<IItemEntryGetter> Items { get; }
+        IReadOnlySetList<IItemEntryInternalGetter> Items { get; }
         #endregion
         #region Aggression
         Byte Aggression { get; }
@@ -2942,7 +2963,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this INPCInternal item)
         {
-            ((NPCCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((NPCSetterCommon)((INPCInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static NPC_Mask<bool> GetEqualsMask(
@@ -2950,7 +2971,7 @@ namespace Mutagen.Bethesda.Oblivion
             INPCInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((NPCCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((NPCCommon)((INPCInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -2961,7 +2982,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             NPC_Mask<bool> printMask = null)
         {
-            return ((NPCCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((NPCCommon)((INPCInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -2973,7 +2994,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             NPC_Mask<bool> printMask = null)
         {
-            ((NPCCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((NPCCommon)((INPCInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -2984,7 +3005,7 @@ namespace Mutagen.Bethesda.Oblivion
             this INPCInternalGetter item,
             NPC_Mask<bool?> checkMask)
         {
-            return ((NPCCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((NPCCommon)((INPCInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -2992,7 +3013,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static NPC_Mask<bool> GetHasBeenSetMask(this INPCInternalGetter item)
         {
             var ret = new NPC_Mask<bool>();
-            ((NPCCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((NPCCommon)((INPCInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -3002,7 +3023,7 @@ namespace Mutagen.Bethesda.Oblivion
             this INPCInternalGetter item,
             INPCInternalGetter rhs)
         {
-            return ((NPCCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((NPCCommon)((INPCInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -3124,8 +3145,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type SetterType = typeof(INPC);
 
         public static readonly Type InternalSetterType = typeof(INPCInternal);
-
-        public static readonly Type CommonType = typeof(NPCCommon);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.NPC";
 
@@ -4013,7 +4032,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -4033,9 +4051,1178 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
+    public partial class NPCSetterCommon : NPCAbstractSetterCommon
+    {
+        public new static readonly NPCSetterCommon Instance = new NPCSetterCommon();
+
+        partial void ClearPartial();
+        
+        public virtual void Clear(INPCInternal item)
+        {
+            ClearPartial();
+            item.Name_Unset();
+            item.Model_Unset();
+            item.Flags = default(NPC.NPCFlag);
+            item.BaseSpellPoints = default(UInt16);
+            item.Fatigue = default(UInt16);
+            item.BarterGold = default(UInt16);
+            item.LevelOffset = default(Int16);
+            item.CalcMin = default(UInt16);
+            item.CalcMax = default(UInt16);
+            item.Factions.Unset();
+            item.DeathItem_Property.Unset();
+            item.Race_Property.Unset();
+            item.Spells.Unset();
+            item.Script_Property.Unset();
+            item.Items.Unset();
+            item.Aggression = default(Byte);
+            item.Confidence = default(Byte);
+            item.EnergyLevel = default(Byte);
+            item.Responsibility = default(Byte);
+            item.BuySellServices = default(NPC.BuySellServiceFlag);
+            item.Teaches = default(Skill);
+            item.MaximumTrainingLevel = default(Byte);
+            item.Fluff = default(Byte[]);
+            item.AIPackages.Unset();
+            item.Animations.Unset();
+            item.Class_Property.Unset();
+            item.Armorer = default(Byte);
+            item.Athletics = default(Byte);
+            item.Blade = default(Byte);
+            item.Block = default(Byte);
+            item.Blunt = default(Byte);
+            item.HandToHand = default(Byte);
+            item.HeavyArmor = default(Byte);
+            item.Alchemy = default(Byte);
+            item.Alteration = default(Byte);
+            item.Conjuration = default(Byte);
+            item.Destruction = default(Byte);
+            item.Illusion = default(Byte);
+            item.Mysticism = default(Byte);
+            item.Restoration = default(Byte);
+            item.Acrobatics = default(Byte);
+            item.LightArmor = default(Byte);
+            item.Marksman = default(Byte);
+            item.Mercantile = default(Byte);
+            item.Security = default(Byte);
+            item.Sneak = default(Byte);
+            item.Speechcraft = default(Byte);
+            item.Health = default(UInt32);
+            item.Strength = default(Byte);
+            item.Intelligence = default(Byte);
+            item.Willpower = default(Byte);
+            item.Agility = default(Byte);
+            item.Speed = default(Byte);
+            item.Endurance = default(Byte);
+            item.Personality = default(Byte);
+            item.Luck = default(Byte);
+            item.Hair_Property.Unset();
+            item.HairLength_Unset();
+            item.Eyes.Unset();
+            item.HairColor_Unset();
+            item.CombatStyle_Property.Unset();
+            item.FaceGenGeometrySymmetric_Unset();
+            item.FaceGenGeometryAsymmetric_Unset();
+            item.FaceGenTextureSymmetric_Unset();
+            item.Unknown_Unset();
+            base.Clear(item);
+        }
+        
+        public override void Clear(INPCAbstractInternal item)
+        {
+            Clear(item: (INPCInternal)item);
+        }
+        
+        public override void Clear(INPCSpawnInternal item)
+        {
+            Clear(item: (INPCInternal)item);
+        }
+        
+        public override void Clear(IOblivionMajorRecordInternal item)
+        {
+            Clear(item: (INPCInternal)item);
+        }
+        
+        public override void Clear(IMajorRecordInternal item)
+        {
+            Clear(item: (INPCInternal)item);
+        }
+        
+        
+    }
     public partial class NPCCommon : NPCAbstractCommon
     {
-        public static readonly NPCCommon Instance = new NPCCommon();
+        public new static readonly NPCCommon Instance = new NPCCommon();
+
+        public NPC_Mask<bool> GetEqualsMask(
+            INPCInternalGetter item,
+            INPCInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new NPC_Mask<bool>();
+            ((NPCCommon)((INPCInternalGetter)item).CommonInstance()).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+        
+        public void FillEqualsMask(
+            INPCInternalGetter item,
+            INPCInternalGetter rhs,
+            NPC_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            if (rhs == null) return;
+            ret.Name = item.Name_IsSet == rhs.Name_IsSet && string.Equals(item.Name, rhs.Name);
+            ret.Model = EqualsMaskHelper.EqualsHelper(
+                item.Model_IsSet,
+                rhs.Model_IsSet,
+                item.Model,
+                rhs.Model,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.BaseSpellPoints = item.BaseSpellPoints == rhs.BaseSpellPoints;
+            ret.Fatigue = item.Fatigue == rhs.Fatigue;
+            ret.BarterGold = item.BarterGold == rhs.BarterGold;
+            ret.LevelOffset = item.LevelOffset == rhs.LevelOffset;
+            ret.CalcMin = item.CalcMin == rhs.CalcMin;
+            ret.CalcMax = item.CalcMax == rhs.CalcMax;
+            ret.Factions = item.Factions.CollectionEqualsHelper(
+                rhs.Factions,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.DeathItem = item.DeathItem_Property.FormKey == rhs.DeathItem_Property.FormKey;
+            ret.Race = item.Race_Property.FormKey == rhs.Race_Property.FormKey;
+            ret.Spells = item.Spells.CollectionEqualsHelper(
+                rhs.Spells,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.Script = item.Script_Property.FormKey == rhs.Script_Property.FormKey;
+            ret.Items = item.Items.CollectionEqualsHelper(
+                rhs.Items,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Aggression = item.Aggression == rhs.Aggression;
+            ret.Confidence = item.Confidence == rhs.Confidence;
+            ret.EnergyLevel = item.EnergyLevel == rhs.EnergyLevel;
+            ret.Responsibility = item.Responsibility == rhs.Responsibility;
+            ret.BuySellServices = item.BuySellServices == rhs.BuySellServices;
+            ret.Teaches = item.Teaches == rhs.Teaches;
+            ret.MaximumTrainingLevel = item.MaximumTrainingLevel == rhs.MaximumTrainingLevel;
+            ret.Fluff = MemoryExtensions.SequenceEqual(item.Fluff, rhs.Fluff);
+            ret.AIPackages = item.AIPackages.CollectionEqualsHelper(
+                rhs.AIPackages,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.Animations = item.Animations.CollectionEqualsHelper(
+                rhs.Animations,
+                (l, r) => string.Equals(l, r),
+                include);
+            ret.Class = item.Class_Property.FormKey == rhs.Class_Property.FormKey;
+            ret.Armorer = item.Armorer == rhs.Armorer;
+            ret.Athletics = item.Athletics == rhs.Athletics;
+            ret.Blade = item.Blade == rhs.Blade;
+            ret.Block = item.Block == rhs.Block;
+            ret.Blunt = item.Blunt == rhs.Blunt;
+            ret.HandToHand = item.HandToHand == rhs.HandToHand;
+            ret.HeavyArmor = item.HeavyArmor == rhs.HeavyArmor;
+            ret.Alchemy = item.Alchemy == rhs.Alchemy;
+            ret.Alteration = item.Alteration == rhs.Alteration;
+            ret.Conjuration = item.Conjuration == rhs.Conjuration;
+            ret.Destruction = item.Destruction == rhs.Destruction;
+            ret.Illusion = item.Illusion == rhs.Illusion;
+            ret.Mysticism = item.Mysticism == rhs.Mysticism;
+            ret.Restoration = item.Restoration == rhs.Restoration;
+            ret.Acrobatics = item.Acrobatics == rhs.Acrobatics;
+            ret.LightArmor = item.LightArmor == rhs.LightArmor;
+            ret.Marksman = item.Marksman == rhs.Marksman;
+            ret.Mercantile = item.Mercantile == rhs.Mercantile;
+            ret.Security = item.Security == rhs.Security;
+            ret.Sneak = item.Sneak == rhs.Sneak;
+            ret.Speechcraft = item.Speechcraft == rhs.Speechcraft;
+            ret.Health = item.Health == rhs.Health;
+            ret.Strength = item.Strength == rhs.Strength;
+            ret.Intelligence = item.Intelligence == rhs.Intelligence;
+            ret.Willpower = item.Willpower == rhs.Willpower;
+            ret.Agility = item.Agility == rhs.Agility;
+            ret.Speed = item.Speed == rhs.Speed;
+            ret.Endurance = item.Endurance == rhs.Endurance;
+            ret.Personality = item.Personality == rhs.Personality;
+            ret.Luck = item.Luck == rhs.Luck;
+            ret.Hair = item.Hair_Property.FormKey == rhs.Hair_Property.FormKey;
+            ret.HairLength = item.HairLength_IsSet == rhs.HairLength_IsSet && item.HairLength.EqualsWithin(rhs.HairLength);
+            ret.Eyes = item.Eyes.CollectionEqualsHelper(
+                rhs.Eyes,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.HairColor = item.HairColor_IsSet == rhs.HairColor_IsSet && item.HairColor.ColorOnlyEquals(rhs.HairColor);
+            ret.CombatStyle = item.CombatStyle_Property.FormKey == rhs.CombatStyle_Property.FormKey;
+            ret.FaceGenGeometrySymmetric = item.FaceGenGeometrySymmetric_IsSet == rhs.FaceGenGeometrySymmetric_IsSet && MemoryExtensions.SequenceEqual(item.FaceGenGeometrySymmetric, rhs.FaceGenGeometrySymmetric);
+            ret.FaceGenGeometryAsymmetric = item.FaceGenGeometryAsymmetric_IsSet == rhs.FaceGenGeometryAsymmetric_IsSet && MemoryExtensions.SequenceEqual(item.FaceGenGeometryAsymmetric, rhs.FaceGenGeometryAsymmetric);
+            ret.FaceGenTextureSymmetric = item.FaceGenTextureSymmetric_IsSet == rhs.FaceGenTextureSymmetric_IsSet && MemoryExtensions.SequenceEqual(item.FaceGenTextureSymmetric, rhs.FaceGenTextureSymmetric);
+            ret.Unknown = item.Unknown_IsSet == rhs.Unknown_IsSet && MemoryExtensions.SequenceEqual(item.Unknown, rhs.Unknown);
+            base.FillEqualsMask(item, rhs, ret, include);
+        }
+        
+        public string ToString(
+            INPCInternalGetter item,
+            string name = null,
+            NPC_Mask<bool> printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+            return fg.ToString();
+        }
+        
+        public void ToString(
+            INPCInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            NPC_Mask<bool> printMask = null)
+        {
+            if (name == null)
+            {
+                fg.AppendLine($"NPC =>");
+            }
+            else
+            {
+                fg.AppendLine($"{name} (NPC) =>");
+            }
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
+            }
+            fg.AppendLine("]");
+        }
+        
+        protected static void ToStringFields(
+            INPCInternalGetter item,
+            FileGeneration fg,
+            NPC_Mask<bool> printMask = null)
+        {
+            NPCAbstractCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.Name ?? true)
+            {
+                fg.AppendLine($"Name => {item.Name}");
+            }
+            if (printMask?.Model?.Overall ?? true)
+            {
+                item.Model?.ToString(fg, "Model");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                fg.AppendLine($"Flags => {item.Flags}");
+            }
+            if (printMask?.BaseSpellPoints ?? true)
+            {
+                fg.AppendLine($"BaseSpellPoints => {item.BaseSpellPoints}");
+            }
+            if (printMask?.Fatigue ?? true)
+            {
+                fg.AppendLine($"Fatigue => {item.Fatigue}");
+            }
+            if (printMask?.BarterGold ?? true)
+            {
+                fg.AppendLine($"BarterGold => {item.BarterGold}");
+            }
+            if (printMask?.LevelOffset ?? true)
+            {
+                fg.AppendLine($"LevelOffset => {item.LevelOffset}");
+            }
+            if (printMask?.CalcMin ?? true)
+            {
+                fg.AppendLine($"CalcMin => {item.CalcMin}");
+            }
+            if (printMask?.CalcMax ?? true)
+            {
+                fg.AppendLine($"CalcMax => {item.CalcMax}");
+            }
+            if (printMask?.Factions?.Overall ?? true)
+            {
+                fg.AppendLine("Factions =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Factions)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.DeathItem ?? true)
+            {
+                fg.AppendLine($"DeathItem => {item.DeathItem_Property}");
+            }
+            if (printMask?.Race ?? true)
+            {
+                fg.AppendLine($"Race => {item.Race_Property}");
+            }
+            if (printMask?.Spells?.Overall ?? true)
+            {
+                fg.AppendLine("Spells =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Spells)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"Item => {subItem}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.Script ?? true)
+            {
+                fg.AppendLine($"Script => {item.Script_Property}");
+            }
+            if (printMask?.Items?.Overall ?? true)
+            {
+                fg.AppendLine("Items =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Items)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.Aggression ?? true)
+            {
+                fg.AppendLine($"Aggression => {item.Aggression}");
+            }
+            if (printMask?.Confidence ?? true)
+            {
+                fg.AppendLine($"Confidence => {item.Confidence}");
+            }
+            if (printMask?.EnergyLevel ?? true)
+            {
+                fg.AppendLine($"EnergyLevel => {item.EnergyLevel}");
+            }
+            if (printMask?.Responsibility ?? true)
+            {
+                fg.AppendLine($"Responsibility => {item.Responsibility}");
+            }
+            if (printMask?.BuySellServices ?? true)
+            {
+                fg.AppendLine($"BuySellServices => {item.BuySellServices}");
+            }
+            if (printMask?.Teaches ?? true)
+            {
+                fg.AppendLine($"Teaches => {item.Teaches}");
+            }
+            if (printMask?.MaximumTrainingLevel ?? true)
+            {
+                fg.AppendLine($"MaximumTrainingLevel => {item.MaximumTrainingLevel}");
+            }
+            if (printMask?.Fluff ?? true)
+            {
+                fg.AppendLine($"Fluff => {SpanExt.ToHexString(item.Fluff)}");
+            }
+            if (printMask?.AIPackages?.Overall ?? true)
+            {
+                fg.AppendLine("AIPackages =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.AIPackages)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"Item => {subItem}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.Animations?.Overall ?? true)
+            {
+                fg.AppendLine("Animations =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Animations)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"Item => {subItem}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.Class ?? true)
+            {
+                fg.AppendLine($"Class => {item.Class_Property}");
+            }
+            if (printMask?.Armorer ?? true)
+            {
+                fg.AppendLine($"Armorer => {item.Armorer}");
+            }
+            if (printMask?.Athletics ?? true)
+            {
+                fg.AppendLine($"Athletics => {item.Athletics}");
+            }
+            if (printMask?.Blade ?? true)
+            {
+                fg.AppendLine($"Blade => {item.Blade}");
+            }
+            if (printMask?.Block ?? true)
+            {
+                fg.AppendLine($"Block => {item.Block}");
+            }
+            if (printMask?.Blunt ?? true)
+            {
+                fg.AppendLine($"Blunt => {item.Blunt}");
+            }
+            if (printMask?.HandToHand ?? true)
+            {
+                fg.AppendLine($"HandToHand => {item.HandToHand}");
+            }
+            if (printMask?.HeavyArmor ?? true)
+            {
+                fg.AppendLine($"HeavyArmor => {item.HeavyArmor}");
+            }
+            if (printMask?.Alchemy ?? true)
+            {
+                fg.AppendLine($"Alchemy => {item.Alchemy}");
+            }
+            if (printMask?.Alteration ?? true)
+            {
+                fg.AppendLine($"Alteration => {item.Alteration}");
+            }
+            if (printMask?.Conjuration ?? true)
+            {
+                fg.AppendLine($"Conjuration => {item.Conjuration}");
+            }
+            if (printMask?.Destruction ?? true)
+            {
+                fg.AppendLine($"Destruction => {item.Destruction}");
+            }
+            if (printMask?.Illusion ?? true)
+            {
+                fg.AppendLine($"Illusion => {item.Illusion}");
+            }
+            if (printMask?.Mysticism ?? true)
+            {
+                fg.AppendLine($"Mysticism => {item.Mysticism}");
+            }
+            if (printMask?.Restoration ?? true)
+            {
+                fg.AppendLine($"Restoration => {item.Restoration}");
+            }
+            if (printMask?.Acrobatics ?? true)
+            {
+                fg.AppendLine($"Acrobatics => {item.Acrobatics}");
+            }
+            if (printMask?.LightArmor ?? true)
+            {
+                fg.AppendLine($"LightArmor => {item.LightArmor}");
+            }
+            if (printMask?.Marksman ?? true)
+            {
+                fg.AppendLine($"Marksman => {item.Marksman}");
+            }
+            if (printMask?.Mercantile ?? true)
+            {
+                fg.AppendLine($"Mercantile => {item.Mercantile}");
+            }
+            if (printMask?.Security ?? true)
+            {
+                fg.AppendLine($"Security => {item.Security}");
+            }
+            if (printMask?.Sneak ?? true)
+            {
+                fg.AppendLine($"Sneak => {item.Sneak}");
+            }
+            if (printMask?.Speechcraft ?? true)
+            {
+                fg.AppendLine($"Speechcraft => {item.Speechcraft}");
+            }
+            if (printMask?.Health ?? true)
+            {
+                fg.AppendLine($"Health => {item.Health}");
+            }
+            if (printMask?.Strength ?? true)
+            {
+                fg.AppendLine($"Strength => {item.Strength}");
+            }
+            if (printMask?.Intelligence ?? true)
+            {
+                fg.AppendLine($"Intelligence => {item.Intelligence}");
+            }
+            if (printMask?.Willpower ?? true)
+            {
+                fg.AppendLine($"Willpower => {item.Willpower}");
+            }
+            if (printMask?.Agility ?? true)
+            {
+                fg.AppendLine($"Agility => {item.Agility}");
+            }
+            if (printMask?.Speed ?? true)
+            {
+                fg.AppendLine($"Speed => {item.Speed}");
+            }
+            if (printMask?.Endurance ?? true)
+            {
+                fg.AppendLine($"Endurance => {item.Endurance}");
+            }
+            if (printMask?.Personality ?? true)
+            {
+                fg.AppendLine($"Personality => {item.Personality}");
+            }
+            if (printMask?.Luck ?? true)
+            {
+                fg.AppendLine($"Luck => {item.Luck}");
+            }
+            if (printMask?.Hair ?? true)
+            {
+                fg.AppendLine($"Hair => {item.Hair_Property}");
+            }
+            if (printMask?.HairLength ?? true)
+            {
+                fg.AppendLine($"HairLength => {item.HairLength}");
+            }
+            if (printMask?.Eyes?.Overall ?? true)
+            {
+                fg.AppendLine("Eyes =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Eyes)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"Item => {subItem}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.HairColor ?? true)
+            {
+                fg.AppendLine($"HairColor => {item.HairColor}");
+            }
+            if (printMask?.CombatStyle ?? true)
+            {
+                fg.AppendLine($"CombatStyle => {item.CombatStyle_Property}");
+            }
+            if (printMask?.FaceGenGeometrySymmetric ?? true)
+            {
+                fg.AppendLine($"FaceGenGeometrySymmetric => {SpanExt.ToHexString(item.FaceGenGeometrySymmetric)}");
+            }
+            if (printMask?.FaceGenGeometryAsymmetric ?? true)
+            {
+                fg.AppendLine($"FaceGenGeometryAsymmetric => {SpanExt.ToHexString(item.FaceGenGeometryAsymmetric)}");
+            }
+            if (printMask?.FaceGenTextureSymmetric ?? true)
+            {
+                fg.AppendLine($"FaceGenTextureSymmetric => {SpanExt.ToHexString(item.FaceGenTextureSymmetric)}");
+            }
+            if (printMask?.Unknown ?? true)
+            {
+                fg.AppendLine($"Unknown => {SpanExt.ToHexString(item.Unknown)}");
+            }
+            if (printMask?.ACBSDataTypeState ?? true)
+            {
+            }
+            if (printMask?.AIDTDataTypeState ?? true)
+            {
+            }
+            if (printMask?.DATADataTypeState ?? true)
+            {
+            }
+        }
+        
+        public bool HasBeenSet(
+            INPCInternalGetter item,
+            NPC_Mask<bool?> checkMask)
+        {
+            if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_IsSet) return false;
+            if (checkMask.Model.Overall.HasValue && checkMask.Model.Overall.Value != item.Model_IsSet) return false;
+            if (checkMask.Model.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
+            if (checkMask.Factions.Overall.HasValue && checkMask.Factions.Overall.Value != item.Factions.HasBeenSet) return false;
+            if (checkMask.DeathItem.HasValue && checkMask.DeathItem.Value != item.DeathItem_Property.HasBeenSet) return false;
+            if (checkMask.Race.HasValue && checkMask.Race.Value != item.Race_Property.HasBeenSet) return false;
+            if (checkMask.Spells.Overall.HasValue && checkMask.Spells.Overall.Value != item.Spells.HasBeenSet) return false;
+            if (checkMask.Script.HasValue && checkMask.Script.Value != item.Script_Property.HasBeenSet) return false;
+            if (checkMask.Items.Overall.HasValue && checkMask.Items.Overall.Value != item.Items.HasBeenSet) return false;
+            if (checkMask.AIPackages.Overall.HasValue && checkMask.AIPackages.Overall.Value != item.AIPackages.HasBeenSet) return false;
+            if (checkMask.Animations.Overall.HasValue && checkMask.Animations.Overall.Value != item.Animations.HasBeenSet) return false;
+            if (checkMask.Class.HasValue && checkMask.Class.Value != item.Class_Property.HasBeenSet) return false;
+            if (checkMask.Hair.HasValue && checkMask.Hair.Value != item.Hair_Property.HasBeenSet) return false;
+            if (checkMask.HairLength.HasValue && checkMask.HairLength.Value != item.HairLength_IsSet) return false;
+            if (checkMask.Eyes.Overall.HasValue && checkMask.Eyes.Overall.Value != item.Eyes.HasBeenSet) return false;
+            if (checkMask.HairColor.HasValue && checkMask.HairColor.Value != item.HairColor_IsSet) return false;
+            if (checkMask.CombatStyle.HasValue && checkMask.CombatStyle.Value != item.CombatStyle_Property.HasBeenSet) return false;
+            if (checkMask.FaceGenGeometrySymmetric.HasValue && checkMask.FaceGenGeometrySymmetric.Value != item.FaceGenGeometrySymmetric_IsSet) return false;
+            if (checkMask.FaceGenGeometryAsymmetric.HasValue && checkMask.FaceGenGeometryAsymmetric.Value != item.FaceGenGeometryAsymmetric_IsSet) return false;
+            if (checkMask.FaceGenTextureSymmetric.HasValue && checkMask.FaceGenTextureSymmetric.Value != item.FaceGenTextureSymmetric_IsSet) return false;
+            if (checkMask.Unknown.HasValue && checkMask.Unknown.Value != item.Unknown_IsSet) return false;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+        
+        public void FillHasBeenSetMask(
+            INPCInternalGetter item,
+            NPC_Mask<bool> mask)
+        {
+            mask.Name = item.Name_IsSet;
+            mask.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, item.Model.GetHasBeenSetMask());
+            mask.Flags = true;
+            mask.BaseSpellPoints = true;
+            mask.Fatigue = true;
+            mask.BarterGold = true;
+            mask.LevelOffset = true;
+            mask.CalcMin = true;
+            mask.CalcMax = true;
+            mask.Factions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, RankPlacement_Mask<bool>>>>(item.Factions.HasBeenSet, item.Factions.WithIndex().Select((i) => new MaskItemIndexed<bool, RankPlacement_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.DeathItem = item.DeathItem_Property.HasBeenSet;
+            mask.Race = item.Race_Property.HasBeenSet;
+            mask.Spells = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Spells.HasBeenSet, null);
+            mask.Script = item.Script_Property.HasBeenSet;
+            mask.Items = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, ItemEntry_Mask<bool>>>>(item.Items.HasBeenSet, item.Items.WithIndex().Select((i) => new MaskItemIndexed<bool, ItemEntry_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.Aggression = true;
+            mask.Confidence = true;
+            mask.EnergyLevel = true;
+            mask.Responsibility = true;
+            mask.BuySellServices = true;
+            mask.Teaches = true;
+            mask.MaximumTrainingLevel = true;
+            mask.Fluff = true;
+            mask.AIPackages = new MaskItem<bool, IEnumerable<(int, bool)>>(item.AIPackages.HasBeenSet, null);
+            mask.Animations = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Animations.HasBeenSet, null);
+            mask.Class = item.Class_Property.HasBeenSet;
+            mask.Armorer = true;
+            mask.Athletics = true;
+            mask.Blade = true;
+            mask.Block = true;
+            mask.Blunt = true;
+            mask.HandToHand = true;
+            mask.HeavyArmor = true;
+            mask.Alchemy = true;
+            mask.Alteration = true;
+            mask.Conjuration = true;
+            mask.Destruction = true;
+            mask.Illusion = true;
+            mask.Mysticism = true;
+            mask.Restoration = true;
+            mask.Acrobatics = true;
+            mask.LightArmor = true;
+            mask.Marksman = true;
+            mask.Mercantile = true;
+            mask.Security = true;
+            mask.Sneak = true;
+            mask.Speechcraft = true;
+            mask.Health = true;
+            mask.Strength = true;
+            mask.Intelligence = true;
+            mask.Willpower = true;
+            mask.Agility = true;
+            mask.Speed = true;
+            mask.Endurance = true;
+            mask.Personality = true;
+            mask.Luck = true;
+            mask.Hair = item.Hair_Property.HasBeenSet;
+            mask.HairLength = item.HairLength_IsSet;
+            mask.Eyes = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Eyes.HasBeenSet, null);
+            mask.HairColor = item.HairColor_IsSet;
+            mask.CombatStyle = item.CombatStyle_Property.HasBeenSet;
+            mask.FaceGenGeometrySymmetric = item.FaceGenGeometrySymmetric_IsSet;
+            mask.FaceGenGeometryAsymmetric = item.FaceGenGeometryAsymmetric_IsSet;
+            mask.FaceGenTextureSymmetric = item.FaceGenTextureSymmetric_IsSet;
+            mask.Unknown = item.Unknown_IsSet;
+            mask.ACBSDataTypeState = true;
+            mask.AIDTDataTypeState = true;
+            mask.DATADataTypeState = true;
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
+        }
+        
+        public static NPC_FieldIndex ConvertFieldIndex(NPCAbstract_FieldIndex index)
+        {
+            switch (index)
+            {
+                case NPCAbstract_FieldIndex.MajorRecordFlagsRaw:
+                    return (NPC_FieldIndex)((int)index);
+                case NPCAbstract_FieldIndex.FormKey:
+                    return (NPC_FieldIndex)((int)index);
+                case NPCAbstract_FieldIndex.Version:
+                    return (NPC_FieldIndex)((int)index);
+                case NPCAbstract_FieldIndex.EditorID:
+                    return (NPC_FieldIndex)((int)index);
+                case NPCAbstract_FieldIndex.OblivionMajorRecordFlags:
+                    return (NPC_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        public static NPC_FieldIndex ConvertFieldIndex(NPCSpawn_FieldIndex index)
+        {
+            switch (index)
+            {
+                case NPCSpawn_FieldIndex.MajorRecordFlagsRaw:
+                    return (NPC_FieldIndex)((int)index);
+                case NPCSpawn_FieldIndex.FormKey:
+                    return (NPC_FieldIndex)((int)index);
+                case NPCSpawn_FieldIndex.Version:
+                    return (NPC_FieldIndex)((int)index);
+                case NPCSpawn_FieldIndex.EditorID:
+                    return (NPC_FieldIndex)((int)index);
+                case NPCSpawn_FieldIndex.OblivionMajorRecordFlags:
+                    return (NPC_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        public static NPC_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (NPC_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.FormKey:
+                    return (NPC_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.Version:
+                    return (NPC_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.EditorID:
+                    return (NPC_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
+                    return (NPC_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        public static NPC_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (NPC_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.FormKey:
+                    return (NPC_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.Version:
+                    return (NPC_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.EditorID:
+                    return (NPC_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        #region Equals and Hash
+        public virtual bool Equals(
+            INPCInternalGetter lhs,
+            INPCInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.Name_IsSet != rhs.Name_IsSet) return false;
+            if (lhs.Name_IsSet)
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if (lhs.Model_IsSet != rhs.Model_IsSet) return false;
+            if (lhs.Model_IsSet)
+            {
+                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            }
+            if (lhs.Flags != rhs.Flags) return false;
+            if (lhs.BaseSpellPoints != rhs.BaseSpellPoints) return false;
+            if (lhs.Fatigue != rhs.Fatigue) return false;
+            if (lhs.BarterGold != rhs.BarterGold) return false;
+            if (lhs.LevelOffset != rhs.LevelOffset) return false;
+            if (lhs.CalcMin != rhs.CalcMin) return false;
+            if (lhs.CalcMax != rhs.CalcMax) return false;
+            if (lhs.Factions.HasBeenSet != rhs.Factions.HasBeenSet) return false;
+            if (lhs.Factions.HasBeenSet)
+            {
+                if (!lhs.Factions.SequenceEqual(rhs.Factions)) return false;
+            }
+            if (lhs.DeathItem_Property.HasBeenSet != rhs.DeathItem_Property.HasBeenSet) return false;
+            if (lhs.DeathItem_Property.HasBeenSet)
+            {
+                if (!lhs.DeathItem_Property.Equals(rhs.DeathItem_Property)) return false;
+            }
+            if (lhs.Race_Property.HasBeenSet != rhs.Race_Property.HasBeenSet) return false;
+            if (lhs.Race_Property.HasBeenSet)
+            {
+                if (!lhs.Race_Property.Equals(rhs.Race_Property)) return false;
+            }
+            if (lhs.Spells.HasBeenSet != rhs.Spells.HasBeenSet) return false;
+            if (lhs.Spells.HasBeenSet)
+            {
+                if (!lhs.Spells.SequenceEqual(rhs.Spells)) return false;
+            }
+            if (lhs.Script_Property.HasBeenSet != rhs.Script_Property.HasBeenSet) return false;
+            if (lhs.Script_Property.HasBeenSet)
+            {
+                if (!lhs.Script_Property.Equals(rhs.Script_Property)) return false;
+            }
+            if (lhs.Items.HasBeenSet != rhs.Items.HasBeenSet) return false;
+            if (lhs.Items.HasBeenSet)
+            {
+                if (!lhs.Items.SequenceEqual(rhs.Items)) return false;
+            }
+            if (lhs.Aggression != rhs.Aggression) return false;
+            if (lhs.Confidence != rhs.Confidence) return false;
+            if (lhs.EnergyLevel != rhs.EnergyLevel) return false;
+            if (lhs.Responsibility != rhs.Responsibility) return false;
+            if (lhs.BuySellServices != rhs.BuySellServices) return false;
+            if (lhs.Teaches != rhs.Teaches) return false;
+            if (lhs.MaximumTrainingLevel != rhs.MaximumTrainingLevel) return false;
+            if (!MemoryExtensions.SequenceEqual(lhs.Fluff, rhs.Fluff)) return false;
+            if (lhs.AIPackages.HasBeenSet != rhs.AIPackages.HasBeenSet) return false;
+            if (lhs.AIPackages.HasBeenSet)
+            {
+                if (!lhs.AIPackages.SequenceEqual(rhs.AIPackages)) return false;
+            }
+            if (lhs.Animations.HasBeenSet != rhs.Animations.HasBeenSet) return false;
+            if (lhs.Animations.HasBeenSet)
+            {
+                if (!lhs.Animations.SequenceEqual(rhs.Animations)) return false;
+            }
+            if (lhs.Class_Property.HasBeenSet != rhs.Class_Property.HasBeenSet) return false;
+            if (lhs.Class_Property.HasBeenSet)
+            {
+                if (!lhs.Class_Property.Equals(rhs.Class_Property)) return false;
+            }
+            if (lhs.Armorer != rhs.Armorer) return false;
+            if (lhs.Athletics != rhs.Athletics) return false;
+            if (lhs.Blade != rhs.Blade) return false;
+            if (lhs.Block != rhs.Block) return false;
+            if (lhs.Blunt != rhs.Blunt) return false;
+            if (lhs.HandToHand != rhs.HandToHand) return false;
+            if (lhs.HeavyArmor != rhs.HeavyArmor) return false;
+            if (lhs.Alchemy != rhs.Alchemy) return false;
+            if (lhs.Alteration != rhs.Alteration) return false;
+            if (lhs.Conjuration != rhs.Conjuration) return false;
+            if (lhs.Destruction != rhs.Destruction) return false;
+            if (lhs.Illusion != rhs.Illusion) return false;
+            if (lhs.Mysticism != rhs.Mysticism) return false;
+            if (lhs.Restoration != rhs.Restoration) return false;
+            if (lhs.Acrobatics != rhs.Acrobatics) return false;
+            if (lhs.LightArmor != rhs.LightArmor) return false;
+            if (lhs.Marksman != rhs.Marksman) return false;
+            if (lhs.Mercantile != rhs.Mercantile) return false;
+            if (lhs.Security != rhs.Security) return false;
+            if (lhs.Sneak != rhs.Sneak) return false;
+            if (lhs.Speechcraft != rhs.Speechcraft) return false;
+            if (lhs.Health != rhs.Health) return false;
+            if (lhs.Strength != rhs.Strength) return false;
+            if (lhs.Intelligence != rhs.Intelligence) return false;
+            if (lhs.Willpower != rhs.Willpower) return false;
+            if (lhs.Agility != rhs.Agility) return false;
+            if (lhs.Speed != rhs.Speed) return false;
+            if (lhs.Endurance != rhs.Endurance) return false;
+            if (lhs.Personality != rhs.Personality) return false;
+            if (lhs.Luck != rhs.Luck) return false;
+            if (lhs.Hair_Property.HasBeenSet != rhs.Hair_Property.HasBeenSet) return false;
+            if (lhs.Hair_Property.HasBeenSet)
+            {
+                if (!lhs.Hair_Property.Equals(rhs.Hair_Property)) return false;
+            }
+            if (lhs.HairLength_IsSet != rhs.HairLength_IsSet) return false;
+            if (lhs.HairLength_IsSet)
+            {
+                if (!lhs.HairLength.EqualsWithin(rhs.HairLength)) return false;
+            }
+            if (lhs.Eyes.HasBeenSet != rhs.Eyes.HasBeenSet) return false;
+            if (lhs.Eyes.HasBeenSet)
+            {
+                if (!lhs.Eyes.SequenceEqual(rhs.Eyes)) return false;
+            }
+            if (lhs.HairColor_IsSet != rhs.HairColor_IsSet) return false;
+            if (lhs.HairColor_IsSet)
+            {
+                if (!lhs.HairColor.ColorOnlyEquals(rhs.HairColor)) return false;
+            }
+            if (lhs.CombatStyle_Property.HasBeenSet != rhs.CombatStyle_Property.HasBeenSet) return false;
+            if (lhs.CombatStyle_Property.HasBeenSet)
+            {
+                if (!lhs.CombatStyle_Property.Equals(rhs.CombatStyle_Property)) return false;
+            }
+            if (lhs.FaceGenGeometrySymmetric_IsSet != rhs.FaceGenGeometrySymmetric_IsSet) return false;
+            if (lhs.FaceGenGeometrySymmetric_IsSet)
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.FaceGenGeometrySymmetric, rhs.FaceGenGeometrySymmetric)) return false;
+            }
+            if (lhs.FaceGenGeometryAsymmetric_IsSet != rhs.FaceGenGeometryAsymmetric_IsSet) return false;
+            if (lhs.FaceGenGeometryAsymmetric_IsSet)
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.FaceGenGeometryAsymmetric, rhs.FaceGenGeometryAsymmetric)) return false;
+            }
+            if (lhs.FaceGenTextureSymmetric_IsSet != rhs.FaceGenTextureSymmetric_IsSet) return false;
+            if (lhs.FaceGenTextureSymmetric_IsSet)
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.FaceGenTextureSymmetric, rhs.FaceGenTextureSymmetric)) return false;
+            }
+            if (lhs.Unknown_IsSet != rhs.Unknown_IsSet) return false;
+            if (lhs.Unknown_IsSet)
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.Unknown, rhs.Unknown)) return false;
+            }
+            if (lhs.ACBSDataTypeState != rhs.ACBSDataTypeState) return false;
+            if (lhs.AIDTDataTypeState != rhs.AIDTDataTypeState) return false;
+            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            return true;
+        }
+        
+        public override bool Equals(
+            INPCAbstractInternalGetter lhs,
+            INPCAbstractInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (INPCInternalGetter)lhs,
+                rhs: rhs as INPCInternalGetter);
+        }
+        
+        public override bool Equals(
+            INPCSpawnInternalGetter lhs,
+            INPCSpawnInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (INPCInternalGetter)lhs,
+                rhs: rhs as INPCInternalGetter);
+        }
+        
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (INPCInternalGetter)lhs,
+                rhs: rhs as INPCInternalGetter);
+        }
+        
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (INPCInternalGetter)lhs,
+                rhs: rhs as INPCInternalGetter);
+        }
+        
+        public virtual int GetHashCode(INPCInternalGetter item)
+        {
+            int ret = 0;
+            if (item.Name_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Name).CombineHashCode(ret);
+            }
+            if (item.Model_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Model).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.BaseSpellPoints).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Fatigue).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.BarterGold).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.LevelOffset).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.CalcMin).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.CalcMax).CombineHashCode(ret);
+            if (item.Factions.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Factions).CombineHashCode(ret);
+            }
+            if (item.DeathItem_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.DeathItem).CombineHashCode(ret);
+            }
+            if (item.Race_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Race).CombineHashCode(ret);
+            }
+            if (item.Spells.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Spells).CombineHashCode(ret);
+            }
+            if (item.Script_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Script).CombineHashCode(ret);
+            }
+            if (item.Items.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Items).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.Aggression).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Confidence).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.EnergyLevel).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Responsibility).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.BuySellServices).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Teaches).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.MaximumTrainingLevel).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Fluff).CombineHashCode(ret);
+            if (item.AIPackages.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.AIPackages).CombineHashCode(ret);
+            }
+            if (item.Animations.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Animations).CombineHashCode(ret);
+            }
+            if (item.Class_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Class).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.Armorer).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Athletics).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Blade).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Block).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Blunt).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.HandToHand).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.HeavyArmor).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Alchemy).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Alteration).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Conjuration).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Destruction).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Illusion).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Mysticism).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Restoration).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Acrobatics).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.LightArmor).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Marksman).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Mercantile).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Security).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Sneak).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Speechcraft).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Health).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Strength).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Intelligence).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Willpower).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Agility).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Speed).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Endurance).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Personality).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Luck).CombineHashCode(ret);
+            if (item.Hair_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Hair).CombineHashCode(ret);
+            }
+            if (item.HairLength_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.HairLength).CombineHashCode(ret);
+            }
+            if (item.Eyes.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Eyes).CombineHashCode(ret);
+            }
+            if (item.HairColor_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.HairColor).CombineHashCode(ret);
+            }
+            if (item.CombatStyle_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.CombatStyle).CombineHashCode(ret);
+            }
+            if (item.FaceGenGeometrySymmetric_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.FaceGenGeometrySymmetric).CombineHashCode(ret);
+            }
+            if (item.FaceGenGeometryAsymmetric_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.FaceGenGeometryAsymmetric).CombineHashCode(ret);
+            }
+            if (item.FaceGenTextureSymmetric_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.FaceGenTextureSymmetric).CombineHashCode(ret);
+            }
+            if (item.Unknown_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Unknown).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.ACBSDataTypeState).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.AIDTDataTypeState).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.DATADataTypeState).CombineHashCode(ret);
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+        
+        public override int GetHashCode(INPCAbstractInternalGetter item)
+        {
+            return GetHashCode(item: (INPCInternalGetter)item);
+        }
+        
+        public override int GetHashCode(INPCSpawnInternalGetter item)
+        {
+            return GetHashCode(item: (INPCInternalGetter)item);
+        }
+        
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (INPCInternalGetter)item);
+        }
+        
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (INPCInternalGetter)item);
+        }
+        
+        #endregion
+        
+        
+        #region Mutagen
+        partial void PostDuplicate(NPC obj, NPC rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+        
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new NPC(getNextFormKey());
+            ret.CopyFieldsFrom((NPC)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (NPC)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+        
+        #endregion
+        
+        
+    }
+    public partial class NPCSetterCopyCommon : NPCAbstractSetterCopyCommon
+    {
+        public new static readonly NPCSetterCopyCommon Instance = new NPCSetterCopyCommon();
 
         #region Copy Fields From
         public static void CopyFieldsFrom(
@@ -4045,7 +5232,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             NPC_CopyMask copyMask)
         {
-            NPCAbstractCommon.CopyFieldsFrom(
+            NPCAbstractSetterCopyCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -4099,7 +5286,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             case CopyOption.Reference:
                                 throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
-                                ModelCommon.CopyFieldsFrom(
+                                ModelSetterCopyCommon.CopyFieldsFrom(
                                     item: item.Model,
                                     rhs: rhs.Model,
                                     def: def?.Model,
@@ -5337,1166 +6524,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
         }
-
+        
         #endregion
-
-        partial void ClearPartial();
-
-        public virtual void Clear(INPCInternal item)
-        {
-            ClearPartial();
-            item.Name_Unset();
-            item.Model_Unset();
-            item.Flags = default(NPC.NPCFlag);
-            item.BaseSpellPoints = default(UInt16);
-            item.Fatigue = default(UInt16);
-            item.BarterGold = default(UInt16);
-            item.LevelOffset = default(Int16);
-            item.CalcMin = default(UInt16);
-            item.CalcMax = default(UInt16);
-            item.Factions.Unset();
-            item.DeathItem_Property.Unset();
-            item.Race_Property.Unset();
-            item.Spells.Unset();
-            item.Script_Property.Unset();
-            item.Items.Unset();
-            item.Aggression = default(Byte);
-            item.Confidence = default(Byte);
-            item.EnergyLevel = default(Byte);
-            item.Responsibility = default(Byte);
-            item.BuySellServices = default(NPC.BuySellServiceFlag);
-            item.Teaches = default(Skill);
-            item.MaximumTrainingLevel = default(Byte);
-            item.Fluff = default(Byte[]);
-            item.AIPackages.Unset();
-            item.Animations.Unset();
-            item.Class_Property.Unset();
-            item.Armorer = default(Byte);
-            item.Athletics = default(Byte);
-            item.Blade = default(Byte);
-            item.Block = default(Byte);
-            item.Blunt = default(Byte);
-            item.HandToHand = default(Byte);
-            item.HeavyArmor = default(Byte);
-            item.Alchemy = default(Byte);
-            item.Alteration = default(Byte);
-            item.Conjuration = default(Byte);
-            item.Destruction = default(Byte);
-            item.Illusion = default(Byte);
-            item.Mysticism = default(Byte);
-            item.Restoration = default(Byte);
-            item.Acrobatics = default(Byte);
-            item.LightArmor = default(Byte);
-            item.Marksman = default(Byte);
-            item.Mercantile = default(Byte);
-            item.Security = default(Byte);
-            item.Sneak = default(Byte);
-            item.Speechcraft = default(Byte);
-            item.Health = default(UInt32);
-            item.Strength = default(Byte);
-            item.Intelligence = default(Byte);
-            item.Willpower = default(Byte);
-            item.Agility = default(Byte);
-            item.Speed = default(Byte);
-            item.Endurance = default(Byte);
-            item.Personality = default(Byte);
-            item.Luck = default(Byte);
-            item.Hair_Property.Unset();
-            item.HairLength_Unset();
-            item.Eyes.Unset();
-            item.HairColor_Unset();
-            item.CombatStyle_Property.Unset();
-            item.FaceGenGeometrySymmetric_Unset();
-            item.FaceGenGeometryAsymmetric_Unset();
-            item.FaceGenTextureSymmetric_Unset();
-            item.Unknown_Unset();
-            base.Clear(item);
-        }
-
-        public override void Clear(INPCAbstractInternal item)
-        {
-            Clear(item: (INPCInternal)item);
-        }
-
-        public override void Clear(INPCSpawnInternal item)
-        {
-            Clear(item: (INPCInternal)item);
-        }
-
-        public override void Clear(IOblivionMajorRecordInternal item)
-        {
-            Clear(item: (INPCInternal)item);
-        }
-
-        public override void Clear(IMajorRecordInternal item)
-        {
-            Clear(item: (INPCInternal)item);
-        }
-
-        public NPC_Mask<bool> GetEqualsMask(
-            INPCInternalGetter item,
-            INPCInternalGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new NPC_Mask<bool>();
-            ((NPCCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public void FillEqualsMask(
-            INPCInternalGetter item,
-            INPCInternalGetter rhs,
-            NPC_Mask<bool> ret,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            if (rhs == null) return;
-            ret.Name = item.Name_IsSet == rhs.Name_IsSet && string.Equals(item.Name, rhs.Name);
-            ret.Model = EqualsMaskHelper.EqualsHelper(
-                item.Model_IsSet,
-                rhs.Model_IsSet,
-                item.Model,
-                rhs.Model,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
-                include);
-            ret.Flags = item.Flags == rhs.Flags;
-            ret.BaseSpellPoints = item.BaseSpellPoints == rhs.BaseSpellPoints;
-            ret.Fatigue = item.Fatigue == rhs.Fatigue;
-            ret.BarterGold = item.BarterGold == rhs.BarterGold;
-            ret.LevelOffset = item.LevelOffset == rhs.LevelOffset;
-            ret.CalcMin = item.CalcMin == rhs.CalcMin;
-            ret.CalcMax = item.CalcMax == rhs.CalcMax;
-            ret.Factions = item.Factions.CollectionEqualsHelper(
-                rhs.Factions,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
-                include);
-            ret.DeathItem = item.DeathItem_Property.FormKey == rhs.DeathItem_Property.FormKey;
-            ret.Race = item.Race_Property.FormKey == rhs.Race_Property.FormKey;
-            ret.Spells = item.Spells.CollectionEqualsHelper(
-                rhs.Spells,
-                (l, r) => object.Equals(l, r),
-                include);
-            ret.Script = item.Script_Property.FormKey == rhs.Script_Property.FormKey;
-            ret.Items = item.Items.CollectionEqualsHelper(
-                rhs.Items,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
-                include);
-            ret.Aggression = item.Aggression == rhs.Aggression;
-            ret.Confidence = item.Confidence == rhs.Confidence;
-            ret.EnergyLevel = item.EnergyLevel == rhs.EnergyLevel;
-            ret.Responsibility = item.Responsibility == rhs.Responsibility;
-            ret.BuySellServices = item.BuySellServices == rhs.BuySellServices;
-            ret.Teaches = item.Teaches == rhs.Teaches;
-            ret.MaximumTrainingLevel = item.MaximumTrainingLevel == rhs.MaximumTrainingLevel;
-            ret.Fluff = MemoryExtensions.SequenceEqual(item.Fluff, rhs.Fluff);
-            ret.AIPackages = item.AIPackages.CollectionEqualsHelper(
-                rhs.AIPackages,
-                (l, r) => object.Equals(l, r),
-                include);
-            ret.Animations = item.Animations.CollectionEqualsHelper(
-                rhs.Animations,
-                (l, r) => string.Equals(l, r),
-                include);
-            ret.Class = item.Class_Property.FormKey == rhs.Class_Property.FormKey;
-            ret.Armorer = item.Armorer == rhs.Armorer;
-            ret.Athletics = item.Athletics == rhs.Athletics;
-            ret.Blade = item.Blade == rhs.Blade;
-            ret.Block = item.Block == rhs.Block;
-            ret.Blunt = item.Blunt == rhs.Blunt;
-            ret.HandToHand = item.HandToHand == rhs.HandToHand;
-            ret.HeavyArmor = item.HeavyArmor == rhs.HeavyArmor;
-            ret.Alchemy = item.Alchemy == rhs.Alchemy;
-            ret.Alteration = item.Alteration == rhs.Alteration;
-            ret.Conjuration = item.Conjuration == rhs.Conjuration;
-            ret.Destruction = item.Destruction == rhs.Destruction;
-            ret.Illusion = item.Illusion == rhs.Illusion;
-            ret.Mysticism = item.Mysticism == rhs.Mysticism;
-            ret.Restoration = item.Restoration == rhs.Restoration;
-            ret.Acrobatics = item.Acrobatics == rhs.Acrobatics;
-            ret.LightArmor = item.LightArmor == rhs.LightArmor;
-            ret.Marksman = item.Marksman == rhs.Marksman;
-            ret.Mercantile = item.Mercantile == rhs.Mercantile;
-            ret.Security = item.Security == rhs.Security;
-            ret.Sneak = item.Sneak == rhs.Sneak;
-            ret.Speechcraft = item.Speechcraft == rhs.Speechcraft;
-            ret.Health = item.Health == rhs.Health;
-            ret.Strength = item.Strength == rhs.Strength;
-            ret.Intelligence = item.Intelligence == rhs.Intelligence;
-            ret.Willpower = item.Willpower == rhs.Willpower;
-            ret.Agility = item.Agility == rhs.Agility;
-            ret.Speed = item.Speed == rhs.Speed;
-            ret.Endurance = item.Endurance == rhs.Endurance;
-            ret.Personality = item.Personality == rhs.Personality;
-            ret.Luck = item.Luck == rhs.Luck;
-            ret.Hair = item.Hair_Property.FormKey == rhs.Hair_Property.FormKey;
-            ret.HairLength = item.HairLength_IsSet == rhs.HairLength_IsSet && item.HairLength.EqualsWithin(rhs.HairLength);
-            ret.Eyes = item.Eyes.CollectionEqualsHelper(
-                rhs.Eyes,
-                (l, r) => object.Equals(l, r),
-                include);
-            ret.HairColor = item.HairColor_IsSet == rhs.HairColor_IsSet && item.HairColor.ColorOnlyEquals(rhs.HairColor);
-            ret.CombatStyle = item.CombatStyle_Property.FormKey == rhs.CombatStyle_Property.FormKey;
-            ret.FaceGenGeometrySymmetric = item.FaceGenGeometrySymmetric_IsSet == rhs.FaceGenGeometrySymmetric_IsSet && MemoryExtensions.SequenceEqual(item.FaceGenGeometrySymmetric, rhs.FaceGenGeometrySymmetric);
-            ret.FaceGenGeometryAsymmetric = item.FaceGenGeometryAsymmetric_IsSet == rhs.FaceGenGeometryAsymmetric_IsSet && MemoryExtensions.SequenceEqual(item.FaceGenGeometryAsymmetric, rhs.FaceGenGeometryAsymmetric);
-            ret.FaceGenTextureSymmetric = item.FaceGenTextureSymmetric_IsSet == rhs.FaceGenTextureSymmetric_IsSet && MemoryExtensions.SequenceEqual(item.FaceGenTextureSymmetric, rhs.FaceGenTextureSymmetric);
-            ret.Unknown = item.Unknown_IsSet == rhs.Unknown_IsSet && MemoryExtensions.SequenceEqual(item.Unknown, rhs.Unknown);
-            base.FillEqualsMask(item, rhs, ret, include);
-        }
-
-        public string ToString(
-            INPCInternalGetter item,
-            string name = null,
-            NPC_Mask<bool> printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(
-                item: item,
-                fg: fg,
-                name: name,
-                printMask: printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(
-            INPCInternalGetter item,
-            FileGeneration fg,
-            string name = null,
-            NPC_Mask<bool> printMask = null)
-        {
-            if (name == null)
-            {
-                fg.AppendLine($"NPC =>");
-            }
-            else
-            {
-                fg.AppendLine($"{name} (NPC) =>");
-            }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                ToStringFields(
-                    item: item,
-                    fg: fg,
-                    printMask: printMask);
-            }
-            fg.AppendLine("]");
-        }
-
-        protected static void ToStringFields(
-            INPCInternalGetter item,
-            FileGeneration fg,
-            NPC_Mask<bool> printMask = null)
-        {
-            NPCAbstractCommon.ToStringFields(
-                item: item,
-                fg: fg,
-                printMask: printMask);
-            if (printMask?.Name ?? true)
-            {
-                fg.AppendLine($"Name => {item.Name}");
-            }
-            if (printMask?.Model?.Overall ?? true)
-            {
-                item.Model?.ToString(fg, "Model");
-            }
-            if (printMask?.Flags ?? true)
-            {
-                fg.AppendLine($"Flags => {item.Flags}");
-            }
-            if (printMask?.BaseSpellPoints ?? true)
-            {
-                fg.AppendLine($"BaseSpellPoints => {item.BaseSpellPoints}");
-            }
-            if (printMask?.Fatigue ?? true)
-            {
-                fg.AppendLine($"Fatigue => {item.Fatigue}");
-            }
-            if (printMask?.BarterGold ?? true)
-            {
-                fg.AppendLine($"BarterGold => {item.BarterGold}");
-            }
-            if (printMask?.LevelOffset ?? true)
-            {
-                fg.AppendLine($"LevelOffset => {item.LevelOffset}");
-            }
-            if (printMask?.CalcMin ?? true)
-            {
-                fg.AppendLine($"CalcMin => {item.CalcMin}");
-            }
-            if (printMask?.CalcMax ?? true)
-            {
-                fg.AppendLine($"CalcMax => {item.CalcMax}");
-            }
-            if (printMask?.Factions?.Overall ?? true)
-            {
-                fg.AppendLine("Factions =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
-                {
-                    foreach (var subItem in item.Factions)
-                    {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            subItem?.ToString(fg, "Item");
-                        }
-                        fg.AppendLine("]");
-                    }
-                }
-                fg.AppendLine("]");
-            }
-            if (printMask?.DeathItem ?? true)
-            {
-                fg.AppendLine($"DeathItem => {item.DeathItem_Property}");
-            }
-            if (printMask?.Race ?? true)
-            {
-                fg.AppendLine($"Race => {item.Race_Property}");
-            }
-            if (printMask?.Spells?.Overall ?? true)
-            {
-                fg.AppendLine("Spells =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
-                {
-                    foreach (var subItem in item.Spells)
-                    {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            fg.AppendLine($"Item => {subItem}");
-                        }
-                        fg.AppendLine("]");
-                    }
-                }
-                fg.AppendLine("]");
-            }
-            if (printMask?.Script ?? true)
-            {
-                fg.AppendLine($"Script => {item.Script_Property}");
-            }
-            if (printMask?.Items?.Overall ?? true)
-            {
-                fg.AppendLine("Items =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
-                {
-                    foreach (var subItem in item.Items)
-                    {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            subItem?.ToString(fg, "Item");
-                        }
-                        fg.AppendLine("]");
-                    }
-                }
-                fg.AppendLine("]");
-            }
-            if (printMask?.Aggression ?? true)
-            {
-                fg.AppendLine($"Aggression => {item.Aggression}");
-            }
-            if (printMask?.Confidence ?? true)
-            {
-                fg.AppendLine($"Confidence => {item.Confidence}");
-            }
-            if (printMask?.EnergyLevel ?? true)
-            {
-                fg.AppendLine($"EnergyLevel => {item.EnergyLevel}");
-            }
-            if (printMask?.Responsibility ?? true)
-            {
-                fg.AppendLine($"Responsibility => {item.Responsibility}");
-            }
-            if (printMask?.BuySellServices ?? true)
-            {
-                fg.AppendLine($"BuySellServices => {item.BuySellServices}");
-            }
-            if (printMask?.Teaches ?? true)
-            {
-                fg.AppendLine($"Teaches => {item.Teaches}");
-            }
-            if (printMask?.MaximumTrainingLevel ?? true)
-            {
-                fg.AppendLine($"MaximumTrainingLevel => {item.MaximumTrainingLevel}");
-            }
-            if (printMask?.Fluff ?? true)
-            {
-                fg.AppendLine($"Fluff => {SpanExt.ToHexString(item.Fluff)}");
-            }
-            if (printMask?.AIPackages?.Overall ?? true)
-            {
-                fg.AppendLine("AIPackages =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
-                {
-                    foreach (var subItem in item.AIPackages)
-                    {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            fg.AppendLine($"Item => {subItem}");
-                        }
-                        fg.AppendLine("]");
-                    }
-                }
-                fg.AppendLine("]");
-            }
-            if (printMask?.Animations?.Overall ?? true)
-            {
-                fg.AppendLine("Animations =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
-                {
-                    foreach (var subItem in item.Animations)
-                    {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            fg.AppendLine($"Item => {subItem}");
-                        }
-                        fg.AppendLine("]");
-                    }
-                }
-                fg.AppendLine("]");
-            }
-            if (printMask?.Class ?? true)
-            {
-                fg.AppendLine($"Class => {item.Class_Property}");
-            }
-            if (printMask?.Armorer ?? true)
-            {
-                fg.AppendLine($"Armorer => {item.Armorer}");
-            }
-            if (printMask?.Athletics ?? true)
-            {
-                fg.AppendLine($"Athletics => {item.Athletics}");
-            }
-            if (printMask?.Blade ?? true)
-            {
-                fg.AppendLine($"Blade => {item.Blade}");
-            }
-            if (printMask?.Block ?? true)
-            {
-                fg.AppendLine($"Block => {item.Block}");
-            }
-            if (printMask?.Blunt ?? true)
-            {
-                fg.AppendLine($"Blunt => {item.Blunt}");
-            }
-            if (printMask?.HandToHand ?? true)
-            {
-                fg.AppendLine($"HandToHand => {item.HandToHand}");
-            }
-            if (printMask?.HeavyArmor ?? true)
-            {
-                fg.AppendLine($"HeavyArmor => {item.HeavyArmor}");
-            }
-            if (printMask?.Alchemy ?? true)
-            {
-                fg.AppendLine($"Alchemy => {item.Alchemy}");
-            }
-            if (printMask?.Alteration ?? true)
-            {
-                fg.AppendLine($"Alteration => {item.Alteration}");
-            }
-            if (printMask?.Conjuration ?? true)
-            {
-                fg.AppendLine($"Conjuration => {item.Conjuration}");
-            }
-            if (printMask?.Destruction ?? true)
-            {
-                fg.AppendLine($"Destruction => {item.Destruction}");
-            }
-            if (printMask?.Illusion ?? true)
-            {
-                fg.AppendLine($"Illusion => {item.Illusion}");
-            }
-            if (printMask?.Mysticism ?? true)
-            {
-                fg.AppendLine($"Mysticism => {item.Mysticism}");
-            }
-            if (printMask?.Restoration ?? true)
-            {
-                fg.AppendLine($"Restoration => {item.Restoration}");
-            }
-            if (printMask?.Acrobatics ?? true)
-            {
-                fg.AppendLine($"Acrobatics => {item.Acrobatics}");
-            }
-            if (printMask?.LightArmor ?? true)
-            {
-                fg.AppendLine($"LightArmor => {item.LightArmor}");
-            }
-            if (printMask?.Marksman ?? true)
-            {
-                fg.AppendLine($"Marksman => {item.Marksman}");
-            }
-            if (printMask?.Mercantile ?? true)
-            {
-                fg.AppendLine($"Mercantile => {item.Mercantile}");
-            }
-            if (printMask?.Security ?? true)
-            {
-                fg.AppendLine($"Security => {item.Security}");
-            }
-            if (printMask?.Sneak ?? true)
-            {
-                fg.AppendLine($"Sneak => {item.Sneak}");
-            }
-            if (printMask?.Speechcraft ?? true)
-            {
-                fg.AppendLine($"Speechcraft => {item.Speechcraft}");
-            }
-            if (printMask?.Health ?? true)
-            {
-                fg.AppendLine($"Health => {item.Health}");
-            }
-            if (printMask?.Strength ?? true)
-            {
-                fg.AppendLine($"Strength => {item.Strength}");
-            }
-            if (printMask?.Intelligence ?? true)
-            {
-                fg.AppendLine($"Intelligence => {item.Intelligence}");
-            }
-            if (printMask?.Willpower ?? true)
-            {
-                fg.AppendLine($"Willpower => {item.Willpower}");
-            }
-            if (printMask?.Agility ?? true)
-            {
-                fg.AppendLine($"Agility => {item.Agility}");
-            }
-            if (printMask?.Speed ?? true)
-            {
-                fg.AppendLine($"Speed => {item.Speed}");
-            }
-            if (printMask?.Endurance ?? true)
-            {
-                fg.AppendLine($"Endurance => {item.Endurance}");
-            }
-            if (printMask?.Personality ?? true)
-            {
-                fg.AppendLine($"Personality => {item.Personality}");
-            }
-            if (printMask?.Luck ?? true)
-            {
-                fg.AppendLine($"Luck => {item.Luck}");
-            }
-            if (printMask?.Hair ?? true)
-            {
-                fg.AppendLine($"Hair => {item.Hair_Property}");
-            }
-            if (printMask?.HairLength ?? true)
-            {
-                fg.AppendLine($"HairLength => {item.HairLength}");
-            }
-            if (printMask?.Eyes?.Overall ?? true)
-            {
-                fg.AppendLine("Eyes =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
-                {
-                    foreach (var subItem in item.Eyes)
-                    {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            fg.AppendLine($"Item => {subItem}");
-                        }
-                        fg.AppendLine("]");
-                    }
-                }
-                fg.AppendLine("]");
-            }
-            if (printMask?.HairColor ?? true)
-            {
-                fg.AppendLine($"HairColor => {item.HairColor}");
-            }
-            if (printMask?.CombatStyle ?? true)
-            {
-                fg.AppendLine($"CombatStyle => {item.CombatStyle_Property}");
-            }
-            if (printMask?.FaceGenGeometrySymmetric ?? true)
-            {
-                fg.AppendLine($"FaceGenGeometrySymmetric => {SpanExt.ToHexString(item.FaceGenGeometrySymmetric)}");
-            }
-            if (printMask?.FaceGenGeometryAsymmetric ?? true)
-            {
-                fg.AppendLine($"FaceGenGeometryAsymmetric => {SpanExt.ToHexString(item.FaceGenGeometryAsymmetric)}");
-            }
-            if (printMask?.FaceGenTextureSymmetric ?? true)
-            {
-                fg.AppendLine($"FaceGenTextureSymmetric => {SpanExt.ToHexString(item.FaceGenTextureSymmetric)}");
-            }
-            if (printMask?.Unknown ?? true)
-            {
-                fg.AppendLine($"Unknown => {SpanExt.ToHexString(item.Unknown)}");
-            }
-            if (printMask?.ACBSDataTypeState ?? true)
-            {
-            }
-            if (printMask?.AIDTDataTypeState ?? true)
-            {
-            }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-            }
-        }
-
-        public bool HasBeenSet(
-            INPCInternalGetter item,
-            NPC_Mask<bool?> checkMask)
-        {
-            if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_IsSet) return false;
-            if (checkMask.Model.Overall.HasValue && checkMask.Model.Overall.Value != item.Model_IsSet) return false;
-            if (checkMask.Model.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
-            if (checkMask.Factions.Overall.HasValue && checkMask.Factions.Overall.Value != item.Factions.HasBeenSet) return false;
-            if (checkMask.DeathItem.HasValue && checkMask.DeathItem.Value != item.DeathItem_Property.HasBeenSet) return false;
-            if (checkMask.Race.HasValue && checkMask.Race.Value != item.Race_Property.HasBeenSet) return false;
-            if (checkMask.Spells.Overall.HasValue && checkMask.Spells.Overall.Value != item.Spells.HasBeenSet) return false;
-            if (checkMask.Script.HasValue && checkMask.Script.Value != item.Script_Property.HasBeenSet) return false;
-            if (checkMask.Items.Overall.HasValue && checkMask.Items.Overall.Value != item.Items.HasBeenSet) return false;
-            if (checkMask.AIPackages.Overall.HasValue && checkMask.AIPackages.Overall.Value != item.AIPackages.HasBeenSet) return false;
-            if (checkMask.Animations.Overall.HasValue && checkMask.Animations.Overall.Value != item.Animations.HasBeenSet) return false;
-            if (checkMask.Class.HasValue && checkMask.Class.Value != item.Class_Property.HasBeenSet) return false;
-            if (checkMask.Hair.HasValue && checkMask.Hair.Value != item.Hair_Property.HasBeenSet) return false;
-            if (checkMask.HairLength.HasValue && checkMask.HairLength.Value != item.HairLength_IsSet) return false;
-            if (checkMask.Eyes.Overall.HasValue && checkMask.Eyes.Overall.Value != item.Eyes.HasBeenSet) return false;
-            if (checkMask.HairColor.HasValue && checkMask.HairColor.Value != item.HairColor_IsSet) return false;
-            if (checkMask.CombatStyle.HasValue && checkMask.CombatStyle.Value != item.CombatStyle_Property.HasBeenSet) return false;
-            if (checkMask.FaceGenGeometrySymmetric.HasValue && checkMask.FaceGenGeometrySymmetric.Value != item.FaceGenGeometrySymmetric_IsSet) return false;
-            if (checkMask.FaceGenGeometryAsymmetric.HasValue && checkMask.FaceGenGeometryAsymmetric.Value != item.FaceGenGeometryAsymmetric_IsSet) return false;
-            if (checkMask.FaceGenTextureSymmetric.HasValue && checkMask.FaceGenTextureSymmetric.Value != item.FaceGenTextureSymmetric_IsSet) return false;
-            if (checkMask.Unknown.HasValue && checkMask.Unknown.Value != item.Unknown_IsSet) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public void FillHasBeenSetMask(
-            INPCInternalGetter item,
-            NPC_Mask<bool> mask)
-        {
-            mask.Name = item.Name_IsSet;
-            mask.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, item.Model.GetHasBeenSetMask());
-            mask.Flags = true;
-            mask.BaseSpellPoints = true;
-            mask.Fatigue = true;
-            mask.BarterGold = true;
-            mask.LevelOffset = true;
-            mask.CalcMin = true;
-            mask.CalcMax = true;
-            mask.Factions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, RankPlacement_Mask<bool>>>>(item.Factions.HasBeenSet, item.Factions.WithIndex().Select((i) => new MaskItemIndexed<bool, RankPlacement_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.DeathItem = item.DeathItem_Property.HasBeenSet;
-            mask.Race = item.Race_Property.HasBeenSet;
-            mask.Spells = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Spells.HasBeenSet, null);
-            mask.Script = item.Script_Property.HasBeenSet;
-            mask.Items = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, ItemEntry_Mask<bool>>>>(item.Items.HasBeenSet, item.Items.WithIndex().Select((i) => new MaskItemIndexed<bool, ItemEntry_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.Aggression = true;
-            mask.Confidence = true;
-            mask.EnergyLevel = true;
-            mask.Responsibility = true;
-            mask.BuySellServices = true;
-            mask.Teaches = true;
-            mask.MaximumTrainingLevel = true;
-            mask.Fluff = true;
-            mask.AIPackages = new MaskItem<bool, IEnumerable<(int, bool)>>(item.AIPackages.HasBeenSet, null);
-            mask.Animations = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Animations.HasBeenSet, null);
-            mask.Class = item.Class_Property.HasBeenSet;
-            mask.Armorer = true;
-            mask.Athletics = true;
-            mask.Blade = true;
-            mask.Block = true;
-            mask.Blunt = true;
-            mask.HandToHand = true;
-            mask.HeavyArmor = true;
-            mask.Alchemy = true;
-            mask.Alteration = true;
-            mask.Conjuration = true;
-            mask.Destruction = true;
-            mask.Illusion = true;
-            mask.Mysticism = true;
-            mask.Restoration = true;
-            mask.Acrobatics = true;
-            mask.LightArmor = true;
-            mask.Marksman = true;
-            mask.Mercantile = true;
-            mask.Security = true;
-            mask.Sneak = true;
-            mask.Speechcraft = true;
-            mask.Health = true;
-            mask.Strength = true;
-            mask.Intelligence = true;
-            mask.Willpower = true;
-            mask.Agility = true;
-            mask.Speed = true;
-            mask.Endurance = true;
-            mask.Personality = true;
-            mask.Luck = true;
-            mask.Hair = item.Hair_Property.HasBeenSet;
-            mask.HairLength = item.HairLength_IsSet;
-            mask.Eyes = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Eyes.HasBeenSet, null);
-            mask.HairColor = item.HairColor_IsSet;
-            mask.CombatStyle = item.CombatStyle_Property.HasBeenSet;
-            mask.FaceGenGeometrySymmetric = item.FaceGenGeometrySymmetric_IsSet;
-            mask.FaceGenGeometryAsymmetric = item.FaceGenGeometryAsymmetric_IsSet;
-            mask.FaceGenTextureSymmetric = item.FaceGenTextureSymmetric_IsSet;
-            mask.Unknown = item.Unknown_IsSet;
-            mask.ACBSDataTypeState = true;
-            mask.AIDTDataTypeState = true;
-            mask.DATADataTypeState = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-
-        public static NPC_FieldIndex ConvertFieldIndex(NPCAbstract_FieldIndex index)
-        {
-            switch (index)
-            {
-                case NPCAbstract_FieldIndex.MajorRecordFlagsRaw:
-                    return (NPC_FieldIndex)((int)index);
-                case NPCAbstract_FieldIndex.FormKey:
-                    return (NPC_FieldIndex)((int)index);
-                case NPCAbstract_FieldIndex.Version:
-                    return (NPC_FieldIndex)((int)index);
-                case NPCAbstract_FieldIndex.EditorID:
-                    return (NPC_FieldIndex)((int)index);
-                case NPCAbstract_FieldIndex.OblivionMajorRecordFlags:
-                    return (NPC_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        public static NPC_FieldIndex ConvertFieldIndex(NPCSpawn_FieldIndex index)
-        {
-            switch (index)
-            {
-                case NPCSpawn_FieldIndex.MajorRecordFlagsRaw:
-                    return (NPC_FieldIndex)((int)index);
-                case NPCSpawn_FieldIndex.FormKey:
-                    return (NPC_FieldIndex)((int)index);
-                case NPCSpawn_FieldIndex.Version:
-                    return (NPC_FieldIndex)((int)index);
-                case NPCSpawn_FieldIndex.EditorID:
-                    return (NPC_FieldIndex)((int)index);
-                case NPCSpawn_FieldIndex.OblivionMajorRecordFlags:
-                    return (NPC_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        public static NPC_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
-        {
-            switch (index)
-            {
-                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (NPC_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.FormKey:
-                    return (NPC_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.Version:
-                    return (NPC_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.EditorID:
-                    return (NPC_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
-                    return (NPC_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        public static NPC_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
-        {
-            switch (index)
-            {
-                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (NPC_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.FormKey:
-                    return (NPC_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
-                    return (NPC_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.EditorID:
-                    return (NPC_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        #region Equals and Hash
-        public virtual bool Equals(
-            INPCInternalGetter lhs,
-            INPCInternalGetter rhs)
-        {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (lhs.Name_IsSet != rhs.Name_IsSet) return false;
-            if (lhs.Name_IsSet)
-            {
-                if (!string.Equals(lhs.Name, rhs.Name)) return false;
-            }
-            if (lhs.Model_IsSet != rhs.Model_IsSet) return false;
-            if (lhs.Model_IsSet)
-            {
-                if (!object.Equals(lhs.Model, rhs.Model)) return false;
-            }
-            if (lhs.Flags != rhs.Flags) return false;
-            if (lhs.BaseSpellPoints != rhs.BaseSpellPoints) return false;
-            if (lhs.Fatigue != rhs.Fatigue) return false;
-            if (lhs.BarterGold != rhs.BarterGold) return false;
-            if (lhs.LevelOffset != rhs.LevelOffset) return false;
-            if (lhs.CalcMin != rhs.CalcMin) return false;
-            if (lhs.CalcMax != rhs.CalcMax) return false;
-            if (lhs.Factions.HasBeenSet != rhs.Factions.HasBeenSet) return false;
-            if (lhs.Factions.HasBeenSet)
-            {
-                if (!lhs.Factions.SequenceEqual(rhs.Factions)) return false;
-            }
-            if (lhs.DeathItem_Property.HasBeenSet != rhs.DeathItem_Property.HasBeenSet) return false;
-            if (lhs.DeathItem_Property.HasBeenSet)
-            {
-                if (!lhs.DeathItem_Property.Equals(rhs.DeathItem_Property)) return false;
-            }
-            if (lhs.Race_Property.HasBeenSet != rhs.Race_Property.HasBeenSet) return false;
-            if (lhs.Race_Property.HasBeenSet)
-            {
-                if (!lhs.Race_Property.Equals(rhs.Race_Property)) return false;
-            }
-            if (lhs.Spells.HasBeenSet != rhs.Spells.HasBeenSet) return false;
-            if (lhs.Spells.HasBeenSet)
-            {
-                if (!lhs.Spells.SequenceEqual(rhs.Spells)) return false;
-            }
-            if (lhs.Script_Property.HasBeenSet != rhs.Script_Property.HasBeenSet) return false;
-            if (lhs.Script_Property.HasBeenSet)
-            {
-                if (!lhs.Script_Property.Equals(rhs.Script_Property)) return false;
-            }
-            if (lhs.Items.HasBeenSet != rhs.Items.HasBeenSet) return false;
-            if (lhs.Items.HasBeenSet)
-            {
-                if (!lhs.Items.SequenceEqual(rhs.Items)) return false;
-            }
-            if (lhs.Aggression != rhs.Aggression) return false;
-            if (lhs.Confidence != rhs.Confidence) return false;
-            if (lhs.EnergyLevel != rhs.EnergyLevel) return false;
-            if (lhs.Responsibility != rhs.Responsibility) return false;
-            if (lhs.BuySellServices != rhs.BuySellServices) return false;
-            if (lhs.Teaches != rhs.Teaches) return false;
-            if (lhs.MaximumTrainingLevel != rhs.MaximumTrainingLevel) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Fluff, rhs.Fluff)) return false;
-            if (lhs.AIPackages.HasBeenSet != rhs.AIPackages.HasBeenSet) return false;
-            if (lhs.AIPackages.HasBeenSet)
-            {
-                if (!lhs.AIPackages.SequenceEqual(rhs.AIPackages)) return false;
-            }
-            if (lhs.Animations.HasBeenSet != rhs.Animations.HasBeenSet) return false;
-            if (lhs.Animations.HasBeenSet)
-            {
-                if (!lhs.Animations.SequenceEqual(rhs.Animations)) return false;
-            }
-            if (lhs.Class_Property.HasBeenSet != rhs.Class_Property.HasBeenSet) return false;
-            if (lhs.Class_Property.HasBeenSet)
-            {
-                if (!lhs.Class_Property.Equals(rhs.Class_Property)) return false;
-            }
-            if (lhs.Armorer != rhs.Armorer) return false;
-            if (lhs.Athletics != rhs.Athletics) return false;
-            if (lhs.Blade != rhs.Blade) return false;
-            if (lhs.Block != rhs.Block) return false;
-            if (lhs.Blunt != rhs.Blunt) return false;
-            if (lhs.HandToHand != rhs.HandToHand) return false;
-            if (lhs.HeavyArmor != rhs.HeavyArmor) return false;
-            if (lhs.Alchemy != rhs.Alchemy) return false;
-            if (lhs.Alteration != rhs.Alteration) return false;
-            if (lhs.Conjuration != rhs.Conjuration) return false;
-            if (lhs.Destruction != rhs.Destruction) return false;
-            if (lhs.Illusion != rhs.Illusion) return false;
-            if (lhs.Mysticism != rhs.Mysticism) return false;
-            if (lhs.Restoration != rhs.Restoration) return false;
-            if (lhs.Acrobatics != rhs.Acrobatics) return false;
-            if (lhs.LightArmor != rhs.LightArmor) return false;
-            if (lhs.Marksman != rhs.Marksman) return false;
-            if (lhs.Mercantile != rhs.Mercantile) return false;
-            if (lhs.Security != rhs.Security) return false;
-            if (lhs.Sneak != rhs.Sneak) return false;
-            if (lhs.Speechcraft != rhs.Speechcraft) return false;
-            if (lhs.Health != rhs.Health) return false;
-            if (lhs.Strength != rhs.Strength) return false;
-            if (lhs.Intelligence != rhs.Intelligence) return false;
-            if (lhs.Willpower != rhs.Willpower) return false;
-            if (lhs.Agility != rhs.Agility) return false;
-            if (lhs.Speed != rhs.Speed) return false;
-            if (lhs.Endurance != rhs.Endurance) return false;
-            if (lhs.Personality != rhs.Personality) return false;
-            if (lhs.Luck != rhs.Luck) return false;
-            if (lhs.Hair_Property.HasBeenSet != rhs.Hair_Property.HasBeenSet) return false;
-            if (lhs.Hair_Property.HasBeenSet)
-            {
-                if (!lhs.Hair_Property.Equals(rhs.Hair_Property)) return false;
-            }
-            if (lhs.HairLength_IsSet != rhs.HairLength_IsSet) return false;
-            if (lhs.HairLength_IsSet)
-            {
-                if (!lhs.HairLength.EqualsWithin(rhs.HairLength)) return false;
-            }
-            if (lhs.Eyes.HasBeenSet != rhs.Eyes.HasBeenSet) return false;
-            if (lhs.Eyes.HasBeenSet)
-            {
-                if (!lhs.Eyes.SequenceEqual(rhs.Eyes)) return false;
-            }
-            if (lhs.HairColor_IsSet != rhs.HairColor_IsSet) return false;
-            if (lhs.HairColor_IsSet)
-            {
-                if (!lhs.HairColor.ColorOnlyEquals(rhs.HairColor)) return false;
-            }
-            if (lhs.CombatStyle_Property.HasBeenSet != rhs.CombatStyle_Property.HasBeenSet) return false;
-            if (lhs.CombatStyle_Property.HasBeenSet)
-            {
-                if (!lhs.CombatStyle_Property.Equals(rhs.CombatStyle_Property)) return false;
-            }
-            if (lhs.FaceGenGeometrySymmetric_IsSet != rhs.FaceGenGeometrySymmetric_IsSet) return false;
-            if (lhs.FaceGenGeometrySymmetric_IsSet)
-            {
-                if (!MemoryExtensions.SequenceEqual(lhs.FaceGenGeometrySymmetric, rhs.FaceGenGeometrySymmetric)) return false;
-            }
-            if (lhs.FaceGenGeometryAsymmetric_IsSet != rhs.FaceGenGeometryAsymmetric_IsSet) return false;
-            if (lhs.FaceGenGeometryAsymmetric_IsSet)
-            {
-                if (!MemoryExtensions.SequenceEqual(lhs.FaceGenGeometryAsymmetric, rhs.FaceGenGeometryAsymmetric)) return false;
-            }
-            if (lhs.FaceGenTextureSymmetric_IsSet != rhs.FaceGenTextureSymmetric_IsSet) return false;
-            if (lhs.FaceGenTextureSymmetric_IsSet)
-            {
-                if (!MemoryExtensions.SequenceEqual(lhs.FaceGenTextureSymmetric, rhs.FaceGenTextureSymmetric)) return false;
-            }
-            if (lhs.Unknown_IsSet != rhs.Unknown_IsSet) return false;
-            if (lhs.Unknown_IsSet)
-            {
-                if (!MemoryExtensions.SequenceEqual(lhs.Unknown, rhs.Unknown)) return false;
-            }
-            if (lhs.ACBSDataTypeState != rhs.ACBSDataTypeState) return false;
-            if (lhs.AIDTDataTypeState != rhs.AIDTDataTypeState) return false;
-            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
-            return true;
-        }
-
-        public override bool Equals(
-            INPCAbstractInternalGetter lhs,
-            INPCAbstractInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (INPCInternalGetter)lhs,
-                rhs: rhs as INPCInternalGetter);
-        }
-
-        public override bool Equals(
-            INPCSpawnInternalGetter lhs,
-            INPCSpawnInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (INPCInternalGetter)lhs,
-                rhs: rhs as INPCInternalGetter);
-        }
-
-        public override bool Equals(
-            IOblivionMajorRecordInternalGetter lhs,
-            IOblivionMajorRecordInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (INPCInternalGetter)lhs,
-                rhs: rhs as INPCInternalGetter);
-        }
-
-        public override bool Equals(
-            IMajorRecordInternalGetter lhs,
-            IMajorRecordInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (INPCInternalGetter)lhs,
-                rhs: rhs as INPCInternalGetter);
-        }
-
-        public virtual int GetHashCode(INPCInternalGetter item)
-        {
-            int ret = 0;
-            if (item.Name_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Name).CombineHashCode(ret);
-            }
-            if (item.Model_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Model).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.BaseSpellPoints).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Fatigue).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.BarterGold).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.LevelOffset).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.CalcMin).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.CalcMax).CombineHashCode(ret);
-            if (item.Factions.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.Factions).CombineHashCode(ret);
-            }
-            if (item.DeathItem_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.DeathItem).CombineHashCode(ret);
-            }
-            if (item.Race_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.Race).CombineHashCode(ret);
-            }
-            if (item.Spells.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.Spells).CombineHashCode(ret);
-            }
-            if (item.Script_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.Script).CombineHashCode(ret);
-            }
-            if (item.Items.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.Items).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(item.Aggression).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Confidence).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.EnergyLevel).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Responsibility).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.BuySellServices).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Teaches).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.MaximumTrainingLevel).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Fluff).CombineHashCode(ret);
-            if (item.AIPackages.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.AIPackages).CombineHashCode(ret);
-            }
-            if (item.Animations.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.Animations).CombineHashCode(ret);
-            }
-            if (item.Class_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.Class).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(item.Armorer).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Athletics).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Blade).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Block).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Blunt).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.HandToHand).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.HeavyArmor).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Alchemy).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Alteration).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Conjuration).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Destruction).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Illusion).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Mysticism).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Restoration).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Acrobatics).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.LightArmor).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Marksman).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Mercantile).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Security).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Sneak).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Speechcraft).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Health).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Strength).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Intelligence).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Willpower).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Agility).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Speed).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Endurance).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Personality).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Luck).CombineHashCode(ret);
-            if (item.Hair_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.Hair).CombineHashCode(ret);
-            }
-            if (item.HairLength_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.HairLength).CombineHashCode(ret);
-            }
-            if (item.Eyes.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.Eyes).CombineHashCode(ret);
-            }
-            if (item.HairColor_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.HairColor).CombineHashCode(ret);
-            }
-            if (item.CombatStyle_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.CombatStyle).CombineHashCode(ret);
-            }
-            if (item.FaceGenGeometrySymmetric_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.FaceGenGeometrySymmetric).CombineHashCode(ret);
-            }
-            if (item.FaceGenGeometryAsymmetric_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.FaceGenGeometryAsymmetric).CombineHashCode(ret);
-            }
-            if (item.FaceGenTextureSymmetric_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.FaceGenTextureSymmetric).CombineHashCode(ret);
-            }
-            if (item.Unknown_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Unknown).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(item.ACBSDataTypeState).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.AIDTDataTypeState).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.DATADataTypeState).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        public override int GetHashCode(INPCAbstractInternalGetter item)
-        {
-            return GetHashCode(item: (INPCInternalGetter)item);
-        }
-
-        public override int GetHashCode(INPCSpawnInternalGetter item)
-        {
-            return GetHashCode(item: (INPCInternalGetter)item);
-        }
-
-        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
-        {
-            return GetHashCode(item: (INPCInternalGetter)item);
-        }
-
-        public override int GetHashCode(IMajorRecordInternalGetter item)
-        {
-            return GetHashCode(item: (INPCInternalGetter)item);
-        }
-
-        #endregion
-
-
-        #region Mutagen
-        partial void PostDuplicate(NPC obj, NPC rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new NPC(getNextFormKey());
-            ret.CopyFieldsFrom((NPC)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (NPC)item, getNextFormKey, duplicatedRecords);
-            return ret;
-        }
-
-        #endregion
-
+        
+        
     }
     #endregion
 
@@ -6610,14 +6641,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Factions.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)NPC_FieldIndex.Factions) ?? true))
             {
-                ListXmlTranslation<IRankPlacementGetter>.Instance.Write(
+                ListXmlTranslation<IRankPlacementInternalGetter>.Instance.Write(
                     node: node,
                     name: nameof(item.Factions),
                     item: item.Factions,
                     fieldIndex: (int)NPC_FieldIndex.Factions,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)NPC_FieldIndex.Factions),
-                    transl: (XElement subNode, IRankPlacementGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    transl: (XElement subNode, IRankPlacementInternalGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         var loquiItem = subItem;
                         ((RankPlacementXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
@@ -6680,14 +6711,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Items.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)NPC_FieldIndex.Items) ?? true))
             {
-                ListXmlTranslation<IItemEntryGetter>.Instance.Write(
+                ListXmlTranslation<IItemEntryInternalGetter>.Instance.Write(
                     node: node,
                     name: nameof(item.Items),
                     item: item.Items,
                     fieldIndex: (int)NPC_FieldIndex.Items,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)NPC_FieldIndex.Items),
-                    transl: (XElement subNode, IItemEntryGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    transl: (XElement subNode, IItemEntryInternalGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         var loquiItem = subItem;
                         ((ItemEntryXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
@@ -11687,12 +11718,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.Factions.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<IRankPlacementGetter>.Instance.Write(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<IRankPlacementInternalGetter>.Instance.Write(
                     writer: writer,
                     items: item.Factions,
                     fieldIndex: (int)NPC_FieldIndex.Factions,
                     errorMask: errorMask,
-                    transl: (MutagenWriter subWriter, IRankPlacementGetter subItem, ErrorMaskBuilder listErrorMask) =>
+                    transl: (MutagenWriter subWriter, IRankPlacementInternalGetter subItem, ErrorMaskBuilder listErrorMask) =>
                     {
                         var loquiItem = subItem;
                         ((RankPlacementBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
@@ -11747,12 +11778,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.Items.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<IItemEntryGetter>.Instance.Write(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<IItemEntryInternalGetter>.Instance.Write(
                     writer: writer,
                     items: item.Items,
                     fieldIndex: (int)NPC_FieldIndex.Items,
                     errorMask: errorMask,
-                    transl: (MutagenWriter subWriter, IItemEntryGetter subItem, ErrorMaskBuilder listErrorMask) =>
+                    transl: (MutagenWriter subWriter, IItemEntryInternalGetter subItem, ErrorMaskBuilder listErrorMask) =>
                     {
                         var loquiItem = subItem;
                         ((ItemEntryBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
@@ -12072,17 +12103,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         NPCAbstractBinaryWrapper,
         INPCInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NPC_Registration.Instance;
         public new static NPC_Registration Registration => NPC_Registration.Instance;
-        protected override object CommonInstance => NPCCommon.Instance;
+        protected override object CommonInstance()
+        {
+            return NPCCommon.Instance;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((INPCInternalGetter)rhs, include);
 
         protected override object XmlWriteTranslator => NPCXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((NPCXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         protected override object BinaryWriteTranslator => NPCBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((NPCBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
 
         #region Name
         private int? _NameLocation;
@@ -12090,7 +12153,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public String Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _NameLocation.Value, _package.Meta)) : default;
         #endregion
         #region Model
-        public IModelGetter Model { get; private set; }
+        public IModelInternalGetter Model { get; private set; }
         public bool Model_IsSet => Model != null;
         #endregion
         private int? _ACBSLocation;
@@ -12130,7 +12193,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private bool _CalcMax_IsSet => _ACBSLocation.HasValue;
         public UInt16 CalcMax => _CalcMax_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_CalcMaxLocation, 2)) : default;
         #endregion
-        public IReadOnlySetList<IRankPlacementGetter> Factions { get; private set; } = EmptySetList<RankPlacementBinaryWrapper>.Instance;
+        public IReadOnlySetList<IRankPlacementInternalGetter> Factions { get; private set; } = EmptySetList<RankPlacementBinaryWrapper>.Instance;
         #region DeathItem
         private int? _DeathItemLocation;
         public bool DeathItem_IsSet => _DeathItemLocation.HasValue;
@@ -12150,7 +12213,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IFormIDSetLinkGetter<IScriptInternalGetter> Script_Property => _ScriptLocation.HasValue ? new FormIDSetLink<IScriptInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ScriptLocation.Value, _package.Meta)))) : FormIDSetLink<IScriptInternalGetter>.Empty;
         public IScriptInternalGetter Script => default;
         #endregion
-        public IReadOnlySetList<IItemEntryGetter> Items { get; private set; } = EmptySetList<ItemEntryBinaryWrapper>.Instance;
+        public IReadOnlySetList<IItemEntryInternalGetter> Items { get; private set; } = EmptySetList<ItemEntryBinaryWrapper>.Instance;
         private int? _AIDTLocation;
         public NPC.AIDTDataType AIDTDataTypeState { get; private set; }
         public Byte Aggression => _AIDTLocation.HasValue ? _data.Span[_AIDTLocation.Value + 0] : default;
@@ -12498,4 +12561,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class NPC
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => NPC_Registration.Instance;
+        public new static NPC_Registration Registration => NPC_Registration.Instance;
+        protected override object CommonInstance()
+        {
+            return NPCCommon.Instance;
+        }
+        protected override object CommonSetterInstance()
+        {
+            return NPCSetterCommon.Instance;
+        }
+        protected override object CommonSetterCopyInstance()
+        {
+            return NPCSetterCopyCommon.Instance;
+        }
+
+        #endregion
+
+    }
 }

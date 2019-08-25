@@ -46,11 +46,6 @@ namespace Mutagen.Bethesda.Oblivion
         IEquatable<Cell>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Cell_Registration.Instance;
-        public new static Cell_Registration Registration => Cell_Registration.Instance;
-        protected override object CommonInstance => CellCommon.Instance;
-
         #region Ctor
         protected Cell()
         {
@@ -162,7 +157,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Lighting_Set(default(CellLighting), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ICellLightingGetter ICellGetter.Lighting => this.Lighting;
+        ICellLightingInternalGetter ICellGetter.Lighting => this.Lighting;
         #endregion
         #region Regions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -460,20 +455,33 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is ICellInternalGetter rhs)) return false;
-            return ((CellCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            return ((CellCommon)((ICellInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(Cell obj)
         {
-            return ((CellCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((CellCommon)((ICellInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((CellCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((CellCommon)((ICellInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected override object XmlWriteTranslator => CellXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((CellXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static Cell CreateFromXml(
@@ -814,6 +822,19 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Binary Translation
         protected override object BinaryWriteTranslator => CellBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((CellBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
         #region Binary Create
         [DebuggerStepThrough]
         public static async Task<Cell> CreateFromBinary(
@@ -1147,7 +1168,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            CellCommon.CopyFieldsFrom(
+            CellSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -1162,7 +1183,7 @@ namespace Mutagen.Bethesda.Oblivion
             Cell_CopyMask copyMask = null,
             Cell def = null)
         {
-            CellCommon.CopyFieldsFrom(
+            CellSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -1246,7 +1267,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            CellCommon.Instance.Clear(this);
+            CellSetterCommon.Instance.Clear(this);
         }
 
         public new static Cell Create(IEnumerable<KeyValuePair<ushort, object>> fields)
@@ -1452,7 +1473,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Lighting
-        ICellLightingGetter Lighting { get; }
+        ICellLightingInternalGetter Lighting { get; }
         bool Lighting_IsSet { get; }
 
         #endregion
@@ -1546,7 +1567,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this ICellInternal item)
         {
-            ((CellCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((CellSetterCommon)((ICellInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static Cell_Mask<bool> GetEqualsMask(
@@ -1554,7 +1575,7 @@ namespace Mutagen.Bethesda.Oblivion
             ICellInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((CellCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((CellCommon)((ICellInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -1565,7 +1586,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Cell_Mask<bool> printMask = null)
         {
-            return ((CellCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((CellCommon)((ICellInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -1577,7 +1598,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Cell_Mask<bool> printMask = null)
         {
-            ((CellCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((CellCommon)((ICellInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -1588,7 +1609,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ICellInternalGetter item,
             Cell_Mask<bool?> checkMask)
         {
-            return ((CellCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((CellCommon)((ICellInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -1596,7 +1617,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Cell_Mask<bool> GetHasBeenSetMask(this ICellInternalGetter item)
         {
             var ret = new Cell_Mask<bool>();
-            ((CellCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((CellCommon)((ICellInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -1606,7 +1627,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ICellInternalGetter item,
             ICellInternalGetter rhs)
         {
-            return ((CellCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((CellCommon)((ICellInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1681,8 +1702,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type SetterType = typeof(ICell);
 
         public static readonly Type InternalSetterType = typeof(ICellInternal);
-
-        public static readonly Type CommonType = typeof(CellCommon);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.Cell";
 
@@ -2047,7 +2066,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -2067,9 +2085,682 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
+    public partial class CellSetterCommon : PlaceSetterCommon
+    {
+        public new static readonly CellSetterCommon Instance = new CellSetterCommon();
+
+        partial void ClearPartial();
+        
+        public virtual void Clear(ICellInternal item)
+        {
+            ClearPartial();
+            item.Name_Unset();
+            item.Flags_Unset();
+            item.Grid_Unset();
+            item.Lighting_Unset();
+            item.Regions.Unset();
+            item.MusicType_Unset();
+            item.WaterHeight_Unset();
+            item.Climate_Property.Unset();
+            item.Water_Property.Unset();
+            item.Owner_Property.Unset();
+            item.FactionRank_Unset();
+            item.GlobalVariable_Property.Unset();
+            item.PathGrid_Unset();
+            item.Landscape_Unset();
+            item.Timestamp = default(Byte[]);
+            item.PersistentTimestamp = default(Byte[]);
+            item.Persistent.Unset();
+            item.TemporaryTimestamp = default(Byte[]);
+            item.Temporary.Unset();
+            item.VisibleWhenDistantTimestamp = default(Byte[]);
+            item.VisibleWhenDistant.Unset();
+            base.Clear(item);
+        }
+        
+        public override void Clear(IPlaceInternal item)
+        {
+            Clear(item: (ICellInternal)item);
+        }
+        
+        public override void Clear(IOblivionMajorRecordInternal item)
+        {
+            Clear(item: (ICellInternal)item);
+        }
+        
+        public override void Clear(IMajorRecordInternal item)
+        {
+            Clear(item: (ICellInternal)item);
+        }
+        
+        
+    }
     public partial class CellCommon : PlaceCommon
     {
-        public static readonly CellCommon Instance = new CellCommon();
+        public new static readonly CellCommon Instance = new CellCommon();
+
+        public Cell_Mask<bool> GetEqualsMask(
+            ICellInternalGetter item,
+            ICellInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new Cell_Mask<bool>();
+            ((CellCommon)((ICellInternalGetter)item).CommonInstance()).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+        
+        public void FillEqualsMask(
+            ICellInternalGetter item,
+            ICellInternalGetter rhs,
+            Cell_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            if (rhs == null) return;
+            ret.Name = item.Name_IsSet == rhs.Name_IsSet && string.Equals(item.Name, rhs.Name);
+            ret.Flags = item.Flags_IsSet == rhs.Flags_IsSet && item.Flags == rhs.Flags;
+            ret.Grid = item.Grid_IsSet == rhs.Grid_IsSet && item.Grid.Equals(rhs.Grid);
+            ret.Lighting = EqualsMaskHelper.EqualsHelper(
+                item.Lighting_IsSet,
+                rhs.Lighting_IsSet,
+                item.Lighting,
+                rhs.Lighting,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
+            ret.Regions = item.Regions.CollectionEqualsHelper(
+                rhs.Regions,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.MusicType = item.MusicType_IsSet == rhs.MusicType_IsSet && item.MusicType == rhs.MusicType;
+            ret.WaterHeight = item.WaterHeight_IsSet == rhs.WaterHeight_IsSet && item.WaterHeight.EqualsWithin(rhs.WaterHeight);
+            ret.Climate = item.Climate_Property.FormKey == rhs.Climate_Property.FormKey;
+            ret.Water = item.Water_Property.FormKey == rhs.Water_Property.FormKey;
+            ret.Owner = item.Owner_Property.FormKey == rhs.Owner_Property.FormKey;
+            ret.FactionRank = item.FactionRank_IsSet == rhs.FactionRank_IsSet && item.FactionRank == rhs.FactionRank;
+            ret.GlobalVariable = item.GlobalVariable_Property.FormKey == rhs.GlobalVariable_Property.FormKey;
+            ret.PathGrid = EqualsMaskHelper.EqualsHelper(
+                item.PathGrid_IsSet,
+                rhs.PathGrid_IsSet,
+                item.PathGrid,
+                rhs.PathGrid,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
+            ret.Landscape = EqualsMaskHelper.EqualsHelper(
+                item.Landscape_IsSet,
+                rhs.Landscape_IsSet,
+                item.Landscape,
+                rhs.Landscape,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
+            ret.Timestamp = MemoryExtensions.SequenceEqual(item.Timestamp, rhs.Timestamp);
+            ret.PersistentTimestamp = MemoryExtensions.SequenceEqual(item.PersistentTimestamp, rhs.PersistentTimestamp);
+            ret.Persistent = item.Persistent.CollectionEqualsHelper(
+                rhs.Persistent,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsIMask(loqRhs, include),
+                include);
+            ret.TemporaryTimestamp = MemoryExtensions.SequenceEqual(item.TemporaryTimestamp, rhs.TemporaryTimestamp);
+            ret.Temporary = item.Temporary.CollectionEqualsHelper(
+                rhs.Temporary,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsIMask(loqRhs, include),
+                include);
+            ret.VisibleWhenDistantTimestamp = MemoryExtensions.SequenceEqual(item.VisibleWhenDistantTimestamp, rhs.VisibleWhenDistantTimestamp);
+            ret.VisibleWhenDistant = item.VisibleWhenDistant.CollectionEqualsHelper(
+                rhs.VisibleWhenDistant,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsIMask(loqRhs, include),
+                include);
+            base.FillEqualsMask(item, rhs, ret, include);
+        }
+        
+        public string ToString(
+            ICellInternalGetter item,
+            string name = null,
+            Cell_Mask<bool> printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+            return fg.ToString();
+        }
+        
+        public void ToString(
+            ICellInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            Cell_Mask<bool> printMask = null)
+        {
+            if (name == null)
+            {
+                fg.AppendLine($"Cell =>");
+            }
+            else
+            {
+                fg.AppendLine($"{name} (Cell) =>");
+            }
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
+            }
+            fg.AppendLine("]");
+        }
+        
+        protected static void ToStringFields(
+            ICellInternalGetter item,
+            FileGeneration fg,
+            Cell_Mask<bool> printMask = null)
+        {
+            PlaceCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.Name ?? true)
+            {
+                fg.AppendLine($"Name => {item.Name}");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                fg.AppendLine($"Flags => {item.Flags}");
+            }
+            if (printMask?.Grid ?? true)
+            {
+                fg.AppendLine($"Grid => {item.Grid}");
+            }
+            if (printMask?.Lighting?.Overall ?? true)
+            {
+                item.Lighting?.ToString(fg, "Lighting");
+            }
+            if (printMask?.Regions?.Overall ?? true)
+            {
+                fg.AppendLine("Regions =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Regions)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"Item => {subItem}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.MusicType ?? true)
+            {
+                fg.AppendLine($"MusicType => {item.MusicType}");
+            }
+            if (printMask?.WaterHeight ?? true)
+            {
+                fg.AppendLine($"WaterHeight => {item.WaterHeight}");
+            }
+            if (printMask?.Climate ?? true)
+            {
+                fg.AppendLine($"Climate => {item.Climate_Property}");
+            }
+            if (printMask?.Water ?? true)
+            {
+                fg.AppendLine($"Water => {item.Water_Property}");
+            }
+            if (printMask?.Owner ?? true)
+            {
+                fg.AppendLine($"Owner => {item.Owner_Property}");
+            }
+            if (printMask?.FactionRank ?? true)
+            {
+                fg.AppendLine($"FactionRank => {item.FactionRank}");
+            }
+            if (printMask?.GlobalVariable ?? true)
+            {
+                fg.AppendLine($"GlobalVariable => {item.GlobalVariable_Property}");
+            }
+            if (printMask?.PathGrid?.Overall ?? true)
+            {
+                item.PathGrid?.ToString(fg, "PathGrid");
+            }
+            if (printMask?.Landscape?.Overall ?? true)
+            {
+                item.Landscape?.ToString(fg, "Landscape");
+            }
+            if (printMask?.Timestamp ?? true)
+            {
+                fg.AppendLine($"Timestamp => {SpanExt.ToHexString(item.Timestamp)}");
+            }
+            if (printMask?.PersistentTimestamp ?? true)
+            {
+                fg.AppendLine($"PersistentTimestamp => {SpanExt.ToHexString(item.PersistentTimestamp)}");
+            }
+            if (printMask?.Persistent?.Overall ?? true)
+            {
+                fg.AppendLine("Persistent =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Persistent)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.TemporaryTimestamp ?? true)
+            {
+                fg.AppendLine($"TemporaryTimestamp => {SpanExt.ToHexString(item.TemporaryTimestamp)}");
+            }
+            if (printMask?.Temporary?.Overall ?? true)
+            {
+                fg.AppendLine("Temporary =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Temporary)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.VisibleWhenDistantTimestamp ?? true)
+            {
+                fg.AppendLine($"VisibleWhenDistantTimestamp => {SpanExt.ToHexString(item.VisibleWhenDistantTimestamp)}");
+            }
+            if (printMask?.VisibleWhenDistant?.Overall ?? true)
+            {
+                fg.AppendLine("VisibleWhenDistant =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.VisibleWhenDistant)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+        }
+        
+        public bool HasBeenSet(
+            ICellInternalGetter item,
+            Cell_Mask<bool?> checkMask)
+        {
+            if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_IsSet) return false;
+            if (checkMask.Flags.HasValue && checkMask.Flags.Value != item.Flags_IsSet) return false;
+            if (checkMask.Grid.HasValue && checkMask.Grid.Value != item.Grid_IsSet) return false;
+            if (checkMask.Lighting.Overall.HasValue && checkMask.Lighting.Overall.Value != item.Lighting_IsSet) return false;
+            if (checkMask.Lighting.Specific != null && (item.Lighting == null || !item.Lighting.HasBeenSet(checkMask.Lighting.Specific))) return false;
+            if (checkMask.Regions.Overall.HasValue && checkMask.Regions.Overall.Value != item.Regions.HasBeenSet) return false;
+            if (checkMask.MusicType.HasValue && checkMask.MusicType.Value != item.MusicType_IsSet) return false;
+            if (checkMask.WaterHeight.HasValue && checkMask.WaterHeight.Value != item.WaterHeight_IsSet) return false;
+            if (checkMask.Climate.HasValue && checkMask.Climate.Value != item.Climate_Property.HasBeenSet) return false;
+            if (checkMask.Water.HasValue && checkMask.Water.Value != item.Water_Property.HasBeenSet) return false;
+            if (checkMask.Owner.HasValue && checkMask.Owner.Value != item.Owner_Property.HasBeenSet) return false;
+            if (checkMask.FactionRank.HasValue && checkMask.FactionRank.Value != item.FactionRank_IsSet) return false;
+            if (checkMask.GlobalVariable.HasValue && checkMask.GlobalVariable.Value != item.GlobalVariable_Property.HasBeenSet) return false;
+            if (checkMask.PathGrid.Overall.HasValue && checkMask.PathGrid.Overall.Value != item.PathGrid_IsSet) return false;
+            if (checkMask.PathGrid.Specific != null && (item.PathGrid == null || !item.PathGrid.HasBeenSet(checkMask.PathGrid.Specific))) return false;
+            if (checkMask.Landscape.Overall.HasValue && checkMask.Landscape.Overall.Value != item.Landscape_IsSet) return false;
+            if (checkMask.Landscape.Specific != null && (item.Landscape == null || !item.Landscape.HasBeenSet(checkMask.Landscape.Specific))) return false;
+            if (checkMask.Persistent.Overall.HasValue && checkMask.Persistent.Overall.Value != item.Persistent.HasBeenSet) return false;
+            if (checkMask.Temporary.Overall.HasValue && checkMask.Temporary.Overall.Value != item.Temporary.HasBeenSet) return false;
+            if (checkMask.VisibleWhenDistant.Overall.HasValue && checkMask.VisibleWhenDistant.Overall.Value != item.VisibleWhenDistant.HasBeenSet) return false;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+        
+        public void FillHasBeenSetMask(
+            ICellInternalGetter item,
+            Cell_Mask<bool> mask)
+        {
+            mask.Name = item.Name_IsSet;
+            mask.Flags = item.Flags_IsSet;
+            mask.Grid = item.Grid_IsSet;
+            mask.Lighting = new MaskItem<bool, CellLighting_Mask<bool>>(item.Lighting_IsSet, item.Lighting.GetHasBeenSetMask());
+            mask.Regions = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Regions.HasBeenSet, null);
+            mask.MusicType = item.MusicType_IsSet;
+            mask.WaterHeight = item.WaterHeight_IsSet;
+            mask.Climate = item.Climate_Property.HasBeenSet;
+            mask.Water = item.Water_Property.HasBeenSet;
+            mask.Owner = item.Owner_Property.HasBeenSet;
+            mask.FactionRank = item.FactionRank_IsSet;
+            mask.GlobalVariable = item.GlobalVariable_Property.HasBeenSet;
+            mask.PathGrid = new MaskItem<bool, PathGrid_Mask<bool>>(item.PathGrid_IsSet, item.PathGrid.GetHasBeenSetMask());
+            mask.Landscape = new MaskItem<bool, Landscape_Mask<bool>>(item.Landscape_IsSet, item.Landscape.GetHasBeenSetMask());
+            mask.Timestamp = true;
+            mask.PersistentTimestamp = true;
+            mask.Persistent = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, IMask<bool>>>>(item.Persistent.HasBeenSet, item.Persistent.WithIndex().Select((i) => new MaskItemIndexed<bool, IMask<bool>>(i.Index, true, i.Item.GetHasBeenSetIMask())));
+            mask.TemporaryTimestamp = true;
+            mask.Temporary = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, IMask<bool>>>>(item.Temporary.HasBeenSet, item.Temporary.WithIndex().Select((i) => new MaskItemIndexed<bool, IMask<bool>>(i.Index, true, i.Item.GetHasBeenSetIMask())));
+            mask.VisibleWhenDistantTimestamp = true;
+            mask.VisibleWhenDistant = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, IMask<bool>>>>(item.VisibleWhenDistant.HasBeenSet, item.VisibleWhenDistant.WithIndex().Select((i) => new MaskItemIndexed<bool, IMask<bool>>(i.Index, true, i.Item.GetHasBeenSetIMask())));
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
+        }
+        
+        public static Cell_FieldIndex ConvertFieldIndex(Place_FieldIndex index)
+        {
+            switch (index)
+            {
+                case Place_FieldIndex.MajorRecordFlagsRaw:
+                    return (Cell_FieldIndex)((int)index);
+                case Place_FieldIndex.FormKey:
+                    return (Cell_FieldIndex)((int)index);
+                case Place_FieldIndex.Version:
+                    return (Cell_FieldIndex)((int)index);
+                case Place_FieldIndex.EditorID:
+                    return (Cell_FieldIndex)((int)index);
+                case Place_FieldIndex.OblivionMajorRecordFlags:
+                    return (Cell_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        public static Cell_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (Cell_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.FormKey:
+                    return (Cell_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.Version:
+                    return (Cell_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.EditorID:
+                    return (Cell_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
+                    return (Cell_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        public static Cell_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (Cell_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.FormKey:
+                    return (Cell_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.Version:
+                    return (Cell_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.EditorID:
+                    return (Cell_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        #region Equals and Hash
+        public virtual bool Equals(
+            ICellInternalGetter lhs,
+            ICellInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.Name_IsSet != rhs.Name_IsSet) return false;
+            if (lhs.Name_IsSet)
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if (lhs.Flags_IsSet != rhs.Flags_IsSet) return false;
+            if (lhs.Flags_IsSet)
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if (lhs.Grid_IsSet != rhs.Grid_IsSet) return false;
+            if (lhs.Grid_IsSet)
+            {
+                if (!lhs.Grid.Equals(rhs.Grid)) return false;
+            }
+            if (lhs.Lighting_IsSet != rhs.Lighting_IsSet) return false;
+            if (lhs.Lighting_IsSet)
+            {
+                if (!object.Equals(lhs.Lighting, rhs.Lighting)) return false;
+            }
+            if (lhs.Regions.HasBeenSet != rhs.Regions.HasBeenSet) return false;
+            if (lhs.Regions.HasBeenSet)
+            {
+                if (!lhs.Regions.SequenceEqual(rhs.Regions)) return false;
+            }
+            if (lhs.MusicType_IsSet != rhs.MusicType_IsSet) return false;
+            if (lhs.MusicType_IsSet)
+            {
+                if (lhs.MusicType != rhs.MusicType) return false;
+            }
+            if (lhs.WaterHeight_IsSet != rhs.WaterHeight_IsSet) return false;
+            if (lhs.WaterHeight_IsSet)
+            {
+                if (!lhs.WaterHeight.EqualsWithin(rhs.WaterHeight)) return false;
+            }
+            if (lhs.Climate_Property.HasBeenSet != rhs.Climate_Property.HasBeenSet) return false;
+            if (lhs.Climate_Property.HasBeenSet)
+            {
+                if (!lhs.Climate_Property.Equals(rhs.Climate_Property)) return false;
+            }
+            if (lhs.Water_Property.HasBeenSet != rhs.Water_Property.HasBeenSet) return false;
+            if (lhs.Water_Property.HasBeenSet)
+            {
+                if (!lhs.Water_Property.Equals(rhs.Water_Property)) return false;
+            }
+            if (lhs.Owner_Property.HasBeenSet != rhs.Owner_Property.HasBeenSet) return false;
+            if (lhs.Owner_Property.HasBeenSet)
+            {
+                if (!lhs.Owner_Property.Equals(rhs.Owner_Property)) return false;
+            }
+            if (lhs.FactionRank_IsSet != rhs.FactionRank_IsSet) return false;
+            if (lhs.FactionRank_IsSet)
+            {
+                if (lhs.FactionRank != rhs.FactionRank) return false;
+            }
+            if (lhs.GlobalVariable_Property.HasBeenSet != rhs.GlobalVariable_Property.HasBeenSet) return false;
+            if (lhs.GlobalVariable_Property.HasBeenSet)
+            {
+                if (!lhs.GlobalVariable_Property.Equals(rhs.GlobalVariable_Property)) return false;
+            }
+            if (lhs.PathGrid_IsSet != rhs.PathGrid_IsSet) return false;
+            if (lhs.PathGrid_IsSet)
+            {
+                if (!object.Equals(lhs.PathGrid, rhs.PathGrid)) return false;
+            }
+            if (lhs.Landscape_IsSet != rhs.Landscape_IsSet) return false;
+            if (lhs.Landscape_IsSet)
+            {
+                if (!object.Equals(lhs.Landscape, rhs.Landscape)) return false;
+            }
+            if (!MemoryExtensions.SequenceEqual(lhs.Timestamp, rhs.Timestamp)) return false;
+            if (!MemoryExtensions.SequenceEqual(lhs.PersistentTimestamp, rhs.PersistentTimestamp)) return false;
+            if (lhs.Persistent.HasBeenSet != rhs.Persistent.HasBeenSet) return false;
+            if (lhs.Persistent.HasBeenSet)
+            {
+                if (!lhs.Persistent.SequenceEqual(rhs.Persistent)) return false;
+            }
+            if (!MemoryExtensions.SequenceEqual(lhs.TemporaryTimestamp, rhs.TemporaryTimestamp)) return false;
+            if (lhs.Temporary.HasBeenSet != rhs.Temporary.HasBeenSet) return false;
+            if (lhs.Temporary.HasBeenSet)
+            {
+                if (!lhs.Temporary.SequenceEqual(rhs.Temporary)) return false;
+            }
+            if (!MemoryExtensions.SequenceEqual(lhs.VisibleWhenDistantTimestamp, rhs.VisibleWhenDistantTimestamp)) return false;
+            if (lhs.VisibleWhenDistant.HasBeenSet != rhs.VisibleWhenDistant.HasBeenSet) return false;
+            if (lhs.VisibleWhenDistant.HasBeenSet)
+            {
+                if (!lhs.VisibleWhenDistant.SequenceEqual(rhs.VisibleWhenDistant)) return false;
+            }
+            return true;
+        }
+        
+        public override bool Equals(
+            IPlaceInternalGetter lhs,
+            IPlaceInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (ICellInternalGetter)lhs,
+                rhs: rhs as ICellInternalGetter);
+        }
+        
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (ICellInternalGetter)lhs,
+                rhs: rhs as ICellInternalGetter);
+        }
+        
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (ICellInternalGetter)lhs,
+                rhs: rhs as ICellInternalGetter);
+        }
+        
+        public virtual int GetHashCode(ICellInternalGetter item)
+        {
+            int ret = 0;
+            if (item.Name_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Name).CombineHashCode(ret);
+            }
+            if (item.Flags_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
+            }
+            if (item.Grid_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Grid).CombineHashCode(ret);
+            }
+            if (item.Lighting_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Lighting).CombineHashCode(ret);
+            }
+            if (item.Regions.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Regions).CombineHashCode(ret);
+            }
+            if (item.MusicType_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.MusicType).CombineHashCode(ret);
+            }
+            if (item.WaterHeight_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.WaterHeight).CombineHashCode(ret);
+            }
+            if (item.Climate_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Climate).CombineHashCode(ret);
+            }
+            if (item.Water_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Water).CombineHashCode(ret);
+            }
+            if (item.Owner_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Owner).CombineHashCode(ret);
+            }
+            if (item.FactionRank_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.FactionRank).CombineHashCode(ret);
+            }
+            if (item.GlobalVariable_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.GlobalVariable).CombineHashCode(ret);
+            }
+            if (item.PathGrid_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.PathGrid).CombineHashCode(ret);
+            }
+            if (item.Landscape_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Landscape).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.Timestamp).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.PersistentTimestamp).CombineHashCode(ret);
+            if (item.Persistent.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Persistent).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.TemporaryTimestamp).CombineHashCode(ret);
+            if (item.Temporary.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Temporary).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.VisibleWhenDistantTimestamp).CombineHashCode(ret);
+            if (item.VisibleWhenDistant.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.VisibleWhenDistant).CombineHashCode(ret);
+            }
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+        
+        public override int GetHashCode(IPlaceInternalGetter item)
+        {
+            return GetHashCode(item: (ICellInternalGetter)item);
+        }
+        
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (ICellInternalGetter)item);
+        }
+        
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (ICellInternalGetter)item);
+        }
+        
+        #endregion
+        
+        
+        #region Mutagen
+        partial void PostDuplicate(Cell obj, Cell rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+        
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new Cell(getNextFormKey());
+            ret.CopyFieldsFrom((Cell)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (Cell)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+        
+        #endregion
+        
+        
+    }
+    public partial class CellSetterCopyCommon : PlaceSetterCopyCommon
+    {
+        public new static readonly CellSetterCopyCommon Instance = new CellSetterCopyCommon();
 
         #region Copy Fields From
         public static void CopyFieldsFrom(
@@ -2079,7 +2770,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             Cell_CopyMask copyMask)
         {
-            PlaceCommon.CopyFieldsFrom(
+            PlaceSetterCopyCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -2193,7 +2884,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             case CopyOption.Reference:
                                 throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
-                                CellLightingCommon.CopyFieldsFrom(
+                                CellLightingSetterCopyCommon.CopyFieldsFrom(
                                     item: item.Lighting,
                                     rhs: rhs.Lighting,
                                     def: def?.Lighting,
@@ -2430,7 +3121,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             case CopyOption.Reference:
                                 throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
-                                PathGridCommon.CopyFieldsFrom(
+                                PathGridSetterCopyCommon.CopyFieldsFrom(
                                     item: item.PathGrid,
                                     rhs: rhs.PathGrid,
                                     def: def?.PathGrid,
@@ -2482,7 +3173,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             case CopyOption.Reference:
                                 throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
-                                LandscapeCommon.CopyFieldsFrom(
+                                LandscapeSetterCopyCommon.CopyFieldsFrom(
                                     item: item.Landscape,
                                     rhs: rhs.Landscape,
                                     def: def?.Landscape,
@@ -2678,670 +3369,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
         }
-
+        
         #endregion
-
-        partial void ClearPartial();
-
-        public virtual void Clear(ICellInternal item)
-        {
-            ClearPartial();
-            item.Name_Unset();
-            item.Flags_Unset();
-            item.Grid_Unset();
-            item.Lighting_Unset();
-            item.Regions.Unset();
-            item.MusicType_Unset();
-            item.WaterHeight_Unset();
-            item.Climate_Property.Unset();
-            item.Water_Property.Unset();
-            item.Owner_Property.Unset();
-            item.FactionRank_Unset();
-            item.GlobalVariable_Property.Unset();
-            item.PathGrid_Unset();
-            item.Landscape_Unset();
-            item.Timestamp = default(Byte[]);
-            item.PersistentTimestamp = default(Byte[]);
-            item.Persistent.Unset();
-            item.TemporaryTimestamp = default(Byte[]);
-            item.Temporary.Unset();
-            item.VisibleWhenDistantTimestamp = default(Byte[]);
-            item.VisibleWhenDistant.Unset();
-            base.Clear(item);
-        }
-
-        public override void Clear(IPlaceInternal item)
-        {
-            Clear(item: (ICellInternal)item);
-        }
-
-        public override void Clear(IOblivionMajorRecordInternal item)
-        {
-            Clear(item: (ICellInternal)item);
-        }
-
-        public override void Clear(IMajorRecordInternal item)
-        {
-            Clear(item: (ICellInternal)item);
-        }
-
-        public Cell_Mask<bool> GetEqualsMask(
-            ICellInternalGetter item,
-            ICellInternalGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new Cell_Mask<bool>();
-            ((CellCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public void FillEqualsMask(
-            ICellInternalGetter item,
-            ICellInternalGetter rhs,
-            Cell_Mask<bool> ret,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            if (rhs == null) return;
-            ret.Name = item.Name_IsSet == rhs.Name_IsSet && string.Equals(item.Name, rhs.Name);
-            ret.Flags = item.Flags_IsSet == rhs.Flags_IsSet && item.Flags == rhs.Flags;
-            ret.Grid = item.Grid_IsSet == rhs.Grid_IsSet && item.Grid.Equals(rhs.Grid);
-            ret.Lighting = EqualsMaskHelper.EqualsHelper(
-                item.Lighting_IsSet,
-                rhs.Lighting_IsSet,
-                item.Lighting,
-                rhs.Lighting,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
-                include);
-            ret.Regions = item.Regions.CollectionEqualsHelper(
-                rhs.Regions,
-                (l, r) => object.Equals(l, r),
-                include);
-            ret.MusicType = item.MusicType_IsSet == rhs.MusicType_IsSet && item.MusicType == rhs.MusicType;
-            ret.WaterHeight = item.WaterHeight_IsSet == rhs.WaterHeight_IsSet && item.WaterHeight.EqualsWithin(rhs.WaterHeight);
-            ret.Climate = item.Climate_Property.FormKey == rhs.Climate_Property.FormKey;
-            ret.Water = item.Water_Property.FormKey == rhs.Water_Property.FormKey;
-            ret.Owner = item.Owner_Property.FormKey == rhs.Owner_Property.FormKey;
-            ret.FactionRank = item.FactionRank_IsSet == rhs.FactionRank_IsSet && item.FactionRank == rhs.FactionRank;
-            ret.GlobalVariable = item.GlobalVariable_Property.FormKey == rhs.GlobalVariable_Property.FormKey;
-            ret.PathGrid = EqualsMaskHelper.EqualsHelper(
-                item.PathGrid_IsSet,
-                rhs.PathGrid_IsSet,
-                item.PathGrid,
-                rhs.PathGrid,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
-                include);
-            ret.Landscape = EqualsMaskHelper.EqualsHelper(
-                item.Landscape_IsSet,
-                rhs.Landscape_IsSet,
-                item.Landscape,
-                rhs.Landscape,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
-                include);
-            ret.Timestamp = MemoryExtensions.SequenceEqual(item.Timestamp, rhs.Timestamp);
-            ret.PersistentTimestamp = MemoryExtensions.SequenceEqual(item.PersistentTimestamp, rhs.PersistentTimestamp);
-            ret.Persistent = item.Persistent.CollectionEqualsHelper(
-                rhs.Persistent,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsIMask(loqRhs, include),
-                include);
-            ret.TemporaryTimestamp = MemoryExtensions.SequenceEqual(item.TemporaryTimestamp, rhs.TemporaryTimestamp);
-            ret.Temporary = item.Temporary.CollectionEqualsHelper(
-                rhs.Temporary,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsIMask(loqRhs, include),
-                include);
-            ret.VisibleWhenDistantTimestamp = MemoryExtensions.SequenceEqual(item.VisibleWhenDistantTimestamp, rhs.VisibleWhenDistantTimestamp);
-            ret.VisibleWhenDistant = item.VisibleWhenDistant.CollectionEqualsHelper(
-                rhs.VisibleWhenDistant,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsIMask(loqRhs, include),
-                include);
-            base.FillEqualsMask(item, rhs, ret, include);
-        }
-
-        public string ToString(
-            ICellInternalGetter item,
-            string name = null,
-            Cell_Mask<bool> printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(
-                item: item,
-                fg: fg,
-                name: name,
-                printMask: printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(
-            ICellInternalGetter item,
-            FileGeneration fg,
-            string name = null,
-            Cell_Mask<bool> printMask = null)
-        {
-            if (name == null)
-            {
-                fg.AppendLine($"Cell =>");
-            }
-            else
-            {
-                fg.AppendLine($"{name} (Cell) =>");
-            }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                ToStringFields(
-                    item: item,
-                    fg: fg,
-                    printMask: printMask);
-            }
-            fg.AppendLine("]");
-        }
-
-        protected static void ToStringFields(
-            ICellInternalGetter item,
-            FileGeneration fg,
-            Cell_Mask<bool> printMask = null)
-        {
-            PlaceCommon.ToStringFields(
-                item: item,
-                fg: fg,
-                printMask: printMask);
-            if (printMask?.Name ?? true)
-            {
-                fg.AppendLine($"Name => {item.Name}");
-            }
-            if (printMask?.Flags ?? true)
-            {
-                fg.AppendLine($"Flags => {item.Flags}");
-            }
-            if (printMask?.Grid ?? true)
-            {
-                fg.AppendLine($"Grid => {item.Grid}");
-            }
-            if (printMask?.Lighting?.Overall ?? true)
-            {
-                item.Lighting?.ToString(fg, "Lighting");
-            }
-            if (printMask?.Regions?.Overall ?? true)
-            {
-                fg.AppendLine("Regions =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
-                {
-                    foreach (var subItem in item.Regions)
-                    {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            fg.AppendLine($"Item => {subItem}");
-                        }
-                        fg.AppendLine("]");
-                    }
-                }
-                fg.AppendLine("]");
-            }
-            if (printMask?.MusicType ?? true)
-            {
-                fg.AppendLine($"MusicType => {item.MusicType}");
-            }
-            if (printMask?.WaterHeight ?? true)
-            {
-                fg.AppendLine($"WaterHeight => {item.WaterHeight}");
-            }
-            if (printMask?.Climate ?? true)
-            {
-                fg.AppendLine($"Climate => {item.Climate_Property}");
-            }
-            if (printMask?.Water ?? true)
-            {
-                fg.AppendLine($"Water => {item.Water_Property}");
-            }
-            if (printMask?.Owner ?? true)
-            {
-                fg.AppendLine($"Owner => {item.Owner_Property}");
-            }
-            if (printMask?.FactionRank ?? true)
-            {
-                fg.AppendLine($"FactionRank => {item.FactionRank}");
-            }
-            if (printMask?.GlobalVariable ?? true)
-            {
-                fg.AppendLine($"GlobalVariable => {item.GlobalVariable_Property}");
-            }
-            if (printMask?.PathGrid?.Overall ?? true)
-            {
-                item.PathGrid?.ToString(fg, "PathGrid");
-            }
-            if (printMask?.Landscape?.Overall ?? true)
-            {
-                item.Landscape?.ToString(fg, "Landscape");
-            }
-            if (printMask?.Timestamp ?? true)
-            {
-                fg.AppendLine($"Timestamp => {SpanExt.ToHexString(item.Timestamp)}");
-            }
-            if (printMask?.PersistentTimestamp ?? true)
-            {
-                fg.AppendLine($"PersistentTimestamp => {SpanExt.ToHexString(item.PersistentTimestamp)}");
-            }
-            if (printMask?.Persistent?.Overall ?? true)
-            {
-                fg.AppendLine("Persistent =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
-                {
-                    foreach (var subItem in item.Persistent)
-                    {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            subItem?.ToString(fg, "Item");
-                        }
-                        fg.AppendLine("]");
-                    }
-                }
-                fg.AppendLine("]");
-            }
-            if (printMask?.TemporaryTimestamp ?? true)
-            {
-                fg.AppendLine($"TemporaryTimestamp => {SpanExt.ToHexString(item.TemporaryTimestamp)}");
-            }
-            if (printMask?.Temporary?.Overall ?? true)
-            {
-                fg.AppendLine("Temporary =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
-                {
-                    foreach (var subItem in item.Temporary)
-                    {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            subItem?.ToString(fg, "Item");
-                        }
-                        fg.AppendLine("]");
-                    }
-                }
-                fg.AppendLine("]");
-            }
-            if (printMask?.VisibleWhenDistantTimestamp ?? true)
-            {
-                fg.AppendLine($"VisibleWhenDistantTimestamp => {SpanExt.ToHexString(item.VisibleWhenDistantTimestamp)}");
-            }
-            if (printMask?.VisibleWhenDistant?.Overall ?? true)
-            {
-                fg.AppendLine("VisibleWhenDistant =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
-                {
-                    foreach (var subItem in item.VisibleWhenDistant)
-                    {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            subItem?.ToString(fg, "Item");
-                        }
-                        fg.AppendLine("]");
-                    }
-                }
-                fg.AppendLine("]");
-            }
-        }
-
-        public bool HasBeenSet(
-            ICellInternalGetter item,
-            Cell_Mask<bool?> checkMask)
-        {
-            if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_IsSet) return false;
-            if (checkMask.Flags.HasValue && checkMask.Flags.Value != item.Flags_IsSet) return false;
-            if (checkMask.Grid.HasValue && checkMask.Grid.Value != item.Grid_IsSet) return false;
-            if (checkMask.Lighting.Overall.HasValue && checkMask.Lighting.Overall.Value != item.Lighting_IsSet) return false;
-            if (checkMask.Lighting.Specific != null && (item.Lighting == null || !item.Lighting.HasBeenSet(checkMask.Lighting.Specific))) return false;
-            if (checkMask.Regions.Overall.HasValue && checkMask.Regions.Overall.Value != item.Regions.HasBeenSet) return false;
-            if (checkMask.MusicType.HasValue && checkMask.MusicType.Value != item.MusicType_IsSet) return false;
-            if (checkMask.WaterHeight.HasValue && checkMask.WaterHeight.Value != item.WaterHeight_IsSet) return false;
-            if (checkMask.Climate.HasValue && checkMask.Climate.Value != item.Climate_Property.HasBeenSet) return false;
-            if (checkMask.Water.HasValue && checkMask.Water.Value != item.Water_Property.HasBeenSet) return false;
-            if (checkMask.Owner.HasValue && checkMask.Owner.Value != item.Owner_Property.HasBeenSet) return false;
-            if (checkMask.FactionRank.HasValue && checkMask.FactionRank.Value != item.FactionRank_IsSet) return false;
-            if (checkMask.GlobalVariable.HasValue && checkMask.GlobalVariable.Value != item.GlobalVariable_Property.HasBeenSet) return false;
-            if (checkMask.PathGrid.Overall.HasValue && checkMask.PathGrid.Overall.Value != item.PathGrid_IsSet) return false;
-            if (checkMask.PathGrid.Specific != null && (item.PathGrid == null || !item.PathGrid.HasBeenSet(checkMask.PathGrid.Specific))) return false;
-            if (checkMask.Landscape.Overall.HasValue && checkMask.Landscape.Overall.Value != item.Landscape_IsSet) return false;
-            if (checkMask.Landscape.Specific != null && (item.Landscape == null || !item.Landscape.HasBeenSet(checkMask.Landscape.Specific))) return false;
-            if (checkMask.Persistent.Overall.HasValue && checkMask.Persistent.Overall.Value != item.Persistent.HasBeenSet) return false;
-            if (checkMask.Temporary.Overall.HasValue && checkMask.Temporary.Overall.Value != item.Temporary.HasBeenSet) return false;
-            if (checkMask.VisibleWhenDistant.Overall.HasValue && checkMask.VisibleWhenDistant.Overall.Value != item.VisibleWhenDistant.HasBeenSet) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public void FillHasBeenSetMask(
-            ICellInternalGetter item,
-            Cell_Mask<bool> mask)
-        {
-            mask.Name = item.Name_IsSet;
-            mask.Flags = item.Flags_IsSet;
-            mask.Grid = item.Grid_IsSet;
-            mask.Lighting = new MaskItem<bool, CellLighting_Mask<bool>>(item.Lighting_IsSet, item.Lighting.GetHasBeenSetMask());
-            mask.Regions = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Regions.HasBeenSet, null);
-            mask.MusicType = item.MusicType_IsSet;
-            mask.WaterHeight = item.WaterHeight_IsSet;
-            mask.Climate = item.Climate_Property.HasBeenSet;
-            mask.Water = item.Water_Property.HasBeenSet;
-            mask.Owner = item.Owner_Property.HasBeenSet;
-            mask.FactionRank = item.FactionRank_IsSet;
-            mask.GlobalVariable = item.GlobalVariable_Property.HasBeenSet;
-            mask.PathGrid = new MaskItem<bool, PathGrid_Mask<bool>>(item.PathGrid_IsSet, item.PathGrid.GetHasBeenSetMask());
-            mask.Landscape = new MaskItem<bool, Landscape_Mask<bool>>(item.Landscape_IsSet, item.Landscape.GetHasBeenSetMask());
-            mask.Timestamp = true;
-            mask.PersistentTimestamp = true;
-            mask.Persistent = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, IMask<bool>>>>(item.Persistent.HasBeenSet, item.Persistent.WithIndex().Select((i) => new MaskItemIndexed<bool, IMask<bool>>(i.Index, true, i.Item.GetHasBeenSetIMask())));
-            mask.TemporaryTimestamp = true;
-            mask.Temporary = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, IMask<bool>>>>(item.Temporary.HasBeenSet, item.Temporary.WithIndex().Select((i) => new MaskItemIndexed<bool, IMask<bool>>(i.Index, true, i.Item.GetHasBeenSetIMask())));
-            mask.VisibleWhenDistantTimestamp = true;
-            mask.VisibleWhenDistant = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, IMask<bool>>>>(item.VisibleWhenDistant.HasBeenSet, item.VisibleWhenDistant.WithIndex().Select((i) => new MaskItemIndexed<bool, IMask<bool>>(i.Index, true, i.Item.GetHasBeenSetIMask())));
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-
-        public static Cell_FieldIndex ConvertFieldIndex(Place_FieldIndex index)
-        {
-            switch (index)
-            {
-                case Place_FieldIndex.MajorRecordFlagsRaw:
-                    return (Cell_FieldIndex)((int)index);
-                case Place_FieldIndex.FormKey:
-                    return (Cell_FieldIndex)((int)index);
-                case Place_FieldIndex.Version:
-                    return (Cell_FieldIndex)((int)index);
-                case Place_FieldIndex.EditorID:
-                    return (Cell_FieldIndex)((int)index);
-                case Place_FieldIndex.OblivionMajorRecordFlags:
-                    return (Cell_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        public static Cell_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
-        {
-            switch (index)
-            {
-                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Cell_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.FormKey:
-                    return (Cell_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.Version:
-                    return (Cell_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.EditorID:
-                    return (Cell_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
-                    return (Cell_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        public static Cell_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
-        {
-            switch (index)
-            {
-                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Cell_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.FormKey:
-                    return (Cell_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
-                    return (Cell_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.EditorID:
-                    return (Cell_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        #region Equals and Hash
-        public virtual bool Equals(
-            ICellInternalGetter lhs,
-            ICellInternalGetter rhs)
-        {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (lhs.Name_IsSet != rhs.Name_IsSet) return false;
-            if (lhs.Name_IsSet)
-            {
-                if (!string.Equals(lhs.Name, rhs.Name)) return false;
-            }
-            if (lhs.Flags_IsSet != rhs.Flags_IsSet) return false;
-            if (lhs.Flags_IsSet)
-            {
-                if (lhs.Flags != rhs.Flags) return false;
-            }
-            if (lhs.Grid_IsSet != rhs.Grid_IsSet) return false;
-            if (lhs.Grid_IsSet)
-            {
-                if (!lhs.Grid.Equals(rhs.Grid)) return false;
-            }
-            if (lhs.Lighting_IsSet != rhs.Lighting_IsSet) return false;
-            if (lhs.Lighting_IsSet)
-            {
-                if (!object.Equals(lhs.Lighting, rhs.Lighting)) return false;
-            }
-            if (lhs.Regions.HasBeenSet != rhs.Regions.HasBeenSet) return false;
-            if (lhs.Regions.HasBeenSet)
-            {
-                if (!lhs.Regions.SequenceEqual(rhs.Regions)) return false;
-            }
-            if (lhs.MusicType_IsSet != rhs.MusicType_IsSet) return false;
-            if (lhs.MusicType_IsSet)
-            {
-                if (lhs.MusicType != rhs.MusicType) return false;
-            }
-            if (lhs.WaterHeight_IsSet != rhs.WaterHeight_IsSet) return false;
-            if (lhs.WaterHeight_IsSet)
-            {
-                if (!lhs.WaterHeight.EqualsWithin(rhs.WaterHeight)) return false;
-            }
-            if (lhs.Climate_Property.HasBeenSet != rhs.Climate_Property.HasBeenSet) return false;
-            if (lhs.Climate_Property.HasBeenSet)
-            {
-                if (!lhs.Climate_Property.Equals(rhs.Climate_Property)) return false;
-            }
-            if (lhs.Water_Property.HasBeenSet != rhs.Water_Property.HasBeenSet) return false;
-            if (lhs.Water_Property.HasBeenSet)
-            {
-                if (!lhs.Water_Property.Equals(rhs.Water_Property)) return false;
-            }
-            if (lhs.Owner_Property.HasBeenSet != rhs.Owner_Property.HasBeenSet) return false;
-            if (lhs.Owner_Property.HasBeenSet)
-            {
-                if (!lhs.Owner_Property.Equals(rhs.Owner_Property)) return false;
-            }
-            if (lhs.FactionRank_IsSet != rhs.FactionRank_IsSet) return false;
-            if (lhs.FactionRank_IsSet)
-            {
-                if (lhs.FactionRank != rhs.FactionRank) return false;
-            }
-            if (lhs.GlobalVariable_Property.HasBeenSet != rhs.GlobalVariable_Property.HasBeenSet) return false;
-            if (lhs.GlobalVariable_Property.HasBeenSet)
-            {
-                if (!lhs.GlobalVariable_Property.Equals(rhs.GlobalVariable_Property)) return false;
-            }
-            if (lhs.PathGrid_IsSet != rhs.PathGrid_IsSet) return false;
-            if (lhs.PathGrid_IsSet)
-            {
-                if (!object.Equals(lhs.PathGrid, rhs.PathGrid)) return false;
-            }
-            if (lhs.Landscape_IsSet != rhs.Landscape_IsSet) return false;
-            if (lhs.Landscape_IsSet)
-            {
-                if (!object.Equals(lhs.Landscape, rhs.Landscape)) return false;
-            }
-            if (!MemoryExtensions.SequenceEqual(lhs.Timestamp, rhs.Timestamp)) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.PersistentTimestamp, rhs.PersistentTimestamp)) return false;
-            if (lhs.Persistent.HasBeenSet != rhs.Persistent.HasBeenSet) return false;
-            if (lhs.Persistent.HasBeenSet)
-            {
-                if (!lhs.Persistent.SequenceEqual(rhs.Persistent)) return false;
-            }
-            if (!MemoryExtensions.SequenceEqual(lhs.TemporaryTimestamp, rhs.TemporaryTimestamp)) return false;
-            if (lhs.Temporary.HasBeenSet != rhs.Temporary.HasBeenSet) return false;
-            if (lhs.Temporary.HasBeenSet)
-            {
-                if (!lhs.Temporary.SequenceEqual(rhs.Temporary)) return false;
-            }
-            if (!MemoryExtensions.SequenceEqual(lhs.VisibleWhenDistantTimestamp, rhs.VisibleWhenDistantTimestamp)) return false;
-            if (lhs.VisibleWhenDistant.HasBeenSet != rhs.VisibleWhenDistant.HasBeenSet) return false;
-            if (lhs.VisibleWhenDistant.HasBeenSet)
-            {
-                if (!lhs.VisibleWhenDistant.SequenceEqual(rhs.VisibleWhenDistant)) return false;
-            }
-            return true;
-        }
-
-        public override bool Equals(
-            IPlaceInternalGetter lhs,
-            IPlaceInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (ICellInternalGetter)lhs,
-                rhs: rhs as ICellInternalGetter);
-        }
-
-        public override bool Equals(
-            IOblivionMajorRecordInternalGetter lhs,
-            IOblivionMajorRecordInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (ICellInternalGetter)lhs,
-                rhs: rhs as ICellInternalGetter);
-        }
-
-        public override bool Equals(
-            IMajorRecordInternalGetter lhs,
-            IMajorRecordInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (ICellInternalGetter)lhs,
-                rhs: rhs as ICellInternalGetter);
-        }
-
-        public virtual int GetHashCode(ICellInternalGetter item)
-        {
-            int ret = 0;
-            if (item.Name_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Name).CombineHashCode(ret);
-            }
-            if (item.Flags_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
-            }
-            if (item.Grid_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Grid).CombineHashCode(ret);
-            }
-            if (item.Lighting_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Lighting).CombineHashCode(ret);
-            }
-            if (item.Regions.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.Regions).CombineHashCode(ret);
-            }
-            if (item.MusicType_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.MusicType).CombineHashCode(ret);
-            }
-            if (item.WaterHeight_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.WaterHeight).CombineHashCode(ret);
-            }
-            if (item.Climate_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.Climate).CombineHashCode(ret);
-            }
-            if (item.Water_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.Water).CombineHashCode(ret);
-            }
-            if (item.Owner_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.Owner).CombineHashCode(ret);
-            }
-            if (item.FactionRank_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.FactionRank).CombineHashCode(ret);
-            }
-            if (item.GlobalVariable_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.GlobalVariable).CombineHashCode(ret);
-            }
-            if (item.PathGrid_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.PathGrid).CombineHashCode(ret);
-            }
-            if (item.Landscape_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Landscape).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(item.Timestamp).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.PersistentTimestamp).CombineHashCode(ret);
-            if (item.Persistent.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.Persistent).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(item.TemporaryTimestamp).CombineHashCode(ret);
-            if (item.Temporary.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.Temporary).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(item.VisibleWhenDistantTimestamp).CombineHashCode(ret);
-            if (item.VisibleWhenDistant.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.VisibleWhenDistant).CombineHashCode(ret);
-            }
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        public override int GetHashCode(IPlaceInternalGetter item)
-        {
-            return GetHashCode(item: (ICellInternalGetter)item);
-        }
-
-        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
-        {
-            return GetHashCode(item: (ICellInternalGetter)item);
-        }
-
-        public override int GetHashCode(IMajorRecordInternalGetter item)
-        {
-            return GetHashCode(item: (ICellInternalGetter)item);
-        }
-
-        #endregion
-
-
-        #region Mutagen
-        partial void PostDuplicate(Cell obj, Cell rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new Cell(getNextFormKey());
-            ret.CopyFieldsFrom((Cell)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (Cell)item, getNextFormKey, duplicatedRecords);
-            return ret;
-        }
-
-        #endregion
-
+        
+        
     }
     #endregion
 
@@ -5717,17 +5748,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         PlaceBinaryWrapper,
         ICellInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Cell_Registration.Instance;
         public new static Cell_Registration Registration => Cell_Registration.Instance;
-        protected override object CommonInstance => CellCommon.Instance;
+        protected override object CommonInstance()
+        {
+            return CellCommon.Instance;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICellInternalGetter)rhs, include);
 
         protected override object XmlWriteTranslator => CellXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((CellXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         protected override object BinaryWriteTranslator => CellBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((CellBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
 
         #region Name
         private int? _NameLocation;
@@ -5745,7 +5808,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public P2Int Grid => _GridLocation.HasValue ? P2IntBinaryTranslation.Read(HeaderTranslation.ExtractSubrecordSpan(_data, _GridLocation.Value, _package.Meta)) : default;
         #endregion
         #region Lighting
-        public ICellLightingGetter Lighting { get; private set; }
+        public ICellLightingInternalGetter Lighting { get; private set; }
         public bool Lighting_IsSet => Lighting != null;
         #endregion
         public IReadOnlySetList<IFormIDLinkGetter<IRegionInternalGetter>> Regions { get; private set; } = EmptySetList<IFormIDLinkGetter<IRegionInternalGetter>>.Instance;
@@ -5932,4 +5995,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class Cell
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Cell_Registration.Instance;
+        public new static Cell_Registration Registration => Cell_Registration.Instance;
+        protected override object CommonInstance()
+        {
+            return CellCommon.Instance;
+        }
+        protected override object CommonSetterInstance()
+        {
+            return CellSetterCommon.Instance;
+        }
+        protected override object CommonSetterCopyInstance()
+        {
+            return CellSetterCopyCommon.Instance;
+        }
+
+        #endregion
+
+    }
 }

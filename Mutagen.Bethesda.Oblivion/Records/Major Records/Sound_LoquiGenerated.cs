@@ -41,11 +41,6 @@ namespace Mutagen.Bethesda.Oblivion
         IEquatable<Sound>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Sound_Registration.Instance;
-        public new static Sound_Registration Registration => Sound_Registration.Instance;
-        protected override object CommonInstance => SoundCommon.Instance;
-
         #region Ctor
         protected Sound()
         {
@@ -127,20 +122,33 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is ISoundInternalGetter rhs)) return false;
-            return ((SoundCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            return ((SoundCommon)((ISoundInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(Sound obj)
         {
-            return ((SoundCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((SoundCommon)((ISoundInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((SoundCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((SoundCommon)((ISoundInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected override object XmlWriteTranslator => SoundXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((SoundXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static Sound CreateFromXml(
@@ -348,6 +356,19 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Binary Translation
         protected override object BinaryWriteTranslator => SoundBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((SoundBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
         #region Binary Create
         [DebuggerStepThrough]
         public static Sound CreateFromBinary(
@@ -579,7 +600,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            SoundCommon.CopyFieldsFrom(
+            SoundSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -594,7 +615,7 @@ namespace Mutagen.Bethesda.Oblivion
             Sound_CopyMask copyMask = null,
             Sound def = null)
         {
-            SoundCommon.CopyFieldsFrom(
+            SoundSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -621,7 +642,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            SoundCommon.Instance.Clear(this);
+            SoundSetterCommon.Instance.Clear(this);
         }
 
         public new static Sound Create(IEnumerable<KeyValuePair<ushort, object>> fields)
@@ -718,7 +739,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this ISoundInternal item)
         {
-            ((SoundCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((SoundSetterCommon)((ISoundInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static Sound_Mask<bool> GetEqualsMask(
@@ -726,7 +747,7 @@ namespace Mutagen.Bethesda.Oblivion
             ISoundInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((SoundCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((SoundCommon)((ISoundInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -737,7 +758,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Sound_Mask<bool> printMask = null)
         {
-            return ((SoundCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((SoundCommon)((ISoundInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -749,7 +770,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Sound_Mask<bool> printMask = null)
         {
-            ((SoundCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((SoundCommon)((ISoundInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -760,7 +781,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ISoundInternalGetter item,
             Sound_Mask<bool?> checkMask)
         {
-            return ((SoundCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((SoundCommon)((ISoundInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -768,7 +789,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Sound_Mask<bool> GetHasBeenSetMask(this ISoundInternalGetter item)
         {
             var ret = new Sound_Mask<bool>();
-            ((SoundCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((SoundCommon)((ISoundInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -778,7 +799,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ISoundInternalGetter item,
             ISoundInternalGetter rhs)
         {
-            return ((SoundCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((SoundCommon)((ISoundInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -834,8 +855,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type SetterType = typeof(ISound);
 
         public static readonly Type InternalSetterType = typeof(ISoundInternal);
-
-        public static readonly Type CommonType = typeof(SoundCommon);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.Sound";
 
@@ -976,7 +995,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -996,9 +1014,271 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
+    public partial class SoundSetterCommon : OblivionMajorRecordSetterCommon
+    {
+        public new static readonly SoundSetterCommon Instance = new SoundSetterCommon();
+
+        partial void ClearPartial();
+        
+        public virtual void Clear(ISoundInternal item)
+        {
+            ClearPartial();
+            item.File_Unset();
+            item.Data_Unset();
+            base.Clear(item);
+        }
+        
+        public override void Clear(IOblivionMajorRecordInternal item)
+        {
+            Clear(item: (ISoundInternal)item);
+        }
+        
+        public override void Clear(IMajorRecordInternal item)
+        {
+            Clear(item: (ISoundInternal)item);
+        }
+        
+        
+    }
     public partial class SoundCommon : OblivionMajorRecordCommon
     {
-        public static readonly SoundCommon Instance = new SoundCommon();
+        public new static readonly SoundCommon Instance = new SoundCommon();
+
+        public Sound_Mask<bool> GetEqualsMask(
+            ISoundInternalGetter item,
+            ISoundInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new Sound_Mask<bool>();
+            ((SoundCommon)((ISoundInternalGetter)item).CommonInstance()).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+        
+        public void FillEqualsMask(
+            ISoundInternalGetter item,
+            ISoundInternalGetter rhs,
+            Sound_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            if (rhs == null) return;
+            ret.File = item.File_IsSet == rhs.File_IsSet && string.Equals(item.File, rhs.File);
+            ret.Data = EqualsMaskHelper.EqualsHelper(
+                item.Data_IsSet,
+                rhs.Data_IsSet,
+                item.Data,
+                rhs.Data,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
+            base.FillEqualsMask(item, rhs, ret, include);
+        }
+        
+        public string ToString(
+            ISoundInternalGetter item,
+            string name = null,
+            Sound_Mask<bool> printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+            return fg.ToString();
+        }
+        
+        public void ToString(
+            ISoundInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            Sound_Mask<bool> printMask = null)
+        {
+            if (name == null)
+            {
+                fg.AppendLine($"Sound =>");
+            }
+            else
+            {
+                fg.AppendLine($"{name} (Sound) =>");
+            }
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
+            }
+            fg.AppendLine("]");
+        }
+        
+        protected static void ToStringFields(
+            ISoundInternalGetter item,
+            FileGeneration fg,
+            Sound_Mask<bool> printMask = null)
+        {
+            OblivionMajorRecordCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.File ?? true)
+            {
+                fg.AppendLine($"File => {item.File}");
+            }
+            if (printMask?.Data?.Overall ?? true)
+            {
+                item.Data?.ToString(fg, "Data");
+            }
+        }
+        
+        public bool HasBeenSet(
+            ISoundInternalGetter item,
+            Sound_Mask<bool?> checkMask)
+        {
+            if (checkMask.File.HasValue && checkMask.File.Value != item.File_IsSet) return false;
+            if (checkMask.Data.Overall.HasValue && checkMask.Data.Overall.Value != item.Data_IsSet) return false;
+            if (checkMask.Data.Specific != null && (item.Data == null || !item.Data.HasBeenSet(checkMask.Data.Specific))) return false;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+        
+        public void FillHasBeenSetMask(
+            ISoundInternalGetter item,
+            Sound_Mask<bool> mask)
+        {
+            mask.File = item.File_IsSet;
+            mask.Data = new MaskItem<bool, SoundData_Mask<bool>>(item.Data_IsSet, item.Data.GetHasBeenSetMask());
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
+        }
+        
+        public static Sound_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (Sound_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.FormKey:
+                    return (Sound_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.Version:
+                    return (Sound_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.EditorID:
+                    return (Sound_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
+                    return (Sound_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        public static Sound_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (Sound_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.FormKey:
+                    return (Sound_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.Version:
+                    return (Sound_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.EditorID:
+                    return (Sound_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        #region Equals and Hash
+        public virtual bool Equals(
+            ISoundInternalGetter lhs,
+            ISoundInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.File_IsSet != rhs.File_IsSet) return false;
+            if (lhs.File_IsSet)
+            {
+                if (!string.Equals(lhs.File, rhs.File)) return false;
+            }
+            if (lhs.Data_IsSet != rhs.Data_IsSet) return false;
+            if (lhs.Data_IsSet)
+            {
+                if (!object.Equals(lhs.Data, rhs.Data)) return false;
+            }
+            return true;
+        }
+        
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (ISoundInternalGetter)lhs,
+                rhs: rhs as ISoundInternalGetter);
+        }
+        
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (ISoundInternalGetter)lhs,
+                rhs: rhs as ISoundInternalGetter);
+        }
+        
+        public virtual int GetHashCode(ISoundInternalGetter item)
+        {
+            int ret = 0;
+            if (item.File_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.File).CombineHashCode(ret);
+            }
+            if (item.Data_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Data).CombineHashCode(ret);
+            }
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+        
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (ISoundInternalGetter)item);
+        }
+        
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (ISoundInternalGetter)item);
+        }
+        
+        #endregion
+        
+        
+        #region Mutagen
+        partial void PostDuplicate(Sound obj, Sound rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+        
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new Sound(getNextFormKey());
+            ret.CopyFieldsFrom((Sound)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (Sound)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+        
+        #endregion
+        
+        
+    }
+    public partial class SoundSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
+    {
+        public new static readonly SoundSetterCopyCommon Instance = new SoundSetterCopyCommon();
 
         #region Copy Fields From
         public static void CopyFieldsFrom(
@@ -1008,7 +1288,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             Sound_CopyMask copyMask)
         {
-            OblivionMajorRecordCommon.CopyFieldsFrom(
+            OblivionMajorRecordSetterCopyCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1062,7 +1342,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             case CopyOption.Reference:
                                 throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
-                                SoundDataCommon.CopyFieldsFrom(
+                                SoundDataSetterCopyCommon.CopyFieldsFrom(
                                     item: item.Data,
                                     rhs: rhs.Data,
                                     def: def?.Data,
@@ -1097,259 +1377,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
         }
-
+        
         #endregion
-
-        partial void ClearPartial();
-
-        public virtual void Clear(ISoundInternal item)
-        {
-            ClearPartial();
-            item.File_Unset();
-            item.Data_Unset();
-            base.Clear(item);
-        }
-
-        public override void Clear(IOblivionMajorRecordInternal item)
-        {
-            Clear(item: (ISoundInternal)item);
-        }
-
-        public override void Clear(IMajorRecordInternal item)
-        {
-            Clear(item: (ISoundInternal)item);
-        }
-
-        public Sound_Mask<bool> GetEqualsMask(
-            ISoundInternalGetter item,
-            ISoundInternalGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new Sound_Mask<bool>();
-            ((SoundCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public void FillEqualsMask(
-            ISoundInternalGetter item,
-            ISoundInternalGetter rhs,
-            Sound_Mask<bool> ret,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            if (rhs == null) return;
-            ret.File = item.File_IsSet == rhs.File_IsSet && string.Equals(item.File, rhs.File);
-            ret.Data = EqualsMaskHelper.EqualsHelper(
-                item.Data_IsSet,
-                rhs.Data_IsSet,
-                item.Data,
-                rhs.Data,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
-                include);
-            base.FillEqualsMask(item, rhs, ret, include);
-        }
-
-        public string ToString(
-            ISoundInternalGetter item,
-            string name = null,
-            Sound_Mask<bool> printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(
-                item: item,
-                fg: fg,
-                name: name,
-                printMask: printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(
-            ISoundInternalGetter item,
-            FileGeneration fg,
-            string name = null,
-            Sound_Mask<bool> printMask = null)
-        {
-            if (name == null)
-            {
-                fg.AppendLine($"Sound =>");
-            }
-            else
-            {
-                fg.AppendLine($"{name} (Sound) =>");
-            }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                ToStringFields(
-                    item: item,
-                    fg: fg,
-                    printMask: printMask);
-            }
-            fg.AppendLine("]");
-        }
-
-        protected static void ToStringFields(
-            ISoundInternalGetter item,
-            FileGeneration fg,
-            Sound_Mask<bool> printMask = null)
-        {
-            OblivionMajorRecordCommon.ToStringFields(
-                item: item,
-                fg: fg,
-                printMask: printMask);
-            if (printMask?.File ?? true)
-            {
-                fg.AppendLine($"File => {item.File}");
-            }
-            if (printMask?.Data?.Overall ?? true)
-            {
-                item.Data?.ToString(fg, "Data");
-            }
-        }
-
-        public bool HasBeenSet(
-            ISoundInternalGetter item,
-            Sound_Mask<bool?> checkMask)
-        {
-            if (checkMask.File.HasValue && checkMask.File.Value != item.File_IsSet) return false;
-            if (checkMask.Data.Overall.HasValue && checkMask.Data.Overall.Value != item.Data_IsSet) return false;
-            if (checkMask.Data.Specific != null && (item.Data == null || !item.Data.HasBeenSet(checkMask.Data.Specific))) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public void FillHasBeenSetMask(
-            ISoundInternalGetter item,
-            Sound_Mask<bool> mask)
-        {
-            mask.File = item.File_IsSet;
-            mask.Data = new MaskItem<bool, SoundData_Mask<bool>>(item.Data_IsSet, item.Data.GetHasBeenSetMask());
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-
-        public static Sound_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
-        {
-            switch (index)
-            {
-                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Sound_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.FormKey:
-                    return (Sound_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.Version:
-                    return (Sound_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.EditorID:
-                    return (Sound_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
-                    return (Sound_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        public static Sound_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
-        {
-            switch (index)
-            {
-                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Sound_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.FormKey:
-                    return (Sound_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
-                    return (Sound_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.EditorID:
-                    return (Sound_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        #region Equals and Hash
-        public virtual bool Equals(
-            ISoundInternalGetter lhs,
-            ISoundInternalGetter rhs)
-        {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (lhs.File_IsSet != rhs.File_IsSet) return false;
-            if (lhs.File_IsSet)
-            {
-                if (!string.Equals(lhs.File, rhs.File)) return false;
-            }
-            if (lhs.Data_IsSet != rhs.Data_IsSet) return false;
-            if (lhs.Data_IsSet)
-            {
-                if (!object.Equals(lhs.Data, rhs.Data)) return false;
-            }
-            return true;
-        }
-
-        public override bool Equals(
-            IOblivionMajorRecordInternalGetter lhs,
-            IOblivionMajorRecordInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (ISoundInternalGetter)lhs,
-                rhs: rhs as ISoundInternalGetter);
-        }
-
-        public override bool Equals(
-            IMajorRecordInternalGetter lhs,
-            IMajorRecordInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (ISoundInternalGetter)lhs,
-                rhs: rhs as ISoundInternalGetter);
-        }
-
-        public virtual int GetHashCode(ISoundInternalGetter item)
-        {
-            int ret = 0;
-            if (item.File_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.File).CombineHashCode(ret);
-            }
-            if (item.Data_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Data).CombineHashCode(ret);
-            }
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
-        {
-            return GetHashCode(item: (ISoundInternalGetter)item);
-        }
-
-        public override int GetHashCode(IMajorRecordInternalGetter item)
-        {
-            return GetHashCode(item: (ISoundInternalGetter)item);
-        }
-
-        #endregion
-
-
-        #region Mutagen
-        partial void PostDuplicate(Sound obj, Sound rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new Sound(getNextFormKey());
-            ret.CopyFieldsFrom((Sound)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (Sound)item, getNextFormKey, duplicatedRecords);
-            return ret;
-        }
-
-        #endregion
-
+        
+        
     }
     #endregion
 
@@ -2077,17 +2108,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         OblivionMajorRecordBinaryWrapper,
         ISoundInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Sound_Registration.Instance;
         public new static Sound_Registration Registration => Sound_Registration.Instance;
-        protected override object CommonInstance => SoundCommon.Instance;
+        protected override object CommonInstance()
+        {
+            return SoundCommon.Instance;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISoundInternalGetter)rhs, include);
 
         protected override object XmlWriteTranslator => SoundXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((SoundXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         protected override object BinaryWriteTranslator => SoundBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((SoundBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
 
         #region File
         private int? _FileLocation;
@@ -2185,4 +2248,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class Sound
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Sound_Registration.Instance;
+        public new static Sound_Registration Registration => Sound_Registration.Instance;
+        protected override object CommonInstance()
+        {
+            return SoundCommon.Instance;
+        }
+        protected override object CommonSetterInstance()
+        {
+            return SoundSetterCommon.Instance;
+        }
+        protected override object CommonSetterCopyInstance()
+        {
+            return SoundSetterCopyCommon.Instance;
+        }
+
+        #endregion
+
+    }
 }

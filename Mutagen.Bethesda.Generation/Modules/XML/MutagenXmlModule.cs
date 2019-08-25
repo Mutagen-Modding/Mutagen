@@ -1,4 +1,4 @@
-﻿using Loqui;
+using Loqui;
 using Loqui.Generation;
 using Loqui.Internal;
 using System;
@@ -20,10 +20,10 @@ namespace Mutagen.Bethesda.Generation
         public override void GenerateWriteToNode(ObjectGeneration obj, FileGeneration fg)
         {
             using (var args = new FunctionWrapper(fg,
-                $"public static void WriteToNode{ModuleNickname}{obj.GetGenericTypes(MaskType.Normal)}",
-                obj.GenerateWhereClauses(LoquiInterfaceType.IGetter, defs: obj.Generics).ToArray()))
+                $"public static void WriteToNode{ModuleNickname}{obj.GetGenericTypes(MaskType.Normal)}"))
             {
-                args.Add($"{obj.Interface(internalInterface: obj.HasInternalInterface, getter: true)} item");
+                args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.IGetter, defs: obj.Generics));
+                args.Add($"{obj.Interface(internalInterface: true, getter: true)} item");
                 args.Add($"XElement {XmlTranslationModule.XElementLine.GetParameterName(obj)}");
                 args.Add($"ErrorMaskBuilder errorMask");
                 args.Add($"{nameof(TranslationCrystal)} translationMask");
@@ -303,7 +303,7 @@ namespace Mutagen.Bethesda.Generation
             using (var args = new FunctionWrapper(fg,
                 $"public static void FillPublicElement{ModuleNickname}"))
             {
-                args.Add($"{obj.Interface(getter: false, internalInterface: obj.HasInternalInterface)} item");
+                args.Add($"{obj.Interface(getter: false, internalInterface: true)} item");
                 args.Add($"XElement {XmlTranslationModule.XElementLine.GetParameterName(obj)}");
                 args.Add("string name");
                 args.Add($"ErrorMaskBuilder errorMask");

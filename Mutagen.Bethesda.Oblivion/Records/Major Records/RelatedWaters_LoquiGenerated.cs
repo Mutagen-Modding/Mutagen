@@ -34,18 +34,12 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class RelatedWaters :
         LoquiNotifyingObject,
-        IRelatedWaters,
+        IRelatedWatersInternal,
         ILoquiObjectSetter<RelatedWaters>,
         ILinkSubContainer,
         IEquatable<RelatedWaters>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => RelatedWaters_Registration.Instance;
-        public static RelatedWaters_Registration Registration => RelatedWaters_Registration.Instance;
-        protected object CommonInstance => RelatedWatersCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
-
         #region Ctor
         public RelatedWaters()
         {
@@ -79,7 +73,7 @@ namespace Mutagen.Bethesda.Oblivion
         IFormIDLinkGetter<IWaterInternalGetter> IRelatedWatersGetter.RelatedWaterUnderwater_Property => this.RelatedWaterUnderwater_Property;
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRelatedWatersGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRelatedWatersInternalGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -97,22 +91,35 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is IRelatedWatersGetter rhs)) return false;
-            return ((RelatedWatersCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            if (!(obj is IRelatedWatersInternalGetter rhs)) return false;
+            return ((RelatedWatersCommon)((IRelatedWatersInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(RelatedWaters obj)
         {
-            return ((RelatedWatersCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((RelatedWatersCommon)((IRelatedWatersInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((RelatedWatersCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((RelatedWatersCommon)((IRelatedWatersInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected object XmlWriteTranslator => RelatedWatersXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((RelatedWatersXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static RelatedWaters CreateFromXml(
@@ -297,6 +304,19 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Translation
         protected object BinaryWriteTranslator => RelatedWatersBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((RelatedWatersBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
         #region Binary Create
         [DebuggerStepThrough]
         public static RelatedWaters CreateFromBinary(
@@ -455,7 +475,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            RelatedWatersCommon.CopyFieldsFrom(
+            RelatedWatersSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -470,7 +490,7 @@ namespace Mutagen.Bethesda.Oblivion
             RelatedWaters_CopyMask copyMask = null,
             RelatedWaters def = null)
         {
-            RelatedWatersCommon.CopyFieldsFrom(
+            RelatedWatersSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -499,7 +519,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void Clear()
         {
-            RelatedWatersCommon.Instance.Clear(this);
+            RelatedWatersSetterCommon.Instance.Clear(this);
         }
 
         public static RelatedWaters Create(IEnumerable<KeyValuePair<ushort, object>> fields)
@@ -538,8 +558,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IRelatedWaters :
-        IRelatedWatersGetter,
-        ILoquiObjectSetter<IRelatedWaters>
+        IRelatedWatersInternalGetter,
+        ILoquiObjectSetter<IRelatedWatersInternal>
     {
         new Water RelatedWaterDaytime { get; set; }
         new IFormIDLink<Water> RelatedWaterDaytime_Property { get; }
@@ -554,9 +574,21 @@ namespace Mutagen.Bethesda.Oblivion
             RelatedWaters def = null);
     }
 
+    public partial interface IRelatedWatersInternal :
+        IRelatedWaters,
+        IRelatedWatersInternalGetter
+    {
+        new Water RelatedWaterDaytime { get; set; }
+        new IFormIDLink<Water> RelatedWaterDaytime_Property { get; }
+        new Water RelatedWaterNighttime { get; set; }
+        new IFormIDLink<Water> RelatedWaterNighttime_Property { get; }
+        new Water RelatedWaterUnderwater { get; set; }
+        new IFormIDLink<Water> RelatedWaterUnderwater_Property { get; }
+    }
+
     public partial interface IRelatedWatersGetter :
         ILoquiObject,
-        ILoquiObject<IRelatedWatersGetter>,
+        ILoquiObject<IRelatedWatersInternalGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -578,45 +610,53 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    public partial interface IRelatedWatersInternalGetter : IRelatedWatersGetter
+    {
+        object CommonInstance();
+        object CommonSetterInstance();
+        object CommonSetterCopyInstance();
+
+    }
+
     #endregion
 
     #region Common MixIn
     public static class RelatedWatersMixIn
     {
-        public static void Clear(this IRelatedWaters item)
+        public static void Clear(this IRelatedWatersInternal item)
         {
-            ((RelatedWatersCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((RelatedWatersSetterCommon)((IRelatedWatersInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static RelatedWaters_Mask<bool> GetEqualsMask(
-            this IRelatedWatersGetter item,
-            IRelatedWatersGetter rhs,
+            this IRelatedWatersInternalGetter item,
+            IRelatedWatersInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((RelatedWatersCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((RelatedWatersCommon)((IRelatedWatersInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IRelatedWatersGetter item,
+            this IRelatedWatersInternalGetter item,
             string name = null,
             RelatedWaters_Mask<bool> printMask = null)
         {
-            return ((RelatedWatersCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((RelatedWatersCommon)((IRelatedWatersInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IRelatedWatersGetter item,
+            this IRelatedWatersInternalGetter item,
             FileGeneration fg,
             string name = null,
             RelatedWaters_Mask<bool> printMask = null)
         {
-            ((RelatedWatersCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((RelatedWatersCommon)((IRelatedWatersInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -624,28 +664,28 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static bool HasBeenSet(
-            this IRelatedWatersGetter item,
+            this IRelatedWatersInternalGetter item,
             RelatedWaters_Mask<bool?> checkMask)
         {
-            return ((RelatedWatersCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((RelatedWatersCommon)((IRelatedWatersInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static RelatedWaters_Mask<bool> GetHasBeenSetMask(this IRelatedWatersGetter item)
+        public static RelatedWaters_Mask<bool> GetHasBeenSetMask(this IRelatedWatersInternalGetter item)
         {
             var ret = new RelatedWaters_Mask<bool>();
-            ((RelatedWatersCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((RelatedWatersCommon)((IRelatedWatersInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this IRelatedWatersGetter item,
-            IRelatedWatersGetter rhs)
+            this IRelatedWatersInternalGetter item,
+            IRelatedWatersInternalGetter rhs)
         {
-            return ((RelatedWatersCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((RelatedWatersCommon)((IRelatedWatersInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -692,13 +732,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IRelatedWatersGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type InternalGetterType = typeof(IRelatedWatersInternalGetter);
 
         public static readonly Type SetterType = typeof(IRelatedWaters);
 
-        public static readonly Type InternalSetterType = null;
-
-        public static readonly Type CommonType = typeof(RelatedWatersCommon);
+        public static readonly Type InternalSetterType = typeof(IRelatedWatersInternal);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.RelatedWaters";
 
@@ -846,7 +884,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -866,9 +903,156 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
+    public partial class RelatedWatersSetterCommon
+    {
+        public static readonly RelatedWatersSetterCommon Instance = new RelatedWatersSetterCommon();
+
+        partial void ClearPartial();
+        
+        public virtual void Clear(IRelatedWatersInternal item)
+        {
+            ClearPartial();
+            item.RelatedWaterDaytime = default(Water);
+            item.RelatedWaterNighttime = default(Water);
+            item.RelatedWaterUnderwater = default(Water);
+        }
+        
+        
+    }
     public partial class RelatedWatersCommon
     {
         public static readonly RelatedWatersCommon Instance = new RelatedWatersCommon();
+
+        public RelatedWaters_Mask<bool> GetEqualsMask(
+            IRelatedWatersInternalGetter item,
+            IRelatedWatersInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new RelatedWaters_Mask<bool>();
+            ((RelatedWatersCommon)((IRelatedWatersInternalGetter)item).CommonInstance()).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+        
+        public void FillEqualsMask(
+            IRelatedWatersInternalGetter item,
+            IRelatedWatersInternalGetter rhs,
+            RelatedWaters_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            if (rhs == null) return;
+            ret.RelatedWaterDaytime = item.RelatedWaterDaytime_Property.FormKey == rhs.RelatedWaterDaytime_Property.FormKey;
+            ret.RelatedWaterNighttime = item.RelatedWaterNighttime_Property.FormKey == rhs.RelatedWaterNighttime_Property.FormKey;
+            ret.RelatedWaterUnderwater = item.RelatedWaterUnderwater_Property.FormKey == rhs.RelatedWaterUnderwater_Property.FormKey;
+        }
+        
+        public string ToString(
+            IRelatedWatersInternalGetter item,
+            string name = null,
+            RelatedWaters_Mask<bool> printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+            return fg.ToString();
+        }
+        
+        public void ToString(
+            IRelatedWatersInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            RelatedWaters_Mask<bool> printMask = null)
+        {
+            if (name == null)
+            {
+                fg.AppendLine($"RelatedWaters =>");
+            }
+            else
+            {
+                fg.AppendLine($"{name} (RelatedWaters) =>");
+            }
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
+            }
+            fg.AppendLine("]");
+        }
+        
+        protected static void ToStringFields(
+            IRelatedWatersInternalGetter item,
+            FileGeneration fg,
+            RelatedWaters_Mask<bool> printMask = null)
+        {
+            if (printMask?.RelatedWaterDaytime ?? true)
+            {
+                fg.AppendLine($"RelatedWaterDaytime => {item.RelatedWaterDaytime_Property}");
+            }
+            if (printMask?.RelatedWaterNighttime ?? true)
+            {
+                fg.AppendLine($"RelatedWaterNighttime => {item.RelatedWaterNighttime_Property}");
+            }
+            if (printMask?.RelatedWaterUnderwater ?? true)
+            {
+                fg.AppendLine($"RelatedWaterUnderwater => {item.RelatedWaterUnderwater_Property}");
+            }
+        }
+        
+        public bool HasBeenSet(
+            IRelatedWatersInternalGetter item,
+            RelatedWaters_Mask<bool?> checkMask)
+        {
+            return true;
+        }
+        
+        public void FillHasBeenSetMask(
+            IRelatedWatersInternalGetter item,
+            RelatedWaters_Mask<bool> mask)
+        {
+            mask.RelatedWaterDaytime = true;
+            mask.RelatedWaterNighttime = true;
+            mask.RelatedWaterUnderwater = true;
+        }
+        
+        #region Equals and Hash
+        public virtual bool Equals(
+            IRelatedWatersInternalGetter lhs,
+            IRelatedWatersInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!lhs.RelatedWaterDaytime_Property.Equals(rhs.RelatedWaterDaytime_Property)) return false;
+            if (!lhs.RelatedWaterNighttime_Property.Equals(rhs.RelatedWaterNighttime_Property)) return false;
+            if (!lhs.RelatedWaterUnderwater_Property.Equals(rhs.RelatedWaterUnderwater_Property)) return false;
+            return true;
+        }
+        
+        public virtual int GetHashCode(IRelatedWatersInternalGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.RelatedWaterDaytime).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.RelatedWaterNighttime).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.RelatedWaterUnderwater).CombineHashCode(ret);
+            return ret;
+        }
+        
+        #endregion
+        
+        
+        
+    }
+    public partial class RelatedWatersSetterCopyCommon
+    {
+        public static readonly RelatedWatersSetterCopyCommon Instance = new RelatedWatersSetterCopyCommon();
 
         #region Copy Fields From
         public static void CopyFieldsFrom(
@@ -930,144 +1114,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
         }
-
+        
         #endregion
-
-        partial void ClearPartial();
-
-        public virtual void Clear(IRelatedWaters item)
-        {
-            ClearPartial();
-            item.RelatedWaterDaytime = default(Water);
-            item.RelatedWaterNighttime = default(Water);
-            item.RelatedWaterUnderwater = default(Water);
-        }
-
-        public RelatedWaters_Mask<bool> GetEqualsMask(
-            IRelatedWatersGetter item,
-            IRelatedWatersGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new RelatedWaters_Mask<bool>();
-            ((RelatedWatersCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public void FillEqualsMask(
-            IRelatedWatersGetter item,
-            IRelatedWatersGetter rhs,
-            RelatedWaters_Mask<bool> ret,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            if (rhs == null) return;
-            ret.RelatedWaterDaytime = item.RelatedWaterDaytime_Property.FormKey == rhs.RelatedWaterDaytime_Property.FormKey;
-            ret.RelatedWaterNighttime = item.RelatedWaterNighttime_Property.FormKey == rhs.RelatedWaterNighttime_Property.FormKey;
-            ret.RelatedWaterUnderwater = item.RelatedWaterUnderwater_Property.FormKey == rhs.RelatedWaterUnderwater_Property.FormKey;
-        }
-
-        public string ToString(
-            IRelatedWatersGetter item,
-            string name = null,
-            RelatedWaters_Mask<bool> printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(
-                item: item,
-                fg: fg,
-                name: name,
-                printMask: printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(
-            IRelatedWatersGetter item,
-            FileGeneration fg,
-            string name = null,
-            RelatedWaters_Mask<bool> printMask = null)
-        {
-            if (name == null)
-            {
-                fg.AppendLine($"RelatedWaters =>");
-            }
-            else
-            {
-                fg.AppendLine($"{name} (RelatedWaters) =>");
-            }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                ToStringFields(
-                    item: item,
-                    fg: fg,
-                    printMask: printMask);
-            }
-            fg.AppendLine("]");
-        }
-
-        protected static void ToStringFields(
-            IRelatedWatersGetter item,
-            FileGeneration fg,
-            RelatedWaters_Mask<bool> printMask = null)
-        {
-            if (printMask?.RelatedWaterDaytime ?? true)
-            {
-                fg.AppendLine($"RelatedWaterDaytime => {item.RelatedWaterDaytime_Property}");
-            }
-            if (printMask?.RelatedWaterNighttime ?? true)
-            {
-                fg.AppendLine($"RelatedWaterNighttime => {item.RelatedWaterNighttime_Property}");
-            }
-            if (printMask?.RelatedWaterUnderwater ?? true)
-            {
-                fg.AppendLine($"RelatedWaterUnderwater => {item.RelatedWaterUnderwater_Property}");
-            }
-        }
-
-        public bool HasBeenSet(
-            IRelatedWatersGetter item,
-            RelatedWaters_Mask<bool?> checkMask)
-        {
-            return true;
-        }
-
-        public void FillHasBeenSetMask(
-            IRelatedWatersGetter item,
-            RelatedWaters_Mask<bool> mask)
-        {
-            mask.RelatedWaterDaytime = true;
-            mask.RelatedWaterNighttime = true;
-            mask.RelatedWaterUnderwater = true;
-        }
-
-        #region Equals and Hash
-        public virtual bool Equals(
-            IRelatedWatersGetter lhs,
-            IRelatedWatersGetter rhs)
-        {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
-            if (!lhs.RelatedWaterDaytime_Property.Equals(rhs.RelatedWaterDaytime_Property)) return false;
-            if (!lhs.RelatedWaterNighttime_Property.Equals(rhs.RelatedWaterNighttime_Property)) return false;
-            if (!lhs.RelatedWaterUnderwater_Property.Equals(rhs.RelatedWaterUnderwater_Property)) return false;
-            return true;
-        }
-
-        public virtual int GetHashCode(IRelatedWatersGetter item)
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.RelatedWaterDaytime).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.RelatedWaterNighttime).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.RelatedWaterUnderwater).CombineHashCode(ret);
-            return ret;
-        }
-
-        #endregion
-
-
+        
+        
     }
     #endregion
 
@@ -1078,7 +1128,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static RelatedWatersXmlWriteTranslation Instance = new RelatedWatersXmlWriteTranslation();
 
         public static void WriteToNodeXml(
-            IRelatedWatersGetter item,
+            IRelatedWatersInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1114,7 +1164,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             XElement node,
-            IRelatedWatersGetter item,
+            IRelatedWatersInternalGetter item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)
@@ -1140,7 +1190,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             Write(
-                item: (IRelatedWatersGetter)item,
+                item: (IRelatedWatersInternalGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1149,7 +1199,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             XElement node,
-            IRelatedWatersGetter item,
+            IRelatedWatersInternalGetter item,
             ErrorMaskBuilder errorMask,
             int fieldIndex,
             TranslationCrystal translationMask,
@@ -1159,7 +1209,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 errorMask?.PushIndex(fieldIndex);
                 Write(
-                    item: (IRelatedWatersGetter)item,
+                    item: (IRelatedWatersInternalGetter)item,
                     name: name,
                     node: node,
                     errorMask: errorMask,
@@ -1183,7 +1233,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static RelatedWatersXmlCreateTranslation Instance = new RelatedWatersXmlCreateTranslation();
 
         public static void FillPublicXml(
-            IRelatedWaters item,
+            IRelatedWatersInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1208,7 +1258,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElementXml(
-            IRelatedWaters item,
+            IRelatedWatersInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -1248,7 +1298,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public static class RelatedWatersXmlTranslationMixIn
     {
         public static void WriteToXml(
-            this IRelatedWatersGetter item,
+            this IRelatedWatersInternalGetter item,
             XElement node,
             out RelatedWaters_ErrorMask errorMask,
             bool doMasks = true,
@@ -1266,7 +1316,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IRelatedWatersGetter item,
+            this IRelatedWatersInternalGetter item,
             string path,
             out RelatedWaters_ErrorMask errorMask,
             RelatedWaters_TranslationMask translationMask = null,
@@ -1285,7 +1335,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IRelatedWatersGetter item,
+            this IRelatedWatersInternalGetter item,
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1303,7 +1353,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IRelatedWatersGetter item,
+            this IRelatedWatersInternalGetter item,
             Stream stream,
             out RelatedWaters_ErrorMask errorMask,
             RelatedWaters_TranslationMask translationMask = null,
@@ -1322,7 +1372,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IRelatedWatersGetter item,
+            this IRelatedWatersInternalGetter item,
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1340,7 +1390,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IRelatedWatersGetter item,
+            this IRelatedWatersInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1355,7 +1405,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IRelatedWatersGetter item,
+            this IRelatedWatersInternalGetter item,
             XElement node,
             string name = null,
             RelatedWaters_TranslationMask translationMask = null)
@@ -1369,7 +1419,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IRelatedWatersGetter item,
+            this IRelatedWatersInternalGetter item,
             string path,
             string name = null)
         {
@@ -1384,7 +1434,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IRelatedWatersGetter item,
+            this IRelatedWatersInternalGetter item,
             Stream stream,
             string name = null)
         {
@@ -1739,7 +1789,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static RelatedWatersBinaryWriteTranslation Instance = new RelatedWatersBinaryWriteTranslation();
 
         public static void Write_Embedded(
-            IRelatedWatersGetter item,
+            IRelatedWatersInternalGetter item,
             MutagenWriter writer,
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
@@ -1760,7 +1810,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             MutagenWriter writer,
-            IRelatedWatersGetter item,
+            IRelatedWatersInternalGetter item,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
@@ -1786,7 +1836,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask)
         {
             Write(
-                item: (IRelatedWatersGetter)item,
+                item: (IRelatedWatersInternalGetter)item,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -1805,7 +1855,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public static class RelatedWatersBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IRelatedWatersGetter item,
+            this IRelatedWatersInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
             out RelatedWaters_ErrorMask errorMask,
@@ -1822,7 +1872,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToBinary(
-            this IRelatedWatersGetter item,
+            this IRelatedWatersInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -1836,7 +1886,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToBinary(
-            this IRelatedWatersGetter item,
+            this IRelatedWatersInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
@@ -1853,22 +1903,65 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     public partial class RelatedWatersBinaryWrapper :
         BinaryWrapper,
-        IRelatedWatersGetter
+        IRelatedWatersInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RelatedWaters_Registration.Instance;
         public static RelatedWaters_Registration Registration => RelatedWaters_Registration.Instance;
-        protected object CommonInstance => RelatedWatersCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
+        protected object CommonInstance()
+        {
+            return RelatedWatersCommon.Instance;
+        }
+        object IRelatedWatersInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IRelatedWatersInternalGetter.CommonSetterInstance()
+        {
+            return null;
+        }
+        object IRelatedWatersInternalGetter.CommonSetterCopyInstance()
+        {
+            return null;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRelatedWatersGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRelatedWatersInternalGetter)rhs, include);
 
         protected object XmlWriteTranslator => RelatedWatersXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((RelatedWatersXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         protected object BinaryWriteTranslator => RelatedWatersBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((RelatedWatersBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
 
         #region RelatedWaterDaytime
         public IFormIDLinkGetter<IWaterInternalGetter> RelatedWaterDaytime_Property => new FormIDLink<IWaterInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
@@ -1921,4 +2014,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class RelatedWaters
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => RelatedWaters_Registration.Instance;
+        public static RelatedWaters_Registration Registration => RelatedWaters_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return RelatedWatersCommon.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return RelatedWatersSetterCommon.Instance;
+        }
+        protected object CommonSetterCopyInstance()
+        {
+            return RelatedWatersSetterCopyCommon.Instance;
+        }
+        object IRelatedWatersInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IRelatedWatersInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object IRelatedWatersInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
 }

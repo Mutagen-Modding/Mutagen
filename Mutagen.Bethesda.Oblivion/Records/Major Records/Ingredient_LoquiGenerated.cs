@@ -45,11 +45,6 @@ namespace Mutagen.Bethesda.Oblivion
         IEquatable<Ingredient>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Ingredient_Registration.Instance;
-        public new static Ingredient_Registration Registration => Ingredient_Registration.Instance;
-        protected override object CommonInstance => IngredientCommon.Instance;
-
         #region Ctor
         protected Ingredient()
         {
@@ -109,7 +104,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Model_Set(default(Model), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IModelGetter IIngredientGetter.Model => this.Model;
+        IModelInternalGetter IIngredientGetter.Model => this.Model;
         #endregion
         #region Icon
         public bool Icon_IsSet
@@ -244,20 +239,33 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IIngredientInternalGetter rhs)) return false;
-            return ((IngredientCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            return ((IngredientCommon)((IIngredientInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(Ingredient obj)
         {
-            return ((IngredientCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((IngredientCommon)((IIngredientInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((IngredientCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((IngredientCommon)((IIngredientInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected override object XmlWriteTranslator => IngredientXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((IngredientXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static Ingredient CreateFromXml(
@@ -517,6 +525,19 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Binary Translation
         protected override object BinaryWriteTranslator => IngredientBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((IngredientBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
         #region Binary Create
         [DebuggerStepThrough]
         public static Ingredient CreateFromBinary(
@@ -806,7 +827,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            IngredientCommon.CopyFieldsFrom(
+            IngredientSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -821,7 +842,7 @@ namespace Mutagen.Bethesda.Oblivion
             Ingredient_CopyMask copyMask = null,
             Ingredient def = null)
         {
-            IngredientCommon.CopyFieldsFrom(
+            IngredientSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -869,7 +890,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            IngredientCommon.Instance.Clear(this);
+            IngredientSetterCommon.Instance.Clear(this);
         }
 
         public new static Ingredient Create(IEnumerable<KeyValuePair<ushort, object>> fields)
@@ -987,7 +1008,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Model
-        IModelGetter Model { get; }
+        IModelInternalGetter Model { get; }
         bool Model_IsSet { get; }
 
         #endregion
@@ -1038,7 +1059,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IIngredientInternal item)
         {
-            ((IngredientCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((IngredientSetterCommon)((IIngredientInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static Ingredient_Mask<bool> GetEqualsMask(
@@ -1046,7 +1067,7 @@ namespace Mutagen.Bethesda.Oblivion
             IIngredientInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((IngredientCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((IngredientCommon)((IIngredientInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -1057,7 +1078,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Ingredient_Mask<bool> printMask = null)
         {
-            return ((IngredientCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((IngredientCommon)((IIngredientInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -1069,7 +1090,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Ingredient_Mask<bool> printMask = null)
         {
-            ((IngredientCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((IngredientCommon)((IIngredientInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -1080,7 +1101,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IIngredientInternalGetter item,
             Ingredient_Mask<bool?> checkMask)
         {
-            return ((IngredientCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((IngredientCommon)((IIngredientInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -1088,7 +1109,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Ingredient_Mask<bool> GetHasBeenSetMask(this IIngredientInternalGetter item)
         {
             var ret = new Ingredient_Mask<bool>();
-            ((IngredientCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((IngredientCommon)((IIngredientInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -1098,7 +1119,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IIngredientInternalGetter item,
             IIngredientInternalGetter rhs)
         {
-            return ((IngredientCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((IngredientCommon)((IIngredientInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1161,8 +1182,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type SetterType = typeof(IIngredient);
 
         public static readonly Type InternalSetterType = typeof(IIngredientInternal);
-
-        public static readonly Type CommonType = typeof(IngredientCommon);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.Ingredient";
 
@@ -1385,7 +1404,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -1405,9 +1423,418 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
+    public partial class IngredientSetterCommon : ItemAbstractSetterCommon
+    {
+        public new static readonly IngredientSetterCommon Instance = new IngredientSetterCommon();
+
+        partial void ClearPartial();
+        
+        public virtual void Clear(IIngredientInternal item)
+        {
+            ClearPartial();
+            item.Name_Unset();
+            item.Model_Unset();
+            item.Icon_Unset();
+            item.Script_Property.Unset();
+            item.Weight_Unset();
+            item.Value = default(UInt32);
+            item.Flags = default(IngredientFlag);
+            item.Effects.Unset();
+            base.Clear(item);
+        }
+        
+        public override void Clear(IItemAbstractInternal item)
+        {
+            Clear(item: (IIngredientInternal)item);
+        }
+        
+        public override void Clear(IOblivionMajorRecordInternal item)
+        {
+            Clear(item: (IIngredientInternal)item);
+        }
+        
+        public override void Clear(IMajorRecordInternal item)
+        {
+            Clear(item: (IIngredientInternal)item);
+        }
+        
+        
+    }
     public partial class IngredientCommon : ItemAbstractCommon
     {
-        public static readonly IngredientCommon Instance = new IngredientCommon();
+        public new static readonly IngredientCommon Instance = new IngredientCommon();
+
+        public Ingredient_Mask<bool> GetEqualsMask(
+            IIngredientInternalGetter item,
+            IIngredientInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new Ingredient_Mask<bool>();
+            ((IngredientCommon)((IIngredientInternalGetter)item).CommonInstance()).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+        
+        public void FillEqualsMask(
+            IIngredientInternalGetter item,
+            IIngredientInternalGetter rhs,
+            Ingredient_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            if (rhs == null) return;
+            ret.Name = item.Name_IsSet == rhs.Name_IsSet && string.Equals(item.Name, rhs.Name);
+            ret.Model = EqualsMaskHelper.EqualsHelper(
+                item.Model_IsSet,
+                rhs.Model_IsSet,
+                item.Model,
+                rhs.Model,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
+            ret.Icon = item.Icon_IsSet == rhs.Icon_IsSet && string.Equals(item.Icon, rhs.Icon);
+            ret.Script = item.Script_Property.FormKey == rhs.Script_Property.FormKey;
+            ret.Weight = item.Weight_IsSet == rhs.Weight_IsSet && item.Weight.EqualsWithin(rhs.Weight);
+            ret.Value = item.Value == rhs.Value;
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.Effects = item.Effects.CollectionEqualsHelper(
+                rhs.Effects,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            base.FillEqualsMask(item, rhs, ret, include);
+        }
+        
+        public string ToString(
+            IIngredientInternalGetter item,
+            string name = null,
+            Ingredient_Mask<bool> printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+            return fg.ToString();
+        }
+        
+        public void ToString(
+            IIngredientInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            Ingredient_Mask<bool> printMask = null)
+        {
+            if (name == null)
+            {
+                fg.AppendLine($"Ingredient =>");
+            }
+            else
+            {
+                fg.AppendLine($"{name} (Ingredient) =>");
+            }
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
+            }
+            fg.AppendLine("]");
+        }
+        
+        protected static void ToStringFields(
+            IIngredientInternalGetter item,
+            FileGeneration fg,
+            Ingredient_Mask<bool> printMask = null)
+        {
+            ItemAbstractCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.Name ?? true)
+            {
+                fg.AppendLine($"Name => {item.Name}");
+            }
+            if (printMask?.Model?.Overall ?? true)
+            {
+                item.Model?.ToString(fg, "Model");
+            }
+            if (printMask?.Icon ?? true)
+            {
+                fg.AppendLine($"Icon => {item.Icon}");
+            }
+            if (printMask?.Script ?? true)
+            {
+                fg.AppendLine($"Script => {item.Script_Property}");
+            }
+            if (printMask?.Weight ?? true)
+            {
+                fg.AppendLine($"Weight => {item.Weight}");
+            }
+            if (printMask?.Value ?? true)
+            {
+                fg.AppendLine($"Value => {item.Value}");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                fg.AppendLine($"Flags => {item.Flags}");
+            }
+            if (printMask?.Effects?.Overall ?? true)
+            {
+                fg.AppendLine("Effects =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Effects)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.ENITDataTypeState ?? true)
+            {
+            }
+        }
+        
+        public bool HasBeenSet(
+            IIngredientInternalGetter item,
+            Ingredient_Mask<bool?> checkMask)
+        {
+            if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_IsSet) return false;
+            if (checkMask.Model.Overall.HasValue && checkMask.Model.Overall.Value != item.Model_IsSet) return false;
+            if (checkMask.Model.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
+            if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_IsSet) return false;
+            if (checkMask.Script.HasValue && checkMask.Script.Value != item.Script_Property.HasBeenSet) return false;
+            if (checkMask.Weight.HasValue && checkMask.Weight.Value != item.Weight_IsSet) return false;
+            if (checkMask.Effects.Overall.HasValue && checkMask.Effects.Overall.Value != item.Effects.HasBeenSet) return false;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+        
+        public void FillHasBeenSetMask(
+            IIngredientInternalGetter item,
+            Ingredient_Mask<bool> mask)
+        {
+            mask.Name = item.Name_IsSet;
+            mask.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, item.Model.GetHasBeenSetMask());
+            mask.Icon = item.Icon_IsSet;
+            mask.Script = item.Script_Property.HasBeenSet;
+            mask.Weight = item.Weight_IsSet;
+            mask.Value = true;
+            mask.Flags = true;
+            mask.Effects = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Effect_Mask<bool>>>>(item.Effects.HasBeenSet, item.Effects.WithIndex().Select((i) => new MaskItemIndexed<bool, Effect_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.ENITDataTypeState = true;
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
+        }
+        
+        public static Ingredient_FieldIndex ConvertFieldIndex(ItemAbstract_FieldIndex index)
+        {
+            switch (index)
+            {
+                case ItemAbstract_FieldIndex.MajorRecordFlagsRaw:
+                    return (Ingredient_FieldIndex)((int)index);
+                case ItemAbstract_FieldIndex.FormKey:
+                    return (Ingredient_FieldIndex)((int)index);
+                case ItemAbstract_FieldIndex.Version:
+                    return (Ingredient_FieldIndex)((int)index);
+                case ItemAbstract_FieldIndex.EditorID:
+                    return (Ingredient_FieldIndex)((int)index);
+                case ItemAbstract_FieldIndex.OblivionMajorRecordFlags:
+                    return (Ingredient_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        public static Ingredient_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (Ingredient_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.FormKey:
+                    return (Ingredient_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.Version:
+                    return (Ingredient_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.EditorID:
+                    return (Ingredient_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
+                    return (Ingredient_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        public static Ingredient_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (Ingredient_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.FormKey:
+                    return (Ingredient_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.Version:
+                    return (Ingredient_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.EditorID:
+                    return (Ingredient_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        #region Equals and Hash
+        public virtual bool Equals(
+            IIngredientInternalGetter lhs,
+            IIngredientInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.Name_IsSet != rhs.Name_IsSet) return false;
+            if (lhs.Name_IsSet)
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if (lhs.Model_IsSet != rhs.Model_IsSet) return false;
+            if (lhs.Model_IsSet)
+            {
+                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            }
+            if (lhs.Icon_IsSet != rhs.Icon_IsSet) return false;
+            if (lhs.Icon_IsSet)
+            {
+                if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
+            }
+            if (lhs.Script_Property.HasBeenSet != rhs.Script_Property.HasBeenSet) return false;
+            if (lhs.Script_Property.HasBeenSet)
+            {
+                if (!lhs.Script_Property.Equals(rhs.Script_Property)) return false;
+            }
+            if (lhs.Weight_IsSet != rhs.Weight_IsSet) return false;
+            if (lhs.Weight_IsSet)
+            {
+                if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
+            }
+            if (lhs.Value != rhs.Value) return false;
+            if (lhs.Flags != rhs.Flags) return false;
+            if (lhs.Effects.HasBeenSet != rhs.Effects.HasBeenSet) return false;
+            if (lhs.Effects.HasBeenSet)
+            {
+                if (!lhs.Effects.SequenceEqual(rhs.Effects)) return false;
+            }
+            if (lhs.ENITDataTypeState != rhs.ENITDataTypeState) return false;
+            return true;
+        }
+        
+        public override bool Equals(
+            IItemAbstractInternalGetter lhs,
+            IItemAbstractInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IIngredientInternalGetter)lhs,
+                rhs: rhs as IIngredientInternalGetter);
+        }
+        
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IIngredientInternalGetter)lhs,
+                rhs: rhs as IIngredientInternalGetter);
+        }
+        
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IIngredientInternalGetter)lhs,
+                rhs: rhs as IIngredientInternalGetter);
+        }
+        
+        public virtual int GetHashCode(IIngredientInternalGetter item)
+        {
+            int ret = 0;
+            if (item.Name_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Name).CombineHashCode(ret);
+            }
+            if (item.Model_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Model).CombineHashCode(ret);
+            }
+            if (item.Icon_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Icon).CombineHashCode(ret);
+            }
+            if (item.Script_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Script).CombineHashCode(ret);
+            }
+            if (item.Weight_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Weight).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.Value).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
+            if (item.Effects.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Effects).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(item.ENITDataTypeState).CombineHashCode(ret);
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+        
+        public override int GetHashCode(IItemAbstractInternalGetter item)
+        {
+            return GetHashCode(item: (IIngredientInternalGetter)item);
+        }
+        
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IIngredientInternalGetter)item);
+        }
+        
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IIngredientInternalGetter)item);
+        }
+        
+        #endregion
+        
+        
+        #region Mutagen
+        partial void PostDuplicate(Ingredient obj, Ingredient rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+        
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new Ingredient(getNextFormKey());
+            ret.CopyFieldsFrom((Ingredient)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (Ingredient)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+        
+        #endregion
+        
+        
+    }
+    public partial class IngredientSetterCopyCommon : ItemAbstractSetterCopyCommon
+    {
+        public new static readonly IngredientSetterCopyCommon Instance = new IngredientSetterCopyCommon();
 
         #region Copy Fields From
         public static void CopyFieldsFrom(
@@ -1417,7 +1844,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             Ingredient_CopyMask copyMask)
         {
-            ItemAbstractCommon.CopyFieldsFrom(
+            ItemAbstractSetterCopyCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1471,7 +1898,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             case CopyOption.Reference:
                                 throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
-                                ModelCommon.CopyFieldsFrom(
+                                ModelSetterCopyCommon.CopyFieldsFrom(
                                     item: item.Model,
                                     rhs: rhs.Model,
                                     def: def?.Model,
@@ -1653,406 +2080,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
         }
-
+        
         #endregion
-
-        partial void ClearPartial();
-
-        public virtual void Clear(IIngredientInternal item)
-        {
-            ClearPartial();
-            item.Name_Unset();
-            item.Model_Unset();
-            item.Icon_Unset();
-            item.Script_Property.Unset();
-            item.Weight_Unset();
-            item.Value = default(UInt32);
-            item.Flags = default(IngredientFlag);
-            item.Effects.Unset();
-            base.Clear(item);
-        }
-
-        public override void Clear(IItemAbstractInternal item)
-        {
-            Clear(item: (IIngredientInternal)item);
-        }
-
-        public override void Clear(IOblivionMajorRecordInternal item)
-        {
-            Clear(item: (IIngredientInternal)item);
-        }
-
-        public override void Clear(IMajorRecordInternal item)
-        {
-            Clear(item: (IIngredientInternal)item);
-        }
-
-        public Ingredient_Mask<bool> GetEqualsMask(
-            IIngredientInternalGetter item,
-            IIngredientInternalGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new Ingredient_Mask<bool>();
-            ((IngredientCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public void FillEqualsMask(
-            IIngredientInternalGetter item,
-            IIngredientInternalGetter rhs,
-            Ingredient_Mask<bool> ret,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            if (rhs == null) return;
-            ret.Name = item.Name_IsSet == rhs.Name_IsSet && string.Equals(item.Name, rhs.Name);
-            ret.Model = EqualsMaskHelper.EqualsHelper(
-                item.Model_IsSet,
-                rhs.Model_IsSet,
-                item.Model,
-                rhs.Model,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
-                include);
-            ret.Icon = item.Icon_IsSet == rhs.Icon_IsSet && string.Equals(item.Icon, rhs.Icon);
-            ret.Script = item.Script_Property.FormKey == rhs.Script_Property.FormKey;
-            ret.Weight = item.Weight_IsSet == rhs.Weight_IsSet && item.Weight.EqualsWithin(rhs.Weight);
-            ret.Value = item.Value == rhs.Value;
-            ret.Flags = item.Flags == rhs.Flags;
-            ret.Effects = item.Effects.CollectionEqualsHelper(
-                rhs.Effects,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
-                include);
-            base.FillEqualsMask(item, rhs, ret, include);
-        }
-
-        public string ToString(
-            IIngredientInternalGetter item,
-            string name = null,
-            Ingredient_Mask<bool> printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(
-                item: item,
-                fg: fg,
-                name: name,
-                printMask: printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(
-            IIngredientInternalGetter item,
-            FileGeneration fg,
-            string name = null,
-            Ingredient_Mask<bool> printMask = null)
-        {
-            if (name == null)
-            {
-                fg.AppendLine($"Ingredient =>");
-            }
-            else
-            {
-                fg.AppendLine($"{name} (Ingredient) =>");
-            }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                ToStringFields(
-                    item: item,
-                    fg: fg,
-                    printMask: printMask);
-            }
-            fg.AppendLine("]");
-        }
-
-        protected static void ToStringFields(
-            IIngredientInternalGetter item,
-            FileGeneration fg,
-            Ingredient_Mask<bool> printMask = null)
-        {
-            ItemAbstractCommon.ToStringFields(
-                item: item,
-                fg: fg,
-                printMask: printMask);
-            if (printMask?.Name ?? true)
-            {
-                fg.AppendLine($"Name => {item.Name}");
-            }
-            if (printMask?.Model?.Overall ?? true)
-            {
-                item.Model?.ToString(fg, "Model");
-            }
-            if (printMask?.Icon ?? true)
-            {
-                fg.AppendLine($"Icon => {item.Icon}");
-            }
-            if (printMask?.Script ?? true)
-            {
-                fg.AppendLine($"Script => {item.Script_Property}");
-            }
-            if (printMask?.Weight ?? true)
-            {
-                fg.AppendLine($"Weight => {item.Weight}");
-            }
-            if (printMask?.Value ?? true)
-            {
-                fg.AppendLine($"Value => {item.Value}");
-            }
-            if (printMask?.Flags ?? true)
-            {
-                fg.AppendLine($"Flags => {item.Flags}");
-            }
-            if (printMask?.Effects?.Overall ?? true)
-            {
-                fg.AppendLine("Effects =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
-                {
-                    foreach (var subItem in item.Effects)
-                    {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            subItem?.ToString(fg, "Item");
-                        }
-                        fg.AppendLine("]");
-                    }
-                }
-                fg.AppendLine("]");
-            }
-            if (printMask?.ENITDataTypeState ?? true)
-            {
-            }
-        }
-
-        public bool HasBeenSet(
-            IIngredientInternalGetter item,
-            Ingredient_Mask<bool?> checkMask)
-        {
-            if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_IsSet) return false;
-            if (checkMask.Model.Overall.HasValue && checkMask.Model.Overall.Value != item.Model_IsSet) return false;
-            if (checkMask.Model.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
-            if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_IsSet) return false;
-            if (checkMask.Script.HasValue && checkMask.Script.Value != item.Script_Property.HasBeenSet) return false;
-            if (checkMask.Weight.HasValue && checkMask.Weight.Value != item.Weight_IsSet) return false;
-            if (checkMask.Effects.Overall.HasValue && checkMask.Effects.Overall.Value != item.Effects.HasBeenSet) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public void FillHasBeenSetMask(
-            IIngredientInternalGetter item,
-            Ingredient_Mask<bool> mask)
-        {
-            mask.Name = item.Name_IsSet;
-            mask.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, item.Model.GetHasBeenSetMask());
-            mask.Icon = item.Icon_IsSet;
-            mask.Script = item.Script_Property.HasBeenSet;
-            mask.Weight = item.Weight_IsSet;
-            mask.Value = true;
-            mask.Flags = true;
-            mask.Effects = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Effect_Mask<bool>>>>(item.Effects.HasBeenSet, item.Effects.WithIndex().Select((i) => new MaskItemIndexed<bool, Effect_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.ENITDataTypeState = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-
-        public static Ingredient_FieldIndex ConvertFieldIndex(ItemAbstract_FieldIndex index)
-        {
-            switch (index)
-            {
-                case ItemAbstract_FieldIndex.MajorRecordFlagsRaw:
-                    return (Ingredient_FieldIndex)((int)index);
-                case ItemAbstract_FieldIndex.FormKey:
-                    return (Ingredient_FieldIndex)((int)index);
-                case ItemAbstract_FieldIndex.Version:
-                    return (Ingredient_FieldIndex)((int)index);
-                case ItemAbstract_FieldIndex.EditorID:
-                    return (Ingredient_FieldIndex)((int)index);
-                case ItemAbstract_FieldIndex.OblivionMajorRecordFlags:
-                    return (Ingredient_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        public static Ingredient_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
-        {
-            switch (index)
-            {
-                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Ingredient_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.FormKey:
-                    return (Ingredient_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.Version:
-                    return (Ingredient_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.EditorID:
-                    return (Ingredient_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
-                    return (Ingredient_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        public static Ingredient_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
-        {
-            switch (index)
-            {
-                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Ingredient_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.FormKey:
-                    return (Ingredient_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
-                    return (Ingredient_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.EditorID:
-                    return (Ingredient_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        #region Equals and Hash
-        public virtual bool Equals(
-            IIngredientInternalGetter lhs,
-            IIngredientInternalGetter rhs)
-        {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (lhs.Name_IsSet != rhs.Name_IsSet) return false;
-            if (lhs.Name_IsSet)
-            {
-                if (!string.Equals(lhs.Name, rhs.Name)) return false;
-            }
-            if (lhs.Model_IsSet != rhs.Model_IsSet) return false;
-            if (lhs.Model_IsSet)
-            {
-                if (!object.Equals(lhs.Model, rhs.Model)) return false;
-            }
-            if (lhs.Icon_IsSet != rhs.Icon_IsSet) return false;
-            if (lhs.Icon_IsSet)
-            {
-                if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
-            }
-            if (lhs.Script_Property.HasBeenSet != rhs.Script_Property.HasBeenSet) return false;
-            if (lhs.Script_Property.HasBeenSet)
-            {
-                if (!lhs.Script_Property.Equals(rhs.Script_Property)) return false;
-            }
-            if (lhs.Weight_IsSet != rhs.Weight_IsSet) return false;
-            if (lhs.Weight_IsSet)
-            {
-                if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
-            }
-            if (lhs.Value != rhs.Value) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (lhs.Effects.HasBeenSet != rhs.Effects.HasBeenSet) return false;
-            if (lhs.Effects.HasBeenSet)
-            {
-                if (!lhs.Effects.SequenceEqual(rhs.Effects)) return false;
-            }
-            if (lhs.ENITDataTypeState != rhs.ENITDataTypeState) return false;
-            return true;
-        }
-
-        public override bool Equals(
-            IItemAbstractInternalGetter lhs,
-            IItemAbstractInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (IIngredientInternalGetter)lhs,
-                rhs: rhs as IIngredientInternalGetter);
-        }
-
-        public override bool Equals(
-            IOblivionMajorRecordInternalGetter lhs,
-            IOblivionMajorRecordInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (IIngredientInternalGetter)lhs,
-                rhs: rhs as IIngredientInternalGetter);
-        }
-
-        public override bool Equals(
-            IMajorRecordInternalGetter lhs,
-            IMajorRecordInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (IIngredientInternalGetter)lhs,
-                rhs: rhs as IIngredientInternalGetter);
-        }
-
-        public virtual int GetHashCode(IIngredientInternalGetter item)
-        {
-            int ret = 0;
-            if (item.Name_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Name).CombineHashCode(ret);
-            }
-            if (item.Model_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Model).CombineHashCode(ret);
-            }
-            if (item.Icon_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Icon).CombineHashCode(ret);
-            }
-            if (item.Script_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.Script).CombineHashCode(ret);
-            }
-            if (item.Weight_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Weight).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(item.Value).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
-            if (item.Effects.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.Effects).CombineHashCode(ret);
-            }
-            ret = HashHelper.GetHashCode(item.ENITDataTypeState).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        public override int GetHashCode(IItemAbstractInternalGetter item)
-        {
-            return GetHashCode(item: (IIngredientInternalGetter)item);
-        }
-
-        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
-        {
-            return GetHashCode(item: (IIngredientInternalGetter)item);
-        }
-
-        public override int GetHashCode(IMajorRecordInternalGetter item)
-        {
-            return GetHashCode(item: (IIngredientInternalGetter)item);
-        }
-
-        #endregion
-
-
-        #region Mutagen
-        partial void PostDuplicate(Ingredient obj, Ingredient rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new Ingredient(getNextFormKey());
-            ret.CopyFieldsFrom((Ingredient)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (Ingredient)item, getNextFormKey, duplicatedRecords);
-            return ret;
-        }
-
-        #endregion
-
+        
+        
     }
     #endregion
 
@@ -3391,17 +3422,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         ItemAbstractBinaryWrapper,
         IIngredientInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Ingredient_Registration.Instance;
         public new static Ingredient_Registration Registration => Ingredient_Registration.Instance;
-        protected override object CommonInstance => IngredientCommon.Instance;
+        protected override object CommonInstance()
+        {
+            return IngredientCommon.Instance;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IIngredientInternalGetter)rhs, include);
 
         protected override object XmlWriteTranslator => IngredientXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((IngredientXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         protected override object BinaryWriteTranslator => IngredientBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((IngredientBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
 
         #region Name
         private int? _NameLocation;
@@ -3409,7 +3472,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public String Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _NameLocation.Value, _package.Meta)) : default;
         #endregion
         #region Model
-        public IModelGetter Model { get; private set; }
+        public IModelInternalGetter Model { get; private set; }
         public bool Model_IsSet => Model != null;
         #endregion
         #region Icon
@@ -3550,4 +3613,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class Ingredient
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Ingredient_Registration.Instance;
+        public new static Ingredient_Registration Registration => Ingredient_Registration.Instance;
+        protected override object CommonInstance()
+        {
+            return IngredientCommon.Instance;
+        }
+        protected override object CommonSetterInstance()
+        {
+            return IngredientSetterCommon.Instance;
+        }
+        protected override object CommonSetterCopyInstance()
+        {
+            return IngredientSetterCopyCommon.Instance;
+        }
+
+        #endregion
+
+    }
 }

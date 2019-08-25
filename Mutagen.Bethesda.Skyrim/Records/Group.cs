@@ -1,4 +1,4 @@
-﻿using DynamicData;
+using DynamicData;
 using Loqui;
 using Loqui.Internal;
 using Loqui.Xml;
@@ -58,7 +58,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             static partial void WriteBinaryContainedRecordTypeParseCustom<T>(
                 MutagenWriter writer,
-                IGroupGetter<T> item,
+                IGroupInternalGetter<T> item,
                 MasterReferences masterReferences,
                 ErrorMaskBuilder errorMask)
                 where T : ISkyrimMajorRecordInternalGetter, IXmlItem, IBinaryItem

@@ -35,19 +35,13 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class Group<T> :
-        IGroup<T>,
+        IGroupInternal<T>,
         ILoquiObjectSetter<Group<T>>,
         ILinkSubContainer,
         IEquatable<Group<T>>,
         IEqualsMask
         where T : IOblivionMajorRecordInternal, IXmlItem, IBinaryItem
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Group_Registration.Instance;
-        public static Group_Registration Registration => Group_Registration.Instance;
-        protected object CommonInstance => GroupCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
-
         #region Ctor
         protected Group()
         {
@@ -89,7 +83,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IGroupGetter<T>)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IGroupInternalGetter<T>)rhs, include);
         #region To String
 
         public void ToString(
@@ -107,22 +101,35 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is IGroupGetter<T> rhs)) return false;
-            return ((GroupCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            if (!(obj is IGroupInternalGetter<T> rhs)) return false;
+            return ((GroupCommon<T>)((IGroupInternalGetter<T>)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(Group<T> obj)
         {
-            return ((GroupCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((GroupCommon<T>)((IGroupInternalGetter<T>)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((GroupCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((GroupCommon<T>)((IGroupInternalGetter<T>)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected object XmlWriteTranslator => GroupXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((GroupXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static Group<T> CreateFromXml<T_TranslMask>(
@@ -333,6 +340,19 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Translation
         protected object BinaryWriteTranslator => GroupBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((GroupBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
         #region Binary Create
         [DebuggerStepThrough]
         public static async Task<Group<T>> CreateFromBinary(
@@ -535,7 +555,7 @@ namespace Mutagen.Bethesda.Oblivion
             where T_CopyMask : OblivionMajorRecord_CopyMask, new()
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            GroupCommon.CopyFieldsFrom<T, T_CopyMask>(
+            GroupSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -551,7 +571,7 @@ namespace Mutagen.Bethesda.Oblivion
             Group<T> def = null)
             where T_CopyMask : OblivionMajorRecord_CopyMask, new()
         {
-            GroupCommon.CopyFieldsFrom<T, T_CopyMask>(
+            GroupSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -580,7 +600,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void Clear()
         {
-            GroupCommon.Instance.Clear(this);
+            GroupSetterCommon<T>.Instance.Clear(this);
         }
 
         public static Group<T> Create(IEnumerable<KeyValuePair<ushort, object>> fields)
@@ -619,8 +639,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IGroup<T> :
-        IGroupGetter<T>,
-        ILoquiObjectSetter<IGroup<T>>
+        IGroupInternalGetter<T>,
+        ILoquiObjectSetter<IGroupInternal<T>>
         where T : IOblivionMajorRecordInternal, IXmlItem, IBinaryItem
     {
         new GroupTypeEnum GroupType { get; set; }
@@ -636,9 +656,16 @@ namespace Mutagen.Bethesda.Oblivion
             where T_CopyMask : OblivionMajorRecord_CopyMask, new();
     }
 
+    public partial interface IGroupInternal<T> :
+        IGroup<T>,
+        IGroupInternalGetter<T>
+        where T : IOblivionMajorRecordInternal, IXmlItem, IBinaryItem
+    {
+    }
+
     public partial interface IGroupGetter<out T> :
         ILoquiObject,
-        ILoquiObject<IGroupGetter<T>>,
+        ILoquiObject<IGroupInternalGetter<T>>,
         IXmlItem,
         IBinaryItem
         where T : IOblivionMajorRecordInternalGetter, IXmlItem, IBinaryItem
@@ -657,49 +684,59 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    public partial interface IGroupInternalGetter<out T> : IGroupGetter<T>
+        where T : IOblivionMajorRecordInternalGetter, IXmlItem, IBinaryItem
+    {
+        object CommonInstance();
+        object CommonSetterInstance();
+        object CommonSetterCopyInstance<T_CopyMask>()
+            where T_CopyMask : OblivionMajorRecord_CopyMask, new();
+
+    }
+
     #endregion
 
     #region Common MixIn
     public static class GroupMixIn
     {
-        public static void Clear<T>(this IGroup<T> item)
+        public static void Clear<T>(this IGroupInternal<T> item)
             where T : IOblivionMajorRecordInternal, IXmlItem, IBinaryItem
         {
-            ((GroupCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((GroupSetterCommon<T>)((IGroupInternalGetter<T>)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static Group_Mask<bool> GetEqualsMask<T>(
-            this IGroupGetter<T> item,
-            IGroupGetter<T> rhs,
+            this IGroupInternalGetter<T> item,
+            IGroupInternalGetter<T> rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
             where T : IOblivionMajorRecordInternalGetter, IXmlItem, IBinaryItem
         {
-            return ((GroupCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((GroupCommon<T>)((IGroupInternalGetter<T>)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString<T>(
-            this IGroupGetter<T> item,
+            this IGroupInternalGetter<T> item,
             string name = null,
             Group_Mask<bool> printMask = null)
             where T : IOblivionMajorRecordInternalGetter, IXmlItem, IBinaryItem
         {
-            return ((GroupCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((GroupCommon<T>)((IGroupInternalGetter<T>)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString<T>(
-            this IGroupGetter<T> item,
+            this IGroupInternalGetter<T> item,
             FileGeneration fg,
             string name = null,
             Group_Mask<bool> printMask = null)
             where T : IOblivionMajorRecordInternalGetter, IXmlItem, IBinaryItem
         {
-            ((GroupCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((GroupCommon<T>)((IGroupInternalGetter<T>)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -707,31 +744,31 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static bool HasBeenSet<T>(
-            this IGroupGetter<T> item,
+            this IGroupInternalGetter<T> item,
             Group_Mask<bool?> checkMask)
             where T : IOblivionMajorRecordInternalGetter, IXmlItem, IBinaryItem
         {
-            return ((GroupCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((GroupCommon<T>)((IGroupInternalGetter<T>)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static Group_Mask<bool> GetHasBeenSetMask<T>(this IGroupGetter<T> item)
+        public static Group_Mask<bool> GetHasBeenSetMask<T>(this IGroupInternalGetter<T> item)
             where T : IOblivionMajorRecordInternalGetter, IXmlItem, IBinaryItem
         {
             var ret = new Group_Mask<bool>();
-            ((GroupCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((GroupCommon<T>)((IGroupInternalGetter<T>)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals<T>(
-            this IGroupGetter<T> item,
-            IGroupGetter<T> rhs)
+            this IGroupInternalGetter<T> item,
+            IGroupInternalGetter<T> rhs)
             where T : IOblivionMajorRecordInternalGetter, IXmlItem, IBinaryItem
         {
-            return ((GroupCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((GroupCommon<T>)((IGroupInternalGetter<T>)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -778,13 +815,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IGroupGetter<>);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type InternalGetterType = typeof(IGroupInternalGetter<>);
 
         public static readonly Type SetterType = typeof(IGroup<>);
 
-        public static readonly Type InternalSetterType = null;
-
-        public static readonly Type CommonType = typeof(GroupCommon);
+        public static readonly Type InternalSetterType = typeof(IGroupInternal<>);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.Group";
 
@@ -918,7 +953,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -961,9 +995,176 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class GroupCommon
+    public partial class GroupSetterCommon<T>
+        where T : IOblivionMajorRecordInternal, IXmlItem, IBinaryItem
     {
-        public static readonly GroupCommon Instance = new GroupCommon();
+        public static readonly GroupSetterCommon<T> Instance = new GroupSetterCommon<T>();
+
+        partial void ClearPartial();
+        
+        public virtual void Clear(IGroupInternal<T> item)
+        {
+            ClearPartial();
+            item.GroupType = default(GroupTypeEnum);
+            item.LastModified = default(Int32);
+            item.Items.Clear();
+        }
+        
+        
+    }
+    public partial class GroupCommon<T>
+        where T : IOblivionMajorRecordInternalGetter, IXmlItem, IBinaryItem
+    {
+        public static readonly GroupCommon<T> Instance = new GroupCommon<T>();
+
+        public Group_Mask<bool> GetEqualsMask(
+            IGroupInternalGetter<T> item,
+            IGroupInternalGetter<T> rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new Group_Mask<bool>();
+            ((GroupCommon<T>)((IGroupInternalGetter<T>)item).CommonInstance()).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+        
+        public void FillEqualsMask(
+            IGroupInternalGetter<T> item,
+            IGroupInternalGetter<T> rhs,
+            Group_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            if (rhs == null) return;
+            ret.GroupType = item.GroupType == rhs.GroupType;
+            ret.LastModified = item.LastModified == rhs.LastModified;
+            ret.Items = EqualsMaskHelper.CacheEqualsHelper(
+                lhs: item.Items,
+                rhs: rhs.Items,
+                maskGetter: (k, l, r) => l.GetEqualsMask(r, include),
+                include: include);
+        }
+        
+        public string ToString(
+            IGroupInternalGetter<T> item,
+            string name = null,
+            Group_Mask<bool> printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+            return fg.ToString();
+        }
+        
+        public void ToString(
+            IGroupInternalGetter<T> item,
+            FileGeneration fg,
+            string name = null,
+            Group_Mask<bool> printMask = null)
+        {
+            if (name == null)
+            {
+                fg.AppendLine($"Group<{typeof(T).Name}> =>");
+            }
+            else
+            {
+                fg.AppendLine($"{name} (Group<{typeof(T).Name}>) =>");
+            }
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
+            }
+            fg.AppendLine("]");
+        }
+        
+        protected static void ToStringFields(
+            IGroupInternalGetter<T> item,
+            FileGeneration fg,
+            Group_Mask<bool> printMask = null)
+        {
+            if (printMask?.GroupType ?? true)
+            {
+                fg.AppendLine($"GroupType => {item.GroupType}");
+            }
+            if (printMask?.LastModified ?? true)
+            {
+                fg.AppendLine($"LastModified => {item.LastModified}");
+            }
+            if (printMask?.Items?.Overall ?? true)
+            {
+                fg.AppendLine("Items =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Items)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem.Value?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+        }
+        
+        public bool HasBeenSet(
+            IGroupInternalGetter<T> item,
+            Group_Mask<bool?> checkMask)
+        {
+            return true;
+        }
+        
+        public void FillHasBeenSetMask(
+            IGroupInternalGetter<T> item,
+            Group_Mask<bool> mask)
+        {
+            mask.GroupType = true;
+            mask.LastModified = true;
+            mask.Items = new MaskItem<bool, IEnumerable<MaskItemIndexed<FormKey, bool, OblivionMajorRecord_Mask<bool>>>>(true, item.Items.Values.Select((i) => new MaskItemIndexed<FormKey, bool, OblivionMajorRecord_Mask<bool>>(i.FormKey, true, i.GetHasBeenSetMask())));
+        }
+        
+        #region Equals and Hash
+        public virtual bool Equals(
+            IGroupInternalGetter<T> lhs,
+            IGroupInternalGetter<T> rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (lhs.GroupType != rhs.GroupType) return false;
+            if (lhs.LastModified != rhs.LastModified) return false;
+            if (!lhs.Items.SequenceEqual(rhs.Items)) return false;
+            return true;
+        }
+        
+        public virtual int GetHashCode(IGroupInternalGetter<T> item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.GroupType).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.LastModified).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Items).CombineHashCode(ret);
+            return ret;
+        }
+        
+        #endregion
+        
+        
+        
+    }
+    public partial class GroupSetterCopyCommon
+    {
+        public static readonly GroupSetterCopyCommon Instance = new GroupSetterCopyCommon();
 
         #region Copy Fields From
         public static void CopyFieldsFrom<T, T_CopyMask>(
@@ -1041,172 +1242,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
         }
-
+        
         #endregion
-
-        partial void ClearPartial();
-
-        public virtual void Clear<T>(IGroup<T> item)
-            where T : IOblivionMajorRecordInternal, IXmlItem, IBinaryItem
-        {
-            ClearPartial();
-            item.GroupType = default(GroupTypeEnum);
-            item.LastModified = default(Int32);
-            item.Items.Clear();
-        }
-
-        public Group_Mask<bool> GetEqualsMask<T>(
-            IGroupGetter<T> item,
-            IGroupGetter<T> rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-            where T : IOblivionMajorRecordInternalGetter, IXmlItem, IBinaryItem
-        {
-            var ret = new Group_Mask<bool>();
-            ((GroupCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public void FillEqualsMask<T>(
-            IGroupGetter<T> item,
-            IGroupGetter<T> rhs,
-            Group_Mask<bool> ret,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-            where T : IOblivionMajorRecordInternalGetter, IXmlItem, IBinaryItem
-        {
-            if (rhs == null) return;
-            ret.GroupType = item.GroupType == rhs.GroupType;
-            ret.LastModified = item.LastModified == rhs.LastModified;
-            ret.Items = EqualsMaskHelper.CacheEqualsHelper(
-                lhs: item.Items,
-                rhs: rhs.Items,
-                maskGetter: (k, l, r) => l.GetEqualsMask(r, include),
-                include: include);
-        }
-
-        public string ToString<T>(
-            IGroupGetter<T> item,
-            string name = null,
-            Group_Mask<bool> printMask = null)
-            where T : IOblivionMajorRecordInternalGetter, IXmlItem, IBinaryItem
-        {
-            var fg = new FileGeneration();
-            ToString(
-                item: item,
-                fg: fg,
-                name: name,
-                printMask: printMask);
-            return fg.ToString();
-        }
-
-        public void ToString<T>(
-            IGroupGetter<T> item,
-            FileGeneration fg,
-            string name = null,
-            Group_Mask<bool> printMask = null)
-            where T : IOblivionMajorRecordInternalGetter, IXmlItem, IBinaryItem
-        {
-            if (name == null)
-            {
-                fg.AppendLine($"Group<{typeof(T).Name}> =>");
-            }
-            else
-            {
-                fg.AppendLine($"{name} (Group<{typeof(T).Name}>) =>");
-            }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                ToStringFields(
-                    item: item,
-                    fg: fg,
-                    printMask: printMask);
-            }
-            fg.AppendLine("]");
-        }
-
-        protected static void ToStringFields<T>(
-            IGroupGetter<T> item,
-            FileGeneration fg,
-            Group_Mask<bool> printMask = null)
-            where T : IOblivionMajorRecordInternalGetter, IXmlItem, IBinaryItem
-        {
-            if (printMask?.GroupType ?? true)
-            {
-                fg.AppendLine($"GroupType => {item.GroupType}");
-            }
-            if (printMask?.LastModified ?? true)
-            {
-                fg.AppendLine($"LastModified => {item.LastModified}");
-            }
-            if (printMask?.Items?.Overall ?? true)
-            {
-                fg.AppendLine("Items =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
-                {
-                    foreach (var subItem in item.Items)
-                    {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            subItem.Value?.ToString(fg, "Item");
-                        }
-                        fg.AppendLine("]");
-                    }
-                }
-                fg.AppendLine("]");
-            }
-        }
-
-        public bool HasBeenSet<T>(
-            IGroupGetter<T> item,
-            Group_Mask<bool?> checkMask)
-            where T : IOblivionMajorRecordInternalGetter, IXmlItem, IBinaryItem
-        {
-            return true;
-        }
-
-        public void FillHasBeenSetMask<T>(
-            IGroupGetter<T> item,
-            Group_Mask<bool> mask)
-            where T : IOblivionMajorRecordInternalGetter, IXmlItem, IBinaryItem
-        {
-            mask.GroupType = true;
-            mask.LastModified = true;
-            mask.Items = new MaskItem<bool, IEnumerable<MaskItemIndexed<FormKey, bool, OblivionMajorRecord_Mask<bool>>>>(true, item.Items.Values.Select((i) => new MaskItemIndexed<FormKey, bool, OblivionMajorRecord_Mask<bool>>(i.FormKey, true, i.GetHasBeenSetMask())));
-        }
-
-        #region Equals and Hash
-        public virtual bool Equals<T>(
-            IGroupGetter<T> lhs,
-            IGroupGetter<T> rhs)
-            where T : IOblivionMajorRecordInternalGetter, IXmlItem, IBinaryItem
-        {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
-            if (lhs.GroupType != rhs.GroupType) return false;
-            if (lhs.LastModified != rhs.LastModified) return false;
-            if (!lhs.Items.SequenceEqual(rhs.Items)) return false;
-            return true;
-        }
-
-        public virtual int GetHashCode<T>(IGroupGetter<T> item)
-            where T : IOblivionMajorRecordInternalGetter, IXmlItem, IBinaryItem
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.GroupType).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.LastModified).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Items).CombineHashCode(ret);
-            return ret;
-        }
-
-        #endregion
-
-
+        
+        
     }
     #endregion
 
@@ -1217,7 +1256,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static GroupXmlWriteTranslation Instance = new GroupXmlWriteTranslation();
 
         public static void WriteToNodeXml<T>(
-            IGroupGetter<T> item,
+            IGroupInternalGetter<T> item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1277,7 +1316,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write<T>(
             XElement node,
-            IGroupGetter<T> item,
+            IGroupInternalGetter<T> item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)
@@ -1308,7 +1347,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write<T>(
             XElement node,
-            IGroupGetter<T> item,
+            IGroupInternalGetter<T> item,
             ErrorMaskBuilder errorMask,
             int fieldIndex,
             TranslationCrystal translationMask,
@@ -1319,7 +1358,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 errorMask?.PushIndex(fieldIndex);
                 Write(
-                    item: (IGroupGetter<T>)item,
+                    item: (IGroupInternalGetter<T>)item,
                     name: name,
                     node: node,
                     errorMask: errorMask,
@@ -1344,7 +1383,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static GroupXmlCreateTranslation<T> Instance = new GroupXmlCreateTranslation<T>();
 
         public static void FillPublicXml(
-            IGroup<T> item,
+            IGroupInternal<T> item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1369,7 +1408,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElementXml(
-            IGroup<T> item,
+            IGroupInternal<T> item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -1449,7 +1488,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public static class GroupXmlTranslationMixIn
     {
         public static void WriteToXml<T, T_ErrMask, T_TranslMask>(
-            this IGroupGetter<T> item,
+            this IGroupInternalGetter<T> item,
             XElement node,
             out Group_ErrorMask<T_ErrMask> errorMask,
             bool doMasks = true,
@@ -1470,7 +1509,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml<T, T_ErrMask, T_TranslMask>(
-            this IGroupGetter<T> item,
+            this IGroupInternalGetter<T> item,
             string path,
             out Group_ErrorMask<T_ErrMask> errorMask,
             Group_TranslationMask<T_TranslMask> translationMask = null,
@@ -1492,7 +1531,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml<T>(
-            this IGroupGetter<T> item,
+            this IGroupInternalGetter<T> item,
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1511,7 +1550,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml<T, T_ErrMask, T_TranslMask>(
-            this IGroupGetter<T> item,
+            this IGroupInternalGetter<T> item,
             Stream stream,
             out Group_ErrorMask<T_ErrMask> errorMask,
             Group_TranslationMask<T_TranslMask> translationMask = null,
@@ -1533,7 +1572,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml<T>(
-            this IGroupGetter<T> item,
+            this IGroupInternalGetter<T> item,
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1552,7 +1591,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml<T>(
-            this IGroupGetter<T> item,
+            this IGroupInternalGetter<T> item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1568,7 +1607,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml<T, T_ErrMask, T_TranslMask>(
-            this IGroupGetter<T> item,
+            this IGroupInternalGetter<T> item,
             XElement node,
             string name = null,
             Group_TranslationMask<T_TranslMask> translationMask = null)
@@ -1585,7 +1624,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml<T, T_TranslMask>(
-            this IGroupGetter<T> item,
+            this IGroupInternalGetter<T> item,
             string path,
             string name = null)
             where T : IOblivionMajorRecordInternalGetter, IXmlItem, IBinaryItem
@@ -1602,7 +1641,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml<T, T_TranslMask>(
-            this IGroupGetter<T> item,
+            this IGroupInternalGetter<T> item,
             Stream stream,
             string name = null)
             where T : IOblivionMajorRecordInternalGetter, IXmlItem, IBinaryItem
@@ -2031,14 +2070,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         static partial void WriteBinaryContainedRecordTypeParseCustom<T>(
             MutagenWriter writer,
-            IGroupGetter<T> item,
+            IGroupInternalGetter<T> item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
             where T : IOblivionMajorRecordInternalGetter, IXmlItem, IBinaryItem;
 
         public static void WriteBinaryContainedRecordTypeParse<T>(
             MutagenWriter writer,
-            IGroupGetter<T> item,
+            IGroupInternalGetter<T> item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
             where T : IOblivionMajorRecordInternalGetter, IXmlItem, IBinaryItem
@@ -2051,7 +2090,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void Write_Embedded<T>(
-            IGroupGetter<T> item,
+            IGroupInternalGetter<T> item,
             MutagenWriter writer,
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
@@ -2070,7 +2109,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void Write_RecordTypes<T>(
-            IGroupGetter<T> item,
+            IGroupInternalGetter<T> item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask,
@@ -2096,7 +2135,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write<T>(
             MutagenWriter writer,
-            IGroupGetter<T> item,
+            IGroupInternalGetter<T> item,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
@@ -2163,7 +2202,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public static class GroupBinaryTranslationMixIn
     {
         public static void WriteToBinary<T, T_ErrMask>(
-            this IGroupGetter<T> item,
+            this IGroupInternalGetter<T> item,
             MutagenWriter writer,
             MasterReferences masterReferences,
             out Group_ErrorMask<T_ErrMask> errorMask,
@@ -2182,7 +2221,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToBinary<T>(
-            this IGroupGetter<T> item,
+            this IGroupInternalGetter<T> item,
             MutagenWriter writer,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -2197,7 +2236,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToBinary<T, T_ErrMask>(
-            this IGroupGetter<T> item,
+            this IGroupInternalGetter<T> item,
             MutagenWriter writer,
             MasterReferences masterReferences)
             where T : IOblivionMajorRecordInternalGetter, IXmlItem, IBinaryItem
@@ -2216,23 +2255,66 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     public partial class GroupBinaryWrapper<T> :
         BinaryWrapper,
-        IGroupGetter<T>
+        IGroupInternalGetter<T>
         where T : IOblivionMajorRecordInternalGetter, IXmlItem, IBinaryItem
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Group_Registration.Instance;
         public static Group_Registration Registration => Group_Registration.Instance;
-        protected object CommonInstance => GroupCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
+        protected object CommonInstance()
+        {
+            return GroupCommon<T>.Instance;
+        }
+        object IGroupInternalGetter<T>.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IGroupInternalGetter<T>.CommonSetterInstance()
+        {
+            return null;
+        }
+        object IGroupInternalGetter<T>.CommonSetterCopyInstance<T_CopyMask>()
+        {
+            return null;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IGroupGetter<T>)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IGroupInternalGetter<T>)rhs, include);
 
         protected object XmlWriteTranslator => GroupXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((GroupXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         protected object BinaryWriteTranslator => GroupBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((GroupBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
 
         #region ContainedRecordTypeParse
         partial void ContainedRecordTypeParseCustomParse(
@@ -2301,4 +2383,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class Group<T>
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Group_Registration.Instance;
+        public static Group_Registration Registration => Group_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return GroupCommon<T>.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return GroupSetterCommon<T>.Instance;
+        }
+        protected object CommonSetterCopyInstance<T_CopyMask>()
+            where T_CopyMask : OblivionMajorRecord_CopyMask, new()
+        {
+            return GroupSetterCopyCommon.Instance;
+        }
+        object IGroupInternalGetter<T>.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IGroupInternalGetter<T>.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object IGroupInternalGetter<T>.CommonSetterCopyInstance<T_CopyMask>()
+        {
+            return this.CommonSetterCopyInstance<T_CopyMask>();
+        }
+
+        #endregion
+
+    }
 }

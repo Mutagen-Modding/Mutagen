@@ -43,11 +43,6 @@ namespace Mutagen.Bethesda.Oblivion
         IEquatable<RegionDataGrasses>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => RegionDataGrasses_Registration.Instance;
-        public new static RegionDataGrasses_Registration Registration => RegionDataGrasses_Registration.Instance;
-        protected override object CommonInstance => RegionDataGrassesCommon.Instance;
-
         #region Ctor
         public RegionDataGrasses()
         {
@@ -88,20 +83,33 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IRegionDataGrassesInternalGetter rhs)) return false;
-            return ((RegionDataGrassesCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            return ((RegionDataGrassesCommon)((IRegionDataGrassesInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(RegionDataGrasses obj)
         {
-            return ((RegionDataGrassesCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((RegionDataGrassesCommon)((IRegionDataGrassesInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((RegionDataGrassesCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((RegionDataGrassesCommon)((IRegionDataGrassesInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected override object XmlWriteTranslator => RegionDataGrassesXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((RegionDataGrassesXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static RegionDataGrasses CreateFromXml(
@@ -316,6 +324,19 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Binary Translation
         protected override object BinaryWriteTranslator => RegionDataGrassesBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((RegionDataGrassesBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
         #region Binary Create
         [DebuggerStepThrough]
         public static RegionDataGrasses CreateFromBinary(
@@ -500,7 +521,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            RegionDataGrassesCommon.CopyFieldsFrom(
+            RegionDataGrassesSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -515,7 +536,7 @@ namespace Mutagen.Bethesda.Oblivion
             RegionDataGrasses_CopyMask copyMask = null,
             RegionDataGrasses def = null)
         {
-            RegionDataGrassesCommon.CopyFieldsFrom(
+            RegionDataGrassesSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -539,7 +560,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            RegionDataGrassesCommon.Instance.Clear(this);
+            RegionDataGrassesSetterCommon.Instance.Clear(this);
         }
 
         public new static RegionDataGrasses Create(IEnumerable<KeyValuePair<ushort, object>> fields)
@@ -617,7 +638,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IRegionDataGrassesInternal item)
         {
-            ((RegionDataGrassesCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((RegionDataGrassesSetterCommon)((IRegionDataGrassesInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static RegionDataGrasses_Mask<bool> GetEqualsMask(
@@ -625,7 +646,7 @@ namespace Mutagen.Bethesda.Oblivion
             IRegionDataGrassesInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((RegionDataGrassesCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((RegionDataGrassesCommon)((IRegionDataGrassesInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -636,7 +657,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             RegionDataGrasses_Mask<bool> printMask = null)
         {
-            return ((RegionDataGrassesCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((RegionDataGrassesCommon)((IRegionDataGrassesInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -648,7 +669,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             RegionDataGrasses_Mask<bool> printMask = null)
         {
-            ((RegionDataGrassesCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((RegionDataGrassesCommon)((IRegionDataGrassesInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -659,7 +680,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRegionDataGrassesInternalGetter item,
             RegionDataGrasses_Mask<bool?> checkMask)
         {
-            return ((RegionDataGrassesCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((RegionDataGrassesCommon)((IRegionDataGrassesInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -667,7 +688,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static RegionDataGrasses_Mask<bool> GetHasBeenSetMask(this IRegionDataGrassesInternalGetter item)
         {
             var ret = new RegionDataGrasses_Mask<bool>();
-            ((RegionDataGrassesCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((RegionDataGrassesCommon)((IRegionDataGrassesInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -677,7 +698,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRegionDataGrassesInternalGetter item,
             IRegionDataGrassesInternalGetter rhs)
         {
-            return ((RegionDataGrassesCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((RegionDataGrassesCommon)((IRegionDataGrassesInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -731,8 +752,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type SetterType = typeof(IRegionDataGrasses);
 
         public static readonly Type InternalSetterType = typeof(IRegionDataGrassesInternal);
-
-        public static readonly Type CommonType = typeof(RegionDataGrassesCommon);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.RegionDataGrasses";
 
@@ -859,7 +878,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -879,60 +897,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class RegionDataGrassesCommon : RegionDataCommon
+    public partial class RegionDataGrassesSetterCommon : RegionDataSetterCommon
     {
-        public static readonly RegionDataGrassesCommon Instance = new RegionDataGrassesCommon();
-
-        #region Copy Fields From
-        public static void CopyFieldsFrom(
-            RegionDataGrasses item,
-            RegionDataGrasses rhs,
-            RegionDataGrasses def,
-            ErrorMaskBuilder errorMask,
-            RegionDataGrasses_CopyMask copyMask)
-        {
-            RegionDataCommon.CopyFieldsFrom(
-                item,
-                rhs,
-                def,
-                errorMask,
-                copyMask);
-            if (copyMask?.Grasses != CopyOption.Skip)
-            {
-                errorMask?.PushIndex((int)RegionDataGrasses_FieldIndex.Grasses);
-                try
-                {
-                    item.Grasses.SetToWithDefault(
-                        rhs.Grasses,
-                        def?.Grasses);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-        }
-
-        #endregion
+        public new static readonly RegionDataGrassesSetterCommon Instance = new RegionDataGrassesSetterCommon();
 
         partial void ClearPartial();
-
+        
         public virtual void Clear(IRegionDataGrassesInternal item)
         {
             ClearPartial();
             item.Grasses.Unset();
             base.Clear(item);
         }
-
+        
         public override void Clear(IRegionDataInternal item)
         {
             Clear(item: (IRegionDataGrassesInternal)item);
         }
+        
+        
+    }
+    public partial class RegionDataGrassesCommon : RegionDataCommon
+    {
+        public new static readonly RegionDataGrassesCommon Instance = new RegionDataGrassesCommon();
 
         public RegionDataGrasses_Mask<bool> GetEqualsMask(
             IRegionDataGrassesInternalGetter item,
@@ -940,14 +927,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new RegionDataGrasses_Mask<bool>();
-            ((RegionDataGrassesCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
+            ((RegionDataGrassesCommon)((IRegionDataGrassesInternalGetter)item).CommonInstance()).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
                 include: include);
             return ret;
         }
-
+        
         public void FillEqualsMask(
             IRegionDataGrassesInternalGetter item,
             IRegionDataGrassesInternalGetter rhs,
@@ -961,7 +948,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
-
+        
         public string ToString(
             IRegionDataGrassesInternalGetter item,
             string name = null,
@@ -975,7 +962,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 printMask: printMask);
             return fg.ToString();
         }
-
+        
         public void ToString(
             IRegionDataGrassesInternalGetter item,
             FileGeneration fg,
@@ -1000,7 +987,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             fg.AppendLine("]");
         }
-
+        
         protected static void ToStringFields(
             IRegionDataGrassesInternalGetter item,
             FileGeneration fg,
@@ -1029,7 +1016,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg.AppendLine("]");
             }
         }
-
+        
         public bool HasBeenSet(
             IRegionDataGrassesInternalGetter item,
             RegionDataGrasses_Mask<bool?> checkMask)
@@ -1039,7 +1026,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 checkMask: checkMask);
         }
-
+        
         public void FillHasBeenSetMask(
             IRegionDataGrassesInternalGetter item,
             RegionDataGrasses_Mask<bool> mask)
@@ -1049,7 +1036,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 mask: mask);
         }
-
+        
         public static RegionDataGrasses_FieldIndex ConvertFieldIndex(RegionData_FieldIndex index)
         {
             switch (index)
@@ -1066,7 +1053,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
-
+        
         #region Equals and Hash
         public virtual bool Equals(
             IRegionDataGrassesInternalGetter lhs,
@@ -1082,7 +1069,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             return true;
         }
-
+        
         public override bool Equals(
             IRegionDataInternalGetter lhs,
             IRegionDataInternalGetter rhs)
@@ -1091,7 +1078,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 lhs: (IRegionDataGrassesInternalGetter)lhs,
                 rhs: rhs as IRegionDataGrassesInternalGetter);
         }
-
+        
         public virtual int GetHashCode(IRegionDataGrassesInternalGetter item)
         {
             int ret = 0;
@@ -1102,15 +1089,59 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
-
+        
         public override int GetHashCode(IRegionDataInternalGetter item)
         {
             return GetHashCode(item: (IRegionDataGrassesInternalGetter)item);
         }
-
+        
         #endregion
+        
+        
+        
+    }
+    public partial class RegionDataGrassesSetterCopyCommon : RegionDataSetterCopyCommon
+    {
+        public new static readonly RegionDataGrassesSetterCopyCommon Instance = new RegionDataGrassesSetterCopyCommon();
 
-
+        #region Copy Fields From
+        public static void CopyFieldsFrom(
+            RegionDataGrasses item,
+            RegionDataGrasses rhs,
+            RegionDataGrasses def,
+            ErrorMaskBuilder errorMask,
+            RegionDataGrasses_CopyMask copyMask)
+        {
+            RegionDataSetterCopyCommon.CopyFieldsFrom(
+                item,
+                rhs,
+                def,
+                errorMask,
+                copyMask);
+            if (copyMask?.Grasses != CopyOption.Skip)
+            {
+                errorMask?.PushIndex((int)RegionDataGrasses_FieldIndex.Grasses);
+                try
+                {
+                    item.Grasses.SetToWithDefault(
+                        rhs.Grasses,
+                        def?.Grasses);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+        }
+        
+        #endregion
+        
+        
     }
     #endregion
 
@@ -1800,17 +1831,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         RegionDataBinaryWrapper,
         IRegionDataGrassesInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RegionDataGrasses_Registration.Instance;
         public new static RegionDataGrasses_Registration Registration => RegionDataGrasses_Registration.Instance;
-        protected override object CommonInstance => RegionDataGrassesCommon.Instance;
+        protected override object CommonInstance()
+        {
+            return RegionDataGrassesCommon.Instance;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRegionDataGrassesInternalGetter)rhs, include);
 
         protected override object XmlWriteTranslator => RegionDataGrassesXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((RegionDataGrassesXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         protected override object BinaryWriteTranslator => RegionDataGrassesBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((RegionDataGrassesBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
 
         public IReadOnlySetList<IFormIDLinkGetter<IGrassInternalGetter>> Grasses { get; private set; } = EmptySetList<IFormIDLinkGetter<IGrassInternalGetter>>.Instance;
         partial void CustomCtor(
@@ -1888,4 +1951,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class RegionDataGrasses
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => RegionDataGrasses_Registration.Instance;
+        public new static RegionDataGrasses_Registration Registration => RegionDataGrasses_Registration.Instance;
+        protected override object CommonInstance()
+        {
+            return RegionDataGrassesCommon.Instance;
+        }
+        protected override object CommonSetterInstance()
+        {
+            return RegionDataGrassesSetterCommon.Instance;
+        }
+        protected override object CommonSetterCopyInstance()
+        {
+            return RegionDataGrassesSetterCopyCommon.Instance;
+        }
+
+        #endregion
+
+    }
 }

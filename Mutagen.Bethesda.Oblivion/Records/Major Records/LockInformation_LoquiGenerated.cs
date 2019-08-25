@@ -34,18 +34,12 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class LockInformation :
         LoquiNotifyingObject,
-        ILockInformation,
+        ILockInformationInternal,
         ILoquiObjectSetter<LockInformation>,
         ILinkSubContainer,
         IEquatable<LockInformation>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => LockInformation_Registration.Instance;
-        public static LockInformation_Registration Registration => LockInformation_Registration.Instance;
-        protected object CommonInstance => LockInformationCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
-
         #region Ctor
         public LockInformation()
         {
@@ -96,7 +90,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILockInformationGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILockInformationInternalGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -114,22 +108,35 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is ILockInformationGetter rhs)) return false;
-            return ((LockInformationCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            if (!(obj is ILockInformationInternalGetter rhs)) return false;
+            return ((LockInformationCommon)((ILockInformationInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(LockInformation obj)
         {
-            return ((LockInformationCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((LockInformationCommon)((ILockInformationInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((LockInformationCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((LockInformationCommon)((ILockInformationInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected object XmlWriteTranslator => LockInformationXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((LockInformationXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static LockInformation CreateFromXml(
@@ -321,6 +328,19 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Translation
         protected object BinaryWriteTranslator => LockInformationBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((LockInformationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
         #region Binary Create
         [DebuggerStepThrough]
         public static LockInformation CreateFromBinary(
@@ -492,7 +512,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            LockInformationCommon.CopyFieldsFrom(
+            LockInformationSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -507,7 +527,7 @@ namespace Mutagen.Bethesda.Oblivion
             LockInformation_CopyMask copyMask = null,
             LockInformation def = null)
         {
-            LockInformationCommon.CopyFieldsFrom(
+            LockInformationSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -539,7 +559,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void Clear()
         {
-            LockInformationCommon.Instance.Clear(this);
+            LockInformationSetterCommon.Instance.Clear(this);
         }
 
         public static LockInformation Create(IEnumerable<KeyValuePair<ushort, object>> fields)
@@ -581,8 +601,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface ILockInformation :
-        ILockInformationGetter,
-        ILoquiObjectSetter<ILockInformation>
+        ILockInformationInternalGetter,
+        ILoquiObjectSetter<ILockInformationInternal>
     {
         new Byte LockLevel { get; set; }
 
@@ -599,9 +619,17 @@ namespace Mutagen.Bethesda.Oblivion
             LockInformation def = null);
     }
 
+    public partial interface ILockInformationInternal :
+        ILockInformation,
+        ILockInformationInternalGetter
+    {
+        new Key Key { get; set; }
+        new IFormIDLink<Key> Key_Property { get; }
+    }
+
     public partial interface ILockInformationGetter :
         ILoquiObject,
-        ILoquiObject<ILockInformationGetter>,
+        ILoquiObject<ILockInformationInternalGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -625,45 +653,53 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    public partial interface ILockInformationInternalGetter : ILockInformationGetter
+    {
+        object CommonInstance();
+        object CommonSetterInstance();
+        object CommonSetterCopyInstance();
+
+    }
+
     #endregion
 
     #region Common MixIn
     public static class LockInformationMixIn
     {
-        public static void Clear(this ILockInformation item)
+        public static void Clear(this ILockInformationInternal item)
         {
-            ((LockInformationCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((LockInformationSetterCommon)((ILockInformationInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static LockInformation_Mask<bool> GetEqualsMask(
-            this ILockInformationGetter item,
-            ILockInformationGetter rhs,
+            this ILockInformationInternalGetter item,
+            ILockInformationInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((LockInformationCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((LockInformationCommon)((ILockInformationInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this ILockInformationGetter item,
+            this ILockInformationInternalGetter item,
             string name = null,
             LockInformation_Mask<bool> printMask = null)
         {
-            return ((LockInformationCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((LockInformationCommon)((ILockInformationInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this ILockInformationGetter item,
+            this ILockInformationInternalGetter item,
             FileGeneration fg,
             string name = null,
             LockInformation_Mask<bool> printMask = null)
         {
-            ((LockInformationCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((LockInformationCommon)((ILockInformationInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -671,28 +707,28 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static bool HasBeenSet(
-            this ILockInformationGetter item,
+            this ILockInformationInternalGetter item,
             LockInformation_Mask<bool?> checkMask)
         {
-            return ((LockInformationCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((LockInformationCommon)((ILockInformationInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static LockInformation_Mask<bool> GetHasBeenSetMask(this ILockInformationGetter item)
+        public static LockInformation_Mask<bool> GetHasBeenSetMask(this ILockInformationInternalGetter item)
         {
             var ret = new LockInformation_Mask<bool>();
-            ((LockInformationCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((LockInformationCommon)((ILockInformationInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this ILockInformationGetter item,
-            ILockInformationGetter rhs)
+            this ILockInformationInternalGetter item,
+            ILockInformationInternalGetter rhs)
         {
-            return ((LockInformationCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((LockInformationCommon)((ILockInformationInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -740,13 +776,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(ILockInformationGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type InternalGetterType = typeof(ILockInformationInternalGetter);
 
         public static readonly Type SetterType = typeof(ILockInformation);
 
-        public static readonly Type InternalSetterType = null;
-
-        public static readonly Type CommonType = typeof(LockInformationCommon);
+        public static readonly Type InternalSetterType = typeof(ILockInformationInternal);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.LockInformation";
 
@@ -905,7 +939,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -925,9 +958,165 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
+    public partial class LockInformationSetterCommon
+    {
+        public static readonly LockInformationSetterCommon Instance = new LockInformationSetterCommon();
+
+        partial void ClearPartial();
+        
+        public virtual void Clear(ILockInformationInternal item)
+        {
+            ClearPartial();
+            item.LockLevel = default(Byte);
+            item.Fluff = default(Byte[]);
+            item.Key = default(Key);
+            item.Flags = default(LockInformation.Flag);
+        }
+        
+        
+    }
     public partial class LockInformationCommon
     {
         public static readonly LockInformationCommon Instance = new LockInformationCommon();
+
+        public LockInformation_Mask<bool> GetEqualsMask(
+            ILockInformationInternalGetter item,
+            ILockInformationInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new LockInformation_Mask<bool>();
+            ((LockInformationCommon)((ILockInformationInternalGetter)item).CommonInstance()).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+        
+        public void FillEqualsMask(
+            ILockInformationInternalGetter item,
+            ILockInformationInternalGetter rhs,
+            LockInformation_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            if (rhs == null) return;
+            ret.LockLevel = item.LockLevel == rhs.LockLevel;
+            ret.Fluff = MemoryExtensions.SequenceEqual(item.Fluff, rhs.Fluff);
+            ret.Key = item.Key_Property.FormKey == rhs.Key_Property.FormKey;
+            ret.Flags = item.Flags == rhs.Flags;
+        }
+        
+        public string ToString(
+            ILockInformationInternalGetter item,
+            string name = null,
+            LockInformation_Mask<bool> printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+            return fg.ToString();
+        }
+        
+        public void ToString(
+            ILockInformationInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            LockInformation_Mask<bool> printMask = null)
+        {
+            if (name == null)
+            {
+                fg.AppendLine($"LockInformation =>");
+            }
+            else
+            {
+                fg.AppendLine($"{name} (LockInformation) =>");
+            }
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
+            }
+            fg.AppendLine("]");
+        }
+        
+        protected static void ToStringFields(
+            ILockInformationInternalGetter item,
+            FileGeneration fg,
+            LockInformation_Mask<bool> printMask = null)
+        {
+            if (printMask?.LockLevel ?? true)
+            {
+                fg.AppendLine($"LockLevel => {item.LockLevel}");
+            }
+            if (printMask?.Fluff ?? true)
+            {
+                fg.AppendLine($"Fluff => {SpanExt.ToHexString(item.Fluff)}");
+            }
+            if (printMask?.Key ?? true)
+            {
+                fg.AppendLine($"Key => {item.Key_Property}");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                fg.AppendLine($"Flags => {item.Flags}");
+            }
+        }
+        
+        public bool HasBeenSet(
+            ILockInformationInternalGetter item,
+            LockInformation_Mask<bool?> checkMask)
+        {
+            return true;
+        }
+        
+        public void FillHasBeenSetMask(
+            ILockInformationInternalGetter item,
+            LockInformation_Mask<bool> mask)
+        {
+            mask.LockLevel = true;
+            mask.Fluff = true;
+            mask.Key = true;
+            mask.Flags = true;
+        }
+        
+        #region Equals and Hash
+        public virtual bool Equals(
+            ILockInformationInternalGetter lhs,
+            ILockInformationInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (lhs.LockLevel != rhs.LockLevel) return false;
+            if (!MemoryExtensions.SequenceEqual(lhs.Fluff, rhs.Fluff)) return false;
+            if (!lhs.Key_Property.Equals(rhs.Key_Property)) return false;
+            if (lhs.Flags != rhs.Flags) return false;
+            return true;
+        }
+        
+        public virtual int GetHashCode(ILockInformationInternalGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.LockLevel).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Fluff).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Key).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
+            return ret;
+        }
+        
+        #endregion
+        
+        
+        
+    }
+    public partial class LockInformationSetterCopyCommon
+    {
+        public static readonly LockInformationSetterCopyCommon Instance = new LockInformationSetterCopyCommon();
 
         #region Copy Fields From
         public static void CopyFieldsFrom(
@@ -1006,153 +1195,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
         }
-
+        
         #endregion
-
-        partial void ClearPartial();
-
-        public virtual void Clear(ILockInformation item)
-        {
-            ClearPartial();
-            item.LockLevel = default(Byte);
-            item.Fluff = default(Byte[]);
-            item.Key = default(Key);
-            item.Flags = default(LockInformation.Flag);
-        }
-
-        public LockInformation_Mask<bool> GetEqualsMask(
-            ILockInformationGetter item,
-            ILockInformationGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new LockInformation_Mask<bool>();
-            ((LockInformationCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public void FillEqualsMask(
-            ILockInformationGetter item,
-            ILockInformationGetter rhs,
-            LockInformation_Mask<bool> ret,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            if (rhs == null) return;
-            ret.LockLevel = item.LockLevel == rhs.LockLevel;
-            ret.Fluff = MemoryExtensions.SequenceEqual(item.Fluff, rhs.Fluff);
-            ret.Key = item.Key_Property.FormKey == rhs.Key_Property.FormKey;
-            ret.Flags = item.Flags == rhs.Flags;
-        }
-
-        public string ToString(
-            ILockInformationGetter item,
-            string name = null,
-            LockInformation_Mask<bool> printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(
-                item: item,
-                fg: fg,
-                name: name,
-                printMask: printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(
-            ILockInformationGetter item,
-            FileGeneration fg,
-            string name = null,
-            LockInformation_Mask<bool> printMask = null)
-        {
-            if (name == null)
-            {
-                fg.AppendLine($"LockInformation =>");
-            }
-            else
-            {
-                fg.AppendLine($"{name} (LockInformation) =>");
-            }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                ToStringFields(
-                    item: item,
-                    fg: fg,
-                    printMask: printMask);
-            }
-            fg.AppendLine("]");
-        }
-
-        protected static void ToStringFields(
-            ILockInformationGetter item,
-            FileGeneration fg,
-            LockInformation_Mask<bool> printMask = null)
-        {
-            if (printMask?.LockLevel ?? true)
-            {
-                fg.AppendLine($"LockLevel => {item.LockLevel}");
-            }
-            if (printMask?.Fluff ?? true)
-            {
-                fg.AppendLine($"Fluff => {SpanExt.ToHexString(item.Fluff)}");
-            }
-            if (printMask?.Key ?? true)
-            {
-                fg.AppendLine($"Key => {item.Key_Property}");
-            }
-            if (printMask?.Flags ?? true)
-            {
-                fg.AppendLine($"Flags => {item.Flags}");
-            }
-        }
-
-        public bool HasBeenSet(
-            ILockInformationGetter item,
-            LockInformation_Mask<bool?> checkMask)
-        {
-            return true;
-        }
-
-        public void FillHasBeenSetMask(
-            ILockInformationGetter item,
-            LockInformation_Mask<bool> mask)
-        {
-            mask.LockLevel = true;
-            mask.Fluff = true;
-            mask.Key = true;
-            mask.Flags = true;
-        }
-
-        #region Equals and Hash
-        public virtual bool Equals(
-            ILockInformationGetter lhs,
-            ILockInformationGetter rhs)
-        {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
-            if (lhs.LockLevel != rhs.LockLevel) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Fluff, rhs.Fluff)) return false;
-            if (!lhs.Key_Property.Equals(rhs.Key_Property)) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            return true;
-        }
-
-        public virtual int GetHashCode(ILockInformationGetter item)
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.LockLevel).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Fluff).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Key).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
-            return ret;
-        }
-
-        #endregion
-
-
+        
+        
     }
     #endregion
 
@@ -1163,7 +1209,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static LockInformationXmlWriteTranslation Instance = new LockInformationXmlWriteTranslation();
 
         public static void WriteToNodeXml(
-            ILockInformationGetter item,
+            ILockInformationInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1208,7 +1254,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             XElement node,
-            ILockInformationGetter item,
+            ILockInformationInternalGetter item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)
@@ -1234,7 +1280,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             Write(
-                item: (ILockInformationGetter)item,
+                item: (ILockInformationInternalGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1243,7 +1289,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             XElement node,
-            ILockInformationGetter item,
+            ILockInformationInternalGetter item,
             ErrorMaskBuilder errorMask,
             int fieldIndex,
             TranslationCrystal translationMask,
@@ -1253,7 +1299,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 errorMask?.PushIndex(fieldIndex);
                 Write(
-                    item: (ILockInformationGetter)item,
+                    item: (ILockInformationInternalGetter)item,
                     name: name,
                     node: node,
                     errorMask: errorMask,
@@ -1277,7 +1323,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static LockInformationXmlCreateTranslation Instance = new LockInformationXmlCreateTranslation();
 
         public static void FillPublicXml(
-            ILockInformation item,
+            ILockInformationInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1302,7 +1348,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElementXml(
-            ILockInformation item,
+            ILockInformationInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -1406,7 +1452,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public static class LockInformationXmlTranslationMixIn
     {
         public static void WriteToXml(
-            this ILockInformationGetter item,
+            this ILockInformationInternalGetter item,
             XElement node,
             out LockInformation_ErrorMask errorMask,
             bool doMasks = true,
@@ -1424,7 +1470,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this ILockInformationGetter item,
+            this ILockInformationInternalGetter item,
             string path,
             out LockInformation_ErrorMask errorMask,
             LockInformation_TranslationMask translationMask = null,
@@ -1443,7 +1489,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this ILockInformationGetter item,
+            this ILockInformationInternalGetter item,
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1461,7 +1507,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this ILockInformationGetter item,
+            this ILockInformationInternalGetter item,
             Stream stream,
             out LockInformation_ErrorMask errorMask,
             LockInformation_TranslationMask translationMask = null,
@@ -1480,7 +1526,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this ILockInformationGetter item,
+            this ILockInformationInternalGetter item,
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1498,7 +1544,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this ILockInformationGetter item,
+            this ILockInformationInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1513,7 +1559,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this ILockInformationGetter item,
+            this ILockInformationInternalGetter item,
             XElement node,
             string name = null,
             LockInformation_TranslationMask translationMask = null)
@@ -1527,7 +1573,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this ILockInformationGetter item,
+            this ILockInformationInternalGetter item,
             string path,
             string name = null)
         {
@@ -1542,7 +1588,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this ILockInformationGetter item,
+            this ILockInformationInternalGetter item,
             Stream stream,
             string name = null)
         {
@@ -1924,7 +1970,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static LockInformationBinaryWriteTranslation Instance = new LockInformationBinaryWriteTranslation();
 
         public static void Write_Embedded(
-            ILockInformationGetter item,
+            ILockInformationInternalGetter item,
             MutagenWriter writer,
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
@@ -1945,7 +1991,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             MutagenWriter writer,
-            ILockInformationGetter item,
+            ILockInformationInternalGetter item,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
@@ -1971,7 +2017,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask)
         {
             Write(
-                item: (ILockInformationGetter)item,
+                item: (ILockInformationInternalGetter)item,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -1990,7 +2036,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public static class LockInformationBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this ILockInformationGetter item,
+            this ILockInformationInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
             out LockInformation_ErrorMask errorMask,
@@ -2007,7 +2053,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToBinary(
-            this ILockInformationGetter item,
+            this ILockInformationInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -2021,7 +2067,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToBinary(
-            this ILockInformationGetter item,
+            this ILockInformationInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
@@ -2038,22 +2084,65 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     public partial class LockInformationBinaryWrapper :
         BinaryWrapper,
-        ILockInformationGetter
+        ILockInformationInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LockInformation_Registration.Instance;
         public static LockInformation_Registration Registration => LockInformation_Registration.Instance;
-        protected object CommonInstance => LockInformationCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
+        protected object CommonInstance()
+        {
+            return LockInformationCommon.Instance;
+        }
+        object ILockInformationInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object ILockInformationInternalGetter.CommonSetterInstance()
+        {
+            return null;
+        }
+        object ILockInformationInternalGetter.CommonSetterCopyInstance()
+        {
+            return null;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILockInformationGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILockInformationInternalGetter)rhs, include);
 
         protected object XmlWriteTranslator => LockInformationXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((LockInformationXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         protected object BinaryWriteTranslator => LockInformationBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((LockInformationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
 
         public Byte LockLevel => _data.Span[0];
         public ReadOnlySpan<Byte> Fluff => _data.Span.Slice(1, 3).ToArray();
@@ -2101,4 +2190,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class LockInformation
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => LockInformation_Registration.Instance;
+        public static LockInformation_Registration Registration => LockInformation_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return LockInformationCommon.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return LockInformationSetterCommon.Instance;
+        }
+        protected object CommonSetterCopyInstance()
+        {
+            return LockInformationSetterCopyCommon.Instance;
+        }
+        object ILockInformationInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object ILockInformationInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object ILockInformationInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
 }

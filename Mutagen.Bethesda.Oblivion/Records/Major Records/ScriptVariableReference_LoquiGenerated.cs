@@ -35,16 +35,11 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class ScriptVariableReference :
         ScriptReference,
-        IScriptVariableReference,
+        IScriptVariableReferenceInternal,
         ILoquiObjectSetter<ScriptVariableReference>,
         IEquatable<ScriptVariableReference>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => ScriptVariableReference_Registration.Instance;
-        public new static ScriptVariableReference_Registration Registration => ScriptVariableReference_Registration.Instance;
-        protected override object CommonInstance => ScriptVariableReferenceCommon.Instance;
-
         #region Ctor
         public ScriptVariableReference()
         {
@@ -63,7 +58,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IScriptVariableReferenceGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IScriptVariableReferenceInternalGetter)rhs, include);
         #region To String
 
         public override void ToString(
@@ -81,21 +76,34 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is IScriptVariableReferenceGetter rhs)) return false;
-            return ((ScriptVariableReferenceCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            if (!(obj is IScriptVariableReferenceInternalGetter rhs)) return false;
+            return ((ScriptVariableReferenceCommon)((IScriptVariableReferenceInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(ScriptVariableReference obj)
         {
-            return ((ScriptVariableReferenceCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((ScriptVariableReferenceCommon)((IScriptVariableReferenceInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((ScriptVariableReferenceCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((ScriptVariableReferenceCommon)((IScriptVariableReferenceInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected override object XmlWriteTranslator => ScriptVariableReferenceXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((ScriptVariableReferenceXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static ScriptVariableReference CreateFromXml(
@@ -266,6 +274,19 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Binary Translation
         protected override object BinaryWriteTranslator => ScriptVariableReferenceBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((ScriptVariableReferenceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
         #region Binary Create
         [DebuggerStepThrough]
         public static ScriptVariableReference CreateFromBinary(
@@ -435,7 +456,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ScriptVariableReferenceCommon.CopyFieldsFrom(
+            ScriptVariableReferenceSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -450,7 +471,7 @@ namespace Mutagen.Bethesda.Oblivion
             ScriptVariableReference_CopyMask copyMask = null,
             ScriptVariableReference def = null)
         {
-            ScriptVariableReferenceCommon.CopyFieldsFrom(
+            ScriptVariableReferenceSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -474,7 +495,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            ScriptVariableReferenceCommon.Instance.Clear(this);
+            ScriptVariableReferenceSetterCommon.Instance.Clear(this);
         }
 
         public new static ScriptVariableReference Create(IEnumerable<KeyValuePair<ushort, object>> fields)
@@ -507,9 +528,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IScriptVariableReference :
-        IScriptVariableReferenceGetter,
+        IScriptVariableReferenceInternalGetter,
         IScriptReference,
-        ILoquiObjectSetter<IScriptVariableReference>
+        ILoquiObjectSetter<IScriptVariableReferenceInternal>
     {
         new Int32 VariableIndex { get; set; }
 
@@ -520,9 +541,16 @@ namespace Mutagen.Bethesda.Oblivion
             ScriptVariableReference def = null);
     }
 
+    public partial interface IScriptVariableReferenceInternal :
+        IScriptReferenceInternal,
+        IScriptVariableReference,
+        IScriptVariableReferenceInternalGetter
+    {
+    }
+
     public partial interface IScriptVariableReferenceGetter :
         IScriptReferenceGetter,
-        ILoquiObject<IScriptVariableReferenceGetter>,
+        ILoquiObject<IScriptVariableReferenceInternalGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -533,45 +561,52 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    public partial interface IScriptVariableReferenceInternalGetter :
+        IScriptReferenceInternalGetter,
+        IScriptVariableReferenceGetter
+    {
+
+    }
+
     #endregion
 
     #region Common MixIn
     public static class ScriptVariableReferenceMixIn
     {
-        public static void Clear(this IScriptVariableReference item)
+        public static void Clear(this IScriptVariableReferenceInternal item)
         {
-            ((ScriptVariableReferenceCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((ScriptVariableReferenceSetterCommon)((IScriptVariableReferenceInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static ScriptVariableReference_Mask<bool> GetEqualsMask(
-            this IScriptVariableReferenceGetter item,
-            IScriptVariableReferenceGetter rhs,
+            this IScriptVariableReferenceInternalGetter item,
+            IScriptVariableReferenceInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((ScriptVariableReferenceCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((ScriptVariableReferenceCommon)((IScriptVariableReferenceInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IScriptVariableReferenceGetter item,
+            this IScriptVariableReferenceInternalGetter item,
             string name = null,
             ScriptVariableReference_Mask<bool> printMask = null)
         {
-            return ((ScriptVariableReferenceCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((ScriptVariableReferenceCommon)((IScriptVariableReferenceInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IScriptVariableReferenceGetter item,
+            this IScriptVariableReferenceInternalGetter item,
             FileGeneration fg,
             string name = null,
             ScriptVariableReference_Mask<bool> printMask = null)
         {
-            ((ScriptVariableReferenceCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((ScriptVariableReferenceCommon)((IScriptVariableReferenceInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -579,28 +614,28 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static bool HasBeenSet(
-            this IScriptVariableReferenceGetter item,
+            this IScriptVariableReferenceInternalGetter item,
             ScriptVariableReference_Mask<bool?> checkMask)
         {
-            return ((ScriptVariableReferenceCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((ScriptVariableReferenceCommon)((IScriptVariableReferenceInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static ScriptVariableReference_Mask<bool> GetHasBeenSetMask(this IScriptVariableReferenceGetter item)
+        public static ScriptVariableReference_Mask<bool> GetHasBeenSetMask(this IScriptVariableReferenceInternalGetter item)
         {
             var ret = new ScriptVariableReference_Mask<bool>();
-            ((ScriptVariableReferenceCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((ScriptVariableReferenceCommon)((IScriptVariableReferenceInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this IScriptVariableReferenceGetter item,
-            IScriptVariableReferenceGetter rhs)
+            this IScriptVariableReferenceInternalGetter item,
+            IScriptVariableReferenceInternalGetter rhs)
         {
-            return ((ScriptVariableReferenceCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((ScriptVariableReferenceCommon)((IScriptVariableReferenceInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -645,13 +680,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IScriptVariableReferenceGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type InternalGetterType = typeof(IScriptVariableReferenceInternalGetter);
 
         public static readonly Type SetterType = typeof(IScriptVariableReference);
 
-        public static readonly Type InternalSetterType = null;
-
-        public static readonly Type CommonType = typeof(ScriptVariableReferenceCommon);
+        public static readonly Type InternalSetterType = typeof(IScriptVariableReferenceInternal);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.ScriptVariableReference";
 
@@ -777,7 +810,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -797,9 +829,179 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
+    public partial class ScriptVariableReferenceSetterCommon : ScriptReferenceSetterCommon
+    {
+        public new static readonly ScriptVariableReferenceSetterCommon Instance = new ScriptVariableReferenceSetterCommon();
+
+        partial void ClearPartial();
+        
+        public virtual void Clear(IScriptVariableReferenceInternal item)
+        {
+            ClearPartial();
+            item.VariableIndex = default(Int32);
+            base.Clear(item);
+        }
+        
+        public override void Clear(IScriptReferenceInternal item)
+        {
+            Clear(item: (IScriptVariableReferenceInternal)item);
+        }
+        
+        
+    }
     public partial class ScriptVariableReferenceCommon : ScriptReferenceCommon
     {
-        public static readonly ScriptVariableReferenceCommon Instance = new ScriptVariableReferenceCommon();
+        public new static readonly ScriptVariableReferenceCommon Instance = new ScriptVariableReferenceCommon();
+
+        public ScriptVariableReference_Mask<bool> GetEqualsMask(
+            IScriptVariableReferenceInternalGetter item,
+            IScriptVariableReferenceInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new ScriptVariableReference_Mask<bool>();
+            ((ScriptVariableReferenceCommon)((IScriptVariableReferenceInternalGetter)item).CommonInstance()).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+        
+        public void FillEqualsMask(
+            IScriptVariableReferenceInternalGetter item,
+            IScriptVariableReferenceInternalGetter rhs,
+            ScriptVariableReference_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            if (rhs == null) return;
+            ret.VariableIndex = item.VariableIndex == rhs.VariableIndex;
+            base.FillEqualsMask(item, rhs, ret, include);
+        }
+        
+        public string ToString(
+            IScriptVariableReferenceInternalGetter item,
+            string name = null,
+            ScriptVariableReference_Mask<bool> printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+            return fg.ToString();
+        }
+        
+        public void ToString(
+            IScriptVariableReferenceInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            ScriptVariableReference_Mask<bool> printMask = null)
+        {
+            if (name == null)
+            {
+                fg.AppendLine($"ScriptVariableReference =>");
+            }
+            else
+            {
+                fg.AppendLine($"{name} (ScriptVariableReference) =>");
+            }
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
+            }
+            fg.AppendLine("]");
+        }
+        
+        protected static void ToStringFields(
+            IScriptVariableReferenceInternalGetter item,
+            FileGeneration fg,
+            ScriptVariableReference_Mask<bool> printMask = null)
+        {
+            ScriptReferenceCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.VariableIndex ?? true)
+            {
+                fg.AppendLine($"VariableIndex => {item.VariableIndex}");
+            }
+        }
+        
+        public bool HasBeenSet(
+            IScriptVariableReferenceInternalGetter item,
+            ScriptVariableReference_Mask<bool?> checkMask)
+        {
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+        
+        public void FillHasBeenSetMask(
+            IScriptVariableReferenceInternalGetter item,
+            ScriptVariableReference_Mask<bool> mask)
+        {
+            mask.VariableIndex = true;
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
+        }
+        
+        public static ScriptVariableReference_FieldIndex ConvertFieldIndex(ScriptReference_FieldIndex index)
+        {
+            switch (index)
+            {
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        #region Equals and Hash
+        public virtual bool Equals(
+            IScriptVariableReferenceInternalGetter lhs,
+            IScriptVariableReferenceInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.VariableIndex != rhs.VariableIndex) return false;
+            return true;
+        }
+        
+        public override bool Equals(
+            IScriptReferenceInternalGetter lhs,
+            IScriptReferenceInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IScriptVariableReferenceInternalGetter)lhs,
+                rhs: rhs as IScriptVariableReferenceInternalGetter);
+        }
+        
+        public virtual int GetHashCode(IScriptVariableReferenceInternalGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.VariableIndex).CombineHashCode(ret);
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+        
+        public override int GetHashCode(IScriptReferenceInternalGetter item)
+        {
+            return GetHashCode(item: (IScriptVariableReferenceInternalGetter)item);
+        }
+        
+        #endregion
+        
+        
+        
+    }
+    public partial class ScriptVariableReferenceSetterCopyCommon : ScriptReferenceSetterCopyCommon
+    {
+        public new static readonly ScriptVariableReferenceSetterCopyCommon Instance = new ScriptVariableReferenceSetterCopyCommon();
 
         #region Copy Fields From
         public static void CopyFieldsFrom(
@@ -809,7 +1011,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             ScriptVariableReference_CopyMask copyMask)
         {
-            ScriptReferenceCommon.CopyFieldsFrom(
+            ScriptReferenceSetterCopyCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -833,167 +1035,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
         }
-
+        
         #endregion
-
-        partial void ClearPartial();
-
-        public virtual void Clear(IScriptVariableReference item)
-        {
-            ClearPartial();
-            item.VariableIndex = default(Int32);
-            base.Clear(item);
-        }
-
-        public override void Clear(IScriptReference item)
-        {
-            Clear(item: (IScriptVariableReference)item);
-        }
-
-        public ScriptVariableReference_Mask<bool> GetEqualsMask(
-            IScriptVariableReferenceGetter item,
-            IScriptVariableReferenceGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new ScriptVariableReference_Mask<bool>();
-            ((ScriptVariableReferenceCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public void FillEqualsMask(
-            IScriptVariableReferenceGetter item,
-            IScriptVariableReferenceGetter rhs,
-            ScriptVariableReference_Mask<bool> ret,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            if (rhs == null) return;
-            ret.VariableIndex = item.VariableIndex == rhs.VariableIndex;
-            base.FillEqualsMask(item, rhs, ret, include);
-        }
-
-        public string ToString(
-            IScriptVariableReferenceGetter item,
-            string name = null,
-            ScriptVariableReference_Mask<bool> printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(
-                item: item,
-                fg: fg,
-                name: name,
-                printMask: printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(
-            IScriptVariableReferenceGetter item,
-            FileGeneration fg,
-            string name = null,
-            ScriptVariableReference_Mask<bool> printMask = null)
-        {
-            if (name == null)
-            {
-                fg.AppendLine($"ScriptVariableReference =>");
-            }
-            else
-            {
-                fg.AppendLine($"{name} (ScriptVariableReference) =>");
-            }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                ToStringFields(
-                    item: item,
-                    fg: fg,
-                    printMask: printMask);
-            }
-            fg.AppendLine("]");
-        }
-
-        protected static void ToStringFields(
-            IScriptVariableReferenceGetter item,
-            FileGeneration fg,
-            ScriptVariableReference_Mask<bool> printMask = null)
-        {
-            ScriptReferenceCommon.ToStringFields(
-                item: item,
-                fg: fg,
-                printMask: printMask);
-            if (printMask?.VariableIndex ?? true)
-            {
-                fg.AppendLine($"VariableIndex => {item.VariableIndex}");
-            }
-        }
-
-        public bool HasBeenSet(
-            IScriptVariableReferenceGetter item,
-            ScriptVariableReference_Mask<bool?> checkMask)
-        {
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public void FillHasBeenSetMask(
-            IScriptVariableReferenceGetter item,
-            ScriptVariableReference_Mask<bool> mask)
-        {
-            mask.VariableIndex = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-
-        public static ScriptVariableReference_FieldIndex ConvertFieldIndex(ScriptReference_FieldIndex index)
-        {
-            switch (index)
-            {
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        #region Equals and Hash
-        public virtual bool Equals(
-            IScriptVariableReferenceGetter lhs,
-            IScriptVariableReferenceGetter rhs)
-        {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (lhs.VariableIndex != rhs.VariableIndex) return false;
-            return true;
-        }
-
-        public override bool Equals(
-            IScriptReferenceGetter lhs,
-            IScriptReferenceGetter rhs)
-        {
-            return Equals(
-                lhs: (IScriptVariableReferenceGetter)lhs,
-                rhs: rhs as IScriptVariableReferenceGetter);
-        }
-
-        public virtual int GetHashCode(IScriptVariableReferenceGetter item)
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.VariableIndex).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        public override int GetHashCode(IScriptReferenceGetter item)
-        {
-            return GetHashCode(item: (IScriptVariableReferenceGetter)item);
-        }
-
-        #endregion
-
-
+        
+        
     }
     #endregion
 
@@ -1006,7 +1051,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public new readonly static ScriptVariableReferenceXmlWriteTranslation Instance = new ScriptVariableReferenceXmlWriteTranslation();
 
         public static void WriteToNodeXml(
-            IScriptVariableReferenceGetter item,
+            IScriptVariableReferenceInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1029,7 +1074,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             XElement node,
-            IScriptVariableReferenceGetter item,
+            IScriptVariableReferenceInternalGetter item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)
@@ -1055,7 +1100,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             Write(
-                item: (IScriptVariableReferenceGetter)item,
+                item: (IScriptVariableReferenceInternalGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1064,13 +1109,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public override void Write(
             XElement node,
-            IScriptReferenceGetter item,
+            IScriptReferenceInternalGetter item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)
         {
             Write(
-                item: (IScriptVariableReferenceGetter)item,
+                item: (IScriptVariableReferenceInternalGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1084,7 +1129,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public new readonly static ScriptVariableReferenceXmlCreateTranslation Instance = new ScriptVariableReferenceXmlCreateTranslation();
 
         public static void FillPublicXml(
-            IScriptVariableReference item,
+            IScriptVariableReferenceInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1109,7 +1154,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElementXml(
-            IScriptVariableReference item,
+            IScriptVariableReferenceInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -1160,7 +1205,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public static class ScriptVariableReferenceXmlTranslationMixIn
     {
         public static void WriteToXml(
-            this IScriptVariableReferenceGetter item,
+            this IScriptVariableReferenceInternalGetter item,
             XElement node,
             out ScriptVariableReference_ErrorMask errorMask,
             bool doMasks = true,
@@ -1178,7 +1223,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IScriptVariableReferenceGetter item,
+            this IScriptVariableReferenceInternalGetter item,
             string path,
             out ScriptVariableReference_ErrorMask errorMask,
             ScriptVariableReference_TranslationMask translationMask = null,
@@ -1197,7 +1242,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this IScriptVariableReferenceGetter item,
+            this IScriptVariableReferenceInternalGetter item,
             Stream stream,
             out ScriptVariableReference_ErrorMask errorMask,
             ScriptVariableReference_TranslationMask translationMask = null,
@@ -1489,7 +1534,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public new readonly static ScriptVariableReferenceBinaryWriteTranslation Instance = new ScriptVariableReferenceBinaryWriteTranslation();
 
         public static void Write_RecordTypes(
-            IScriptVariableReferenceGetter item,
+            IScriptVariableReferenceInternalGetter item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask,
@@ -1504,7 +1549,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             MutagenWriter writer,
-            IScriptVariableReferenceGetter item,
+            IScriptVariableReferenceInternalGetter item,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
@@ -1525,7 +1570,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask)
         {
             Write(
-                item: (IScriptVariableReferenceGetter)item,
+                item: (IScriptVariableReferenceInternalGetter)item,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -1534,13 +1579,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public override void Write(
             MutagenWriter writer,
-            IScriptReferenceGetter item,
+            IScriptReferenceInternalGetter item,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
             Write(
-                item: (IScriptVariableReferenceGetter)item,
+                item: (IScriptVariableReferenceInternalGetter)item,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -1559,7 +1604,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public static class ScriptVariableReferenceBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IScriptVariableReferenceGetter item,
+            this IScriptVariableReferenceInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
             out ScriptVariableReference_ErrorMask errorMask,
@@ -1580,19 +1625,51 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     public partial class ScriptVariableReferenceBinaryWrapper :
         ScriptReferenceBinaryWrapper,
-        IScriptVariableReferenceGetter
+        IScriptVariableReferenceInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScriptVariableReference_Registration.Instance;
         public new static ScriptVariableReference_Registration Registration => ScriptVariableReference_Registration.Instance;
-        protected override object CommonInstance => ScriptVariableReferenceCommon.Instance;
+        protected override object CommonInstance()
+        {
+            return ScriptVariableReferenceCommon.Instance;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IScriptVariableReferenceGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IScriptVariableReferenceInternalGetter)rhs, include);
 
         protected override object XmlWriteTranslator => ScriptVariableReferenceXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((ScriptVariableReferenceXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         protected override object BinaryWriteTranslator => ScriptVariableReferenceBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((ScriptVariableReferenceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
 
         #region VariableIndex
         private int? _VariableIndexLocation;
@@ -1661,4 +1738,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class ScriptVariableReference
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => ScriptVariableReference_Registration.Instance;
+        public new static ScriptVariableReference_Registration Registration => ScriptVariableReference_Registration.Instance;
+        protected override object CommonInstance()
+        {
+            return ScriptVariableReferenceCommon.Instance;
+        }
+        protected override object CommonSetterInstance()
+        {
+            return ScriptVariableReferenceSetterCommon.Instance;
+        }
+        protected override object CommonSetterCopyInstance()
+        {
+            return ScriptVariableReferenceSetterCopyCommon.Instance;
+        }
+
+        #endregion
+
+    }
 }

@@ -159,7 +159,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     public partial class PathGridBinaryWrapper
     {
-        public IReadOnlySetList<IPathGridPointGetter> PointToPointConnections { get; private set; } = EmptySetList<IPathGridPointGetter>.Instance;
+        public IReadOnlySetList<IPathGridPointInternalGetter> PointToPointConnections { get; private set; } = EmptySetList<IPathGridPointInternalGetter>.Instance;
 
         private int? _UnknownLocation;
         public bool Unknown_IsSet => this._UnknownLocation.HasValue;
@@ -194,7 +194,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     case 0x52524750: // "PGRR":
                         stream.Position += subMeta.HeaderLength;
                         var connectionPtData = stream.ReadMemory(subMeta.RecordLength);
-                        this.PointToPointConnections = BinaryWrapperSetList<IPathGridPointGetter>.FactoryByLazyParse(
+                        this.PointToPointConnections = BinaryWrapperSetList<IPathGridPointInternalGetter>.FactoryByLazyParse(
                             pointData,
                             _package,
                             getter: (s, p) =>
@@ -220,7 +220,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
             if (!readPGRR)
             {
-                this.PointToPointConnections = BinaryWrapperSetList<IPathGridPointGetter>.FactoryByStartIndex(
+                this.PointToPointConnections = BinaryWrapperSetList<IPathGridPointInternalGetter>.FactoryByStartIndex(
                     pointData,
                     this._package,
                     itemLength: 16,

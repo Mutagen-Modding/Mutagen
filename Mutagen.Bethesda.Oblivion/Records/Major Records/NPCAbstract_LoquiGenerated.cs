@@ -42,11 +42,6 @@ namespace Mutagen.Bethesda.Oblivion
         IEquatable<NPCAbstract>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => NPCAbstract_Registration.Instance;
-        public new static NPCAbstract_Registration Registration => NPCAbstract_Registration.Instance;
-        protected override object CommonInstance => NPCAbstractCommon.Instance;
-
         #region Ctor
         protected NPCAbstract()
         {
@@ -75,20 +70,33 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is INPCAbstractInternalGetter rhs)) return false;
-            return ((NPCAbstractCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            return ((NPCAbstractCommon)((INPCAbstractInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(NPCAbstract obj)
         {
-            return ((NPCAbstractCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((NPCAbstractCommon)((INPCAbstractInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((NPCAbstractCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((NPCAbstractCommon)((INPCAbstractInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected override object XmlWriteTranslator => NPCAbstractXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((NPCAbstractXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static NPCAbstract CreateFromXml(
@@ -284,6 +292,19 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Binary Translation
         protected override object BinaryWriteTranslator => NPCAbstractBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((NPCAbstractBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
         #endregion
 
         public NPCAbstract Copy(
@@ -353,7 +374,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            NPCAbstractCommon.CopyFieldsFrom(
+            NPCAbstractSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -368,7 +389,7 @@ namespace Mutagen.Bethesda.Oblivion
             NPCAbstract_CopyMask copyMask = null,
             NPCAbstract def = null)
         {
-            NPCAbstractCommon.CopyFieldsFrom(
+            NPCAbstractSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -389,7 +410,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            NPCAbstractCommon.Instance.Clear(this);
+            NPCAbstractSetterCommon.Instance.Clear(this);
         }
 
         protected new static void CopyInInternal_NPCAbstract(NPCAbstract obj, KeyValuePair<ushort, object> pair)
@@ -450,7 +471,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this INPCAbstractInternal item)
         {
-            ((NPCAbstractCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((NPCAbstractSetterCommon)((INPCAbstractInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static NPCAbstract_Mask<bool> GetEqualsMask(
@@ -458,7 +479,7 @@ namespace Mutagen.Bethesda.Oblivion
             INPCAbstractInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((NPCAbstractCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((NPCAbstractCommon)((INPCAbstractInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -469,7 +490,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             NPCAbstract_Mask<bool> printMask = null)
         {
-            return ((NPCAbstractCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((NPCAbstractCommon)((INPCAbstractInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -481,7 +502,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             NPCAbstract_Mask<bool> printMask = null)
         {
-            ((NPCAbstractCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((NPCAbstractCommon)((INPCAbstractInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -492,7 +513,7 @@ namespace Mutagen.Bethesda.Oblivion
             this INPCAbstractInternalGetter item,
             NPCAbstract_Mask<bool?> checkMask)
         {
-            return ((NPCAbstractCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((NPCAbstractCommon)((INPCAbstractInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -500,7 +521,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static NPCAbstract_Mask<bool> GetHasBeenSetMask(this INPCAbstractInternalGetter item)
         {
             var ret = new NPCAbstract_Mask<bool>();
-            ((NPCAbstractCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((NPCAbstractCommon)((INPCAbstractInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -510,7 +531,7 @@ namespace Mutagen.Bethesda.Oblivion
             this INPCAbstractInternalGetter item,
             INPCAbstractInternalGetter rhs)
         {
-            return ((NPCAbstractCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((NPCAbstractCommon)((INPCAbstractInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -564,8 +585,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type SetterType = typeof(INPCAbstract);
 
         public static readonly Type InternalSetterType = typeof(INPCAbstractInternal);
-
-        public static readonly Type CommonType = typeof(NPCAbstractCommon);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.NPCAbstract";
 
@@ -687,7 +706,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -707,50 +725,38 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class NPCAbstractCommon : NPCSpawnCommon
+    public partial class NPCAbstractSetterCommon : NPCSpawnSetterCommon
     {
-        public static readonly NPCAbstractCommon Instance = new NPCAbstractCommon();
-
-        #region Copy Fields From
-        public static void CopyFieldsFrom(
-            NPCAbstract item,
-            NPCAbstract rhs,
-            NPCAbstract def,
-            ErrorMaskBuilder errorMask,
-            NPCAbstract_CopyMask copyMask)
-        {
-            NPCSpawnCommon.CopyFieldsFrom(
-                item,
-                rhs,
-                def,
-                errorMask,
-                copyMask);
-        }
-
-        #endregion
+        public new static readonly NPCAbstractSetterCommon Instance = new NPCAbstractSetterCommon();
 
         partial void ClearPartial();
-
+        
         public virtual void Clear(INPCAbstractInternal item)
         {
             ClearPartial();
             base.Clear(item);
         }
-
+        
         public override void Clear(INPCSpawnInternal item)
         {
             Clear(item: (INPCAbstractInternal)item);
         }
-
+        
         public override void Clear(IOblivionMajorRecordInternal item)
         {
             Clear(item: (INPCAbstractInternal)item);
         }
-
+        
         public override void Clear(IMajorRecordInternal item)
         {
             Clear(item: (INPCAbstractInternal)item);
         }
+        
+        
+    }
+    public partial class NPCAbstractCommon : NPCSpawnCommon
+    {
+        public new static readonly NPCAbstractCommon Instance = new NPCAbstractCommon();
 
         public NPCAbstract_Mask<bool> GetEqualsMask(
             INPCAbstractInternalGetter item,
@@ -758,14 +764,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new NPCAbstract_Mask<bool>();
-            ((NPCAbstractCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
+            ((NPCAbstractCommon)((INPCAbstractInternalGetter)item).CommonInstance()).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
                 include: include);
             return ret;
         }
-
+        
         public void FillEqualsMask(
             INPCAbstractInternalGetter item,
             INPCAbstractInternalGetter rhs,
@@ -775,7 +781,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (rhs == null) return;
             base.FillEqualsMask(item, rhs, ret, include);
         }
-
+        
         public string ToString(
             INPCAbstractInternalGetter item,
             string name = null,
@@ -789,7 +795,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 printMask: printMask);
             return fg.ToString();
         }
-
+        
         public void ToString(
             INPCAbstractInternalGetter item,
             FileGeneration fg,
@@ -814,7 +820,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             fg.AppendLine("]");
         }
-
+        
         protected static void ToStringFields(
             INPCAbstractInternalGetter item,
             FileGeneration fg,
@@ -825,7 +831,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg: fg,
                 printMask: printMask);
         }
-
+        
         public bool HasBeenSet(
             INPCAbstractInternalGetter item,
             NPCAbstract_Mask<bool?> checkMask)
@@ -834,7 +840,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 checkMask: checkMask);
         }
-
+        
         public void FillHasBeenSetMask(
             INPCAbstractInternalGetter item,
             NPCAbstract_Mask<bool> mask)
@@ -843,7 +849,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 mask: mask);
         }
-
+        
         public static NPCAbstract_FieldIndex ConvertFieldIndex(NPCSpawn_FieldIndex index)
         {
             switch (index)
@@ -862,7 +868,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
-
+        
         public static NPCAbstract_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
         {
             switch (index)
@@ -881,7 +887,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
-
+        
         public static NPCAbstract_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
@@ -898,7 +904,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
-
+        
         #region Equals and Hash
         public virtual bool Equals(
             INPCAbstractInternalGetter lhs,
@@ -909,7 +915,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!base.Equals(rhs)) return false;
             return true;
         }
-
+        
         public override bool Equals(
             INPCSpawnInternalGetter lhs,
             INPCSpawnInternalGetter rhs)
@@ -918,7 +924,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 lhs: (INPCAbstractInternalGetter)lhs,
                 rhs: rhs as INPCAbstractInternalGetter);
         }
-
+        
         public override bool Equals(
             IOblivionMajorRecordInternalGetter lhs,
             IOblivionMajorRecordInternalGetter rhs)
@@ -927,7 +933,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 lhs: (INPCAbstractInternalGetter)lhs,
                 rhs: rhs as INPCAbstractInternalGetter);
         }
-
+        
         public override bool Equals(
             IMajorRecordInternalGetter lhs,
             IMajorRecordInternalGetter rhs)
@@ -936,42 +942,67 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 lhs: (INPCAbstractInternalGetter)lhs,
                 rhs: rhs as INPCAbstractInternalGetter);
         }
-
+        
         public virtual int GetHashCode(INPCAbstractInternalGetter item)
         {
             int ret = 0;
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
-
+        
         public override int GetHashCode(INPCSpawnInternalGetter item)
         {
             return GetHashCode(item: (INPCAbstractInternalGetter)item);
         }
-
+        
         public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
         {
             return GetHashCode(item: (INPCAbstractInternalGetter)item);
         }
-
+        
         public override int GetHashCode(IMajorRecordInternalGetter item)
         {
             return GetHashCode(item: (INPCAbstractInternalGetter)item);
         }
-
+        
         #endregion
-
-
+        
+        
         #region Mutagen
         partial void PostDuplicate(NPCAbstract obj, NPCAbstract rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
+        
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             throw new NotImplementedException();
         }
-
+        
         #endregion
+        
+        
+    }
+    public partial class NPCAbstractSetterCopyCommon : NPCSpawnSetterCopyCommon
+    {
+        public new static readonly NPCAbstractSetterCopyCommon Instance = new NPCAbstractSetterCopyCommon();
 
+        #region Copy Fields From
+        public static void CopyFieldsFrom(
+            NPCAbstract item,
+            NPCAbstract rhs,
+            NPCAbstract def,
+            ErrorMaskBuilder errorMask,
+            NPCAbstract_CopyMask copyMask)
+        {
+            NPCSpawnSetterCopyCommon.CopyFieldsFrom(
+                item,
+                rhs,
+                def,
+                errorMask,
+                copyMask);
+        }
+        
+        #endregion
+        
+        
     }
     #endregion
 
@@ -1533,17 +1564,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         NPCSpawnBinaryWrapper,
         INPCAbstractInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NPCAbstract_Registration.Instance;
         public new static NPCAbstract_Registration Registration => NPCAbstract_Registration.Instance;
-        protected override object CommonInstance => NPCAbstractCommon.Instance;
+        protected override object CommonInstance()
+        {
+            return NPCAbstractCommon.Instance;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((INPCAbstractInternalGetter)rhs, include);
 
         protected override object XmlWriteTranslator => NPCAbstractXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((NPCAbstractXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         protected override object BinaryWriteTranslator => NPCAbstractBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((NPCAbstractBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
 
         partial void CustomCtor(
             BinaryMemoryReadStream stream,
@@ -1565,4 +1628,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class NPCAbstract
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => NPCAbstract_Registration.Instance;
+        public new static NPCAbstract_Registration Registration => NPCAbstract_Registration.Instance;
+        protected override object CommonInstance()
+        {
+            return NPCAbstractCommon.Instance;
+        }
+        protected override object CommonSetterInstance()
+        {
+            return NPCAbstractSetterCommon.Instance;
+        }
+        protected override object CommonSetterCopyInstance()
+        {
+            return NPCAbstractSetterCopyCommon.Instance;
+        }
+
+        #endregion
+
+    }
 }

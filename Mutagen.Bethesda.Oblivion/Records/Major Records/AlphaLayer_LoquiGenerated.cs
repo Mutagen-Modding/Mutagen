@@ -40,11 +40,6 @@ namespace Mutagen.Bethesda.Oblivion
         IEquatable<AlphaLayer>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => AlphaLayer_Registration.Instance;
-        public new static AlphaLayer_Registration Registration => AlphaLayer_Registration.Instance;
-        protected override object CommonInstance => AlphaLayerCommon.Instance;
-
         #region Ctor
         public AlphaLayer()
         {
@@ -101,20 +96,33 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IAlphaLayerInternalGetter rhs)) return false;
-            return ((AlphaLayerCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            return ((AlphaLayerCommon)((IAlphaLayerInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(AlphaLayer obj)
         {
-            return ((AlphaLayerCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((AlphaLayerCommon)((IAlphaLayerInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((AlphaLayerCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((AlphaLayerCommon)((IAlphaLayerInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected override object XmlWriteTranslator => AlphaLayerXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((AlphaLayerXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static AlphaLayer CreateFromXml(
@@ -310,6 +318,19 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Binary Translation
         protected override object BinaryWriteTranslator => AlphaLayerBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((AlphaLayerBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
         #region Binary Create
         [DebuggerStepThrough]
         public static AlphaLayer CreateFromBinary(
@@ -487,7 +508,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            AlphaLayerCommon.CopyFieldsFrom(
+            AlphaLayerSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -502,7 +523,7 @@ namespace Mutagen.Bethesda.Oblivion
             AlphaLayer_CopyMask copyMask = null,
             AlphaLayer def = null)
         {
-            AlphaLayerCommon.CopyFieldsFrom(
+            AlphaLayerSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -526,7 +547,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            AlphaLayerCommon.Instance.Clear(this);
+            AlphaLayerSetterCommon.Instance.Clear(this);
         }
 
         public new static AlphaLayer Create(IEnumerable<KeyValuePair<ushort, object>> fields)
@@ -610,7 +631,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IAlphaLayerInternal item)
         {
-            ((AlphaLayerCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((AlphaLayerSetterCommon)((IAlphaLayerInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static AlphaLayer_Mask<bool> GetEqualsMask(
@@ -618,7 +639,7 @@ namespace Mutagen.Bethesda.Oblivion
             IAlphaLayerInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((AlphaLayerCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((AlphaLayerCommon)((IAlphaLayerInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -629,7 +650,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             AlphaLayer_Mask<bool> printMask = null)
         {
-            return ((AlphaLayerCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((AlphaLayerCommon)((IAlphaLayerInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -641,7 +662,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             AlphaLayer_Mask<bool> printMask = null)
         {
-            ((AlphaLayerCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((AlphaLayerCommon)((IAlphaLayerInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -652,7 +673,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IAlphaLayerInternalGetter item,
             AlphaLayer_Mask<bool?> checkMask)
         {
-            return ((AlphaLayerCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((AlphaLayerCommon)((IAlphaLayerInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -660,7 +681,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static AlphaLayer_Mask<bool> GetHasBeenSetMask(this IAlphaLayerInternalGetter item)
         {
             var ret = new AlphaLayer_Mask<bool>();
-            ((AlphaLayerCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((AlphaLayerCommon)((IAlphaLayerInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -670,7 +691,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IAlphaLayerInternalGetter item,
             IAlphaLayerInternalGetter rhs)
         {
-            return ((AlphaLayerCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((AlphaLayerCommon)((IAlphaLayerInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -724,8 +745,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type SetterType = typeof(IAlphaLayer);
 
         public static readonly Type InternalSetterType = typeof(IAlphaLayerInternal);
-
-        public static readonly Type CommonType = typeof(AlphaLayerCommon);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.AlphaLayer";
 
@@ -856,7 +875,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -876,9 +894,195 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
+    public partial class AlphaLayerSetterCommon : BaseLayerSetterCommon
+    {
+        public new static readonly AlphaLayerSetterCommon Instance = new AlphaLayerSetterCommon();
+
+        partial void ClearPartial();
+        
+        public virtual void Clear(IAlphaLayerInternal item)
+        {
+            ClearPartial();
+            item.AlphaLayerData_Unset();
+            base.Clear(item);
+        }
+        
+        public override void Clear(IBaseLayerInternal item)
+        {
+            Clear(item: (IAlphaLayerInternal)item);
+        }
+        
+        
+    }
     public partial class AlphaLayerCommon : BaseLayerCommon
     {
-        public static readonly AlphaLayerCommon Instance = new AlphaLayerCommon();
+        public new static readonly AlphaLayerCommon Instance = new AlphaLayerCommon();
+
+        public AlphaLayer_Mask<bool> GetEqualsMask(
+            IAlphaLayerInternalGetter item,
+            IAlphaLayerInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new AlphaLayer_Mask<bool>();
+            ((AlphaLayerCommon)((IAlphaLayerInternalGetter)item).CommonInstance()).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+        
+        public void FillEqualsMask(
+            IAlphaLayerInternalGetter item,
+            IAlphaLayerInternalGetter rhs,
+            AlphaLayer_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            if (rhs == null) return;
+            ret.AlphaLayerData = item.AlphaLayerData_IsSet == rhs.AlphaLayerData_IsSet && MemoryExtensions.SequenceEqual(item.AlphaLayerData, rhs.AlphaLayerData);
+            base.FillEqualsMask(item, rhs, ret, include);
+        }
+        
+        public string ToString(
+            IAlphaLayerInternalGetter item,
+            string name = null,
+            AlphaLayer_Mask<bool> printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+            return fg.ToString();
+        }
+        
+        public void ToString(
+            IAlphaLayerInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            AlphaLayer_Mask<bool> printMask = null)
+        {
+            if (name == null)
+            {
+                fg.AppendLine($"AlphaLayer =>");
+            }
+            else
+            {
+                fg.AppendLine($"{name} (AlphaLayer) =>");
+            }
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
+            }
+            fg.AppendLine("]");
+        }
+        
+        protected static void ToStringFields(
+            IAlphaLayerInternalGetter item,
+            FileGeneration fg,
+            AlphaLayer_Mask<bool> printMask = null)
+        {
+            BaseLayerCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.AlphaLayerData ?? true)
+            {
+                fg.AppendLine($"AlphaLayerData => {SpanExt.ToHexString(item.AlphaLayerData)}");
+            }
+        }
+        
+        public bool HasBeenSet(
+            IAlphaLayerInternalGetter item,
+            AlphaLayer_Mask<bool?> checkMask)
+        {
+            if (checkMask.AlphaLayerData.HasValue && checkMask.AlphaLayerData.Value != item.AlphaLayerData_IsSet) return false;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+        
+        public void FillHasBeenSetMask(
+            IAlphaLayerInternalGetter item,
+            AlphaLayer_Mask<bool> mask)
+        {
+            mask.AlphaLayerData = item.AlphaLayerData_IsSet;
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
+        }
+        
+        public static AlphaLayer_FieldIndex ConvertFieldIndex(BaseLayer_FieldIndex index)
+        {
+            switch (index)
+            {
+                case BaseLayer_FieldIndex.Texture:
+                    return (AlphaLayer_FieldIndex)((int)index);
+                case BaseLayer_FieldIndex.Quadrant:
+                    return (AlphaLayer_FieldIndex)((int)index);
+                case BaseLayer_FieldIndex.LayerNumber:
+                    return (AlphaLayer_FieldIndex)((int)index);
+                case BaseLayer_FieldIndex.BTXTDataTypeState:
+                    return (AlphaLayer_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        #region Equals and Hash
+        public virtual bool Equals(
+            IAlphaLayerInternalGetter lhs,
+            IAlphaLayerInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.AlphaLayerData_IsSet != rhs.AlphaLayerData_IsSet) return false;
+            if (lhs.AlphaLayerData_IsSet)
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.AlphaLayerData, rhs.AlphaLayerData)) return false;
+            }
+            return true;
+        }
+        
+        public override bool Equals(
+            IBaseLayerInternalGetter lhs,
+            IBaseLayerInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IAlphaLayerInternalGetter)lhs,
+                rhs: rhs as IAlphaLayerInternalGetter);
+        }
+        
+        public virtual int GetHashCode(IAlphaLayerInternalGetter item)
+        {
+            int ret = 0;
+            if (item.AlphaLayerData_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.AlphaLayerData).CombineHashCode(ret);
+            }
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+        
+        public override int GetHashCode(IBaseLayerInternalGetter item)
+        {
+            return GetHashCode(item: (IAlphaLayerInternalGetter)item);
+        }
+        
+        #endregion
+        
+        
+        
+    }
+    public partial class AlphaLayerSetterCopyCommon : BaseLayerSetterCopyCommon
+    {
+        public new static readonly AlphaLayerSetterCopyCommon Instance = new AlphaLayerSetterCopyCommon();
 
         #region Copy Fields From
         public static void CopyFieldsFrom(
@@ -888,7 +1092,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             AlphaLayer_CopyMask copyMask)
         {
-            BaseLayerCommon.CopyFieldsFrom(
+            BaseLayerSetterCopyCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -925,183 +1129,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
         }
-
+        
         #endregion
-
-        partial void ClearPartial();
-
-        public virtual void Clear(IAlphaLayerInternal item)
-        {
-            ClearPartial();
-            item.AlphaLayerData_Unset();
-            base.Clear(item);
-        }
-
-        public override void Clear(IBaseLayerInternal item)
-        {
-            Clear(item: (IAlphaLayerInternal)item);
-        }
-
-        public AlphaLayer_Mask<bool> GetEqualsMask(
-            IAlphaLayerInternalGetter item,
-            IAlphaLayerInternalGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new AlphaLayer_Mask<bool>();
-            ((AlphaLayerCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public void FillEqualsMask(
-            IAlphaLayerInternalGetter item,
-            IAlphaLayerInternalGetter rhs,
-            AlphaLayer_Mask<bool> ret,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            if (rhs == null) return;
-            ret.AlphaLayerData = item.AlphaLayerData_IsSet == rhs.AlphaLayerData_IsSet && MemoryExtensions.SequenceEqual(item.AlphaLayerData, rhs.AlphaLayerData);
-            base.FillEqualsMask(item, rhs, ret, include);
-        }
-
-        public string ToString(
-            IAlphaLayerInternalGetter item,
-            string name = null,
-            AlphaLayer_Mask<bool> printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(
-                item: item,
-                fg: fg,
-                name: name,
-                printMask: printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(
-            IAlphaLayerInternalGetter item,
-            FileGeneration fg,
-            string name = null,
-            AlphaLayer_Mask<bool> printMask = null)
-        {
-            if (name == null)
-            {
-                fg.AppendLine($"AlphaLayer =>");
-            }
-            else
-            {
-                fg.AppendLine($"{name} (AlphaLayer) =>");
-            }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                ToStringFields(
-                    item: item,
-                    fg: fg,
-                    printMask: printMask);
-            }
-            fg.AppendLine("]");
-        }
-
-        protected static void ToStringFields(
-            IAlphaLayerInternalGetter item,
-            FileGeneration fg,
-            AlphaLayer_Mask<bool> printMask = null)
-        {
-            BaseLayerCommon.ToStringFields(
-                item: item,
-                fg: fg,
-                printMask: printMask);
-            if (printMask?.AlphaLayerData ?? true)
-            {
-                fg.AppendLine($"AlphaLayerData => {SpanExt.ToHexString(item.AlphaLayerData)}");
-            }
-        }
-
-        public bool HasBeenSet(
-            IAlphaLayerInternalGetter item,
-            AlphaLayer_Mask<bool?> checkMask)
-        {
-            if (checkMask.AlphaLayerData.HasValue && checkMask.AlphaLayerData.Value != item.AlphaLayerData_IsSet) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public void FillHasBeenSetMask(
-            IAlphaLayerInternalGetter item,
-            AlphaLayer_Mask<bool> mask)
-        {
-            mask.AlphaLayerData = item.AlphaLayerData_IsSet;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-
-        public static AlphaLayer_FieldIndex ConvertFieldIndex(BaseLayer_FieldIndex index)
-        {
-            switch (index)
-            {
-                case BaseLayer_FieldIndex.Texture:
-                    return (AlphaLayer_FieldIndex)((int)index);
-                case BaseLayer_FieldIndex.Quadrant:
-                    return (AlphaLayer_FieldIndex)((int)index);
-                case BaseLayer_FieldIndex.LayerNumber:
-                    return (AlphaLayer_FieldIndex)((int)index);
-                case BaseLayer_FieldIndex.BTXTDataTypeState:
-                    return (AlphaLayer_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        #region Equals and Hash
-        public virtual bool Equals(
-            IAlphaLayerInternalGetter lhs,
-            IAlphaLayerInternalGetter rhs)
-        {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (lhs.AlphaLayerData_IsSet != rhs.AlphaLayerData_IsSet) return false;
-            if (lhs.AlphaLayerData_IsSet)
-            {
-                if (!MemoryExtensions.SequenceEqual(lhs.AlphaLayerData, rhs.AlphaLayerData)) return false;
-            }
-            return true;
-        }
-
-        public override bool Equals(
-            IBaseLayerInternalGetter lhs,
-            IBaseLayerInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (IAlphaLayerInternalGetter)lhs,
-                rhs: rhs as IAlphaLayerInternalGetter);
-        }
-
-        public virtual int GetHashCode(IAlphaLayerInternalGetter item)
-        {
-            int ret = 0;
-            if (item.AlphaLayerData_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.AlphaLayerData).CombineHashCode(ret);
-            }
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        public override int GetHashCode(IBaseLayerInternalGetter item)
-        {
-            return GetHashCode(item: (IAlphaLayerInternalGetter)item);
-        }
-
-        #endregion
-
-
+        
+        
     }
     #endregion
 
@@ -1705,17 +1736,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         BaseLayerBinaryWrapper,
         IAlphaLayerInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AlphaLayer_Registration.Instance;
         public new static AlphaLayer_Registration Registration => AlphaLayer_Registration.Instance;
-        protected override object CommonInstance => AlphaLayerCommon.Instance;
+        protected override object CommonInstance()
+        {
+            return AlphaLayerCommon.Instance;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAlphaLayerInternalGetter)rhs, include);
 
         protected override object XmlWriteTranslator => AlphaLayerXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((AlphaLayerXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         protected override object BinaryWriteTranslator => AlphaLayerBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((AlphaLayerBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
 
         #region AlphaLayerData
         private int? _AlphaLayerDataLocation;
@@ -1790,4 +1853,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class AlphaLayer
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => AlphaLayer_Registration.Instance;
+        public new static AlphaLayer_Registration Registration => AlphaLayer_Registration.Instance;
+        protected override object CommonInstance()
+        {
+            return AlphaLayerCommon.Instance;
+        }
+        protected override object CommonSetterInstance()
+        {
+            return AlphaLayerSetterCommon.Instance;
+        }
+        protected override object CommonSetterCopyInstance()
+        {
+            return AlphaLayerSetterCopyCommon.Instance;
+        }
+
+        #endregion
+
+    }
 }

@@ -43,11 +43,6 @@ namespace Mutagen.Bethesda.Oblivion
         IEquatable<Furnature>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Furnature_Registration.Instance;
-        public new static Furnature_Registration Registration => Furnature_Registration.Instance;
-        protected override object CommonInstance => FurnatureCommon.Instance;
-
         #region Ctor
         protected Furnature()
         {
@@ -107,7 +102,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Model_Set(default(Model), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IModelGetter IFurnatureGetter.Model => this.Model;
+        IModelInternalGetter IFurnatureGetter.Model => this.Model;
         #endregion
         #region Script
         public IFormIDSetLink<Script> Script_Property { get; } = new FormIDSetLink<Script>();
@@ -165,20 +160,33 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IFurnatureInternalGetter rhs)) return false;
-            return ((FurnatureCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            return ((FurnatureCommon)((IFurnatureInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(Furnature obj)
         {
-            return ((FurnatureCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((FurnatureCommon)((IFurnatureInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((FurnatureCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((FurnatureCommon)((IFurnatureInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected override object XmlWriteTranslator => FurnatureXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((FurnatureXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static Furnature CreateFromXml(
@@ -413,6 +421,19 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Binary Translation
         protected override object BinaryWriteTranslator => FurnatureBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((FurnatureBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
         #region Binary Create
         [DebuggerStepThrough]
         public static Furnature CreateFromBinary(
@@ -646,7 +667,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            FurnatureCommon.CopyFieldsFrom(
+            FurnatureSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -661,7 +682,7 @@ namespace Mutagen.Bethesda.Oblivion
             Furnature_CopyMask copyMask = null,
             Furnature def = null)
         {
-            FurnatureCommon.CopyFieldsFrom(
+            FurnatureSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -694,7 +715,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Clear()
         {
-            FurnatureCommon.Instance.Clear(this);
+            FurnatureSetterCommon.Instance.Clear(this);
         }
 
         public new static Furnature Create(IEnumerable<KeyValuePair<ushort, object>> fields)
@@ -785,7 +806,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Model
-        IModelGetter Model { get; }
+        IModelInternalGetter Model { get; }
         bool Model_IsSet { get; }
 
         #endregion
@@ -816,7 +837,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IFurnatureInternal item)
         {
-            ((FurnatureCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((FurnatureSetterCommon)((IFurnatureInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static Furnature_Mask<bool> GetEqualsMask(
@@ -824,7 +845,7 @@ namespace Mutagen.Bethesda.Oblivion
             IFurnatureInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((FurnatureCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((FurnatureCommon)((IFurnatureInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -835,7 +856,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Furnature_Mask<bool> printMask = null)
         {
-            return ((FurnatureCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((FurnatureCommon)((IFurnatureInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -847,7 +868,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null,
             Furnature_Mask<bool> printMask = null)
         {
-            ((FurnatureCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((FurnatureCommon)((IFurnatureInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -858,7 +879,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IFurnatureInternalGetter item,
             Furnature_Mask<bool?> checkMask)
         {
-            return ((FurnatureCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((FurnatureCommon)((IFurnatureInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
@@ -866,7 +887,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Furnature_Mask<bool> GetHasBeenSetMask(this IFurnatureInternalGetter item)
         {
             var ret = new Furnature_Mask<bool>();
-            ((FurnatureCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((FurnatureCommon)((IFurnatureInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -876,7 +897,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IFurnatureInternalGetter item,
             IFurnatureInternalGetter rhs)
         {
-            return ((FurnatureCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((FurnatureCommon)((IFurnatureInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -934,8 +955,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type SetterType = typeof(IFurnature);
 
         public static readonly Type InternalSetterType = typeof(IFurnatureInternal);
-
-        public static readonly Type CommonType = typeof(FurnatureCommon);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.Furnature";
 
@@ -1099,7 +1118,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -1119,9 +1137,305 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
+    public partial class FurnatureSetterCommon : OblivionMajorRecordSetterCommon
+    {
+        public new static readonly FurnatureSetterCommon Instance = new FurnatureSetterCommon();
+
+        partial void ClearPartial();
+        
+        public virtual void Clear(IFurnatureInternal item)
+        {
+            ClearPartial();
+            item.Name_Unset();
+            item.Model_Unset();
+            item.Script_Property.Unset();
+            item.MarkerFlags_Unset();
+            base.Clear(item);
+        }
+        
+        public override void Clear(IOblivionMajorRecordInternal item)
+        {
+            Clear(item: (IFurnatureInternal)item);
+        }
+        
+        public override void Clear(IMajorRecordInternal item)
+        {
+            Clear(item: (IFurnatureInternal)item);
+        }
+        
+        
+    }
     public partial class FurnatureCommon : OblivionMajorRecordCommon
     {
-        public static readonly FurnatureCommon Instance = new FurnatureCommon();
+        public new static readonly FurnatureCommon Instance = new FurnatureCommon();
+
+        public Furnature_Mask<bool> GetEqualsMask(
+            IFurnatureInternalGetter item,
+            IFurnatureInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new Furnature_Mask<bool>();
+            ((FurnatureCommon)((IFurnatureInternalGetter)item).CommonInstance()).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+        
+        public void FillEqualsMask(
+            IFurnatureInternalGetter item,
+            IFurnatureInternalGetter rhs,
+            Furnature_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            if (rhs == null) return;
+            ret.Name = item.Name_IsSet == rhs.Name_IsSet && string.Equals(item.Name, rhs.Name);
+            ret.Model = EqualsMaskHelper.EqualsHelper(
+                item.Model_IsSet,
+                rhs.Model_IsSet,
+                item.Model,
+                rhs.Model,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
+            ret.Script = item.Script_Property.FormKey == rhs.Script_Property.FormKey;
+            ret.MarkerFlags = item.MarkerFlags_IsSet == rhs.MarkerFlags_IsSet && MemoryExtensions.SequenceEqual(item.MarkerFlags, rhs.MarkerFlags);
+            base.FillEqualsMask(item, rhs, ret, include);
+        }
+        
+        public string ToString(
+            IFurnatureInternalGetter item,
+            string name = null,
+            Furnature_Mask<bool> printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+            return fg.ToString();
+        }
+        
+        public void ToString(
+            IFurnatureInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            Furnature_Mask<bool> printMask = null)
+        {
+            if (name == null)
+            {
+                fg.AppendLine($"Furnature =>");
+            }
+            else
+            {
+                fg.AppendLine($"{name} (Furnature) =>");
+            }
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
+            }
+            fg.AppendLine("]");
+        }
+        
+        protected static void ToStringFields(
+            IFurnatureInternalGetter item,
+            FileGeneration fg,
+            Furnature_Mask<bool> printMask = null)
+        {
+            OblivionMajorRecordCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
+            if (printMask?.Name ?? true)
+            {
+                fg.AppendLine($"Name => {item.Name}");
+            }
+            if (printMask?.Model?.Overall ?? true)
+            {
+                item.Model?.ToString(fg, "Model");
+            }
+            if (printMask?.Script ?? true)
+            {
+                fg.AppendLine($"Script => {item.Script_Property}");
+            }
+            if (printMask?.MarkerFlags ?? true)
+            {
+                fg.AppendLine($"MarkerFlags => {SpanExt.ToHexString(item.MarkerFlags)}");
+            }
+        }
+        
+        public bool HasBeenSet(
+            IFurnatureInternalGetter item,
+            Furnature_Mask<bool?> checkMask)
+        {
+            if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_IsSet) return false;
+            if (checkMask.Model.Overall.HasValue && checkMask.Model.Overall.Value != item.Model_IsSet) return false;
+            if (checkMask.Model.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
+            if (checkMask.Script.HasValue && checkMask.Script.Value != item.Script_Property.HasBeenSet) return false;
+            if (checkMask.MarkerFlags.HasValue && checkMask.MarkerFlags.Value != item.MarkerFlags_IsSet) return false;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
+        }
+        
+        public void FillHasBeenSetMask(
+            IFurnatureInternalGetter item,
+            Furnature_Mask<bool> mask)
+        {
+            mask.Name = item.Name_IsSet;
+            mask.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, item.Model.GetHasBeenSetMask());
+            mask.Script = item.Script_Property.HasBeenSet;
+            mask.MarkerFlags = item.MarkerFlags_IsSet;
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
+        }
+        
+        public static Furnature_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (Furnature_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.FormKey:
+                    return (Furnature_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.Version:
+                    return (Furnature_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.EditorID:
+                    return (Furnature_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
+                    return (Furnature_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        public static Furnature_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (Furnature_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.FormKey:
+                    return (Furnature_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.Version:
+                    return (Furnature_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.EditorID:
+                    return (Furnature_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        #region Equals and Hash
+        public virtual bool Equals(
+            IFurnatureInternalGetter lhs,
+            IFurnatureInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (lhs.Name_IsSet != rhs.Name_IsSet) return false;
+            if (lhs.Name_IsSet)
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if (lhs.Model_IsSet != rhs.Model_IsSet) return false;
+            if (lhs.Model_IsSet)
+            {
+                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            }
+            if (lhs.Script_Property.HasBeenSet != rhs.Script_Property.HasBeenSet) return false;
+            if (lhs.Script_Property.HasBeenSet)
+            {
+                if (!lhs.Script_Property.Equals(rhs.Script_Property)) return false;
+            }
+            if (lhs.MarkerFlags_IsSet != rhs.MarkerFlags_IsSet) return false;
+            if (lhs.MarkerFlags_IsSet)
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.MarkerFlags, rhs.MarkerFlags)) return false;
+            }
+            return true;
+        }
+        
+        public override bool Equals(
+            IOblivionMajorRecordInternalGetter lhs,
+            IOblivionMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IFurnatureInternalGetter)lhs,
+                rhs: rhs as IFurnatureInternalGetter);
+        }
+        
+        public override bool Equals(
+            IMajorRecordInternalGetter lhs,
+            IMajorRecordInternalGetter rhs)
+        {
+            return Equals(
+                lhs: (IFurnatureInternalGetter)lhs,
+                rhs: rhs as IFurnatureInternalGetter);
+        }
+        
+        public virtual int GetHashCode(IFurnatureInternalGetter item)
+        {
+            int ret = 0;
+            if (item.Name_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Name).CombineHashCode(ret);
+            }
+            if (item.Model_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.Model).CombineHashCode(ret);
+            }
+            if (item.Script_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(item.Script).CombineHashCode(ret);
+            }
+            if (item.MarkerFlags_IsSet)
+            {
+                ret = HashHelper.GetHashCode(item.MarkerFlags).CombineHashCode(ret);
+            }
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+        
+        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IFurnatureInternalGetter)item);
+        }
+        
+        public override int GetHashCode(IMajorRecordInternalGetter item)
+        {
+            return GetHashCode(item: (IFurnatureInternalGetter)item);
+        }
+        
+        #endregion
+        
+        
+        #region Mutagen
+        partial void PostDuplicate(Furnature obj, Furnature rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+        
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new Furnature(getNextFormKey());
+            ret.CopyFieldsFrom((Furnature)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (Furnature)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+        
+        #endregion
+        
+        
+    }
+    public partial class FurnatureSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
+    {
+        public new static readonly FurnatureSetterCopyCommon Instance = new FurnatureSetterCopyCommon();
 
         #region Copy Fields From
         public static void CopyFieldsFrom(
@@ -1131,7 +1445,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             Furnature_CopyMask copyMask)
         {
-            OblivionMajorRecordCommon.CopyFieldsFrom(
+            OblivionMajorRecordSetterCopyCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1185,7 +1499,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             case CopyOption.Reference:
                                 throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
-                                ModelCommon.CopyFieldsFrom(
+                                ModelSetterCopyCommon.CopyFieldsFrom(
                                     item: item.Model,
                                     rhs: rhs.Model,
                                     def: def?.Model,
@@ -1269,293 +1583,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
         }
-
+        
         #endregion
-
-        partial void ClearPartial();
-
-        public virtual void Clear(IFurnatureInternal item)
-        {
-            ClearPartial();
-            item.Name_Unset();
-            item.Model_Unset();
-            item.Script_Property.Unset();
-            item.MarkerFlags_Unset();
-            base.Clear(item);
-        }
-
-        public override void Clear(IOblivionMajorRecordInternal item)
-        {
-            Clear(item: (IFurnatureInternal)item);
-        }
-
-        public override void Clear(IMajorRecordInternal item)
-        {
-            Clear(item: (IFurnatureInternal)item);
-        }
-
-        public Furnature_Mask<bool> GetEqualsMask(
-            IFurnatureInternalGetter item,
-            IFurnatureInternalGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new Furnature_Mask<bool>();
-            ((FurnatureCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public void FillEqualsMask(
-            IFurnatureInternalGetter item,
-            IFurnatureInternalGetter rhs,
-            Furnature_Mask<bool> ret,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            if (rhs == null) return;
-            ret.Name = item.Name_IsSet == rhs.Name_IsSet && string.Equals(item.Name, rhs.Name);
-            ret.Model = EqualsMaskHelper.EqualsHelper(
-                item.Model_IsSet,
-                rhs.Model_IsSet,
-                item.Model,
-                rhs.Model,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
-                include);
-            ret.Script = item.Script_Property.FormKey == rhs.Script_Property.FormKey;
-            ret.MarkerFlags = item.MarkerFlags_IsSet == rhs.MarkerFlags_IsSet && MemoryExtensions.SequenceEqual(item.MarkerFlags, rhs.MarkerFlags);
-            base.FillEqualsMask(item, rhs, ret, include);
-        }
-
-        public string ToString(
-            IFurnatureInternalGetter item,
-            string name = null,
-            Furnature_Mask<bool> printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(
-                item: item,
-                fg: fg,
-                name: name,
-                printMask: printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(
-            IFurnatureInternalGetter item,
-            FileGeneration fg,
-            string name = null,
-            Furnature_Mask<bool> printMask = null)
-        {
-            if (name == null)
-            {
-                fg.AppendLine($"Furnature =>");
-            }
-            else
-            {
-                fg.AppendLine($"{name} (Furnature) =>");
-            }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                ToStringFields(
-                    item: item,
-                    fg: fg,
-                    printMask: printMask);
-            }
-            fg.AppendLine("]");
-        }
-
-        protected static void ToStringFields(
-            IFurnatureInternalGetter item,
-            FileGeneration fg,
-            Furnature_Mask<bool> printMask = null)
-        {
-            OblivionMajorRecordCommon.ToStringFields(
-                item: item,
-                fg: fg,
-                printMask: printMask);
-            if (printMask?.Name ?? true)
-            {
-                fg.AppendLine($"Name => {item.Name}");
-            }
-            if (printMask?.Model?.Overall ?? true)
-            {
-                item.Model?.ToString(fg, "Model");
-            }
-            if (printMask?.Script ?? true)
-            {
-                fg.AppendLine($"Script => {item.Script_Property}");
-            }
-            if (printMask?.MarkerFlags ?? true)
-            {
-                fg.AppendLine($"MarkerFlags => {SpanExt.ToHexString(item.MarkerFlags)}");
-            }
-        }
-
-        public bool HasBeenSet(
-            IFurnatureInternalGetter item,
-            Furnature_Mask<bool?> checkMask)
-        {
-            if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_IsSet) return false;
-            if (checkMask.Model.Overall.HasValue && checkMask.Model.Overall.Value != item.Model_IsSet) return false;
-            if (checkMask.Model.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
-            if (checkMask.Script.HasValue && checkMask.Script.Value != item.Script_Property.HasBeenSet) return false;
-            if (checkMask.MarkerFlags.HasValue && checkMask.MarkerFlags.Value != item.MarkerFlags_IsSet) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public void FillHasBeenSetMask(
-            IFurnatureInternalGetter item,
-            Furnature_Mask<bool> mask)
-        {
-            mask.Name = item.Name_IsSet;
-            mask.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, item.Model.GetHasBeenSetMask());
-            mask.Script = item.Script_Property.HasBeenSet;
-            mask.MarkerFlags = item.MarkerFlags_IsSet;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-
-        public static Furnature_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
-        {
-            switch (index)
-            {
-                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Furnature_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.FormKey:
-                    return (Furnature_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.Version:
-                    return (Furnature_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.EditorID:
-                    return (Furnature_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
-                    return (Furnature_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        public static Furnature_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
-        {
-            switch (index)
-            {
-                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Furnature_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.FormKey:
-                    return (Furnature_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
-                    return (Furnature_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.EditorID:
-                    return (Furnature_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        #region Equals and Hash
-        public virtual bool Equals(
-            IFurnatureInternalGetter lhs,
-            IFurnatureInternalGetter rhs)
-        {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (lhs.Name_IsSet != rhs.Name_IsSet) return false;
-            if (lhs.Name_IsSet)
-            {
-                if (!string.Equals(lhs.Name, rhs.Name)) return false;
-            }
-            if (lhs.Model_IsSet != rhs.Model_IsSet) return false;
-            if (lhs.Model_IsSet)
-            {
-                if (!object.Equals(lhs.Model, rhs.Model)) return false;
-            }
-            if (lhs.Script_Property.HasBeenSet != rhs.Script_Property.HasBeenSet) return false;
-            if (lhs.Script_Property.HasBeenSet)
-            {
-                if (!lhs.Script_Property.Equals(rhs.Script_Property)) return false;
-            }
-            if (lhs.MarkerFlags_IsSet != rhs.MarkerFlags_IsSet) return false;
-            if (lhs.MarkerFlags_IsSet)
-            {
-                if (!MemoryExtensions.SequenceEqual(lhs.MarkerFlags, rhs.MarkerFlags)) return false;
-            }
-            return true;
-        }
-
-        public override bool Equals(
-            IOblivionMajorRecordInternalGetter lhs,
-            IOblivionMajorRecordInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (IFurnatureInternalGetter)lhs,
-                rhs: rhs as IFurnatureInternalGetter);
-        }
-
-        public override bool Equals(
-            IMajorRecordInternalGetter lhs,
-            IMajorRecordInternalGetter rhs)
-        {
-            return Equals(
-                lhs: (IFurnatureInternalGetter)lhs,
-                rhs: rhs as IFurnatureInternalGetter);
-        }
-
-        public virtual int GetHashCode(IFurnatureInternalGetter item)
-        {
-            int ret = 0;
-            if (item.Name_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Name).CombineHashCode(ret);
-            }
-            if (item.Model_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Model).CombineHashCode(ret);
-            }
-            if (item.Script_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.Script).CombineHashCode(ret);
-            }
-            if (item.MarkerFlags_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.MarkerFlags).CombineHashCode(ret);
-            }
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        public override int GetHashCode(IOblivionMajorRecordInternalGetter item)
-        {
-            return GetHashCode(item: (IFurnatureInternalGetter)item);
-        }
-
-        public override int GetHashCode(IMajorRecordInternalGetter item)
-        {
-            return GetHashCode(item: (IFurnatureInternalGetter)item);
-        }
-
-        #endregion
-
-
-        #region Mutagen
-        partial void PostDuplicate(Furnature obj, Furnature rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
-
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
-        {
-            var ret = new Furnature(getNextFormKey());
-            ret.CopyFieldsFrom((Furnature)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (Furnature)item, getNextFormKey, duplicatedRecords);
-            return ret;
-        }
-
-        #endregion
-
+        
+        
     }
     #endregion
 
@@ -2407,17 +2438,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         OblivionMajorRecordBinaryWrapper,
         IFurnatureInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Furnature_Registration.Instance;
         public new static Furnature_Registration Registration => Furnature_Registration.Instance;
-        protected override object CommonInstance => FurnatureCommon.Instance;
+        protected override object CommonInstance()
+        {
+            return FurnatureCommon.Instance;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IFurnatureInternalGetter)rhs, include);
 
         protected override object XmlWriteTranslator => FurnatureXmlWriteTranslation.Instance;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((FurnatureXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         protected override object BinaryWriteTranslator => FurnatureBinaryWriteTranslation.Instance;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((FurnatureBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
 
         #region Name
         private int? _NameLocation;
@@ -2425,7 +2488,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public String Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _NameLocation.Value, _package.Meta)) : default;
         #endregion
         #region Model
-        public IModelGetter Model { get; private set; }
+        public IModelInternalGetter Model { get; private set; }
         public bool Model_IsSet => Model != null;
         #endregion
         #region Script
@@ -2528,4 +2591,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class Furnature
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Furnature_Registration.Instance;
+        public new static Furnature_Registration Registration => Furnature_Registration.Instance;
+        protected override object CommonInstance()
+        {
+            return FurnatureCommon.Instance;
+        }
+        protected override object CommonSetterInstance()
+        {
+            return FurnatureSetterCommon.Instance;
+        }
+        protected override object CommonSetterCopyInstance()
+        {
+            return FurnatureSetterCopyCommon.Instance;
+        }
+
+        #endregion
+
+    }
 }

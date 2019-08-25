@@ -34,18 +34,12 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class LoadScreenLocation :
         LoquiNotifyingObject,
-        ILoadScreenLocation,
+        ILoadScreenLocationInternal,
         ILoquiObjectSetter<LoadScreenLocation>,
         ILinkSubContainer,
         IEquatable<LoadScreenLocation>,
         IEqualsMask
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => LoadScreenLocation_Registration.Instance;
-        public static LoadScreenLocation_Registration Registration => LoadScreenLocation_Registration.Instance;
-        protected object CommonInstance => LoadScreenLocationCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
-
         #region Ctor
         public LoadScreenLocation()
         {
@@ -80,7 +74,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILoadScreenLocationGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILoadScreenLocationInternalGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -98,22 +92,35 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is ILoadScreenLocationGetter rhs)) return false;
-            return ((LoadScreenLocationCommon)((ILoquiObject)this).CommonInstance).Equals(this, rhs);
+            if (!(obj is ILoadScreenLocationInternalGetter rhs)) return false;
+            return ((LoadScreenLocationCommon)((ILoadScreenLocationInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
         public bool Equals(LoadScreenLocation obj)
         {
-            return ((LoadScreenLocationCommon)((ILoquiObject)this).CommonInstance).Equals(this, obj);
+            return ((LoadScreenLocationCommon)((ILoadScreenLocationInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((LoadScreenLocationCommon)((ILoquiObject)this).CommonInstance).GetHashCode(this);
+        public override int GetHashCode() => ((LoadScreenLocationCommon)((ILoadScreenLocationInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         protected object XmlWriteTranslator => LoadScreenLocationXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((LoadScreenLocationXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #region Xml Create
         [DebuggerStepThrough]
         public static LoadScreenLocation CreateFromXml(
@@ -308,6 +315,19 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Translation
         protected object BinaryWriteTranslator => LoadScreenLocationBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((LoadScreenLocationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
         #region Binary Create
         [DebuggerStepThrough]
         public static LoadScreenLocation CreateFromBinary(
@@ -472,7 +492,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            LoadScreenLocationCommon.CopyFieldsFrom(
+            LoadScreenLocationSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -487,7 +507,7 @@ namespace Mutagen.Bethesda.Oblivion
             LoadScreenLocation_CopyMask copyMask = null,
             LoadScreenLocation def = null)
         {
-            LoadScreenLocationCommon.CopyFieldsFrom(
+            LoadScreenLocationSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -516,7 +536,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void Clear()
         {
-            LoadScreenLocationCommon.Instance.Clear(this);
+            LoadScreenLocationSetterCommon.Instance.Clear(this);
         }
 
         public static LoadScreenLocation Create(IEnumerable<KeyValuePair<ushort, object>> fields)
@@ -555,8 +575,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface ILoadScreenLocation :
-        ILoadScreenLocationGetter,
-        ILoquiObjectSetter<ILoadScreenLocation>
+        ILoadScreenLocationInternalGetter,
+        ILoquiObjectSetter<ILoadScreenLocationInternal>
     {
         new Place Direct { get; set; }
         new IFormIDLink<Place> Direct_Property { get; }
@@ -571,9 +591,19 @@ namespace Mutagen.Bethesda.Oblivion
             LoadScreenLocation def = null);
     }
 
+    public partial interface ILoadScreenLocationInternal :
+        ILoadScreenLocation,
+        ILoadScreenLocationInternalGetter
+    {
+        new Place Direct { get; set; }
+        new IFormIDLink<Place> Direct_Property { get; }
+        new Worldspace Indirect { get; set; }
+        new IFormIDLink<Worldspace> Indirect_Property { get; }
+    }
+
     public partial interface ILoadScreenLocationGetter :
         ILoquiObject,
-        ILoquiObject<ILoadScreenLocationGetter>,
+        ILoquiObject<ILoadScreenLocationInternalGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -594,45 +624,53 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    public partial interface ILoadScreenLocationInternalGetter : ILoadScreenLocationGetter
+    {
+        object CommonInstance();
+        object CommonSetterInstance();
+        object CommonSetterCopyInstance();
+
+    }
+
     #endregion
 
     #region Common MixIn
     public static class LoadScreenLocationMixIn
     {
-        public static void Clear(this ILoadScreenLocation item)
+        public static void Clear(this ILoadScreenLocationInternal item)
         {
-            ((LoadScreenLocationCommon)((ILoquiObject)item).CommonInstance).Clear(item: item);
+            ((LoadScreenLocationSetterCommon)((ILoadScreenLocationInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
         public static LoadScreenLocation_Mask<bool> GetEqualsMask(
-            this ILoadScreenLocationGetter item,
-            ILoadScreenLocationGetter rhs,
+            this ILoadScreenLocationInternalGetter item,
+            ILoadScreenLocationInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((LoadScreenLocationCommon)((ILoquiObject)item).CommonInstance).GetEqualsMask(
+            return ((LoadScreenLocationCommon)((ILoadScreenLocationInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this ILoadScreenLocationGetter item,
+            this ILoadScreenLocationInternalGetter item,
             string name = null,
             LoadScreenLocation_Mask<bool> printMask = null)
         {
-            return ((LoadScreenLocationCommon)((ILoquiObject)item).CommonInstance).ToString(
+            return ((LoadScreenLocationCommon)((ILoadScreenLocationInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this ILoadScreenLocationGetter item,
+            this ILoadScreenLocationInternalGetter item,
             FileGeneration fg,
             string name = null,
             LoadScreenLocation_Mask<bool> printMask = null)
         {
-            ((LoadScreenLocationCommon)((ILoquiObject)item).CommonInstance).ToString(
+            ((LoadScreenLocationCommon)((ILoadScreenLocationInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -640,28 +678,28 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static bool HasBeenSet(
-            this ILoadScreenLocationGetter item,
+            this ILoadScreenLocationInternalGetter item,
             LoadScreenLocation_Mask<bool?> checkMask)
         {
-            return ((LoadScreenLocationCommon)((ILoquiObject)item).CommonInstance).HasBeenSet(
+            return ((LoadScreenLocationCommon)((ILoadScreenLocationInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static LoadScreenLocation_Mask<bool> GetHasBeenSetMask(this ILoadScreenLocationGetter item)
+        public static LoadScreenLocation_Mask<bool> GetHasBeenSetMask(this ILoadScreenLocationInternalGetter item)
         {
             var ret = new LoadScreenLocation_Mask<bool>();
-            ((LoadScreenLocationCommon)((ILoquiObject)item).CommonInstance).FillHasBeenSetMask(
+            ((LoadScreenLocationCommon)((ILoadScreenLocationInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this ILoadScreenLocationGetter item,
-            ILoadScreenLocationGetter rhs)
+            this ILoadScreenLocationInternalGetter item,
+            ILoadScreenLocationInternalGetter rhs)
         {
-            return ((LoadScreenLocationCommon)((ILoquiObject)item).CommonInstance).Equals(
+            return ((LoadScreenLocationCommon)((ILoadScreenLocationInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -708,13 +746,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(ILoadScreenLocationGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type InternalGetterType = typeof(ILoadScreenLocationInternalGetter);
 
         public static readonly Type SetterType = typeof(ILoadScreenLocation);
 
-        public static readonly Type InternalSetterType = null;
-
-        public static readonly Type CommonType = typeof(LoadScreenLocationCommon);
+        public static readonly Type InternalSetterType = typeof(ILoadScreenLocationInternal);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.LoadScreenLocation";
 
@@ -862,7 +898,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
         Type ILoquiRegistration.InternalGetterType => InternalGetterType;
-        Type ILoquiRegistration.CommonType => CommonType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
@@ -882,9 +917,156 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
+    public partial class LoadScreenLocationSetterCommon
+    {
+        public static readonly LoadScreenLocationSetterCommon Instance = new LoadScreenLocationSetterCommon();
+
+        partial void ClearPartial();
+        
+        public virtual void Clear(ILoadScreenLocationInternal item)
+        {
+            ClearPartial();
+            item.Direct = default(Place);
+            item.Indirect = default(Worldspace);
+            item.GridPoint = default(P2Int16);
+        }
+        
+        
+    }
     public partial class LoadScreenLocationCommon
     {
         public static readonly LoadScreenLocationCommon Instance = new LoadScreenLocationCommon();
+
+        public LoadScreenLocation_Mask<bool> GetEqualsMask(
+            ILoadScreenLocationInternalGetter item,
+            ILoadScreenLocationInternalGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            var ret = new LoadScreenLocation_Mask<bool>();
+            ((LoadScreenLocationCommon)((ILoadScreenLocationInternalGetter)item).CommonInstance()).FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
+            return ret;
+        }
+        
+        public void FillEqualsMask(
+            ILoadScreenLocationInternalGetter item,
+            ILoadScreenLocationInternalGetter rhs,
+            LoadScreenLocation_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+        {
+            if (rhs == null) return;
+            ret.Direct = item.Direct_Property.FormKey == rhs.Direct_Property.FormKey;
+            ret.Indirect = item.Indirect_Property.FormKey == rhs.Indirect_Property.FormKey;
+            ret.GridPoint = item.GridPoint.Equals(rhs.GridPoint);
+        }
+        
+        public string ToString(
+            ILoadScreenLocationInternalGetter item,
+            string name = null,
+            LoadScreenLocation_Mask<bool> printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(
+                item: item,
+                fg: fg,
+                name: name,
+                printMask: printMask);
+            return fg.ToString();
+        }
+        
+        public void ToString(
+            ILoadScreenLocationInternalGetter item,
+            FileGeneration fg,
+            string name = null,
+            LoadScreenLocation_Mask<bool> printMask = null)
+        {
+            if (name == null)
+            {
+                fg.AppendLine($"LoadScreenLocation =>");
+            }
+            else
+            {
+                fg.AppendLine($"{name} (LoadScreenLocation) =>");
+            }
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                ToStringFields(
+                    item: item,
+                    fg: fg,
+                    printMask: printMask);
+            }
+            fg.AppendLine("]");
+        }
+        
+        protected static void ToStringFields(
+            ILoadScreenLocationInternalGetter item,
+            FileGeneration fg,
+            LoadScreenLocation_Mask<bool> printMask = null)
+        {
+            if (printMask?.Direct ?? true)
+            {
+                fg.AppendLine($"Direct => {item.Direct_Property}");
+            }
+            if (printMask?.Indirect ?? true)
+            {
+                fg.AppendLine($"Indirect => {item.Indirect_Property}");
+            }
+            if (printMask?.GridPoint ?? true)
+            {
+                fg.AppendLine($"GridPoint => {item.GridPoint}");
+            }
+        }
+        
+        public bool HasBeenSet(
+            ILoadScreenLocationInternalGetter item,
+            LoadScreenLocation_Mask<bool?> checkMask)
+        {
+            return true;
+        }
+        
+        public void FillHasBeenSetMask(
+            ILoadScreenLocationInternalGetter item,
+            LoadScreenLocation_Mask<bool> mask)
+        {
+            mask.Direct = true;
+            mask.Indirect = true;
+            mask.GridPoint = true;
+        }
+        
+        #region Equals and Hash
+        public virtual bool Equals(
+            ILoadScreenLocationInternalGetter lhs,
+            ILoadScreenLocationInternalGetter rhs)
+        {
+            if (lhs == null && rhs == null) return false;
+            if (lhs == null || rhs == null) return false;
+            if (!lhs.Direct_Property.Equals(rhs.Direct_Property)) return false;
+            if (!lhs.Indirect_Property.Equals(rhs.Indirect_Property)) return false;
+            if (!lhs.GridPoint.Equals(rhs.GridPoint)) return false;
+            return true;
+        }
+        
+        public virtual int GetHashCode(ILoadScreenLocationInternalGetter item)
+        {
+            int ret = 0;
+            ret = HashHelper.GetHashCode(item.Direct).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Indirect).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.GridPoint).CombineHashCode(ret);
+            return ret;
+        }
+        
+        #endregion
+        
+        
+        
+    }
+    public partial class LoadScreenLocationSetterCopyCommon
+    {
+        public static readonly LoadScreenLocationSetterCopyCommon Instance = new LoadScreenLocationSetterCopyCommon();
 
         #region Copy Fields From
         public static void CopyFieldsFrom(
@@ -946,144 +1128,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
         }
-
+        
         #endregion
-
-        partial void ClearPartial();
-
-        public virtual void Clear(ILoadScreenLocation item)
-        {
-            ClearPartial();
-            item.Direct = default(Place);
-            item.Indirect = default(Worldspace);
-            item.GridPoint = default(P2Int16);
-        }
-
-        public LoadScreenLocation_Mask<bool> GetEqualsMask(
-            ILoadScreenLocationGetter item,
-            ILoadScreenLocationGetter rhs,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            var ret = new LoadScreenLocation_Mask<bool>();
-            ((LoadScreenLocationCommon)((ILoquiObject)item).CommonInstance).FillEqualsMask(
-                item: item,
-                rhs: rhs,
-                ret: ret,
-                include: include);
-            return ret;
-        }
-
-        public void FillEqualsMask(
-            ILoadScreenLocationGetter item,
-            ILoadScreenLocationGetter rhs,
-            LoadScreenLocation_Mask<bool> ret,
-            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-        {
-            if (rhs == null) return;
-            ret.Direct = item.Direct_Property.FormKey == rhs.Direct_Property.FormKey;
-            ret.Indirect = item.Indirect_Property.FormKey == rhs.Indirect_Property.FormKey;
-            ret.GridPoint = item.GridPoint.Equals(rhs.GridPoint);
-        }
-
-        public string ToString(
-            ILoadScreenLocationGetter item,
-            string name = null,
-            LoadScreenLocation_Mask<bool> printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(
-                item: item,
-                fg: fg,
-                name: name,
-                printMask: printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(
-            ILoadScreenLocationGetter item,
-            FileGeneration fg,
-            string name = null,
-            LoadScreenLocation_Mask<bool> printMask = null)
-        {
-            if (name == null)
-            {
-                fg.AppendLine($"LoadScreenLocation =>");
-            }
-            else
-            {
-                fg.AppendLine($"{name} (LoadScreenLocation) =>");
-            }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                ToStringFields(
-                    item: item,
-                    fg: fg,
-                    printMask: printMask);
-            }
-            fg.AppendLine("]");
-        }
-
-        protected static void ToStringFields(
-            ILoadScreenLocationGetter item,
-            FileGeneration fg,
-            LoadScreenLocation_Mask<bool> printMask = null)
-        {
-            if (printMask?.Direct ?? true)
-            {
-                fg.AppendLine($"Direct => {item.Direct_Property}");
-            }
-            if (printMask?.Indirect ?? true)
-            {
-                fg.AppendLine($"Indirect => {item.Indirect_Property}");
-            }
-            if (printMask?.GridPoint ?? true)
-            {
-                fg.AppendLine($"GridPoint => {item.GridPoint}");
-            }
-        }
-
-        public bool HasBeenSet(
-            ILoadScreenLocationGetter item,
-            LoadScreenLocation_Mask<bool?> checkMask)
-        {
-            return true;
-        }
-
-        public void FillHasBeenSetMask(
-            ILoadScreenLocationGetter item,
-            LoadScreenLocation_Mask<bool> mask)
-        {
-            mask.Direct = true;
-            mask.Indirect = true;
-            mask.GridPoint = true;
-        }
-
-        #region Equals and Hash
-        public virtual bool Equals(
-            ILoadScreenLocationGetter lhs,
-            ILoadScreenLocationGetter rhs)
-        {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
-            if (!lhs.Direct_Property.Equals(rhs.Direct_Property)) return false;
-            if (!lhs.Indirect_Property.Equals(rhs.Indirect_Property)) return false;
-            if (!lhs.GridPoint.Equals(rhs.GridPoint)) return false;
-            return true;
-        }
-
-        public virtual int GetHashCode(ILoadScreenLocationGetter item)
-        {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.Direct).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Indirect).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.GridPoint).CombineHashCode(ret);
-            return ret;
-        }
-
-        #endregion
-
-
+        
+        
     }
     #endregion
 
@@ -1094,7 +1142,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static LoadScreenLocationXmlWriteTranslation Instance = new LoadScreenLocationXmlWriteTranslation();
 
         public static void WriteToNodeXml(
-            ILoadScreenLocationGetter item,
+            ILoadScreenLocationInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1130,7 +1178,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             XElement node,
-            ILoadScreenLocationGetter item,
+            ILoadScreenLocationInternalGetter item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)
@@ -1156,7 +1204,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             Write(
-                item: (ILoadScreenLocationGetter)item,
+                item: (ILoadScreenLocationInternalGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1165,7 +1213,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             XElement node,
-            ILoadScreenLocationGetter item,
+            ILoadScreenLocationInternalGetter item,
             ErrorMaskBuilder errorMask,
             int fieldIndex,
             TranslationCrystal translationMask,
@@ -1175,7 +1223,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 errorMask?.PushIndex(fieldIndex);
                 Write(
-                    item: (ILoadScreenLocationGetter)item,
+                    item: (ILoadScreenLocationInternalGetter)item,
                     name: name,
                     node: node,
                     errorMask: errorMask,
@@ -1199,7 +1247,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static LoadScreenLocationXmlCreateTranslation Instance = new LoadScreenLocationXmlCreateTranslation();
 
         public static void FillPublicXml(
-            ILoadScreenLocation item,
+            ILoadScreenLocationInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1224,7 +1272,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElementXml(
-            ILoadScreenLocation item,
+            ILoadScreenLocationInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -1283,7 +1331,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public static class LoadScreenLocationXmlTranslationMixIn
     {
         public static void WriteToXml(
-            this ILoadScreenLocationGetter item,
+            this ILoadScreenLocationInternalGetter item,
             XElement node,
             out LoadScreenLocation_ErrorMask errorMask,
             bool doMasks = true,
@@ -1301,7 +1349,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this ILoadScreenLocationGetter item,
+            this ILoadScreenLocationInternalGetter item,
             string path,
             out LoadScreenLocation_ErrorMask errorMask,
             LoadScreenLocation_TranslationMask translationMask = null,
@@ -1320,7 +1368,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this ILoadScreenLocationGetter item,
+            this ILoadScreenLocationInternalGetter item,
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1338,7 +1386,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this ILoadScreenLocationGetter item,
+            this ILoadScreenLocationInternalGetter item,
             Stream stream,
             out LoadScreenLocation_ErrorMask errorMask,
             LoadScreenLocation_TranslationMask translationMask = null,
@@ -1357,7 +1405,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this ILoadScreenLocationGetter item,
+            this ILoadScreenLocationInternalGetter item,
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1375,7 +1423,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this ILoadScreenLocationGetter item,
+            this ILoadScreenLocationInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1390,7 +1438,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this ILoadScreenLocationGetter item,
+            this ILoadScreenLocationInternalGetter item,
             XElement node,
             string name = null,
             LoadScreenLocation_TranslationMask translationMask = null)
@@ -1404,7 +1452,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this ILoadScreenLocationGetter item,
+            this ILoadScreenLocationInternalGetter item,
             string path,
             string name = null)
         {
@@ -1419,7 +1467,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToXml(
-            this ILoadScreenLocationGetter item,
+            this ILoadScreenLocationInternalGetter item,
             Stream stream,
             string name = null)
         {
@@ -1774,7 +1822,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static LoadScreenLocationBinaryWriteTranslation Instance = new LoadScreenLocationBinaryWriteTranslation();
 
         public static void Write_Embedded(
-            ILoadScreenLocationGetter item,
+            ILoadScreenLocationInternalGetter item,
             MutagenWriter writer,
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
@@ -1794,7 +1842,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             MutagenWriter writer,
-            ILoadScreenLocationGetter item,
+            ILoadScreenLocationInternalGetter item,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
@@ -1820,7 +1868,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask)
         {
             Write(
-                item: (ILoadScreenLocationGetter)item,
+                item: (ILoadScreenLocationInternalGetter)item,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -1839,7 +1887,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public static class LoadScreenLocationBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this ILoadScreenLocationGetter item,
+            this ILoadScreenLocationInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
             out LoadScreenLocation_ErrorMask errorMask,
@@ -1856,7 +1904,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToBinary(
-            this ILoadScreenLocationGetter item,
+            this ILoadScreenLocationInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -1870,7 +1918,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteToBinary(
-            this ILoadScreenLocationGetter item,
+            this ILoadScreenLocationInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
@@ -1887,22 +1935,65 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     public partial class LoadScreenLocationBinaryWrapper :
         BinaryWrapper,
-        ILoadScreenLocationGetter
+        ILoadScreenLocationInternalGetter
     {
+        #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LoadScreenLocation_Registration.Instance;
         public static LoadScreenLocation_Registration Registration => LoadScreenLocation_Registration.Instance;
-        protected object CommonInstance => LoadScreenLocationCommon.Instance;
-        object ILoquiObject.CommonInstance => this.CommonInstance;
+        protected object CommonInstance()
+        {
+            return LoadScreenLocationCommon.Instance;
+        }
+        object ILoadScreenLocationInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object ILoadScreenLocationInternalGetter.CommonSetterInstance()
+        {
+            return null;
+        }
+        object ILoadScreenLocationInternalGetter.CommonSetterCopyInstance()
+        {
+            return null;
+        }
+
+        #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILoadScreenLocationGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILoadScreenLocationInternalGetter)rhs, include);
 
         protected object XmlWriteTranslator => LoadScreenLocationXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        void IXmlItem.WriteToXml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            ((LoadScreenLocationXmlWriteTranslation)this.XmlWriteTranslator).Write(
+                item: this,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         protected object BinaryWriteTranslator => LoadScreenLocationBinaryWriteTranslation.Instance;
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        void IBinaryItem.WriteToBinary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((LoadScreenLocationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+                item: this,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
 
         #region Direct
         public IFormIDLinkGetter<IPlaceInternalGetter> Direct_Property => new FormIDLink<IPlaceInternalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
@@ -1952,4 +2043,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #endregion
 
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class LoadScreenLocation
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => LoadScreenLocation_Registration.Instance;
+        public static LoadScreenLocation_Registration Registration => LoadScreenLocation_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return LoadScreenLocationCommon.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return LoadScreenLocationSetterCommon.Instance;
+        }
+        protected object CommonSetterCopyInstance()
+        {
+            return LoadScreenLocationSetterCopyCommon.Instance;
+        }
+        object ILoadScreenLocationInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object ILoadScreenLocationInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object ILoadScreenLocationInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
 }

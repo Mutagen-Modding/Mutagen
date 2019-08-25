@@ -1,4 +1,4 @@
-﻿using Loqui;
+using Loqui;
 using Loqui.Generation;
 using System;
 using System.Collections.Generic;
@@ -19,9 +19,10 @@ namespace Mutagen.Bethesda.Generation
             await base.PostLoad(obj);
         }
 
-        public override async Task GenerateInCommon(ObjectGeneration obj, FileGeneration fg)
+        public override async Task GenerateInCommon(ObjectGeneration obj, FileGeneration fg, MaskTypeSet maskTypes)
         {
             if (!await obj.IsMajorRecord()) return;
+            if (!maskTypes.Applicable(LoquiInterfaceType.IGetter, CommonGenerics.Class, MaskType.Normal)) return;
             //ToDo
             // Modify to getter interface after copy is refactored
             fg.AppendLine($"partial void PostDuplicate({obj.Name} obj, {obj.ObjectName} rhs, Func<FormKey> getNextFormKey, IList<({nameof(IMajorRecordCommon)} Record, FormKey OriginalFormKey)> duplicatedRecords);");
@@ -87,7 +88,7 @@ namespace Mutagen.Bethesda.Generation
             using (new BraceWrapper(fg))
             {
                 using (var args = new ArgsWrapper(fg,
-                     $"return {obj.CommonClassInstance("item")}.{nameof(IDuplicatable.Duplicate)}"))
+                     $"return {obj.CommonClassInstance("item", LoquiInterfaceType.IGetter, CommonGenerics.Class, MaskType.Normal)}.{nameof(IDuplicatable.Duplicate)}"))
                 {
                     args.AddPassArg("item");
                     args.AddPassArg("getNextFormKey");
