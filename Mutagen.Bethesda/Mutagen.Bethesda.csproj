@@ -114,7 +114,9 @@
     <Compile Include="Translators\Binary\MutagenFrame.cs" />
     <Compile Include="Translators\Binary\MutagenWriter.cs" />
     <Compile Include="Translators\Binary\P2FloatBinaryTranslation.cs" />
+    <Compile Include="Translators\Binary\P3Int16BinaryTranslation.cs" />
     <Compile Include="Translators\Binary\P2Int16BinaryTranslation.cs" />
+    <Compile Include="Translators\Binary\P3IntBinaryTranslation.cs" />
     <Compile Include="Translators\Binary\P2IntBinaryTranslation.cs" />
     <Compile Include="Translators\Binary\P3FloatBinaryTranslation.cs" />
     <Compile Include="Translators\Binary\P3UInt16BinaryTranslation.cs" />

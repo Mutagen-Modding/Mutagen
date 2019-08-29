@@ -2,18 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>54a8dd00ad0c98e02ed5f4ebba88d9f09f81307d</Sha>
+         <Sha>19996255be7980c002982368b2176bb07eb97d6a</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>08-25-2019 15:59:59</CommitDate>
-         <Description>Noggog.WPF:  Basic theming.  Some snippets</Description>
+         <CommitDate>08-30-2019 08:20:11</CommitDate>
+         <Description>P3Int16</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>b53404817acca81632d3c930de844248ac1bc7e3</Sha>
+         <Sha>6769a4677f137fc74e7cb2575c8a621a4e728924</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>08-25-2019 16:00:17</CommitDate>
-         <Description>Nuget updates</Description>
+         <CommitDate>08-30-2019 08:20:50</CommitDate>
+         <Description>P3Int16 support</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

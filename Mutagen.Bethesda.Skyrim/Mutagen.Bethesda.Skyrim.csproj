@@ -24,6 +24,9 @@
     <Compile Include="Records\Group.cs">
       <DependentUpon>Group.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Decal.cs">
+      <DependentUpon>TextureSet.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\GameSetting.cs">
       <DependentUpon>GameSetting.xml</DependentUpon>
     </Compile>
@@ -62,6 +65,9 @@
     </Compile>
     <Compile Include="Records\Major Records\Global_LoquiGenerated.cs">
       <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\TextureSet.cs">
+      <DependentUpon>TextureSet.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\ModHeader.cs">
       <DependentUpon>ModHeader.xml</DependentUpon>
@@ -108,6 +114,21 @@
     </Compile>
     <Compile Include="Records\Major Records\LocationReferenceType_LoquiGenerated.cs">
       <DependentUpon>LocationReferenceType.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Action_LoquiGenerated.cs">
+      <DependentUpon>Action.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\ObjectBounds_LoquiGenerated.cs">
+      <DependentUpon>ObjectBounds.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\TextureSet_LoquiGenerated.cs">
+      <DependentUpon>TextureSet.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Textures_LoquiGenerated.cs">
+      <DependentUpon>TextureSet.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Decal_LoquiGenerated.cs">
+      <DependentUpon>TextureSet.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>
