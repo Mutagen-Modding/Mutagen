@@ -21,6 +21,7 @@
     <ProjectReference Include="..\Mutagen.Bethesda\Mutagen.Bethesda.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Records\Common Enums\Skill.cs" />
     <Compile Include="Records\Group.cs">
       <DependentUpon>Group.xml</DependentUpon>
     </Compile>
@@ -129,6 +130,9 @@
     </Compile>
     <Compile Include="Records\Major Records\Decal_LoquiGenerated.cs">
       <DependentUpon>TextureSet.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Class_LoquiGenerated.cs">
+      <DependentUpon>Class.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

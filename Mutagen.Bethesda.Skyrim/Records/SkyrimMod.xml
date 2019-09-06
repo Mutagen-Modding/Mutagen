@@ -9,6 +9,7 @@
       <Group name="Actions" refName="Action" />
       <Group name="TextureSets" refName="TextureSet" />
       <Group name="Globals" refName="Global" />
+      <Group name="Classes" refName="Class" />
     </Fields>
   </Object>
 </Loqui>
