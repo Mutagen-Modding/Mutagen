@@ -147,6 +147,7 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public MajorRecordMeta MajorRecord(ReadOnlySpan<byte> span) => new MajorRecordMeta(this, span);
+        public MajorRecordMetaWritable MajorRecordWritable(Span<byte> span) => new MajorRecordMetaWritable(this, span);
         public MajorRecordFrame MajorRecordFrame(ReadOnlySpan<byte> span) => new MajorRecordFrame(this, span);
         public MajorRecordMemoryFrame MajorRecordMemoryFrame(ReadOnlyMemorySlice<byte> span) => new MajorRecordMemoryFrame(this, span);
         public MajorRecordMeta GetMajorRecord(IBinaryReadStream stream, int offset = 0) => new MajorRecordMeta(this, stream.GetSpan(this.MajorConstants.HeaderLength, offset));
@@ -397,7 +398,7 @@ namespace Mutagen.Bethesda.Binary
             this.Meta = meta;
             this.Span = span.Slice(0, meta.MajorConstants.HeaderLength);
         }
-        
+
         public GameMode GameMode => Meta.GameMode;
         public sbyte HeaderLength => Meta.MajorConstants.HeaderLength;
         public RecordType RecordType => new RecordType(BinaryPrimitives.ReadInt32LittleEndian(this.Span.Slice(0, 4)));
@@ -406,6 +407,57 @@ namespace Mutagen.Bethesda.Binary
         public FormID FormID => FormID.Factory(BinaryPrimitives.ReadUInt32LittleEndian(this.Span.Slice(12, 4)));
         public long TotalLength => this.HeaderLength + this.RecordLength;
         public bool IsCompressed => (this.MajorRecordFlags & Mutagen.Bethesda.Constants.CompressedFlag) > 0;
+    }
+
+    public ref struct MajorRecordMetaWritable
+    {
+        public MetaDataConstants Meta { get; }
+        public Span<byte> Span { get; }
+
+        public MajorRecordMetaWritable(MetaDataConstants meta, Span<byte> span)
+        {
+            this.Meta = meta;
+            this.Span = span.Slice(0, meta.MajorConstants.HeaderLength);
+        }
+
+        public GameMode GameMode => Meta.GameMode;
+        public sbyte HeaderLength => Meta.MajorConstants.HeaderLength;
+        public RecordType RecordType
+        {
+            get => new RecordType(BinaryPrimitives.ReadInt32LittleEndian(this.Span.Slice(0, 4)));
+            set => BinaryPrimitives.WriteInt32LittleEndian(this.Span.Slice(0, 4), value.TypeInt);
+        }
+        public uint RecordLength
+        {
+            get => BinaryPrimitives.ReadUInt32LittleEndian(this.Span.Slice(4, 4));
+            set => BinaryPrimitives.WriteUInt32LittleEndian(this.Span.Slice(4, 4), value);
+        }
+        public int MajorRecordFlags
+        {
+            get => BinaryPrimitives.ReadInt32LittleEndian(this.Span.Slice(8, 4));
+            set => BinaryPrimitives.WriteInt32LittleEndian(this.Span.Slice(8, 4), value);
+        }
+        public FormID FormID
+        {
+            get => FormID.Factory(BinaryPrimitives.ReadUInt32LittleEndian(this.Span.Slice(12, 4)));
+            set => BinaryPrimitives.WriteUInt32LittleEndian(this.Span.Slice(12, 4), value.Raw);
+        }
+        public long TotalLength => this.HeaderLength + this.RecordLength;
+        public bool IsCompressed
+        {
+            get => (this.MajorRecordFlags & Mutagen.Bethesda.Constants.CompressedFlag) > 0;
+            set
+            {
+                if (value)
+                {
+                    this.MajorRecordFlags |= Mutagen.Bethesda.Constants.CompressedFlag;
+                }
+                else
+                {
+                    this.MajorRecordFlags &= ~Mutagen.Bethesda.Constants.CompressedFlag;
+                }
+            }
+        }
     }
 
     public ref struct MajorRecordFrame
