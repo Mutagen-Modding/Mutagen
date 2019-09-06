@@ -59,12 +59,14 @@ namespace Mutagen.Bethesda.Skyrim
             _LocationReferenceTypes_Object = new Group<LocationReferenceType>(this);
             _Actions_Object = new Group<Action>(this);
             _TextureSets_Object = new Group<TextureSet>(this);
+            _Globals_Object = new Group<Global>(this);
             Observable.Merge(
                 _GameSettings_Object.Items.Connect().Transform<IMajorRecord, GameSetting, FormKey>((i) => i),
                 _Keywords_Object.Items.Connect().Transform<IMajorRecord, Keyword, FormKey>((i) => i),
                 _LocationReferenceTypes_Object.Items.Connect().Transform<IMajorRecord, LocationReferenceType, FormKey>((i) => i),
                 _Actions_Object.Items.Connect().Transform<IMajorRecord, Action, FormKey>((i) => i),
-                _TextureSets_Object.Items.Connect().Transform<IMajorRecord, TextureSet, FormKey>((i) => i))
+                _TextureSets_Object.Items.Connect().Transform<IMajorRecord, TextureSet, FormKey>((i) => i),
+                _Globals_Object.Items.Connect().Transform<IMajorRecord, Global, FormKey>((i) => i))
                 .PopulateInto(_majorRecords);
             CustomCtor();
         }
@@ -109,6 +111,12 @@ namespace Mutagen.Bethesda.Skyrim
         private readonly Group<TextureSet> _TextureSets_Object;
         public Group<TextureSet> TextureSets => _TextureSets_Object;
         IGroupGetter<ITextureSetInternalGetter> ISkyrimModGetter.TextureSets => _TextureSets_Object;
+        #endregion
+        #region Globals
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private readonly Group<Global> _Globals_Object;
+        public Group<Global> Globals => _Globals_Object;
+        IGroupGetter<IGlobalInternalGetter> ISkyrimModGetter.Globals => _Globals_Object;
         #endregion
 
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISkyrimModGetter)rhs, include);
@@ -357,6 +365,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case SkyrimMod_FieldIndex.LocationReferenceTypes:
                 case SkyrimMod_FieldIndex.Actions:
                 case SkyrimMod_FieldIndex.TextureSets:
+                case SkyrimMod_FieldIndex.Globals:
                     return true;
                 default:
                     throw new ArgumentException($"Unknown field index: {index}");
@@ -395,6 +404,9 @@ namespace Mutagen.Bethesda.Skyrim
                 case TextureSet texturesets:
                     _TextureSets_Object.Items.Set(texturesets);
                     break;
+                case Global globals:
+                    _Globals_Object.Items.Set(globals);
+                    break;
                 default:
                     throw new ArgumentException($"Unknown settable MajorRecord type: {record?.GetType()}");
             }
@@ -423,6 +435,10 @@ namespace Mutagen.Bethesda.Skyrim
             if (mask?.TextureSets ?? true)
             {
                 this.TextureSets.Items.Set(rhsMod.TextureSets.Items.Items);
+            }
+            if (mask?.Globals ?? true)
+            {
+                this.Globals.Items.Set(rhsMod.Globals.Items.Items);
             }
         }
 
@@ -466,6 +482,13 @@ namespace Mutagen.Bethesda.Skyrim
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<TextureSet>());
             }
+            if (mask?.Globals ?? true)
+            {
+                this.Globals.Items.Set(
+                    rhs.Globals.Items.Items
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<Global>());
+            }
             Dictionary<FormKey, IMajorRecordCommon> router = new Dictionary<FormKey, IMajorRecordCommon>();
             router.Set(duppedRecords.Select(dup => new KeyValuePair<FormKey, IMajorRecordCommon>(dup.OriginalFormKey, dup.Record)));
             foreach (var rec in router.Values)
@@ -502,6 +525,7 @@ namespace Mutagen.Bethesda.Skyrim
             count += LocationReferenceTypes.Items.Count > 0 ? 1 : 0;
             count += Actions.Items.Count > 0 ? 1 : 0;
             count += TextureSets.Items.Count > 0 ? 1 : 0;
+            count += Globals.Items.Count > 0 ? 1 : 0;
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -577,6 +601,11 @@ namespace Mutagen.Bethesda.Skyrim
                 name: nameof(TextureSets),
                 errorMask: errorMask,
                 index: (int)SkyrimMod_FieldIndex.TextureSets)));
+            tasks.Add(Task.Run(() => ret.Globals.CreateFromXmlFolder<Global>(
+                dir: dir,
+                name: nameof(Globals),
+                errorMask: errorMask,
+                index: (int)SkyrimMod_FieldIndex.Globals)));
             await Task.WhenAll(tasks);
             foreach (var link in ret.Links)
             {
@@ -624,6 +653,11 @@ namespace Mutagen.Bethesda.Skyrim
                     name: nameof(TextureSets),
                     errorMask: errorMaskBuilder,
                     index: (int)SkyrimMod_FieldIndex.TextureSets)));
+                tasks.Add(Task.Run(() => Globals.WriteToXmlFolder<Global, Global_ErrorMask>(
+                    dir: dir.Path,
+                    name: nameof(Globals),
+                    errorMask: errorMaskBuilder,
+                    index: (int)SkyrimMod_FieldIndex.Globals)));
                 await Task.WhenAll(tasks);
             }
             return null;
@@ -1005,6 +1039,40 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.TextureSets);
                 }
+                case 0x424F4C47: // GLOB
+                {
+                    if (importMask?.Globals ?? true)
+                    {
+                        try
+                        {
+                            errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Globals);
+                            var tmpGlobals = await Group<Global>.CreateFromBinary(
+                                frame: frame,
+                                errorMask: errorMask,
+                                recordTypeConverter: null,
+                                masterReferences: masterReferences);
+                            item.Globals.CopyFieldsFrom<Global_CopyMask>(
+                                rhs: tmpGlobals,
+                                def: null,
+                                copyMask: null,
+                                errorMask: errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
+                        }
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Globals);
+                }
                 default:
                     errorMask?.ReportWarning($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
                     frame.Position += contentLength;
@@ -1143,6 +1211,9 @@ namespace Mutagen.Bethesda.Skyrim
                 case SkyrimMod_FieldIndex.TextureSets:
                     this._TextureSets_Object.CopyFieldsFrom<TextureSet_CopyMask>(rhs: (Group<TextureSet>)obj);
                     break;
+                case SkyrimMod_FieldIndex.Globals:
+                    this._Globals_Object.CopyFieldsFrom<Global_CopyMask>(rhs: (Group<Global>)obj);
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1189,6 +1260,9 @@ namespace Mutagen.Bethesda.Skyrim
                 case SkyrimMod_FieldIndex.TextureSets:
                     obj._TextureSets_Object.CopyFieldsFrom<TextureSet_CopyMask>(rhs: (Group<TextureSet>)pair.Value);
                     break;
+                case SkyrimMod_FieldIndex.Globals:
+                    obj._Globals_Object.CopyFieldsFrom<Global_CopyMask>(rhs: (Group<Global>)pair.Value);
+                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
@@ -1207,6 +1281,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Group<LocationReferenceType> LocationReferenceTypes { get; }
         new Group<Action> Actions { get; }
         new Group<TextureSet> TextureSets { get; }
+        new Group<Global> Globals { get; }
         void CopyFieldsFrom(
             SkyrimMod rhs,
             ErrorMaskBuilder errorMask = null,
@@ -1238,6 +1313,9 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region TextureSets
         IGroupGetter<ITextureSetInternalGetter> TextureSets { get; }
+        #endregion
+        #region Globals
+        IGroupGetter<IGlobalInternalGetter> Globals { get; }
         #endregion
 
     }
@@ -1344,6 +1422,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         LocationReferenceTypes = 3,
         Actions = 4,
         TextureSets = 5,
+        Globals = 6,
     }
     #endregion
 
@@ -1361,9 +1440,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "61f5127d-406d-41a1-897e-6d17188258ea";
 
-        public const ushort AdditionalFieldCount = 6;
+        public const ushort AdditionalFieldCount = 7;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 7;
 
         public static readonly Type MaskType = typeof(SkyrimMod_Mask<>);
 
@@ -1407,6 +1486,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)SkyrimMod_FieldIndex.Actions;
                 case "TEXTURESETS":
                     return (ushort)SkyrimMod_FieldIndex.TextureSets;
+                case "GLOBALS":
+                    return (ushort)SkyrimMod_FieldIndex.Globals;
                 default:
                     return null;
             }
@@ -1423,6 +1504,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.LocationReferenceTypes:
                 case SkyrimMod_FieldIndex.Actions:
                 case SkyrimMod_FieldIndex.TextureSets:
+                case SkyrimMod_FieldIndex.Globals:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1440,6 +1522,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.LocationReferenceTypes:
                 case SkyrimMod_FieldIndex.Actions:
                 case SkyrimMod_FieldIndex.TextureSets:
+                case SkyrimMod_FieldIndex.Globals:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1457,6 +1540,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.LocationReferenceTypes:
                 case SkyrimMod_FieldIndex.Actions:
                 case SkyrimMod_FieldIndex.TextureSets:
+                case SkyrimMod_FieldIndex.Globals:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1480,6 +1564,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "Actions";
                 case SkyrimMod_FieldIndex.TextureSets:
                     return "TextureSets";
+                case SkyrimMod_FieldIndex.Globals:
+                    return "Globals";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1496,6 +1582,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.LocationReferenceTypes:
                 case SkyrimMod_FieldIndex.Actions:
                 case SkyrimMod_FieldIndex.TextureSets:
+                case SkyrimMod_FieldIndex.Globals:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1514,6 +1601,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.LocationReferenceTypes:
                 case SkyrimMod_FieldIndex.Actions:
                 case SkyrimMod_FieldIndex.TextureSets:
+                case SkyrimMod_FieldIndex.Globals:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1537,6 +1625,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(Group<Action>);
                 case SkyrimMod_FieldIndex.TextureSets:
                     return typeof(Group<TextureSet>);
+                case SkyrimMod_FieldIndex.Globals:
+                    return typeof(Group<Global>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1549,6 +1639,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType LCRT_HEADER = new RecordType("LCRT");
         public static readonly RecordType AACT_HEADER = new RecordType("AACT");
         public static readonly RecordType TXST_HEADER = new RecordType("TXST");
+        public static readonly RecordType GLOB_HEADER = new RecordType("GLOB");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -1562,7 +1653,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             );
         });
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 6;
+        public const int NumTypedFields = 7;
         public static readonly Type BinaryWriteTranslation = typeof(SkyrimModBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1741,6 +1832,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
+            if (copyMask?.Globals.Overall ?? true)
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Globals);
+                try
+                {
+                    GroupCommon.CopyFieldsFrom<Global, Global_CopyMask>(
+                        item: item.Globals,
+                        rhs: rhs.Globals,
+                        def: def?.Globals,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.Globals.Specific);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
 
         #endregion
@@ -1785,6 +1898,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.LocationReferenceTypes = MaskItemExt.Factory(item.LocationReferenceTypes.GetEqualsMask(rhs.LocationReferenceTypes, include), include);
             ret.Actions = MaskItemExt.Factory(item.Actions.GetEqualsMask(rhs.Actions, include), include);
             ret.TextureSets = MaskItemExt.Factory(item.TextureSets.GetEqualsMask(rhs.TextureSets, include), include);
+            ret.Globals = MaskItemExt.Factory(item.Globals.GetEqualsMask(rhs.Globals, include), include);
         }
 
         public string ToString(
@@ -1855,6 +1969,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.TextureSets?.ToString(fg, "TextureSets");
             }
+            if (printMask?.Globals?.Overall ?? true)
+            {
+                item.Globals?.ToString(fg, "Globals");
+            }
         }
 
         public bool HasBeenSet(
@@ -1876,6 +1994,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.LocationReferenceTypes = new MaskItem<bool, Group_Mask<bool>>(true, item.LocationReferenceTypes.GetHasBeenSetMask());
             mask.Actions = new MaskItem<bool, Group_Mask<bool>>(true, item.Actions.GetHasBeenSetMask());
             mask.TextureSets = new MaskItem<bool, Group_Mask<bool>>(true, item.TextureSets.GetHasBeenSetMask());
+            mask.Globals = new MaskItem<bool, Group_Mask<bool>>(true, item.Globals.GetHasBeenSetMask());
         }
 
         #region Equals and Hash
@@ -1895,6 +2014,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!object.Equals(lhs.LocationReferenceTypes, rhs.LocationReferenceTypes)) return false;
             if (!object.Equals(lhs.Actions, rhs.Actions)) return false;
             if (!object.Equals(lhs.TextureSets, rhs.TextureSets)) return false;
+            if (!object.Equals(lhs.Globals, rhs.Globals)) return false;
             return true;
         }
 
@@ -1910,6 +2030,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret = HashHelper.GetHashCode(item.LocationReferenceTypes).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(item.Actions).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(item.TextureSets).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Globals).CombineHashCode(ret);
             return ret;
         }
 
@@ -1942,6 +2063,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ITextureSetInternalGetter":
                 case "ITextureSetInternal":
                     return obj.TextureSets.Items;
+                case "Global":
+                case "IGlobalInternalGetter":
+                case "IGlobalInternal":
+                    return obj.Globals.Items;
                 default:
                     throw new ArgumentException($"Unknown group type: {typeof(T)}");
             }
@@ -2030,6 +2155,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)SkyrimMod_FieldIndex.TextureSets,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.TextureSets));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Globals) ?? true))
+            {
+                var loquiItem = item.Globals;
+                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<IGlobalInternalGetter>(
+                    item: loquiItem,
+                    node: node,
+                    name: nameof(item.Globals),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.Globals,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Globals));
             }
         }
 
@@ -2252,6 +2388,29 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
+                case "Globals":
+                    try
+                    {
+                        errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Globals);
+                        item.Globals.CopyFieldsFrom<Global_CopyMask>(
+                            rhs: Group<Global>.CreateFromXml(
+                                node: node,
+                                errorMask: errorMask,
+                                translationMask: translationMask),
+                            def: null,
+                            copyMask: null,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     break;
             }
@@ -2434,6 +2593,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             this.LocationReferenceTypes = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
             this.Actions = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
             this.TextureSets = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
+            this.Globals = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
         }
         #endregion
 
@@ -2444,6 +2604,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public MaskItem<T, Group_Mask<T>> LocationReferenceTypes { get; set; }
         public MaskItem<T, Group_Mask<T>> Actions { get; set; }
         public MaskItem<T, Group_Mask<T>> TextureSets { get; set; }
+        public MaskItem<T, Group_Mask<T>> Globals { get; set; }
         #endregion
 
         #region Equals
@@ -2462,6 +2623,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!object.Equals(this.LocationReferenceTypes, rhs.LocationReferenceTypes)) return false;
             if (!object.Equals(this.Actions, rhs.Actions)) return false;
             if (!object.Equals(this.TextureSets, rhs.TextureSets)) return false;
+            if (!object.Equals(this.Globals, rhs.Globals)) return false;
             return true;
         }
         public override int GetHashCode()
@@ -2473,6 +2635,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret = ret.CombineHashCode(this.LocationReferenceTypes?.GetHashCode());
             ret = ret.CombineHashCode(this.Actions?.GetHashCode());
             ret = ret.CombineHashCode(this.TextureSets?.GetHashCode());
+            ret = ret.CombineHashCode(this.Globals?.GetHashCode());
             return ret;
         }
 
@@ -2510,6 +2673,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 if (!eval(this.TextureSets.Overall)) return false;
                 if (this.TextureSets.Specific != null && !this.TextureSets.Specific.AllEqual(eval)) return false;
+            }
+            if (Globals != null)
+            {
+                if (!eval(this.Globals.Overall)) return false;
+                if (this.Globals.Specific != null && !this.Globals.Specific.AllEqual(eval)) return false;
             }
             return true;
         }
@@ -2579,6 +2747,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     obj.TextureSets.Specific = this.TextureSets.Specific.Translate(eval);
                 }
             }
+            if (this.Globals != null)
+            {
+                obj.Globals = new MaskItem<R, Group_Mask<R>>();
+                obj.Globals.Overall = eval(this.Globals.Overall);
+                if (this.Globals.Specific != null)
+                {
+                    obj.Globals.Specific = this.Globals.Specific.Translate(eval);
+                }
+            }
         }
         #endregion
 
@@ -2631,6 +2808,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     TextureSets?.ToString(fg);
                 }
+                if (printMask?.Globals?.Overall ?? true)
+                {
+                    Globals?.ToString(fg);
+                }
             }
             fg.AppendLine("]");
         }
@@ -2660,6 +2841,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public MaskItem<Exception, Group_ErrorMask<LocationReferenceType_ErrorMask>> LocationReferenceTypes;
         public MaskItem<Exception, Group_ErrorMask<Action_ErrorMask>> Actions;
         public MaskItem<Exception, Group_ErrorMask<TextureSet_ErrorMask>> TextureSets;
+        public MaskItem<Exception, Group_ErrorMask<Global_ErrorMask>> Globals;
         #endregion
 
         #region IErrorMask
@@ -2680,6 +2862,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return Actions;
                 case SkyrimMod_FieldIndex.TextureSets:
                     return TextureSets;
+                case SkyrimMod_FieldIndex.Globals:
+                    return Globals;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -2707,6 +2891,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     break;
                 case SkyrimMod_FieldIndex.TextureSets:
                     this.TextureSets = new MaskItem<Exception, Group_ErrorMask<TextureSet_ErrorMask>>(ex, null);
+                    break;
+                case SkyrimMod_FieldIndex.Globals:
+                    this.Globals = new MaskItem<Exception, Group_ErrorMask<Global_ErrorMask>>(ex, null);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2736,6 +2923,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.TextureSets:
                     this.TextureSets = (MaskItem<Exception, Group_ErrorMask<TextureSet_ErrorMask>>)obj;
                     break;
+                case SkyrimMod_FieldIndex.Globals:
+                    this.Globals = (MaskItem<Exception, Group_ErrorMask<Global_ErrorMask>>)obj;
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -2750,6 +2940,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (LocationReferenceTypes != null) return true;
             if (Actions != null) return true;
             if (TextureSets != null) return true;
+            if (Globals != null) return true;
             return false;
         }
         #endregion
@@ -2790,6 +2981,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             LocationReferenceTypes?.ToString(fg);
             Actions?.ToString(fg);
             TextureSets?.ToString(fg);
+            Globals?.ToString(fg);
         }
         #endregion
 
@@ -2803,6 +2995,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.LocationReferenceTypes = new MaskItem<Exception, Group_ErrorMask<LocationReferenceType_ErrorMask>>(this.LocationReferenceTypes.Overall.Combine(rhs.LocationReferenceTypes.Overall), ((IErrorMask<Group_ErrorMask<LocationReferenceType_ErrorMask>>)this.LocationReferenceTypes.Specific).Combine(rhs.LocationReferenceTypes.Specific));
             ret.Actions = new MaskItem<Exception, Group_ErrorMask<Action_ErrorMask>>(this.Actions.Overall.Combine(rhs.Actions.Overall), ((IErrorMask<Group_ErrorMask<Action_ErrorMask>>)this.Actions.Specific).Combine(rhs.Actions.Specific));
             ret.TextureSets = new MaskItem<Exception, Group_ErrorMask<TextureSet_ErrorMask>>(this.TextureSets.Overall.Combine(rhs.TextureSets.Overall), ((IErrorMask<Group_ErrorMask<TextureSet_ErrorMask>>)this.TextureSets.Specific).Combine(rhs.TextureSets.Specific));
+            ret.Globals = new MaskItem<Exception, Group_ErrorMask<Global_ErrorMask>>(this.Globals.Overall.Combine(rhs.Globals.Overall), ((IErrorMask<Group_ErrorMask<Global_ErrorMask>>)this.Globals.Specific).Combine(rhs.Globals.Specific));
             return ret;
         }
         public static SkyrimMod_ErrorMask Combine(SkyrimMod_ErrorMask lhs, SkyrimMod_ErrorMask rhs)
@@ -2835,6 +3028,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             this.LocationReferenceTypes = new MaskItem<bool, Group_CopyMask<LocationReferenceType_CopyMask>>(defaultOn, default);
             this.Actions = new MaskItem<bool, Group_CopyMask<Action_CopyMask>>(defaultOn, default);
             this.TextureSets = new MaskItem<bool, Group_CopyMask<TextureSet_CopyMask>>(defaultOn, default);
+            this.Globals = new MaskItem<bool, Group_CopyMask<Global_CopyMask>>(defaultOn, default);
         }
 
         #region Members
@@ -2844,6 +3038,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public MaskItem<bool, Group_CopyMask<LocationReferenceType_CopyMask>> LocationReferenceTypes;
         public MaskItem<bool, Group_CopyMask<Action_CopyMask>> Actions;
         public MaskItem<bool, Group_CopyMask<TextureSet_CopyMask>> TextureSets;
+        public MaskItem<bool, Group_CopyMask<Global_CopyMask>> Globals;
         #endregion
 
     }
@@ -2858,6 +3053,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public MaskItem<bool, Group_TranslationMask<LocationReferenceType_TranslationMask>> LocationReferenceTypes;
         public MaskItem<bool, Group_TranslationMask<Action_TranslationMask>> Actions;
         public MaskItem<bool, Group_TranslationMask<TextureSet_TranslationMask>> TextureSets;
+        public MaskItem<bool, Group_TranslationMask<Global_TranslationMask>> Globals;
         #endregion
 
         #region Ctors
@@ -2873,6 +3069,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             this.LocationReferenceTypes = new MaskItem<bool, Group_TranslationMask<LocationReferenceType_TranslationMask>>(defaultOn, null);
             this.Actions = new MaskItem<bool, Group_TranslationMask<Action_TranslationMask>>(defaultOn, null);
             this.TextureSets = new MaskItem<bool, Group_TranslationMask<TextureSet_TranslationMask>>(defaultOn, null);
+            this.Globals = new MaskItem<bool, Group_TranslationMask<Global_TranslationMask>>(defaultOn, null);
         }
 
         #endregion
@@ -2897,6 +3094,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Add((LocationReferenceTypes?.Overall ?? true, LocationReferenceTypes?.Specific?.GetCrystal()));
             ret.Add((Actions?.Overall ?? true, Actions?.Specific?.GetCrystal()));
             ret.Add((TextureSets?.Overall ?? true, TextureSets?.Specific?.GetCrystal()));
+            ret.Add((Globals?.Overall ?? true, Globals?.Specific?.GetCrystal()));
         }
     }
     #endregion
@@ -2909,6 +3107,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public bool LocationReferenceTypes;
         public bool Actions;
         public bool TextureSets;
+        public bool Globals;
         public GroupMask()
         {
         }
@@ -2919,6 +3118,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             LocationReferenceTypes = defaultValue;
             Actions = defaultValue;
             TextureSets = defaultValue;
+            Globals = defaultValue;
         }
     }
     #endregion
@@ -3005,6 +3205,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var loquiItem = item.TextureSets;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<ITextureSetInternalGetter>(
+                        item: loquiItem,
+                        writer: writer,
+                        errorMask: errorMask,
+                        masterReferences: masterReferences,
+                        recordTypeConverter: null);
+                }
+            }
+            if (importMask?.Globals ?? true)
+            {
+                if (item.Globals.Items.Count > 0)
+                {
+                    var loquiItem = item.Globals;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IGlobalInternalGetter>(
                         item: loquiItem,
                         writer: writer,
                         errorMask: errorMask,
@@ -3305,6 +3518,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private IGroupGetter<ITextureSetInternalGetter> _TextureSets;
         public IGroupGetter<ITextureSetInternalGetter> TextureSets => _TextureSets ?? new Group<TextureSet>(this);
         #endregion
+        #region Globals
+        private IGroupGetter<IGlobalInternalGetter> _Globals;
+        public IGroupGetter<IGlobalInternalGetter> Globals => _Globals ?? new Group<Global>(this);
+        #endregion
         partial void CustomCtor(
             BinaryMemoryReadStream stream,
             long finalPos,
@@ -3407,6 +3624,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         package: _package,
                         recordTypeConverter: null);
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.TextureSets);
+                }
+                case 0x424F4C47: // GLOB
+                {
+                    this._Globals = GroupBinaryWrapper<IGlobalInternalGetter>.GroupFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Globals);
                 }
                 default:
                     return TryGet<int?>.Succeed(null);
