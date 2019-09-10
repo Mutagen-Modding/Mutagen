@@ -363,6 +363,8 @@ namespace Mutagen.Bethesda.Skyrim
             get => MajorRecords.Lookup(id).Value;
             set => SetMajorRecord(id, value);
         }
+        void IModGetter.WriteToBinary(string path, ModKey modKey) => this.WriteToBinary(path, modKey, importMask: null);
+        Task IModGetter.WriteToBinaryAsync(string path, ModKey modKey) => this.WriteToBinaryAsync(path, modKey);
         protected void SetMajorRecord(
             FormKey id,
             IMajorRecord record)
@@ -1195,6 +1197,31 @@ namespace Mutagen.Bethesda.Skyrim
         {
             return (ISourceCache<T, FormKey>)((SkyrimModCommon)((ISkyrimModInternalGetter)obj).CommonInstance()).GetGroup<T>(obj: obj);
         }
+
+        public static Task WriteToBinaryAsync(
+            this ISkyrimModGetter item,
+            Stream stream,
+            ModKey modKey)
+        {
+            return SkyrimModCommon.WriteAsync(
+                item: item,
+                stream: stream,
+                modKey: modKey);
+        }
+
+        public static async Task WriteToBinaryAsync(
+            this ISkyrimModGetter item,
+            string path,
+            ModKey modKey)
+        {
+            using (var stream = new FileStream(path, FileMode.Create, FileAccess.Write))
+            {
+                await SkyrimModCommon.WriteAsync(
+                    item: item,
+                    stream: stream,
+                    modKey: modKey);
+            }
+        }
         #endregion
 
     }
@@ -1623,6 +1650,59 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 default:
                     throw new ArgumentException($"Unknown group type: {typeof(T)}");
             }
+        }
+        
+        const int CutCount = 100;
+        public static async Task WriteAsync(
+            ISkyrimModGetter item,
+            Stream stream,
+            ModKey modKey)
+        {
+            var masterRefs = new MasterReferences(item.MasterReferences, modKey);
+            item.ModHeader.WriteToBinary(
+                new MutagenWriter(stream, MetaDataConstants.Skyrim),
+                masterRefs);
+            List<Task<IEnumerable<Stream>>> outputStreams = new List<Task<IEnumerable<Stream>>>();
+            outputStreams.Add(WriteGroupAsync(item.GameSettings, masterRefs));
+            outputStreams.Add(WriteGroupAsync(item.Keywords, masterRefs));
+            outputStreams.Add(WriteGroupAsync(item.LocationReferenceTypes, masterRefs));
+            await UtilityTranslation.CompileStreamsInto(
+                outputStreams,
+                stream);
+        }
+        
+        public static async Task<IEnumerable<Stream>> WriteGroupAsync<T>(
+            IGroupInternalGetter<T> group,
+            MasterReferences masters)
+            where T : ISkyrimMajorRecordInternalGetter, IXmlItem, IBinaryItem
+        {
+            if (group.Items.Count == 0) return EnumerableExt<Stream>.Empty;
+            List<Task<Stream>> streams = new List<Task<Stream>>();
+            byte[] groupBytes = new byte[MetaDataConstants.Oblivion.GroupConstants.HeaderLength];
+            BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), Group_Registration.GRUP_HEADER.TypeInt);
+            using (var stream = new MutagenWriter(new MemoryStream(groupBytes), MetaDataConstants.Skyrim))
+            {
+                stream.Position += 8;
+                GroupBinaryWriteTranslation.Write_Embedded<T>(group, stream, default, default);
+            }
+            streams.Add(Task.FromResult<Stream>(new MemoryStream(groupBytes)));
+            foreach (var cutItems in group.Items.Cut(CutCount))
+            {
+                streams.Add(
+                    Task.Run<Stream>(() =>
+                    {
+                        MemoryTributary trib = new MemoryTributary();
+                        using (var stream = new MutagenWriter(trib, MetaDataConstants.Skyrim, dispose: false))
+                        {
+                            foreach (var item in cutItems)
+                            {
+                                item.Value.WriteToBinary(stream, masters);
+                            }
+                        }
+                        return trib;
+                    }));
+            }
+            return await UtilityTranslation.CompileSetGroupLength(streams, groupBytes);
         }
         
         #endregion
@@ -2892,14 +2972,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public GameMode GameMode => GameMode.Skyrim;
         IReadOnlyCache<T, FormKey> IModGetter.GetGroupGetter<T>() => this.GetGroupGetter<T>();
-        void IModGetter.WriteToBinary(
-            string path,
-            ModKey modKey)
-        {
-            this.WriteToBinary(
-                path: path,
-                modKey: modKey);
-        }
+        void IModGetter.WriteToBinary(string path, ModKey modKey) => this.WriteToBinary(path, modKey, importMask: null);
+        Task IModGetter.WriteToBinaryAsync(string path, ModKey modKey) => this.WriteToBinaryAsync(path, modKey);
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;
         IReadOnlyCache<IMajorRecordInternalGetter, FormKey> IModGetter.MajorRecords => throw new NotImplementedException();
         protected object XmlWriteTranslator => SkyrimModXmlWriteTranslation.Instance;

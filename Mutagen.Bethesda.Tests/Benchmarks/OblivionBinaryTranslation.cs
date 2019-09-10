@@ -70,23 +70,23 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
         }
 
         [Benchmark]
-        public void CreateAndWriteBinaryWrapper()
+        public async Task CreateAndWriteBinaryWrapper()
         {
             var bytes = File.ReadAllBytes(DataPath);
             var mod = OblivionModBinaryWrapper.OblivionModFactory(
                 new MemorySlice<byte>(bytes),
                 ModKey);
-            mod.WriteToBinary(
+            await mod.WriteToBinaryAsync(
                 BinaryPath,
-                ModKey);
+                Mutagen.Bethesda.Oblivion.Constants.Oblivion);
         }
 
         [Benchmark]
-        public void WriteBinary()
+        public async Task WriteBinary()
         {
-            Mod.WriteToBinary(
+            await Mod.WriteToBinaryAsync(
                 BinaryPath,
-                ModKey);
+                Mutagen.Bethesda.Oblivion.Constants.Oblivion);
         }
     }
 }

@@ -18,6 +18,9 @@ namespace Mutagen.Bethesda
         void WriteToBinary(
             string path,
             ModKey modKey);
+        Task WriteToBinaryAsync(
+            string path,
+            ModKey modKey);
         ModKey ModKey { get; }
     }
 

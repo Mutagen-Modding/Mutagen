@@ -1445,21 +1445,8 @@ namespace Mutagen.Bethesda.Generation
                 {
                     fg.AppendLine($"public {nameof(GameMode)} GameMode => {nameof(GameMode)}.{obj.GetObjectData().GameMode};");
                     fg.AppendLine($"IReadOnlyCache<T, FormKey> {nameof(IModGetter)}.GetGroupGetter<T>() => this.GetGroupGetter<T>();");
-                    using (var args = new FunctionWrapper(fg,
-                        $"void {nameof(IModGetter)}.WriteToBinary"))
-                    {
-                        args.Add("string path");
-                        args.Add($"{nameof(ModKey)} modKey");
-                    }
-                    using (new BraceWrapper(fg))
-                    {
-                        using (var args = new ArgsWrapper(fg,
-                            $"this.WriteToBinary"))
-                        {
-                            args.AddPassArg("path");
-                            args.AddPassArg($"modKey");
-                        }
-                    }
+                    fg.AppendLine($"void IModGetter.WriteToBinary(string path, ModKey modKey) => this.WriteToBinary(path, modKey, importMask: null);");
+                    fg.AppendLine($"Task IModGetter.WriteToBinaryAsync(string path, ModKey modKey) => this.WriteToBinaryAsync(path, modKey);");
                     fg.AppendLine($"IReadOnlyList<{nameof(IMasterReferenceGetter)}> {nameof(IModGetter)}.MasterReferences => this.ModHeader.MasterReferences;");
                     fg.AppendLine($"IReadOnlyCache<{nameof(IMajorRecordInternalGetter)}, {nameof(FormKey)}> {nameof(IModGetter)}.MajorRecords => throw new NotImplementedException();");
                 }

@@ -7,6 +7,7 @@ using Noggog;
 using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -500,6 +501,53 @@ namespace Mutagen.Bethesda
                 loc += subMeta.TotalLength;
             }
             return -1;
+        }
+
+        public static async Task CompileStreamsInto(IEnumerable<Task<IEnumerable<Stream>>> inStreams, Stream outStream)
+        {
+            var streams = await Task.WhenAll(inStreams);
+            foreach (var s in streams.SelectMany(s => s))
+            {
+                s.Position = 0;
+                s.CopyTo(outStream);
+            }
+        }
+
+        public static async Task CompileStreamsInto(Task<IEnumerable<Stream>> inStreams, Stream outStream)
+        {
+            var streams = await inStreams;
+            foreach (var s in streams)
+            {
+                s.Position = 0;
+                s.CopyTo(outStream);
+            }
+        }
+
+        public static async Task CompileStreamsInto(IEnumerable<Task<Stream>> inStreams, Stream outStream)
+        {
+            foreach (var sTask in inStreams)
+            {
+                var s = await sTask;
+                s.Position = 0;
+                s.CopyTo(outStream);
+            }
+        }
+
+        public static void SetGroupLength(
+            byte[] bytes,
+            uint len)
+        {
+            var bytesSpan = bytes.AsSpan();
+            BinaryPrimitives.WriteUInt32LittleEndian(bytesSpan.Slice(4), len);
+        }
+
+        public static async Task<IEnumerable<Stream>> CompileSetGroupLength(
+            IEnumerable<Task<Stream>> streams,
+            byte[] bytes)
+        {
+            var ret = await Task.WhenAll(streams);
+            UtilityTranslation.SetGroupLength(bytes, (uint)ret.Sum(i => i.Length));
+            return ret;
         }
     }
 

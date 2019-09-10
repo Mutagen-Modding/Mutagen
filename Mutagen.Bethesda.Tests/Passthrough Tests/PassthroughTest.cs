@@ -1,4 +1,6 @@
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Oblivion;
+using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Preprocessing;
 using Noggog;
 using Noggog.Streams.Binary;
@@ -166,7 +168,8 @@ namespace Mutagen.Bethesda.Tests
                     {
                         record.IsCompressed = false;
                     }
-                    mod.WriteToBinary(
+
+                    await mod.WriteToBinaryAsync(
                         outputPath,
                         Mutagen.Bethesda.Oblivion.Constants.Oblivion);
                     GC.Collect();
@@ -195,7 +198,7 @@ namespace Mutagen.Bethesda.Tests
                 {
                     var wrapper = await ImportBinaryWrapper(this.FilePath.Path);
 
-                    wrapper.WriteToBinary(
+                    await wrapper.WriteToBinaryAsync(
                         binaryWrapper,
                         Mutagen.Bethesda.Oblivion.Constants.Oblivion);
 
