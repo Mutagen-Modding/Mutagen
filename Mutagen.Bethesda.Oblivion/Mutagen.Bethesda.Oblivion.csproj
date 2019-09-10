@@ -415,6 +415,9 @@
     <Compile Include="Records\Major Records\PathGrid.cs">
       <DependentUpon>PathGrid.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\PathGridPoint.cs">
+      <DependentUpon>PathGrid.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\PlacedObject.cs">
       <DependentUpon>PlacedObject.xml</DependentUpon>
     </Compile>

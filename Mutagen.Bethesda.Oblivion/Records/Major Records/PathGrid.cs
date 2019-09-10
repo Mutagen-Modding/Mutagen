@@ -104,7 +104,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 reader.Slice(4).GetFloat(),
                 reader.Slice(8).GetFloat());
             numConn = reader[12];
-            pt.NumConnectionsFluffBytes = reader.Slice(13, 3).ToArray();
+            pt.FluffBytes = reader.Slice(13, 3).ToArray();
             return pt;
         }
     }
@@ -127,7 +127,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer.Write(pt.Point.Y);
                     writer.Write(pt.Point.Z);
                     writer.Write((byte)(pt.Connections.Count));
-                    writer.Write(pt.NumConnectionsFluffBytes);
+                    writer.Write(pt.FluffBytes);
                     if (pt.Connections.Count > 0)
                     {
                         anyConnections = true;
@@ -200,14 +200,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             getter: (s, p) =>
                             {
                                 var connectionInts = connectionPtData.Span.AsInt16Span();
-                                PathGridPoint[] pathGridPoints = new PathGridPoint[bytePointsNum];
+                                IPathGridPointInternalGetter[] pathGridPoints = new IPathGridPointInternalGetter[bytePointsNum];
                                 for (int i = 0; i < bytePointsNum; i++)
                                 {
-                                    var pt = PathGridBinaryCreateTranslation.ReadPathGridPoint(s, out var numConn);
-                                    pt.Connections.AddRange(connectionInts.Slice(0, numConn).ToArray());
+                                    var pt = PathGridPointBinaryWrapper.Factory(s, p);
+                                    pt.Connections = connectionInts.Slice(0, pt.NumConnections).ToArray().ToList();
                                     pathGridPoints[i] = pt;
                                     s = s.Slice(16);
-                                    connectionInts = connectionInts.Slice(numConn);
+                                    connectionInts = connectionInts.Slice(pt.NumConnections);
                                 }
                                 return pathGridPoints;
                             });
