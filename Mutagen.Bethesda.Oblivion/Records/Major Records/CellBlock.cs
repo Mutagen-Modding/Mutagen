@@ -51,7 +51,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask);
                 }));
             }
-            await Task.WhenAll(tasks);
+            await Task.WhenAll(tasks).ConfigureAwait(false);
         }
 
         public object Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecordTracker = null)
@@ -97,7 +97,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 tasks.Add(Task.Run(() => CellSubBlock.CreateFromXmlFolder(f.File, f.Index)));
             }
-            var subBlocks = await Task.WhenAll(tasks);
+            var subBlocks = await Task.WhenAll(tasks).ConfigureAwait(false);
             ret.Items.AddRange(subBlocks);
             return ret;
         }

@@ -43,7 +43,7 @@ namespace Mutagen.Bethesda.Oblivion
                     var mod = await OblivionMod.CreateFromBinary(
                         p.Path,
                         mk,
-                        importMask: importMask);
+                        importMask: importMask).ConfigureAwait(false);
                     return TryGet<OblivionMod>.Succeed(mod);
                 });
         }
@@ -70,9 +70,9 @@ namespace Mutagen.Bethesda.Oblivion
                     var mod = await OblivionMod.CreateFromBinary(
                         path.Path,
                         modKey,
-                        importMask: importMask);
+                        importMask: importMask).ConfigureAwait(false);
                     return TryGet<OblivionMod>.Succeed(mod);
-                });
+                }).ConfigureAwait(false);
             return TryGet<ModList<OblivionMod>>.Succeed(modList);
         }
 
@@ -84,7 +84,7 @@ namespace Mutagen.Bethesda.Oblivion
             var tg = await TryImportUsualLoadOrder(
                 dataFolder,
                 importMask,
-                modKeyExclusionHint);
+                modKeyExclusionHint).ConfigureAwait(false);
             return tg.Value;
         }
 

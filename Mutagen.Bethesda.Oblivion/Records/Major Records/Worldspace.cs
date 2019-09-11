@@ -154,12 +154,12 @@ namespace Mutagen.Bethesda.Oblivion
                             return wsb;
                         }));
                     }
-                    var subBlocks = await Task.WhenAll(subTasks);
+                    var subBlocks = await Task.WhenAll(subTasks).ConfigureAwait(false);
                     wb.Items.AddRange(subBlocks);
                     return wb;
                 }));
             }
-            var blocks = await Task.WhenAll(tasks);
+            var blocks = await Task.WhenAll(tasks).ConfigureAwait(false);
             ret.SubCells.AddRange(blocks);
             return TryGet<Worldspace>.Succeed(ret);
         }
@@ -223,10 +223,10 @@ namespace Mutagen.Bethesda.Oblivion
                                 errorMask: errorMask);
                         }));
                     }
-                    await Task.WhenAll(subBlockTasks);
+                    await Task.WhenAll(subBlockTasks).ConfigureAwait(false);
                 }));
             }
-            await Task.WhenAll(blockTasks);
+            await Task.WhenAll(blockTasks).ConfigureAwait(false);
         }
     }
 
@@ -428,7 +428,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 frame: subFrame,
                                 fieldIndex: (int)Worldspace_FieldIndex.TopCell,
                                 masterReferences: masterReferences,
-                                errorMask: errorMask);
+                                errorMask: errorMask).ConfigureAwait(false);
                             if (topCell.Succeeded)
                             {
                                 obj.TopCell = topCell.Value;
@@ -452,7 +452,7 @@ namespace Mutagen.Bethesda.Oblivion
                                         frame: r,
                                         masterReferences: masterReferences,
                                         errorMask: errorMask);
-                                });
+                                }).ConfigureAwait(false);
                             break;
                         default:
                             return;

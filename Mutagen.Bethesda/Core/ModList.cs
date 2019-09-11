@@ -120,9 +120,9 @@ namespace Mutagen.Bethesda
                     {
                         FilePath modPath = dataFolder.GetFile(modKey.FileName);
                         if (!modPath.Exists) return (modKey, modIndex, TryGet<TMod>.Failure);
-                        return (modKey, modIndex, await importer(modPath, modKey));
+                        return (modKey, modIndex, await importer(modPath, modKey).ConfigureAwait(false));
                     });
-                }));
+                })).ConfigureAwait(false);
             foreach (var item in results
                 .OrderBy(i => i.modIndex))
             {

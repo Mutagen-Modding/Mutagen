@@ -505,7 +505,7 @@ namespace Mutagen.Bethesda
 
         public static async Task CompileStreamsInto(IEnumerable<Task<IEnumerable<Stream>>> inStreams, Stream outStream)
         {
-            var streams = await Task.WhenAll(inStreams);
+            var streams = await Task.WhenAll(inStreams).ConfigureAwait(false);
             foreach (var s in streams.SelectMany(s => s))
             {
                 s.Position = 0;
@@ -515,7 +515,7 @@ namespace Mutagen.Bethesda
 
         public static async Task CompileStreamsInto(Task<IEnumerable<Stream>> inStreams, Stream outStream)
         {
-            var streams = await inStreams;
+            var streams = await inStreams.ConfigureAwait(false);
             foreach (var s in streams)
             {
                 s.Position = 0;
@@ -527,7 +527,7 @@ namespace Mutagen.Bethesda
         {
             foreach (var sTask in inStreams)
             {
-                var s = await sTask;
+                var s = await sTask.ConfigureAwait(false);
                 s.Position = 0;
                 s.CopyTo(outStream);
             }
@@ -545,7 +545,7 @@ namespace Mutagen.Bethesda
             IEnumerable<Task<Stream>> streams,
             byte[] bytes)
         {
-            var ret = await Task.WhenAll(streams);
+            var ret = await Task.WhenAll(streams).ConfigureAwait(false);
             UtilityTranslation.SetGroupLength(bytes, (uint)ret.Sum(i => i.Length));
             return ret;
         }
@@ -852,7 +852,7 @@ namespace Mutagen.Bethesda
                         }
                     }
                     return record;
-                });
+                }).ConfigureAwait(false);
             }
             catch (Exception ex)
             when (errorMask != null)

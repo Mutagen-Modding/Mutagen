@@ -39,8 +39,8 @@ namespace Mutagen.Bethesda
             await modList.Import(
                 dataFolder,
                 loadOrder,
-                importer);
-            var outMod = await processor(outModKey, modList);
+                importer).ConfigureAwait(false);
+            var outMod = await processor(outModKey, modList).ConfigureAwait(false);
             foreach (var npc in outMod.MajorRecords.Items)
             {
                 npc.MajorRecordFlagsRaw &= ~(int)MajorRecord.MajorRecordFlag.Compressed;

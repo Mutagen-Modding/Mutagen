@@ -78,10 +78,10 @@ namespace Mutagen.Bethesda.Oblivion
                                     node: null,
                                     path: subDir.Dir.Path,
                                     errorMask: errorMask,
-                                    translationMask: null);
+                                    translationMask: null).ConfigureAwait(false);
                             }));
                         }
-                        var items = await Task.WhenAll(tasks);
+                        var items = await Task.WhenAll(tasks).ConfigureAwait(false);
                         group.Items.AddRange(items);
                     }
                     catch (Exception ex)
@@ -130,7 +130,7 @@ namespace Mutagen.Bethesda.Oblivion
                                     errorMask: errorMask);
                             }));
                         }
-                        await Task.WhenAll(tasks);
+                        await Task.WhenAll(tasks).ConfigureAwait(false);
                         topNode.SaveIfChanged(Path.Combine(dir.Path, $"Group.xml"));
                     }
                     catch (Exception ex)

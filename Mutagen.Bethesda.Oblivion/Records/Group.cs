@@ -83,7 +83,7 @@ namespace Mutagen.Bethesda.Oblivion
                                         errorMask: errorMask,
                                         translationMask: null));
                             }
-                            var items = await Task.WhenAll(tasks);
+                            var items = await Task.WhenAll(tasks).ConfigureAwait(false);
                             group.Items.Set(items);
                         }
                     }
@@ -129,7 +129,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 dir: dir,
                                 errorMask: errorMask));
                     }
-                    await Task.WhenAll(tasks);
+                    await Task.WhenAll(tasks).ConfigureAwait(false);
                     if (items.HasElements)
                     {
                         topNode.Add(items);

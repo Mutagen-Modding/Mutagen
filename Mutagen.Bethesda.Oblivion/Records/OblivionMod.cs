@@ -203,11 +203,11 @@ namespace Mutagen.Bethesda.Oblivion
                         {
                             tasks.Add(Task.Run(async () =>
                             {
-                                var get = await Worldspace.TryCreateXmFolder(subDir.Dir, errorMask);
+                                var get = await Worldspace.TryCreateXmFolder(subDir.Dir, errorMask).ConfigureAwait(false);
                                 return get.Value;
                             }));
                         }
-                        var worldspaces = await Task.WhenAll(tasks);
+                        var worldspaces = await Task.WhenAll(tasks).ConfigureAwait(false);
                         this.Worldspaces.Items.Set(worldspaces.Where(ws => ws != null));
                     }
                     catch (Exception ex)
@@ -244,7 +244,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 dir: dir,
                                 errorMask: errorMask));
                     }
-                    await Task.WhenAll(tasks);
+                    await Task.WhenAll(tasks).ConfigureAwait(false);
                 }
             }
         }
@@ -301,7 +301,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     return script;
                 }));
-                var scripts = await Task.WhenAll(tasks);
+                var scripts = await Task.WhenAll(tasks).ConfigureAwait(false);
                 this.Scripts.Items.Set(scripts);
             }
         }
@@ -340,7 +340,7 @@ namespace Mutagen.Bethesda.Oblivion
                             File.SetLastAccessTime(sourceCodePath, DateTime.Now);
                         }));
                     }
-                    await Task.WhenAll(tasks);
+                    await Task.WhenAll(tasks).ConfigureAwait(false);
                 }
             }
         }
@@ -376,11 +376,11 @@ namespace Mutagen.Bethesda.Oblivion
                             WriteBlocksAsync(
                                 cellBlock,
                                 masters),
-                            trib);
+                            trib).ConfigureAwait(false);
                         return trib;
                     }));
                 }
-                return await UtilityTranslation.CompileSetGroupLength(streams, groupBytes);
+                return await UtilityTranslation.CompileSetGroupLength(streams, groupBytes).ConfigureAwait(false);
             }
 
             public static async Task<IEnumerable<Stream>> WriteBlocksAsync(
@@ -409,11 +409,11 @@ namespace Mutagen.Bethesda.Oblivion
                             WriteSubBlocksAsync(
                                 subBlock,
                                 masters),
-                            trib);
+                            trib).ConfigureAwait(false);
                         return trib;
                     }));
                 }
-                return await UtilityTranslation.CompileSetGroupLength(streams, groupBytes);
+                return await UtilityTranslation.CompileSetGroupLength(streams, groupBytes).ConfigureAwait(false);
             }
 
             public static async Task<IEnumerable<Stream>> WriteSubBlocksAsync(
@@ -442,7 +442,7 @@ namespace Mutagen.Bethesda.Oblivion
                         return trib;
                     }));
                 }
-                return await UtilityTranslation.CompileSetGroupLength(streams, groupBytes);
+                return await UtilityTranslation.CompileSetGroupLength(streams, groupBytes).ConfigureAwait(false);
             }
 
             public static async Task<IEnumerable<Stream>> WriteWorldspacesAsync(
@@ -527,17 +527,17 @@ namespace Mutagen.Bethesda.Oblivion
                                     WriteBlocksAsync(
                                         block,
                                         masters),
-                                    trib);
+                                    trib).ConfigureAwait(false);
                                 return trib;
                             }));
                         }
-                        await UtilityTranslation.CompileStreamsInto(subGroupStreams, worldGroupTrib);
+                        await UtilityTranslation.CompileStreamsInto(subGroupStreams, worldGroupTrib).ConfigureAwait(false);
                         worldGroupWriter.Position = 4;
                         worldGroupWriter.Write((uint)worldGroupTrib.Length);
                         return worldGroupTrib;
                     }));
                 }
-                return await UtilityTranslation.CompileSetGroupLength(streams, groupBytes);
+                return await UtilityTranslation.CompileSetGroupLength(streams, groupBytes).ConfigureAwait(false);
             }
 
             public static async Task<IEnumerable<Stream>> WriteBlocksAsync(
@@ -562,11 +562,11 @@ namespace Mutagen.Bethesda.Oblivion
                             WriteSubBlocksAsync(
                                 subBlock,
                                 masters),
-                            trib);
+                            trib).ConfigureAwait(false);
                         return trib;
                     }));
                 }
-                return await UtilityTranslation.CompileSetGroupLength(streams, groupBytes);
+                return await UtilityTranslation.CompileSetGroupLength(streams, groupBytes).ConfigureAwait(false);
             }
 
             public static async Task<IEnumerable<Stream>> WriteSubBlocksAsync(
@@ -591,7 +591,7 @@ namespace Mutagen.Bethesda.Oblivion
                         return trib;
                     }));
                 }
-                return await UtilityTranslation.CompileSetGroupLength(streams, groupBytes);
+                return await UtilityTranslation.CompileSetGroupLength(streams, groupBytes).ConfigureAwait(false);
             }
 
             public static Task<IEnumerable<Stream>> WriteDialogTopicsAsync(

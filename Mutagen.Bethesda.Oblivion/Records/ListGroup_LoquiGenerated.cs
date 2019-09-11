@@ -330,7 +330,7 @@ namespace Mutagen.Bethesda.Oblivion
                 masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null,
-                errorMask: errorMaskBuilder);
+                errorMask: errorMaskBuilder).ConfigureAwait(false);
             return (ret, ListGroup_ErrorMask<T_ErrMask>.Factory(errorMaskBuilder));
         }
 

@@ -373,7 +373,7 @@ namespace Mutagen.Bethesda.Oblivion
                 masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null,
-                errorMask: null);
+                errorMask: null).ConfigureAwait(false);
         }
 
         [DebuggerStepThrough]
@@ -387,7 +387,7 @@ namespace Mutagen.Bethesda.Oblivion
                 masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null,
-                errorMask: errorMaskBuilder);
+                errorMask: errorMaskBuilder).ConfigureAwait(false);
             return (ret, WorldspaceBlock_ErrorMask.Factory(errorMaskBuilder));
         }
 

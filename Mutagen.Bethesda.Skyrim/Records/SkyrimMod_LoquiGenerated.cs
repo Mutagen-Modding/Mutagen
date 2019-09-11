@@ -584,7 +584,7 @@ namespace Mutagen.Bethesda.Skyrim
                 modKey: modKey,
                 frame: frame,
                 recordTypeConverter: null,
-                errorMask: null);
+                errorMask: null).ConfigureAwait(false);
         }
 
         [DebuggerStepThrough]
@@ -600,7 +600,7 @@ namespace Mutagen.Bethesda.Skyrim
                 modKey: modKey,
                 frame: frame,
                 recordTypeConverter: null,
-                errorMask: errorMaskBuilder);
+                errorMask: errorMaskBuilder).ConfigureAwait(false);
             return (ret, SkyrimMod_ErrorMask.Factory(errorMaskBuilder));
         }
 

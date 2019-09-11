@@ -2792,7 +2792,7 @@ namespace Mutagen.Bethesda.Oblivion
                 modKey: modKey,
                 frame: frame,
                 recordTypeConverter: null,
-                errorMask: null);
+                errorMask: null).ConfigureAwait(false);
         }
 
         [DebuggerStepThrough]
@@ -2808,7 +2808,7 @@ namespace Mutagen.Bethesda.Oblivion
                 modKey: modKey,
                 frame: frame,
                 recordTypeConverter: null,
-                errorMask: errorMaskBuilder);
+                errorMask: errorMaskBuilder).ConfigureAwait(false);
             return (ret, OblivionMod_ErrorMask.Factory(errorMaskBuilder));
         }
 

@@ -335,7 +335,7 @@ namespace Mutagen.Bethesda.Binary
                 reader: frame,
                 recordTypeConverter: recordTypeConverter,
                 masterReferences: masterReferences,
-                errorMask: errorMask);
+                errorMask: errorMask).ConfigureAwait(false);
             return TryGet<T>.Succeed(item);
         }
         #endregion

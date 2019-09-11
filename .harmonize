@@ -2,19 +2,19 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>7af63048309e4a20125125bcf2db9a8a31d30ba6</Sha>
+         <Sha>efc6105e053a77a459df0d49356557ed0b330d48</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>09-03-2019 22:27:24</CommitDate>
-         <Description>Merge remote-tracking branch 'origin/master'</Description>
+         <CommitDate>09-10-2019 19:00:54</CommitDate>
+         <Description>Some ConfigureAwaits</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/CSharpExt.git</OriginHint>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>9411725c290bfa09ab4ea8baeed6857bdb65aef6</Sha>
+         <Sha>445e0d1ff6daa8ac6b92a544628bade3c6f054ca</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>09-08-2019 18:11:27</CommitDate>
-         <Description>TranslationItem interfaces expose WriteTo function</Description>
+         <CommitDate>09-11-2019 23:08:48</CommitDate>
+         <Description>Some configure await generation</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/Loqui.git</OriginHint>
       </RepoListing>
