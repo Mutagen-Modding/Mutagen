@@ -3696,6 +3696,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask);
         }
 
+        #region Icon
+        partial void IconCustomParse(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset);
+        public bool Icon_IsSet => GetIconIsSetCustom();
+        public String Icon => GetIconCustom();
+        #endregion
         #region MapColor
         private int? _MapColorLocation;
         public bool MapColor_IsSet => _MapColorLocation.HasValue;
@@ -3763,6 +3771,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
+                case 0x4E4F4349: // ICON
+                {
+                    IconCustomParse(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset);
+                    return TryGet<int?>.Succeed((int)Region_FieldIndex.Icon);
+                }
                 case 0x524C4352: // RCLR
                 {
                     _MapColorLocation = (ushort)(stream.Position - offset);

@@ -143,21 +143,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Icon
         private int? _IconLocation;
         private int? _SecondaryIconLocation;
-        public bool Icon_IsSet => _IconLocation.HasValue || _SecondaryIconLocation.HasValue;
-        public String Icon
+        bool GetIconIsSetCustom() => _IconLocation.HasValue || _SecondaryIconLocation.HasValue;
+        string GetIconCustom()
         {
-            get
+            if (_IconLocation.HasValue)
             {
-                if (_IconLocation.HasValue)
-                {
-                    return BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _IconLocation.Value, _package.Meta));
-                }
-                if (_SecondaryIconLocation.HasValue)
-                {
-                    return BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _SecondaryIconLocation.Value, _package.Meta));
-                }
-                return default;
+                return BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _IconLocation.Value, _package.Meta));
             }
+            if (_SecondaryIconLocation.HasValue)
+            {
+                return BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _SecondaryIconLocation.Value, _package.Meta));
+            }
+            return default;
         }
         #endregion
 
@@ -192,6 +189,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 if (stream.Complete) break;
                 rdat = this._package.Meta.GetSubRecord(stream);
             }
+        }
+
+        partial void IconCustomParse(BinaryMemoryReadStream stream, long finalPos, int offset)
+        {
+            _IconLocation = (ushort)(stream.Position - offset);
         }
 
         private void ParseRegionData(BinaryMemoryReadStream stream, int offset)
