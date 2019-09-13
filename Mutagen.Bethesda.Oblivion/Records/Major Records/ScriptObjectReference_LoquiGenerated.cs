@@ -1013,8 +1013,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class ScriptObjectReferenceXmlWriteTranslation :
         ScriptReferenceXmlWriteTranslation,
         IXmlWriteTranslator
@@ -1153,6 +1156,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class ScriptObjectReferenceXmlTranslationMixIn
     {
@@ -1215,9 +1221,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class ScriptObjectReference_Mask<T> : ScriptReference_Mask<T>, IMask<T>, IEquatable<ScriptObjectReference_Mask<T>>
     {
         #region Ctors
@@ -1476,9 +1486,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((Reference, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class ScriptObjectReferenceBinaryWriteTranslation :
         ScriptReferenceBinaryWriteTranslation,
         IBinaryWriteTranslator
@@ -1553,6 +1566,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class ScriptObjectReferenceBinaryTranslationMixIn
     {
@@ -1576,6 +1592,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class ScriptObjectReferenceBinaryWrapper :
         ScriptReferenceBinaryWrapper,
         IScriptObjectReferenceGetter
@@ -1657,8 +1677,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
+
+#endregion
+

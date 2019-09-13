@@ -2010,8 +2010,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class RegionDataObjectXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static RegionDataObjectXmlWriteTranslation Instance = new RegionDataObjectXmlWriteTranslation();
@@ -2711,6 +2714,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class RegionDataObjectXmlTranslationMixIn
     {
@@ -2868,9 +2874,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class RegionDataObject_Mask<T> : IMask<T>, IEquatable<RegionDataObject_Mask<T>>
     {
         #region Ctors
@@ -3576,9 +3586,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((Unknown2, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class RegionDataObjectBinaryWriteTranslation : IBinaryWriteTranslator
     {
         public readonly static RegionDataObjectBinaryWriteTranslation Instance = new RegionDataObjectBinaryWriteTranslation();
@@ -3669,6 +3682,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class RegionDataObjectBinaryTranslationMixIn
     {
@@ -3719,6 +3735,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class RegionDataObjectBinaryWrapper :
         BinaryWrapper,
         IRegionDataObjectGetter
@@ -3791,8 +3811,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
+
+#endregion
+

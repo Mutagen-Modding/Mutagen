@@ -1374,8 +1374,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class ClothingXmlWriteTranslation :
         ClothingAbstractXmlWriteTranslation,
         IXmlWriteTranslator
@@ -1652,6 +1655,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class ClothingXmlTranslationMixIn
     {
@@ -1714,9 +1720,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class Clothing_Mask<T> : ClothingAbstract_Mask<T>, IMask<T>, IEquatable<Clothing_Mask<T>>
     {
         #region Ctors
@@ -2029,9 +2039,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((DATADataTypeState, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class ClothingBinaryWriteTranslation :
         ClothingAbstractBinaryWriteTranslation,
         IBinaryWriteTranslator
@@ -2185,6 +2198,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class ClothingBinaryTranslationMixIn
     {
@@ -2208,6 +2224,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class ClothingBinaryWrapper :
         ClothingAbstractBinaryWrapper,
         IClothingInternalGetter
@@ -2304,8 +2324,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
+
+#endregion
+

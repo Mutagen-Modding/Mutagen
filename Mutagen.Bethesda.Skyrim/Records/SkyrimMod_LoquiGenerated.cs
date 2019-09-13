@@ -2202,8 +2202,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Skyrim.Internals
+{
     public partial class SkyrimModXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static SkyrimModXmlWriteTranslation Instance = new SkyrimModXmlWriteTranslation();
@@ -2577,6 +2580,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Skyrim
+{
     #region Xml Write Mixins
     public static class SkyrimModXmlTranslationMixIn
     {
@@ -2734,9 +2740,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Skyrim.Internals
+{
     public class SkyrimMod_Mask<T> : IMask<T>, IEquatable<SkyrimMod_Mask<T>>
     {
         #region Ctors
@@ -3295,35 +3305,38 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Add((Classes?.Overall ?? true, Classes?.Specific?.GetCrystal()));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Mutagen
-    public class GroupMask
+#region Mutagen
+public class GroupMask
+{
+    public bool GameSettings;
+    public bool Keywords;
+    public bool LocationReferenceTypes;
+    public bool Actions;
+    public bool TextureSets;
+    public bool Globals;
+    public bool Classes;
+    public GroupMask()
     {
-        public bool GameSettings;
-        public bool Keywords;
-        public bool LocationReferenceTypes;
-        public bool Actions;
-        public bool TextureSets;
-        public bool Globals;
-        public bool Classes;
-        public GroupMask()
-        {
-        }
-        public GroupMask(bool defaultValue)
-        {
-            GameSettings = defaultValue;
-            Keywords = defaultValue;
-            LocationReferenceTypes = defaultValue;
-            Actions = defaultValue;
-            TextureSets = defaultValue;
-            Globals = defaultValue;
-            Classes = defaultValue;
-        }
     }
-    #endregion
+    public GroupMask(bool defaultValue)
+    {
+        GameSettings = defaultValue;
+        Keywords = defaultValue;
+        LocationReferenceTypes = defaultValue;
+        Actions = defaultValue;
+        TextureSets = defaultValue;
+        Globals = defaultValue;
+        Classes = defaultValue;
+    }
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Skyrim.Internals
+{
     public partial class SkyrimModBinaryWriteTranslation
     {
         public readonly static SkyrimModBinaryWriteTranslation Instance = new SkyrimModBinaryWriteTranslation();
@@ -3482,6 +3495,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Skyrim
+{
     #region Binary Write Mixins
     public static class SkyrimModBinaryTranslationMixIn
     {
@@ -3676,6 +3692,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Skyrim.Internals
+{
     public partial class SkyrimModBinaryWrapper :
         BinaryWrapper,
         ISkyrimModGetter
@@ -3864,8 +3884,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
+
+#endregion
+

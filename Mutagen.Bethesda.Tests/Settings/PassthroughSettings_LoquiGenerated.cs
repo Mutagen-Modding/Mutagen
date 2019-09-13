@@ -1301,8 +1301,11 @@ namespace Mutagen.Bethesda.Tests.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Tests.Internals
+{
     public partial class PassthroughSettingsXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static PassthroughSettingsXmlWriteTranslation Instance = new PassthroughSettingsXmlWriteTranslation();
@@ -1692,6 +1695,9 @@ namespace Mutagen.Bethesda.Tests.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Tests
+{
     #region Xml Write Mixins
     public static class PassthroughSettingsXmlTranslationMixIn
     {
@@ -1849,9 +1855,13 @@ namespace Mutagen.Bethesda.Tests.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Tests.Internals
+{
     public class PassthroughSettings_Mask<T> : IMask<T>, IEquatable<PassthroughSettings_Mask<T>>
     {
         #region Ctors
@@ -2287,8 +2297,8 @@ namespace Mutagen.Bethesda.Tests.Internals
             ret.Add((TestFolder, null));
         }
     }
-    #endregion
-
-    #endregion
-
 }
+#endregion
+
+#endregion
+

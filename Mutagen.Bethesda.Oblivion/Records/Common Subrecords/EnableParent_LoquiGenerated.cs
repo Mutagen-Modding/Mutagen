@@ -1019,8 +1019,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class EnableParentXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static EnableParentXmlWriteTranslation Instance = new EnableParentXmlWriteTranslation();
@@ -1195,6 +1198,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class EnableParentXmlTranslationMixIn
     {
@@ -1352,9 +1358,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class EnableParent_Mask<T> : IMask<T>, IEquatable<EnableParent_Mask<T>>
     {
         #region Ctors
@@ -1655,9 +1665,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((Flags, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class EnableParentBinaryWriteTranslation : IBinaryWriteTranslator
     {
         public readonly static EnableParentBinaryWriteTranslation Instance = new EnableParentBinaryWriteTranslation();
@@ -1721,6 +1734,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class EnableParentBinaryTranslationMixIn
     {
@@ -1771,6 +1787,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class EnableParentBinaryWrapper :
         BinaryWrapper,
         IEnableParentGetter
@@ -1830,8 +1850,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
+
+#endregion
+

@@ -1643,8 +1643,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class SpellUnleveledXmlWriteTranslation :
         SpellXmlWriteTranslation,
         IXmlWriteTranslator
@@ -2040,6 +2043,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class SpellUnleveledXmlTranslationMixIn
     {
@@ -2102,9 +2108,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class SpellUnleveled_Mask<T> : Spell_Mask<T>, IMask<T>, IEquatable<SpellUnleveled_Mask<T>>
     {
         #region Ctors
@@ -2576,9 +2586,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((SPITDataTypeState, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class SpellUnleveledBinaryWriteTranslation :
         SpellBinaryWriteTranslation,
         IBinaryWriteTranslator
@@ -2759,6 +2772,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class SpellUnleveledBinaryTranslationMixIn
     {
@@ -2782,6 +2798,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class SpellUnleveledBinaryWrapper :
         SpellBinaryWrapper,
         ISpellUnleveledInternalGetter
@@ -2898,8 +2918,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
+
+#endregion
+

@@ -1088,8 +1088,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class AIPackageLocationXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static AIPackageLocationXmlWriteTranslation Instance = new AIPackageLocationXmlWriteTranslation();
@@ -1299,6 +1302,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class AIPackageLocationXmlTranslationMixIn
     {
@@ -1456,9 +1462,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class AIPackageLocation_Mask<T> : IMask<T>, IEquatable<AIPackageLocation_Mask<T>>
     {
         #region Ctors
@@ -1786,9 +1796,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((Radius, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class AIPackageLocationBinaryWriteTranslation : IBinaryWriteTranslator
     {
         public readonly static AIPackageLocationBinaryWriteTranslation Instance = new AIPackageLocationBinaryWriteTranslation();
@@ -1855,6 +1868,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class AIPackageLocationBinaryTranslationMixIn
     {
@@ -1905,6 +1921,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class AIPackageLocationBinaryWrapper :
         BinaryWrapper,
         IAIPackageLocationGetter
@@ -1965,8 +1985,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
+
+#endregion
+

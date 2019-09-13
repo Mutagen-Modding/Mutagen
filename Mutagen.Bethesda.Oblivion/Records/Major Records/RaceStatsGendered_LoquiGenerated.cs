@@ -1071,8 +1071,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class RaceStatsGenderedXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static RaceStatsGenderedXmlWriteTranslation Instance = new RaceStatsGenderedXmlWriteTranslation();
@@ -1272,6 +1275,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class RaceStatsGenderedXmlTranslationMixIn
     {
@@ -1429,9 +1435,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class RaceStatsGendered_Mask<T> : IMask<T>, IEquatable<RaceStatsGendered_Mask<T>>
     {
         #region Ctors
@@ -1756,9 +1766,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((Female?.Overall ?? true, Female?.Specific?.GetCrystal()));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class RaceStatsGenderedBinaryWriteTranslation : IBinaryWriteTranslator
     {
         public readonly static RaceStatsGenderedBinaryWriteTranslation Instance = new RaceStatsGenderedBinaryWriteTranslation();
@@ -1832,6 +1845,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class RaceStatsGenderedBinaryTranslationMixIn
     {
@@ -1882,6 +1898,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class RaceStatsGenderedBinaryWrapper :
         BinaryWrapper,
         IRaceStatsGenderedGetter
@@ -1938,8 +1958,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
+
+#endregion
+

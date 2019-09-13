@@ -1205,8 +1205,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class GlobalShortXmlWriteTranslation :
         GlobalXmlWriteTranslation,
         IXmlWriteTranslator
@@ -1395,6 +1398,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class GlobalShortXmlTranslationMixIn
     {
@@ -1457,9 +1463,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class GlobalShort_Mask<T> : Global_Mask<T>, IMask<T>, IEquatable<GlobalShort_Mask<T>>
     {
         #region Ctors
@@ -1718,9 +1728,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((Data, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class GlobalShortBinaryWriteTranslation :
         GlobalBinaryWriteTranslation,
         IBinaryWriteTranslator
@@ -1879,6 +1892,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class GlobalShortBinaryTranslationMixIn
     {
@@ -1902,6 +1918,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class GlobalShortBinaryWrapper :
         GlobalBinaryWrapper,
         IGlobalShortInternalGetter
@@ -1996,8 +2016,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
+
+#endregion
+

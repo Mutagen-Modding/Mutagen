@@ -1239,8 +1239,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class MapMarkerXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static MapMarkerXmlWriteTranslation Instance = new MapMarkerXmlWriteTranslation();
@@ -1483,6 +1486,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class MapMarkerXmlTranslationMixIn
     {
@@ -1640,9 +1646,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class MapMarker_Mask<T> : IMask<T>, IEquatable<MapMarker_Mask<T>>
     {
         #region Ctors
@@ -2039,9 +2049,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((Types, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class MapMarkerBinaryWriteTranslation : IBinaryWriteTranslator
     {
         public readonly static MapMarkerBinaryWriteTranslation Instance = new MapMarkerBinaryWriteTranslation();
@@ -2124,6 +2137,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class MapMarkerBinaryTranslationMixIn
     {
@@ -2174,6 +2190,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class MapMarkerBinaryWrapper :
         BinaryWrapper,
         IMapMarkerGetter
@@ -2283,8 +2303,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
+
+#endregion
+

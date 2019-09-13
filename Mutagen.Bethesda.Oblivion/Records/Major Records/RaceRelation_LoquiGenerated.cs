@@ -1010,8 +1010,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class RaceRelationXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static RaceRelationXmlWriteTranslation Instance = new RaceRelationXmlWriteTranslation();
@@ -1186,6 +1189,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class RaceRelationXmlTranslationMixIn
     {
@@ -1343,9 +1349,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class RaceRelation_Mask<T> : IMask<T>, IEquatable<RaceRelation_Mask<T>>
     {
         #region Ctors
@@ -1646,9 +1656,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((Modifier, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class RaceRelationBinaryWriteTranslation : IBinaryWriteTranslator
     {
         public readonly static RaceRelationBinaryWriteTranslation Instance = new RaceRelationBinaryWriteTranslation();
@@ -1709,6 +1722,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class RaceRelationBinaryTranslationMixIn
     {
@@ -1759,6 +1775,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class RaceRelationBinaryWrapper :
         BinaryWrapper,
         IRaceRelationGetter
@@ -1818,8 +1838,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
+
+#endregion
+

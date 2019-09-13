@@ -1354,8 +1354,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class MagicEffectSubDataXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static MagicEffectSubDataXmlWriteTranslation Instance = new MagicEffectSubDataXmlWriteTranslation();
@@ -1629,6 +1632,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class MagicEffectSubDataXmlTranslationMixIn
     {
@@ -1786,9 +1792,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class MagicEffectSubData_Mask<T> : IMask<T>, IEquatable<MagicEffectSubData_Mask<T>>
     {
         #region Ctors
@@ -2224,9 +2234,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((ConstantEffectBarterFactor, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class MagicEffectSubDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
         public readonly static MagicEffectSubDataBinaryWriteTranslation Instance = new MagicEffectSubDataBinaryWriteTranslation();
@@ -2302,6 +2315,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class MagicEffectSubDataBinaryTranslationMixIn
     {
@@ -2352,6 +2368,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class MagicEffectSubDataBinaryWrapper :
         BinaryWrapper,
         IMagicEffectSubDataGetter
@@ -2426,8 +2446,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
+
+#endregion
+

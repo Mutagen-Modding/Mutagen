@@ -1087,8 +1087,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class LoadScreenLocationXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static LoadScreenLocationXmlWriteTranslation Instance = new LoadScreenLocationXmlWriteTranslation();
@@ -1279,6 +1282,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class LoadScreenLocationXmlTranslationMixIn
     {
@@ -1436,9 +1442,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class LoadScreenLocation_Mask<T> : IMask<T>, IEquatable<LoadScreenLocation_Mask<T>>
     {
         #region Ctors
@@ -1766,9 +1776,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((GridPoint, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class LoadScreenLocationBinaryWriteTranslation : IBinaryWriteTranslator
     {
         public readonly static LoadScreenLocationBinaryWriteTranslation Instance = new LoadScreenLocationBinaryWriteTranslation();
@@ -1835,6 +1848,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class LoadScreenLocationBinaryTranslationMixIn
     {
@@ -1885,6 +1901,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class LoadScreenLocationBinaryWrapper :
         BinaryWrapper,
         ILoadScreenLocationGetter
@@ -1948,8 +1968,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
+
+#endregion
+

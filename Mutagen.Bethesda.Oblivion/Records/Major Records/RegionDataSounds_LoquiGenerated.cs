@@ -1269,8 +1269,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class RegionDataSoundsXmlWriteTranslation :
         RegionDataXmlWriteTranslation,
         IXmlWriteTranslator
@@ -1478,6 +1481,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class RegionDataSoundsXmlTranslationMixIn
     {
@@ -1540,9 +1546,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class RegionDataSounds_Mask<T> : RegionData_Mask<T>, IMask<T>, IEquatable<RegionDataSounds_Mask<T>>
     {
         #region Ctors
@@ -1906,9 +1916,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((Sounds?.Overall ?? true, Sounds?.Specific?.GetCrystal()));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class RegionDataSoundsBinaryWriteTranslation :
         RegionDataBinaryWriteTranslation,
         IBinaryWriteTranslator
@@ -2018,6 +2031,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class RegionDataSoundsBinaryTranslationMixIn
     {
@@ -2041,6 +2057,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class RegionDataSoundsBinaryWrapper :
         RegionDataBinaryWrapper,
         IRegionDataSoundsInternalGetter
@@ -2139,8 +2159,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
+
+#endregion
+

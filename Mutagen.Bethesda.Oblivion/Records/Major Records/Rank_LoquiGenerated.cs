@@ -1362,8 +1362,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class RankXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static RankXmlWriteTranslation Instance = new RankXmlWriteTranslation();
@@ -1631,6 +1634,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class RankXmlTranslationMixIn
     {
@@ -1788,9 +1794,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class Rank_Mask<T> : IMask<T>, IEquatable<Rank_Mask<T>>
     {
         #region Ctors
@@ -2145,9 +2155,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((Insignia, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class RankBinaryWriteTranslation : IBinaryWriteTranslator
     {
         public readonly static RankBinaryWriteTranslation Instance = new RankBinaryWriteTranslation();
@@ -2231,6 +2244,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class RankBinaryTranslationMixIn
     {
@@ -2281,6 +2297,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class RankBinaryWrapper :
         BinaryWrapper,
         IRankGetter
@@ -2398,8 +2418,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
+
+#endregion
+

@@ -1918,8 +1918,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class ModHeaderXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static ModHeaderXmlWriteTranslation Instance = new ModHeaderXmlWriteTranslation();
@@ -2415,6 +2418,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class ModHeaderXmlTranslationMixIn
     {
@@ -2572,9 +2578,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class ModHeader_Mask<T> : IMask<T>, IEquatable<ModHeader_Mask<T>>
     {
         #region Ctors
@@ -3181,9 +3191,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((VestigialData, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class ModHeaderBinaryWriteTranslation : IBinaryWriteTranslator
     {
         public readonly static ModHeaderBinaryWriteTranslation Instance = new ModHeaderBinaryWriteTranslation();
@@ -3327,6 +3340,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class ModHeaderBinaryTranslationMixIn
     {
@@ -3377,6 +3393,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class ModHeaderBinaryWrapper :
         BinaryWrapper,
         IModHeaderGetter
@@ -3528,8 +3548,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
+
+#endregion
+

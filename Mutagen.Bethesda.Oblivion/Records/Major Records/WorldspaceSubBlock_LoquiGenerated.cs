@@ -1299,8 +1299,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class WorldspaceSubBlockXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static WorldspaceSubBlockXmlWriteTranslation Instance = new WorldspaceSubBlockXmlWriteTranslation();
@@ -1613,6 +1616,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class WorldspaceSubBlockXmlTranslationMixIn
     {
@@ -1770,9 +1776,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class WorldspaceSubBlock_Mask<T> : IMask<T>, IEquatable<WorldspaceSubBlock_Mask<T>>
     {
         #region Ctors
@@ -2232,9 +2242,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((Items?.Overall ?? true, Items?.Specific?.GetCrystal()));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class WorldspaceSubBlockBinaryWriteTranslation : IBinaryWriteTranslator
     {
         public readonly static WorldspaceSubBlockBinaryWriteTranslation Instance = new WorldspaceSubBlockBinaryWriteTranslation();
@@ -2332,6 +2345,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class WorldspaceSubBlockBinaryTranslationMixIn
     {
@@ -2382,6 +2398,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class WorldspaceSubBlockBinaryWrapper :
         BinaryWrapper,
         IWorldspaceSubBlockGetter
@@ -2479,8 +2499,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
+
+#endregion
+

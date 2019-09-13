@@ -1352,8 +1352,11 @@ namespace Mutagen.Bethesda.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Internals
+{
     public partial class MajorRecordXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static MajorRecordXmlWriteTranslation Instance = new MajorRecordXmlWriteTranslation();
@@ -1592,6 +1595,9 @@ namespace Mutagen.Bethesda.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda
+{
     #region Xml Write Mixins
     public static class MajorRecordXmlTranslationMixIn
     {
@@ -1749,9 +1755,13 @@ namespace Mutagen.Bethesda.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Internals
+{
     public class MajorRecord_Mask<T> : IMask<T>, IEquatable<MajorRecord_Mask<T>>
     {
         #region Ctors
@@ -2106,9 +2116,12 @@ namespace Mutagen.Bethesda.Internals
             ret.Add((EditorID, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Internals
+{
     public partial class MajorRecordBinaryWriteTranslation : IBinaryWriteTranslator
     {
         public readonly static MajorRecordBinaryWriteTranslation Instance = new MajorRecordBinaryWriteTranslation();
@@ -2187,6 +2200,9 @@ namespace Mutagen.Bethesda.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda
+{
     #region Binary Write Mixins
     public static class MajorRecordBinaryTranslationMixIn
     {
@@ -2237,6 +2253,10 @@ namespace Mutagen.Bethesda.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Internals
+{
     public partial class MajorRecordBinaryWrapper :
         BinaryWrapper,
         IMajorRecordInternalGetter
@@ -2301,8 +2321,8 @@ namespace Mutagen.Bethesda.Internals
         }
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
+
+#endregion
+

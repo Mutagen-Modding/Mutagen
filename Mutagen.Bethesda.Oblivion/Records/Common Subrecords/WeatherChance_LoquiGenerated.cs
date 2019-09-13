@@ -1004,8 +1004,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class WeatherChanceXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static WeatherChanceXmlWriteTranslation Instance = new WeatherChanceXmlWriteTranslation();
@@ -1180,6 +1183,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class WeatherChanceXmlTranslationMixIn
     {
@@ -1337,9 +1343,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class WeatherChance_Mask<T> : IMask<T>, IEquatable<WeatherChance_Mask<T>>
     {
         #region Ctors
@@ -1640,9 +1650,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((Chance, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class WeatherChanceBinaryWriteTranslation : IBinaryWriteTranslator
     {
         public readonly static WeatherChanceBinaryWriteTranslation Instance = new WeatherChanceBinaryWriteTranslation();
@@ -1697,6 +1710,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class WeatherChanceBinaryTranslationMixIn
     {
@@ -1747,6 +1763,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class WeatherChanceBinaryWrapper :
         BinaryWrapper,
         IWeatherChanceGetter
@@ -1804,8 +1824,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
+
+#endregion
+

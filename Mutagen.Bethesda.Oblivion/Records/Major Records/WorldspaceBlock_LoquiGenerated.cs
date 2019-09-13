@@ -1299,8 +1299,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class WorldspaceBlockXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static WorldspaceBlockXmlWriteTranslation Instance = new WorldspaceBlockXmlWriteTranslation();
@@ -1613,6 +1616,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class WorldspaceBlockXmlTranslationMixIn
     {
@@ -1770,9 +1776,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class WorldspaceBlock_Mask<T> : IMask<T>, IEquatable<WorldspaceBlock_Mask<T>>
     {
         #region Ctors
@@ -2232,9 +2242,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((Items?.Overall ?? true, Items?.Specific?.GetCrystal()));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class WorldspaceBlockBinaryWriteTranslation : IBinaryWriteTranslator
     {
         public readonly static WorldspaceBlockBinaryWriteTranslation Instance = new WorldspaceBlockBinaryWriteTranslation();
@@ -2332,6 +2345,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class WorldspaceBlockBinaryTranslationMixIn
     {
@@ -2382,6 +2398,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class WorldspaceBlockBinaryWrapper :
         BinaryWrapper,
         IWorldspaceBlockGetter
@@ -2477,8 +2497,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
+
+#endregion
+

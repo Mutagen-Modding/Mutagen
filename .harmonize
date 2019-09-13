@@ -10,11 +10,12 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>6769a4677f137fc74e7cb2575c8a621a4e728924</Sha>
+         <Sha>9e0520f0dd179c9eeed88f335939699bb65dd310</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>08-30-2019 08:20:50</CommitDate>
-         <Description>P3Int16 support</Description>
+         <CommitDate>09-13-2019 17:01:47</CommitDate>
+         <Description>Translation Mixins no longer generated inside internal interface</Description>
          <Author>Justin Swanson</Author>
+         <OriginHint>https://github.com/Noggog/Loqui.git</OriginHint>
       </RepoListing>
       <RepoListing>
          <Nickname>DynamicData</Nickname>

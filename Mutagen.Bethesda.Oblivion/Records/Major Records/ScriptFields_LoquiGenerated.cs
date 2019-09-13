@@ -1561,8 +1561,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class ScriptFieldsXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static ScriptFieldsXmlWriteTranslation Instance = new ScriptFieldsXmlWriteTranslation();
@@ -1868,6 +1871,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class ScriptFieldsXmlTranslationMixIn
     {
@@ -2025,9 +2031,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class ScriptFields_Mask<T> : IMask<T>, IEquatable<ScriptFields_Mask<T>>
     {
         #region Ctors
@@ -2577,9 +2587,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((References?.Overall ?? true, References?.Specific?.GetCrystal()));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class ScriptFieldsBinaryWriteTranslation : IBinaryWriteTranslator
     {
         public readonly static ScriptFieldsBinaryWriteTranslation Instance = new ScriptFieldsBinaryWriteTranslation();
@@ -2737,6 +2750,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class ScriptFieldsBinaryTranslationMixIn
     {
@@ -2787,6 +2803,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class ScriptFieldsBinaryWrapper :
         BinaryWrapper,
         IScriptFieldsGetter
@@ -2939,8 +2959,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
+
+#endregion
+

@@ -1246,8 +1246,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class QuestTargetXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static QuestTargetXmlWriteTranslation Instance = new QuestTargetXmlWriteTranslation();
@@ -1510,6 +1513,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class QuestTargetXmlTranslationMixIn
     {
@@ -1667,9 +1673,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class QuestTarget_Mask<T> : IMask<T>, IEquatable<QuestTarget_Mask<T>>
     {
         #region Ctors
@@ -2102,9 +2112,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((QSTADataTypeState, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class QuestTargetBinaryWriteTranslation : IBinaryWriteTranslator
     {
         public readonly static QuestTargetBinaryWriteTranslation Instance = new QuestTargetBinaryWriteTranslation();
@@ -2201,6 +2214,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class QuestTargetBinaryTranslationMixIn
     {
@@ -2251,6 +2267,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class QuestTargetBinaryWrapper :
         BinaryWrapper,
         IQuestTargetInternalGetter
@@ -2361,8 +2381,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
+
+#endregion
+

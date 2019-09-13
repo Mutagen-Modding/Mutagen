@@ -1653,8 +1653,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class LeveledCreatureXmlWriteTranslation :
         NPCSpawnXmlWriteTranslation,
         IXmlWriteTranslator
@@ -1962,6 +1965,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class LeveledCreatureXmlTranslationMixIn
     {
@@ -2024,9 +2030,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class LeveledCreature_Mask<T> : NPCSpawn_Mask<T>, IMask<T>, IEquatable<LeveledCreature_Mask<T>>
     {
         #region Ctors
@@ -2471,9 +2481,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((Template, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class LeveledCreatureBinaryWriteTranslation :
         NPCSpawnBinaryWriteTranslation,
         IBinaryWriteTranslator
@@ -2642,6 +2655,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class LeveledCreatureBinaryTranslationMixIn
     {
@@ -2665,6 +2681,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class LeveledCreatureBinaryWrapper :
         NPCSpawnBinaryWrapper,
         ILeveledCreatureInternalGetter
@@ -2801,8 +2821,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
+
+#endregion
+

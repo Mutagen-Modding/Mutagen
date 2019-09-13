@@ -1055,8 +1055,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class ItemEntryXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static ItemEntryXmlWriteTranslation Instance = new ItemEntryXmlWriteTranslation();
@@ -1232,6 +1235,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class ItemEntryXmlTranslationMixIn
     {
@@ -1389,9 +1395,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class ItemEntry_Mask<T> : IMask<T>, IEquatable<ItemEntry_Mask<T>>
     {
         #region Ctors
@@ -1692,9 +1702,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((Count, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class ItemEntryBinaryWriteTranslation : IBinaryWriteTranslator
     {
         public readonly static ItemEntryBinaryWriteTranslation Instance = new ItemEntryBinaryWriteTranslation();
@@ -1758,6 +1771,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class ItemEntryBinaryTranslationMixIn
     {
@@ -1808,6 +1824,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class ItemEntryBinaryWrapper :
         BinaryWrapper,
         IItemEntryGetter
@@ -1870,8 +1890,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
+
+#endregion
+

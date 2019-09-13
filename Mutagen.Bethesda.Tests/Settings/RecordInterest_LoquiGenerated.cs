@@ -1035,8 +1035,11 @@ namespace Mutagen.Bethesda.Tests.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Tests.Internals
+{
     public partial class RecordInterestXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static RecordInterestXmlWriteTranslation Instance = new RecordInterestXmlWriteTranslation();
@@ -1258,6 +1261,9 @@ namespace Mutagen.Bethesda.Tests.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Tests
+{
     #region Xml Write Mixins
     public static class RecordInterestXmlTranslationMixIn
     {
@@ -1415,9 +1421,13 @@ namespace Mutagen.Bethesda.Tests.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Tests.Internals
+{
     public class RecordInterest_Mask<T> : IMask<T>, IEquatable<RecordInterest_Mask<T>>
     {
         #region Ctors
@@ -1856,8 +1866,8 @@ namespace Mutagen.Bethesda.Tests.Internals
             ret.Add((UninterestingTypes, null));
         }
     }
-    #endregion
-
-    #endregion
-
 }
+#endregion
+
+#endregion
+

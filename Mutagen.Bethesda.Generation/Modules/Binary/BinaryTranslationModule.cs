@@ -227,7 +227,10 @@ namespace Mutagen.Bethesda.Generation
         public override async Task GenerateInVoid(ObjectGeneration obj, FileGeneration fg)
         {
             await base.GenerateInVoid(obj, fg);
-            await GenerateImportWrapper(obj, fg);
+            using (new NamespaceWrapper(fg, obj.InternalNamespace))
+            {
+                await GenerateImportWrapper(obj, fg);
+            }
         }
 
         public override async Task GenerateInTranslationCreateClass(ObjectGeneration obj, FileGeneration fg)

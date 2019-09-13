@@ -1005,8 +1005,11 @@ namespace Mutagen.Bethesda.Tests.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Tests.Internals
+{
     public partial class DataFolderLocationsXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static DataFolderLocationsXmlWriteTranslation Instance = new DataFolderLocationsXmlWriteTranslation();
@@ -1206,6 +1209,9 @@ namespace Mutagen.Bethesda.Tests.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Tests
+{
     #region Xml Write Mixins
     public static class DataFolderLocationsXmlTranslationMixIn
     {
@@ -1363,9 +1369,13 @@ namespace Mutagen.Bethesda.Tests.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Tests.Internals
+{
     public class DataFolderLocations_Mask<T> : IMask<T>, IEquatable<DataFolderLocations_Mask<T>>
     {
         #region Ctors
@@ -1666,8 +1676,8 @@ namespace Mutagen.Bethesda.Tests.Internals
             ret.Add((Skyrim, null));
         }
     }
-    #endregion
-
-    #endregion
-
 }
+#endregion
+
+#endregion
+

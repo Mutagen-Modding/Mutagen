@@ -1612,8 +1612,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Skyrim.Internals
+{
     public partial class DecalXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static DecalXmlWriteTranslation Instance = new DecalXmlWriteTranslation();
@@ -2122,6 +2125,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Skyrim
+{
     #region Xml Write Mixins
     public static class DecalXmlTranslationMixIn
     {
@@ -2279,9 +2285,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Skyrim.Internals
+{
     public class Decal_Mask<T> : IMask<T>, IEquatable<Decal_Mask<T>>
     {
         #region Ctors
@@ -2825,9 +2835,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Add((Color, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Skyrim.Internals
+{
     public partial class DecalBinaryWriteTranslation : IBinaryWriteTranslator
     {
         public readonly static DecalBinaryWriteTranslation Instance = new DecalBinaryWriteTranslation();
@@ -2914,6 +2927,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Skyrim
+{
     #region Binary Write Mixins
     public static class DecalBinaryTranslationMixIn
     {
@@ -2964,6 +2980,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Skyrim.Internals
+{
     public partial class DecalBinaryWrapper :
         BinaryWrapper,
         IDecalGetter
@@ -3029,8 +3049,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
+
+#endregion
+

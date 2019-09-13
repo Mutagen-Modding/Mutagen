@@ -1215,8 +1215,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Skyrim.Internals
+{
     public partial class GameSettingBoolXmlWriteTranslation :
         GameSettingXmlWriteTranslation,
         IXmlWriteTranslator
@@ -1405,6 +1408,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Skyrim
+{
     #region Xml Write Mixins
     public static class GameSettingBoolXmlTranslationMixIn
     {
@@ -1467,9 +1473,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Skyrim.Internals
+{
     public class GameSettingBool_Mask<T> : GameSetting_Mask<T>, IMask<T>, IEquatable<GameSettingBool_Mask<T>>
     {
         #region Ctors
@@ -1728,9 +1738,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Add((Data, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Skyrim.Internals
+{
     public partial class GameSettingBoolBinaryWriteTranslation :
         GameSettingBinaryWriteTranslation,
         IBinaryWriteTranslator
@@ -1889,6 +1902,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Skyrim
+{
     #region Binary Write Mixins
     public static class GameSettingBoolBinaryTranslationMixIn
     {
@@ -1912,6 +1928,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Skyrim.Internals
+{
     public partial class GameSettingBoolBinaryWrapper :
         GameSettingBinaryWrapper,
         IGameSettingBoolInternalGetter
@@ -2006,8 +2026,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
+
+#endregion
+

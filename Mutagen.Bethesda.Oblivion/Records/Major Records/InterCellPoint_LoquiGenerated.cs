@@ -988,8 +988,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class InterCellPointXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static InterCellPointXmlWriteTranslation Instance = new InterCellPointXmlWriteTranslation();
@@ -1183,6 +1186,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class InterCellPointXmlTranslationMixIn
     {
@@ -1340,9 +1346,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class InterCellPoint_Mask<T> : IMask<T>, IEquatable<InterCellPoint_Mask<T>>
     {
         #region Ctors
@@ -1643,9 +1653,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((Point, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class InterCellPointBinaryWriteTranslation : IBinaryWriteTranslator
     {
         public readonly static InterCellPointBinaryWriteTranslation Instance = new InterCellPointBinaryWriteTranslation();
@@ -1699,6 +1712,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class InterCellPointBinaryTranslationMixIn
     {
@@ -1749,6 +1765,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class InterCellPointBinaryWrapper :
         BinaryWrapper,
         IInterCellPointGetter
@@ -1803,8 +1823,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
+
+#endregion
+

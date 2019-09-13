@@ -5542,8 +5542,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class CreatureXmlWriteTranslation :
         NPCAbstractXmlWriteTranslation,
         IXmlWriteTranslator
@@ -7573,6 +7576,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class CreatureXmlTranslationMixIn
     {
@@ -7635,9 +7641,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class Creature_Mask<T> : NPCAbstract_Mask<T>, IMask<T>, IEquatable<Creature_Mask<T>>
     {
         #region Ctors
@@ -9795,9 +9805,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((DATADataTypeState, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class CreatureBinaryWriteTranslation :
         NPCAbstractBinaryWriteTranslation,
         IBinaryWriteTranslator
@@ -10214,6 +10227,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class CreatureBinaryTranslationMixIn
     {
@@ -10237,6 +10253,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class CreatureBinaryWrapper :
         NPCAbstractBinaryWrapper,
         ICreatureInternalGetter
@@ -10654,8 +10674,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
+
+#endregion
+

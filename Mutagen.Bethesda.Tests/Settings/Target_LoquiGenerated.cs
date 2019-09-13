@@ -1311,8 +1311,11 @@ namespace Mutagen.Bethesda.Tests.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Tests.Internals
+{
     public partial class TargetXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static TargetXmlWriteTranslation Instance = new TargetXmlWriteTranslation();
@@ -1668,6 +1671,9 @@ namespace Mutagen.Bethesda.Tests.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Tests
+{
     #region Xml Write Mixins
     public static class TargetXmlTranslationMixIn
     {
@@ -1825,9 +1831,13 @@ namespace Mutagen.Bethesda.Tests.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Tests.Internals
+{
     public class Target_Mask<T> : IMask<T>, IEquatable<Target_Mask<T>>
     {
         #region Ctors
@@ -2248,8 +2258,8 @@ namespace Mutagen.Bethesda.Tests.Internals
             ret.Add((Interest?.Overall ?? true, Interest?.Specific?.GetCrystal()));
         }
     }
-    #endregion
-
-    #endregion
-
 }
+#endregion
+
+#endregion
+

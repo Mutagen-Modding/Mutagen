@@ -1075,8 +1075,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class MapDataXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static MapDataXmlWriteTranslation Instance = new MapDataXmlWriteTranslation();
@@ -1305,6 +1308,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class MapDataXmlTranslationMixIn
     {
@@ -1462,9 +1468,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class MapData_Mask<T> : IMask<T>, IEquatable<MapData_Mask<T>>
     {
         #region Ctors
@@ -1792,9 +1802,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((CellCoordinatesSECell, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class MapDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
         public readonly static MapDataBinaryWriteTranslation Instance = new MapDataBinaryWriteTranslation();
@@ -1859,6 +1872,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class MapDataBinaryTranslationMixIn
     {
@@ -1909,6 +1925,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class MapDataBinaryWrapper :
         BinaryWrapper,
         IMapDataGetter
@@ -1966,8 +1986,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
+
+#endregion
+

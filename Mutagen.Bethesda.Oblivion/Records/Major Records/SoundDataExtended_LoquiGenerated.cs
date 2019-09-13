@@ -1148,8 +1148,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class SoundDataExtendedXmlWriteTranslation :
         SoundDataXmlWriteTranslation,
         IXmlWriteTranslator
@@ -1377,6 +1380,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class SoundDataExtendedXmlTranslationMixIn
     {
@@ -1439,9 +1445,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class SoundDataExtended_Mask<T> : SoundData_Mask<T>, IMask<T>, IEquatable<SoundDataExtended_Mask<T>>
     {
         #region Ctors
@@ -1754,9 +1764,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((StartTime, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class SoundDataExtendedBinaryWriteTranslation :
         SoundDataBinaryWriteTranslation,
         IBinaryWriteTranslator
@@ -1963,6 +1976,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class SoundDataExtendedBinaryTranslationMixIn
     {
@@ -1986,6 +2002,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class SoundDataExtendedBinaryWrapper :
         SoundDataBinaryWrapper,
         ISoundDataExtendedInternalGetter
@@ -2039,8 +2059,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
+
+#endregion
+

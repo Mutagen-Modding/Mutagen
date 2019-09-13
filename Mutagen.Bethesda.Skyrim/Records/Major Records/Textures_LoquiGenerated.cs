@@ -1856,8 +1856,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Skyrim.Internals
+{
     public partial class TexturesXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static TexturesXmlWriteTranslation Instance = new TexturesXmlWriteTranslation();
@@ -2269,6 +2272,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Skyrim
+{
     #region Xml Write Mixins
     public static class TexturesXmlTranslationMixIn
     {
@@ -2426,9 +2432,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Skyrim.Internals
+{
     public class Textures_Mask<T> : IMask<T>, IEquatable<Textures_Mask<T>>
     {
         #region Ctors
@@ -2891,9 +2901,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Add((BacklightMaskOrSpecular, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Skyrim.Internals
+{
     public partial class TexturesBinaryWriteTranslation : IBinaryWriteTranslator
     {
         public readonly static TexturesBinaryWriteTranslation Instance = new TexturesBinaryWriteTranslation();
@@ -3009,6 +3022,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Skyrim
+{
     #region Binary Write Mixins
     public static class TexturesBinaryTranslationMixIn
     {
@@ -3059,6 +3075,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Skyrim.Internals
+{
     public partial class TexturesBinaryWrapper :
         BinaryWrapper,
         ITexturesGetter
@@ -3220,8 +3240,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
+
+#endregion
+

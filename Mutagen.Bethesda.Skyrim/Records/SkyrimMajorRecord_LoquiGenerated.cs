@@ -1085,8 +1085,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Skyrim.Internals
+{
     public partial class SkyrimMajorRecordXmlWriteTranslation :
         MajorRecordXmlWriteTranslation,
         IXmlWriteTranslator
@@ -1314,6 +1317,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Skyrim
+{
     #region Xml Write Mixins
     public static class SkyrimMajorRecordXmlTranslationMixIn
     {
@@ -1376,9 +1382,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Skyrim.Internals
+{
     public class SkyrimMajorRecord_Mask<T> : MajorRecord_Mask<T>, IMask<T>, IEquatable<SkyrimMajorRecord_Mask<T>>
     {
         #region Ctors
@@ -1691,9 +1701,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Add((Version2, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Skyrim.Internals
+{
     public partial class SkyrimMajorRecordBinaryWriteTranslation :
         MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
@@ -1773,6 +1786,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Skyrim
+{
     #region Binary Write Mixins
     public static class SkyrimMajorRecordBinaryTranslationMixIn
     {
@@ -1796,6 +1812,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Skyrim.Internals
+{
     public partial class SkyrimMajorRecordBinaryWrapper :
         MajorRecordBinaryWrapper,
         ISkyrimMajorRecordInternalGetter
@@ -1830,8 +1850,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
+
+#endregion
+

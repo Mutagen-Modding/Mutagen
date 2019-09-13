@@ -1088,8 +1088,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class TeleportDestinationXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static TeleportDestinationXmlWriteTranslation Instance = new TeleportDestinationXmlWriteTranslation();
@@ -1299,6 +1302,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class TeleportDestinationXmlTranslationMixIn
     {
@@ -1456,9 +1462,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class TeleportDestination_Mask<T> : IMask<T>, IEquatable<TeleportDestination_Mask<T>>
     {
         #region Ctors
@@ -1786,9 +1796,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((Rotation, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class TeleportDestinationBinaryWriteTranslation : IBinaryWriteTranslator
     {
         public readonly static TeleportDestinationBinaryWriteTranslation Instance = new TeleportDestinationBinaryWriteTranslation();
@@ -1854,6 +1867,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class TeleportDestinationBinaryTranslationMixIn
     {
@@ -1904,6 +1920,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class TeleportDestinationBinaryWrapper :
         BinaryWrapper,
         ITeleportDestinationGetter
@@ -1964,8 +1984,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
+
+#endregion
+

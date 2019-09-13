@@ -1245,8 +1245,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Skyrim.Internals
+{
     public partial class GroupXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static GroupXmlWriteTranslation Instance = new GroupXmlWriteTranslation();
@@ -1515,6 +1518,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Skyrim
+{
     #region Xml Write Mixins
     public static class GroupXmlTranslationMixIn
     {
@@ -1691,9 +1697,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Skyrim.Internals
+{
     public class Group_Mask<T> : IMask<T>, IEquatable<Group_Mask<T>>
     {
         #region Ctors
@@ -2119,9 +2129,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Add((Items?.Overall ?? true, Items?.Specific?.GetCrystal()));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Skyrim.Internals
+{
     public partial class GroupBinaryWriteTranslation : IBinaryWriteTranslator
     {
         public readonly static GroupBinaryWriteTranslation Instance = new GroupBinaryWriteTranslation();
@@ -2257,6 +2270,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Skyrim
+{
     #region Binary Write Mixins
     public static class GroupBinaryTranslationMixIn
     {
@@ -2312,6 +2328,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Skyrim.Internals
+{
     public partial class GroupBinaryWrapper<T> :
         BinaryWrapper,
         IGroupGetter<T>
@@ -2396,8 +2416,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
+
+#endregion
+

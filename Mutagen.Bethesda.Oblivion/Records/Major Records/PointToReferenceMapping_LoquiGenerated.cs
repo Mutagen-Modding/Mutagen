@@ -1023,8 +1023,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class PointToReferenceMappingXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static PointToReferenceMappingXmlWriteTranslation Instance = new PointToReferenceMappingXmlWriteTranslation();
@@ -1210,6 +1213,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class PointToReferenceMappingXmlTranslationMixIn
     {
@@ -1367,9 +1373,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class PointToReferenceMapping_Mask<T> : IMask<T>, IEquatable<PointToReferenceMapping_Mask<T>>
     {
         #region Ctors
@@ -1739,9 +1749,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((Points, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class PointToReferenceMappingBinaryWriteTranslation : IBinaryWriteTranslator
     {
         public readonly static PointToReferenceMappingBinaryWriteTranslation Instance = new PointToReferenceMappingBinaryWriteTranslation();
@@ -1805,6 +1818,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class PointToReferenceMappingBinaryTranslationMixIn
     {
@@ -1855,6 +1871,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class PointToReferenceMappingBinaryWrapper :
         BinaryWrapper,
         IPointToReferenceMappingGetter
@@ -1914,8 +1934,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
+
+#endregion
+

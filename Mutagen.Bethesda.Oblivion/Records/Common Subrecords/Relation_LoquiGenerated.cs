@@ -1010,8 +1010,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class RelationXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static RelationXmlWriteTranslation Instance = new RelationXmlWriteTranslation();
@@ -1186,6 +1189,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class RelationXmlTranslationMixIn
     {
@@ -1343,9 +1349,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class Relation_Mask<T> : IMask<T>, IEquatable<Relation_Mask<T>>
     {
         #region Ctors
@@ -1646,9 +1656,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((Modifier, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class RelationBinaryWriteTranslation : IBinaryWriteTranslator
     {
         public readonly static RelationBinaryWriteTranslation Instance = new RelationBinaryWriteTranslation();
@@ -1709,6 +1722,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class RelationBinaryTranslationMixIn
     {
@@ -1759,6 +1775,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class RelationBinaryWrapper :
         BinaryWrapper,
         IRelationGetter
@@ -1818,8 +1838,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
+
+#endregion
+

@@ -1288,8 +1288,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class FacePartXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static FacePartXmlWriteTranslation Instance = new FacePartXmlWriteTranslation();
@@ -1524,6 +1527,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class FacePartXmlTranslationMixIn
     {
@@ -1681,9 +1687,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class FacePart_Mask<T> : IMask<T>, IEquatable<FacePart_Mask<T>>
     {
         #region Ctors
@@ -2023,9 +2033,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((Icon, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class FacePartBinaryWriteTranslation : IBinaryWriteTranslator
     {
         public readonly static FacePartBinaryWriteTranslation Instance = new FacePartBinaryWriteTranslation();
@@ -2104,6 +2117,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class FacePartBinaryTranslationMixIn
     {
@@ -2154,6 +2170,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class FacePartBinaryWrapper :
         BinaryWrapper,
         IFacePartGetter
@@ -2262,8 +2282,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
+
+#endregion
+

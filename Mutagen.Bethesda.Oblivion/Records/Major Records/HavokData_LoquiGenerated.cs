@@ -1057,8 +1057,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class HavokDataXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static HavokDataXmlWriteTranslation Instance = new HavokDataXmlWriteTranslation();
@@ -1287,6 +1290,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class HavokDataXmlTranslationMixIn
     {
@@ -1444,9 +1450,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class HavokData_Mask<T> : IMask<T>, IEquatable<HavokData_Mask<T>>
     {
         #region Ctors
@@ -1774,9 +1784,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((Restitution, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class HavokDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
         public readonly static HavokDataBinaryWriteTranslation Instance = new HavokDataBinaryWriteTranslation();
@@ -1838,6 +1851,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class HavokDataBinaryTranslationMixIn
     {
@@ -1888,6 +1904,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class HavokDataBinaryWrapper :
         BinaryWrapper,
         IHavokDataGetter
@@ -1945,8 +1965,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
+
+#endregion
+

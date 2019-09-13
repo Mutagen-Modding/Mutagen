@@ -8733,8 +8733,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class OblivionModXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static OblivionModXmlWriteTranslation Instance = new OblivionModXmlWriteTranslation();
@@ -10751,6 +10754,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class OblivionModXmlTranslationMixIn
     {
@@ -10908,9 +10914,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class OblivionMod_Mask<T> : IMask<T>, IEquatable<OblivionMod_Mask<T>>
     {
         #region Ctors
@@ -13380,133 +13390,136 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((EffectShaders?.Overall ?? true, EffectShaders?.Specific?.GetCrystal()));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Mutagen
-    public class GroupMask
+#region Mutagen
+public class GroupMask
+{
+    public bool GameSettings;
+    public bool Globals;
+    public bool Classes;
+    public bool Factions;
+    public bool Hairs;
+    public bool Eyes;
+    public bool Races;
+    public bool Sounds;
+    public bool Skills;
+    public bool MagicEffects;
+    public bool Scripts;
+    public bool LandTextures;
+    public bool Enchantments;
+    public bool Spells;
+    public bool Birthsigns;
+    public bool Activators;
+    public bool AlchemicalApparatus;
+    public bool Armors;
+    public bool Books;
+    public bool Clothes;
+    public bool Containers;
+    public bool Doors;
+    public bool Ingredients;
+    public bool Lights;
+    public bool Miscellaneous;
+    public bool Statics;
+    public bool Grasses;
+    public bool Trees;
+    public bool Flora;
+    public bool Furnature;
+    public bool Weapons;
+    public bool Ammo;
+    public bool NPCs;
+    public bool Creatures;
+    public bool LeveledCreatures;
+    public bool SoulGems;
+    public bool Keys;
+    public bool Potions;
+    public bool Subspaces;
+    public bool SigilStones;
+    public bool LeveledItems;
+    public bool Weathers;
+    public bool Climates;
+    public bool Regions;
+    public bool Cells;
+    public bool Worldspaces;
+    public bool DialogTopics;
+    public bool Quests;
+    public bool IdleAnimations;
+    public bool AIPackages;
+    public bool CombatStyles;
+    public bool LoadScreens;
+    public bool LeveledSpells;
+    public bool AnimatedObjects;
+    public bool Waters;
+    public bool EffectShaders;
+    public GroupMask()
     {
-        public bool GameSettings;
-        public bool Globals;
-        public bool Classes;
-        public bool Factions;
-        public bool Hairs;
-        public bool Eyes;
-        public bool Races;
-        public bool Sounds;
-        public bool Skills;
-        public bool MagicEffects;
-        public bool Scripts;
-        public bool LandTextures;
-        public bool Enchantments;
-        public bool Spells;
-        public bool Birthsigns;
-        public bool Activators;
-        public bool AlchemicalApparatus;
-        public bool Armors;
-        public bool Books;
-        public bool Clothes;
-        public bool Containers;
-        public bool Doors;
-        public bool Ingredients;
-        public bool Lights;
-        public bool Miscellaneous;
-        public bool Statics;
-        public bool Grasses;
-        public bool Trees;
-        public bool Flora;
-        public bool Furnature;
-        public bool Weapons;
-        public bool Ammo;
-        public bool NPCs;
-        public bool Creatures;
-        public bool LeveledCreatures;
-        public bool SoulGems;
-        public bool Keys;
-        public bool Potions;
-        public bool Subspaces;
-        public bool SigilStones;
-        public bool LeveledItems;
-        public bool Weathers;
-        public bool Climates;
-        public bool Regions;
-        public bool Cells;
-        public bool Worldspaces;
-        public bool DialogTopics;
-        public bool Quests;
-        public bool IdleAnimations;
-        public bool AIPackages;
-        public bool CombatStyles;
-        public bool LoadScreens;
-        public bool LeveledSpells;
-        public bool AnimatedObjects;
-        public bool Waters;
-        public bool EffectShaders;
-        public GroupMask()
-        {
-        }
-        public GroupMask(bool defaultValue)
-        {
-            GameSettings = defaultValue;
-            Globals = defaultValue;
-            Classes = defaultValue;
-            Factions = defaultValue;
-            Hairs = defaultValue;
-            Eyes = defaultValue;
-            Races = defaultValue;
-            Sounds = defaultValue;
-            Skills = defaultValue;
-            MagicEffects = defaultValue;
-            Scripts = defaultValue;
-            LandTextures = defaultValue;
-            Enchantments = defaultValue;
-            Spells = defaultValue;
-            Birthsigns = defaultValue;
-            Activators = defaultValue;
-            AlchemicalApparatus = defaultValue;
-            Armors = defaultValue;
-            Books = defaultValue;
-            Clothes = defaultValue;
-            Containers = defaultValue;
-            Doors = defaultValue;
-            Ingredients = defaultValue;
-            Lights = defaultValue;
-            Miscellaneous = defaultValue;
-            Statics = defaultValue;
-            Grasses = defaultValue;
-            Trees = defaultValue;
-            Flora = defaultValue;
-            Furnature = defaultValue;
-            Weapons = defaultValue;
-            Ammo = defaultValue;
-            NPCs = defaultValue;
-            Creatures = defaultValue;
-            LeveledCreatures = defaultValue;
-            SoulGems = defaultValue;
-            Keys = defaultValue;
-            Potions = defaultValue;
-            Subspaces = defaultValue;
-            SigilStones = defaultValue;
-            LeveledItems = defaultValue;
-            Weathers = defaultValue;
-            Climates = defaultValue;
-            Regions = defaultValue;
-            Cells = defaultValue;
-            Worldspaces = defaultValue;
-            DialogTopics = defaultValue;
-            Quests = defaultValue;
-            IdleAnimations = defaultValue;
-            AIPackages = defaultValue;
-            CombatStyles = defaultValue;
-            LoadScreens = defaultValue;
-            LeveledSpells = defaultValue;
-            AnimatedObjects = defaultValue;
-            Waters = defaultValue;
-            EffectShaders = defaultValue;
-        }
     }
-    #endregion
+    public GroupMask(bool defaultValue)
+    {
+        GameSettings = defaultValue;
+        Globals = defaultValue;
+        Classes = defaultValue;
+        Factions = defaultValue;
+        Hairs = defaultValue;
+        Eyes = defaultValue;
+        Races = defaultValue;
+        Sounds = defaultValue;
+        Skills = defaultValue;
+        MagicEffects = defaultValue;
+        Scripts = defaultValue;
+        LandTextures = defaultValue;
+        Enchantments = defaultValue;
+        Spells = defaultValue;
+        Birthsigns = defaultValue;
+        Activators = defaultValue;
+        AlchemicalApparatus = defaultValue;
+        Armors = defaultValue;
+        Books = defaultValue;
+        Clothes = defaultValue;
+        Containers = defaultValue;
+        Doors = defaultValue;
+        Ingredients = defaultValue;
+        Lights = defaultValue;
+        Miscellaneous = defaultValue;
+        Statics = defaultValue;
+        Grasses = defaultValue;
+        Trees = defaultValue;
+        Flora = defaultValue;
+        Furnature = defaultValue;
+        Weapons = defaultValue;
+        Ammo = defaultValue;
+        NPCs = defaultValue;
+        Creatures = defaultValue;
+        LeveledCreatures = defaultValue;
+        SoulGems = defaultValue;
+        Keys = defaultValue;
+        Potions = defaultValue;
+        Subspaces = defaultValue;
+        SigilStones = defaultValue;
+        LeveledItems = defaultValue;
+        Weathers = defaultValue;
+        Climates = defaultValue;
+        Regions = defaultValue;
+        Cells = defaultValue;
+        Worldspaces = defaultValue;
+        DialogTopics = defaultValue;
+        Quests = defaultValue;
+        IdleAnimations = defaultValue;
+        AIPackages = defaultValue;
+        CombatStyles = defaultValue;
+        LoadScreens = defaultValue;
+        LeveledSpells = defaultValue;
+        AnimatedObjects = defaultValue;
+        Waters = defaultValue;
+        EffectShaders = defaultValue;
+    }
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class OblivionModBinaryWriteTranslation
     {
         public readonly static OblivionModBinaryWriteTranslation Instance = new OblivionModBinaryWriteTranslation();
@@ -14302,6 +14315,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class OblivionModBinaryTranslationMixIn
     {
@@ -14496,6 +14512,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class OblivionModBinaryWrapper :
         BinaryWrapper,
         IOblivionModGetter
@@ -15276,8 +15296,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
+
+#endregion
+

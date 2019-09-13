@@ -1103,8 +1103,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class SoundItemXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static SoundItemXmlWriteTranslation Instance = new SoundItemXmlWriteTranslation();
@@ -1281,6 +1284,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class SoundItemXmlTranslationMixIn
     {
@@ -1438,9 +1444,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class SoundItem_Mask<T> : IMask<T>, IEquatable<SoundItem_Mask<T>>
     {
         #region Ctors
@@ -1741,9 +1751,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((Chance, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class SoundItemBinaryWriteTranslation : IBinaryWriteTranslator
     {
         public readonly static SoundItemBinaryWriteTranslation Instance = new SoundItemBinaryWriteTranslation();
@@ -1812,6 +1825,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class SoundItemBinaryTranslationMixIn
     {
@@ -1862,6 +1878,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class SoundItemBinaryWrapper :
         BinaryWrapper,
         ISoundItemGetter
@@ -1958,8 +1978,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
+
+#endregion
+
