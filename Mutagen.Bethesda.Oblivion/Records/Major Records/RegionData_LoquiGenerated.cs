@@ -1150,8 +1150,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class RegionData
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => RegionData_Registration.Instance;
+        public static RegionData_Registration Registration => RegionData_Registration.Instance;
+        protected virtual object CommonInstance()
+        {
+            return RegionDataCommon.Instance;
+        }
+        protected virtual object CommonSetterInstance()
+        {
+            return RegionDataSetterCommon.Instance;
+        }
+        protected virtual object CommonSetterCopyInstance()
+        {
+            return RegionDataSetterCopyCommon.Instance;
+        }
+        object IRegionDataInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IRegionDataInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object IRegionDataInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class RegionDataXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static RegionDataXmlWriteTranslation Instance = new RegionDataXmlWriteTranslation();
@@ -1392,6 +1433,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class RegionDataXmlTranslationMixIn
     {
@@ -1549,9 +1593,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class RegionData_Mask<T> : IMask<T>, IEquatable<RegionData_Mask<T>>
     {
         #region Ctors
@@ -1906,9 +1954,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((RDATDataTypeState, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class RegionDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
         public readonly static RegionDataBinaryWriteTranslation Instance = new RegionDataBinaryWriteTranslation();
@@ -1995,6 +2046,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class RegionDataBinaryTranslationMixIn
     {
@@ -2045,6 +2099,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class RegionDataBinaryWrapper :
         BinaryWrapper,
         IRegionDataInternalGetter
@@ -2158,46 +2216,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Oblivion
-{
-    public partial class RegionData
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => RegionData_Registration.Instance;
-        public static RegionData_Registration Registration => RegionData_Registration.Instance;
-        protected virtual object CommonInstance()
-        {
-            return RegionDataCommon.Instance;
-        }
-        protected virtual object CommonSetterInstance()
-        {
-            return RegionDataSetterCommon.Instance;
-        }
-        protected virtual object CommonSetterCopyInstance()
-        {
-            return RegionDataSetterCopyCommon.Instance;
-        }
-        object IRegionDataInternalGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IRegionDataInternalGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IRegionDataInternalGetter.CommonSetterCopyInstance()
-        {
-            return this.CommonSetterCopyInstance();
-        }
+#endregion
 
-        #endregion
-
-    }
-}

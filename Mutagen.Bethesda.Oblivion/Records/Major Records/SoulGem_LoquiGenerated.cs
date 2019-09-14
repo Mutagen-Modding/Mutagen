@@ -2068,8 +2068,37 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class SoulGem
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => SoulGem_Registration.Instance;
+        public new static SoulGem_Registration Registration => SoulGem_Registration.Instance;
+        protected override object CommonInstance()
+        {
+            return SoulGemCommon.Instance;
+        }
+        protected override object CommonSetterInstance()
+        {
+            return SoulGemSetterCommon.Instance;
+        }
+        protected override object CommonSetterCopyInstance()
+        {
+            return SoulGemSetterCopyCommon.Instance;
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class SoulGemXmlWriteTranslation :
         ItemAbstractXmlWriteTranslation,
         IXmlWriteTranslator
@@ -2531,6 +2560,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class SoulGemXmlTranslationMixIn
     {
@@ -2593,9 +2625,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class SoulGem_Mask<T> : ItemAbstract_Mask<T>, IMask<T>, IEquatable<SoulGem_Mask<T>>
     {
         #region Ctors
@@ -3082,9 +3118,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((DATADataTypeState, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class SoulGemBinaryWriteTranslation :
         ItemAbstractBinaryWriteTranslation,
         IBinaryWriteTranslator
@@ -3276,6 +3315,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class SoulGemBinaryTranslationMixIn
     {
@@ -3299,6 +3341,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class SoulGemBinaryWrapper :
         ItemAbstractBinaryWrapper,
         ISoulGemInternalGetter
@@ -3490,34 +3536,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Oblivion
-{
-    public partial class SoulGem
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => SoulGem_Registration.Instance;
-        public new static SoulGem_Registration Registration => SoulGem_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return SoulGemCommon.Instance;
-        }
-        protected override object CommonSetterInstance()
-        {
-            return SoulGemSetterCommon.Instance;
-        }
-        protected override object CommonSetterCopyInstance()
-        {
-            return SoulGemSetterCopyCommon.Instance;
-        }
+#endregion
 
-        #endregion
-
-    }
-}

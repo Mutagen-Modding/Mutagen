@@ -38,7 +38,6 @@ namespace Mutagen.Bethesda.Preprocessing
 
                         // Construct group length container for later use
                         Dictionary<long, (uint Length, long Offset)> grupMeta = new Dictionary<long, (uint Length, long Offset)>();
-
                         inputStream.Position = 0;
                         while (!inputStream.Complete)
                         {
@@ -51,7 +50,6 @@ namespace Mutagen.Bethesda.Preprocessing
                             {
                                 var recordLocation = fileLocs.ListedRecords.Keys[nextRec.Key];
                                 noRecordLength = recordLocation - inputStream.Position;
-                                noRecordLength += 4;
                             }
                             else
                             {
@@ -61,14 +59,8 @@ namespace Mutagen.Bethesda.Preprocessing
 
                             // If complete overall, return
                             if (inputStream.Complete) break;
-
-                            // Get compression status
-                            var len = inputStream.ReadUInt32();
-                            var flags = (MajorRecord.MajorRecordFlag)inputStream.ReadInt32();
-
-                            // Turn compressed flag off
-                            flags &= ~MajorRecord.MajorRecordFlag.Compressed;
-                            var restOfMeta = inputStream.ReadBytes(8);
+                            var majorMeta = meta.ReadMajorRecord(inputStream);
+                            var len = majorMeta.RecordLength;
                             using (var frame = MutagenFrame.ByLength(
                                 reader: inputStream,
                                 length: len))
@@ -77,9 +69,13 @@ namespace Mutagen.Bethesda.Preprocessing
                                 var decompressed = frame.Decompress();
                                 var decompressedLen = decompressed.TotalLength;
                                 var lengthDiff = decompressedLen - len;
-                                writer.Write((uint)(len + lengthDiff));
-                                writer.Write((int)flags);
-                                writer.Write(restOfMeta);
+                                var majorMetaSpan = majorMeta.Span.ToArray();
+
+                                // Write major Meta
+                                var writableMajorMeta = meta.MajorRecordWritable(majorMetaSpan.AsSpan());
+                                writableMajorMeta.IsCompressed = false;
+                                writableMajorMeta.RecordLength = (uint)(len + lengthDiff);
+                                writer.Write(majorMetaSpan);
                                 writer.Write(decompressed.ReadRemaining());
 
                                 // If no difference in lengths, move on

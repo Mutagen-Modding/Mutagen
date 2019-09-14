@@ -1586,8 +1586,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class DialogResponse
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => DialogResponse_Registration.Instance;
+        public static DialogResponse_Registration Registration => DialogResponse_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return DialogResponseCommon.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return DialogResponseSetterCommon.Instance;
+        }
+        protected object CommonSetterCopyInstance()
+        {
+            return DialogResponseSetterCopyCommon.Instance;
+        }
+        object IDialogResponseInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IDialogResponseInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object IDialogResponseInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class DialogResponseXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static DialogResponseXmlWriteTranslation Instance = new DialogResponseXmlWriteTranslation();
@@ -1997,6 +2038,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class DialogResponseXmlTranslationMixIn
     {
@@ -2154,9 +2198,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class DialogResponse_Mask<T> : IMask<T>, IEquatable<DialogResponse_Mask<T>>
     {
         #region Ctors
@@ -2619,9 +2667,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((TRDTDataTypeState, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class DialogResponseBinaryWriteTranslation : IBinaryWriteTranslator
     {
         public readonly static DialogResponseBinaryWriteTranslation Instance = new DialogResponseBinaryWriteTranslation();
@@ -2720,6 +2771,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class DialogResponseBinaryTranslationMixIn
     {
@@ -2770,6 +2824,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class DialogResponseBinaryWrapper :
         BinaryWrapper,
         IDialogResponseInternalGetter
@@ -2936,46 +2994,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Oblivion
-{
-    public partial class DialogResponse
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => DialogResponse_Registration.Instance;
-        public static DialogResponse_Registration Registration => DialogResponse_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return DialogResponseCommon.Instance;
-        }
-        protected object CommonSetterInstance()
-        {
-            return DialogResponseSetterCommon.Instance;
-        }
-        protected object CommonSetterCopyInstance()
-        {
-            return DialogResponseSetterCopyCommon.Instance;
-        }
-        object IDialogResponseInternalGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IDialogResponseInternalGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IDialogResponseInternalGetter.CommonSetterCopyInstance()
-        {
-            return this.CommonSetterCopyInstance();
-        }
+#endregion
 
-        #endregion
-
-    }
-}

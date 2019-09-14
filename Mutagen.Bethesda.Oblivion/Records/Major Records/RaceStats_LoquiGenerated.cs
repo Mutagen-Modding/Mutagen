@@ -1383,8 +1383,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class RaceStats
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => RaceStats_Registration.Instance;
+        public static RaceStats_Registration Registration => RaceStats_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return RaceStatsCommon.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return RaceStatsSetterCommon.Instance;
+        }
+        protected object CommonSetterCopyInstance()
+        {
+            return RaceStatsSetterCopyCommon.Instance;
+        }
+        object IRaceStatsInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IRaceStatsInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object IRaceStatsInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class RaceStatsXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static RaceStatsXmlWriteTranslation Instance = new RaceStatsXmlWriteTranslation();
@@ -1788,6 +1829,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class RaceStatsXmlTranslationMixIn
     {
@@ -1945,9 +1989,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class RaceStats_Mask<T> : IMask<T>, IEquatable<RaceStats_Mask<T>>
     {
         #region Ctors
@@ -2410,9 +2458,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((Luck, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class RaceStatsBinaryWriteTranslation : IBinaryWriteTranslator
     {
         public readonly static RaceStatsBinaryWriteTranslation Instance = new RaceStatsBinaryWriteTranslation();
@@ -2470,6 +2521,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class RaceStatsBinaryTranslationMixIn
     {
@@ -2520,6 +2574,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class RaceStatsBinaryWrapper :
         BinaryWrapper,
         IRaceStatsInternalGetter
@@ -2623,46 +2681,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Oblivion
-{
-    public partial class RaceStats
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => RaceStats_Registration.Instance;
-        public static RaceStats_Registration Registration => RaceStats_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return RaceStatsCommon.Instance;
-        }
-        protected object CommonSetterInstance()
-        {
-            return RaceStatsSetterCommon.Instance;
-        }
-        protected object CommonSetterCopyInstance()
-        {
-            return RaceStatsSetterCopyCommon.Instance;
-        }
-        object IRaceStatsInternalGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IRaceStatsInternalGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IRaceStatsInternalGetter.CommonSetterCopyInstance()
-        {
-            return this.CommonSetterCopyInstance();
-        }
+#endregion
 
-        #endregion
-
-    }
-}

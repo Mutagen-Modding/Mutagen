@@ -70,7 +70,9 @@ namespace Mutagen.Bethesda.Generation
             this._typeGenerations[typeof(P2FloatType)] = new PointBinaryTranslationGeneration<P2Float>(expectedLen: 8);
             this._typeGenerations[typeof(P3FloatType)] = new PointBinaryTranslationGeneration<P3Float>(expectedLen: 12);
             this._typeGenerations[typeof(P2Int32Type)] = new PointBinaryTranslationGeneration<P2Int>(expectedLen: 8);
+            this._typeGenerations[typeof(P3IntType)] = new PointBinaryTranslationGeneration<P3Int>(expectedLen: 12);
             this._typeGenerations[typeof(P2Int16Type)] = new PointBinaryTranslationGeneration<P2Int16>(expectedLen: 4);
+            this._typeGenerations[typeof(P3Int16Type)] = new PointBinaryTranslationGeneration<P3Int16>(expectedLen: 6);
             this._typeGenerations[typeof(P2FloatType)] = new PointBinaryTranslationGeneration<P2Float>(expectedLen: 8);
             this._typeGenerations[typeof(StringType)] = new StringBinaryTranslationGeneration()
             {
@@ -225,7 +227,10 @@ namespace Mutagen.Bethesda.Generation
         public override async Task GenerateInVoid(ObjectGeneration obj, FileGeneration fg)
         {
             await base.GenerateInVoid(obj, fg);
-            await GenerateImportWrapper(obj, fg);
+            using (new NamespaceWrapper(fg, obj.InternalNamespace))
+            {
+                await GenerateImportWrapper(obj, fg);
+            }
         }
 
         public override async Task GenerateInTranslationCreateClass(ObjectGeneration obj, FileGeneration fg)

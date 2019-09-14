@@ -1202,8 +1202,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class LockInformation
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => LockInformation_Registration.Instance;
+        public static LockInformation_Registration Registration => LockInformation_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return LockInformationCommon.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return LockInformationSetterCommon.Instance;
+        }
+        protected object CommonSetterCopyInstance()
+        {
+            return LockInformationSetterCopyCommon.Instance;
+        }
+        object ILockInformationInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object ILockInformationInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object ILockInformationInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class LockInformationXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static LockInformationXmlWriteTranslation Instance = new LockInformationXmlWriteTranslation();
@@ -1448,6 +1489,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class LockInformationXmlTranslationMixIn
     {
@@ -1605,9 +1649,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class LockInformation_Mask<T> : IMask<T>, IEquatable<LockInformation_Mask<T>>
     {
         #region Ctors
@@ -1962,9 +2010,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((Flags, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class LockInformationBinaryWriteTranslation : IBinaryWriteTranslator
     {
         public readonly static LockInformationBinaryWriteTranslation Instance = new LockInformationBinaryWriteTranslation();
@@ -2032,6 +2083,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class LockInformationBinaryTranslationMixIn
     {
@@ -2082,6 +2136,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class LockInformationBinaryWrapper :
         BinaryWrapper,
         ILockInformationInternalGetter
@@ -2186,46 +2244,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Oblivion
-{
-    public partial class LockInformation
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => LockInformation_Registration.Instance;
-        public static LockInformation_Registration Registration => LockInformation_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return LockInformationCommon.Instance;
-        }
-        protected object CommonSetterInstance()
-        {
-            return LockInformationSetterCommon.Instance;
-        }
-        protected object CommonSetterCopyInstance()
-        {
-            return LockInformationSetterCopyCommon.Instance;
-        }
-        object ILockInformationInternalGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object ILockInformationInternalGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object ILockInformationInternalGetter.CommonSetterCopyInstance()
-        {
-            return this.CommonSetterCopyInstance();
-        }
+#endregion
 
-        #endregion
-
-    }
-}

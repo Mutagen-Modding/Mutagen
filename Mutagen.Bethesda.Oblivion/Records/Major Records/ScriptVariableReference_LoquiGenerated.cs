@@ -1042,8 +1042,37 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class ScriptVariableReference
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => ScriptVariableReference_Registration.Instance;
+        public new static ScriptVariableReference_Registration Registration => ScriptVariableReference_Registration.Instance;
+        protected override object CommonInstance()
+        {
+            return ScriptVariableReferenceCommon.Instance;
+        }
+        protected override object CommonSetterInstance()
+        {
+            return ScriptVariableReferenceSetterCommon.Instance;
+        }
+        protected override object CommonSetterCopyInstance()
+        {
+            return ScriptVariableReferenceSetterCopyCommon.Instance;
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class ScriptVariableReferenceXmlWriteTranslation :
         ScriptReferenceXmlWriteTranslation,
         IXmlWriteTranslator
@@ -1201,6 +1230,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class ScriptVariableReferenceXmlTranslationMixIn
     {
@@ -1263,9 +1295,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class ScriptVariableReference_Mask<T> : ScriptReference_Mask<T>, IMask<T>, IEquatable<ScriptVariableReference_Mask<T>>
     {
         #region Ctors
@@ -1524,9 +1560,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((VariableIndex, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class ScriptVariableReferenceBinaryWriteTranslation :
         ScriptReferenceBinaryWriteTranslation,
         IBinaryWriteTranslator
@@ -1600,6 +1639,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class ScriptVariableReferenceBinaryTranslationMixIn
     {
@@ -1623,6 +1665,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class ScriptVariableReferenceBinaryWrapper :
         ScriptReferenceBinaryWrapper,
         IScriptVariableReferenceInternalGetter
@@ -1734,34 +1780,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Oblivion
-{
-    public partial class ScriptVariableReference
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => ScriptVariableReference_Registration.Instance;
-        public new static ScriptVariableReference_Registration Registration => ScriptVariableReference_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return ScriptVariableReferenceCommon.Instance;
-        }
-        protected override object CommonSetterInstance()
-        {
-            return ScriptVariableReferenceSetterCommon.Instance;
-        }
-        protected override object CommonSetterCopyInstance()
-        {
-            return ScriptVariableReferenceSetterCopyCommon.Instance;
-        }
+#endregion
 
-        #endregion
-
-    }
-}

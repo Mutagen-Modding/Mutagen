@@ -1962,8 +1962,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class ModHeader
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => ModHeader_Registration.Instance;
+        public static ModHeader_Registration Registration => ModHeader_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return ModHeaderCommon.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return ModHeaderSetterCommon.Instance;
+        }
+        protected object CommonSetterCopyInstance()
+        {
+            return ModHeaderSetterCopyCommon.Instance;
+        }
+        object IModHeaderInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IModHeaderInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object IModHeaderInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class ModHeaderXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static ModHeaderXmlWriteTranslation Instance = new ModHeaderXmlWriteTranslation();
@@ -2459,6 +2500,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class ModHeaderXmlTranslationMixIn
     {
@@ -2616,9 +2660,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class ModHeader_Mask<T> : IMask<T>, IEquatable<ModHeader_Mask<T>>
     {
         #region Ctors
@@ -3225,9 +3273,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((VestigialData, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class ModHeaderBinaryWriteTranslation : IBinaryWriteTranslator
     {
         public readonly static ModHeaderBinaryWriteTranslation Instance = new ModHeaderBinaryWriteTranslation();
@@ -3371,6 +3422,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class ModHeaderBinaryTranslationMixIn
     {
@@ -3421,6 +3475,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class ModHeaderBinaryWrapper :
         BinaryWrapper,
         IModHeaderInternalGetter
@@ -3614,46 +3672,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Oblivion
-{
-    public partial class ModHeader
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => ModHeader_Registration.Instance;
-        public static ModHeader_Registration Registration => ModHeader_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return ModHeaderCommon.Instance;
-        }
-        protected object CommonSetterInstance()
-        {
-            return ModHeaderSetterCommon.Instance;
-        }
-        protected object CommonSetterCopyInstance()
-        {
-            return ModHeaderSetterCopyCommon.Instance;
-        }
-        object IModHeaderInternalGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IModHeaderInternalGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IModHeaderInternalGetter.CommonSetterCopyInstance()
-        {
-            return this.CommonSetterCopyInstance();
-        }
+#endregion
 
-        #endregion
-
-    }
-}

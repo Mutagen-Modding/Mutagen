@@ -1520,8 +1520,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class CellLighting
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => CellLighting_Registration.Instance;
+        public static CellLighting_Registration Registration => CellLighting_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return CellLightingCommon.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return CellLightingSetterCommon.Instance;
+        }
+        protected object CommonSetterCopyInstance()
+        {
+            return CellLightingSetterCopyCommon.Instance;
+        }
+        object ICellLightingInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object ICellLightingInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object ICellLightingInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class CellLightingXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static CellLightingXmlWriteTranslation Instance = new CellLightingXmlWriteTranslation();
@@ -1960,6 +2001,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class CellLightingXmlTranslationMixIn
     {
@@ -2117,9 +2161,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class CellLighting_Mask<T> : IMask<T>, IEquatable<CellLighting_Mask<T>>
     {
         #region Ctors
@@ -2609,9 +2657,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((FogClipDistance, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class CellLightingBinaryWriteTranslation : IBinaryWriteTranslator
     {
         public readonly static CellLightingBinaryWriteTranslation Instance = new CellLightingBinaryWriteTranslation();
@@ -2693,6 +2744,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class CellLightingBinaryTranslationMixIn
     {
@@ -2743,6 +2797,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class CellLightingBinaryWrapper :
         BinaryWrapper,
         ICellLightingInternalGetter
@@ -2849,46 +2907,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Oblivion
-{
-    public partial class CellLighting
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => CellLighting_Registration.Instance;
-        public static CellLighting_Registration Registration => CellLighting_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return CellLightingCommon.Instance;
-        }
-        protected object CommonSetterInstance()
-        {
-            return CellLightingSetterCommon.Instance;
-        }
-        protected object CommonSetterCopyInstance()
-        {
-            return CellLightingSetterCopyCommon.Instance;
-        }
-        object ICellLightingInternalGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object ICellLightingInternalGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object ICellLightingInternalGetter.CommonSetterCopyInstance()
-        {
-            return this.CommonSetterCopyInstance();
-        }
+#endregion
 
-        #endregion
-
-    }
-}

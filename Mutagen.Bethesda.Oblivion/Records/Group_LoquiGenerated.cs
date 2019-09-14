@@ -1249,8 +1249,50 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class Group<T>
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Group_Registration.Instance;
+        public static Group_Registration Registration => Group_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return GroupCommon<T>.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return GroupSetterCommon<T>.Instance;
+        }
+        protected object CommonSetterCopyInstance<T_CopyMask>()
+            where T_CopyMask : OblivionMajorRecord_CopyMask, new()
+        {
+            return GroupSetterCopyCommon.Instance;
+        }
+        object IGroupInternalGetter<T>.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IGroupInternalGetter<T>.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object IGroupInternalGetter<T>.CommonSetterCopyInstance<T_CopyMask>()
+        {
+            return this.CommonSetterCopyInstance<T_CopyMask>();
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class GroupXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static GroupXmlWriteTranslation Instance = new GroupXmlWriteTranslation();
@@ -1484,6 +1526,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class GroupXmlTranslationMixIn
     {
@@ -1660,9 +1705,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class Group_Mask<T> : IMask<T>, IEquatable<Group_Mask<T>>
     {
         #region Ctors
@@ -2061,9 +2110,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((Items?.Overall ?? true, Items?.Specific?.GetCrystal()));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class GroupBinaryWriteTranslation : IBinaryWriteTranslator
     {
         public readonly static GroupBinaryWriteTranslation Instance = new GroupBinaryWriteTranslation();
@@ -2198,6 +2250,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class GroupBinaryTranslationMixIn
     {
@@ -2253,6 +2308,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class GroupBinaryWrapper<T> :
         BinaryWrapper,
         IGroupInternalGetter<T>
@@ -2379,47 +2438,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Oblivion
-{
-    public partial class Group<T>
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Group_Registration.Instance;
-        public static Group_Registration Registration => Group_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return GroupCommon<T>.Instance;
-        }
-        protected object CommonSetterInstance()
-        {
-            return GroupSetterCommon<T>.Instance;
-        }
-        protected object CommonSetterCopyInstance<T_CopyMask>()
-            where T_CopyMask : OblivionMajorRecord_CopyMask, new()
-        {
-            return GroupSetterCopyCommon.Instance;
-        }
-        object IGroupInternalGetter<T>.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IGroupInternalGetter<T>.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IGroupInternalGetter<T>.CommonSetterCopyInstance<T_CopyMask>()
-        {
-            return this.CommonSetterCopyInstance<T_CopyMask>();
-        }
+#endregion
 
-        #endregion
-
-    }
-}

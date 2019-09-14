@@ -1657,8 +1657,37 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class DialogTopic
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => DialogTopic_Registration.Instance;
+        public new static DialogTopic_Registration Registration => DialogTopic_Registration.Instance;
+        protected override object CommonInstance()
+        {
+            return DialogTopicCommon.Instance;
+        }
+        protected override object CommonSetterInstance()
+        {
+            return DialogTopicSetterCommon.Instance;
+        }
+        protected override object CommonSetterCopyInstance()
+        {
+            return DialogTopicSetterCopyCommon.Instance;
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class DialogTopicXmlWriteTranslation :
         OblivionMajorRecordXmlWriteTranslation,
         IXmlWriteTranslator
@@ -1999,6 +2028,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class DialogTopicXmlTranslationMixIn
     {
@@ -2061,9 +2093,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class DialogTopic_Mask<T> : OblivionMajorRecord_Mask<T>, IMask<T>, IEquatable<DialogTopic_Mask<T>>
     {
         #region Ctors
@@ -2577,9 +2613,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((Items?.Overall ?? true, Items?.Specific?.GetCrystal()));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class DialogTopicBinaryWriteTranslation :
         OblivionMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
@@ -2764,6 +2803,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class DialogTopicBinaryTranslationMixIn
     {
@@ -2787,6 +2829,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class DialogTopicBinaryWrapper :
         OblivionMajorRecordBinaryWrapper,
         IDialogTopicInternalGetter
@@ -2940,34 +2986,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Oblivion
-{
-    public partial class DialogTopic
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => DialogTopic_Registration.Instance;
-        public new static DialogTopic_Registration Registration => DialogTopic_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return DialogTopicCommon.Instance;
-        }
-        protected override object CommonSetterInstance()
-        {
-            return DialogTopicSetterCommon.Instance;
-        }
-        protected override object CommonSetterCopyInstance()
-        {
-            return DialogTopicSetterCopyCommon.Instance;
-        }
+#endregion
 
-        #endregion
-
-    }
-}

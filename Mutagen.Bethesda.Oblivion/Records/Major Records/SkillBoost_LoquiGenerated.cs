@@ -1032,8 +1032,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class SkillBoost
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => SkillBoost_Registration.Instance;
+        public static SkillBoost_Registration Registration => SkillBoost_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return SkillBoostCommon.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return SkillBoostSetterCommon.Instance;
+        }
+        protected object CommonSetterCopyInstance()
+        {
+            return SkillBoostSetterCopyCommon.Instance;
+        }
+        object ISkillBoostInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object ISkillBoostInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object ISkillBoostInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class SkillBoostXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static SkillBoostXmlWriteTranslation Instance = new SkillBoostXmlWriteTranslation();
@@ -1227,6 +1268,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class SkillBoostXmlTranslationMixIn
     {
@@ -1384,9 +1428,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class SkillBoost_Mask<T> : IMask<T>, IEquatable<SkillBoost_Mask<T>>
     {
         #region Ctors
@@ -1687,9 +1735,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((Boost, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class SkillBoostBinaryWriteTranslation : IBinaryWriteTranslator
     {
         public readonly static SkillBoostBinaryWriteTranslation Instance = new SkillBoostBinaryWriteTranslation();
@@ -1744,6 +1795,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class SkillBoostBinaryTranslationMixIn
     {
@@ -1794,6 +1848,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class SkillBoostBinaryWrapper :
         BinaryWrapper,
         ISkillBoostInternalGetter
@@ -1891,46 +1949,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Oblivion
-{
-    public partial class SkillBoost
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => SkillBoost_Registration.Instance;
-        public static SkillBoost_Registration Registration => SkillBoost_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return SkillBoostCommon.Instance;
-        }
-        protected object CommonSetterInstance()
-        {
-            return SkillBoostSetterCommon.Instance;
-        }
-        protected object CommonSetterCopyInstance()
-        {
-            return SkillBoostSetterCopyCommon.Instance;
-        }
-        object ISkillBoostInternalGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object ISkillBoostInternalGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object ISkillBoostInternalGetter.CommonSetterCopyInstance()
-        {
-            return this.CommonSetterCopyInstance();
-        }
+#endregion
 
-        #endregion
-
-    }
-}

@@ -1707,8 +1707,37 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class Enchantment
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Enchantment_Registration.Instance;
+        public new static Enchantment_Registration Registration => Enchantment_Registration.Instance;
+        protected override object CommonInstance()
+        {
+            return EnchantmentCommon.Instance;
+        }
+        protected override object CommonSetterInstance()
+        {
+            return EnchantmentSetterCommon.Instance;
+        }
+        protected override object CommonSetterCopyInstance()
+        {
+            return EnchantmentSetterCopyCommon.Instance;
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class EnchantmentXmlWriteTranslation :
         OblivionMajorRecordXmlWriteTranslation,
         IXmlWriteTranslator
@@ -2110,6 +2139,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class EnchantmentXmlTranslationMixIn
     {
@@ -2172,9 +2204,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class Enchantment_Mask<T> : OblivionMajorRecord_Mask<T>, IMask<T>, IEquatable<Enchantment_Mask<T>>
     {
         #region Ctors
@@ -2673,9 +2709,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((ENITDataTypeState, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class EnchantmentBinaryWriteTranslation :
         OblivionMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
@@ -2831,6 +2870,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class EnchantmentBinaryTranslationMixIn
     {
@@ -2854,6 +2896,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class EnchantmentBinaryWrapper :
         OblivionMajorRecordBinaryWrapper,
         IEnchantmentInternalGetter
@@ -3012,34 +3058,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Oblivion
-{
-    public partial class Enchantment
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Enchantment_Registration.Instance;
-        public new static Enchantment_Registration Registration => Enchantment_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return EnchantmentCommon.Instance;
-        }
-        protected override object CommonSetterInstance()
-        {
-            return EnchantmentSetterCommon.Instance;
-        }
-        protected override object CommonSetterCopyInstance()
-        {
-            return EnchantmentSetterCopyCommon.Instance;
-        }
+#endregion
 
-        #endregion
-
-    }
-}

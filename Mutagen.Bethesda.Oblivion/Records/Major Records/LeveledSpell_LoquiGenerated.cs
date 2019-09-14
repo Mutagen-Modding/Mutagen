@@ -1510,8 +1510,37 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class LeveledSpell
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => LeveledSpell_Registration.Instance;
+        public new static LeveledSpell_Registration Registration => LeveledSpell_Registration.Instance;
+        protected override object CommonInstance()
+        {
+            return LeveledSpellCommon.Instance;
+        }
+        protected override object CommonSetterInstance()
+        {
+            return LeveledSpellSetterCommon.Instance;
+        }
+        protected override object CommonSetterCopyInstance()
+        {
+            return LeveledSpellSetterCopyCommon.Instance;
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class LeveledSpellXmlWriteTranslation :
         SpellAbstractXmlWriteTranslation,
         IXmlWriteTranslator
@@ -1785,6 +1814,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class LeveledSpellXmlTranslationMixIn
     {
@@ -1847,9 +1879,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class LeveledSpell_Mask<T> : SpellAbstract_Mask<T>, IMask<T>, IEquatable<LeveledSpell_Mask<T>>
     {
         #region Ctors
@@ -2240,9 +2276,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((Entries?.Overall ?? true, Entries?.Specific?.GetCrystal()));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class LeveledSpellBinaryWriteTranslation :
         SpellAbstractBinaryWriteTranslation,
         IBinaryWriteTranslator
@@ -2393,6 +2432,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class LeveledSpellBinaryTranslationMixIn
     {
@@ -2416,6 +2458,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class LeveledSpellBinaryWrapper :
         SpellAbstractBinaryWrapper,
         ILeveledSpellInternalGetter
@@ -2562,34 +2608,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Oblivion
-{
-    public partial class LeveledSpell
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => LeveledSpell_Registration.Instance;
-        public new static LeveledSpell_Registration Registration => LeveledSpell_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return LeveledSpellCommon.Instance;
-        }
-        protected override object CommonSetterInstance()
-        {
-            return LeveledSpellSetterCommon.Instance;
-        }
-        protected override object CommonSetterCopyInstance()
-        {
-            return LeveledSpellSetterCopyCommon.Instance;
-        }
+#endregion
 
-        #endregion
-
-    }
-}

@@ -1402,8 +1402,50 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class LeveledEntry<T>
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => LeveledEntry_Registration.Instance;
+        public static LeveledEntry_Registration Registration => LeveledEntry_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return LeveledEntryCommon<T>.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return LeveledEntrySetterCommon<T>.Instance;
+        }
+        protected object CommonSetterCopyInstance<T_CopyMask>()
+            where T_CopyMask : OblivionMajorRecord_CopyMask, new()
+        {
+            return LeveledEntrySetterCopyCommon.Instance;
+        }
+        object ILeveledEntryInternalGetter<T>.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object ILeveledEntryInternalGetter<T>.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object ILeveledEntryInternalGetter<T>.CommonSetterCopyInstance<T_CopyMask>()
+        {
+            return this.CommonSetterCopyInstance<T_CopyMask>();
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class LeveledEntryXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static LeveledEntryXmlWriteTranslation Instance = new LeveledEntryXmlWriteTranslation();
@@ -1684,6 +1726,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class LeveledEntryXmlTranslationMixIn
     {
@@ -1860,9 +1905,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class LeveledEntry_Mask<T> : IMask<T>, IEquatable<LeveledEntry_Mask<T>>
     {
         #region Ctors
@@ -2247,9 +2296,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((Fluff2, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class LeveledEntryBinaryWriteTranslation : IBinaryWriteTranslator
     {
         public readonly static LeveledEntryBinaryWriteTranslation Instance = new LeveledEntryBinaryWriteTranslation();
@@ -2321,6 +2373,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class LeveledEntryBinaryTranslationMixIn
     {
@@ -2376,6 +2431,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class LeveledEntryBinaryWrapper<T> :
         BinaryWrapper,
         ILeveledEntryInternalGetter<T>
@@ -2488,47 +2547,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Oblivion
-{
-    public partial class LeveledEntry<T>
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => LeveledEntry_Registration.Instance;
-        public static LeveledEntry_Registration Registration => LeveledEntry_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return LeveledEntryCommon<T>.Instance;
-        }
-        protected object CommonSetterInstance()
-        {
-            return LeveledEntrySetterCommon<T>.Instance;
-        }
-        protected object CommonSetterCopyInstance<T_CopyMask>()
-            where T_CopyMask : OblivionMajorRecord_CopyMask, new()
-        {
-            return LeveledEntrySetterCopyCommon.Instance;
-        }
-        object ILeveledEntryInternalGetter<T>.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object ILeveledEntryInternalGetter<T>.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object ILeveledEntryInternalGetter<T>.CommonSetterCopyInstance<T_CopyMask>()
-        {
-            return this.CommonSetterCopyInstance<T_CopyMask>();
-        }
+#endregion
 
-        #endregion
-
-    }
-}

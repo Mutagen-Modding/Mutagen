@@ -239,23 +239,9 @@ namespace Mutagen.Bethesda.Generation
         public override async Task GenerateInVoid(ObjectGeneration obj, FileGeneration fg)
         {
             if (obj.GetObjectType() != ObjectType.Mod) return;
-            fg.AppendLine("public class GroupMask");
-            using (new BraceWrapper(fg))
+            using (new NamespaceWrapper(fg, obj.Namespace))
             {
-                foreach (var field in obj.IterateFields())
-                {
-                    if (!(field is LoquiType loqui)) continue;
-                    if (loqui.TargetObjectGeneration == null) continue;
-                    if (loqui.TargetObjectGeneration.GetObjectType() != ObjectType.Group) continue;
-                    fg.AppendLine($"public bool {loqui.Name};");
-                }
-
-                fg.AppendLine("public GroupMask()");
-                using (new BraceWrapper(fg))
-                {
-                }
-
-                fg.AppendLine("public GroupMask(bool defaultValue)");
+                fg.AppendLine("public class GroupMask");
                 using (new BraceWrapper(fg))
                 {
                     foreach (var field in obj.IterateFields())
@@ -263,7 +249,24 @@ namespace Mutagen.Bethesda.Generation
                         if (!(field is LoquiType loqui)) continue;
                         if (loqui.TargetObjectGeneration == null) continue;
                         if (loqui.TargetObjectGeneration.GetObjectType() != ObjectType.Group) continue;
-                        fg.AppendLine($"{loqui.Name} = defaultValue;");
+                        fg.AppendLine($"public bool {loqui.Name};");
+                    }
+
+                    fg.AppendLine("public GroupMask()");
+                    using (new BraceWrapper(fg))
+                    {
+                    }
+
+                    fg.AppendLine("public GroupMask(bool defaultValue)");
+                    using (new BraceWrapper(fg))
+                    {
+                        foreach (var field in obj.IterateFields())
+                        {
+                            if (!(field is LoquiType loqui)) continue;
+                            if (loqui.TargetObjectGeneration == null) continue;
+                            if (loqui.TargetObjectGeneration.GetObjectType() != ObjectType.Group) continue;
+                            fg.AppendLine($"{loqui.Name} = defaultValue;");
+                        }
                     }
                 }
             }

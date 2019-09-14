@@ -1594,8 +1594,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class Effect
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Effect_Registration.Instance;
+        public static Effect_Registration Registration => Effect_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return EffectCommon.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return EffectSetterCommon.Instance;
+        }
+        protected object CommonSetterCopyInstance()
+        {
+            return EffectSetterCopyCommon.Instance;
+        }
+        object IEffectInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IEffectInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object IEffectInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class EffectXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static EffectXmlWriteTranslation Instance = new EffectXmlWriteTranslation();
@@ -1988,6 +2029,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class EffectXmlTranslationMixIn
     {
@@ -2145,9 +2189,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class Effect_Mask<T> : IMask<T>, IEquatable<Effect_Mask<T>>
     {
         #region Ctors
@@ -2622,9 +2670,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((EFITDataTypeState, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class EffectBinaryWriteTranslation : IBinaryWriteTranslator
     {
         public readonly static EffectBinaryWriteTranslation Instance = new EffectBinaryWriteTranslation();
@@ -2762,6 +2813,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class EffectBinaryTranslationMixIn
     {
@@ -2812,6 +2866,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class EffectBinaryWrapper :
         BinaryWrapper,
         IEffectInternalGetter
@@ -2992,46 +3050,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Oblivion
-{
-    public partial class Effect
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Effect_Registration.Instance;
-        public static Effect_Registration Registration => Effect_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return EffectCommon.Instance;
-        }
-        protected object CommonSetterInstance()
-        {
-            return EffectSetterCommon.Instance;
-        }
-        protected object CommonSetterCopyInstance()
-        {
-            return EffectSetterCopyCommon.Instance;
-        }
-        object IEffectInternalGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IEffectInternalGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IEffectInternalGetter.CommonSetterCopyInstance()
-        {
-            return this.CommonSetterCopyInstance();
-        }
+#endregion
 
-        #endregion
-
-    }
-}

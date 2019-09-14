@@ -1036,8 +1036,49 @@ namespace Mutagen.Bethesda.Tests.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Tests
+{
+    public partial class DataFolderLocations
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => DataFolderLocations_Registration.Instance;
+        public static DataFolderLocations_Registration Registration => DataFolderLocations_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return DataFolderLocationsCommon.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return DataFolderLocationsSetterCommon.Instance;
+        }
+        protected object CommonSetterCopyInstance()
+        {
+            return DataFolderLocationsSetterCopyCommon.Instance;
+        }
+        object IDataFolderLocationsInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IDataFolderLocationsInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object IDataFolderLocationsInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Tests.Internals
+{
     public partial class DataFolderLocationsXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static DataFolderLocationsXmlWriteTranslation Instance = new DataFolderLocationsXmlWriteTranslation();
@@ -1237,6 +1278,9 @@ namespace Mutagen.Bethesda.Tests.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Tests
+{
     #region Xml Write Mixins
     public static class DataFolderLocationsXmlTranslationMixIn
     {
@@ -1394,9 +1438,13 @@ namespace Mutagen.Bethesda.Tests.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Tests.Internals
+{
     public class DataFolderLocations_Mask<T> : IMask<T>, IEquatable<DataFolderLocations_Mask<T>>
     {
         #region Ctors
@@ -1697,46 +1745,8 @@ namespace Mutagen.Bethesda.Tests.Internals
             ret.Add((Skyrim, null));
         }
     }
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Tests
-{
-    public partial class DataFolderLocations
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => DataFolderLocations_Registration.Instance;
-        public static DataFolderLocations_Registration Registration => DataFolderLocations_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return DataFolderLocationsCommon.Instance;
-        }
-        protected object CommonSetterInstance()
-        {
-            return DataFolderLocationsSetterCommon.Instance;
-        }
-        protected object CommonSetterCopyInstance()
-        {
-            return DataFolderLocationsSetterCopyCommon.Instance;
-        }
-        object IDataFolderLocationsInternalGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IDataFolderLocationsInternalGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IDataFolderLocationsInternalGetter.CommonSetterCopyInstance()
-        {
-            return this.CommonSetterCopyInstance();
-        }
+#endregion
 
-        #endregion
-
-    }
-}

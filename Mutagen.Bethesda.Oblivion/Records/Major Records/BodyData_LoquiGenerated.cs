@@ -1222,8 +1222,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class BodyData
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => BodyData_Registration.Instance;
+        public static BodyData_Registration Registration => BodyData_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return BodyDataCommon.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return BodyDataSetterCommon.Instance;
+        }
+        protected object CommonSetterCopyInstance()
+        {
+            return BodyDataSetterCopyCommon.Instance;
+        }
+        object IBodyDataInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IBodyDataInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object IBodyDataInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class BodyDataXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static BodyDataXmlWriteTranslation Instance = new BodyDataXmlWriteTranslation();
@@ -1435,6 +1476,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class BodyDataXmlTranslationMixIn
     {
@@ -1592,9 +1636,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class BodyData_Mask<T> : IMask<T>, IEquatable<BodyData_Mask<T>>
     {
         #region Ctors
@@ -1985,9 +2033,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((BodyParts?.Overall ?? true, BodyParts?.Specific?.GetCrystal()));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class BodyDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
         public readonly static BodyDataBinaryWriteTranslation Instance = new BodyDataBinaryWriteTranslation();
@@ -2067,6 +2118,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class BodyDataBinaryTranslationMixIn
     {
@@ -2117,6 +2171,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class BodyDataBinaryWrapper :
         BinaryWrapper,
         IBodyDataInternalGetter
@@ -2258,46 +2316,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Oblivion
-{
-    public partial class BodyData
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => BodyData_Registration.Instance;
-        public static BodyData_Registration Registration => BodyData_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return BodyDataCommon.Instance;
-        }
-        protected object CommonSetterInstance()
-        {
-            return BodyDataSetterCommon.Instance;
-        }
-        protected object CommonSetterCopyInstance()
-        {
-            return BodyDataSetterCopyCommon.Instance;
-        }
-        object IBodyDataInternalGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IBodyDataInternalGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IBodyDataInternalGetter.CommonSetterCopyInstance()
-        {
-            return this.CommonSetterCopyInstance();
-        }
+#endregion
 
-        #endregion
-
-    }
-}

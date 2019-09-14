@@ -1881,8 +1881,37 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class Flora
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Flora_Registration.Instance;
+        public new static Flora_Registration Registration => Flora_Registration.Instance;
+        protected override object CommonInstance()
+        {
+            return FloraCommon.Instance;
+        }
+        protected override object CommonSetterInstance()
+        {
+            return FloraSetterCommon.Instance;
+        }
+        protected override object CommonSetterCopyInstance()
+        {
+            return FloraSetterCopyCommon.Instance;
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class FloraXmlWriteTranslation :
         OblivionMajorRecordXmlWriteTranslation,
         IXmlWriteTranslator
@@ -2308,6 +2337,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class FloraXmlTranslationMixIn
     {
@@ -2370,9 +2402,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class Flora_Mask<T> : OblivionMajorRecord_Mask<T>, IMask<T>, IEquatable<Flora_Mask<T>>
     {
         #region Ctors
@@ -2859,9 +2895,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((PFPCDataTypeState, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class FloraBinaryWriteTranslation :
         OblivionMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
@@ -3021,6 +3060,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class FloraBinaryTranslationMixIn
     {
@@ -3044,6 +3086,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class FloraBinaryWrapper :
         OblivionMajorRecordBinaryWrapper,
         IFloraInternalGetter
@@ -3210,34 +3256,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Oblivion
-{
-    public partial class Flora
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Flora_Registration.Instance;
-        public new static Flora_Registration Registration => Flora_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return FloraCommon.Instance;
-        }
-        protected override object CommonSetterInstance()
-        {
-            return FloraSetterCommon.Instance;
-        }
-        protected override object CommonSetterCopyInstance()
-        {
-            return FloraSetterCopyCommon.Instance;
-        }
+#endregion
 
-        #endregion
-
-    }
-}

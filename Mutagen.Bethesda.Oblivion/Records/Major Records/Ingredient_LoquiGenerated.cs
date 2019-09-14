@@ -2087,8 +2087,37 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class Ingredient
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Ingredient_Registration.Instance;
+        public new static Ingredient_Registration Registration => Ingredient_Registration.Instance;
+        protected override object CommonInstance()
+        {
+            return IngredientCommon.Instance;
+        }
+        protected override object CommonSetterInstance()
+        {
+            return IngredientSetterCommon.Instance;
+        }
+        protected override object CommonSetterCopyInstance()
+        {
+            return IngredientSetterCopyCommon.Instance;
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class IngredientXmlWriteTranslation :
         ItemAbstractXmlWriteTranslation,
         IXmlWriteTranslator
@@ -2563,6 +2592,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class IngredientXmlTranslationMixIn
     {
@@ -2625,9 +2657,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class Ingredient_Mask<T> : ItemAbstract_Mask<T>, IMask<T>, IEquatable<Ingredient_Mask<T>>
     {
         #region Ctors
@@ -3192,9 +3228,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((ENITDataTypeState, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class IngredientBinaryWriteTranslation :
         ItemAbstractBinaryWriteTranslation,
         IBinaryWriteTranslator
@@ -3395,6 +3434,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class IngredientBinaryTranslationMixIn
     {
@@ -3418,6 +3460,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class IngredientBinaryWrapper :
         ItemAbstractBinaryWrapper,
         IIngredientInternalGetter
@@ -3609,34 +3655,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Oblivion
-{
-    public partial class Ingredient
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Ingredient_Registration.Instance;
-        public new static Ingredient_Registration Registration => Ingredient_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return IngredientCommon.Instance;
-        }
-        protected override object CommonSetterInstance()
-        {
-            return IngredientSetterCommon.Instance;
-        }
-        protected override object CommonSetterCopyInstance()
-        {
-            return IngredientSetterCopyCommon.Instance;
-        }
+#endregion
 
-        #endregion
-
-    }
-}

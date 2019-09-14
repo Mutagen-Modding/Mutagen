@@ -2361,8 +2361,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class CombatStyleAdvanced
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => CombatStyleAdvanced_Registration.Instance;
+        public static CombatStyleAdvanced_Registration Registration => CombatStyleAdvanced_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return CombatStyleAdvancedCommon.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return CombatStyleAdvancedSetterCommon.Instance;
+        }
+        protected object CommonSetterCopyInstance()
+        {
+            return CombatStyleAdvancedSetterCopyCommon.Instance;
+        }
+        object ICombatStyleAdvancedInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object ICombatStyleAdvancedInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object ICombatStyleAdvancedInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class CombatStyleAdvancedXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static CombatStyleAdvancedXmlWriteTranslation Instance = new CombatStyleAdvancedXmlWriteTranslation();
@@ -3221,6 +3262,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class CombatStyleAdvancedXmlTranslationMixIn
     {
@@ -3378,9 +3422,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class CombatStyleAdvanced_Mask<T> : IMask<T>, IEquatable<CombatStyleAdvanced_Mask<T>>
     {
         #region Ctors
@@ -4194,9 +4242,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((PowerAttackFatigueModMult, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class CombatStyleAdvancedBinaryWriteTranslation : IBinaryWriteTranslator
     {
         public readonly static CombatStyleAdvancedBinaryWriteTranslation Instance = new CombatStyleAdvancedBinaryWriteTranslation();
@@ -4315,6 +4366,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class CombatStyleAdvancedBinaryTranslationMixIn
     {
@@ -4365,6 +4419,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class CombatStyleAdvancedBinaryWrapper :
         BinaryWrapper,
         ICombatStyleAdvancedInternalGetter
@@ -4483,46 +4541,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Oblivion
-{
-    public partial class CombatStyleAdvanced
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => CombatStyleAdvanced_Registration.Instance;
-        public static CombatStyleAdvanced_Registration Registration => CombatStyleAdvanced_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return CombatStyleAdvancedCommon.Instance;
-        }
-        protected object CommonSetterInstance()
-        {
-            return CombatStyleAdvancedSetterCommon.Instance;
-        }
-        protected object CommonSetterCopyInstance()
-        {
-            return CombatStyleAdvancedSetterCopyCommon.Instance;
-        }
-        object ICombatStyleAdvancedInternalGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object ICombatStyleAdvancedInternalGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object ICombatStyleAdvancedInternalGetter.CommonSetterCopyInstance()
-        {
-            return this.CommonSetterCopyInstance();
-        }
+#endregion
 
-        #endregion
-
-    }
-}

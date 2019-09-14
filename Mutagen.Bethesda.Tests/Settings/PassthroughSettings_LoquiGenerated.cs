@@ -1332,8 +1332,49 @@ namespace Mutagen.Bethesda.Tests.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Tests
+{
+    public partial class PassthroughSettings
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => PassthroughSettings_Registration.Instance;
+        public static PassthroughSettings_Registration Registration => PassthroughSettings_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return PassthroughSettingsCommon.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return PassthroughSettingsSetterCommon.Instance;
+        }
+        protected object CommonSetterCopyInstance()
+        {
+            return PassthroughSettingsSetterCopyCommon.Instance;
+        }
+        object IPassthroughSettingsInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IPassthroughSettingsInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object IPassthroughSettingsInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Tests.Internals
+{
     public partial class PassthroughSettingsXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static PassthroughSettingsXmlWriteTranslation Instance = new PassthroughSettingsXmlWriteTranslation();
@@ -1723,6 +1764,9 @@ namespace Mutagen.Bethesda.Tests.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Tests
+{
     #region Xml Write Mixins
     public static class PassthroughSettingsXmlTranslationMixIn
     {
@@ -1880,9 +1924,13 @@ namespace Mutagen.Bethesda.Tests.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Tests.Internals
+{
     public class PassthroughSettings_Mask<T> : IMask<T>, IEquatable<PassthroughSettings_Mask<T>>
     {
         #region Ctors
@@ -2318,46 +2366,8 @@ namespace Mutagen.Bethesda.Tests.Internals
             ret.Add((TestFolder, null));
         }
     }
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Tests
-{
-    public partial class PassthroughSettings
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => PassthroughSettings_Registration.Instance;
-        public static PassthroughSettings_Registration Registration => PassthroughSettings_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return PassthroughSettingsCommon.Instance;
-        }
-        protected object CommonSetterInstance()
-        {
-            return PassthroughSettingsSetterCommon.Instance;
-        }
-        protected object CommonSetterCopyInstance()
-        {
-            return PassthroughSettingsSetterCopyCommon.Instance;
-        }
-        object IPassthroughSettingsInternalGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IPassthroughSettingsInternalGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IPassthroughSettingsInternalGetter.CommonSetterCopyInstance()
-        {
-            return this.CommonSetterCopyInstance();
-        }
+#endregion
 
-        #endregion
-
-    }
-}

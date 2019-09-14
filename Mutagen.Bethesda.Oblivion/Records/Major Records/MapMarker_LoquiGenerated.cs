@@ -1283,8 +1283,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class MapMarker
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => MapMarker_Registration.Instance;
+        public static MapMarker_Registration Registration => MapMarker_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return MapMarkerCommon.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return MapMarkerSetterCommon.Instance;
+        }
+        protected object CommonSetterCopyInstance()
+        {
+            return MapMarkerSetterCopyCommon.Instance;
+        }
+        object IMapMarkerInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IMapMarkerInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object IMapMarkerInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class MapMarkerXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static MapMarkerXmlWriteTranslation Instance = new MapMarkerXmlWriteTranslation();
@@ -1527,6 +1568,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class MapMarkerXmlTranslationMixIn
     {
@@ -1684,9 +1728,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class MapMarker_Mask<T> : IMask<T>, IEquatable<MapMarker_Mask<T>>
     {
         #region Ctors
@@ -2083,9 +2131,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((Types, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class MapMarkerBinaryWriteTranslation : IBinaryWriteTranslator
     {
         public readonly static MapMarkerBinaryWriteTranslation Instance = new MapMarkerBinaryWriteTranslation();
@@ -2168,6 +2219,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class MapMarkerBinaryTranslationMixIn
     {
@@ -2218,6 +2272,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class MapMarkerBinaryWrapper :
         BinaryWrapper,
         IMapMarkerInternalGetter
@@ -2370,46 +2428,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Oblivion
-{
-    public partial class MapMarker
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => MapMarker_Registration.Instance;
-        public static MapMarker_Registration Registration => MapMarker_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return MapMarkerCommon.Instance;
-        }
-        protected object CommonSetterInstance()
-        {
-            return MapMarkerSetterCommon.Instance;
-        }
-        protected object CommonSetterCopyInstance()
-        {
-            return MapMarkerSetterCopyCommon.Instance;
-        }
-        object IMapMarkerInternalGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IMapMarkerInternalGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IMapMarkerInternalGetter.CommonSetterCopyInstance()
-        {
-            return this.CommonSetterCopyInstance();
-        }
+#endregion
 
-        #endregion
-
-    }
-}

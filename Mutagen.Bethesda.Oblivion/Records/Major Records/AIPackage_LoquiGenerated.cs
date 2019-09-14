@@ -1919,8 +1919,37 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class AIPackage
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => AIPackage_Registration.Instance;
+        public new static AIPackage_Registration Registration => AIPackage_Registration.Instance;
+        protected override object CommonInstance()
+        {
+            return AIPackageCommon.Instance;
+        }
+        protected override object CommonSetterInstance()
+        {
+            return AIPackageSetterCommon.Instance;
+        }
+        protected override object CommonSetterCopyInstance()
+        {
+            return AIPackageSetterCopyCommon.Instance;
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class AIPackageXmlWriteTranslation :
         OblivionMajorRecordXmlWriteTranslation,
         IXmlWriteTranslator
@@ -2333,6 +2362,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class AIPackageXmlTranslationMixIn
     {
@@ -2395,9 +2427,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class AIPackage_Mask<T> : OblivionMajorRecord_Mask<T>, IMask<T>, IEquatable<AIPackage_Mask<T>>
     {
         #region Ctors
@@ -2932,9 +2968,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((PKDTDataTypeState, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class AIPackageBinaryWriteTranslation :
         OblivionMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
@@ -3188,6 +3227,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class AIPackageBinaryTranslationMixIn
     {
@@ -3211,6 +3253,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class AIPackageBinaryWrapper :
         OblivionMajorRecordBinaryWrapper,
         IAIPackageInternalGetter
@@ -3392,34 +3438,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Oblivion
-{
-    public partial class AIPackage
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => AIPackage_Registration.Instance;
-        public new static AIPackage_Registration Registration => AIPackage_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return AIPackageCommon.Instance;
-        }
-        protected override object CommonSetterInstance()
-        {
-            return AIPackageSetterCommon.Instance;
-        }
-        protected override object CommonSetterCopyInstance()
-        {
-            return AIPackageSetterCopyCommon.Instance;
-        }
+#endregion
 
-        #endregion
-
-    }
-}

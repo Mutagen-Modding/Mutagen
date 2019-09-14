@@ -1056,8 +1056,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class ContainerItem
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => ContainerItem_Registration.Instance;
+        public static ContainerItem_Registration Registration => ContainerItem_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return ContainerItemCommon.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return ContainerItemSetterCommon.Instance;
+        }
+        protected object CommonSetterCopyInstance()
+        {
+            return ContainerItemSetterCopyCommon.Instance;
+        }
+        object IContainerItemInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IContainerItemInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object IContainerItemInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class ContainerItemXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static ContainerItemXmlWriteTranslation Instance = new ContainerItemXmlWriteTranslation();
@@ -1232,6 +1273,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class ContainerItemXmlTranslationMixIn
     {
@@ -1389,9 +1433,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class ContainerItem_Mask<T> : IMask<T>, IEquatable<ContainerItem_Mask<T>>
     {
         #region Ctors
@@ -1692,9 +1740,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((Count, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class ContainerItemBinaryWriteTranslation : IBinaryWriteTranslator
     {
         public readonly static ContainerItemBinaryWriteTranslation Instance = new ContainerItemBinaryWriteTranslation();
@@ -1755,6 +1806,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class ContainerItemBinaryTranslationMixIn
     {
@@ -1805,6 +1859,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class ContainerItemBinaryWrapper :
         BinaryWrapper,
         IContainerItemInternalGetter
@@ -1907,46 +1965,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Oblivion
-{
-    public partial class ContainerItem
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => ContainerItem_Registration.Instance;
-        public static ContainerItem_Registration Registration => ContainerItem_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return ContainerItemCommon.Instance;
-        }
-        protected object CommonSetterInstance()
-        {
-            return ContainerItemSetterCommon.Instance;
-        }
-        protected object CommonSetterCopyInstance()
-        {
-            return ContainerItemSetterCopyCommon.Instance;
-        }
-        object IContainerItemInternalGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IContainerItemInternalGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IContainerItemInternalGetter.CommonSetterCopyInstance()
-        {
-            return this.CommonSetterCopyInstance();
-        }
+#endregion
 
-        #endregion
-
-    }
-}

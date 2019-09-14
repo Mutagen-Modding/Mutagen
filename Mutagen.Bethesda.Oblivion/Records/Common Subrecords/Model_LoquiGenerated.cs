@@ -1200,8 +1200,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class Model
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Model_Registration.Instance;
+        public static Model_Registration Registration => Model_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return ModelCommon.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return ModelSetterCommon.Instance;
+        }
+        protected object CommonSetterCopyInstance()
+        {
+            return ModelSetterCopyCommon.Instance;
+        }
+        object IModelInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IModelInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object IModelInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class ModelXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static ModelXmlWriteTranslation Instance = new ModelXmlWriteTranslation();
@@ -1431,6 +1472,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class ModelXmlTranslationMixIn
     {
@@ -1588,9 +1632,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class Model_Mask<T> : IMask<T>, IEquatable<Model_Mask<T>>
     {
         #region Ctors
@@ -1918,9 +1966,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((Hashes, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class ModelBinaryWriteTranslation : IBinaryWriteTranslator
     {
         public readonly static ModelBinaryWriteTranslation Instance = new ModelBinaryWriteTranslation();
@@ -1990,6 +2041,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class ModelBinaryTranslationMixIn
     {
@@ -2040,6 +2094,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class ModelBinaryWrapper :
         BinaryWrapper,
         IModelInternalGetter
@@ -2185,46 +2243,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Oblivion
-{
-    public partial class Model
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Model_Registration.Instance;
-        public static Model_Registration Registration => Model_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return ModelCommon.Instance;
-        }
-        protected object CommonSetterInstance()
-        {
-            return ModelSetterCommon.Instance;
-        }
-        protected object CommonSetterCopyInstance()
-        {
-            return ModelSetterCopyCommon.Instance;
-        }
-        object IModelInternalGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IModelInternalGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IModelInternalGetter.CommonSetterCopyInstance()
-        {
-            return this.CommonSetterCopyInstance();
-        }
+#endregion
 
-        #endregion
-
-    }
-}

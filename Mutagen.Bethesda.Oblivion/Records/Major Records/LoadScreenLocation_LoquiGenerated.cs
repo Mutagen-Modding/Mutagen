@@ -1135,8 +1135,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class LoadScreenLocation
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => LoadScreenLocation_Registration.Instance;
+        public static LoadScreenLocation_Registration Registration => LoadScreenLocation_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return LoadScreenLocationCommon.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return LoadScreenLocationSetterCommon.Instance;
+        }
+        protected object CommonSetterCopyInstance()
+        {
+            return LoadScreenLocationSetterCopyCommon.Instance;
+        }
+        object ILoadScreenLocationInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object ILoadScreenLocationInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object ILoadScreenLocationInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class LoadScreenLocationXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static LoadScreenLocationXmlWriteTranslation Instance = new LoadScreenLocationXmlWriteTranslation();
@@ -1327,6 +1368,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class LoadScreenLocationXmlTranslationMixIn
     {
@@ -1484,9 +1528,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class LoadScreenLocation_Mask<T> : IMask<T>, IEquatable<LoadScreenLocation_Mask<T>>
     {
         #region Ctors
@@ -1814,9 +1862,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((GridPoint, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class LoadScreenLocationBinaryWriteTranslation : IBinaryWriteTranslator
     {
         public readonly static LoadScreenLocationBinaryWriteTranslation Instance = new LoadScreenLocationBinaryWriteTranslation();
@@ -1883,6 +1934,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class LoadScreenLocationBinaryTranslationMixIn
     {
@@ -1933,6 +1987,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class LoadScreenLocationBinaryWrapper :
         BinaryWrapper,
         ILoadScreenLocationInternalGetter
@@ -2039,46 +2097,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Oblivion
-{
-    public partial class LoadScreenLocation
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => LoadScreenLocation_Registration.Instance;
-        public static LoadScreenLocation_Registration Registration => LoadScreenLocation_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return LoadScreenLocationCommon.Instance;
-        }
-        protected object CommonSetterInstance()
-        {
-            return LoadScreenLocationSetterCommon.Instance;
-        }
-        protected object CommonSetterCopyInstance()
-        {
-            return LoadScreenLocationSetterCopyCommon.Instance;
-        }
-        object ILoadScreenLocationInternalGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object ILoadScreenLocationInternalGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object ILoadScreenLocationInternalGetter.CommonSetterCopyInstance()
-        {
-            return this.CommonSetterCopyInstance();
-        }
+#endregion
 
-        #endregion
-
-    }
-}

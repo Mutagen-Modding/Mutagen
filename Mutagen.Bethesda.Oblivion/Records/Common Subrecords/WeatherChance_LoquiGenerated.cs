@@ -1050,8 +1050,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class WeatherChance
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => WeatherChance_Registration.Instance;
+        public static WeatherChance_Registration Registration => WeatherChance_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return WeatherChanceCommon.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return WeatherChanceSetterCommon.Instance;
+        }
+        protected object CommonSetterCopyInstance()
+        {
+            return WeatherChanceSetterCopyCommon.Instance;
+        }
+        object IWeatherChanceInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IWeatherChanceInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object IWeatherChanceInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class WeatherChanceXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static WeatherChanceXmlWriteTranslation Instance = new WeatherChanceXmlWriteTranslation();
@@ -1226,6 +1267,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class WeatherChanceXmlTranslationMixIn
     {
@@ -1383,9 +1427,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class WeatherChance_Mask<T> : IMask<T>, IEquatable<WeatherChance_Mask<T>>
     {
         #region Ctors
@@ -1686,9 +1734,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((Chance, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class WeatherChanceBinaryWriteTranslation : IBinaryWriteTranslator
     {
         public readonly static WeatherChanceBinaryWriteTranslation Instance = new WeatherChanceBinaryWriteTranslation();
@@ -1743,6 +1794,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class WeatherChanceBinaryTranslationMixIn
     {
@@ -1793,6 +1847,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class WeatherChanceBinaryWrapper :
         BinaryWrapper,
         IWeatherChanceInternalGetter
@@ -1893,46 +1951,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Oblivion
-{
-    public partial class WeatherChance
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => WeatherChance_Registration.Instance;
-        public static WeatherChance_Registration Registration => WeatherChance_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return WeatherChanceCommon.Instance;
-        }
-        protected object CommonSetterInstance()
-        {
-            return WeatherChanceSetterCommon.Instance;
-        }
-        protected object CommonSetterCopyInstance()
-        {
-            return WeatherChanceSetterCopyCommon.Instance;
-        }
-        object IWeatherChanceInternalGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IWeatherChanceInternalGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IWeatherChanceInternalGetter.CommonSetterCopyInstance()
-        {
-            return this.CommonSetterCopyInstance();
-        }
+#endregion
 
-        #endregion
-
-    }
-}

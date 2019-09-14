@@ -1052,8 +1052,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class RaceHair
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => RaceHair_Registration.Instance;
+        public static RaceHair_Registration Registration => RaceHair_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return RaceHairCommon.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return RaceHairSetterCommon.Instance;
+        }
+        protected object CommonSetterCopyInstance()
+        {
+            return RaceHairSetterCopyCommon.Instance;
+        }
+        object IRaceHairInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IRaceHairInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object IRaceHairInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class RaceHairXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static RaceHairXmlWriteTranslation Instance = new RaceHairXmlWriteTranslation();
@@ -1209,6 +1250,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class RaceHairXmlTranslationMixIn
     {
@@ -1366,9 +1410,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class RaceHair_Mask<T> : IMask<T>, IEquatable<RaceHair_Mask<T>>
     {
         #region Ctors
@@ -1669,9 +1717,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((Female, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class RaceHairBinaryWriteTranslation : IBinaryWriteTranslator
     {
         public readonly static RaceHairBinaryWriteTranslation Instance = new RaceHairBinaryWriteTranslation();
@@ -1735,6 +1786,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class RaceHairBinaryTranslationMixIn
     {
@@ -1785,6 +1839,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class RaceHairBinaryWrapper :
         BinaryWrapper,
         IRaceHairInternalGetter
@@ -1890,46 +1948,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Oblivion
-{
-    public partial class RaceHair
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => RaceHair_Registration.Instance;
-        public static RaceHair_Registration Registration => RaceHair_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return RaceHairCommon.Instance;
-        }
-        protected object CommonSetterInstance()
-        {
-            return RaceHairSetterCommon.Instance;
-        }
-        protected object CommonSetterCopyInstance()
-        {
-            return RaceHairSetterCopyCommon.Instance;
-        }
-        object IRaceHairInternalGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IRaceHairInternalGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IRaceHairInternalGetter.CommonSetterCopyInstance()
-        {
-            return this.CommonSetterCopyInstance();
-        }
+#endregion
 
-        #endregion
-
-    }
-}

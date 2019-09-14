@@ -1129,8 +1129,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class RegionSound
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => RegionSound_Registration.Instance;
+        public static RegionSound_Registration Registration => RegionSound_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return RegionSoundCommon.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return RegionSoundSetterCommon.Instance;
+        }
+        protected object CommonSetterCopyInstance()
+        {
+            return RegionSoundSetterCopyCommon.Instance;
+        }
+        object IRegionSoundInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IRegionSoundInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object IRegionSoundInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class RegionSoundXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static RegionSoundXmlWriteTranslation Instance = new RegionSoundXmlWriteTranslation();
@@ -1340,6 +1381,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class RegionSoundXmlTranslationMixIn
     {
@@ -1497,9 +1541,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class RegionSound_Mask<T> : IMask<T>, IEquatable<RegionSound_Mask<T>>
     {
         #region Ctors
@@ -1827,9 +1875,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((Chance, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class RegionSoundBinaryWriteTranslation : IBinaryWriteTranslator
     {
         public readonly static RegionSoundBinaryWriteTranslation Instance = new RegionSoundBinaryWriteTranslation();
@@ -1890,6 +1941,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class RegionSoundBinaryTranslationMixIn
     {
@@ -1940,6 +1994,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class RegionSoundBinaryWrapper :
         BinaryWrapper,
         IRegionSoundInternalGetter
@@ -2041,46 +2099,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Oblivion
-{
-    public partial class RegionSound
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => RegionSound_Registration.Instance;
-        public static RegionSound_Registration Registration => RegionSound_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return RegionSoundCommon.Instance;
-        }
-        protected object CommonSetterInstance()
-        {
-            return RegionSoundSetterCommon.Instance;
-        }
-        protected object CommonSetterCopyInstance()
-        {
-            return RegionSoundSetterCopyCommon.Instance;
-        }
-        object IRegionSoundInternalGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IRegionSoundInternalGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IRegionSoundInternalGetter.CommonSetterCopyInstance()
-        {
-            return this.CommonSetterCopyInstance();
-        }
+#endregion
 
-        #endregion
-
-    }
-}

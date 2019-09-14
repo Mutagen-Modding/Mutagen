@@ -1110,8 +1110,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class ClassTraining
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => ClassTraining_Registration.Instance;
+        public static ClassTraining_Registration Registration => ClassTraining_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return ClassTrainingCommon.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return ClassTrainingSetterCommon.Instance;
+        }
+        protected object CommonSetterCopyInstance()
+        {
+            return ClassTrainingSetterCopyCommon.Instance;
+        }
+        object IClassTrainingInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IClassTrainingInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object IClassTrainingInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class ClassTrainingXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static ClassTrainingXmlWriteTranslation Instance = new ClassTrainingXmlWriteTranslation();
@@ -1340,6 +1381,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class ClassTrainingXmlTranslationMixIn
     {
@@ -1497,9 +1541,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class ClassTraining_Mask<T> : IMask<T>, IEquatable<ClassTraining_Mask<T>>
     {
         #region Ctors
@@ -1827,9 +1875,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((Fluff, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class ClassTrainingBinaryWriteTranslation : IBinaryWriteTranslator
     {
         public readonly static ClassTrainingBinaryWriteTranslation Instance = new ClassTrainingBinaryWriteTranslation();
@@ -1887,6 +1938,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class ClassTrainingBinaryTranslationMixIn
     {
@@ -1937,6 +1991,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class ClassTrainingBinaryWrapper :
         BinaryWrapper,
         IClassTrainingInternalGetter
@@ -2035,46 +2093,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Oblivion
-{
-    public partial class ClassTraining
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => ClassTraining_Registration.Instance;
-        public static ClassTraining_Registration Registration => ClassTraining_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return ClassTrainingCommon.Instance;
-        }
-        protected object CommonSetterInstance()
-        {
-            return ClassTrainingSetterCommon.Instance;
-        }
-        protected object CommonSetterCopyInstance()
-        {
-            return ClassTrainingSetterCopyCommon.Instance;
-        }
-        object IClassTrainingInternalGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IClassTrainingInternalGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IClassTrainingInternalGetter.CommonSetterCopyInstance()
-        {
-            return this.CommonSetterCopyInstance();
-        }
+#endregion
 
-        #endregion
-
-    }
-}

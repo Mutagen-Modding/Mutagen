@@ -1133,8 +1133,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class RankPlacement
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => RankPlacement_Registration.Instance;
+        public static RankPlacement_Registration Registration => RankPlacement_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return RankPlacementCommon.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return RankPlacementSetterCommon.Instance;
+        }
+        protected object CommonSetterCopyInstance()
+        {
+            return RankPlacementSetterCopyCommon.Instance;
+        }
+        object IRankPlacementInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IRankPlacementInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object IRankPlacementInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class RankPlacementXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static RankPlacementXmlWriteTranslation Instance = new RankPlacementXmlWriteTranslation();
@@ -1344,6 +1385,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class RankPlacementXmlTranslationMixIn
     {
@@ -1501,9 +1545,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class RankPlacement_Mask<T> : IMask<T>, IEquatable<RankPlacement_Mask<T>>
     {
         #region Ctors
@@ -1831,9 +1879,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((Fluff, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class RankPlacementBinaryWriteTranslation : IBinaryWriteTranslator
     {
         public readonly static RankPlacementBinaryWriteTranslation Instance = new RankPlacementBinaryWriteTranslation();
@@ -1897,6 +1948,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class RankPlacementBinaryTranslationMixIn
     {
@@ -1947,6 +2001,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class RankPlacementBinaryWrapper :
         BinaryWrapper,
         IRankPlacementInternalGetter
@@ -2050,46 +2108,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Oblivion
-{
-    public partial class RankPlacement
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => RankPlacement_Registration.Instance;
-        public static RankPlacement_Registration Registration => RankPlacement_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return RankPlacementCommon.Instance;
-        }
-        protected object CommonSetterInstance()
-        {
-            return RankPlacementSetterCommon.Instance;
-        }
-        protected object CommonSetterCopyInstance()
-        {
-            return RankPlacementSetterCopyCommon.Instance;
-        }
-        object IRankPlacementInternalGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IRankPlacementInternalGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IRankPlacementInternalGetter.CommonSetterCopyInstance()
-        {
-            return this.CommonSetterCopyInstance();
-        }
+#endregion
 
-        #endregion
-
-    }
-}

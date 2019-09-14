@@ -3888,8 +3888,37 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class Water
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Water_Registration.Instance;
+        public new static Water_Registration Registration => Water_Registration.Instance;
+        protected override object CommonInstance()
+        {
+            return WaterCommon.Instance;
+        }
+        protected override object CommonSetterInstance()
+        {
+            return WaterSetterCommon.Instance;
+        }
+        protected override object CommonSetterCopyInstance()
+        {
+            return WaterSetterCopyCommon.Instance;
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class WaterXmlWriteTranslation :
         OblivionMajorRecordXmlWriteTranslation,
         IXmlWriteTranslator
@@ -5195,6 +5224,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class WaterXmlTranslationMixIn
     {
@@ -5257,9 +5289,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class Water_Mask<T> : OblivionMajorRecord_Mask<T>, IMask<T>, IEquatable<Water_Mask<T>>
     {
         #region Ctors
@@ -6394,9 +6430,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((DATADataTypeState, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class WaterBinaryWriteTranslation :
         OblivionMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
@@ -6830,6 +6869,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class WaterBinaryTranslationMixIn
     {
@@ -6853,6 +6895,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class WaterBinaryWrapper :
         OblivionMajorRecordBinaryWrapper,
         IWaterInternalGetter
@@ -7184,34 +7230,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Oblivion
-{
-    public partial class Water
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Water_Registration.Instance;
-        public new static Water_Registration Registration => Water_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return WaterCommon.Instance;
-        }
-        protected override object CommonSetterInstance()
-        {
-            return WaterSetterCommon.Instance;
-        }
-        protected override object CommonSetterCopyInstance()
-        {
-            return WaterSetterCopyCommon.Instance;
-        }
+#endregion
 
-        #endregion
-
-    }
-}

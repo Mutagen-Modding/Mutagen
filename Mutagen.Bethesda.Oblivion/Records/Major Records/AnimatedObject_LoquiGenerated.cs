@@ -1350,8 +1350,37 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class AnimatedObject
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => AnimatedObject_Registration.Instance;
+        public new static AnimatedObject_Registration Registration => AnimatedObject_Registration.Instance;
+        protected override object CommonInstance()
+        {
+            return AnimatedObjectCommon.Instance;
+        }
+        protected override object CommonSetterInstance()
+        {
+            return AnimatedObjectSetterCommon.Instance;
+        }
+        protected override object CommonSetterCopyInstance()
+        {
+            return AnimatedObjectSetterCopyCommon.Instance;
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class AnimatedObjectXmlWriteTranslation :
         OblivionMajorRecordXmlWriteTranslation,
         IXmlWriteTranslator
@@ -1545,6 +1574,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class AnimatedObjectXmlTranslationMixIn
     {
@@ -1607,9 +1639,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class AnimatedObject_Mask<T> : OblivionMajorRecord_Mask<T>, IMask<T>, IEquatable<AnimatedObject_Mask<T>>
     {
         #region Ctors
@@ -1907,9 +1943,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((IdleAnimation, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class AnimatedObjectBinaryWriteTranslation :
         OblivionMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
@@ -2029,6 +2068,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class AnimatedObjectBinaryTranslationMixIn
     {
@@ -2052,6 +2094,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class AnimatedObjectBinaryWrapper :
         OblivionMajorRecordBinaryWrapper,
         IAnimatedObjectInternalGetter
@@ -2185,34 +2231,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Oblivion
-{
-    public partial class AnimatedObject
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => AnimatedObject_Registration.Instance;
-        public new static AnimatedObject_Registration Registration => AnimatedObject_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return AnimatedObjectCommon.Instance;
-        }
-        protected override object CommonSetterInstance()
-        {
-            return AnimatedObjectSetterCommon.Instance;
-        }
-        protected override object CommonSetterCopyInstance()
-        {
-            return AnimatedObjectSetterCopyCommon.Instance;
-        }
+#endregion
 
-        #endregion
-
-    }
-}

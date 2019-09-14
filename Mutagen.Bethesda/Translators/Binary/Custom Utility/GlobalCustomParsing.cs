@@ -10,7 +10,7 @@ namespace Mutagen.Bethesda.Binary
         public static readonly RecordType GLOB = new RecordType("GLOB");
         public static readonly RecordType FNAM = new RecordType("FNAM");
         public static readonly RecordType FLTV = new RecordType("FLTV");
-        
+
         public interface IGlobalCommon
         {
             float RawFloat { get; set; }
@@ -36,25 +36,19 @@ namespace Mutagen.Bethesda.Binary
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask,
-            Func<char, T> getter)
+            Func<MutagenFrame, MasterReferences, char, T> getter)
             where T : MajorRecord, IGlobalCommon
         {
             var initialPos = frame.Position;
-            var majorMeta = frame.MetaData.ReadMajorRecordFrame(frame);
+            var majorMeta = frame.MetaData.GetMajorRecordFrame(frame);
             if (majorMeta.Header.RecordType != GLOB)
             {
                 throw new ArgumentException();
             }
             
-            T g = getter(GetGlobalChar(majorMeta));
+            T g = getter(frame, masterReferences, GetGlobalChar(majorMeta));
 
-            // Fill with major record fields
             frame.Reader.Position = initialPos + frame.MetaData.MajorConstants.TypeAndLengthLength;
-            MajorRecord.FillBinary(
-                frame,
-                g,
-                masterReferences,
-                errorMask);
 
             // Read data
             var fltvLoc = UtilityTranslation.FindFirstSubrecord(majorMeta.ContentSpan, frame.MetaData, FLTV, navigateToContent: true);

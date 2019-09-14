@@ -1497,8 +1497,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class LogEntry
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => LogEntry_Registration.Instance;
+        public static LogEntry_Registration Registration => LogEntry_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return LogEntryCommon.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return LogEntrySetterCommon.Instance;
+        }
+        protected object CommonSetterCopyInstance()
+        {
+            return LogEntrySetterCopyCommon.Instance;
+        }
+        object ILogEntryInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object ILogEntryInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object ILogEntryInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class LogEntryXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static LogEntryXmlWriteTranslation Instance = new LogEntryXmlWriteTranslation();
@@ -1782,6 +1823,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class LogEntryXmlTranslationMixIn
     {
@@ -1939,9 +1983,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class LogEntry_Mask<T> : IMask<T>, IEquatable<LogEntry_Mask<T>>
     {
         #region Ctors
@@ -2386,9 +2434,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((ResultScript?.Overall ?? true, ResultScript?.Specific?.GetCrystal()));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class LogEntryBinaryWriteTranslation : IBinaryWriteTranslator
     {
         public readonly static LogEntryBinaryWriteTranslation Instance = new LogEntryBinaryWriteTranslation();
@@ -2485,6 +2536,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class LogEntryBinaryTranslationMixIn
     {
@@ -2535,6 +2589,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class LogEntryBinaryWrapper :
         BinaryWrapper,
         ILogEntryInternalGetter
@@ -2705,46 +2763,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Oblivion
-{
-    public partial class LogEntry
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => LogEntry_Registration.Instance;
-        public static LogEntry_Registration Registration => LogEntry_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return LogEntryCommon.Instance;
-        }
-        protected object CommonSetterInstance()
-        {
-            return LogEntrySetterCommon.Instance;
-        }
-        protected object CommonSetterCopyInstance()
-        {
-            return LogEntrySetterCopyCommon.Instance;
-        }
-        object ILogEntryInternalGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object ILogEntryInternalGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object ILogEntryInternalGetter.CommonSetterCopyInstance()
-        {
-            return this.CommonSetterCopyInstance();
-        }
+#endregion
 
-        #endregion
-
-    }
-}

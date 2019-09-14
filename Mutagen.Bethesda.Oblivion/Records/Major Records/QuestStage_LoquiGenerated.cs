@@ -1157,8 +1157,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class QuestStage
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => QuestStage_Registration.Instance;
+        public static QuestStage_Registration Registration => QuestStage_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return QuestStageCommon.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return QuestStageSetterCommon.Instance;
+        }
+        protected object CommonSetterCopyInstance()
+        {
+            return QuestStageSetterCopyCommon.Instance;
+        }
+        object IQuestStageInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IQuestStageInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object IQuestStageInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class QuestStageXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static QuestStageXmlWriteTranslation Instance = new QuestStageXmlWriteTranslation();
@@ -1366,6 +1407,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class QuestStageXmlTranslationMixIn
     {
@@ -1523,9 +1567,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class QuestStage_Mask<T> : IMask<T>, IEquatable<QuestStage_Mask<T>>
     {
         #region Ctors
@@ -1904,9 +1952,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((LogEntries?.Overall ?? true, LogEntries?.Specific?.GetCrystal()));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class QuestStageBinaryWriteTranslation : IBinaryWriteTranslator
     {
         public readonly static QuestStageBinaryWriteTranslation Instance = new QuestStageBinaryWriteTranslation();
@@ -1981,6 +2032,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class QuestStageBinaryTranslationMixIn
     {
@@ -2031,6 +2085,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class QuestStageBinaryWrapper :
         BinaryWrapper,
         IQuestStageInternalGetter
@@ -2172,46 +2230,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Oblivion
-{
-    public partial class QuestStage
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => QuestStage_Registration.Instance;
-        public static QuestStage_Registration Registration => QuestStage_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return QuestStageCommon.Instance;
-        }
-        protected object CommonSetterInstance()
-        {
-            return QuestStageSetterCommon.Instance;
-        }
-        protected object CommonSetterCopyInstance()
-        {
-            return QuestStageSetterCopyCommon.Instance;
-        }
-        object IQuestStageInternalGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IQuestStageInternalGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IQuestStageInternalGetter.CommonSetterCopyInstance()
-        {
-            return this.CommonSetterCopyInstance();
-        }
+#endregion
 
-        #endregion
-
-    }
-}

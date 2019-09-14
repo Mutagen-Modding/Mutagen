@@ -2569,8 +2569,37 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class ClothingAbstract
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => ClothingAbstract_Registration.Instance;
+        public new static ClothingAbstract_Registration Registration => ClothingAbstract_Registration.Instance;
+        protected override object CommonInstance()
+        {
+            return ClothingAbstractCommon.Instance;
+        }
+        protected override object CommonSetterInstance()
+        {
+            return ClothingAbstractSetterCommon.Instance;
+        }
+        protected override object CommonSetterCopyInstance()
+        {
+            return ClothingAbstractSetterCopyCommon.Instance;
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class ClothingAbstractXmlWriteTranslation :
         ItemAbstractXmlWriteTranslation,
         IXmlWriteTranslator
@@ -3166,6 +3195,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class ClothingAbstractXmlTranslationMixIn
     {
@@ -3228,9 +3260,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class ClothingAbstract_Mask<T> : ItemAbstract_Mask<T>, IMask<T>, IEquatable<ClothingAbstract_Mask<T>>
     {
         #region Ctors
@@ -3861,9 +3897,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((BMDTDataTypeState, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class ClothingAbstractBinaryWriteTranslation :
         ItemAbstractBinaryWriteTranslation,
         IBinaryWriteTranslator
@@ -4090,6 +4129,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class ClothingAbstractBinaryTranslationMixIn
     {
@@ -4113,6 +4155,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class ClothingAbstractBinaryWrapper :
         ItemAbstractBinaryWrapper,
         IClothingAbstractInternalGetter
@@ -4326,34 +4372,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Oblivion
-{
-    public partial class ClothingAbstract
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => ClothingAbstract_Registration.Instance;
-        public new static ClothingAbstract_Registration Registration => ClothingAbstract_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return ClothingAbstractCommon.Instance;
-        }
-        protected override object CommonSetterInstance()
-        {
-            return ClothingAbstractSetterCommon.Instance;
-        }
-        protected override object CommonSetterCopyInstance()
-        {
-            return ClothingAbstractSetterCopyCommon.Instance;
-        }
+#endregion
 
-        #endregion
-
-    }
-}

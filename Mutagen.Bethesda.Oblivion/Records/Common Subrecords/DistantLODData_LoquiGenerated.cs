@@ -1119,8 +1119,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class DistantLODData
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => DistantLODData_Registration.Instance;
+        public static DistantLODData_Registration Registration => DistantLODData_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return DistantLODDataCommon.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return DistantLODDataSetterCommon.Instance;
+        }
+        protected object CommonSetterCopyInstance()
+        {
+            return DistantLODDataSetterCopyCommon.Instance;
+        }
+        object IDistantLODDataInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IDistantLODDataInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object IDistantLODDataInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class DistantLODDataXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static DistantLODDataXmlWriteTranslation Instance = new DistantLODDataXmlWriteTranslation();
@@ -1349,6 +1390,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class DistantLODDataXmlTranslationMixIn
     {
@@ -1506,9 +1550,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class DistantLODData_Mask<T> : IMask<T>, IEquatable<DistantLODData_Mask<T>>
     {
         #region Ctors
@@ -1836,9 +1884,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((Unknown2, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class DistantLODDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
         public readonly static DistantLODDataBinaryWriteTranslation Instance = new DistantLODDataBinaryWriteTranslation();
@@ -1903,6 +1954,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class DistantLODDataBinaryTranslationMixIn
     {
@@ -1953,6 +2007,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class DistantLODDataBinaryWrapper :
         BinaryWrapper,
         IDistantLODDataInternalGetter
@@ -2053,46 +2111,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Oblivion
-{
-    public partial class DistantLODData
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => DistantLODData_Registration.Instance;
-        public static DistantLODData_Registration Registration => DistantLODData_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return DistantLODDataCommon.Instance;
-        }
-        protected object CommonSetterInstance()
-        {
-            return DistantLODDataSetterCommon.Instance;
-        }
-        protected object CommonSetterCopyInstance()
-        {
-            return DistantLODDataSetterCopyCommon.Instance;
-        }
-        object IDistantLODDataInternalGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IDistantLODDataInternalGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IDistantLODDataInternalGetter.CommonSetterCopyInstance()
-        {
-            return this.CommonSetterCopyInstance();
-        }
+#endregion
 
-        #endregion
-
-    }
-}

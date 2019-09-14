@@ -35,16 +35,16 @@ namespace Mutagen.Bethesda.Skyrim
                 frame,
                 masterReferences,
                 errorMask,
-                getter: (triggerChar) =>
+                getter: (f, m, triggerChar) =>
                 {
                     switch (triggerChar)
                     {
                         case GlobalInt.TRIGGER_CHAR:
-                            return GlobalInt.Factory();
+                            return GlobalInt.CreateFromBinary(f, m);
                         case GlobalShort.TRIGGER_CHAR:
-                            return GlobalShort.Factory();
+                            return GlobalShort.CreateFromBinary(f, m);
                         case GlobalFloat.TRIGGER_CHAR:
-                            return GlobalFloat.Factory();
+                            return GlobalFloat.CreateFromBinary(f, m);
                         default:
                             throw new ArgumentException($"Unknown trigger char: {triggerChar}");
                     }

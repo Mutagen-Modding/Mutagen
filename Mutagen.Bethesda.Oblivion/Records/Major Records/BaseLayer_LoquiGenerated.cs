@@ -1254,8 +1254,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class BaseLayer
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => BaseLayer_Registration.Instance;
+        public static BaseLayer_Registration Registration => BaseLayer_Registration.Instance;
+        protected virtual object CommonInstance()
+        {
+            return BaseLayerCommon.Instance;
+        }
+        protected virtual object CommonSetterInstance()
+        {
+            return BaseLayerSetterCommon.Instance;
+        }
+        protected virtual object CommonSetterCopyInstance()
+        {
+            return BaseLayerSetterCopyCommon.Instance;
+        }
+        object IBaseLayerInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IBaseLayerInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object IBaseLayerInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class BaseLayerXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static BaseLayerXmlWriteTranslation Instance = new BaseLayerXmlWriteTranslation();
@@ -1478,6 +1519,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class BaseLayerXmlTranslationMixIn
     {
@@ -1635,9 +1679,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class BaseLayer_Mask<T> : IMask<T>, IEquatable<BaseLayer_Mask<T>>
     {
         #region Ctors
@@ -1992,9 +2040,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((BTXTDataTypeState, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class BaseLayerBinaryWriteTranslation : IBinaryWriteTranslator
     {
         public readonly static BaseLayerBinaryWriteTranslation Instance = new BaseLayerBinaryWriteTranslation();
@@ -2074,6 +2125,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class BaseLayerBinaryTranslationMixIn
     {
@@ -2124,6 +2178,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class BaseLayerBinaryWrapper :
         BinaryWrapper,
         IBaseLayerInternalGetter
@@ -2265,46 +2323,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Oblivion
-{
-    public partial class BaseLayer
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => BaseLayer_Registration.Instance;
-        public static BaseLayer_Registration Registration => BaseLayer_Registration.Instance;
-        protected virtual object CommonInstance()
-        {
-            return BaseLayerCommon.Instance;
-        }
-        protected virtual object CommonSetterInstance()
-        {
-            return BaseLayerSetterCommon.Instance;
-        }
-        protected virtual object CommonSetterCopyInstance()
-        {
-            return BaseLayerSetterCopyCommon.Instance;
-        }
-        object IBaseLayerInternalGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IBaseLayerInternalGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IBaseLayerInternalGetter.CommonSetterCopyInstance()
-        {
-            return this.CommonSetterCopyInstance();
-        }
+#endregion
 
-        #endregion
-
-    }
-}

@@ -6,7 +6,10 @@
       <Group name="GameSettings" refName="GameSetting" />
       <Group name="Keywords" refName="Keyword" />
       <Group name="LocationReferenceTypes" refName="LocationReferenceType" />
-      <!--<Group name="Globals" refName="Global" />-->
+      <Group name="Actions" refName="Action" />
+      <Group name="TextureSets" refName="TextureSet" />
+      <Group name="Globals" refName="Global" />
+      <Group name="Classes" refName="Class" />
     </Fields>
   </Object>
 </Loqui>

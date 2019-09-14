@@ -1233,8 +1233,37 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class GameSettingInt
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => GameSettingInt_Registration.Instance;
+        public new static GameSettingInt_Registration Registration => GameSettingInt_Registration.Instance;
+        protected override object CommonInstance()
+        {
+            return GameSettingIntCommon.Instance;
+        }
+        protected override object CommonSetterInstance()
+        {
+            return GameSettingIntSetterCommon.Instance;
+        }
+        protected override object CommonSetterCopyInstance()
+        {
+            return GameSettingIntSetterCopyCommon.Instance;
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class GameSettingIntXmlWriteTranslation :
         GameSettingXmlWriteTranslation,
         IXmlWriteTranslator
@@ -1423,6 +1452,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class GameSettingIntXmlTranslationMixIn
     {
@@ -1485,9 +1517,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class GameSettingInt_Mask<T> : GameSetting_Mask<T>, IMask<T>, IEquatable<GameSettingInt_Mask<T>>
     {
         #region Ctors
@@ -1746,9 +1782,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((Data, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class GameSettingIntBinaryWriteTranslation :
         GameSettingBinaryWriteTranslation,
         IBinaryWriteTranslator
@@ -1872,6 +1911,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class GameSettingIntBinaryTranslationMixIn
     {
@@ -1895,6 +1937,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class GameSettingIntBinaryWrapper :
         GameSettingBinaryWrapper,
         IGameSettingIntInternalGetter
@@ -2015,34 +2061,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Oblivion
-{
-    public partial class GameSettingInt
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => GameSettingInt_Registration.Instance;
-        public new static GameSettingInt_Registration Registration => GameSettingInt_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return GameSettingIntCommon.Instance;
-        }
-        protected override object CommonSetterInstance()
-        {
-            return GameSettingIntSetterCommon.Instance;
-        }
-        protected override object CommonSetterCopyInstance()
-        {
-            return GameSettingIntSetterCopyCommon.Instance;
-        }
+#endregion
 
-        #endregion
-
-    }
-}

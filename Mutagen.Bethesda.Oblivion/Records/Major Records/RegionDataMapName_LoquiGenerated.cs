@@ -1143,8 +1143,37 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class RegionDataMapName
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => RegionDataMapName_Registration.Instance;
+        public new static RegionDataMapName_Registration Registration => RegionDataMapName_Registration.Instance;
+        protected override object CommonInstance()
+        {
+            return RegionDataMapNameCommon.Instance;
+        }
+        protected override object CommonSetterInstance()
+        {
+            return RegionDataMapNameSetterCommon.Instance;
+        }
+        protected override object CommonSetterCopyInstance()
+        {
+            return RegionDataMapNameSetterCopyCommon.Instance;
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class RegionDataMapNameXmlWriteTranslation :
         RegionDataXmlWriteTranslation,
         IXmlWriteTranslator
@@ -1303,6 +1332,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class RegionDataMapNameXmlTranslationMixIn
     {
@@ -1365,9 +1397,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class RegionDataMapName_Mask<T> : RegionData_Mask<T>, IMask<T>, IEquatable<RegionDataMapName_Mask<T>>
     {
         #region Ctors
@@ -1626,9 +1662,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((MapName, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class RegionDataMapNameBinaryWriteTranslation :
         RegionDataBinaryWriteTranslation,
         IBinaryWriteTranslator
@@ -1716,6 +1755,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class RegionDataMapNameBinaryTranslationMixIn
     {
@@ -1739,6 +1781,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class RegionDataMapNameBinaryWrapper :
         RegionDataBinaryWrapper,
         IRegionDataMapNameInternalGetter
@@ -1856,34 +1902,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Oblivion
-{
-    public partial class RegionDataMapName
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => RegionDataMapName_Registration.Instance;
-        public new static RegionDataMapName_Registration Registration => RegionDataMapName_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return RegionDataMapNameCommon.Instance;
-        }
-        protected override object CommonSetterInstance()
-        {
-            return RegionDataMapNameSetterCommon.Instance;
-        }
-        protected override object CommonSetterCopyInstance()
-        {
-            return RegionDataMapNameSetterCopyCommon.Instance;
-        }
+#endregion
 
-        #endregion
-
-    }
-}

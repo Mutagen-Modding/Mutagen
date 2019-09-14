@@ -2351,8 +2351,37 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class SkillRecord
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => SkillRecord_Registration.Instance;
+        public new static SkillRecord_Registration Registration => SkillRecord_Registration.Instance;
+        protected override object CommonInstance()
+        {
+            return SkillRecordCommon.Instance;
+        }
+        protected override object CommonSetterInstance()
+        {
+            return SkillRecordSetterCommon.Instance;
+        }
+        protected override object CommonSetterCopyInstance()
+        {
+            return SkillRecordSetterCopyCommon.Instance;
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class SkillRecordXmlWriteTranslation :
         OblivionMajorRecordXmlWriteTranslation,
         IXmlWriteTranslator
@@ -2956,6 +2985,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class SkillRecordXmlTranslationMixIn
     {
@@ -3018,9 +3050,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class SkillRecord_Mask<T> : OblivionMajorRecord_Mask<T>, IMask<T>, IEquatable<SkillRecord_Mask<T>>
     {
         #region Ctors
@@ -3603,9 +3639,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((DATADataTypeState, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class SkillRecordBinaryWriteTranslation :
         OblivionMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
@@ -3800,6 +3839,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class SkillRecordBinaryTranslationMixIn
     {
@@ -3823,6 +3865,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class SkillRecordBinaryWrapper :
         OblivionMajorRecordBinaryWrapper,
         ISkillRecordInternalGetter
@@ -4036,34 +4082,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Oblivion
-{
-    public partial class SkillRecord
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => SkillRecord_Registration.Instance;
-        public new static SkillRecord_Registration Registration => SkillRecord_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return SkillRecordCommon.Instance;
-        }
-        protected override object CommonSetterInstance()
-        {
-            return SkillRecordSetterCommon.Instance;
-        }
-        protected override object CommonSetterCopyInstance()
-        {
-            return SkillRecordSetterCopyCommon.Instance;
-        }
+#endregion
 
-        #endregion
-
-    }
-}

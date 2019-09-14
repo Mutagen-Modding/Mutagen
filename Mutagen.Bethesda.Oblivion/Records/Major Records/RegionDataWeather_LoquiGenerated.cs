@@ -1168,8 +1168,37 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class RegionDataWeather
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => RegionDataWeather_Registration.Instance;
+        public new static RegionDataWeather_Registration Registration => RegionDataWeather_Registration.Instance;
+        protected override object CommonInstance()
+        {
+            return RegionDataWeatherCommon.Instance;
+        }
+        protected override object CommonSetterInstance()
+        {
+            return RegionDataWeatherSetterCommon.Instance;
+        }
+        protected override object CommonSetterCopyInstance()
+        {
+            return RegionDataWeatherSetterCopyCommon.Instance;
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class RegionDataWeatherXmlWriteTranslation :
         RegionDataXmlWriteTranslation,
         IXmlWriteTranslator
@@ -1341,6 +1370,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class RegionDataWeatherXmlTranslationMixIn
     {
@@ -1403,9 +1435,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class RegionDataWeather_Mask<T> : RegionData_Mask<T>, IMask<T>, IEquatable<RegionDataWeather_Mask<T>>
     {
         #region Ctors
@@ -1742,9 +1778,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((Weathers?.Overall ?? true, Weathers?.Specific?.GetCrystal()));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class RegionDataWeatherBinaryWriteTranslation :
         RegionDataBinaryWriteTranslation,
         IBinaryWriteTranslator
@@ -1845,6 +1884,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class RegionDataWeatherBinaryTranslationMixIn
     {
@@ -1868,6 +1910,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class RegionDataWeatherBinaryWrapper :
         RegionDataBinaryWrapper,
         IRegionDataWeatherInternalGetter
@@ -1988,34 +2034,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Oblivion
-{
-    public partial class RegionDataWeather
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => RegionDataWeather_Registration.Instance;
-        public new static RegionDataWeather_Registration Registration => RegionDataWeather_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return RegionDataWeatherCommon.Instance;
-        }
-        protected override object CommonSetterInstance()
-        {
-            return RegionDataWeatherSetterCommon.Instance;
-        }
-        protected override object CommonSetterCopyInstance()
-        {
-            return RegionDataWeatherSetterCopyCommon.Instance;
-        }
+#endregion
 
-        #endregion
-
-    }
-}

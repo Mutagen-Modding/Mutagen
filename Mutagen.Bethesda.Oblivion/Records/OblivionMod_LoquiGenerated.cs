@@ -8954,8 +8954,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class OblivionMod
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => OblivionMod_Registration.Instance;
+        public static OblivionMod_Registration Registration => OblivionMod_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return OblivionModCommon.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return OblivionModSetterCommon.Instance;
+        }
+        protected object CommonSetterCopyInstance()
+        {
+            return OblivionModSetterCopyCommon.Instance;
+        }
+        object IOblivionModInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IOblivionModInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object IOblivionModInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class OblivionModXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static OblivionModXmlWriteTranslation Instance = new OblivionModXmlWriteTranslation();
@@ -10972,6 +11013,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class OblivionModXmlTranslationMixIn
     {
@@ -11129,9 +11173,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class OblivionMod_Mask<T> : IMask<T>, IEquatable<OblivionMod_Mask<T>>
     {
         #region Ctors
@@ -13601,9 +13649,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((EffectShaders?.Overall ?? true, EffectShaders?.Specific?.GetCrystal()));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Mutagen
+#region Mutagen
+namespace Mutagen.Bethesda.Oblivion
+{
     public class GroupMask
     {
         public bool GameSettings;
@@ -13725,9 +13776,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EffectShaders = defaultValue;
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class OblivionModBinaryWriteTranslation
     {
         public readonly static OblivionModBinaryWriteTranslation Instance = new OblivionModBinaryWriteTranslation();
@@ -14523,6 +14577,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class OblivionModBinaryTranslationMixIn
     {
@@ -14717,6 +14774,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class OblivionModBinaryWrapper :
         BinaryWrapper,
         IOblivionModInternalGetter
@@ -15521,46 +15582,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Oblivion
-{
-    public partial class OblivionMod
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => OblivionMod_Registration.Instance;
-        public static OblivionMod_Registration Registration => OblivionMod_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return OblivionModCommon.Instance;
-        }
-        protected object CommonSetterInstance()
-        {
-            return OblivionModSetterCommon.Instance;
-        }
-        protected object CommonSetterCopyInstance()
-        {
-            return OblivionModSetterCopyCommon.Instance;
-        }
-        object IOblivionModInternalGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IOblivionModInternalGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IOblivionModInternalGetter.CommonSetterCopyInstance()
-        {
-            return this.CommonSetterCopyInstance();
-        }
+#endregion
 
-        #endregion
-
-    }
-}

@@ -1483,8 +1483,37 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class LoadScreen
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => LoadScreen_Registration.Instance;
+        public new static LoadScreen_Registration Registration => LoadScreen_Registration.Instance;
+        protected override object CommonInstance()
+        {
+            return LoadScreenCommon.Instance;
+        }
+        protected override object CommonSetterInstance()
+        {
+            return LoadScreenSetterCommon.Instance;
+        }
+        protected override object CommonSetterCopyInstance()
+        {
+            return LoadScreenSetterCopyCommon.Instance;
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class LoadScreenXmlWriteTranslation :
         OblivionMajorRecordXmlWriteTranslation,
         IXmlWriteTranslator
@@ -1743,6 +1772,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class LoadScreenXmlTranslationMixIn
     {
@@ -1805,9 +1837,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class LoadScreen_Mask<T> : OblivionMajorRecord_Mask<T>, IMask<T>, IEquatable<LoadScreen_Mask<T>>
     {
         #region Ctors
@@ -2198,9 +2234,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((Locations?.Overall ?? true, Locations?.Specific?.GetCrystal()));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class LoadScreenBinaryWriteTranslation :
         OblivionMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
@@ -2335,6 +2374,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class LoadScreenBinaryTranslationMixIn
     {
@@ -2358,6 +2400,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class LoadScreenBinaryWrapper :
         OblivionMajorRecordBinaryWrapper,
         ILoadScreenInternalGetter
@@ -2504,34 +2550,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Oblivion
-{
-    public partial class LoadScreen
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => LoadScreen_Registration.Instance;
-        public new static LoadScreen_Registration Registration => LoadScreen_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return LoadScreenCommon.Instance;
-        }
-        protected override object CommonSetterInstance()
-        {
-            return LoadScreenSetterCommon.Instance;
-        }
-        protected override object CommonSetterCopyInstance()
-        {
-            return LoadScreenSetterCopyCommon.Instance;
-        }
+#endregion
 
-        #endregion
-
-    }
-}

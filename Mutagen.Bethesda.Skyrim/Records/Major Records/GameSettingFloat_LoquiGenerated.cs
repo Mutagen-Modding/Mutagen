@@ -1252,8 +1252,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Skyrim
+{
+    public partial class GameSettingFloat
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => GameSettingFloat_Registration.Instance;
+        public new static GameSettingFloat_Registration Registration => GameSettingFloat_Registration.Instance;
+        protected override object CommonInstance()
+        {
+            return GameSettingFloatCommon.Instance;
+        }
+        protected override object CommonSetterInstance()
+        {
+            return GameSettingFloatSetterCommon.Instance;
+        }
+        protected override object CommonSetterCopyInstance()
+        {
+            return GameSettingFloatSetterCopyCommon.Instance;
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Skyrim.Internals
+{
     public partial class GameSettingFloatXmlWriteTranslation :
         GameSettingXmlWriteTranslation,
         IXmlWriteTranslator
@@ -1442,6 +1471,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Skyrim
+{
     #region Xml Write Mixins
     public static class GameSettingFloatXmlTranslationMixIn
     {
@@ -1504,9 +1536,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Skyrim.Internals
+{
     public class GameSettingFloat_Mask<T> : GameSetting_Mask<T>, IMask<T>, IEquatable<GameSettingFloat_Mask<T>>
     {
         #region Ctors
@@ -1765,9 +1801,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Add((Data, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Skyrim.Internals
+{
     public partial class GameSettingFloatBinaryWriteTranslation :
         GameSettingBinaryWriteTranslation,
         IBinaryWriteTranslator
@@ -1891,6 +1930,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Skyrim
+{
     #region Binary Write Mixins
     public static class GameSettingFloatBinaryTranslationMixIn
     {
@@ -1914,6 +1956,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Skyrim.Internals
+{
     public partial class GameSettingFloatBinaryWrapper :
         GameSettingBinaryWrapper,
         IGameSettingFloatInternalGetter
@@ -2034,34 +2080,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Skyrim
-{
-    public partial class GameSettingFloat
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => GameSettingFloat_Registration.Instance;
-        public new static GameSettingFloat_Registration Registration => GameSettingFloat_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return GameSettingFloatCommon.Instance;
-        }
-        protected override object CommonSetterInstance()
-        {
-            return GameSettingFloatSetterCommon.Instance;
-        }
-        protected override object CommonSetterCopyInstance()
-        {
-            return GameSettingFloatSetterCopyCommon.Instance;
-        }
+#endregion
 
-        #endregion
-
-    }
-}

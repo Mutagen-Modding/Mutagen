@@ -2178,8 +2178,37 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class Climate
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Climate_Registration.Instance;
+        public new static Climate_Registration Registration => Climate_Registration.Instance;
+        protected override object CommonInstance()
+        {
+            return ClimateCommon.Instance;
+        }
+        protected override object CommonSetterInstance()
+        {
+            return ClimateSetterCommon.Instance;
+        }
+        protected override object CommonSetterCopyInstance()
+        {
+            return ClimateSetterCopyCommon.Instance;
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class ClimateXmlWriteTranslation :
         OblivionMajorRecordXmlWriteTranslation,
         IXmlWriteTranslator
@@ -2761,6 +2790,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class ClimateXmlTranslationMixIn
     {
@@ -2823,9 +2855,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class Climate_Mask<T> : OblivionMajorRecord_Mask<T>, IMask<T>, IEquatable<Climate_Mask<T>>
     {
         #region Ctors
@@ -3471,9 +3507,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((TNAMDataTypeState, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class ClimateBinaryWriteTranslation :
         OblivionMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
@@ -3899,6 +3938,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class ClimateBinaryTranslationMixIn
     {
@@ -3922,6 +3964,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class ClimateBinaryWrapper :
         OblivionMajorRecordBinaryWrapper,
         IClimateInternalGetter
@@ -4116,34 +4162,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Oblivion
-{
-    public partial class Climate
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Climate_Registration.Instance;
-        public new static Climate_Registration Registration => Climate_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return ClimateCommon.Instance;
-        }
-        protected override object CommonSetterInstance()
-        {
-            return ClimateSetterCommon.Instance;
-        }
-        protected override object CommonSetterCopyInstance()
-        {
-            return ClimateSetterCopyCommon.Instance;
-        }
+#endregion
 
-        #endregion
-
-    }
-}

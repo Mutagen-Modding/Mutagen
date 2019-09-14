@@ -1212,8 +1212,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class CreatureSound
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => CreatureSound_Registration.Instance;
+        public static CreatureSound_Registration Registration => CreatureSound_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return CreatureSoundCommon.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return CreatureSoundSetterCommon.Instance;
+        }
+        protected object CommonSetterCopyInstance()
+        {
+            return CreatureSoundSetterCopyCommon.Instance;
+        }
+        object ICreatureSoundInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object ICreatureSoundInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object ICreatureSoundInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class CreatureSoundXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static CreatureSoundXmlWriteTranslation Instance = new CreatureSoundXmlWriteTranslation();
@@ -1422,6 +1463,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class CreatureSoundXmlTranslationMixIn
     {
@@ -1579,9 +1623,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class CreatureSound_Mask<T> : IMask<T>, IEquatable<CreatureSound_Mask<T>>
     {
         #region Ctors
@@ -1960,9 +2008,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((Sounds?.Overall ?? true, Sounds?.Specific?.GetCrystal()));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class CreatureSoundBinaryWriteTranslation : IBinaryWriteTranslator
     {
         public readonly static CreatureSoundBinaryWriteTranslation Instance = new CreatureSoundBinaryWriteTranslation();
@@ -2041,6 +2092,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class CreatureSoundBinaryTranslationMixIn
     {
@@ -2091,6 +2145,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class CreatureSoundBinaryWrapper :
         BinaryWrapper,
         ICreatureSoundInternalGetter
@@ -2230,46 +2288,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Oblivion
-{
-    public partial class CreatureSound
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => CreatureSound_Registration.Instance;
-        public static CreatureSound_Registration Registration => CreatureSound_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return CreatureSoundCommon.Instance;
-        }
-        protected object CommonSetterInstance()
-        {
-            return CreatureSoundSetterCommon.Instance;
-        }
-        protected object CommonSetterCopyInstance()
-        {
-            return CreatureSoundSetterCopyCommon.Instance;
-        }
-        object ICreatureSoundInternalGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object ICreatureSoundInternalGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object ICreatureSoundInternalGetter.CommonSetterCopyInstance()
-        {
-            return this.CommonSetterCopyInstance();
-        }
+#endregion
 
-        #endregion
-
-    }
-}

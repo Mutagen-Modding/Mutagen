@@ -3376,8 +3376,37 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class Cell
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Cell_Registration.Instance;
+        public new static Cell_Registration Registration => Cell_Registration.Instance;
+        protected override object CommonInstance()
+        {
+            return CellCommon.Instance;
+        }
+        protected override object CommonSetterInstance()
+        {
+            return CellSetterCommon.Instance;
+        }
+        protected override object CommonSetterCopyInstance()
+        {
+            return CellSetterCopyCommon.Instance;
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class CellXmlWriteTranslation :
         PlaceXmlWriteTranslation,
         IXmlWriteTranslator
@@ -4265,6 +4294,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class CellXmlTranslationMixIn
     {
@@ -4327,9 +4359,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class Cell_Mask<T> : Place_Mask<T>, IMask<T>, IEquatable<Cell_Mask<T>>
     {
         #region Ctors
@@ -5458,9 +5494,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((VisibleWhenDistant, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class CellBinaryWriteTranslation :
         PlaceBinaryWriteTranslation,
         IBinaryWriteTranslator
@@ -5721,6 +5760,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class CellBinaryTranslationMixIn
     {
@@ -5744,6 +5786,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class CellBinaryWrapper :
         PlaceBinaryWrapper,
         ICellInternalGetter
@@ -5991,34 +6037,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Oblivion
-{
-    public partial class Cell
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Cell_Registration.Instance;
-        public new static Cell_Registration Registration => Cell_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return CellCommon.Instance;
-        }
-        protected override object CommonSetterInstance()
-        {
-            return CellSetterCommon.Instance;
-        }
-        protected override object CommonSetterCopyInstance()
-        {
-            return CellSetterCopyCommon.Instance;
-        }
+#endregion
 
-        #endregion
-
-    }
-}

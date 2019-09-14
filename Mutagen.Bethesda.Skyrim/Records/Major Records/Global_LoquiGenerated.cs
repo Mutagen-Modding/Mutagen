@@ -976,8 +976,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Skyrim
+{
+    public partial class Global
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Global_Registration.Instance;
+        public new static Global_Registration Registration => Global_Registration.Instance;
+        protected override object CommonInstance()
+        {
+            return GlobalCommon.Instance;
+        }
+        protected override object CommonSetterInstance()
+        {
+            return GlobalSetterCommon.Instance;
+        }
+        protected override object CommonSetterCopyInstance()
+        {
+            return GlobalSetterCopyCommon.Instance;
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Skyrim.Internals
+{
     public partial class GlobalXmlWriteTranslation :
         SkyrimMajorRecordXmlWriteTranslation,
         IXmlWriteTranslator
@@ -1115,6 +1144,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Skyrim
+{
     #region Xml Write Mixins
     public static class GlobalXmlTranslationMixIn
     {
@@ -1177,9 +1209,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Skyrim.Internals
+{
     public class Global_Mask<T> : SkyrimMajorRecord_Mask<T>, IMask<T>, IEquatable<Global_Mask<T>>
     {
         #region Ctors
@@ -1395,9 +1431,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Skyrim.Internals
+{
     public partial class GlobalBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
@@ -1541,6 +1580,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Skyrim
+{
     #region Binary Write Mixins
     public static class GlobalBinaryTranslationMixIn
     {
@@ -1564,6 +1606,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Skyrim.Internals
+{
     public partial class GlobalBinaryWrapper :
         SkyrimMajorRecordBinaryWrapper,
         IGlobalInternalGetter
@@ -1661,34 +1707,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Skyrim
-{
-    public partial class Global
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Global_Registration.Instance;
-        public new static Global_Registration Registration => Global_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return GlobalCommon.Instance;
-        }
-        protected override object CommonSetterInstance()
-        {
-            return GlobalSetterCommon.Instance;
-        }
-        protected override object CommonSetterCopyInstance()
-        {
-            return GlobalSetterCopyCommon.Instance;
-        }
+#endregion
 
-        #endregion
-
-    }
-}

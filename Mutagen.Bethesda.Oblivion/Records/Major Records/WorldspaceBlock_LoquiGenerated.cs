@@ -1343,8 +1343,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class WorldspaceBlock
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => WorldspaceBlock_Registration.Instance;
+        public static WorldspaceBlock_Registration Registration => WorldspaceBlock_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return WorldspaceBlockCommon.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return WorldspaceBlockSetterCommon.Instance;
+        }
+        protected object CommonSetterCopyInstance()
+        {
+            return WorldspaceBlockSetterCopyCommon.Instance;
+        }
+        object IWorldspaceBlockInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IWorldspaceBlockInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object IWorldspaceBlockInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class WorldspaceBlockXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static WorldspaceBlockXmlWriteTranslation Instance = new WorldspaceBlockXmlWriteTranslation();
@@ -1657,6 +1698,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class WorldspaceBlockXmlTranslationMixIn
     {
@@ -1814,9 +1858,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class WorldspaceBlock_Mask<T> : IMask<T>, IEquatable<WorldspaceBlock_Mask<T>>
     {
         #region Ctors
@@ -2276,9 +2324,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((Items?.Overall ?? true, Items?.Specific?.GetCrystal()));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class WorldspaceBlockBinaryWriteTranslation : IBinaryWriteTranslator
     {
         public readonly static WorldspaceBlockBinaryWriteTranslation Instance = new WorldspaceBlockBinaryWriteTranslation();
@@ -2376,6 +2427,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class WorldspaceBlockBinaryTranslationMixIn
     {
@@ -2426,6 +2480,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class WorldspaceBlockBinaryWrapper :
         BinaryWrapper,
         IWorldspaceBlockInternalGetter
@@ -2564,46 +2622,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Oblivion
-{
-    public partial class WorldspaceBlock
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => WorldspaceBlock_Registration.Instance;
-        public static WorldspaceBlock_Registration Registration => WorldspaceBlock_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return WorldspaceBlockCommon.Instance;
-        }
-        protected object CommonSetterInstance()
-        {
-            return WorldspaceBlockSetterCommon.Instance;
-        }
-        protected object CommonSetterCopyInstance()
-        {
-            return WorldspaceBlockSetterCopyCommon.Instance;
-        }
-        object IWorldspaceBlockInternalGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IWorldspaceBlockInternalGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IWorldspaceBlockInternalGetter.CommonSetterCopyInstance()
-        {
-            return this.CommonSetterCopyInstance();
-        }
+#endregion
 
-        #endregion
-
-    }
-}

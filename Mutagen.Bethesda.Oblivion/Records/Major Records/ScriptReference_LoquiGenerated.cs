@@ -820,8 +820,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class ScriptReference
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => ScriptReference_Registration.Instance;
+        public static ScriptReference_Registration Registration => ScriptReference_Registration.Instance;
+        protected virtual object CommonInstance()
+        {
+            return ScriptReferenceCommon.Instance;
+        }
+        protected virtual object CommonSetterInstance()
+        {
+            return ScriptReferenceSetterCommon.Instance;
+        }
+        protected virtual object CommonSetterCopyInstance()
+        {
+            return ScriptReferenceSetterCopyCommon.Instance;
+        }
+        object IScriptReferenceInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IScriptReferenceInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object IScriptReferenceInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class ScriptReferenceXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static ScriptReferenceXmlWriteTranslation Instance = new ScriptReferenceXmlWriteTranslation();
@@ -945,6 +986,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class ScriptReferenceXmlTranslationMixIn
     {
@@ -1102,9 +1146,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class ScriptReference_Mask<T> : IMask<T>, IEquatable<ScriptReference_Mask<T>>
     {
         #region Ctors
@@ -1345,9 +1393,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class ScriptReferenceBinaryWriteTranslation : IBinaryWriteTranslator
     {
         public readonly static ScriptReferenceBinaryWriteTranslation Instance = new ScriptReferenceBinaryWriteTranslation();
@@ -1384,6 +1435,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class ScriptReferenceBinaryTranslationMixIn
     {
@@ -1434,6 +1488,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class ScriptReferenceBinaryWrapper :
         BinaryWrapper,
         IScriptReferenceInternalGetter
@@ -1513,46 +1571,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Oblivion
-{
-    public partial class ScriptReference
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => ScriptReference_Registration.Instance;
-        public static ScriptReference_Registration Registration => ScriptReference_Registration.Instance;
-        protected virtual object CommonInstance()
-        {
-            return ScriptReferenceCommon.Instance;
-        }
-        protected virtual object CommonSetterInstance()
-        {
-            return ScriptReferenceSetterCommon.Instance;
-        }
-        protected virtual object CommonSetterCopyInstance()
-        {
-            return ScriptReferenceSetterCopyCommon.Instance;
-        }
-        object IScriptReferenceInternalGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IScriptReferenceInternalGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IScriptReferenceInternalGetter.CommonSetterCopyInstance()
-        {
-            return this.CommonSetterCopyInstance();
-        }
+#endregion
 
-        #endregion
-
-    }
-}

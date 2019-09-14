@@ -1052,8 +1052,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class RaceVoices
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => RaceVoices_Registration.Instance;
+        public static RaceVoices_Registration Registration => RaceVoices_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return RaceVoicesCommon.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return RaceVoicesSetterCommon.Instance;
+        }
+        protected object CommonSetterCopyInstance()
+        {
+            return RaceVoicesSetterCopyCommon.Instance;
+        }
+        object IRaceVoicesInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IRaceVoicesInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object IRaceVoicesInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class RaceVoicesXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static RaceVoicesXmlWriteTranslation Instance = new RaceVoicesXmlWriteTranslation();
@@ -1209,6 +1250,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class RaceVoicesXmlTranslationMixIn
     {
@@ -1366,9 +1410,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class RaceVoices_Mask<T> : IMask<T>, IEquatable<RaceVoices_Mask<T>>
     {
         #region Ctors
@@ -1669,9 +1717,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((Female, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class RaceVoicesBinaryWriteTranslation : IBinaryWriteTranslator
     {
         public readonly static RaceVoicesBinaryWriteTranslation Instance = new RaceVoicesBinaryWriteTranslation();
@@ -1735,6 +1786,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class RaceVoicesBinaryTranslationMixIn
     {
@@ -1785,6 +1839,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class RaceVoicesBinaryWrapper :
         BinaryWrapper,
         IRaceVoicesInternalGetter
@@ -1890,46 +1948,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Oblivion
-{
-    public partial class RaceVoices
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => RaceVoices_Registration.Instance;
-        public static RaceVoices_Registration Registration => RaceVoices_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return RaceVoicesCommon.Instance;
-        }
-        protected object CommonSetterInstance()
-        {
-            return RaceVoicesSetterCommon.Instance;
-        }
-        protected object CommonSetterCopyInstance()
-        {
-            return RaceVoicesSetterCopyCommon.Instance;
-        }
-        object IRaceVoicesInternalGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IRaceVoicesInternalGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IRaceVoicesInternalGetter.CommonSetterCopyInstance()
-        {
-            return this.CommonSetterCopyInstance();
-        }
+#endregion
 
-        #endregion
-
-    }
-}

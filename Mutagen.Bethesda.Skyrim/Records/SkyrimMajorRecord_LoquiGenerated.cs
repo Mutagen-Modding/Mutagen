@@ -774,10 +774,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(SkyrimMajorRecordXmlWriteTranslation);
+        public static readonly RecordType AACT_HEADER = new RecordType("AACT");
+        public static readonly RecordType CLAS_HEADER = new RecordType("CLAS");
         public static readonly RecordType GMST_HEADER = new RecordType("GMST");
         public static readonly RecordType GLOB_HEADER = new RecordType("GLOB");
         public static readonly RecordType KYWD_HEADER = new RecordType("KYWD");
         public static readonly RecordType LCRT_HEADER = new RecordType("LCRT");
+        public static readonly RecordType TXST_HEADER = new RecordType("TXST");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -785,10 +788,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 new HashSet<RecordType>(
                     new RecordType[]
                     {
+                        AACT_HEADER,
+                        CLAS_HEADER,
                         GMST_HEADER,
                         GLOB_HEADER,
                         KYWD_HEADER,
-                        LCRT_HEADER
+                        LCRT_HEADER,
+                        TXST_HEADER
                     })
             );
         });
@@ -1110,8 +1116,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Skyrim
+{
+    public partial class SkyrimMajorRecord
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => SkyrimMajorRecord_Registration.Instance;
+        public new static SkyrimMajorRecord_Registration Registration => SkyrimMajorRecord_Registration.Instance;
+        protected override object CommonInstance()
+        {
+            return SkyrimMajorRecordCommon.Instance;
+        }
+        protected override object CommonSetterInstance()
+        {
+            return SkyrimMajorRecordSetterCommon.Instance;
+        }
+        protected override object CommonSetterCopyInstance()
+        {
+            return SkyrimMajorRecordSetterCopyCommon.Instance;
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Skyrim.Internals
+{
     public partial class SkyrimMajorRecordXmlWriteTranslation :
         MajorRecordXmlWriteTranslation,
         IXmlWriteTranslator
@@ -1339,6 +1374,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Skyrim
+{
     #region Xml Write Mixins
     public static class SkyrimMajorRecordXmlTranslationMixIn
     {
@@ -1401,9 +1439,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Skyrim.Internals
+{
     public class SkyrimMajorRecord_Mask<T> : MajorRecord_Mask<T>, IMask<T>, IEquatable<SkyrimMajorRecord_Mask<T>>
     {
         #region Ctors
@@ -1716,9 +1758,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Add((Version2, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Skyrim.Internals
+{
     public partial class SkyrimMajorRecordBinaryWriteTranslation :
         MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
@@ -1798,6 +1843,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Skyrim
+{
     #region Binary Write Mixins
     public static class SkyrimMajorRecordBinaryTranslationMixIn
     {
@@ -1821,6 +1869,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Skyrim.Internals
+{
     public partial class SkyrimMajorRecordBinaryWrapper :
         MajorRecordBinaryWrapper,
         ISkyrimMajorRecordInternalGetter
@@ -1887,34 +1939,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Skyrim
-{
-    public partial class SkyrimMajorRecord
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => SkyrimMajorRecord_Registration.Instance;
-        public new static SkyrimMajorRecord_Registration Registration => SkyrimMajorRecord_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return SkyrimMajorRecordCommon.Instance;
-        }
-        protected override object CommonSetterInstance()
-        {
-            return SkyrimMajorRecordSetterCommon.Instance;
-        }
-        protected override object CommonSetterCopyInstance()
-        {
-            return SkyrimMajorRecordSetterCopyCommon.Instance;
-        }
+#endregion
 
-        #endregion
-
-    }
-}

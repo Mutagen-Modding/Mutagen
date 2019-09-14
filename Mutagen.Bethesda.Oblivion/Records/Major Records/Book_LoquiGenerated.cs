@@ -2302,8 +2302,37 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class Book
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Book_Registration.Instance;
+        public new static Book_Registration Registration => Book_Registration.Instance;
+        protected override object CommonInstance()
+        {
+            return BookCommon.Instance;
+        }
+        protected override object CommonSetterInstance()
+        {
+            return BookSetterCommon.Instance;
+        }
+        protected override object CommonSetterCopyInstance()
+        {
+            return BookSetterCopyCommon.Instance;
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class BookXmlWriteTranslation :
         ItemAbstractXmlWriteTranslation,
         IXmlWriteTranslator
@@ -2852,6 +2881,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class BookXmlTranslationMixIn
     {
@@ -2914,9 +2946,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class Book_Mask<T> : ItemAbstract_Mask<T>, IMask<T>, IEquatable<Book_Mask<T>>
     {
         #region Ctors
@@ -3484,9 +3520,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((DATADataTypeState, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class BookBinaryWriteTranslation :
         ItemAbstractBinaryWriteTranslation,
         IBinaryWriteTranslator
@@ -3695,6 +3734,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class BookBinaryTranslationMixIn
     {
@@ -3718,6 +3760,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class BookBinaryWrapper :
         ItemAbstractBinaryWrapper,
         IBookInternalGetter
@@ -3930,34 +3976,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Oblivion
-{
-    public partial class Book
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Book_Registration.Instance;
-        public new static Book_Registration Registration => Book_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return BookCommon.Instance;
-        }
-        protected override object CommonSetterInstance()
-        {
-            return BookSetterCommon.Instance;
-        }
-        protected override object CommonSetterCopyInstance()
-        {
-            return BookSetterCopyCommon.Instance;
-        }
+#endregion
 
-        #endregion
-
-    }
-}

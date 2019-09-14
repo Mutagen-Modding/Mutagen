@@ -1213,8 +1213,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Skyrim
+{
+    public partial class LocationReferenceType
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => LocationReferenceType_Registration.Instance;
+        public new static LocationReferenceType_Registration Registration => LocationReferenceType_Registration.Instance;
+        protected override object CommonInstance()
+        {
+            return LocationReferenceTypeCommon.Instance;
+        }
+        protected override object CommonSetterInstance()
+        {
+            return LocationReferenceTypeSetterCommon.Instance;
+        }
+        protected override object CommonSetterCopyInstance()
+        {
+            return LocationReferenceTypeSetterCopyCommon.Instance;
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Skyrim.Internals
+{
     public partial class LocationReferenceTypeXmlWriteTranslation :
         SkyrimMajorRecordXmlWriteTranslation,
         IXmlWriteTranslator
@@ -1388,6 +1417,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Skyrim
+{
     #region Xml Write Mixins
     public static class LocationReferenceTypeXmlTranslationMixIn
     {
@@ -1450,9 +1482,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Skyrim.Internals
+{
     public class LocationReferenceType_Mask<T> : SkyrimMajorRecord_Mask<T>, IMask<T>, IEquatable<LocationReferenceType_Mask<T>>
     {
         #region Ctors
@@ -1711,9 +1747,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Add((Color, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Skyrim.Internals
+{
     public partial class LocationReferenceTypeBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
@@ -1823,6 +1862,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Skyrim
+{
     #region Binary Write Mixins
     public static class LocationReferenceTypeBinaryTranslationMixIn
     {
@@ -1846,6 +1888,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Skyrim.Internals
+{
     public partial class LocationReferenceTypeBinaryWrapper :
         SkyrimMajorRecordBinaryWrapper,
         ILocationReferenceTypeInternalGetter
@@ -1966,34 +2012,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Skyrim
-{
-    public partial class LocationReferenceType
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => LocationReferenceType_Registration.Instance;
-        public new static LocationReferenceType_Registration Registration => LocationReferenceType_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return LocationReferenceTypeCommon.Instance;
-        }
-        protected override object CommonSetterInstance()
-        {
-            return LocationReferenceTypeSetterCommon.Instance;
-        }
-        protected override object CommonSetterCopyInstance()
-        {
-            return LocationReferenceTypeSetterCopyCommon.Instance;
-        }
+#endregion
 
-        #endregion
-
-    }
-}

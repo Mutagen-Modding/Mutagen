@@ -1101,8 +1101,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class AIPackageTarget
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => AIPackageTarget_Registration.Instance;
+        public static AIPackageTarget_Registration Registration => AIPackageTarget_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return AIPackageTargetCommon.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return AIPackageTargetSetterCommon.Instance;
+        }
+        protected object CommonSetterCopyInstance()
+        {
+            return AIPackageTargetSetterCopyCommon.Instance;
+        }
+        object IAIPackageTargetInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IAIPackageTargetInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object IAIPackageTargetInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class AIPackageTargetXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static AIPackageTargetXmlWriteTranslation Instance = new AIPackageTargetXmlWriteTranslation();
@@ -1331,6 +1372,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class AIPackageTargetXmlTranslationMixIn
     {
@@ -1488,9 +1532,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class AIPackageTarget_Mask<T> : IMask<T>, IEquatable<AIPackageTarget_Mask<T>>
     {
         #region Ctors
@@ -1818,9 +1866,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((Count, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class AIPackageTargetBinaryWriteTranslation : IBinaryWriteTranslator
     {
         public readonly static AIPackageTargetBinaryWriteTranslation Instance = new AIPackageTargetBinaryWriteTranslation();
@@ -1882,6 +1933,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class AIPackageTargetBinaryTranslationMixIn
     {
@@ -1932,6 +1986,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class AIPackageTargetBinaryWrapper :
         BinaryWrapper,
         IAIPackageTargetInternalGetter
@@ -2032,46 +2090,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Oblivion
-{
-    public partial class AIPackageTarget
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => AIPackageTarget_Registration.Instance;
-        public static AIPackageTarget_Registration Registration => AIPackageTarget_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return AIPackageTargetCommon.Instance;
-        }
-        protected object CommonSetterInstance()
-        {
-            return AIPackageTargetSetterCommon.Instance;
-        }
-        protected object CommonSetterCopyInstance()
-        {
-            return AIPackageTargetSetterCopyCommon.Instance;
-        }
-        object IAIPackageTargetInternalGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IAIPackageTargetInternalGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IAIPackageTargetInternalGetter.CommonSetterCopyInstance()
-        {
-            return this.CommonSetterCopyInstance();
-        }
+#endregion
 
-        #endregion
-
-    }
-}

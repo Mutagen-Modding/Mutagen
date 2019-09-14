@@ -1213,8 +1213,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Skyrim
+{
+    public partial class Keyword
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Keyword_Registration.Instance;
+        public new static Keyword_Registration Registration => Keyword_Registration.Instance;
+        protected override object CommonInstance()
+        {
+            return KeywordCommon.Instance;
+        }
+        protected override object CommonSetterInstance()
+        {
+            return KeywordSetterCommon.Instance;
+        }
+        protected override object CommonSetterCopyInstance()
+        {
+            return KeywordSetterCopyCommon.Instance;
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Skyrim.Internals
+{
     public partial class KeywordXmlWriteTranslation :
         SkyrimMajorRecordXmlWriteTranslation,
         IXmlWriteTranslator
@@ -1388,6 +1417,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Skyrim
+{
     #region Xml Write Mixins
     public static class KeywordXmlTranslationMixIn
     {
@@ -1450,9 +1482,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Skyrim.Internals
+{
     public class Keyword_Mask<T> : SkyrimMajorRecord_Mask<T>, IMask<T>, IEquatable<Keyword_Mask<T>>
     {
         #region Ctors
@@ -1711,9 +1747,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Add((Color, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Skyrim.Internals
+{
     public partial class KeywordBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
@@ -1823,6 +1862,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Skyrim
+{
     #region Binary Write Mixins
     public static class KeywordBinaryTranslationMixIn
     {
@@ -1846,6 +1888,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Skyrim.Internals
+{
     public partial class KeywordBinaryWrapper :
         SkyrimMajorRecordBinaryWrapper,
         IKeywordInternalGetter
@@ -1966,34 +2012,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Skyrim
-{
-    public partial class Keyword
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Keyword_Registration.Instance;
-        public new static Keyword_Registration Registration => Keyword_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return KeywordCommon.Instance;
-        }
-        protected override object CommonSetterInstance()
-        {
-            return KeywordSetterCommon.Instance;
-        }
-        protected override object CommonSetterCopyInstance()
-        {
-            return KeywordSetterCopyCommon.Instance;
-        }
+#endregion
 
-        #endregion
-
-    }
-}

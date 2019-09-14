@@ -1332,8 +1332,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class FacePart
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => FacePart_Registration.Instance;
+        public static FacePart_Registration Registration => FacePart_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return FacePartCommon.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return FacePartSetterCommon.Instance;
+        }
+        protected object CommonSetterCopyInstance()
+        {
+            return FacePartSetterCopyCommon.Instance;
+        }
+        object IFacePartInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IFacePartInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object IFacePartInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class FacePartXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static FacePartXmlWriteTranslation Instance = new FacePartXmlWriteTranslation();
@@ -1568,6 +1609,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class FacePartXmlTranslationMixIn
     {
@@ -1725,9 +1769,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class FacePart_Mask<T> : IMask<T>, IEquatable<FacePart_Mask<T>>
     {
         #region Ctors
@@ -2067,9 +2115,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((Icon, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class FacePartBinaryWriteTranslation : IBinaryWriteTranslator
     {
         public readonly static FacePartBinaryWriteTranslation Instance = new FacePartBinaryWriteTranslation();
@@ -2148,6 +2199,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class FacePartBinaryTranslationMixIn
     {
@@ -2198,6 +2252,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class FacePartBinaryWrapper :
         BinaryWrapper,
         IFacePartInternalGetter
@@ -2349,46 +2407,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Oblivion
-{
-    public partial class FacePart
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => FacePart_Registration.Instance;
-        public static FacePart_Registration Registration => FacePart_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return FacePartCommon.Instance;
-        }
-        protected object CommonSetterInstance()
-        {
-            return FacePartSetterCommon.Instance;
-        }
-        protected object CommonSetterCopyInstance()
-        {
-            return FacePartSetterCopyCommon.Instance;
-        }
-        object IFacePartInternalGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IFacePartInternalGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IFacePartInternalGetter.CommonSetterCopyInstance()
-        {
-            return this.CommonSetterCopyInstance();
-        }
+#endregion
 
-        #endregion
-
-    }
-}

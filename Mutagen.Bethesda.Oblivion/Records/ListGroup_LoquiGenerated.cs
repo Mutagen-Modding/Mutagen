@@ -1203,8 +1203,50 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class ListGroup<T>
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => ListGroup_Registration.Instance;
+        public static ListGroup_Registration Registration => ListGroup_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return ListGroupCommon<T>.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return ListGroupSetterCommon<T>.Instance;
+        }
+        protected object CommonSetterCopyInstance<T_CopyMask>()
+            where T_CopyMask : class, new()
+        {
+            return ListGroupSetterCopyCommon.Instance;
+        }
+        object IListGroupInternalGetter<T>.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IListGroupInternalGetter<T>.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object IListGroupInternalGetter<T>.CommonSetterCopyInstance<T_CopyMask>()
+        {
+            return this.CommonSetterCopyInstance<T_CopyMask>();
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class ListGroupXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static ListGroupXmlWriteTranslation Instance = new ListGroupXmlWriteTranslation();
@@ -1445,6 +1487,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class ListGroupXmlTranslationMixIn
     {
@@ -1621,9 +1666,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class ListGroup_Mask<T> : IMask<T>, IEquatable<ListGroup_Mask<T>>
     {
         #region Ctors
@@ -2029,9 +2078,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((Items?.Overall ?? true, Items?.Specific?.GetCrystal()));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class ListGroupBinaryWriteTranslation : IBinaryWriteTranslator
     {
         public readonly static ListGroupBinaryWriteTranslation Instance = new ListGroupBinaryWriteTranslation();
@@ -2166,6 +2218,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class ListGroupBinaryTranslationMixIn
     {
@@ -2221,6 +2276,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class ListGroupBinaryWrapper<T> :
         BinaryWrapper,
         IListGroupInternalGetter<T>
@@ -2347,47 +2406,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Oblivion
-{
-    public partial class ListGroup<T>
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => ListGroup_Registration.Instance;
-        public static ListGroup_Registration Registration => ListGroup_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return ListGroupCommon<T>.Instance;
-        }
-        protected object CommonSetterInstance()
-        {
-            return ListGroupSetterCommon<T>.Instance;
-        }
-        protected object CommonSetterCopyInstance<T_CopyMask>()
-            where T_CopyMask : class, new()
-        {
-            return ListGroupSetterCopyCommon.Instance;
-        }
-        object IListGroupInternalGetter<T>.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IListGroupInternalGetter<T>.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IListGroupInternalGetter<T>.CommonSetterCopyInstance<T_CopyMask>()
-        {
-            return this.CommonSetterCopyInstance<T_CopyMask>();
-        }
+#endregion
 
-        #endregion
-
-    }
-}

@@ -11,10 +11,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>445e0d1ff6daa8ac6b92a544628bade3c6f054ca</Sha>
+         <Sha>1165459db9bf3d1d8089bc1d646fc6367e20a373</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>09-11-2019 23:08:48</CommitDate>
-         <Description>Some configure await generation</Description>
+         <CommitDate>09-14-2019 16:46:50</CommitDate>
+         <Description>Merge branch 'transl-mix-in'</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/Loqui.git</OriginHint>
       </RepoListing>

@@ -1384,8 +1384,37 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class Sound
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Sound_Registration.Instance;
+        public new static Sound_Registration Registration => Sound_Registration.Instance;
+        protected override object CommonInstance()
+        {
+            return SoundCommon.Instance;
+        }
+        protected override object CommonSetterInstance()
+        {
+            return SoundSetterCommon.Instance;
+        }
+        protected override object CommonSetterCopyInstance()
+        {
+            return SoundSetterCopyCommon.Instance;
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class SoundXmlWriteTranslation :
         OblivionMajorRecordXmlWriteTranslation,
         IXmlWriteTranslator
@@ -1598,6 +1627,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class SoundXmlTranslationMixIn
     {
@@ -1660,9 +1692,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class Sound_Mask<T> : OblivionMajorRecord_Mask<T>, IMask<T>, IEquatable<Sound_Mask<T>>
     {
         #region Ctors
@@ -1960,9 +1996,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((Data?.Overall ?? true, Data?.Specific?.GetCrystal()));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class SoundBinaryWriteTranslation :
         OblivionMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
@@ -2081,6 +2120,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class SoundBinaryTranslationMixIn
     {
@@ -2104,6 +2146,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class SoundBinaryWrapper :
         OblivionMajorRecordBinaryWrapper,
         ISoundInternalGetter
@@ -2244,34 +2290,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Oblivion
-{
-    public partial class Sound
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Sound_Registration.Instance;
-        public new static Sound_Registration Registration => Sound_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return SoundCommon.Instance;
-        }
-        protected override object CommonSetterInstance()
-        {
-            return SoundSetterCommon.Instance;
-        }
-        protected override object CommonSetterCopyInstance()
-        {
-            return SoundSetterCopyCommon.Instance;
-        }
+#endregion
 
-        #endregion
-
-    }
-}

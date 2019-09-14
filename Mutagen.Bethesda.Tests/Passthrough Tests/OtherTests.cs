@@ -22,7 +22,7 @@ namespace Mutagen.Bethesda.Tests
             var mod = await OblivionMod.CreateFromBinary(
                 Path.Combine(settings.DataFolderLocations.Oblivion, target.Path),
                 modKey: Mutagen.Bethesda.Oblivion.Constants.Oblivion,
-                importMask: new GroupMask()
+                importMask: new Mutagen.Bethesda.Oblivion.GroupMask()
                 {
                     NPCs = true
                 });

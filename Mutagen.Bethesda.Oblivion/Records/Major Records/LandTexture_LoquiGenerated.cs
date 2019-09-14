@@ -1605,8 +1605,37 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class LandTexture
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => LandTexture_Registration.Instance;
+        public new static LandTexture_Registration Registration => LandTexture_Registration.Instance;
+        protected override object CommonInstance()
+        {
+            return LandTextureCommon.Instance;
+        }
+        protected override object CommonSetterInstance()
+        {
+            return LandTextureSetterCommon.Instance;
+        }
+        protected override object CommonSetterCopyInstance()
+        {
+            return LandTextureSetterCopyCommon.Instance;
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class LandTextureXmlWriteTranslation :
         OblivionMajorRecordXmlWriteTranslation,
         IXmlWriteTranslator
@@ -1902,6 +1931,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class LandTextureXmlTranslationMixIn
     {
@@ -1964,9 +1996,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class LandTexture_Mask<T> : OblivionMajorRecord_Mask<T>, IMask<T>, IEquatable<LandTexture_Mask<T>>
     {
         #region Ctors
@@ -2387,9 +2423,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((PotentialGrass, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class LandTextureBinaryWriteTranslation :
         OblivionMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
@@ -2531,6 +2570,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class LandTextureBinaryTranslationMixIn
     {
@@ -2554,6 +2596,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class LandTextureBinaryWrapper :
         OblivionMajorRecordBinaryWrapper,
         ILandTextureInternalGetter
@@ -2711,34 +2757,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Oblivion
-{
-    public partial class LandTexture
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => LandTexture_Registration.Instance;
-        public new static LandTexture_Registration Registration => LandTexture_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return LandTextureCommon.Instance;
-        }
-        protected override object CommonSetterInstance()
-        {
-            return LandTextureSetterCommon.Instance;
-        }
-        protected override object CommonSetterCopyInstance()
-        {
-            return LandTextureSetterCopyCommon.Instance;
-        }
+#endregion
 
-        #endregion
-
-    }
-}

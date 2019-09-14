@@ -1119,8 +1119,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class MapData
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => MapData_Registration.Instance;
+        public static MapData_Registration Registration => MapData_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return MapDataCommon.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return MapDataSetterCommon.Instance;
+        }
+        protected object CommonSetterCopyInstance()
+        {
+            return MapDataSetterCopyCommon.Instance;
+        }
+        object IMapDataInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IMapDataInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object IMapDataInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class MapDataXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static MapDataXmlWriteTranslation Instance = new MapDataXmlWriteTranslation();
@@ -1349,6 +1390,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class MapDataXmlTranslationMixIn
     {
@@ -1506,9 +1550,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class MapData_Mask<T> : IMask<T>, IEquatable<MapData_Mask<T>>
     {
         #region Ctors
@@ -1836,9 +1884,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((CellCoordinatesSECell, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class MapDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
         public readonly static MapDataBinaryWriteTranslation Instance = new MapDataBinaryWriteTranslation();
@@ -1903,6 +1954,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class MapDataBinaryTranslationMixIn
     {
@@ -1953,6 +2007,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class MapDataBinaryWrapper :
         BinaryWrapper,
         IMapDataInternalGetter
@@ -2053,46 +2111,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Oblivion
-{
-    public partial class MapData
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => MapData_Registration.Instance;
-        public static MapData_Registration Registration => MapData_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return MapDataCommon.Instance;
-        }
-        protected object CommonSetterInstance()
-        {
-            return MapDataSetterCommon.Instance;
-        }
-        protected object CommonSetterCopyInstance()
-        {
-            return MapDataSetterCopyCommon.Instance;
-        }
-        object IMapDataInternalGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IMapDataInternalGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IMapDataInternalGetter.CommonSetterCopyInstance()
-        {
-            return this.CommonSetterCopyInstance();
-        }
+#endregion
 
-        #endregion
-
-    }
-}

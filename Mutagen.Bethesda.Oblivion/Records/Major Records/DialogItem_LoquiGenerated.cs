@@ -2239,8 +2239,37 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class DialogItem
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => DialogItem_Registration.Instance;
+        public new static DialogItem_Registration Registration => DialogItem_Registration.Instance;
+        protected override object CommonInstance()
+        {
+            return DialogItemCommon.Instance;
+        }
+        protected override object CommonSetterInstance()
+        {
+            return DialogItemSetterCommon.Instance;
+        }
+        protected override object CommonSetterCopyInstance()
+        {
+            return DialogItemSetterCopyCommon.Instance;
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class DialogItemXmlWriteTranslation :
         OblivionMajorRecordXmlWriteTranslation,
         IXmlWriteTranslator
@@ -2780,6 +2809,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class DialogItemXmlTranslationMixIn
     {
@@ -2842,9 +2874,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class DialogItem_Mask<T> : OblivionMajorRecord_Mask<T>, IMask<T>, IEquatable<DialogItem_Mask<T>>
     {
         #region Ctors
@@ -3748,9 +3784,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((DATADataTypeState, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class DialogItemBinaryWriteTranslation :
         OblivionMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
@@ -3990,6 +4029,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class DialogItemBinaryTranslationMixIn
     {
@@ -4013,6 +4055,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class DialogItemBinaryWrapper :
         OblivionMajorRecordBinaryWrapper,
         IDialogItemInternalGetter
@@ -4254,34 +4300,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Oblivion
-{
-    public partial class DialogItem
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => DialogItem_Registration.Instance;
-        public new static DialogItem_Registration Registration => DialogItem_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return DialogItemCommon.Instance;
-        }
-        protected override object CommonSetterInstance()
-        {
-            return DialogItemSetterCommon.Instance;
-        }
-        protected override object CommonSetterCopyInstance()
-        {
-            return DialogItemSetterCopyCommon.Instance;
-        }
+#endregion
 
-        #endregion
-
-    }
-}

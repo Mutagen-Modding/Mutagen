@@ -1115,8 +1115,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class RaceStatsGendered
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => RaceStatsGendered_Registration.Instance;
+        public static RaceStatsGendered_Registration Registration => RaceStatsGendered_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return RaceStatsGenderedCommon.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return RaceStatsGenderedSetterCommon.Instance;
+        }
+        protected object CommonSetterCopyInstance()
+        {
+            return RaceStatsGenderedSetterCopyCommon.Instance;
+        }
+        object IRaceStatsGenderedInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IRaceStatsGenderedInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object IRaceStatsGenderedInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class RaceStatsGenderedXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static RaceStatsGenderedXmlWriteTranslation Instance = new RaceStatsGenderedXmlWriteTranslation();
@@ -1316,6 +1357,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class RaceStatsGenderedXmlTranslationMixIn
     {
@@ -1473,9 +1517,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class RaceStatsGendered_Mask<T> : IMask<T>, IEquatable<RaceStatsGendered_Mask<T>>
     {
         #region Ctors
@@ -1800,9 +1848,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((Female?.Overall ?? true, Female?.Specific?.GetCrystal()));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class RaceStatsGenderedBinaryWriteTranslation : IBinaryWriteTranslator
     {
         public readonly static RaceStatsGenderedBinaryWriteTranslation Instance = new RaceStatsGenderedBinaryWriteTranslation();
@@ -1876,6 +1927,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class RaceStatsGenderedBinaryTranslationMixIn
     {
@@ -1926,6 +1980,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class RaceStatsGenderedBinaryWrapper :
         BinaryWrapper,
         IRaceStatsGenderedInternalGetter
@@ -2025,46 +2083,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Oblivion
-{
-    public partial class RaceStatsGendered
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => RaceStatsGendered_Registration.Instance;
-        public static RaceStatsGendered_Registration Registration => RaceStatsGendered_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return RaceStatsGenderedCommon.Instance;
-        }
-        protected object CommonSetterInstance()
-        {
-            return RaceStatsGenderedSetterCommon.Instance;
-        }
-        protected object CommonSetterCopyInstance()
-        {
-            return RaceStatsGenderedSetterCopyCommon.Instance;
-        }
-        object IRaceStatsGenderedInternalGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IRaceStatsGenderedInternalGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IRaceStatsGenderedInternalGetter.CommonSetterCopyInstance()
-        {
-            return this.CommonSetterCopyInstance();
-        }
+#endregion
 
-        #endregion
-
-    }
-}

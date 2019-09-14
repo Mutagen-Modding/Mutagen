@@ -1454,8 +1454,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class Condition
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Condition_Registration.Instance;
+        public static Condition_Registration Registration => Condition_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return ConditionCommon.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return ConditionSetterCommon.Instance;
+        }
+        protected object CommonSetterCopyInstance()
+        {
+            return ConditionSetterCopyCommon.Instance;
+        }
+        object IConditionInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IConditionInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object IConditionInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class ConditionXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static ConditionXmlWriteTranslation Instance = new ConditionXmlWriteTranslation();
@@ -1859,6 +1900,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class ConditionXmlTranslationMixIn
     {
@@ -2016,9 +2060,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class Condition_Mask<T> : IMask<T>, IEquatable<Condition_Mask<T>>
     {
         #region Ctors
@@ -2481,9 +2529,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((ThirdParameter, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class ConditionBinaryWriteTranslation : IBinaryWriteTranslator
     {
         public readonly static ConditionBinaryWriteTranslation Instance = new ConditionBinaryWriteTranslation();
@@ -2595,6 +2646,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class ConditionBinaryTranslationMixIn
     {
@@ -2645,6 +2699,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class ConditionBinaryWrapper :
         BinaryWrapper,
         IConditionInternalGetter
@@ -2765,46 +2823,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Oblivion
-{
-    public partial class Condition
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Condition_Registration.Instance;
-        public static Condition_Registration Registration => Condition_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return ConditionCommon.Instance;
-        }
-        protected object CommonSetterInstance()
-        {
-            return ConditionSetterCommon.Instance;
-        }
-        protected object CommonSetterCopyInstance()
-        {
-            return ConditionSetterCopyCommon.Instance;
-        }
-        object IConditionInternalGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IConditionInternalGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IConditionInternalGetter.CommonSetterCopyInstance()
-        {
-            return this.CommonSetterCopyInstance();
-        }
+#endregion
 
-        #endregion
-
-    }
-}

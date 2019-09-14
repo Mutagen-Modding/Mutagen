@@ -1065,8 +1065,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class WeatherSound
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => WeatherSound_Registration.Instance;
+        public static WeatherSound_Registration Registration => WeatherSound_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return WeatherSoundCommon.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return WeatherSoundSetterCommon.Instance;
+        }
+        protected object CommonSetterCopyInstance()
+        {
+            return WeatherSoundSetterCopyCommon.Instance;
+        }
+        object IWeatherSoundInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IWeatherSoundInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object IWeatherSoundInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class WeatherSoundXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static WeatherSoundXmlWriteTranslation Instance = new WeatherSoundXmlWriteTranslation();
@@ -1241,6 +1282,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class WeatherSoundXmlTranslationMixIn
     {
@@ -1398,9 +1442,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class WeatherSound_Mask<T> : IMask<T>, IEquatable<WeatherSound_Mask<T>>
     {
         #region Ctors
@@ -1701,9 +1749,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((Type, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class WeatherSoundBinaryWriteTranslation : IBinaryWriteTranslator
     {
         public readonly static WeatherSoundBinaryWriteTranslation Instance = new WeatherSoundBinaryWriteTranslation();
@@ -1767,6 +1818,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class WeatherSoundBinaryTranslationMixIn
     {
@@ -1817,6 +1871,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class WeatherSoundBinaryWrapper :
         BinaryWrapper,
         IWeatherSoundInternalGetter
@@ -1919,46 +1977,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Oblivion
-{
-    public partial class WeatherSound
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => WeatherSound_Registration.Instance;
-        public static WeatherSound_Registration Registration => WeatherSound_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return WeatherSoundCommon.Instance;
-        }
-        protected object CommonSetterInstance()
-        {
-            return WeatherSoundSetterCommon.Instance;
-        }
-        protected object CommonSetterCopyInstance()
-        {
-            return WeatherSoundSetterCopyCommon.Instance;
-        }
-        object IWeatherSoundInternalGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IWeatherSoundInternalGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IWeatherSoundInternalGetter.CommonSetterCopyInstance()
-        {
-            return this.CommonSetterCopyInstance();
-        }
+#endregion
 
-        #endregion
-
-    }
-}

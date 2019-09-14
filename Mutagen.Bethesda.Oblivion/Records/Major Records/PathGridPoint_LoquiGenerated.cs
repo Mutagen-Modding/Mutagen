@@ -1192,8 +1192,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class PathGridPoint
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => PathGridPoint_Registration.Instance;
+        public static PathGridPoint_Registration Registration => PathGridPoint_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return PathGridPointCommon.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return PathGridPointSetterCommon.Instance;
+        }
+        protected object CommonSetterCopyInstance()
+        {
+            return PathGridPointSetterCopyCommon.Instance;
+        }
+        object IPathGridPointInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IPathGridPointInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object IPathGridPointInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class PathGridPointXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static PathGridPointXmlWriteTranslation Instance = new PathGridPointXmlWriteTranslation();
@@ -1468,6 +1509,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class PathGridPointXmlTranslationMixIn
     {
@@ -1625,9 +1669,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class PathGridPoint_Mask<T> : IMask<T>, IEquatable<PathGridPoint_Mask<T>>
     {
         #region Ctors
@@ -2051,9 +2099,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((Connections, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class PathGridPointBinaryWriteTranslation : IBinaryWriteTranslator
     {
         public readonly static PathGridPointBinaryWriteTranslation Instance = new PathGridPointBinaryWriteTranslation();
@@ -2110,6 +2161,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class PathGridPointBinaryTranslationMixIn
     {
@@ -2160,6 +2214,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class PathGridPointBinaryWrapper :
         BinaryWrapper,
         IPathGridPointInternalGetter
@@ -2258,46 +2316,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Oblivion
-{
-    public partial class PathGridPoint
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => PathGridPoint_Registration.Instance;
-        public static PathGridPoint_Registration Registration => PathGridPoint_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return PathGridPointCommon.Instance;
-        }
-        protected object CommonSetterInstance()
-        {
-            return PathGridPointSetterCommon.Instance;
-        }
-        protected object CommonSetterCopyInstance()
-        {
-            return PathGridPointSetterCopyCommon.Instance;
-        }
-        object IPathGridPointInternalGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IPathGridPointInternalGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IPathGridPointInternalGetter.CommonSetterCopyInstance()
-        {
-            return this.CommonSetterCopyInstance();
-        }
+#endregion
 
-        #endregion
-
-    }
-}

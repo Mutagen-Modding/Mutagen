@@ -1178,8 +1178,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class SoundData
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => SoundData_Registration.Instance;
+        public static SoundData_Registration Registration => SoundData_Registration.Instance;
+        protected virtual object CommonInstance()
+        {
+            return SoundDataCommon.Instance;
+        }
+        protected virtual object CommonSetterInstance()
+        {
+            return SoundDataSetterCommon.Instance;
+        }
+        protected virtual object CommonSetterCopyInstance()
+        {
+            return SoundDataSetterCopyCommon.Instance;
+        }
+        object ISoundDataInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object ISoundDataInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object ISoundDataInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class SoundDataXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static SoundDataXmlWriteTranslation Instance = new SoundDataXmlWriteTranslation();
@@ -1443,6 +1484,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class SoundDataXmlTranslationMixIn
     {
@@ -1600,9 +1644,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class SoundData_Mask<T> : IMask<T>, IEquatable<SoundData_Mask<T>>
     {
         #region Ctors
@@ -1957,9 +2005,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((Flags, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class SoundDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
         public readonly static SoundDataBinaryWriteTranslation Instance = new SoundDataBinaryWriteTranslation();
@@ -2109,6 +2160,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class SoundDataBinaryTranslationMixIn
     {
@@ -2159,6 +2213,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class SoundDataBinaryWrapper :
         BinaryWrapper,
         ISoundDataInternalGetter
@@ -2260,46 +2318,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Oblivion
-{
-    public partial class SoundData
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => SoundData_Registration.Instance;
-        public static SoundData_Registration Registration => SoundData_Registration.Instance;
-        protected virtual object CommonInstance()
-        {
-            return SoundDataCommon.Instance;
-        }
-        protected virtual object CommonSetterInstance()
-        {
-            return SoundDataSetterCommon.Instance;
-        }
-        protected virtual object CommonSetterCopyInstance()
-        {
-            return SoundDataSetterCopyCommon.Instance;
-        }
-        object ISoundDataInternalGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object ISoundDataInternalGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object ISoundDataInternalGetter.CommonSetterCopyInstance()
-        {
-            return this.CommonSetterCopyInstance();
-        }
+#endregion
 
-        #endregion
-
-    }
-}

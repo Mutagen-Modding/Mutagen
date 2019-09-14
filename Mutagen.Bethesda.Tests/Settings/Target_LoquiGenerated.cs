@@ -1342,8 +1342,49 @@ namespace Mutagen.Bethesda.Tests.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Tests
+{
+    public partial class Target
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Target_Registration.Instance;
+        public static Target_Registration Registration => Target_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return TargetCommon.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return TargetSetterCommon.Instance;
+        }
+        protected object CommonSetterCopyInstance()
+        {
+            return TargetSetterCopyCommon.Instance;
+        }
+        object ITargetInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object ITargetInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object ITargetInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Tests.Internals
+{
     public partial class TargetXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static TargetXmlWriteTranslation Instance = new TargetXmlWriteTranslation();
@@ -1699,6 +1740,9 @@ namespace Mutagen.Bethesda.Tests.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Tests
+{
     #region Xml Write Mixins
     public static class TargetXmlTranslationMixIn
     {
@@ -1856,9 +1900,13 @@ namespace Mutagen.Bethesda.Tests.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Tests.Internals
+{
     public class Target_Mask<T> : IMask<T>, IEquatable<Target_Mask<T>>
     {
         #region Ctors
@@ -2279,46 +2327,8 @@ namespace Mutagen.Bethesda.Tests.Internals
             ret.Add((Interest?.Overall ?? true, Interest?.Specific?.GetCrystal()));
         }
     }
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Tests
-{
-    public partial class Target
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Target_Registration.Instance;
-        public static Target_Registration Registration => Target_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return TargetCommon.Instance;
-        }
-        protected object CommonSetterInstance()
-        {
-            return TargetSetterCommon.Instance;
-        }
-        protected object CommonSetterCopyInstance()
-        {
-            return TargetSetterCopyCommon.Instance;
-        }
-        object ITargetInternalGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object ITargetInternalGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object ITargetInternalGetter.CommonSetterCopyInstance()
-        {
-            return this.CommonSetterCopyInstance();
-        }
+#endregion
 
-        #endregion
-
-    }
-}

@@ -1372,8 +1372,37 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class Subspace
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => Subspace_Registration.Instance;
+        public new static Subspace_Registration Registration => Subspace_Registration.Instance;
+        protected override object CommonInstance()
+        {
+            return SubspaceCommon.Instance;
+        }
+        protected override object CommonSetterInstance()
+        {
+            return SubspaceSetterCommon.Instance;
+        }
+        protected override object CommonSetterCopyInstance()
+        {
+            return SubspaceSetterCopyCommon.Instance;
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class SubspaceXmlWriteTranslation :
         OblivionMajorRecordXmlWriteTranslation,
         IXmlWriteTranslator
@@ -1655,6 +1684,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class SubspaceXmlTranslationMixIn
     {
@@ -1717,9 +1749,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class Subspace_Mask<T> : OblivionMajorRecord_Mask<T>, IMask<T>, IEquatable<Subspace_Mask<T>>
     {
         #region Ctors
@@ -2059,9 +2095,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((DNAMDataTypeState, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class SubspaceBinaryWriteTranslation :
         OblivionMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
@@ -2190,6 +2229,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class SubspaceBinaryTranslationMixIn
     {
@@ -2213,6 +2255,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class SubspaceBinaryWrapper :
         OblivionMajorRecordBinaryWrapper,
         ISubspaceInternalGetter
@@ -2346,34 +2392,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Oblivion
-{
-    public partial class Subspace
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Subspace_Registration.Instance;
-        public new static Subspace_Registration Registration => Subspace_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return SubspaceCommon.Instance;
-        }
-        protected override object CommonSetterInstance()
-        {
-            return SubspaceSetterCommon.Instance;
-        }
-        protected override object CommonSetterCopyInstance()
-        {
-            return SubspaceSetterCopyCommon.Instance;
-        }
+#endregion
 
-        #endregion
-
-    }
-}

@@ -1065,8 +1065,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class EnableParent
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => EnableParent_Registration.Instance;
+        public static EnableParent_Registration Registration => EnableParent_Registration.Instance;
+        protected object CommonInstance()
+        {
+            return EnableParentCommon.Instance;
+        }
+        protected object CommonSetterInstance()
+        {
+            return EnableParentSetterCommon.Instance;
+        }
+        protected object CommonSetterCopyInstance()
+        {
+            return EnableParentSetterCopyCommon.Instance;
+        }
+        object IEnableParentInternalGetter.CommonInstance()
+        {
+            return this.CommonInstance();
+        }
+        object IEnableParentInternalGetter.CommonSetterInstance()
+        {
+            return this.CommonSetterInstance();
+        }
+        object IEnableParentInternalGetter.CommonSetterCopyInstance()
+        {
+            return this.CommonSetterCopyInstance();
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class EnableParentXmlWriteTranslation : IXmlWriteTranslator
     {
         public readonly static EnableParentXmlWriteTranslation Instance = new EnableParentXmlWriteTranslation();
@@ -1241,6 +1282,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class EnableParentXmlTranslationMixIn
     {
@@ -1398,9 +1442,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class EnableParent_Mask<T> : IMask<T>, IEquatable<EnableParent_Mask<T>>
     {
         #region Ctors
@@ -1701,9 +1749,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((Flags, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class EnableParentBinaryWriteTranslation : IBinaryWriteTranslator
     {
         public readonly static EnableParentBinaryWriteTranslation Instance = new EnableParentBinaryWriteTranslation();
@@ -1767,6 +1818,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class EnableParentBinaryTranslationMixIn
     {
@@ -1817,6 +1871,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class EnableParentBinaryWrapper :
         BinaryWrapper,
         IEnableParentInternalGetter
@@ -1919,46 +1977,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Oblivion
-{
-    public partial class EnableParent
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => EnableParent_Registration.Instance;
-        public static EnableParent_Registration Registration => EnableParent_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return EnableParentCommon.Instance;
-        }
-        protected object CommonSetterInstance()
-        {
-            return EnableParentSetterCommon.Instance;
-        }
-        protected object CommonSetterCopyInstance()
-        {
-            return EnableParentSetterCopyCommon.Instance;
-        }
-        object IEnableParentInternalGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IEnableParentInternalGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IEnableParentInternalGetter.CommonSetterCopyInstance()
-        {
-            return this.CommonSetterCopyInstance();
-        }
+#endregion
 
-        #endregion
-
-    }
-}

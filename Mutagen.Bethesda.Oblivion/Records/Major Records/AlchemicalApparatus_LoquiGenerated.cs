@@ -1979,8 +1979,37 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class AlchemicalApparatus
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => AlchemicalApparatus_Registration.Instance;
+        public new static AlchemicalApparatus_Registration Registration => AlchemicalApparatus_Registration.Instance;
+        protected override object CommonInstance()
+        {
+            return AlchemicalApparatusCommon.Instance;
+        }
+        protected override object CommonSetterInstance()
+        {
+            return AlchemicalApparatusSetterCommon.Instance;
+        }
+        protected override object CommonSetterCopyInstance()
+        {
+            return AlchemicalApparatusSetterCopyCommon.Instance;
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class AlchemicalApparatusXmlWriteTranslation :
         ItemAbstractXmlWriteTranslation,
         IXmlWriteTranslator
@@ -2440,6 +2469,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class AlchemicalApparatusXmlTranslationMixIn
     {
@@ -2502,9 +2534,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class AlchemicalApparatus_Mask<T> : ItemAbstract_Mask<T>, IMask<T>, IEquatable<AlchemicalApparatus_Mask<T>>
     {
         #region Ctors
@@ -2991,9 +3027,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((DATADataTypeState, null));
         }
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class AlchemicalApparatusBinaryWriteTranslation :
         ItemAbstractBinaryWriteTranslation,
         IBinaryWriteTranslator
@@ -3174,6 +3213,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class AlchemicalApparatusBinaryTranslationMixIn
     {
@@ -3197,6 +3239,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class AlchemicalApparatusBinaryWrapper :
         ItemAbstractBinaryWrapper,
         IAlchemicalApparatusInternalGetter
@@ -3378,34 +3424,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Oblivion
-{
-    public partial class AlchemicalApparatus
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => AlchemicalApparatus_Registration.Instance;
-        public new static AlchemicalApparatus_Registration Registration => AlchemicalApparatus_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return AlchemicalApparatusCommon.Instance;
-        }
-        protected override object CommonSetterInstance()
-        {
-            return AlchemicalApparatusSetterCommon.Instance;
-        }
-        protected override object CommonSetterCopyInstance()
-        {
-            return AlchemicalApparatusSetterCopyCommon.Instance;
-        }
+#endregion
 
-        #endregion
-
-    }
-}

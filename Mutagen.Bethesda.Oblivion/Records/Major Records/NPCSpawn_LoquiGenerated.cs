@@ -970,8 +970,37 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #region Modules
-    #region Xml Translation
+}
+
+namespace Mutagen.Bethesda.Oblivion
+{
+    public partial class NPCSpawn
+    {
+        #region Common Routing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILoquiRegistration ILoquiObject.Registration => NPCSpawn_Registration.Instance;
+        public new static NPCSpawn_Registration Registration => NPCSpawn_Registration.Instance;
+        protected override object CommonInstance()
+        {
+            return NPCSpawnCommon.Instance;
+        }
+        protected override object CommonSetterInstance()
+        {
+            return NPCSpawnSetterCommon.Instance;
+        }
+        protected override object CommonSetterCopyInstance()
+        {
+            return NPCSpawnSetterCopyCommon.Instance;
+        }
+
+        #endregion
+
+    }
+}
+#region Modules
+#region Xml Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class NPCSpawnXmlWriteTranslation :
         OblivionMajorRecordXmlWriteTranslation,
         IXmlWriteTranslator
@@ -1109,6 +1138,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Xml Write Mixins
     public static class NPCSpawnXmlTranslationMixIn
     {
@@ -1171,9 +1203,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-    #endregion
 
-    #region Mask
+}
+#endregion
+
+#region Mask
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public class NPCSpawn_Mask<T> : OblivionMajorRecord_Mask<T>, IMask<T>, IEquatable<NPCSpawn_Mask<T>>
     {
         #region Ctors
@@ -1389,9 +1425,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    #endregion
+}
+#endregion
 
-    #region Binary Translation
+#region Binary Translation
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class NPCSpawnBinaryWriteTranslation :
         OblivionMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
@@ -1471,6 +1510,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+}
+namespace Mutagen.Bethesda.Oblivion
+{
     #region Binary Write Mixins
     public static class NPCSpawnBinaryTranslationMixIn
     {
@@ -1494,6 +1536,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
     public partial class NPCSpawnBinaryWrapper :
         OblivionMajorRecordBinaryWrapper,
         INPCSpawnInternalGetter
@@ -1558,34 +1604,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    #endregion
-
-    #endregion
-
 }
+#endregion
 
-namespace Mutagen.Bethesda.Oblivion
-{
-    public partial class NPCSpawn
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => NPCSpawn_Registration.Instance;
-        public new static NPCSpawn_Registration Registration => NPCSpawn_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return NPCSpawnCommon.Instance;
-        }
-        protected override object CommonSetterInstance()
-        {
-            return NPCSpawnSetterCommon.Instance;
-        }
-        protected override object CommonSetterCopyInstance()
-        {
-            return NPCSpawnSetterCopyCommon.Instance;
-        }
+#endregion
 
-        #endregion
-
-    }
-}
