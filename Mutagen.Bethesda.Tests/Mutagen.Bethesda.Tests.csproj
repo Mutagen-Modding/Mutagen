@@ -20,8 +20,7 @@
     <ProjectReference Include="..\..\DynamicData\DynamicData\DynamicData.csproj" />
     <ProjectReference Include="..\..\Loqui\Loqui.Presentation\Loqui.Presentation.csproj" />
     <ProjectReference Include="..\..\Loqui\Loqui\Loqui.csproj" />
-    <ProjectReference Include="..\Mutagen.Bethesda.Oblivion\Mutagen.Bethesda.Oblivion.csproj" />
-    <ProjectReference Include="..\Mutagen.Bethesda.Skyrim\Mutagen.Bethesda.Skyrim.csproj" />
+    <ProjectReference Include="..\Mutagen.Bethesda.Records\Mutagen.Bethesda.Records.csproj" />
     <ProjectReference Include="..\Mutagen.Bethesda\Mutagen.Bethesda.csproj" />
   </ItemGroup>
   <ItemGroup>

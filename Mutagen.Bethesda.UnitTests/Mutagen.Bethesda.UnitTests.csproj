@@ -69,9 +69,9 @@
       <Project>{91f19c1e-adf8-4b84-9452-04c2cd8f46d4}</Project>
       <Name>Loqui</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Mutagen.Bethesda.Oblivion\Mutagen.Bethesda.Oblivion.csproj">
-      <Project>{d4ebf681-3a69-4919-bf64-d9cc6896a0c6}</Project>
-      <Name>Mutagen.Bethesda.Oblivion</Name>
+    <ProjectReference Include="..\Mutagen.Bethesda.Records\Mutagen.Bethesda.Records.csproj">
+      <Project>{8b371c38-ca17-4e7f-9175-bdbc6918298f}</Project>
+      <Name>Mutagen.Bethesda.Records</Name>
     </ProjectReference>
     <ProjectReference Include="..\Mutagen.Bethesda.Tests\Mutagen.Bethesda.Tests.csproj">
       <Project>{e64e58e8-e2c6-4b2c-b649-2934fffa603f}</Project>
