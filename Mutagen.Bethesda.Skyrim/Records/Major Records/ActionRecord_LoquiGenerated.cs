@@ -36,15 +36,15 @@ using System.Buffers.Binary;
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
-    public partial class Action :
+    public partial class ActionRecord :
         SkyrimMajorRecord,
-        IActionInternal,
-        ILoquiObjectSetter<Action>,
-        IEquatable<Action>,
+        IActionRecordInternal,
+        ILoquiObjectSetter<ActionRecord>,
+        IEquatable<ActionRecord>,
         IEqualsMask
     {
         #region Ctor
-        protected Action()
+        protected ActionRecord()
         {
             CustomCtor();
         }
@@ -54,10 +54,10 @@ namespace Mutagen.Bethesda.Skyrim
         #region Color
         public bool Color_IsSet
         {
-            get => _hasBeenSetTracker[(int)Action_FieldIndex.Color];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Action_FieldIndex.Color, nameof(Color_IsSet));
+            get => _hasBeenSetTracker[(int)ActionRecord_FieldIndex.Color];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)ActionRecord_FieldIndex.Color, nameof(Color_IsSet));
         }
-        bool IActionGetter.Color_IsSet => Color_IsSet;
+        bool IActionRecordGetter.Color_IsSet => Color_IsSet;
         private Color _Color;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Color Color
@@ -65,12 +65,12 @@ namespace Mutagen.Bethesda.Skyrim
             get => this._Color;
             set => Color_Set(value);
         }
-        Color IActionGetter.Color => this.Color;
+        Color IActionRecordGetter.Color => this.Color;
         public void Color_Set(
             Color value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Color, value, _hasBeenSetTracker, markSet, (int)Action_FieldIndex.Color, nameof(Color), nameof(Color_IsSet));
+            this.RaiseAndSetIfChanged(ref _Color, value, _hasBeenSetTracker, markSet, (int)ActionRecord_FieldIndex.Color, nameof(Color), nameof(Color_IsSet));
         }
         public void Color_Unset()
         {
@@ -78,14 +78,14 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IActionInternalGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IActionRecordInternalGetter)rhs, include);
         #region To String
 
         public override void ToString(
             FileGeneration fg,
             string name = null)
         {
-            ActionMixIn.ToString(
+            ActionRecordMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -96,28 +96,28 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is IActionInternalGetter rhs)) return false;
-            return ((ActionCommon)((IActionInternalGetter)this).CommonInstance()).Equals(this, rhs);
+            if (!(obj is IActionRecordInternalGetter rhs)) return false;
+            return ((ActionRecordCommon)((IActionRecordInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
-        public bool Equals(Action obj)
+        public bool Equals(ActionRecord obj)
         {
-            return ((ActionCommon)((IActionInternalGetter)this).CommonInstance()).Equals(this, obj);
+            return ((ActionRecordCommon)((IActionRecordInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((ActionCommon)((IActionInternalGetter)this).CommonInstance()).GetHashCode(this);
+        public override int GetHashCode() => ((ActionRecordCommon)((IActionRecordInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
-        protected override object XmlWriteTranslator => ActionXmlWriteTranslation.Instance;
+        protected override object XmlWriteTranslator => ActionRecordXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)
         {
-            ((ActionXmlWriteTranslation)this.XmlWriteTranslator).Write(
+            ((ActionRecordXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
                 name: name,
                 node: node,
@@ -126,10 +126,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static Action CreateFromXml(
+        public static ActionRecord CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
-            Action_TranslationMask translationMask = null)
+            ActionRecord_TranslationMask translationMask = null)
         {
             return CreateFromXml(
                 missing: missing,
@@ -139,11 +139,11 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         [DebuggerStepThrough]
-        public static Action CreateFromXml(
+        public static ActionRecord CreateFromXml(
             XElement node,
-            out Action_ErrorMask errorMask,
+            out ActionRecord_ErrorMask errorMask,
             bool doMasks = true,
-            Action_TranslationMask translationMask = null,
+            ActionRecord_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
@@ -152,11 +152,11 @@ namespace Mutagen.Bethesda.Skyrim
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask.GetCrystal());
-            errorMask = Action_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ActionRecord_ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
-        public new static Action CreateFromXml(
+        public new static ActionRecord CreateFromXml(
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
@@ -166,12 +166,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case MissingCreate.New:
                 case MissingCreate.Null:
-                    if (node == null) return missing == MissingCreate.New ? new Action() : null;
+                    if (node == null) return missing == MissingCreate.New ? new ActionRecord() : null;
                     break;
                 default:
                     break;
             }
-            var ret = new Action();
+            var ret = new ActionRecord();
             try
             {
                 foreach (var elem in node.Elements())
@@ -182,7 +182,7 @@ namespace Mutagen.Bethesda.Skyrim
                         name: elem.Name.LocalName,
                         errorMask: errorMask,
                         translationMask: translationMask);
-                    ActionXmlCreateTranslation.FillPublicElementXml(
+                    ActionRecordXmlCreateTranslation.FillPublicElementXml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -198,10 +198,10 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static Action CreateFromXml(
+        public static ActionRecord CreateFromXml(
             string path,
             MissingCreate missing = MissingCreate.New,
-            Action_TranslationMask translationMask = null)
+            ActionRecord_TranslationMask translationMask = null)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
             return CreateFromXml(
@@ -210,10 +210,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static Action CreateFromXml(
+        public static ActionRecord CreateFromXml(
             string path,
-            out Action_ErrorMask errorMask,
-            Action_TranslationMask translationMask = null,
+            out ActionRecord_ErrorMask errorMask,
+            ActionRecord_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
@@ -224,10 +224,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static Action CreateFromXml(
+        public static ActionRecord CreateFromXml(
             string path,
             ErrorMaskBuilder errorMask,
-            Action_TranslationMask translationMask = null,
+            ActionRecord_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
@@ -238,10 +238,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask?.GetCrystal());
         }
 
-        public static Action CreateFromXml(
+        public static ActionRecord CreateFromXml(
             Stream stream,
             MissingCreate missing = MissingCreate.New,
-            Action_TranslationMask translationMask = null)
+            ActionRecord_TranslationMask translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -250,10 +250,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static Action CreateFromXml(
+        public static ActionRecord CreateFromXml(
             Stream stream,
-            out Action_ErrorMask errorMask,
-            Action_TranslationMask translationMask = null,
+            out ActionRecord_ErrorMask errorMask,
+            ActionRecord_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
@@ -264,10 +264,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static Action CreateFromXml(
+        public static ActionRecord CreateFromXml(
             Stream stream,
             ErrorMaskBuilder errorMask,
-            Action_TranslationMask translationMask = null,
+            ActionRecord_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
@@ -281,7 +281,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         protected static void FillPrivateElementXml(
-            Action item,
+            ActionRecord item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -304,9 +304,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         protected override bool GetHasBeenSet(int index)
         {
-            switch ((Action_FieldIndex)index)
+            switch ((ActionRecord_FieldIndex)index)
             {
-                case Action_FieldIndex.Color:
+                case ActionRecord_FieldIndex.Color:
                     return _hasBeenSetTracker[index];
                 default:
                     return base.GetHasBeenSet(index);
@@ -314,14 +314,14 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = Action_Registration.TRIGGERING_RECORD_TYPE;
-        public Action(FormKey formKey)
+        public new static readonly RecordType GRUP_RECORD_TYPE = ActionRecord_Registration.TRIGGERING_RECORD_TYPE;
+        public ActionRecord(FormKey formKey)
         {
             this.FormKey = formKey;
             CustomCtor();
         }
 
-        public Action(IMod mod)
+        public ActionRecord(IMod mod)
             : this(mod.GetNextFormKey())
         {
         }
@@ -329,14 +329,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Binary Translation
-        protected override object BinaryWriteTranslator => ActionBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => ActionRecordBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            ((ActionBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((ActionRecordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -345,7 +345,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static Action CreateFromBinary(
+        public static ActionRecord CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
@@ -357,10 +357,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         [DebuggerStepThrough]
-        public static Action CreateFromBinary(
+        public static ActionRecord CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
-            out Action_ErrorMask errorMask,
+            out ActionRecord_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
@@ -369,21 +369,21 @@ namespace Mutagen.Bethesda.Skyrim
                 frame: frame,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
-            errorMask = Action_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ActionRecord_ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
-        public new static Action CreateFromBinary(
+        public new static ActionRecord CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            return UtilityTranslation.MajorRecordParse<Action>(
-                record: new Action(),
+            return UtilityTranslation.MajorRecordParse<ActionRecord>(
+                record: new ActionRecord(),
                 frame: frame,
                 errorMask: errorMask,
-                recType: Action_Registration.AACT_HEADER,
+                recType: ActionRecord_Registration.AACT_HEADER,
                 recordTypeConverter: recordTypeConverter,
                 masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
@@ -393,7 +393,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         protected static void FillBinaryStructs(
-            Action item,
+            ActionRecord item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -406,7 +406,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         protected static TryGet<int?> FillBinaryRecordTypes(
-            Action item,
+            ActionRecord item,
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,
@@ -431,7 +431,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         item.Color = default(Color);
                     }
-                    return TryGet<int?>.Succeed((int)Action_FieldIndex.Color);
+                    return TryGet<int?>.Succeed((int)ActionRecord_FieldIndex.Color);
                 }
                 default:
                     return SkyrimMajorRecord.FillBinaryRecordTypes(
@@ -447,29 +447,29 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        public Action Copy(
-            Action_CopyMask copyMask = null,
-            Action def = null)
+        public ActionRecord Copy(
+            ActionRecord_CopyMask copyMask = null,
+            ActionRecord def = null)
         {
-            return Action.Copy(
+            return ActionRecord.Copy(
                 this,
                 copyMask: copyMask,
                 def: def);
         }
 
-        public static Action Copy(
-            Action item,
-            Action_CopyMask copyMask = null,
-            Action def = null)
+        public static ActionRecord Copy(
+            ActionRecord item,
+            ActionRecord_CopyMask copyMask = null,
+            ActionRecord def = null)
         {
-            Action ret;
-            if (item.GetType().Equals(typeof(Action)))
+            ActionRecord ret;
+            if (item.GetType().Equals(typeof(ActionRecord)))
             {
-                ret = new Action();
+                ret = new ActionRecord();
             }
             else
             {
-                ret = (Action)System.Activator.CreateInstance(item.GetType());
+                ret = (ActionRecord)System.Activator.CreateInstance(item.GetType());
             }
             ret.CopyFieldsFrom(
                 item,
@@ -478,19 +478,19 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static Action Copy_ToLoqui(
-            Action item,
-            Action_CopyMask copyMask = null,
-            Action def = null)
+        public static ActionRecord Copy_ToLoqui(
+            ActionRecord item,
+            ActionRecord_CopyMask copyMask = null,
+            ActionRecord def = null)
         {
-            Action ret;
-            if (item.GetType().Equals(typeof(Action)))
+            ActionRecord ret;
+            if (item.GetType().Equals(typeof(ActionRecord)))
             {
-                ret = new Action() as Action;
+                ret = new ActionRecord() as ActionRecord;
             }
             else
             {
-                ret = (Action)System.Activator.CreateInstance(item.GetType());
+                ret = (ActionRecord)System.Activator.CreateInstance(item.GetType());
             }
             ret.CopyFieldsFrom(
                 item,
@@ -510,9 +510,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public void CopyFieldsFrom(
-            Action rhs,
-            Action_CopyMask copyMask,
-            Action def = null)
+            ActionRecord rhs,
+            ActionRecord_CopyMask copyMask,
+            ActionRecord def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
@@ -523,29 +523,29 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public void CopyFieldsFrom(
-            Action rhs,
-            out Action_ErrorMask errorMask,
-            Action_CopyMask copyMask = null,
-            Action def = null,
+            ActionRecord rhs,
+            out ActionRecord_ErrorMask errorMask,
+            ActionRecord_CopyMask copyMask = null,
+            ActionRecord def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ActionSetterCopyCommon.CopyFieldsFrom(
+            ActionRecordSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
-            errorMask = Action_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ActionRecord_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public void CopyFieldsFrom(
-            Action rhs,
+            ActionRecord rhs,
             ErrorMaskBuilder errorMask,
-            Action_CopyMask copyMask = null,
-            Action def = null)
+            ActionRecord_CopyMask copyMask = null,
+            ActionRecord def = null)
         {
-            ActionSetterCopyCommon.CopyFieldsFrom(
+            ActionRecordSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -555,10 +555,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         protected override void SetNthObject(ushort index, object obj)
         {
-            Action_FieldIndex enu = (Action_FieldIndex)index;
+            ActionRecord_FieldIndex enu = (ActionRecord_FieldIndex)index;
             switch (enu)
             {
-                case Action_FieldIndex.Color:
+                case ActionRecord_FieldIndex.Color:
                     this.Color = (Color)obj;
                     break;
                 default:
@@ -569,28 +569,28 @@ namespace Mutagen.Bethesda.Skyrim
 
         public override void Clear()
         {
-            ActionSetterCommon.Instance.Clear(this);
+            ActionRecordSetterCommon.Instance.Clear(this);
         }
 
-        public new static Action Create(IEnumerable<KeyValuePair<ushort, object>> fields)
+        public new static ActionRecord Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
-            var ret = new Action();
+            var ret = new ActionRecord();
             foreach (var pair in fields)
             {
-                CopyInInternal_Action(ret, pair);
+                CopyInInternal_ActionRecord(ret, pair);
             }
             return ret;
         }
 
-        protected new static void CopyInInternal_Action(Action obj, KeyValuePair<ushort, object> pair)
+        protected new static void CopyInInternal_ActionRecord(ActionRecord obj, KeyValuePair<ushort, object> pair)
         {
-            if (!EnumExt.TryParse(pair.Key, out Action_FieldIndex enu))
+            if (!EnumExt.TryParse(pair.Key, out ActionRecord_FieldIndex enu))
             {
                 CopyInInternal_SkyrimMajorRecord(obj, pair);
             }
             switch (enu)
             {
-                case Action_FieldIndex.Color:
+                case ActionRecord_FieldIndex.Color:
                     obj.Color = (Color)pair.Value;
                     break;
                 default:
@@ -601,10 +601,10 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Interface
-    public partial interface IAction :
-        IActionInternalGetter,
+    public partial interface IActionRecord :
+        IActionRecordInternalGetter,
         ISkyrimMajorRecord,
-        ILoquiObjectSetter<IActionInternal>
+        ILoquiObjectSetter<IActionRecordInternal>
     {
         new Color Color { get; set; }
         new bool Color_IsSet { get; set; }
@@ -612,22 +612,22 @@ namespace Mutagen.Bethesda.Skyrim
         void Color_Unset();
 
         void CopyFieldsFrom(
-            Action rhs,
+            ActionRecord rhs,
             ErrorMaskBuilder errorMask = null,
-            Action_CopyMask copyMask = null,
-            Action def = null);
+            ActionRecord_CopyMask copyMask = null,
+            ActionRecord def = null);
     }
 
-    public partial interface IActionInternal :
+    public partial interface IActionRecordInternal :
         ISkyrimMajorRecordInternal,
-        IAction,
-        IActionInternalGetter
+        IActionRecord,
+        IActionRecordInternalGetter
     {
     }
 
-    public partial interface IActionGetter :
+    public partial interface IActionRecordGetter :
         ISkyrimMajorRecordGetter,
-        ILoquiObject<IActionInternalGetter>,
+        ILoquiObject<IActionRecordInternalGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -639,9 +639,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     }
 
-    public partial interface IActionInternalGetter :
+    public partial interface IActionRecordInternalGetter :
         ISkyrimMajorRecordInternalGetter,
-        IActionGetter
+        IActionRecordGetter
     {
 
     }
@@ -649,42 +649,42 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common MixIn
-    public static class ActionMixIn
+    public static class ActionRecordMixIn
     {
-        public static void Clear(this IActionInternal item)
+        public static void Clear(this IActionRecordInternal item)
         {
-            ((ActionSetterCommon)((IActionInternalGetter)item).CommonSetterInstance()).Clear(item: item);
+            ((ActionRecordSetterCommon)((IActionRecordInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
-        public static Action_Mask<bool> GetEqualsMask(
-            this IActionInternalGetter item,
-            IActionInternalGetter rhs,
+        public static ActionRecord_Mask<bool> GetEqualsMask(
+            this IActionRecordInternalGetter item,
+            IActionRecordInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((ActionCommon)((IActionInternalGetter)item).CommonInstance()).GetEqualsMask(
+            return ((ActionRecordCommon)((IActionRecordInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IActionInternalGetter item,
+            this IActionRecordInternalGetter item,
             string name = null,
-            Action_Mask<bool> printMask = null)
+            ActionRecord_Mask<bool> printMask = null)
         {
-            return ((ActionCommon)((IActionInternalGetter)item).CommonInstance()).ToString(
+            return ((ActionRecordCommon)((IActionRecordInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IActionInternalGetter item,
+            this IActionRecordInternalGetter item,
             FileGeneration fg,
             string name = null,
-            Action_Mask<bool> printMask = null)
+            ActionRecord_Mask<bool> printMask = null)
         {
-            ((ActionCommon)((IActionInternalGetter)item).CommonInstance()).ToString(
+            ((ActionRecordCommon)((IActionRecordInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -692,28 +692,28 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static bool HasBeenSet(
-            this IActionInternalGetter item,
-            Action_Mask<bool?> checkMask)
+            this IActionRecordInternalGetter item,
+            ActionRecord_Mask<bool?> checkMask)
         {
-            return ((ActionCommon)((IActionInternalGetter)item).CommonInstance()).HasBeenSet(
+            return ((ActionRecordCommon)((IActionRecordInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static Action_Mask<bool> GetHasBeenSetMask(this IActionInternalGetter item)
+        public static ActionRecord_Mask<bool> GetHasBeenSetMask(this IActionRecordInternalGetter item)
         {
-            var ret = new Action_Mask<bool>();
-            ((ActionCommon)((IActionInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
+            var ret = new ActionRecord_Mask<bool>();
+            ((ActionRecordCommon)((IActionRecordInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this IActionInternalGetter item,
-            IActionInternalGetter rhs)
+            this IActionRecordInternalGetter item,
+            IActionRecordInternalGetter rhs)
         {
-            return ((ActionCommon)((IActionInternalGetter)item).CommonInstance()).Equals(
+            return ((ActionRecordCommon)((IActionRecordInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -726,7 +726,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     #region Field Index
-    public enum Action_FieldIndex
+    public enum ActionRecord_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -740,9 +740,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public class Action_Registration : ILoquiRegistration
+    public class ActionRecord_Registration : ILoquiRegistration
     {
-        public static readonly Action_Registration Instance = new Action_Registration();
+        public static readonly ActionRecord_Registration Instance = new ActionRecord_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
@@ -757,23 +757,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const ushort FieldCount = 8;
 
-        public static readonly Type MaskType = typeof(Action_Mask<>);
+        public static readonly Type MaskType = typeof(ActionRecord_Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Action_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(ActionRecord_ErrorMask);
 
-        public static readonly Type ClassType = typeof(Action);
+        public static readonly Type ClassType = typeof(ActionRecord);
 
-        public static readonly Type GetterType = typeof(IActionGetter);
+        public static readonly Type GetterType = typeof(IActionRecordGetter);
 
-        public static readonly Type InternalGetterType = typeof(IActionInternalGetter);
+        public static readonly Type InternalGetterType = typeof(IActionRecordInternalGetter);
 
-        public static readonly Type SetterType = typeof(IAction);
+        public static readonly Type SetterType = typeof(IActionRecord);
 
-        public static readonly Type InternalSetterType = typeof(IActionInternal);
+        public static readonly Type InternalSetterType = typeof(IActionRecordInternal);
 
-        public const string FullName = "Mutagen.Bethesda.Skyrim.Action";
+        public const string FullName = "Mutagen.Bethesda.Skyrim.ActionRecord";
 
-        public const string Name = "Action";
+        public const string Name = "ActionRecord";
 
         public const string Namespace = "Mutagen.Bethesda.Skyrim";
 
@@ -786,7 +786,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (str.Upper)
             {
                 case "COLOR":
-                    return (ushort)Action_FieldIndex.Color;
+                    return (ushort)ActionRecord_FieldIndex.Color;
                 default:
                     return null;
             }
@@ -794,10 +794,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsEnumerable(ushort index)
         {
-            Action_FieldIndex enu = (Action_FieldIndex)index;
+            ActionRecord_FieldIndex enu = (ActionRecord_FieldIndex)index;
             switch (enu)
             {
-                case Action_FieldIndex.Color:
+                case ActionRecord_FieldIndex.Color:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
@@ -806,10 +806,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsLoqui(ushort index)
         {
-            Action_FieldIndex enu = (Action_FieldIndex)index;
+            ActionRecord_FieldIndex enu = (ActionRecord_FieldIndex)index;
             switch (enu)
             {
-                case Action_FieldIndex.Color:
+                case ActionRecord_FieldIndex.Color:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
@@ -818,10 +818,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsSingleton(ushort index)
         {
-            Action_FieldIndex enu = (Action_FieldIndex)index;
+            ActionRecord_FieldIndex enu = (ActionRecord_FieldIndex)index;
             switch (enu)
             {
-                case Action_FieldIndex.Color:
+                case ActionRecord_FieldIndex.Color:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
@@ -830,10 +830,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static string GetNthName(ushort index)
         {
-            Action_FieldIndex enu = (Action_FieldIndex)index;
+            ActionRecord_FieldIndex enu = (ActionRecord_FieldIndex)index;
             switch (enu)
             {
-                case Action_FieldIndex.Color:
+                case ActionRecord_FieldIndex.Color:
                     return "Color";
                 default:
                     return SkyrimMajorRecord_Registration.GetNthName(index);
@@ -842,10 +842,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool IsNthDerivative(ushort index)
         {
-            Action_FieldIndex enu = (Action_FieldIndex)index;
+            ActionRecord_FieldIndex enu = (ActionRecord_FieldIndex)index;
             switch (enu)
             {
-                case Action_FieldIndex.Color:
+                case ActionRecord_FieldIndex.Color:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsNthDerivative(index);
@@ -854,10 +854,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool IsProtected(ushort index)
         {
-            Action_FieldIndex enu = (Action_FieldIndex)index;
+            ActionRecord_FieldIndex enu = (ActionRecord_FieldIndex)index;
             switch (enu)
             {
-                case Action_FieldIndex.Color:
+                case ActionRecord_FieldIndex.Color:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsProtected(index);
@@ -866,23 +866,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static Type GetNthType(ushort index)
         {
-            Action_FieldIndex enu = (Action_FieldIndex)index;
+            ActionRecord_FieldIndex enu = (ActionRecord_FieldIndex)index;
             switch (enu)
             {
-                case Action_FieldIndex.Color:
+                case ActionRecord_FieldIndex.Color:
                     return typeof(Color);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(ActionXmlWriteTranslation);
+        public static readonly Type XmlWriteTranslation = typeof(ActionRecordXmlWriteTranslation);
         public static readonly RecordType AACT_HEADER = new RecordType("AACT");
         public static readonly RecordType CNAM_HEADER = new RecordType("CNAM");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = AACT_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 1;
-        public static readonly Type BinaryWriteTranslation = typeof(ActionBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(ActionRecordBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -915,13 +915,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class ActionSetterCommon : SkyrimMajorRecordSetterCommon
+    public partial class ActionRecordSetterCommon : SkyrimMajorRecordSetterCommon
     {
-        public new static readonly ActionSetterCommon Instance = new ActionSetterCommon();
+        public new static readonly ActionRecordSetterCommon Instance = new ActionRecordSetterCommon();
 
         partial void ClearPartial();
         
-        public virtual void Clear(IActionInternal item)
+        public virtual void Clear(IActionRecordInternal item)
         {
             ClearPartial();
             item.Color_Unset();
@@ -930,27 +930,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public override void Clear(ISkyrimMajorRecordInternal item)
         {
-            Clear(item: (IActionInternal)item);
+            Clear(item: (IActionRecordInternal)item);
         }
         
         public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (IActionInternal)item);
+            Clear(item: (IActionRecordInternal)item);
         }
         
         
     }
-    public partial class ActionCommon : SkyrimMajorRecordCommon
+    public partial class ActionRecordCommon : SkyrimMajorRecordCommon
     {
-        public new static readonly ActionCommon Instance = new ActionCommon();
+        public new static readonly ActionRecordCommon Instance = new ActionRecordCommon();
 
-        public Action_Mask<bool> GetEqualsMask(
-            IActionInternalGetter item,
-            IActionInternalGetter rhs,
+        public ActionRecord_Mask<bool> GetEqualsMask(
+            IActionRecordInternalGetter item,
+            IActionRecordInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Action_Mask<bool>();
-            ((ActionCommon)((IActionInternalGetter)item).CommonInstance()).FillEqualsMask(
+            var ret = new ActionRecord_Mask<bool>();
+            ((ActionRecordCommon)((IActionRecordInternalGetter)item).CommonInstance()).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -959,9 +959,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void FillEqualsMask(
-            IActionInternalGetter item,
-            IActionInternalGetter rhs,
-            Action_Mask<bool> ret,
+            IActionRecordInternalGetter item,
+            IActionRecordInternalGetter rhs,
+            ActionRecord_Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -970,9 +970,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public string ToString(
-            IActionInternalGetter item,
+            IActionRecordInternalGetter item,
             string name = null,
-            Action_Mask<bool> printMask = null)
+            ActionRecord_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -984,18 +984,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void ToString(
-            IActionInternalGetter item,
+            IActionRecordInternalGetter item,
             FileGeneration fg,
             string name = null,
-            Action_Mask<bool> printMask = null)
+            ActionRecord_Mask<bool> printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Action =>");
+                fg.AppendLine($"ActionRecord =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Action) =>");
+                fg.AppendLine($"{name} (ActionRecord) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1009,9 +1009,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         protected static void ToStringFields(
-            IActionInternalGetter item,
+            IActionRecordInternalGetter item,
             FileGeneration fg,
-            Action_Mask<bool> printMask = null)
+            ActionRecord_Mask<bool> printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
@@ -1024,8 +1024,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public bool HasBeenSet(
-            IActionInternalGetter item,
-            Action_Mask<bool?> checkMask)
+            IActionRecordInternalGetter item,
+            ActionRecord_Mask<bool?> checkMask)
         {
             if (checkMask.Color.HasValue && checkMask.Color.Value != item.Color_IsSet) return false;
             return base.HasBeenSet(
@@ -1034,8 +1034,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void FillHasBeenSetMask(
-            IActionInternalGetter item,
-            Action_Mask<bool> mask)
+            IActionRecordInternalGetter item,
+            ActionRecord_Mask<bool> mask)
         {
             mask.Color = item.Color_IsSet;
             base.FillHasBeenSetMask(
@@ -1043,41 +1043,41 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 mask: mask);
         }
         
-        public static Action_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
+        public static ActionRecord_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case SkyrimMajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Action_FieldIndex)((int)index);
+                    return (ActionRecord_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormKey:
-                    return (Action_FieldIndex)((int)index);
+                    return (ActionRecord_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version:
-                    return (Action_FieldIndex)((int)index);
+                    return (ActionRecord_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.EditorID:
-                    return (Action_FieldIndex)((int)index);
+                    return (ActionRecord_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
-                    return (Action_FieldIndex)((int)index);
+                    return (ActionRecord_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
-                    return (Action_FieldIndex)((int)index);
+                    return (ActionRecord_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
-                    return (Action_FieldIndex)((int)index);
+                    return (ActionRecord_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
         
-        public static Action_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static ActionRecord_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Action_FieldIndex)((int)index);
+                    return (ActionRecord_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
-                    return (Action_FieldIndex)((int)index);
+                    return (ActionRecord_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
-                    return (Action_FieldIndex)((int)index);
+                    return (ActionRecord_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (Action_FieldIndex)((int)index);
+                    return (ActionRecord_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
@@ -1085,8 +1085,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #region Equals and Hash
         public virtual bool Equals(
-            IActionInternalGetter lhs,
-            IActionInternalGetter rhs)
+            IActionRecordInternalGetter lhs,
+            IActionRecordInternalGetter rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
@@ -1104,8 +1104,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ISkyrimMajorRecordInternalGetter rhs)
         {
             return Equals(
-                lhs: (IActionInternalGetter)lhs,
-                rhs: rhs as IActionInternalGetter);
+                lhs: (IActionRecordInternalGetter)lhs,
+                rhs: rhs as IActionRecordInternalGetter);
         }
         
         public override bool Equals(
@@ -1113,11 +1113,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IMajorRecordInternalGetter rhs)
         {
             return Equals(
-                lhs: (IActionInternalGetter)lhs,
-                rhs: rhs as IActionInternalGetter);
+                lhs: (IActionRecordInternalGetter)lhs,
+                rhs: rhs as IActionRecordInternalGetter);
         }
         
-        public virtual int GetHashCode(IActionInternalGetter item)
+        public virtual int GetHashCode(IActionRecordInternalGetter item)
         {
             int ret = 0;
             if (item.Color_IsSet)
@@ -1130,26 +1130,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public override int GetHashCode(ISkyrimMajorRecordInternalGetter item)
         {
-            return GetHashCode(item: (IActionInternalGetter)item);
+            return GetHashCode(item: (IActionRecordInternalGetter)item);
         }
         
         public override int GetHashCode(IMajorRecordInternalGetter item)
         {
-            return GetHashCode(item: (IActionInternalGetter)item);
+            return GetHashCode(item: (IActionRecordInternalGetter)item);
         }
         
         #endregion
         
         
         #region Mutagen
-        partial void PostDuplicate(Action obj, Action rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+        partial void PostDuplicate(ActionRecord obj, ActionRecord rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
-            var ret = new Action(getNextFormKey());
-            ret.CopyFieldsFrom((Action)item);
+            var ret = new ActionRecord(getNextFormKey());
+            ret.CopyFieldsFrom((ActionRecord)item);
             duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (Action)item, getNextFormKey, duplicatedRecords);
+            PostDuplicate(ret, (ActionRecord)item, getNextFormKey, duplicatedRecords);
             return ret;
         }
         
@@ -1157,17 +1157,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         
     }
-    public partial class ActionSetterCopyCommon : SkyrimMajorRecordSetterCopyCommon
+    public partial class ActionRecordSetterCopyCommon : SkyrimMajorRecordSetterCopyCommon
     {
-        public new static readonly ActionSetterCopyCommon Instance = new ActionSetterCopyCommon();
+        public new static readonly ActionRecordSetterCopyCommon Instance = new ActionRecordSetterCopyCommon();
 
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            Action item,
-            Action rhs,
-            Action def,
+            ActionRecord item,
+            ActionRecord rhs,
+            ActionRecord def,
             ErrorMaskBuilder errorMask,
-            Action_CopyMask copyMask)
+            ActionRecord_CopyMask copyMask)
         {
             SkyrimMajorRecordSetterCopyCommon.CopyFieldsFrom(
                 item,
@@ -1177,7 +1177,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 copyMask);
             if (copyMask?.Color ?? true)
             {
-                errorMask?.PushIndex((int)Action_FieldIndex.Color);
+                errorMask?.PushIndex((int)ActionRecord_FieldIndex.Color);
                 try
                 {
                     if (LoquiHelper.DefaultSwitch(
@@ -1217,23 +1217,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
 namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class Action
+    public partial class ActionRecord
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Action_Registration.Instance;
-        public new static Action_Registration Registration => Action_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => ActionRecord_Registration.Instance;
+        public new static ActionRecord_Registration Registration => ActionRecord_Registration.Instance;
         protected override object CommonInstance()
         {
-            return ActionCommon.Instance;
+            return ActionRecordCommon.Instance;
         }
         protected override object CommonSetterInstance()
         {
-            return ActionSetterCommon.Instance;
+            return ActionRecordSetterCommon.Instance;
         }
         protected override object CommonSetterCopyInstance()
         {
-            return ActionSetterCopyCommon.Instance;
+            return ActionRecordSetterCopyCommon.Instance;
         }
 
         #endregion
@@ -1244,14 +1244,14 @@ namespace Mutagen.Bethesda.Skyrim
 #region Xml Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class ActionXmlWriteTranslation :
+    public partial class ActionRecordXmlWriteTranslation :
         SkyrimMajorRecordXmlWriteTranslation,
         IXmlWriteTranslator
     {
-        public new readonly static ActionXmlWriteTranslation Instance = new ActionXmlWriteTranslation();
+        public new readonly static ActionRecordXmlWriteTranslation Instance = new ActionRecordXmlWriteTranslation();
 
         public static void WriteToNodeXml(
-            IActionInternalGetter item,
+            IActionRecordInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1262,29 +1262,29 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
             if (item.Color_IsSet
-                && (translationMask?.GetShouldTranslate((int)Action_FieldIndex.Color) ?? true))
+                && (translationMask?.GetShouldTranslate((int)ActionRecord_FieldIndex.Color) ?? true))
             {
                 ColorXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Color),
                     item: item.Color,
-                    fieldIndex: (int)Action_FieldIndex.Color,
+                    fieldIndex: (int)ActionRecord_FieldIndex.Color,
                     errorMask: errorMask);
             }
         }
 
         public void Write(
             XElement node,
-            IActionInternalGetter item,
+            IActionRecordInternalGetter item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)
         {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.Action");
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.ActionRecord");
             node.Add(elem);
             if (name != null)
             {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.Action");
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.ActionRecord");
             }
             WriteToNodeXml(
                 item: item,
@@ -1301,7 +1301,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string name = null)
         {
             Write(
-                item: (IActionInternalGetter)item,
+                item: (IActionRecordInternalGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1316,7 +1316,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string name = null)
         {
             Write(
-                item: (IActionInternalGetter)item,
+                item: (IActionRecordInternalGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1331,7 +1331,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string name = null)
         {
             Write(
-                item: (IActionInternalGetter)item,
+                item: (IActionRecordInternalGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1340,12 +1340,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class ActionXmlCreateTranslation : SkyrimMajorRecordXmlCreateTranslation
+    public partial class ActionRecordXmlCreateTranslation : SkyrimMajorRecordXmlCreateTranslation
     {
-        public new readonly static ActionXmlCreateTranslation Instance = new ActionXmlCreateTranslation();
+        public new readonly static ActionRecordXmlCreateTranslation Instance = new ActionRecordXmlCreateTranslation();
 
         public static void FillPublicXml(
-            IActionInternal item,
+            IActionRecordInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1354,7 +1354,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    ActionXmlCreateTranslation.FillPublicElementXml(
+                    ActionRecordXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1370,7 +1370,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static void FillPublicElementXml(
-            IActionInternal item,
+            IActionRecordInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -1381,7 +1381,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "Color":
                     try
                     {
-                        errorMask?.PushIndex((int)Action_FieldIndex.Color);
+                        errorMask?.PushIndex((int)ActionRecord_FieldIndex.Color);
                         if (ColorXmlTranslation.Instance.Parse(
                             node: node,
                             item: out Color ColorParse,
@@ -1421,31 +1421,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Xml Write Mixins
-    public static class ActionXmlTranslationMixIn
+    public static class ActionRecordXmlTranslationMixIn
     {
         public static void WriteToXml(
-            this IActionInternalGetter item,
+            this IActionRecordInternalGetter item,
             XElement node,
-            out Action_ErrorMask errorMask,
+            out ActionRecord_ErrorMask errorMask,
             bool doMasks = true,
-            Action_TranslationMask translationMask = null,
+            ActionRecord_TranslationMask translationMask = null,
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((ActionXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((ActionRecordXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Action_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ActionRecord_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
-            this IActionInternalGetter item,
+            this IActionRecordInternalGetter item,
             string path,
-            out Action_ErrorMask errorMask,
-            Action_TranslationMask translationMask = null,
+            out ActionRecord_ErrorMask errorMask,
+            ActionRecord_TranslationMask translationMask = null,
             bool doMasks = true,
             string name = null)
         {
@@ -1461,10 +1461,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IActionInternalGetter item,
+            this IActionRecordInternalGetter item,
             Stream stream,
-            out Action_ErrorMask errorMask,
-            Action_TranslationMask translationMask = null,
+            out ActionRecord_ErrorMask errorMask,
+            ActionRecord_TranslationMask translationMask = null,
             bool doMasks = true,
             string name = null)
         {
@@ -1489,14 +1489,14 @@ namespace Mutagen.Bethesda.Skyrim
 #region Mask
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public class Action_Mask<T> : SkyrimMajorRecord_Mask<T>, IMask<T>, IEquatable<Action_Mask<T>>
+    public class ActionRecord_Mask<T> : SkyrimMajorRecord_Mask<T>, IMask<T>, IEquatable<ActionRecord_Mask<T>>
     {
         #region Ctors
-        public Action_Mask()
+        public ActionRecord_Mask()
         {
         }
 
-        public Action_Mask(T initialValue)
+        public ActionRecord_Mask(T initialValue)
         {
             this.Color = initialValue;
         }
@@ -1509,11 +1509,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals
         public override bool Equals(object obj)
         {
-            if (!(obj is Action_Mask<T> rhs)) return false;
+            if (!(obj is ActionRecord_Mask<T> rhs)) return false;
             return Equals(rhs);
         }
 
-        public bool Equals(Action_Mask<T> rhs)
+        public bool Equals(ActionRecord_Mask<T> rhs)
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
@@ -1540,14 +1540,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         #region Translate
-        public new Action_Mask<R> Translate<R>(Func<T, R> eval)
+        public new ActionRecord_Mask<R> Translate<R>(Func<T, R> eval)
         {
-            var ret = new Action_Mask<R>();
+            var ret = new ActionRecord_Mask<R>();
             this.Translate_InternalFill(ret, eval);
             return ret;
         }
 
-        protected void Translate_InternalFill<R>(Action_Mask<R> obj, Func<T, R> eval)
+        protected void Translate_InternalFill<R>(ActionRecord_Mask<R> obj, Func<T, R> eval)
         {
             base.Translate_InternalFill(obj, eval);
             obj.Color = eval(this.Color);
@@ -1567,16 +1567,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ToString(printMask: null);
         }
 
-        public string ToString(Action_Mask<bool> printMask = null)
+        public string ToString(ActionRecord_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
             ToString(fg, printMask);
             return fg.ToString();
         }
 
-        public void ToString(FileGeneration fg, Action_Mask<bool> printMask = null)
+        public void ToString(FileGeneration fg, ActionRecord_Mask<bool> printMask = null)
         {
-            fg.AppendLine($"{nameof(Action_Mask<T>)} =>");
+            fg.AppendLine($"{nameof(ActionRecord_Mask<T>)} =>");
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
@@ -1591,7 +1591,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public class Action_ErrorMask : SkyrimMajorRecord_ErrorMask, IErrorMask<Action_ErrorMask>
+    public class ActionRecord_ErrorMask : SkyrimMajorRecord_ErrorMask, IErrorMask<ActionRecord_ErrorMask>
     {
         #region Members
         public Exception Color;
@@ -1600,10 +1600,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region IErrorMask
         public override object GetNthMask(int index)
         {
-            Action_FieldIndex enu = (Action_FieldIndex)index;
+            ActionRecord_FieldIndex enu = (ActionRecord_FieldIndex)index;
             switch (enu)
             {
-                case Action_FieldIndex.Color:
+                case ActionRecord_FieldIndex.Color:
                     return Color;
                 default:
                     return base.GetNthMask(index);
@@ -1612,10 +1612,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public override void SetNthException(int index, Exception ex)
         {
-            Action_FieldIndex enu = (Action_FieldIndex)index;
+            ActionRecord_FieldIndex enu = (ActionRecord_FieldIndex)index;
             switch (enu)
             {
-                case Action_FieldIndex.Color:
+                case ActionRecord_FieldIndex.Color:
                     this.Color = ex;
                     break;
                 default:
@@ -1626,10 +1626,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public override void SetNthMask(int index, object obj)
         {
-            Action_FieldIndex enu = (Action_FieldIndex)index;
+            ActionRecord_FieldIndex enu = (ActionRecord_FieldIndex)index;
             switch (enu)
             {
-                case Action_FieldIndex.Color:
+                case ActionRecord_FieldIndex.Color:
                     this.Color = (Exception)obj;
                     break;
                 default:
@@ -1656,7 +1656,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public override void ToString(FileGeneration fg)
         {
-            fg.AppendLine("Action_ErrorMask =>");
+            fg.AppendLine("ActionRecord_ErrorMask =>");
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
@@ -1682,13 +1682,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         #region Combine
-        public Action_ErrorMask Combine(Action_ErrorMask rhs)
+        public ActionRecord_ErrorMask Combine(ActionRecord_ErrorMask rhs)
         {
-            var ret = new Action_ErrorMask();
+            var ret = new ActionRecord_ErrorMask();
             ret.Color = this.Color.Combine(rhs.Color);
             return ret;
         }
-        public static Action_ErrorMask Combine(Action_ErrorMask lhs, Action_ErrorMask rhs)
+        public static ActionRecord_ErrorMask Combine(ActionRecord_ErrorMask lhs, ActionRecord_ErrorMask rhs)
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
@@ -1696,21 +1696,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         #region Factory
-        public static Action_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static ActionRecord_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            return new Action_ErrorMask();
+            return new ActionRecord_ErrorMask();
         }
         #endregion
 
     }
-    public class Action_CopyMask : SkyrimMajorRecord_CopyMask
+    public class ActionRecord_CopyMask : SkyrimMajorRecord_CopyMask
     {
-        public Action_CopyMask()
+        public ActionRecord_CopyMask()
         {
         }
 
-        public Action_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        public ActionRecord_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
         {
             this.Color = defaultOn;
         }
@@ -1721,19 +1721,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public class Action_TranslationMask : SkyrimMajorRecord_TranslationMask
+    public class ActionRecord_TranslationMask : SkyrimMajorRecord_TranslationMask
     {
         #region Members
         public bool Color;
         #endregion
 
         #region Ctors
-        public Action_TranslationMask()
+        public ActionRecord_TranslationMask()
             : base()
         {
         }
 
-        public Action_TranslationMask(bool defaultOn)
+        public ActionRecord_TranslationMask(bool defaultOn)
             : base(defaultOn)
         {
             this.Color = defaultOn;
@@ -1753,14 +1753,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class ActionBinaryWriteTranslation :
+    public partial class ActionRecordBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static ActionBinaryWriteTranslation Instance = new ActionBinaryWriteTranslation();
+        public new readonly static ActionRecordBinaryWriteTranslation Instance = new ActionRecordBinaryWriteTranslation();
 
         public static void Write_RecordTypes(
-            IActionInternalGetter item,
+            IActionRecordInternalGetter item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask,
@@ -1777,7 +1777,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Color,
-                    header: recordTypeConverter.ConvertToCustom(Action_Registration.CNAM_HEADER),
+                    header: recordTypeConverter.ConvertToCustom(ActionRecord_Registration.CNAM_HEADER),
                     nullable: false,
                     extraByte: true);
             }
@@ -1785,14 +1785,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public void Write(
             MutagenWriter writer,
-            IActionInternalGetter item,
+            IActionRecordInternalGetter item,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: Action_Registration.AACT_HEADER,
+                record: ActionRecord_Registration.AACT_HEADER,
                 type: ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.Write_Embedded(
@@ -1817,7 +1817,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ErrorMaskBuilder errorMask)
         {
             Write(
-                item: (IActionInternalGetter)item,
+                item: (IActionRecordInternalGetter)item,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -1832,7 +1832,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ErrorMaskBuilder errorMask)
         {
             Write(
-                item: (IActionInternalGetter)item,
+                item: (IActionRecordInternalGetter)item,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -1847,7 +1847,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ErrorMaskBuilder errorMask)
         {
             Write(
-                item: (IActionInternalGetter)item,
+                item: (IActionRecordInternalGetter)item,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -1856,9 +1856,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class ActionBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    public partial class ActionRecordBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
-        public new readonly static ActionBinaryCreateTranslation Instance = new ActionBinaryCreateTranslation();
+        public new readonly static ActionRecordBinaryCreateTranslation Instance = new ActionRecordBinaryCreateTranslation();
 
     }
 
@@ -1866,23 +1866,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Binary Write Mixins
-    public static class ActionBinaryTranslationMixIn
+    public static class ActionRecordBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IActionInternalGetter item,
+            this IActionRecordInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences,
-            out Action_ErrorMask errorMask,
+            out ActionRecord_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((ActionBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((ActionRecordBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
-            errorMask = Action_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ActionRecord_ErrorMask.Factory(errorMaskBuilder);
         }
 
     }
@@ -1892,47 +1892,47 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class ActionBinaryWrapper :
+    public partial class ActionRecordBinaryWrapper :
         SkyrimMajorRecordBinaryWrapper,
-        IActionInternalGetter
+        IActionRecordInternalGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Action_Registration.Instance;
-        public new static Action_Registration Registration => Action_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => ActionRecord_Registration.Instance;
+        public new static ActionRecord_Registration Registration => ActionRecord_Registration.Instance;
         protected override object CommonInstance()
         {
-            return ActionCommon.Instance;
+            return ActionRecordCommon.Instance;
         }
 
         #endregion
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IActionInternalGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IActionRecordInternalGetter)rhs, include);
 
-        protected override object XmlWriteTranslator => ActionXmlWriteTranslation.Instance;
+        protected override object XmlWriteTranslator => ActionRecordXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)
         {
-            ((ActionXmlWriteTranslation)this.XmlWriteTranslator).Write(
+            ((ActionRecordXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
                 name: name,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
-        protected override object BinaryWriteTranslator => ActionBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => ActionRecordBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            ((ActionBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((ActionRecordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -1950,7 +1950,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             long finalPos,
             int offset);
 
-        protected ActionBinaryWrapper(
+        protected ActionRecordBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryWrapperFactoryPackage package)
             : base(
@@ -1959,13 +1959,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
 
-        public static ActionBinaryWrapper ActionFactory(
+        public static ActionRecordBinaryWrapper ActionRecordFactory(
             BinaryMemoryReadStream stream,
             BinaryWrapperFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
             stream = UtilityTranslation.DecompressStream(stream, package.Meta);
-            var ret = new ActionBinaryWrapper(
+            var ret = new ActionRecordBinaryWrapper(
                 bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength;
@@ -1998,7 +1998,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4D414E43: // CNAM
                 {
                     _ColorLocation = (ushort)(stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Action_FieldIndex.Color);
+                    return TryGet<int?>.Succeed((int)ActionRecord_FieldIndex.Color);
                 }
                 default:
                     return base.FillRecordType(

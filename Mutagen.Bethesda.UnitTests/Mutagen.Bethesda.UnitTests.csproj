@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BinaryProcessor_Tests.cs" />
+    <Compile Include="CompositeStream_Tests.cs" />
     <Compile Include="FormID_Tests.cs" />
     <Compile Include="FormKey_Tests.cs" />
     <Compile Include="MajorRecordInstantiator_Tests.cs" />

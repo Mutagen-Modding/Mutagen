@@ -21,6 +21,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
         public static ModKey ModKey;
         public static string DataPath;
         public static string BinaryPath;
+        public static MemoryStream DataOutput;
 
         [GlobalSetup]
         public async Task Setup()
@@ -42,6 +43,8 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
             Mod = await OblivionMod.CreateFromBinary(
                 DataPath,
                 ModKey);
+
+            DataOutput = new MemoryStream(new byte[new FileInfo(DataPath).Length]);
         }
 
         [GlobalCleanup]
@@ -59,18 +62,57 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
         }
 
         [Benchmark]
-        public async Task CreateAndWriteBinary()
+        public void CreateAndWriteBinaryWrapperToDisk()
         {
-            var mod = await OblivionMod.CreateFromBinary(
-                DataPath,
+            var bytes = File.ReadAllBytes(DataPath);
+            var mod = OblivionModBinaryWrapper.OblivionModFactory(
+                new MemorySlice<byte>(bytes),
                 ModKey);
             mod.WriteToBinary(
                 BinaryPath,
-                ModKey);
+                Mutagen.Bethesda.Oblivion.Constants.Oblivion);
         }
 
         [Benchmark]
-        public async Task CreateAndWriteBinaryWrapper()
+        public void CreateAndWriteBinaryWrapperToMemory()
+        {
+            var bytes = File.ReadAllBytes(DataPath);
+            var mod = OblivionModBinaryWrapper.OblivionModFactory(
+                new MemorySlice<byte>(bytes),
+                ModKey);
+            DataOutput.Position = 0;
+            mod.WriteToBinary(
+                DataOutput,
+                Mutagen.Bethesda.Oblivion.Constants.Oblivion);
+        }
+
+        [Benchmark]
+        public void CreateAndWriteBinaryWrapperParallelToDisk()
+        {
+            var bytes = File.ReadAllBytes(DataPath);
+            var mod = OblivionModBinaryWrapper.OblivionModFactory(
+                new MemorySlice<byte>(bytes),
+                ModKey);
+            mod.WriteToBinaryParallel(
+                BinaryPath,
+                Mutagen.Bethesda.Oblivion.Constants.Oblivion);
+        }
+
+        [Benchmark]
+        public void CreateAndWriteBinaryWrapperParallelToMemory()
+        {
+            var bytes = File.ReadAllBytes(DataPath);
+            var mod = OblivionModBinaryWrapper.OblivionModFactory(
+                new MemorySlice<byte>(bytes),
+                ModKey);
+            DataOutput.Position = 0;
+            mod.WriteToBinaryParallel(
+                DataOutput,
+                Mutagen.Bethesda.Oblivion.Constants.Oblivion);
+        }
+
+        [Benchmark]
+        public async Task CreateAndWriteBinaryWrapperAsyncToDisk()
         {
             var bytes = File.ReadAllBytes(DataPath);
             var mod = OblivionModBinaryWrapper.OblivionModFactory(
@@ -82,10 +124,63 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
         }
 
         [Benchmark]
-        public async Task WriteBinary()
+        public async Task CreateAndWriteBinaryWrapperAsyncToMemory()
+        {
+            var bytes = File.ReadAllBytes(DataPath);
+            var mod = OblivionModBinaryWrapper.OblivionModFactory(
+                new MemorySlice<byte>(bytes),
+                ModKey);
+            DataOutput.Position = 0;
+            await mod.WriteToBinaryAsync(
+                DataOutput,
+                Mutagen.Bethesda.Oblivion.Constants.Oblivion);
+        }
+
+        [Benchmark]
+        public void WriteBinaryToDisk()
+        {
+            Mod.WriteToBinary(
+                BinaryPath,
+                Mutagen.Bethesda.Oblivion.Constants.Oblivion);
+        }
+
+        [Benchmark]
+        public void WriteBinaryToMemory()
+        {
+            Mod.WriteToBinary(
+                DataOutput,
+                Mutagen.Bethesda.Oblivion.Constants.Oblivion);
+        }
+
+        [Benchmark]
+        public void WriteBinaryParallelToDisk()
+        {
+            Mod.WriteToBinaryParallel(
+                BinaryPath,
+                Mutagen.Bethesda.Oblivion.Constants.Oblivion);
+        }
+
+        [Benchmark]
+        public void WriteBinaryParallelToMemory()
+        {
+            Mod.WriteToBinaryParallel(
+                DataOutput,
+                Mutagen.Bethesda.Oblivion.Constants.Oblivion);
+        }
+
+        [Benchmark]
+        public async Task WriteBinaryAsyncToDisk()
         {
             await Mod.WriteToBinaryAsync(
                 BinaryPath,
+                Mutagen.Bethesda.Oblivion.Constants.Oblivion);
+        }
+
+        [Benchmark]
+        public async Task WriteBinaryAsyncToMemory()
+        {
+            await Mod.WriteToBinaryAsync(
+                DataOutput,
                 Mutagen.Bethesda.Oblivion.Constants.Oblivion);
         }
     }

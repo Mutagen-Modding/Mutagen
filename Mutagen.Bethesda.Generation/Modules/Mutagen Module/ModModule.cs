@@ -17,7 +17,8 @@ namespace Mutagen.Bethesda.Generation
             return new string[]
             {
                 "DynamicData",
-                "CSharpExt.Rx"
+                "CSharpExt.Rx",
+                "System.Collections.Concurrent"
             };
         }
 
@@ -42,6 +43,7 @@ namespace Mutagen.Bethesda.Generation
             }
             fg.AppendLine($"void IModGetter.WriteToBinary(string path, ModKey modKey) => this.WriteToBinary(path, modKey, importMask: null);");
             fg.AppendLine($"Task IModGetter.WriteToBinaryAsync(string path, ModKey modKey) => this.WriteToBinaryAsync(path, modKey);");
+            fg.AppendLine($"void IModGetter.WriteToBinaryParallel(string path, ModKey modKey) => this.WriteToBinaryParallel(path, modKey);");
 
             using (var args = new FunctionWrapper(fg,
                 "protected void SetMajorRecord"))
@@ -349,6 +351,47 @@ namespace Mutagen.Bethesda.Generation
                     }
                 }
             }
+
+            using (var args = new FunctionWrapper(fg,
+                $"public static void WriteToBinaryParallel"))
+            {
+                args.Add($"this {obj.Interface(getter: true, internalInterface: false)} item");
+                args.Add($"Stream stream");
+                args.Add($"ModKey modKey");
+            }
+            using (new BraceWrapper(fg))
+            {
+                using (var args = new ArgsWrapper(fg,
+                    $"{obj.CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class, MaskType.Normal)}.WriteParallel"))
+                {
+                    args.AddPassArg("item");
+                    args.AddPassArg("stream");
+                    args.AddPassArg("modKey");
+                }
+            }
+            fg.AppendLine();
+
+            using (var args = new FunctionWrapper(fg,
+                $"public static void WriteToBinaryParallel"))
+            {
+                args.Add($"this {obj.Interface(getter: true, internalInterface: false)} item");
+                args.Add($"string path");
+                args.Add($"ModKey modKey");
+            }
+            using (new BraceWrapper(fg))
+            {
+                fg.AppendLine("using (var stream = new FileStream(path, FileMode.Create, FileAccess.Write))");
+                using (new BraceWrapper(fg))
+                {
+                    using (var args = new ArgsWrapper(fg,
+                        $"{obj.CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class, MaskType.Normal)}.WriteParallel"))
+                    {
+                        args.AddPassArg("item");
+                        args.AddPassArg("stream");
+                        args.AddPassArg("modKey");
+                    }
+                }
+            }
         }
 
         public override async Task GenerateInCommon(ObjectGeneration obj, FileGeneration fg, MaskTypeSet maskTypes)
@@ -395,6 +438,111 @@ namespace Mutagen.Bethesda.Generation
             LoquiType groupInstance = null;
             LoquiType listGroupInstance = null;
             fg.AppendLine("const int CutCount = 100;");
+            using (var args = new FunctionWrapper(fg,
+                "public static void WriteParallel"))
+            {
+                args.Add($"{obj.Interface(getter: true, internalInterface: false)} item");
+                args.Add($"Stream stream");
+                args.Add($"ModKey modKey");
+            }
+            using (new BraceWrapper(fg))
+            {
+                fg.AppendLine($"var masterRefs = new MasterReferences(item.MasterReferences, modKey);");
+                using (var args = new ArgsWrapper(fg,
+                    "item.ModHeader.WriteToBinary"))
+                {
+                    args.Add($"new MutagenWriter(stream, MetaDataConstants.{obj.GetObjectData().GameMode})");
+                    args.Add($"masterRefs");
+                }
+                int groupCount = obj.IterateFields()
+                    .Select(f => f as LoquiType)
+                    .Where(l => l != null)
+                    .Where(l => l.TargetObjectGeneration?.GetObjectData().ObjectType == ObjectType.Group)
+                    .Count();
+
+                fg.AppendLine($"Stream[] outputStreams = new Stream[{groupCount}];");
+                fg.AppendLine($"List<Action> toDo = new List<Action>();");
+                int i = 0;
+                foreach (var field in obj.IterateFields())
+                {
+                    if (!(field is LoquiType loqui)) continue;
+                    if (loqui.TargetObjectGeneration?.GetObjectData().ObjectType != ObjectType.Group) continue;
+                    if (loqui.TargetObjectGeneration.Name == "ListGroup")
+                    {
+                        listGroupInstance = loqui;
+                    }
+                    else
+                    {
+                        groupInstance = loqui;
+                    }
+                    if (loqui.GetGroupTarget().GetObjectData().CustomBinaryEnd == CustomEnd.Off
+                        && loqui.TargetObjectGeneration.Name != "ListGroup")
+                    {
+                        fg.AppendLine($"toDo.Add(() => WriteGroupParallel(item.{field.Name}, masterRefs, {i}, outputStreams));");
+                    }
+                    else
+                    {
+                        fg.AppendLine($"toDo.Add(() => Write{field.Name}Parallel(item.{field.Name}, masterRefs, {i}, outputStreams));");
+                    }
+                    i++;
+                }
+                fg.AppendLine("Parallel.Invoke(toDo.ToArray());");
+                using (var args = new ArgsWrapper(fg,
+                    $"{nameof(UtilityTranslation)}.{nameof(UtilityTranslation.CompileStreamsInto)}"))
+                {
+                    args.Add("outputStreams.NotNull()");
+                    args.Add("stream");
+                }
+            }
+            fg.AppendLine();
+
+            if (groupInstance != null)
+            {
+                using (var args = new FunctionWrapper(fg,
+                    $"public static void WriteGroupParallel<T>"))
+                {
+                    args.Add("IGroupInternalGetter<T> group");
+                    args.Add("MasterReferences masters");
+                    args.Add("int targetIndex");
+                    args.Add("Stream[] streamDepositArray");
+                    args.Wheres.AddRange(groupInstance.TargetObjectGeneration.GenerateWhereClauses(LoquiInterfaceType.IGetter, groupInstance.TargetObjectGeneration.Generics));
+                }
+                using (new BraceWrapper(fg))
+                {
+                    fg.AppendLine("if (group.Items.Count == 0) return;");
+                    fg.AppendLine($"var cuts = group.Items.Values.Cut(CutCount).ToArray();");
+                    fg.AppendLine($"Stream[] subStreams = new Stream[cuts.Length + 1];");
+                    fg.AppendLine($"byte[] groupBytes = new byte[MetaDataConstants.Oblivion.GroupConstants.HeaderLength];");
+                    fg.AppendLine($"BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), Group_Registration.GRUP_HEADER.TypeInt);");
+                    fg.AppendLine($"var groupByteStream = new MemoryStream(groupBytes);");
+                    fg.AppendLine($"using (var stream = new MutagenWriter(groupByteStream, MetaDataConstants.{obj.GetObjectData().GameMode}, dispose: false))");
+                    using (new BraceWrapper(fg))
+                    {
+                        fg.AppendLine($"stream.Position += 8;");
+                        fg.AppendLine($"GroupBinaryWriteTranslation.Write_Embedded<T>(group, stream, default, default);");
+                    }
+                    fg.AppendLine($"subStreams[0] = groupByteStream;");
+                    fg.AppendLine($"Parallel.ForEach(cuts, (cutItems, state, counter) =>");
+                    using (new BraceWrapper(fg) { AppendSemicolon = true, AppendParenthesis = true })
+                    {
+                        fg.AppendLine($"{nameof(MemoryTributary)} trib = new {nameof(MemoryTributary)}();");
+                        fg.AppendLine($"using (var stream = new MutagenWriter(trib, MetaDataConstants.{obj.GetObjectData().GameMode}, dispose: false))");
+                        using (new BraceWrapper(fg))
+                        {
+                            fg.AppendLine($"foreach (var item in cutItems)");
+                            using (new BraceWrapper(fg))
+                            {
+                                fg.AppendLine($"item.WriteToBinary(stream, masters);");
+                            }
+                        }
+                        fg.AppendLine($"subStreams[(int)counter + 1] = trib;");
+                    }
+                    fg.AppendLine($"UtilityTranslation.CompileSetGroupLength(subStreams, groupBytes);");
+                    fg.AppendLine($"streamDepositArray[targetIndex] = new CompositeReadStream(subStreams, resetPositions: true);");
+                }
+                fg.AppendLine();
+            }
+
             using (var args = new FunctionWrapper(fg,
                 "public static async Task WriteAsync"))
             {

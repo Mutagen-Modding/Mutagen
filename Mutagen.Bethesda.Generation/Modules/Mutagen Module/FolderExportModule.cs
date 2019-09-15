@@ -176,7 +176,7 @@ namespace Mutagen.Bethesda.Generation
                         if (field.GetFieldData().CustomFolder)
                         {
                             using (var args = new ArgsWrapper(fg,
-                                $"tasks.Add(Task.Run(() =>  WriteToXmlFolder{field.Name}",
+                                $"tasks.Add(Task.Run(() => WriteToXmlFolder{field.Name}",
                                 suffixLine: "))"))
                             {
                                 args.Add("dir: dir");

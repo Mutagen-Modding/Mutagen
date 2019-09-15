@@ -26,6 +26,7 @@ using System.Diagnostics;
 using System.Collections.Specialized;
 using DynamicData;
 using CSharpExt.Rx;
+using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using Noggog.Utility;
 using Mutagen.Bethesda.Binary;
@@ -863,6 +864,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         void IModGetter.WriteToBinary(string path, ModKey modKey) => this.WriteToBinary(path, modKey, importMask: null);
         Task IModGetter.WriteToBinaryAsync(string path, ModKey modKey) => this.WriteToBinaryAsync(path, modKey);
+        void IModGetter.WriteToBinaryParallel(string path, ModKey modKey) => this.WriteToBinaryParallel(path, modKey);
         protected void SetMajorRecord(
             FormKey id,
             IMajorRecord record)
@@ -2543,7 +2545,7 @@ namespace Mutagen.Bethesda.Oblivion
                     name: nameof(MagicEffects),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.MagicEffects)));
-                tasks.Add(Task.Run(() =>  WriteToXmlFolderScripts(
+                tasks.Add(Task.Run(() => WriteToXmlFolderScripts(
                     dir: dir,
                     name: nameof(Scripts),
                     index: (int)OblivionMod_FieldIndex.Scripts,
@@ -2718,7 +2720,7 @@ namespace Mutagen.Bethesda.Oblivion
                     name: nameof(Cells),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Cells)));
-                tasks.Add(Task.Run(() =>  WriteToXmlFolderWorldspaces(
+                tasks.Add(Task.Run(() => WriteToXmlFolderWorldspaces(
                     dir: dir,
                     name: nameof(Worldspaces),
                     index: (int)OblivionMod_FieldIndex.Worldspaces,
@@ -5815,6 +5817,30 @@ namespace Mutagen.Bethesda.Oblivion
                     modKey: modKey);
             }
         }
+        public static void WriteToBinaryParallel(
+            this IOblivionModGetter item,
+            Stream stream,
+            ModKey modKey)
+        {
+            OblivionModCommon.WriteParallel(
+                item: item,
+                stream: stream,
+                modKey: modKey);
+        }
+
+        public static void WriteToBinaryParallel(
+            this IOblivionModGetter item,
+            string path,
+            ModKey modKey)
+        {
+            using (var stream = new FileStream(path, FileMode.Create, FileAccess.Write))
+            {
+                OblivionModCommon.WriteParallel(
+                    item: item,
+                    stream: stream,
+                    modKey: modKey);
+            }
+        }
         #endregion
 
     }
@@ -7571,6 +7597,114 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         const int CutCount = 100;
+        public static void WriteParallel(
+            IOblivionModGetter item,
+            Stream stream,
+            ModKey modKey)
+        {
+            var masterRefs = new MasterReferences(item.MasterReferences, modKey);
+            item.ModHeader.WriteToBinary(
+                new MutagenWriter(stream, MetaDataConstants.Oblivion),
+                masterRefs);
+            Stream[] outputStreams = new Stream[56];
+            List<Action> toDo = new List<Action>();
+            toDo.Add(() => WriteGroupParallel(item.GameSettings, masterRefs, 0, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.Globals, masterRefs, 1, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.Classes, masterRefs, 2, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.Factions, masterRefs, 3, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.Hairs, masterRefs, 4, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.Eyes, masterRefs, 5, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.Races, masterRefs, 6, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.Sounds, masterRefs, 7, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.Skills, masterRefs, 8, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.MagicEffects, masterRefs, 9, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.Scripts, masterRefs, 10, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.LandTextures, masterRefs, 11, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.Enchantments, masterRefs, 12, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.Spells, masterRefs, 13, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.Birthsigns, masterRefs, 14, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.Activators, masterRefs, 15, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.AlchemicalApparatus, masterRefs, 16, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.Armors, masterRefs, 17, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.Books, masterRefs, 18, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.Clothes, masterRefs, 19, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.Containers, masterRefs, 20, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.Doors, masterRefs, 21, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.Ingredients, masterRefs, 22, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.Lights, masterRefs, 23, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.Miscellaneous, masterRefs, 24, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.Statics, masterRefs, 25, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.Grasses, masterRefs, 26, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.Trees, masterRefs, 27, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.Flora, masterRefs, 28, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.Furnature, masterRefs, 29, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.Weapons, masterRefs, 30, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.Ammo, masterRefs, 31, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.NPCs, masterRefs, 32, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.Creatures, masterRefs, 33, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.LeveledCreatures, masterRefs, 34, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.SoulGems, masterRefs, 35, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.Keys, masterRefs, 36, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.Potions, masterRefs, 37, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.Subspaces, masterRefs, 38, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.SigilStones, masterRefs, 39, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.LeveledItems, masterRefs, 40, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.Weathers, masterRefs, 41, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.Climates, masterRefs, 42, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.Regions, masterRefs, 43, outputStreams));
+            toDo.Add(() => WriteCellsParallel(item.Cells, masterRefs, 44, outputStreams));
+            toDo.Add(() => WriteWorldspacesParallel(item.Worldspaces, masterRefs, 45, outputStreams));
+            toDo.Add(() => WriteDialogTopicsParallel(item.DialogTopics, masterRefs, 46, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.Quests, masterRefs, 47, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.IdleAnimations, masterRefs, 48, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.AIPackages, masterRefs, 49, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.CombatStyles, masterRefs, 50, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.LoadScreens, masterRefs, 51, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.LeveledSpells, masterRefs, 52, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.AnimatedObjects, masterRefs, 53, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.Waters, masterRefs, 54, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.EffectShaders, masterRefs, 55, outputStreams));
+            Parallel.Invoke(toDo.ToArray());
+            UtilityTranslation.CompileStreamsInto(
+                outputStreams.NotNull(),
+                stream);
+        }
+        
+        public static void WriteGroupParallel<T>(
+            IGroupInternalGetter<T> group,
+            MasterReferences masters,
+            int targetIndex,
+            Stream[] streamDepositArray)
+            where T : IOblivionMajorRecordInternalGetter, IXmlItem, IBinaryItem
+        {
+            if (group.Items.Count == 0) return;
+            var cuts = group.Items.Values.Cut(CutCount).ToArray();
+            Stream[] subStreams = new Stream[cuts.Length + 1];
+            byte[] groupBytes = new byte[MetaDataConstants.Oblivion.GroupConstants.HeaderLength];
+            BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), Group_Registration.GRUP_HEADER.TypeInt);
+            var groupByteStream = new MemoryStream(groupBytes);
+            using (var stream = new MutagenWriter(groupByteStream, MetaDataConstants.Oblivion, dispose: false))
+            {
+                stream.Position += 8;
+                GroupBinaryWriteTranslation.Write_Embedded<T>(group, stream, default, default);
+            }
+            subStreams[0] = groupByteStream;
+            Parallel.ForEach(cuts, (cutItems, state, counter) =>
+            {
+                MemoryTributary trib = new MemoryTributary();
+                using (var stream = new MutagenWriter(trib, MetaDataConstants.Oblivion, dispose: false))
+                {
+                    foreach (var item in cutItems)
+                    {
+                        item.WriteToBinary(stream, masters);
+                    }
+                }
+                subStreams[(int)counter + 1] = trib;
+            });
+            UtilityTranslation.CompileSetGroupLength(subStreams, groupBytes);
+            streamDepositArray[targetIndex] = new CompositeReadStream(subStreams, resetPositions: true);
+        }
+        
         public static async Task WriteAsync(
             IOblivionModGetter item,
             Stream stream,
@@ -14813,6 +14947,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IReadOnlyCache<T, FormKey> IModGetter.GetGroupGetter<T>() => this.GetGroupGetter<T>();
         void IModGetter.WriteToBinary(string path, ModKey modKey) => this.WriteToBinary(path, modKey, importMask: null);
         Task IModGetter.WriteToBinaryAsync(string path, ModKey modKey) => this.WriteToBinaryAsync(path, modKey);
+        void IModGetter.WriteToBinaryParallel(string path, ModKey modKey) => this.WriteToBinaryParallel(path, modKey);
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;
         IReadOnlyCache<IMajorRecordInternalGetter, FormKey> IModGetter.MajorRecords => throw new NotImplementedException();
         protected object XmlWriteTranslator => OblivionModXmlWriteTranslation.Instance;

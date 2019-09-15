@@ -350,6 +350,247 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public partial class OblivionModCommon
         {
+            public static void WriteCellsParallel(
+                IListGroupInternalGetter<ICellBlockInternalGetter> group,
+                MasterReferences masters,
+                int targetIndex,
+                Stream[] streamDepositArray)
+            {
+                if (group.Items.Count == 0) return;
+                Stream[] streams = new Stream[group.Items.Count + 1];
+                byte[] groupBytes = new byte[MetaDataConstants.Oblivion.GroupConstants.HeaderLength];
+                BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), Group_Registration.GRUP_HEADER.TypeInt);
+                var groupByteStream = new MemoryStream(groupBytes);
+                using (var stream = new MutagenWriter(groupByteStream, MetaDataConstants.Oblivion, dispose: false))
+                {
+                    stream.Position += 8;
+                    ListGroupBinaryWriteTranslation.Write_Embedded<ICellBlockInternalGetter>(group, stream, default, default);
+                }
+                streams[0] = groupByteStream;
+                Parallel.ForEach(group.Items, (cellBlock, state, counter) =>
+                {
+                    WriteBlocksParallel(
+                        cellBlock,
+                        masters,
+                        (int)counter + 1,
+                        streams);
+                });
+                UtilityTranslation.CompileSetGroupLength(streams, groupBytes);
+                streamDepositArray[targetIndex] = new CompositeReadStream(streams, resetPositions: true);
+            }
+
+            public static void WriteBlocksParallel(
+                ICellBlockInternalGetter block,
+                MasterReferences masters,
+                int targetIndex,
+                Stream[] streamDepositArray)
+            {
+                if (block.Items.Count == 0) return;
+                Stream[] streams = new Stream[block.Items.Count + 1];
+                byte[] groupBytes = new byte[MetaDataConstants.Oblivion.GroupConstants.HeaderLength];
+                BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), Group_Registration.GRUP_HEADER.TypeInt);
+                var groupByteStream = new MemoryStream(groupBytes);
+                using (var stream = new MutagenWriter(groupByteStream, MetaDataConstants.Oblivion, dispose: false))
+                {
+                    stream.Position += 8;
+                    CellBlockBinaryWriteTranslation.Write_Embedded(block, stream, default, default);
+                }
+                streams[0] = groupByteStream;
+                Parallel.ForEach(block.Items, (cellSubBlock, state, counter) =>
+                {
+                    WriteSubBlocksParallel(
+                        cellSubBlock,
+                        masters,
+                        (int)counter + 1,
+                        streams);
+                });
+                UtilityTranslation.CompileSetGroupLength(streams, groupBytes);
+                streamDepositArray[targetIndex] = new CompositeReadStream(streams, resetPositions: true);
+            }
+
+            public static void WriteSubBlocksParallel(
+                ICellSubBlockInternalGetter subBlock,
+                MasterReferences masters,
+                int targetIndex,
+                Stream[] streamDepositArray)
+            {
+                if (subBlock.Items.Count == 0) return;
+                Stream[] streams = new Stream[subBlock.Items.Count + 1];
+                byte[] groupBytes = new byte[MetaDataConstants.Oblivion.GroupConstants.HeaderLength];
+                var groupByteStream = new MemoryStream(groupBytes);
+                BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), Group_Registration.GRUP_HEADER.TypeInt);
+                using (var stream = new MutagenWriter(groupByteStream, MetaDataConstants.Oblivion, dispose: false))
+                {
+                    stream.Position += 8;
+                    CellSubBlockBinaryWriteTranslation.Write_Embedded(subBlock, stream, default, default);
+                }
+                streams[0] = groupByteStream;
+                Parallel.ForEach(subBlock.Items, (cell, state, counter) =>
+                {
+                    MemoryTributary trib = new MemoryTributary();
+                    cell.WriteToBinary(new MutagenWriter(trib, MetaDataConstants.Oblivion, dispose: false), masters);
+                    streams[(int)counter + 1] = trib;
+                });
+                UtilityTranslation.CompileSetGroupLength(streams, groupBytes);
+                streamDepositArray[targetIndex] = new CompositeReadStream(streams, resetPositions: true);
+            }
+
+            public static void WriteWorldspacesParallel(
+                IGroupInternalGetter<IWorldspaceInternalGetter> group,
+                MasterReferences masters,
+                int targetIndex,
+                Stream[] streamDepositArray)
+            {
+                if (group.Items.Count == 0) return;
+                Stream[] streams = new Stream[group.Items.Count + 1];
+                byte[] groupBytes = new byte[MetaDataConstants.Oblivion.GroupConstants.HeaderLength];
+                BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), Group_Registration.GRUP_HEADER.TypeInt);
+                var groupByteStream = new MemoryStream(groupBytes);
+                using (var stream = new MutagenWriter(groupByteStream, MetaDataConstants.Oblivion, dispose: false))
+                {
+                    stream.Position += 8;
+                    GroupBinaryWriteTranslation.Write_Embedded<IWorldspaceInternalGetter>(group, stream, default, default);
+                }
+                streams[0] = groupByteStream;
+                Parallel.ForEach(group.Items.Values, (worldspace, worldspaceState, worldspaceCounter) =>
+                {
+                    var worldTrib = new MemoryTributary();
+                    using (var writer = new MutagenWriter(worldTrib, MetaDataConstants.Oblivion, dispose: false))
+                    {
+                        using (HeaderExport.ExportHeader(
+                            writer: writer,
+                            record: Worldspace_Registration.WRLD_HEADER,
+                            type: ObjectType.Record))
+                        {
+                            WorldspaceBinaryWriteTranslation.Write_Embedded(
+                                item: worldspace,
+                                writer: writer,
+                                errorMask: null,
+                                masterReferences: masters);
+                            WorldspaceBinaryWriteTranslation.Write_RecordTypes(
+                                item: worldspace,
+                                writer: writer,
+                                recordTypeConverter: null,
+                                errorMask: null,
+                                masterReferences: masters);
+                        }
+                    }
+                    if (worldspace.SubCells.Count == 0
+                        && !worldspace.Road_IsSet
+                        && !worldspace.TopCell_IsSet)
+                    {
+                        streams[worldspaceCounter + 1] = worldTrib;
+                        return;
+                    }
+
+                    Stream[] subStreams = new Stream[worldspace.SubCells.Count + 1];
+
+                    var worldGroupTrib = new MemoryTributary();
+                    var worldGroupWriter = new MutagenWriter(worldGroupTrib, MetaDataConstants.Oblivion, dispose: false);
+                    worldGroupWriter.Write(Group_Registration.GRUP_HEADER.TypeInt);
+                    worldGroupWriter.Write(UtilityTranslation.Zeros.Slice(0, MetaDataConstants.Oblivion.GroupConstants.LengthLength));
+                    FormKeyBinaryTranslation.Instance.Write(
+                        worldGroupWriter,
+                        worldspace.FormKey,
+                        masters);
+                    worldGroupWriter.Write((int)GroupTypeEnum.WorldChildren);
+                    worldGroupWriter.Write(worldspace.SubCellsTimestamp);
+                    if (worldspace.Road_IsSet)
+                    {
+                        worldspace.Road.WriteToBinary(
+                            worldGroupWriter,
+                            masterReferences: masters,
+                            errorMask: null);
+                    }
+                    if (worldspace.TopCell_IsSet)
+                    {
+                        worldspace.TopCell.WriteToBinary(
+                            worldGroupWriter,
+                            masterReferences: masters,
+                            errorMask: null);
+                    }
+                    subStreams[0] = worldGroupTrib;
+
+                    Parallel.ForEach(worldspace.SubCells, (block, blockState, blockCounter) =>
+                    {
+                        WriteBlocksAsync(
+                            block,
+                            masters,
+                            (int)blockCounter + 1,
+                            subStreams);
+                    });
+
+                    worldGroupWriter.Position = 4;
+                    worldGroupWriter.Write((uint)(subStreams.NotNull().Select(s => s.Length).Sum()));
+                    streams[worldspaceCounter + 1] = new CompositeReadStream(worldTrib.And(subStreams), resetPositions: true);
+                });
+                UtilityTranslation.CompileSetGroupLength(streams, groupBytes);
+                streamDepositArray[targetIndex] = new CompositeReadStream(streams, resetPositions: true);
+            }
+
+            public static void WriteBlocksAsync(
+                IWorldspaceBlockInternalGetter block,
+                MasterReferences masters,
+                int targetIndex,
+                Stream[] streamDepositArray)
+            {
+                Stream[] streams = new Stream[block.Items.Count + 1];
+                byte[] groupBytes = new byte[MetaDataConstants.Oblivion.GroupConstants.HeaderLength];
+                BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), Group_Registration.GRUP_HEADER.TypeInt);
+                var groupByteStream = new MemoryStream(groupBytes);
+                using (var stream = new MutagenWriter(groupByteStream, MetaDataConstants.Oblivion, dispose: false))
+                {
+                    stream.Position += 8;
+                    WorldspaceBlockBinaryWriteTranslation.Write_Embedded(block, stream, default, default);
+                }
+                streams[0] = groupByteStream;
+                Parallel.ForEach(block.Items, (subBlock, state, counter) =>
+                {
+                    WriteSubBlocksParallel(
+                        subBlock,
+                        masters,
+                        (int)counter + 1,
+                        streams);
+                });
+                UtilityTranslation.CompileSetGroupLength(streams, groupBytes);
+                streamDepositArray[targetIndex] = new CompositeReadStream(streams, resetPositions: true);
+            }
+
+            public static void WriteSubBlocksParallel(
+                IWorldspaceSubBlockInternalGetter subBlock,
+                MasterReferences masters,
+                int targetIndex,
+                Stream[] streamDepositArray)
+            {
+                Stream[] streams = new Stream[subBlock.Items.Count + 1];
+                byte[] groupBytes = new byte[MetaDataConstants.Oblivion.GroupConstants.HeaderLength];
+                BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), Group_Registration.GRUP_HEADER.TypeInt);
+                var groupByteStream = new MemoryStream(groupBytes);
+                using (var stream = new MutagenWriter(groupByteStream, MetaDataConstants.Oblivion, dispose: false))
+                {
+                    stream.Position += 8;
+                    WorldspaceSubBlockBinaryWriteTranslation.Write_Embedded(subBlock, stream, default, default);
+                }
+                streams[0] = groupByteStream;
+                Parallel.ForEach(subBlock.Items, (cell, state, counter) =>
+                {
+                    MemoryTributary trib = new MemoryTributary();
+                    cell.WriteToBinary(new MutagenWriter(trib, MetaDataConstants.Oblivion, dispose: false), masters);
+                    streams[(int)counter + 1] = trib;
+                });
+                UtilityTranslation.CompileSetGroupLength(streams, groupBytes);
+                streamDepositArray[targetIndex] = new CompositeReadStream(streams, resetPositions: true);
+            }
+
+            public static void WriteDialogTopicsParallel(
+                IGroupInternalGetter<IDialogTopicInternalGetter> group,
+                MasterReferences masters,
+                int targetIndex,
+                Stream[] streamDepositArray)
+            {
+                WriteGroupParallel(group, masters, targetIndex, streamDepositArray);
+            }
+
             public static async Task<IEnumerable<Stream>> WriteCellsAsync(
                 IListGroupInternalGetter<ICellBlockInternalGetter> group,
                 MasterReferences masters)

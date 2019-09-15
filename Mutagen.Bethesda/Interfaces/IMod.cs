@@ -21,6 +21,9 @@ namespace Mutagen.Bethesda
         Task WriteToBinaryAsync(
             string path,
             ModKey modKey);
+        void WriteToBinaryParallel(
+            string path,
+            ModKey modKey);
         ModKey ModKey { get; }
     }
 

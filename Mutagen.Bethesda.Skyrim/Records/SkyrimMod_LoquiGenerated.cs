@@ -26,6 +26,7 @@ using System.Diagnostics;
 using System.Collections.Specialized;
 using DynamicData;
 using CSharpExt.Rx;
+using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using Noggog.Utility;
 using Mutagen.Bethesda.Binary;
@@ -51,7 +52,7 @@ namespace Mutagen.Bethesda.Skyrim
             _GameSettings_Object = new Group<GameSetting>(this);
             _Keywords_Object = new Group<Keyword>(this);
             _LocationReferenceTypes_Object = new Group<LocationReferenceType>(this);
-            _Actions_Object = new Group<Action>(this);
+            _Actions_Object = new Group<ActionRecord>(this);
             _TextureSets_Object = new Group<TextureSet>(this);
             _Globals_Object = new Group<Global>(this);
             _Classes_Object = new Group<Class>(this);
@@ -59,7 +60,7 @@ namespace Mutagen.Bethesda.Skyrim
                 _GameSettings_Object.Items.Connect().Transform<IMajorRecord, GameSetting, FormKey>((i) => i),
                 _Keywords_Object.Items.Connect().Transform<IMajorRecord, Keyword, FormKey>((i) => i),
                 _LocationReferenceTypes_Object.Items.Connect().Transform<IMajorRecord, LocationReferenceType, FormKey>((i) => i),
-                _Actions_Object.Items.Connect().Transform<IMajorRecord, Action, FormKey>((i) => i),
+                _Actions_Object.Items.Connect().Transform<IMajorRecord, ActionRecord, FormKey>((i) => i),
                 _TextureSets_Object.Items.Connect().Transform<IMajorRecord, TextureSet, FormKey>((i) => i),
                 _Globals_Object.Items.Connect().Transform<IMajorRecord, Global, FormKey>((i) => i),
                 _Classes_Object.Items.Connect().Transform<IMajorRecord, Class, FormKey>((i) => i))
@@ -98,9 +99,9 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Actions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly Group<Action> _Actions_Object;
-        public Group<Action> Actions => _Actions_Object;
-        IGroupInternalGetter<IActionInternalGetter> ISkyrimModGetter.Actions => _Actions_Object;
+        private readonly Group<ActionRecord> _Actions_Object;
+        public Group<ActionRecord> Actions => _Actions_Object;
+        IGroupInternalGetter<IActionRecordInternalGetter> ISkyrimModGetter.Actions => _Actions_Object;
         #endregion
         #region TextureSets
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -401,6 +402,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         void IModGetter.WriteToBinary(string path, ModKey modKey) => this.WriteToBinary(path, modKey, importMask: null);
         Task IModGetter.WriteToBinaryAsync(string path, ModKey modKey) => this.WriteToBinaryAsync(path, modKey);
+        void IModGetter.WriteToBinaryParallel(string path, ModKey modKey) => this.WriteToBinaryParallel(path, modKey);
         protected void SetMajorRecord(
             FormKey id,
             IMajorRecord record)
@@ -416,7 +418,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case LocationReferenceType locationreferencetypes:
                     _LocationReferenceTypes_Object.Items.Set(locationreferencetypes);
                     break;
-                case Action actions:
+                case ActionRecord actions:
                     _Actions_Object.Items.Set(actions);
                     break;
                 case TextureSet texturesets:
@@ -498,7 +500,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Actions.Items.Set(
                     rhs.Actions.Items.Items
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<Action>());
+                        .Cast<ActionRecord>());
             }
             if (mask?.TextureSets ?? true)
             {
@@ -624,7 +626,7 @@ namespace Mutagen.Bethesda.Skyrim
                 name: nameof(LocationReferenceTypes),
                 errorMask: errorMask,
                 index: (int)SkyrimMod_FieldIndex.LocationReferenceTypes)));
-            tasks.Add(Task.Run(() => ret.Actions.CreateFromXmlFolder<Action>(
+            tasks.Add(Task.Run(() => ret.Actions.CreateFromXmlFolder<ActionRecord>(
                 dir: dir,
                 name: nameof(Actions),
                 errorMask: errorMask,
@@ -681,7 +683,7 @@ namespace Mutagen.Bethesda.Skyrim
                     name: nameof(LocationReferenceTypes),
                     errorMask: errorMaskBuilder,
                     index: (int)SkyrimMod_FieldIndex.LocationReferenceTypes)));
-                tasks.Add(Task.Run(() => Actions.WriteToXmlFolder<Action, Action_ErrorMask>(
+                tasks.Add(Task.Run(() => Actions.WriteToXmlFolder<ActionRecord, ActionRecord_ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Actions),
                     errorMask: errorMaskBuilder,
@@ -1021,12 +1023,12 @@ namespace Mutagen.Bethesda.Skyrim
                         try
                         {
                             errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Actions);
-                            var tmpActions = await Group<Action>.CreateFromBinary(
+                            var tmpActions = await Group<ActionRecord>.CreateFromBinary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
                                 masterReferences: masterReferences);
-                            item.Actions.CopyFieldsFrom<Action_CopyMask>(
+                            item.Actions.CopyFieldsFrom<ActionRecord_CopyMask>(
                                 rhs: tmpActions,
                                 def: null,
                                 copyMask: null,
@@ -1283,7 +1285,7 @@ namespace Mutagen.Bethesda.Skyrim
                     this._LocationReferenceTypes_Object.CopyFieldsFrom<LocationReferenceType_CopyMask>(rhs: (Group<LocationReferenceType>)obj);
                     break;
                 case SkyrimMod_FieldIndex.Actions:
-                    this._Actions_Object.CopyFieldsFrom<Action_CopyMask>(rhs: (Group<Action>)obj);
+                    this._Actions_Object.CopyFieldsFrom<ActionRecord_CopyMask>(rhs: (Group<ActionRecord>)obj);
                     break;
                 case SkyrimMod_FieldIndex.TextureSets:
                     this._TextureSets_Object.CopyFieldsFrom<TextureSet_CopyMask>(rhs: (Group<TextureSet>)obj);
@@ -1335,7 +1337,7 @@ namespace Mutagen.Bethesda.Skyrim
                     obj._LocationReferenceTypes_Object.CopyFieldsFrom<LocationReferenceType_CopyMask>(rhs: (Group<LocationReferenceType>)pair.Value);
                     break;
                 case SkyrimMod_FieldIndex.Actions:
-                    obj._Actions_Object.CopyFieldsFrom<Action_CopyMask>(rhs: (Group<Action>)pair.Value);
+                    obj._Actions_Object.CopyFieldsFrom<ActionRecord_CopyMask>(rhs: (Group<ActionRecord>)pair.Value);
                     break;
                 case SkyrimMod_FieldIndex.TextureSets:
                     obj._TextureSets_Object.CopyFieldsFrom<TextureSet_CopyMask>(rhs: (Group<TextureSet>)pair.Value);
@@ -1362,7 +1364,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Group<GameSetting> GameSettings { get; }
         new Group<Keyword> Keywords { get; }
         new Group<LocationReferenceType> LocationReferenceTypes { get; }
-        new Group<Action> Actions { get; }
+        new Group<ActionRecord> Actions { get; }
         new Group<TextureSet> TextureSets { get; }
         new Group<Global> Globals { get; }
         new Group<Class> Classes { get; }
@@ -1381,7 +1383,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Group<GameSetting> GameSettings { get; }
         new Group<Keyword> Keywords { get; }
         new Group<LocationReferenceType> LocationReferenceTypes { get; }
-        new Group<Action> Actions { get; }
+        new Group<ActionRecord> Actions { get; }
         new Group<TextureSet> TextureSets { get; }
         new Group<Global> Globals { get; }
         new Group<Class> Classes { get; }
@@ -1407,7 +1409,7 @@ namespace Mutagen.Bethesda.Skyrim
         IGroupInternalGetter<ILocationReferenceTypeInternalGetter> LocationReferenceTypes { get; }
         #endregion
         #region Actions
-        IGroupInternalGetter<IActionInternalGetter> Actions { get; }
+        IGroupInternalGetter<IActionRecordInternalGetter> Actions { get; }
         #endregion
         #region TextureSets
         IGroupInternalGetter<ITextureSetInternalGetter> TextureSets { get; }
@@ -1533,6 +1535,30 @@ namespace Mutagen.Bethesda.Skyrim
             using (var stream = new FileStream(path, FileMode.Create, FileAccess.Write))
             {
                 await SkyrimModCommon.WriteAsync(
+                    item: item,
+                    stream: stream,
+                    modKey: modKey);
+            }
+        }
+        public static void WriteToBinaryParallel(
+            this ISkyrimModGetter item,
+            Stream stream,
+            ModKey modKey)
+        {
+            SkyrimModCommon.WriteParallel(
+                item: item,
+                stream: stream,
+                modKey: modKey);
+        }
+
+        public static void WriteToBinaryParallel(
+            this ISkyrimModGetter item,
+            string path,
+            ModKey modKey)
+        {
+            using (var stream = new FileStream(path, FileMode.Create, FileAccess.Write))
+            {
+                SkyrimModCommon.WriteParallel(
                     item: item,
                     stream: stream,
                     modKey: modKey);
@@ -1764,7 +1790,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.LocationReferenceTypes:
                     return typeof(Group<LocationReferenceType>);
                 case SkyrimMod_FieldIndex.Actions:
-                    return typeof(Group<Action>);
+                    return typeof(Group<ActionRecord>);
                 case SkyrimMod_FieldIndex.TextureSets:
                     return typeof(Group<TextureSet>);
                 case SkyrimMod_FieldIndex.Globals:
@@ -2047,9 +2073,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILocationReferenceTypeInternalGetter":
                 case "ILocationReferenceTypeInternal":
                     return obj.LocationReferenceTypes.Items;
-                case "Action":
-                case "IActionInternalGetter":
-                case "IActionInternal":
+                case "ActionRecord":
+                case "IActionRecordInternalGetter":
+                case "IActionRecordInternal":
                     return obj.Actions.Items;
                 case "TextureSet":
                 case "ITextureSetInternalGetter":
@@ -2069,6 +2095,65 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         const int CutCount = 100;
+        public static void WriteParallel(
+            ISkyrimModGetter item,
+            Stream stream,
+            ModKey modKey)
+        {
+            var masterRefs = new MasterReferences(item.MasterReferences, modKey);
+            item.ModHeader.WriteToBinary(
+                new MutagenWriter(stream, MetaDataConstants.Skyrim),
+                masterRefs);
+            Stream[] outputStreams = new Stream[7];
+            List<Action> toDo = new List<Action>();
+            toDo.Add(() => WriteGroupParallel(item.GameSettings, masterRefs, 0, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.Keywords, masterRefs, 1, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.LocationReferenceTypes, masterRefs, 2, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.Actions, masterRefs, 3, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.TextureSets, masterRefs, 4, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.Globals, masterRefs, 5, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.Classes, masterRefs, 6, outputStreams));
+            Parallel.Invoke(toDo.ToArray());
+            UtilityTranslation.CompileStreamsInto(
+                outputStreams.NotNull(),
+                stream);
+        }
+        
+        public static void WriteGroupParallel<T>(
+            IGroupInternalGetter<T> group,
+            MasterReferences masters,
+            int targetIndex,
+            Stream[] streamDepositArray)
+            where T : ISkyrimMajorRecordInternalGetter, IXmlItem, IBinaryItem
+        {
+            if (group.Items.Count == 0) return;
+            var cuts = group.Items.Values.Cut(CutCount).ToArray();
+            Stream[] subStreams = new Stream[cuts.Length + 1];
+            byte[] groupBytes = new byte[MetaDataConstants.Oblivion.GroupConstants.HeaderLength];
+            BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), Group_Registration.GRUP_HEADER.TypeInt);
+            var groupByteStream = new MemoryStream(groupBytes);
+            using (var stream = new MutagenWriter(groupByteStream, MetaDataConstants.Skyrim, dispose: false))
+            {
+                stream.Position += 8;
+                GroupBinaryWriteTranslation.Write_Embedded<T>(group, stream, default, default);
+            }
+            subStreams[0] = groupByteStream;
+            Parallel.ForEach(cuts, (cutItems, state, counter) =>
+            {
+                MemoryTributary trib = new MemoryTributary();
+                using (var stream = new MutagenWriter(trib, MetaDataConstants.Skyrim, dispose: false))
+                {
+                    foreach (var item in cutItems)
+                    {
+                        item.WriteToBinary(stream, masters);
+                    }
+                }
+                subStreams[(int)counter + 1] = trib;
+            });
+            UtilityTranslation.CompileSetGroupLength(subStreams, groupBytes);
+            streamDepositArray[targetIndex] = new CompositeReadStream(subStreams, resetPositions: true);
+        }
+        
         public static async Task WriteAsync(
             ISkyrimModGetter item,
             Stream stream,
@@ -2426,7 +2511,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Actions) ?? true))
             {
                 var loquiItem = item.Actions;
-                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<IActionInternalGetter>(
+                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<IActionRecordInternalGetter>(
                     item: loquiItem,
                     node: node,
                     name: nameof(item.Actions),
@@ -2646,8 +2731,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Actions);
-                        item.Actions.CopyFieldsFrom<Action_CopyMask>(
-                            rhs: Group<Action>.CreateFromXml(
+                        item.Actions.CopyFieldsFrom<ActionRecord_CopyMask>(
+                            rhs: Group<ActionRecord>.CreateFromXml(
                                 node: node,
                                 errorMask: errorMask,
                                 translationMask: translationMask),
@@ -3191,7 +3276,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public MaskItem<Exception, Group_ErrorMask<GameSetting_ErrorMask>> GameSettings;
         public MaskItem<Exception, Group_ErrorMask<Keyword_ErrorMask>> Keywords;
         public MaskItem<Exception, Group_ErrorMask<LocationReferenceType_ErrorMask>> LocationReferenceTypes;
-        public MaskItem<Exception, Group_ErrorMask<Action_ErrorMask>> Actions;
+        public MaskItem<Exception, Group_ErrorMask<ActionRecord_ErrorMask>> Actions;
         public MaskItem<Exception, Group_ErrorMask<TextureSet_ErrorMask>> TextureSets;
         public MaskItem<Exception, Group_ErrorMask<Global_ErrorMask>> Globals;
         public MaskItem<Exception, Group_ErrorMask<Class_ErrorMask>> Classes;
@@ -3242,7 +3327,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.LocationReferenceTypes = new MaskItem<Exception, Group_ErrorMask<LocationReferenceType_ErrorMask>>(ex, null);
                     break;
                 case SkyrimMod_FieldIndex.Actions:
-                    this.Actions = new MaskItem<Exception, Group_ErrorMask<Action_ErrorMask>>(ex, null);
+                    this.Actions = new MaskItem<Exception, Group_ErrorMask<ActionRecord_ErrorMask>>(ex, null);
                     break;
                 case SkyrimMod_FieldIndex.TextureSets:
                     this.TextureSets = new MaskItem<Exception, Group_ErrorMask<TextureSet_ErrorMask>>(ex, null);
@@ -3276,7 +3361,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.LocationReferenceTypes = (MaskItem<Exception, Group_ErrorMask<LocationReferenceType_ErrorMask>>)obj;
                     break;
                 case SkyrimMod_FieldIndex.Actions:
-                    this.Actions = (MaskItem<Exception, Group_ErrorMask<Action_ErrorMask>>)obj;
+                    this.Actions = (MaskItem<Exception, Group_ErrorMask<ActionRecord_ErrorMask>>)obj;
                     break;
                 case SkyrimMod_FieldIndex.TextureSets:
                     this.TextureSets = (MaskItem<Exception, Group_ErrorMask<TextureSet_ErrorMask>>)obj;
@@ -3356,7 +3441,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.GameSettings = new MaskItem<Exception, Group_ErrorMask<GameSetting_ErrorMask>>(this.GameSettings.Overall.Combine(rhs.GameSettings.Overall), ((IErrorMask<Group_ErrorMask<GameSetting_ErrorMask>>)this.GameSettings.Specific).Combine(rhs.GameSettings.Specific));
             ret.Keywords = new MaskItem<Exception, Group_ErrorMask<Keyword_ErrorMask>>(this.Keywords.Overall.Combine(rhs.Keywords.Overall), ((IErrorMask<Group_ErrorMask<Keyword_ErrorMask>>)this.Keywords.Specific).Combine(rhs.Keywords.Specific));
             ret.LocationReferenceTypes = new MaskItem<Exception, Group_ErrorMask<LocationReferenceType_ErrorMask>>(this.LocationReferenceTypes.Overall.Combine(rhs.LocationReferenceTypes.Overall), ((IErrorMask<Group_ErrorMask<LocationReferenceType_ErrorMask>>)this.LocationReferenceTypes.Specific).Combine(rhs.LocationReferenceTypes.Specific));
-            ret.Actions = new MaskItem<Exception, Group_ErrorMask<Action_ErrorMask>>(this.Actions.Overall.Combine(rhs.Actions.Overall), ((IErrorMask<Group_ErrorMask<Action_ErrorMask>>)this.Actions.Specific).Combine(rhs.Actions.Specific));
+            ret.Actions = new MaskItem<Exception, Group_ErrorMask<ActionRecord_ErrorMask>>(this.Actions.Overall.Combine(rhs.Actions.Overall), ((IErrorMask<Group_ErrorMask<ActionRecord_ErrorMask>>)this.Actions.Specific).Combine(rhs.Actions.Specific));
             ret.TextureSets = new MaskItem<Exception, Group_ErrorMask<TextureSet_ErrorMask>>(this.TextureSets.Overall.Combine(rhs.TextureSets.Overall), ((IErrorMask<Group_ErrorMask<TextureSet_ErrorMask>>)this.TextureSets.Specific).Combine(rhs.TextureSets.Specific));
             ret.Globals = new MaskItem<Exception, Group_ErrorMask<Global_ErrorMask>>(this.Globals.Overall.Combine(rhs.Globals.Overall), ((IErrorMask<Group_ErrorMask<Global_ErrorMask>>)this.Globals.Specific).Combine(rhs.Globals.Specific));
             ret.Classes = new MaskItem<Exception, Group_ErrorMask<Class_ErrorMask>>(this.Classes.Overall.Combine(rhs.Classes.Overall), ((IErrorMask<Group_ErrorMask<Class_ErrorMask>>)this.Classes.Specific).Combine(rhs.Classes.Specific));
@@ -3390,7 +3475,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             this.GameSettings = new MaskItem<bool, Group_CopyMask<GameSetting_CopyMask>>(defaultOn, default);
             this.Keywords = new MaskItem<bool, Group_CopyMask<Keyword_CopyMask>>(defaultOn, default);
             this.LocationReferenceTypes = new MaskItem<bool, Group_CopyMask<LocationReferenceType_CopyMask>>(defaultOn, default);
-            this.Actions = new MaskItem<bool, Group_CopyMask<Action_CopyMask>>(defaultOn, default);
+            this.Actions = new MaskItem<bool, Group_CopyMask<ActionRecord_CopyMask>>(defaultOn, default);
             this.TextureSets = new MaskItem<bool, Group_CopyMask<TextureSet_CopyMask>>(defaultOn, default);
             this.Globals = new MaskItem<bool, Group_CopyMask<Global_CopyMask>>(defaultOn, default);
             this.Classes = new MaskItem<bool, Group_CopyMask<Class_CopyMask>>(defaultOn, default);
@@ -3401,7 +3486,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public MaskItem<bool, Group_CopyMask<GameSetting_CopyMask>> GameSettings;
         public MaskItem<bool, Group_CopyMask<Keyword_CopyMask>> Keywords;
         public MaskItem<bool, Group_CopyMask<LocationReferenceType_CopyMask>> LocationReferenceTypes;
-        public MaskItem<bool, Group_CopyMask<Action_CopyMask>> Actions;
+        public MaskItem<bool, Group_CopyMask<ActionRecord_CopyMask>> Actions;
         public MaskItem<bool, Group_CopyMask<TextureSet_CopyMask>> TextureSets;
         public MaskItem<bool, Group_CopyMask<Global_CopyMask>> Globals;
         public MaskItem<bool, Group_CopyMask<Class_CopyMask>> Classes;
@@ -3417,7 +3502,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public MaskItem<bool, Group_TranslationMask<GameSetting_TranslationMask>> GameSettings;
         public MaskItem<bool, Group_TranslationMask<Keyword_TranslationMask>> Keywords;
         public MaskItem<bool, Group_TranslationMask<LocationReferenceType_TranslationMask>> LocationReferenceTypes;
-        public MaskItem<bool, Group_TranslationMask<Action_TranslationMask>> Actions;
+        public MaskItem<bool, Group_TranslationMask<ActionRecord_TranslationMask>> Actions;
         public MaskItem<bool, Group_TranslationMask<TextureSet_TranslationMask>> TextureSets;
         public MaskItem<bool, Group_TranslationMask<Global_TranslationMask>> Globals;
         public MaskItem<bool, Group_TranslationMask<Class_TranslationMask>> Classes;
@@ -3434,7 +3519,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             this.GameSettings = new MaskItem<bool, Group_TranslationMask<GameSetting_TranslationMask>>(defaultOn, null);
             this.Keywords = new MaskItem<bool, Group_TranslationMask<Keyword_TranslationMask>>(defaultOn, null);
             this.LocationReferenceTypes = new MaskItem<bool, Group_TranslationMask<LocationReferenceType_TranslationMask>>(defaultOn, null);
-            this.Actions = new MaskItem<bool, Group_TranslationMask<Action_TranslationMask>>(defaultOn, null);
+            this.Actions = new MaskItem<bool, Group_TranslationMask<ActionRecord_TranslationMask>>(defaultOn, null);
             this.TextureSets = new MaskItem<bool, Group_TranslationMask<TextureSet_TranslationMask>>(defaultOn, null);
             this.Globals = new MaskItem<bool, Group_TranslationMask<Global_TranslationMask>>(defaultOn, null);
             this.Classes = new MaskItem<bool, Group_TranslationMask<Class_TranslationMask>>(defaultOn, null);
@@ -3568,7 +3653,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 if (item.Actions.Items.Count > 0)
                 {
                     var loquiItem = item.Actions;
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IActionInternalGetter>(
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IActionRecordInternalGetter>(
                         item: loquiItem,
                         writer: writer,
                         errorMask: errorMask,
@@ -3895,6 +3980,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IReadOnlyCache<T, FormKey> IModGetter.GetGroupGetter<T>() => this.GetGroupGetter<T>();
         void IModGetter.WriteToBinary(string path, ModKey modKey) => this.WriteToBinary(path, modKey, importMask: null);
         Task IModGetter.WriteToBinaryAsync(string path, ModKey modKey) => this.WriteToBinaryAsync(path, modKey);
+        void IModGetter.WriteToBinaryParallel(string path, ModKey modKey) => this.WriteToBinaryParallel(path, modKey);
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;
         IReadOnlyCache<IMajorRecordInternalGetter, FormKey> IModGetter.MajorRecords => throw new NotImplementedException();
         protected object XmlWriteTranslator => SkyrimModXmlWriteTranslation.Instance;
@@ -3932,8 +4018,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IGroupInternalGetter<ILocationReferenceTypeInternalGetter> LocationReferenceTypes => _LocationReferenceTypes ?? new Group<LocationReferenceType>(this);
         #endregion
         #region Actions
-        private IGroupInternalGetter<IActionInternalGetter> _Actions;
-        public IGroupInternalGetter<IActionInternalGetter> Actions => _Actions ?? new Group<Action>(this);
+        private IGroupInternalGetter<IActionRecordInternalGetter> _Actions;
+        public IGroupInternalGetter<IActionRecordInternalGetter> Actions => _Actions ?? new Group<ActionRecord>(this);
         #endregion
         #region TextureSets
         private IGroupInternalGetter<ITextureSetInternalGetter> _TextureSets;
@@ -4036,7 +4122,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x54434141: // AACT
                 {
-                    this._Actions = GroupBinaryWrapper<IActionInternalGetter>.GroupFactory(
+                    this._Actions = GroupBinaryWrapper<IActionRecordInternalGetter>.GroupFactory(
                         stream: stream,
                         package: _package,
                         recordTypeConverter: null);

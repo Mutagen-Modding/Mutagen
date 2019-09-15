@@ -502,7 +502,7 @@ namespace Mutagen.Bethesda
             }
             return -1;
         }
-
+        
         public static async Task CompileStreamsInto(IEnumerable<Task<IEnumerable<Stream>>> inStreams, Stream outStream)
         {
             var streams = await Task.WhenAll(inStreams).ConfigureAwait(false);
@@ -533,6 +533,15 @@ namespace Mutagen.Bethesda
             }
         }
 
+        public static void CompileStreamsInto(IEnumerable<Stream> inStreams, Stream outStream)
+        {
+            foreach (var s in inStreams)
+            {
+                s.Position = 0;
+                s.CopyTo(outStream);
+            }
+        }
+
         public static void SetGroupLength(
             byte[] bytes,
             uint len)
@@ -540,7 +549,7 @@ namespace Mutagen.Bethesda
             var bytesSpan = bytes.AsSpan();
             BinaryPrimitives.WriteUInt32LittleEndian(bytesSpan.Slice(4), len);
         }
-
+        
         public static async Task<IEnumerable<Stream>> CompileSetGroupLength(
             IEnumerable<Task<Stream>> streams,
             byte[] bytes)
@@ -548,6 +557,13 @@ namespace Mutagen.Bethesda
             var ret = await Task.WhenAll(streams).ConfigureAwait(false);
             UtilityTranslation.SetGroupLength(bytes, (uint)ret.Sum(i => i.Length));
             return ret;
+        }
+
+        public static void CompileSetGroupLength(
+            IEnumerable<Stream> streams,
+            byte[] bytes)
+        {
+            UtilityTranslation.SetGroupLength(bytes, (uint)streams.NotNull().Sum(i => i.Length));
         }
     }
 

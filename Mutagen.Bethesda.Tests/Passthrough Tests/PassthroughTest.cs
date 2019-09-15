@@ -169,7 +169,7 @@ namespace Mutagen.Bethesda.Tests
                         record.IsCompressed = false;
                     }
 
-                    await mod.WriteToBinaryAsync(
+                    mod.WriteToBinaryParallel(
                         outputPath,
                         Mutagen.Bethesda.Oblivion.Constants.Oblivion);
                     GC.Collect();
@@ -198,7 +198,7 @@ namespace Mutagen.Bethesda.Tests
                 {
                     var wrapper = await ImportBinaryWrapper(this.FilePath.Path);
 
-                    await wrapper.WriteToBinaryAsync(
+                    wrapper.WriteToBinaryParallel(
                         binaryWrapper,
                         Mutagen.Bethesda.Oblivion.Constants.Oblivion);
 

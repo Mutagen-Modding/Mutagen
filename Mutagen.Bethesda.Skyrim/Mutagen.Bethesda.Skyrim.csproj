@@ -116,9 +116,6 @@
     <Compile Include="Records\Major Records\LocationReferenceType_LoquiGenerated.cs">
       <DependentUpon>LocationReferenceType.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\Action_LoquiGenerated.cs">
-      <DependentUpon>Action.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Common Subrecords\ObjectBounds_LoquiGenerated.cs">
       <DependentUpon>ObjectBounds.xml</DependentUpon>
     </Compile>
@@ -133,6 +130,9 @@
     </Compile>
     <Compile Include="Records\Major Records\Class_LoquiGenerated.cs">
       <DependentUpon>Class.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ActionRecord_LoquiGenerated.cs">
+      <DependentUpon>ActionRecord.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

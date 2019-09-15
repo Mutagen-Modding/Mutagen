@@ -2,10 +2,10 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>efc6105e053a77a459df0d49356557ed0b330d48</Sha>
+         <Sha>843bfdb9daa3b4fd57dea519dbfda09aaeab2d49</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>09-10-2019 19:00:54</CommitDate>
-         <Description>Some ConfigureAwaits</Description>
+         <CommitDate>09-14-2019 19:41:15</CommitDate>
+         <Description>EnumerableExt.NotNull</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/CSharpExt.git</OriginHint>
       </RepoListing>
