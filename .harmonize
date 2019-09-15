@@ -2,19 +2,19 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>843bfdb9daa3b4fd57dea519dbfda09aaeab2d49</Sha>
+         <Sha>7951b6889cf77637eff59e2924087ed48e436e36</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>09-14-2019 19:41:15</CommitDate>
-         <Description>EnumerableExt.NotNull</Description>
+         <CommitDate>09-15-2019 02:02:44</CommitDate>
+         <Description>namespace System -&gt; Noggog</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/CSharpExt.git</OriginHint>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>1165459db9bf3d1d8089bc1d646fc6367e20a373</Sha>
+         <Sha>d5ee337228acb6ac7acc9ba97bb5f90a6055bd15</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>09-14-2019 16:46:50</CommitDate>
-         <Description>Merge branch 'transl-mix-in'</Description>
+         <CommitDate>09-15-2019 02:02:55</CommitDate>
+         <Description>Library updates</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/Loqui.git</OriginHint>
       </RepoListing>

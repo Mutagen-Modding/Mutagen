@@ -53,37 +53,6 @@ namespace Mutagen.Bethesda
             get => this.MajorRecordFlags.HasFlag(MajorRecordFlag.Compressed);
         }
 
-        public static void FillBinary(
-            MutagenFrame frame,
-            MajorRecord record,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            FillBinaryStructs(
-                record,
-                frame,
-                masterReferences,
-                errorMask);
-            for (int i = 0; i < MajorRecord_Registration.NumTypedFields; i++)
-            {
-                var nextRecordType = HeaderTranslation.GetNextSubRecordType(
-                    frame.Reader,
-                    contentLength: out var contentLength);
-                var finalPos = frame.Position + contentLength;
-                FillBinaryRecordTypes(
-                    record,
-                    frame,
-                    nextRecordType,
-                    contentLength,
-                    masterReferences,
-                    errorMask: errorMask);
-                if (frame.Position < finalPos)
-                {
-                    frame.Position = finalPos;
-                }
-            }
-        }
-
         object IDuplicatable.Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecordTracker)
         {
             return this.Duplicate(getNextFormKey, duplicatedRecordTracker);

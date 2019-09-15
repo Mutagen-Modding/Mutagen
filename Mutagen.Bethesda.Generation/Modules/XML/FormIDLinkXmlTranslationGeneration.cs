@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Loqui;
 using Loqui.Generation;
+using Noggog;
 
 namespace Mutagen.Bethesda.Generation
 {
