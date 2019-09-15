@@ -147,6 +147,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
         [Benchmark]
         public void WriteBinaryToMemory()
         {
+            DataOutput.Position = 0;
             Mod.WriteToBinary(
                 DataOutput,
                 Mutagen.Bethesda.Oblivion.Constants.Oblivion);
@@ -163,6 +164,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
         [Benchmark]
         public void WriteBinaryParallelToMemory()
         {
+            DataOutput.Position = 0;
             Mod.WriteToBinaryParallel(
                 DataOutput,
                 Mutagen.Bethesda.Oblivion.Constants.Oblivion);
@@ -179,6 +181,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
         [Benchmark]
         public async Task WriteBinaryAsyncToMemory()
         {
+            DataOutput.Position = 0;
             await Mod.WriteToBinaryAsync(
                 DataOutput,
                 Mutagen.Bethesda.Oblivion.Constants.Oblivion);

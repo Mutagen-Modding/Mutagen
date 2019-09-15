@@ -199,7 +199,7 @@ namespace Mutagen.Bethesda.Generation
 
         private void ConvertFromStreamOut(ObjectGeneration obj, FileGeneration fg, InternalTranslation internalToDo)
         {
-            fg.AppendLine("using (var writer = new MutagenWriter(stream, item.GameMode))");
+            fg.AppendLine("using (var writer = new MutagenWriter(stream, meta: item.GameMode, dispose: false))");
             using (new BraceWrapper(fg))
             {
                 internalToDo(this.MainAPI.PublicMembers(obj, TranslationModuleAPI.Direction.Writer).ToArray());

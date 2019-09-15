@@ -3832,7 +3832,7 @@ namespace Mutagen.Bethesda.Skyrim
             bool doMasks = true,
             GroupMask importMask = null)
         {
-            using (var writer = new MutagenWriter(stream, item.GameMode))
+            using (var writer = new MutagenWriter(stream, meta: item.GameMode, dispose: false))
             {
                 WriteToBinary(
                     item: item,
@@ -3852,7 +3852,7 @@ namespace Mutagen.Bethesda.Skyrim
             bool doMasks = true,
             GroupMask importMask = null)
         {
-            using (var writer = new MutagenWriter(stream, item.GameMode))
+            using (var writer = new MutagenWriter(stream, meta: item.GameMode, dispose: false))
             {
                 WriteToBinary(
                     item: item,
@@ -3926,7 +3926,7 @@ namespace Mutagen.Bethesda.Skyrim
             ModKey modKey,
             GroupMask importMask = null)
         {
-            using (var writer = new MutagenWriter(stream, item.GameMode))
+            using (var writer = new MutagenWriter(stream, meta: item.GameMode, dispose: false))
             {
                 SkyrimModBinaryWriteTranslation.Instance.Write(
                     item: item,
