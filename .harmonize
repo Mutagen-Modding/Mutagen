@@ -2,10 +2,10 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>7951b6889cf77637eff59e2924087ed48e436e36</Sha>
+         <Sha>ff262ac53e07964a0c7de7387eaa6cc2591763af</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>09-15-2019 02:02:44</CommitDate>
-         <Description>namespace System -&gt; Noggog</Description>
+         <CommitDate>09-15-2019 18:00:43</CommitDate>
+         <Description>Small tweaks and Nuget update</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/CSharpExt.git</OriginHint>
       </RepoListing>

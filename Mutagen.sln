@@ -33,6 +33,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpExt.UnitTests", "..\C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mutagen.Bethesda.Records", "Mutagen.Bethesda.Records\Mutagen.Bethesda.Records.csproj", "{8B371C38-CA17-4E7F-9175-BDBC6918298F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Bethesda.Examples", "Mutagen.Bethesda.Examples\Mutagen.Bethesda.Examples.csproj", "{827AE980-C78C-4006-9161-FB6B6E3560AD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Noggog.WPF", "..\CSharpExt\Noggog.WPF\Noggog.WPF.csproj", "{BCBEB6F3-9D2F-4491-8DDF-7E711B1F5252}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -95,6 +99,14 @@ Global
 		{8B371C38-CA17-4E7F-9175-BDBC6918298F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8B371C38-CA17-4E7F-9175-BDBC6918298F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8B371C38-CA17-4E7F-9175-BDBC6918298F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{827AE980-C78C-4006-9161-FB6B6E3560AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{827AE980-C78C-4006-9161-FB6B6E3560AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{827AE980-C78C-4006-9161-FB6B6E3560AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{827AE980-C78C-4006-9161-FB6B6E3560AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BCBEB6F3-9D2F-4491-8DDF-7E711B1F5252}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BCBEB6F3-9D2F-4491-8DDF-7E711B1F5252}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BCBEB6F3-9D2F-4491-8DDF-7E711B1F5252}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BCBEB6F3-9D2F-4491-8DDF-7E711B1F5252}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -108,6 +120,7 @@ Global
 		{A5513654-AD62-4CC9-968B-F5F8F72C4142} = {AF36576B-C728-4057-AE4F-937BFB04F43D}
 		{FFB18690-4914-40D3-9BA2-4968DFFB3225} = {AF36576B-C728-4057-AE4F-937BFB04F43D}
 		{7D5ED080-106F-4A21-A724-54A53B5080A4} = {AF36576B-C728-4057-AE4F-937BFB04F43D}
+		{BCBEB6F3-9D2F-4491-8DDF-7E711B1F5252} = {AF36576B-C728-4057-AE4F-937BFB04F43D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3C76E1C6-5B27-4005-8051-03C82E3A4849}
