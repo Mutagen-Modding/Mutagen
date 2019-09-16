@@ -351,7 +351,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         [DebuggerStepThrough]
-        public static async Task<(Group<T> Object, Group_ErrorMask<T_ErrMask> ErrorMask)> CreateFromBinary_Error<T_ErrMask>(
+        public static async Task<(Group<T> Object, Group_ErrorMask<T_ErrMask> ErrorMask)> CreateFromBinaryWithErrorMask<T_ErrMask>(
             MutagenFrame frame,
             MasterReferences masterReferences,
             bool doMasks = true)

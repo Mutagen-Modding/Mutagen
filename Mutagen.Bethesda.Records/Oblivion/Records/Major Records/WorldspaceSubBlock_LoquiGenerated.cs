@@ -377,7 +377,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static async Task<(WorldspaceSubBlock Object, WorldspaceSubBlock_ErrorMask ErrorMask)> CreateFromBinary_Error(
+        public static async Task<(WorldspaceSubBlock Object, WorldspaceSubBlock_ErrorMask ErrorMask)> CreateFromBinaryWithErrorMask(
             MutagenFrame frame,
             MasterReferences masterReferences,
             bool doMasks = true)

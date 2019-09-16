@@ -368,7 +368,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static async Task<(CellBlock Object, CellBlock_ErrorMask ErrorMask)> CreateFromBinary_Error(
+        public static async Task<(CellBlock Object, CellBlock_ErrorMask ErrorMask)> CreateFromBinaryWithErrorMask(
             MutagenFrame frame,
             MasterReferences masterReferences,
             bool doMasks = true)

@@ -587,7 +587,7 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: null);
         }
 
-        public static async Task<(SkyrimMod Mod, SkyrimMod_ErrorMask ErrorMask)> CreateFromXmlFolderWithErrors(
+        public static async Task<(SkyrimMod Mod, SkyrimMod_ErrorMask ErrorMask)> CreateFromXmlFolderWithErrorMask(
             DirectoryPath dir,
             ModKey modKey)
         {
@@ -726,7 +726,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         [DebuggerStepThrough]
-        public static async Task<(SkyrimMod Object, SkyrimMod_ErrorMask ErrorMask)> CreateFromBinary_Error(
+        public static async Task<(SkyrimMod Object, SkyrimMod_ErrorMask ErrorMask)> CreateFromBinaryWithErrorMask(
             MutagenFrame frame,
             ModKey modKey,
             bool doMasks = true,
@@ -783,7 +783,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
         }
 
-        public static async Task<(SkyrimMod Object, SkyrimMod_ErrorMask ErrorMask)> CreateFromBinary_Error(
+        public static async Task<(SkyrimMod Object, SkyrimMod_ErrorMask ErrorMask)> CreateFromBinaryWithErrorMask(
             string path,
             ModKey modKey,
             GroupMask importMask = null)
@@ -791,7 +791,7 @@ namespace Mutagen.Bethesda.Skyrim
             using (var reader = new MutagenBinaryReadStream(path, GameMode.Skyrim))
             {
                 var frame = new MutagenFrame(reader);
-                return await CreateFromBinary_Error(
+                return await CreateFromBinaryWithErrorMask(
                     importMask: importMask,
                     modKey: modKey,
                     frame: frame);
@@ -831,7 +831,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
         }
 
-        public static async Task<(SkyrimMod Object, SkyrimMod_ErrorMask ErrorMask)> CreateFromBinary_Error(
+        public static async Task<(SkyrimMod Object, SkyrimMod_ErrorMask ErrorMask)> CreateFromBinaryWithErrorMask(
             Stream stream,
             ModKey modKey,
             GroupMask importMask = null)
@@ -839,7 +839,7 @@ namespace Mutagen.Bethesda.Skyrim
             using (var reader = new MutagenBinaryReadStream(stream, GameMode.Skyrim))
             {
                 var frame = new MutagenFrame(reader);
-                return await CreateFromBinary_Error(
+                return await CreateFromBinaryWithErrorMask(
                     importMask: importMask,
                     modKey: modKey,
                     frame: frame);
@@ -1157,6 +1157,36 @@ namespace Mutagen.Bethesda.Skyrim
                     frame.Position += contentLength;
                     return TryGet<int?>.Succeed(null);
             }
+        }
+
+        public static ISkyrimModInternalGetter CreateFromBinaryWrapper(
+            ReadOnlyMemorySlice<byte> bytes,
+            ModKey modKey)
+        {
+            return SkyrimModBinaryWrapper.SkyrimModFactory(
+                bytes: bytes,
+                modKey: modKey);
+        }
+
+        public static ISkyrimModInternalGetter CreateFromBinaryWrapper(
+            string path,
+            ModKey modKey)
+        {
+            var bytes = File.ReadAllBytes(path);
+            return CreateFromBinaryWrapper(
+                bytes: new MemorySlice<byte>(bytes),
+                modKey: modKey);
+        }
+
+        public static ISkyrimModInternalGetter CreateFromBinaryWrapper(
+            Stream stream,
+            ModKey modKey)
+        {
+            stream.Position = 0;
+            byte[] bytes = new byte[stream.Length];
+            return CreateFromBinaryWrapper(
+                bytes: new MemorySlice<byte>(bytes),
+                modKey: modKey);
         }
 
         #endregion

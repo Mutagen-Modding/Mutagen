@@ -244,6 +244,7 @@ namespace Mutagen.Bethesda.Generation
         {
             await base.GenerateInClass(obj, fg);
             await GenerateCreateExtras(obj, fg);
+            await GenerateBinaryWrapperCreates(obj, fg);
         }
 
         private void GenerateCustomWritePartials(ObjectGeneration obj, FileGeneration fg)
@@ -589,6 +590,64 @@ namespace Mutagen.Bethesda.Generation
                 }
                 fg.AppendLine();
             }
+        }
+
+        private async Task GenerateBinaryWrapperCreates(ObjectGeneration obj, FileGeneration fg)
+        {
+            if (obj.GetObjectType() != ObjectType.Mod) return;
+            using (var args = new FunctionWrapper(fg,
+                $"public{obj.NewOverride()}static {obj.Interface(getter: true, internalInterface: true)} {CreateFromPrefix}{ModuleNickname}Wrapper"))
+            {
+                args.Add($"ReadOnlyMemorySlice<byte> bytes");
+                args.Add($"ModKey modKey");
+            }
+            using (new BraceWrapper(fg))
+            {
+                using (var args = new ArgsWrapper(fg,
+                    $"return {BinaryWrapperClass(obj)}.{obj.Name}Factory"))
+                {
+                    args.AddPassArg("bytes");
+                    args.AddPassArg("modKey");
+                }
+            }
+            fg.AppendLine();
+
+            using (var args = new FunctionWrapper(fg,
+                $"public{obj.NewOverride()}static {obj.Interface(getter: true, internalInterface: true)} {CreateFromPrefix}{ModuleNickname}Wrapper"))
+            {
+                args.Add($"string path");
+                args.Add($"ModKey modKey");
+            }
+            using (new BraceWrapper(fg))
+            {
+                fg.AppendLine($"var bytes = File.ReadAllBytes(path);");
+                using (var args = new ArgsWrapper(fg,
+                    $"return {CreateFromPrefix}{ModuleNickname}Wrapper"))
+                {
+                    args.Add("bytes: new MemorySlice<byte>(bytes)");
+                    args.AddPassArg("modKey");
+                }
+            }
+            fg.AppendLine();
+
+            using (var args = new FunctionWrapper(fg,
+                $"public{obj.NewOverride()}static {obj.Interface(getter: true, internalInterface: true)} {CreateFromPrefix}{ModuleNickname}Wrapper"))
+            {
+                args.Add($"Stream stream");
+                args.Add($"ModKey modKey");
+            }
+            using (new BraceWrapper(fg))
+            {
+                fg.AppendLine("stream.Position = 0;");
+                fg.AppendLine($"byte[] bytes = new byte[stream.Length];");
+                using (var args = new ArgsWrapper(fg,
+                    $"return {CreateFromPrefix}{ModuleNickname}Wrapper"))
+                {
+                    args.Add("bytes: new MemorySlice<byte>(bytes)");
+                    args.AddPassArg("modKey");
+                }
+            }
+            fg.AppendLine();
         }
 
         private static async Task GenerateLastParsedShortCircuit(

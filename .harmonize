@@ -11,10 +11,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>d5ee337228acb6ac7acc9ba97bb5f90a6055bd15</Sha>
+         <Sha>e346f7b59c8ecab88830cf4f6af0d0ce19b1ed93</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>09-15-2019 02:02:55</CommitDate>
-         <Description>Library updates</Description>
+         <CommitDate>09-15-2019 23:16:40</CommitDate>
+         <Description>_Error -&gt; WithErrorMask</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/Loqui.git</OriginHint>
       </RepoListing>
