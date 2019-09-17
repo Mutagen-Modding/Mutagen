@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfReferenceChanged(ref _File, value, _hasBeenSetTracker, markSet, (int)Sound_FieldIndex.File, nameof(File), nameof(File_IsSet));
+            this.RaiseAndSetIfChanged(ref _File, value, _hasBeenSetTracker, markSet, (int)Sound_FieldIndex.File, nameof(File), nameof(File_IsSet));
         }
         public void File_Unset()
         {
@@ -93,7 +93,7 @@ namespace Mutagen.Bethesda.Oblivion
             SoundData value,
             bool hasBeenSet = true)
         {
-            this.RaiseAndSetIfReferenceChanged(ref _Data, value, _hasBeenSetTracker, hasBeenSet, (int)Sound_FieldIndex.Data, nameof(Data), nameof(Data_IsSet));
+            this.RaiseAndSetIfChanged(ref _Data, value, _hasBeenSetTracker, hasBeenSet, (int)Sound_FieldIndex.Data, nameof(Data), nameof(Data_IsSet));
         }
         public void Data_Unset()
         {

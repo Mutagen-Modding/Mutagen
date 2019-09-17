@@ -72,7 +72,7 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfReferenceChanged(ref _Name, value, _hasBeenSetTracker, markSet, (int)Creature_FieldIndex.Name, nameof(Name), nameof(Name_IsSet));
+            this.RaiseAndSetIfChanged(ref _Name, value, _hasBeenSetTracker, markSet, (int)Creature_FieldIndex.Name, nameof(Name), nameof(Name_IsSet));
         }
         public void Name_Unset()
         {
@@ -97,7 +97,7 @@ namespace Mutagen.Bethesda.Oblivion
             Model value,
             bool hasBeenSet = true)
         {
-            this.RaiseAndSetIfReferenceChanged(ref _Model, value, _hasBeenSetTracker, hasBeenSet, (int)Creature_FieldIndex.Model, nameof(Model), nameof(Model_IsSet));
+            this.RaiseAndSetIfChanged(ref _Model, value, _hasBeenSetTracker, hasBeenSet, (int)Creature_FieldIndex.Model, nameof(Model), nameof(Model_IsSet));
         }
         public void Model_Unset()
         {
@@ -163,7 +163,7 @@ namespace Mutagen.Bethesda.Oblivion
             Byte[] value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfReferenceChanged(ref _NIFT, value, _hasBeenSetTracker, markSet, (int)Creature_FieldIndex.NIFT, nameof(NIFT), nameof(NIFT_IsSet));
+            this.RaiseAndSetIfChanged(ref _NIFT, value, _hasBeenSetTracker, markSet, (int)Creature_FieldIndex.NIFT, nameof(NIFT), nameof(NIFT_IsSet));
         }
         public void NIFT_Unset()
         {
@@ -701,7 +701,7 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfReferenceChanged(ref _BloodSpray, value, _hasBeenSetTracker, markSet, (int)Creature_FieldIndex.BloodSpray, nameof(BloodSpray), nameof(BloodSpray_IsSet));
+            this.RaiseAndSetIfChanged(ref _BloodSpray, value, _hasBeenSetTracker, markSet, (int)Creature_FieldIndex.BloodSpray, nameof(BloodSpray), nameof(BloodSpray_IsSet));
         }
         public void BloodSpray_Unset()
         {
@@ -727,7 +727,7 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfReferenceChanged(ref _BloodDecal, value, _hasBeenSetTracker, markSet, (int)Creature_FieldIndex.BloodDecal, nameof(BloodDecal), nameof(BloodDecal_IsSet));
+            this.RaiseAndSetIfChanged(ref _BloodDecal, value, _hasBeenSetTracker, markSet, (int)Creature_FieldIndex.BloodDecal, nameof(BloodDecal), nameof(BloodDecal_IsSet));
         }
         public void BloodDecal_Unset()
         {

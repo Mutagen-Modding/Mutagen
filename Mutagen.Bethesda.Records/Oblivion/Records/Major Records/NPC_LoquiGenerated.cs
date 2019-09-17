@@ -75,7 +75,7 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfReferenceChanged(ref _Name, value, _hasBeenSetTracker, markSet, (int)NPC_FieldIndex.Name, nameof(Name), nameof(Name_IsSet));
+            this.RaiseAndSetIfChanged(ref _Name, value, _hasBeenSetTracker, markSet, (int)NPC_FieldIndex.Name, nameof(Name), nameof(Name_IsSet));
         }
         public void Name_Unset()
         {
@@ -100,7 +100,7 @@ namespace Mutagen.Bethesda.Oblivion
             Model value,
             bool hasBeenSet = true)
         {
-            this.RaiseAndSetIfReferenceChanged(ref _Model, value, _hasBeenSetTracker, hasBeenSet, (int)NPC_FieldIndex.Model, nameof(Model), nameof(Model_IsSet));
+            this.RaiseAndSetIfChanged(ref _Model, value, _hasBeenSetTracker, hasBeenSet, (int)NPC_FieldIndex.Model, nameof(Model), nameof(Model_IsSet));
         }
         public void Model_Unset()
         {
@@ -846,7 +846,7 @@ namespace Mutagen.Bethesda.Oblivion
             Byte[] value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfReferenceChanged(ref _FaceGenGeometrySymmetric, value, _hasBeenSetTracker, markSet, (int)NPC_FieldIndex.FaceGenGeometrySymmetric, nameof(FaceGenGeometrySymmetric), nameof(FaceGenGeometrySymmetric_IsSet));
+            this.RaiseAndSetIfChanged(ref _FaceGenGeometrySymmetric, value, _hasBeenSetTracker, markSet, (int)NPC_FieldIndex.FaceGenGeometrySymmetric, nameof(FaceGenGeometrySymmetric), nameof(FaceGenGeometrySymmetric_IsSet));
         }
         public void FaceGenGeometrySymmetric_Unset()
         {
@@ -874,7 +874,7 @@ namespace Mutagen.Bethesda.Oblivion
             Byte[] value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfReferenceChanged(ref _FaceGenGeometryAsymmetric, value, _hasBeenSetTracker, markSet, (int)NPC_FieldIndex.FaceGenGeometryAsymmetric, nameof(FaceGenGeometryAsymmetric), nameof(FaceGenGeometryAsymmetric_IsSet));
+            this.RaiseAndSetIfChanged(ref _FaceGenGeometryAsymmetric, value, _hasBeenSetTracker, markSet, (int)NPC_FieldIndex.FaceGenGeometryAsymmetric, nameof(FaceGenGeometryAsymmetric), nameof(FaceGenGeometryAsymmetric_IsSet));
         }
         public void FaceGenGeometryAsymmetric_Unset()
         {
@@ -902,7 +902,7 @@ namespace Mutagen.Bethesda.Oblivion
             Byte[] value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfReferenceChanged(ref _FaceGenTextureSymmetric, value, _hasBeenSetTracker, markSet, (int)NPC_FieldIndex.FaceGenTextureSymmetric, nameof(FaceGenTextureSymmetric), nameof(FaceGenTextureSymmetric_IsSet));
+            this.RaiseAndSetIfChanged(ref _FaceGenTextureSymmetric, value, _hasBeenSetTracker, markSet, (int)NPC_FieldIndex.FaceGenTextureSymmetric, nameof(FaceGenTextureSymmetric), nameof(FaceGenTextureSymmetric_IsSet));
         }
         public void FaceGenTextureSymmetric_Unset()
         {
@@ -930,7 +930,7 @@ namespace Mutagen.Bethesda.Oblivion
             Byte[] value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfReferenceChanged(ref _Unknown, value, _hasBeenSetTracker, markSet, (int)NPC_FieldIndex.Unknown, nameof(Unknown), nameof(Unknown_IsSet));
+            this.RaiseAndSetIfChanged(ref _Unknown, value, _hasBeenSetTracker, markSet, (int)NPC_FieldIndex.Unknown, nameof(Unknown), nameof(Unknown_IsSet));
         }
         public void Unknown_Unset()
         {

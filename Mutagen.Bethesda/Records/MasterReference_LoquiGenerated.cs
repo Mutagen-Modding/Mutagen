@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda
         public ModKey Master
         {
             get => this._Master;
-            set => this.RaiseAndSetIfReferenceChanged(ref this._Master, value, nameof(Master));
+            set => this.RaiseAndSetIfChanged(ref this._Master, value, nameof(Master));
         }
         #endregion
         #region FileSize

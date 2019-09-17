@@ -47,7 +47,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool markSet = true)
         {
             this.MetadataSummary.CompiledSizeInternal = value?.Length ?? 0;
-            this.RaiseAndSetIfReferenceChanged(ref _CompiledScript, value, _hasBeenSetTracker, markSet, (int)ScriptFields_FieldIndex.CompiledScript, nameof(CompiledScript), nameof(CompiledScript_IsSet));
+            this.RaiseAndSetIfChanged(ref _CompiledScript, value, _hasBeenSetTracker, markSet, (int)ScriptFields_FieldIndex.CompiledScript, nameof(CompiledScript), nameof(CompiledScript_IsSet));
         }
         public void CompiledScript_Unset()
         {

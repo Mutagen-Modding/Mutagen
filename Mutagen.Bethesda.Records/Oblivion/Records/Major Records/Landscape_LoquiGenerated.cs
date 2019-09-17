@@ -73,7 +73,7 @@ namespace Mutagen.Bethesda.Oblivion
             Byte[] value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfReferenceChanged(ref _Unknown, value, _hasBeenSetTracker, markSet, (int)Landscape_FieldIndex.Unknown, nameof(Unknown), nameof(Unknown_IsSet));
+            this.RaiseAndSetIfChanged(ref _Unknown, value, _hasBeenSetTracker, markSet, (int)Landscape_FieldIndex.Unknown, nameof(Unknown), nameof(Unknown_IsSet));
         }
         public void Unknown_Unset()
         {
@@ -101,7 +101,7 @@ namespace Mutagen.Bethesda.Oblivion
             Byte[] value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfReferenceChanged(ref _VertexNormals, value, _hasBeenSetTracker, markSet, (int)Landscape_FieldIndex.VertexNormals, nameof(VertexNormals), nameof(VertexNormals_IsSet));
+            this.RaiseAndSetIfChanged(ref _VertexNormals, value, _hasBeenSetTracker, markSet, (int)Landscape_FieldIndex.VertexNormals, nameof(VertexNormals), nameof(VertexNormals_IsSet));
         }
         public void VertexNormals_Unset()
         {
@@ -129,7 +129,7 @@ namespace Mutagen.Bethesda.Oblivion
             Byte[] value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfReferenceChanged(ref _VertexHeightMap, value, _hasBeenSetTracker, markSet, (int)Landscape_FieldIndex.VertexHeightMap, nameof(VertexHeightMap), nameof(VertexHeightMap_IsSet));
+            this.RaiseAndSetIfChanged(ref _VertexHeightMap, value, _hasBeenSetTracker, markSet, (int)Landscape_FieldIndex.VertexHeightMap, nameof(VertexHeightMap), nameof(VertexHeightMap_IsSet));
         }
         public void VertexHeightMap_Unset()
         {
@@ -157,7 +157,7 @@ namespace Mutagen.Bethesda.Oblivion
             Byte[] value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfReferenceChanged(ref _VertexColors, value, _hasBeenSetTracker, markSet, (int)Landscape_FieldIndex.VertexColors, nameof(VertexColors), nameof(VertexColors_IsSet));
+            this.RaiseAndSetIfChanged(ref _VertexColors, value, _hasBeenSetTracker, markSet, (int)Landscape_FieldIndex.VertexColors, nameof(VertexColors), nameof(VertexColors_IsSet));
         }
         public void VertexColors_Unset()
         {

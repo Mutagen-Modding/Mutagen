@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Tests
         public String Path
         {
             get => this._Path;
-            set => this.RaiseAndSetIfReferenceChanged(ref this._Path, value, nameof(Path));
+            set => this.RaiseAndSetIfChanged(ref this._Path, value, nameof(Path));
         }
         #endregion
         #region NumMasters

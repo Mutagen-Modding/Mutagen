@@ -135,7 +135,7 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfReferenceChanged(ref _ResponseText, value, _hasBeenSetTracker, markSet, (int)DialogResponse_FieldIndex.ResponseText, nameof(ResponseText), nameof(ResponseText_IsSet));
+            this.RaiseAndSetIfChanged(ref _ResponseText, value, _hasBeenSetTracker, markSet, (int)DialogResponse_FieldIndex.ResponseText, nameof(ResponseText), nameof(ResponseText_IsSet));
         }
         public void ResponseText_Unset()
         {
@@ -161,7 +161,7 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfReferenceChanged(ref _ActorNotes, value, _hasBeenSetTracker, markSet, (int)DialogResponse_FieldIndex.ActorNotes, nameof(ActorNotes), nameof(ActorNotes_IsSet));
+            this.RaiseAndSetIfChanged(ref _ActorNotes, value, _hasBeenSetTracker, markSet, (int)DialogResponse_FieldIndex.ActorNotes, nameof(ActorNotes), nameof(ActorNotes_IsSet));
         }
         public void ActorNotes_Unset()
         {

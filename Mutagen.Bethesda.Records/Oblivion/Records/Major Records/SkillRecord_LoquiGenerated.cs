@@ -94,7 +94,7 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfReferenceChanged(ref _Description, value, _hasBeenSetTracker, markSet, (int)SkillRecord_FieldIndex.Description, nameof(Description), nameof(Description_IsSet));
+            this.RaiseAndSetIfChanged(ref _Description, value, _hasBeenSetTracker, markSet, (int)SkillRecord_FieldIndex.Description, nameof(Description), nameof(Description_IsSet));
         }
         public void Description_Unset()
         {
@@ -120,7 +120,7 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfReferenceChanged(ref _Icon, value, _hasBeenSetTracker, markSet, (int)SkillRecord_FieldIndex.Icon, nameof(Icon), nameof(Icon_IsSet));
+            this.RaiseAndSetIfChanged(ref _Icon, value, _hasBeenSetTracker, markSet, (int)SkillRecord_FieldIndex.Icon, nameof(Icon), nameof(Icon_IsSet));
         }
         public void Icon_Unset()
         {
@@ -206,7 +206,7 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfReferenceChanged(ref _ApprenticeText, value, _hasBeenSetTracker, markSet, (int)SkillRecord_FieldIndex.ApprenticeText, nameof(ApprenticeText), nameof(ApprenticeText_IsSet));
+            this.RaiseAndSetIfChanged(ref _ApprenticeText, value, _hasBeenSetTracker, markSet, (int)SkillRecord_FieldIndex.ApprenticeText, nameof(ApprenticeText), nameof(ApprenticeText_IsSet));
         }
         public void ApprenticeText_Unset()
         {
@@ -232,7 +232,7 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfReferenceChanged(ref _JourneymanText, value, _hasBeenSetTracker, markSet, (int)SkillRecord_FieldIndex.JourneymanText, nameof(JourneymanText), nameof(JourneymanText_IsSet));
+            this.RaiseAndSetIfChanged(ref _JourneymanText, value, _hasBeenSetTracker, markSet, (int)SkillRecord_FieldIndex.JourneymanText, nameof(JourneymanText), nameof(JourneymanText_IsSet));
         }
         public void JourneymanText_Unset()
         {
@@ -258,7 +258,7 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfReferenceChanged(ref _ExpertText, value, _hasBeenSetTracker, markSet, (int)SkillRecord_FieldIndex.ExpertText, nameof(ExpertText), nameof(ExpertText_IsSet));
+            this.RaiseAndSetIfChanged(ref _ExpertText, value, _hasBeenSetTracker, markSet, (int)SkillRecord_FieldIndex.ExpertText, nameof(ExpertText), nameof(ExpertText_IsSet));
         }
         public void ExpertText_Unset()
         {
@@ -284,7 +284,7 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfReferenceChanged(ref _MasterText, value, _hasBeenSetTracker, markSet, (int)SkillRecord_FieldIndex.MasterText, nameof(MasterText), nameof(MasterText_IsSet));
+            this.RaiseAndSetIfChanged(ref _MasterText, value, _hasBeenSetTracker, markSet, (int)SkillRecord_FieldIndex.MasterText, nameof(MasterText), nameof(MasterText_IsSet));
         }
         public void MasterText_Unset()
         {

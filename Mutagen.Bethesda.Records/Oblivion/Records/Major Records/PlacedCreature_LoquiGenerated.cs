@@ -118,7 +118,7 @@ namespace Mutagen.Bethesda.Oblivion
             EnableParent value,
             bool hasBeenSet = true)
         {
-            this.RaiseAndSetIfReferenceChanged(ref _EnableParent, value, _hasBeenSetTracker, hasBeenSet, (int)PlacedCreature_FieldIndex.EnableParent, nameof(EnableParent), nameof(EnableParent_IsSet));
+            this.RaiseAndSetIfChanged(ref _EnableParent, value, _hasBeenSetTracker, hasBeenSet, (int)PlacedCreature_FieldIndex.EnableParent, nameof(EnableParent), nameof(EnableParent_IsSet));
         }
         public void EnableParent_Unset()
         {
@@ -148,7 +148,7 @@ namespace Mutagen.Bethesda.Oblivion
             Byte[] value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfReferenceChanged(ref _RagdollData, value, _hasBeenSetTracker, markSet, (int)PlacedCreature_FieldIndex.RagdollData, nameof(RagdollData), nameof(RagdollData_IsSet));
+            this.RaiseAndSetIfChanged(ref _RagdollData, value, _hasBeenSetTracker, markSet, (int)PlacedCreature_FieldIndex.RagdollData, nameof(RagdollData), nameof(RagdollData_IsSet));
         }
         public void RagdollData_Unset()
         {

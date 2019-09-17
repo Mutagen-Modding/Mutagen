@@ -65,7 +65,7 @@ namespace Mutagen.Bethesda
         {
             UpdateUnlinkedForm(value);
             this._Item = value;
-            this.RaiseAndSetIfReferenceChanged(ref this._Item, value, nameof(Item));
+            this.RaiseAndSetIfChanged(ref this._Item, value, nameof(Item));
         }
 
         public void SetIfSucceeded(TryGet<FormKey> formKey)

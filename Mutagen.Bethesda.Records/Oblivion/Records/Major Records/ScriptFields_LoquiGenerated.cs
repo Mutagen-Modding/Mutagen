@@ -81,7 +81,7 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfReferenceChanged(ref _SourceCode, value, _hasBeenSetTracker, markSet, (int)ScriptFields_FieldIndex.SourceCode, nameof(SourceCode), nameof(SourceCode_IsSet));
+            this.RaiseAndSetIfChanged(ref _SourceCode, value, _hasBeenSetTracker, markSet, (int)ScriptFields_FieldIndex.SourceCode, nameof(SourceCode), nameof(SourceCode_IsSet));
         }
         public void SourceCode_Unset()
         {

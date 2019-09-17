@@ -46,7 +46,7 @@ namespace Mutagen.Bethesda.Tests
         public String Oblivion
         {
             get => this._Oblivion;
-            set => this.RaiseAndSetIfReferenceChanged(ref this._Oblivion, value, nameof(Oblivion));
+            set => this.RaiseAndSetIfChanged(ref this._Oblivion, value, nameof(Oblivion));
         }
         #endregion
         #region Skyrim
@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Tests
         public String Skyrim
         {
             get => this._Skyrim;
-            set => this.RaiseAndSetIfReferenceChanged(ref this._Skyrim, value, nameof(Skyrim));
+            set => this.RaiseAndSetIfChanged(ref this._Skyrim, value, nameof(Skyrim));
         }
         #endregion
 

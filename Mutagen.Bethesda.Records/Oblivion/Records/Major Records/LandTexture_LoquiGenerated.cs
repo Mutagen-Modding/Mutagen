@@ -71,7 +71,7 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfReferenceChanged(ref _Icon, value, _hasBeenSetTracker, markSet, (int)LandTexture_FieldIndex.Icon, nameof(Icon), nameof(Icon_IsSet));
+            this.RaiseAndSetIfChanged(ref _Icon, value, _hasBeenSetTracker, markSet, (int)LandTexture_FieldIndex.Icon, nameof(Icon), nameof(Icon_IsSet));
         }
         public void Icon_Unset()
         {
@@ -96,7 +96,7 @@ namespace Mutagen.Bethesda.Oblivion
             HavokData value,
             bool hasBeenSet = true)
         {
-            this.RaiseAndSetIfReferenceChanged(ref _Havok, value, _hasBeenSetTracker, hasBeenSet, (int)LandTexture_FieldIndex.Havok, nameof(Havok), nameof(Havok_IsSet));
+            this.RaiseAndSetIfChanged(ref _Havok, value, _hasBeenSetTracker, hasBeenSet, (int)LandTexture_FieldIndex.Havok, nameof(Havok), nameof(Havok_IsSet));
         }
         public void Havok_Unset()
         {

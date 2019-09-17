@@ -109,7 +109,7 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfReferenceChanged(ref _Entry, value, _hasBeenSetTracker, markSet, (int)LogEntry_FieldIndex.Entry, nameof(Entry), nameof(Entry_IsSet));
+            this.RaiseAndSetIfChanged(ref _Entry, value, _hasBeenSetTracker, markSet, (int)LogEntry_FieldIndex.Entry, nameof(Entry), nameof(Entry_IsSet));
         }
         public void Entry_Unset()
         {
@@ -134,7 +134,7 @@ namespace Mutagen.Bethesda.Oblivion
             ScriptFields value,
             bool hasBeenSet = true)
         {
-            this.RaiseAndSetIfReferenceChanged(ref _ResultScript, value, _hasBeenSetTracker, hasBeenSet, (int)LogEntry_FieldIndex.ResultScript, nameof(ResultScript), nameof(ResultScript_IsSet));
+            this.RaiseAndSetIfChanged(ref _ResultScript, value, _hasBeenSetTracker, hasBeenSet, (int)LogEntry_FieldIndex.ResultScript, nameof(ResultScript), nameof(ResultScript_IsSet));
         }
         public void ResultScript_Unset()
         {

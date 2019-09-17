@@ -2,28 +2,28 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>ff262ac53e07964a0c7de7387eaa6cc2591763af</Sha>
+         <Sha>0c47e4a5392487a93d68d203c89cc6748c823226</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>09-15-2019 18:00:43</CommitDate>
-         <Description>Small tweaks and Nuget update</Description>
+         <CommitDate>09-16-2019 23:09:40</CommitDate>
+         <Description>ObservableListExt.TransformMany -&gt; TransformToLatest, plus bugfix</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/CSharpExt.git</OriginHint>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>e346f7b59c8ecab88830cf4f6af0d0ce19b1ed93</Sha>
+         <Sha>0f16c9fef38353e9e6a1fed2b37445fd0f36db32</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>09-15-2019 23:16:40</CommitDate>
-         <Description>_Error -&gt; WithErrorMask</Description>
+         <CommitDate>09-17-2019 18:45:03</CommitDate>
+         <Description>FileGeneration LineAppended debug inspector</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/Loqui.git</OriginHint>
       </RepoListing>
       <RepoListing>
          <Nickname>DynamicData</Nickname>
-         <Sha>a357e131f6e5eb90f6b82ee71f87f525fb58a14e</Sha>
+         <Sha>a5866ca375b49ede7bd91346657e8adedad09286</Sha>
          <Path>../DynamicData</Path>
-         <CommitDate>08-31-2019 15:59:16</CommitDate>
-         <Description>Nuget Update</Description>
+         <CommitDate>09-16-2019 21:38:33</CommitDate>
+         <Description>ObservableListEx.CollectionCount starts with 0</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/DynamicData.git</OriginHint>
       </RepoListing>

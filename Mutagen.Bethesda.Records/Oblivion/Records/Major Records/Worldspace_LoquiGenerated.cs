@@ -73,7 +73,7 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfReferenceChanged(ref _Name, value, _hasBeenSetTracker, markSet, (int)Worldspace_FieldIndex.Name, nameof(Name), nameof(Name_IsSet));
+            this.RaiseAndSetIfChanged(ref _Name, value, _hasBeenSetTracker, markSet, (int)Worldspace_FieldIndex.Name, nameof(Name), nameof(Name_IsSet));
         }
         public void Name_Unset()
         {
@@ -123,7 +123,7 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfReferenceChanged(ref _Icon, value, _hasBeenSetTracker, markSet, (int)Worldspace_FieldIndex.Icon, nameof(Icon), nameof(Icon_IsSet));
+            this.RaiseAndSetIfChanged(ref _Icon, value, _hasBeenSetTracker, markSet, (int)Worldspace_FieldIndex.Icon, nameof(Icon), nameof(Icon_IsSet));
         }
         public void Icon_Unset()
         {
@@ -148,7 +148,7 @@ namespace Mutagen.Bethesda.Oblivion
             MapData value,
             bool hasBeenSet = true)
         {
-            this.RaiseAndSetIfReferenceChanged(ref _MapData, value, _hasBeenSetTracker, hasBeenSet, (int)Worldspace_FieldIndex.MapData, nameof(MapData), nameof(MapData_IsSet));
+            this.RaiseAndSetIfChanged(ref _MapData, value, _hasBeenSetTracker, hasBeenSet, (int)Worldspace_FieldIndex.MapData, nameof(MapData), nameof(MapData_IsSet));
         }
         public void MapData_Unset()
         {
@@ -282,7 +282,7 @@ namespace Mutagen.Bethesda.Oblivion
             Byte[] value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfReferenceChanged(ref _OffsetData, value, _hasBeenSetTracker, markSet, (int)Worldspace_FieldIndex.OffsetData, nameof(OffsetData), nameof(OffsetData_IsSet));
+            this.RaiseAndSetIfChanged(ref _OffsetData, value, _hasBeenSetTracker, markSet, (int)Worldspace_FieldIndex.OffsetData, nameof(OffsetData), nameof(OffsetData_IsSet));
         }
         public void OffsetData_Unset()
         {
@@ -307,7 +307,7 @@ namespace Mutagen.Bethesda.Oblivion
             Road value,
             bool hasBeenSet = true)
         {
-            this.RaiseAndSetIfReferenceChanged(ref _Road, value, _hasBeenSetTracker, hasBeenSet, (int)Worldspace_FieldIndex.Road, nameof(Road), nameof(Road_IsSet));
+            this.RaiseAndSetIfChanged(ref _Road, value, _hasBeenSetTracker, hasBeenSet, (int)Worldspace_FieldIndex.Road, nameof(Road), nameof(Road_IsSet));
         }
         public void Road_Unset()
         {
@@ -334,7 +334,7 @@ namespace Mutagen.Bethesda.Oblivion
             Cell value,
             bool hasBeenSet = true)
         {
-            this.RaiseAndSetIfReferenceChanged(ref _TopCell, value, _hasBeenSetTracker, hasBeenSet, (int)Worldspace_FieldIndex.TopCell, nameof(TopCell), nameof(TopCell_IsSet));
+            this.RaiseAndSetIfChanged(ref _TopCell, value, _hasBeenSetTracker, hasBeenSet, (int)Worldspace_FieldIndex.TopCell, nameof(TopCell), nameof(TopCell_IsSet));
         }
         public void TopCell_Unset()
         {

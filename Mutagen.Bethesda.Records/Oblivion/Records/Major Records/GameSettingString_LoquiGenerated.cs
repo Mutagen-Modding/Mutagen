@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfReferenceChanged(ref _Data, value, _hasBeenSetTracker, markSet, (int)GameSettingString_FieldIndex.Data, nameof(Data), nameof(Data_IsSet));
+            this.RaiseAndSetIfChanged(ref _Data, value, _hasBeenSetTracker, markSet, (int)GameSettingString_FieldIndex.Data, nameof(Data), nameof(Data_IsSet));
         }
         public void Data_Unset()
         {

@@ -83,7 +83,7 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfReferenceChanged(ref _SunTexture, value, _hasBeenSetTracker, markSet, (int)Climate_FieldIndex.SunTexture, nameof(SunTexture), nameof(SunTexture_IsSet));
+            this.RaiseAndSetIfChanged(ref _SunTexture, value, _hasBeenSetTracker, markSet, (int)Climate_FieldIndex.SunTexture, nameof(SunTexture), nameof(SunTexture_IsSet));
         }
         public void SunTexture_Unset()
         {
@@ -109,7 +109,7 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfReferenceChanged(ref _SunGlareTexture, value, _hasBeenSetTracker, markSet, (int)Climate_FieldIndex.SunGlareTexture, nameof(SunGlareTexture), nameof(SunGlareTexture_IsSet));
+            this.RaiseAndSetIfChanged(ref _SunGlareTexture, value, _hasBeenSetTracker, markSet, (int)Climate_FieldIndex.SunGlareTexture, nameof(SunGlareTexture), nameof(SunGlareTexture_IsSet));
         }
         public void SunGlareTexture_Unset()
         {
@@ -134,7 +134,7 @@ namespace Mutagen.Bethesda.Oblivion
             Model value,
             bool hasBeenSet = true)
         {
-            this.RaiseAndSetIfReferenceChanged(ref _Model, value, _hasBeenSetTracker, hasBeenSet, (int)Climate_FieldIndex.Model, nameof(Model), nameof(Model_IsSet));
+            this.RaiseAndSetIfChanged(ref _Model, value, _hasBeenSetTracker, hasBeenSet, (int)Climate_FieldIndex.Model, nameof(Model), nameof(Model_IsSet));
         }
         public void Model_Unset()
         {

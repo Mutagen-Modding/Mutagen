@@ -67,7 +67,7 @@ namespace Mutagen.Bethesda.Oblivion
             BodyData value,
             bool hasBeenSet = true)
         {
-            this.RaiseAndSetIfReferenceChanged(ref _Male, value, _hasBeenSetTracker, hasBeenSet, (int)GenderedBodyData_FieldIndex.Male, nameof(Male), nameof(Male_IsSet));
+            this.RaiseAndSetIfChanged(ref _Male, value, _hasBeenSetTracker, hasBeenSet, (int)GenderedBodyData_FieldIndex.Male, nameof(Male), nameof(Male_IsSet));
         }
         public void Male_Unset()
         {
@@ -94,7 +94,7 @@ namespace Mutagen.Bethesda.Oblivion
             BodyData value,
             bool hasBeenSet = true)
         {
-            this.RaiseAndSetIfReferenceChanged(ref _Female, value, _hasBeenSetTracker, hasBeenSet, (int)GenderedBodyData_FieldIndex.Female, nameof(Female), nameof(Female_IsSet));
+            this.RaiseAndSetIfChanged(ref _Female, value, _hasBeenSetTracker, hasBeenSet, (int)GenderedBodyData_FieldIndex.Female, nameof(Female), nameof(Female_IsSet));
         }
         public void Female_Unset()
         {

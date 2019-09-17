@@ -72,7 +72,7 @@ namespace Mutagen.Bethesda
         public virtual void Set(T value, bool hasBeenSet)
         {
             UpdateUnlinkedForm(value);
-            this.RaiseAndSetIfReferenceChanged(ref this._Item, value, ref this._HasBeenSet, hasBeenSet, nameof(Item), nameof(HasBeenSet));
+            this.RaiseAndSetIfChanged(ref this._Item, value, ref this._HasBeenSet, hasBeenSet, nameof(Item), nameof(HasBeenSet));
         }
 
         public void SetLink(ILink<T> value)
@@ -121,12 +121,12 @@ namespace Mutagen.Bethesda
             if (rhs.HasBeenSet)
             {
                 this.UnlinkedForm = rhs.FormKey;
-                this.RaiseAndSetIfReferenceChanged(ref this._Item, rhs.Item, ref this._HasBeenSet, true, nameof(Item), nameof(HasBeenSet));
+                this.RaiseAndSetIfChanged(ref this._Item, rhs.Item, ref this._HasBeenSet, true, nameof(Item), nameof(HasBeenSet));
             }
             else if (def.HasBeenSet)
             {
                 this.UnlinkedForm = def.FormKey;
-                this.RaiseAndSetIfReferenceChanged(ref this._Item, def.Item, ref this._HasBeenSet, true, nameof(Item), nameof(HasBeenSet));
+                this.RaiseAndSetIfChanged(ref this._Item, def.Item, ref this._HasBeenSet, true, nameof(Item), nameof(HasBeenSet));
             }
             else
             {

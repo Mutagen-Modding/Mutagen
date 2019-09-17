@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,6 +14,9 @@ namespace Mutagen.Bethesda.Generation
     {
         static void Main(string[] args)
         {
+#if DEBUG
+            AttachDebugInspector();
+#endif
             GenerateRecords();
             GenerateTester();
         }
@@ -118,6 +122,17 @@ namespace Mutagen.Bethesda.Generation
                 new FileInfo("../../../Mutagen.Bethesda.Tests/Mutagen.Bethesda.Tests.csproj"));
 
             gen.Generate().Wait();
+        }
+
+        static void AttachDebugInspector()
+        {
+            FileGeneration.LineAppended
+                .Where(i => i.Contains("r loquiItem = item.Subspa"))
+                .Subscribe(s =>
+                {
+                    int wer = 23;
+                    wer++;
+                });
         }
     }
 }

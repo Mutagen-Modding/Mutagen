@@ -533,7 +533,7 @@ namespace Mutagen.Bethesda.Oblivion
             CombatStyleAdvanced value,
             bool hasBeenSet = true)
         {
-            this.RaiseAndSetIfReferenceChanged(ref _Advanced, value, _hasBeenSetTracker, hasBeenSet, (int)CombatStyle_FieldIndex.Advanced, nameof(Advanced), nameof(Advanced_IsSet));
+            this.RaiseAndSetIfChanged(ref _Advanced, value, _hasBeenSetTracker, hasBeenSet, (int)CombatStyle_FieldIndex.Advanced, nameof(Advanced), nameof(Advanced_IsSet));
         }
         public void Advanced_Unset()
         {

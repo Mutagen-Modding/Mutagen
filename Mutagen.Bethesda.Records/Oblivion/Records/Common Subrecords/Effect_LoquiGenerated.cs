@@ -136,7 +136,7 @@ namespace Mutagen.Bethesda.Oblivion
             ScriptEffect value,
             bool hasBeenSet = true)
         {
-            this.RaiseAndSetIfReferenceChanged(ref _ScriptEffect, value, _hasBeenSetTracker, hasBeenSet, (int)Effect_FieldIndex.ScriptEffect, nameof(ScriptEffect), nameof(ScriptEffect_IsSet));
+            this.RaiseAndSetIfChanged(ref _ScriptEffect, value, _hasBeenSetTracker, hasBeenSet, (int)Effect_FieldIndex.ScriptEffect, nameof(ScriptEffect), nameof(ScriptEffect_IsSet));
         }
         public void ScriptEffect_Unset()
         {

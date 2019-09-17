@@ -73,7 +73,7 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfReferenceChanged(ref _Name, value, _hasBeenSetTracker, markSet, (int)Cell_FieldIndex.Name, nameof(Name), nameof(Name_IsSet));
+            this.RaiseAndSetIfChanged(ref _Name, value, _hasBeenSetTracker, markSet, (int)Cell_FieldIndex.Name, nameof(Name), nameof(Name_IsSet));
         }
         public void Name_Unset()
         {
@@ -150,7 +150,7 @@ namespace Mutagen.Bethesda.Oblivion
             CellLighting value,
             bool hasBeenSet = true)
         {
-            this.RaiseAndSetIfReferenceChanged(ref _Lighting, value, _hasBeenSetTracker, hasBeenSet, (int)Cell_FieldIndex.Lighting, nameof(Lighting), nameof(Lighting_IsSet));
+            this.RaiseAndSetIfChanged(ref _Lighting, value, _hasBeenSetTracker, hasBeenSet, (int)Cell_FieldIndex.Lighting, nameof(Lighting), nameof(Lighting_IsSet));
         }
         public void Lighting_Unset()
         {
@@ -299,7 +299,7 @@ namespace Mutagen.Bethesda.Oblivion
             PathGrid value,
             bool hasBeenSet = true)
         {
-            this.RaiseAndSetIfReferenceChanged(ref _PathGrid, value, _hasBeenSetTracker, hasBeenSet, (int)Cell_FieldIndex.PathGrid, nameof(PathGrid), nameof(PathGrid_IsSet));
+            this.RaiseAndSetIfChanged(ref _PathGrid, value, _hasBeenSetTracker, hasBeenSet, (int)Cell_FieldIndex.PathGrid, nameof(PathGrid), nameof(PathGrid_IsSet));
         }
         public void PathGrid_Unset()
         {
@@ -326,7 +326,7 @@ namespace Mutagen.Bethesda.Oblivion
             Landscape value,
             bool hasBeenSet = true)
         {
-            this.RaiseAndSetIfReferenceChanged(ref _Landscape, value, _hasBeenSetTracker, hasBeenSet, (int)Cell_FieldIndex.Landscape, nameof(Landscape), nameof(Landscape_IsSet));
+            this.RaiseAndSetIfChanged(ref _Landscape, value, _hasBeenSetTracker, hasBeenSet, (int)Cell_FieldIndex.Landscape, nameof(Landscape), nameof(Landscape_IsSet));
         }
         public void Landscape_Unset()
         {
