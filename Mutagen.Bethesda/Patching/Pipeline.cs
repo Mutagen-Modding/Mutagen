@@ -59,8 +59,7 @@ namespace Mutagen.Bethesda
                     }));
             outMod.SyncRecordCount();
             outMod.WriteToBinary(
-                path: Path.Combine(dataFolder.Path, outModKey.FileName),
-                modKey: outModKey);
+                path: Path.Combine(dataFolder.Path, outModKey.FileName));
         }
     }
 }

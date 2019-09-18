@@ -41,11 +41,11 @@ namespace Mutagen.Bethesda.Generation
                 fg.AppendLine("get => MajorRecords.Lookup(id).Value;");
                 fg.AppendLine("set => SetMajorRecord(id, value);");
             }
-            fg.AppendLine($"void IModGetter.WriteToBinary(string path, ModKey modKey) => this.WriteToBinary(path, modKey, importMask: null);");
-            fg.AppendLine($"Task IModGetter.WriteToBinaryAsync(string path, ModKey modKey) => this.WriteToBinaryAsync(path, modKey);");
-            fg.AppendLine($"void IModGetter.WriteToBinaryParallel(string path, ModKey modKey) => this.WriteToBinaryParallel(path, modKey);");
+            fg.AppendLine($"void IModGetter.WriteToBinary(string path, ModKey modKeyOverride) => this.WriteToBinary(path, modKeyOverride, importMask: null);");
+            fg.AppendLine($"Task IModGetter.WriteToBinaryAsync(string path, ModKey modKeyOverride) => this.WriteToBinaryAsync(path, modKeyOverride);");
+            fg.AppendLine($"void IModGetter.WriteToBinaryParallel(string path, ModKey modKeyOverride) => this.WriteToBinaryParallel(path, modKeyOverride);");
 
-            using (var args = new FunctionWrapper(fg,
+            using (var args = new FunctionWrapper(fg, 
                 "protected void SetMajorRecord"))
             {
                 args.Add("FormKey id");

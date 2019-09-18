@@ -15,15 +15,9 @@ namespace Mutagen.Bethesda
         IReadOnlyList<IMasterReferenceGetter> MasterReferences { get; }
         IReadOnlyCache<IMajorRecordInternalGetter, FormKey> MajorRecords { get; }
         IReadOnlyCache<T, FormKey> GetGroupGetter<T>() where T : IMajorRecordInternalGetter;
-        void WriteToBinary(
-            string path,
-            ModKey modKey);
-        Task WriteToBinaryAsync(
-            string path,
-            ModKey modKey);
-        void WriteToBinaryParallel(
-            string path,
-            ModKey modKey);
+        void WriteToBinary(string path, ModKey modKeyOverride = null);
+        Task WriteToBinaryAsync(string path, ModKey modKeyOverride = null);
+        void WriteToBinaryParallel(string path, ModKey modKeyOverride = null);
         ModKey ModKey { get; }
     }
 

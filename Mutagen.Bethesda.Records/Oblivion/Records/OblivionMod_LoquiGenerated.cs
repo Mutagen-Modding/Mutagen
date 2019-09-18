@@ -862,9 +862,9 @@ namespace Mutagen.Bethesda.Oblivion
             get => MajorRecords.Lookup(id).Value;
             set => SetMajorRecord(id, value);
         }
-        void IModGetter.WriteToBinary(string path, ModKey modKey) => this.WriteToBinary(path, modKey, importMask: null);
-        Task IModGetter.WriteToBinaryAsync(string path, ModKey modKey) => this.WriteToBinaryAsync(path, modKey);
-        void IModGetter.WriteToBinaryParallel(string path, ModKey modKey) => this.WriteToBinaryParallel(path, modKey);
+        void IModGetter.WriteToBinary(string path, ModKey modKeyOverride) => this.WriteToBinary(path, modKeyOverride, importMask: null);
+        Task IModGetter.WriteToBinaryAsync(string path, ModKey modKeyOverride) => this.WriteToBinaryAsync(path, modKeyOverride);
+        void IModGetter.WriteToBinaryParallel(string path, ModKey modKeyOverride) => this.WriteToBinaryParallel(path, modKeyOverride);
         protected void SetMajorRecord(
             FormKey id,
             IMajorRecord record)
@@ -2842,12 +2842,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static async Task<OblivionMod> CreateFromBinary(
             string path,
-            ModKey modKey,
+            ModKey modKeyOverride = null,
             GroupMask importMask = null)
         {
             using (var reader = new MutagenBinaryReadStream(path, GameMode.Oblivion))
             {
                 var frame = new MutagenFrame(reader);
+                var modKey = modKeyOverride ?? ModKey.Factory(Path.GetFileName(path));
                 return await CreateFromBinary(
                     importMask: importMask,
                     modKey: modKey,
@@ -2857,12 +2858,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static async Task<(OblivionMod Object, OblivionMod_ErrorMask ErrorMask)> CreateFromBinaryWithErrorMask(
             string path,
-            ModKey modKey,
+            ModKey modKeyOverride = null,
             GroupMask importMask = null)
         {
             using (var reader = new MutagenBinaryReadStream(path, GameMode.Oblivion))
             {
                 var frame = new MutagenFrame(reader);
+                var modKey = modKeyOverride ?? ModKey.Factory(Path.GetFileName(path));
                 return await CreateFromBinaryWithErrorMask(
                     importMask: importMask,
                     modKey: modKey,
@@ -2872,13 +2874,14 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static async Task<OblivionMod> CreateFromBinary(
             string path,
-            ModKey modKey,
             ErrorMaskBuilder errorMask,
+            ModKey modKeyOverride = null,
             GroupMask importMask = null)
         {
             using (var reader = new MutagenBinaryReadStream(path, GameMode.Oblivion))
             {
                 var frame = new MutagenFrame(reader);
+                var modKey = modKeyOverride ?? ModKey.Factory(Path.GetFileName(path));
                 return await CreateFromBinary(
                     importMask: importMask,
                     modKey: modKey,
@@ -14769,15 +14772,16 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IOblivionModInternalGetter item,
             string path,
-            ModKey modKey,
             out OblivionMod_ErrorMask errorMask,
             bool doMasks = true,
+            ModKey modKeyOverride = null,
             GroupMask importMask = null)
         {
             using (var memStream = new MemoryTributary())
             {
                 using (var writer = new MutagenWriter(memStream, dispose: false, meta: MetaDataConstants.Get(item.GameMode)))
                 {
+                    var modKey = modKeyOverride ?? ModKey.Factory(Path.GetFileName(path));
                     WriteToBinary(
                         item: item,
                         importMask: importMask,
@@ -14797,15 +14801,16 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IOblivionModInternalGetter item,
             string path,
-            ModKey modKey,
             ErrorMaskBuilder errorMask,
             bool doMasks = true,
+            ModKey modKeyOverride = null,
             GroupMask importMask = null)
         {
             using (var memStream = new MemoryTributary())
             {
                 using (var writer = new MutagenWriter(memStream, dispose: false, meta: MetaDataConstants.Get(item.GameMode)))
                 {
+                    var modKey = modKeyOverride ?? ModKey.Factory(Path.GetFileName(path));
                     WriteToBinary(
                         item: item,
                         importMask: importMask,
@@ -14894,13 +14899,14 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IOblivionModInternalGetter item,
             string path,
-            ModKey modKey,
+            ModKey modKeyOverride = null,
             GroupMask importMask = null)
         {
             using (var memStream = new MemoryTributary())
             {
                 using (var writer = new MutagenWriter(memStream, dispose: false, meta: MetaDataConstants.Get(item.GameMode)))
                 {
+                    var modKey = modKeyOverride ?? ModKey.Factory(Path.GetFileName(path));
                     OblivionModBinaryWriteTranslation.Instance.Write(
                         item: item,
                         importMask: importMask,

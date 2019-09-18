@@ -118,6 +118,10 @@ namespace Mutagen.Bethesda.Generation
                 nicknameKey: "ModKey",
                 resolutionString: "ModKey modKey",
                 when: (obj) => obj.GetObjectType() == ObjectType.Mod);
+            var modKeyOptional = new APILine(
+                nicknameKey: "ModKeyOptional",
+                resolutionString: "ModKey modKeyOverride = null",
+                when: (obj) => obj.GetObjectType() == ObjectType.Mod);
             var recTypeConverter = new APILine(
                 "RecordTypeConverter",
                 $"{nameof(RecordTypeConverter)} recordTypeConverter");
@@ -147,9 +151,8 @@ namespace Mutagen.Bethesda.Generation
                         customAPI: new CustomMethodAPI[]
                         {
                             CustomMethodAPI.FactoryPublic(masterRefs),
-                            CustomMethodAPI.FactoryPublic(modKey),
                         },
-                        optionalAPI: modAPILines))
+                        optionalAPI: modKeyOptional.And(modAPILines).ToArray()))
                 {
                     Funnel = new TranslationFunnel(
                         this.MainAPI,
@@ -891,6 +894,7 @@ namespace Mutagen.Bethesda.Generation
                 fg.AppendLine($"using (var writer = new MutagenWriter(memStream, dispose: false, meta: {nameof(MetaDataConstants)}.{nameof(MetaDataConstants.Get)}(item.GameMode)))");
                 using (new BraceWrapper(fg))
                 {
+                    fg.AppendLine("var modKey = modKeyOverride ?? ModKey.Factory(Path.GetFileName(path));");
                     internalToDo(this.MainAPI.PublicMembers(obj, TranslationModuleAPI.Direction.Writer).ToArray());
                 }
                 fg.AppendLine("using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))");
@@ -908,6 +912,7 @@ namespace Mutagen.Bethesda.Generation
             using (new BraceWrapper(fg))
             {
                 fg.AppendLine("var frame = new MutagenFrame(reader);");
+                fg.AppendLine("var modKey = modKeyOverride ?? ModKey.Factory(Path.GetFileName(path));");
                 internalToDo(this.MainAPI.PublicMembers(obj, TranslationModuleAPI.Direction.Reader).ToArray());
             }
         }

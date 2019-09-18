@@ -139,9 +139,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
         [Benchmark]
         public void WriteBinaryToDisk()
         {
-            Mod.WriteToBinary(
-                BinaryPath,
-                Mutagen.Bethesda.Oblivion.Constants.Oblivion);
+            Mod.WriteToBinary(BinaryPath);
         }
 
         [Benchmark]

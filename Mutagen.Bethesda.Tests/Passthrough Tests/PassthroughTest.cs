@@ -267,7 +267,7 @@ namespace Mutagen.Bethesda.Tests
                     var reexportPath = Path.Combine(tmp.Dir.Path, "Reexport");
                     reimport.WriteToBinary(
                         reexportPath,
-                        modKey: this.ModKey);
+                        modKeyOverride: this.ModKey);
                     using (var stream = new BinaryReadStream(sourcePath))
                     {
                         return PassthroughTest.AssertFilesEqual(

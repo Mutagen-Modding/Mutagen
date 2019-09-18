@@ -126,8 +126,9 @@ namespace Mutagen.Bethesda.Generation
 
         static void AttachDebugInspector()
         {
+            string testString = "sing (var writer = new MutagenWriter(memStream, dispose: false, meta: MetaDataConstants.Get(item.GameMode)))";
             FileGeneration.LineAppended
-                .Where(i => i.Contains("r loquiItem = item.Subspa"))
+                .Where(i => i.Contains(testString))
                 .Subscribe(s =>
                 {
                     int wer = 23;

@@ -21,7 +21,7 @@ namespace Mutagen.Bethesda.Tests
         {
             var mod = await OblivionMod.CreateFromBinary(
                 Path.Combine(settings.DataFolderLocations.Oblivion, target.Path),
-                modKey: Mutagen.Bethesda.Oblivion.Constants.Oblivion,
+                modKeyOverride: Mutagen.Bethesda.Oblivion.Constants.Oblivion,
                 importMask: new Mutagen.Bethesda.Oblivion.GroupMask()
                 {
                     NPCs = true
@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Tests
                 var oblivionOutputPath = Path.Combine(tmp.Dir.Path, TestingConstants.OBLIVION_ESM);
                 mod.WriteToBinary(
                     oblivionOutputPath,
-                    modKey: Mutagen.Bethesda.Oblivion.Constants.Oblivion,
+                    modKeyOverride: Mutagen.Bethesda.Oblivion.Constants.Oblivion,
                     errorMask: out var outputErrMask);
                 Assert.False(outputErrMask?.IsInError() ?? false);
                 var fileLocs = RecordLocator.GetFileLocations(oblivionOutputPath, meta: MetaDataConstants.Get(GameMode.Oblivion));
@@ -55,14 +55,14 @@ namespace Mutagen.Bethesda.Tests
         {
             var mod = await OblivionMod.CreateFromBinary(
                 Path.Combine(settings.DataFolderLocations.Oblivion, target.Path),
-                modKey: Mutagen.Bethesda.Oblivion.Constants.Oblivion);
+                modKeyOverride: Mutagen.Bethesda.Oblivion.Constants.Oblivion);
 
             using (var tmp = new TempFolder("Mutagen_Oblivion_Binary_GroupMask_Export"))
             {
                 var oblivionOutputPath = Path.Combine(tmp.Dir.Path, TestingConstants.OBLIVION_ESM);
                 mod.WriteToBinary(
                     oblivionOutputPath,
-                    modKey: Mutagen.Bethesda.Oblivion.Constants.Oblivion,
+                    modKeyOverride: Mutagen.Bethesda.Oblivion.Constants.Oblivion,
                     errorMask: out var outputErrMask,
                     importMask: new GroupMask()
                     {

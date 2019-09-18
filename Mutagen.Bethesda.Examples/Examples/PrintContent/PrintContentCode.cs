@@ -13,6 +13,9 @@ namespace Mutagen.Bethesda.Examples
     {
         public static void PrintContent(string pathToMod)
         {
+            //OblivionMod.CreateFromBinaryWrapper(pathToMod, )
+            //IOblivionModGetter mod = OblivionModBinaryWrapper.OblivionModFactory()
+            //OblivionMod
         }
     }
 }
