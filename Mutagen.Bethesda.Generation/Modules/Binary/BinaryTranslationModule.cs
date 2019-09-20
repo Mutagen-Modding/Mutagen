@@ -619,7 +619,7 @@ namespace Mutagen.Bethesda.Generation
                 $"public{obj.NewOverride()}static {obj.Interface(getter: true, internalInterface: true)} {CreateFromPrefix}{ModuleNickname}Wrapper"))
             {
                 args.Add($"string path");
-                args.Add($"ModKey modKey");
+                args.Add($"ModKey modKeyOverride = null");
             }
             using (new BraceWrapper(fg))
             {
@@ -628,7 +628,7 @@ namespace Mutagen.Bethesda.Generation
                     $"return {CreateFromPrefix}{ModuleNickname}Wrapper"))
                 {
                     args.Add("bytes: new MemorySlice<byte>(bytes)");
-                    args.AddPassArg("modKey");
+                    args.Add("modKey: modKeyOverride ?? ModKey.Factory(Path.GetFileName(path))");
                 }
             }
             fg.AppendLine();

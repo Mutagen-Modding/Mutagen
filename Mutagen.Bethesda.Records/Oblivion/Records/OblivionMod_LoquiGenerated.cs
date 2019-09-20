@@ -4911,12 +4911,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static IOblivionModInternalGetter CreateFromBinaryWrapper(
             string path,
-            ModKey modKey)
+            ModKey modKeyOverride = null)
         {
             var bytes = File.ReadAllBytes(path);
             return CreateFromBinaryWrapper(
                 bytes: new MemorySlice<byte>(bytes),
-                modKey: modKey);
+                modKey: modKeyOverride ?? ModKey.Factory(Path.GetFileName(path)));
         }
 
         public static IOblivionModInternalGetter CreateFromBinaryWrapper(
