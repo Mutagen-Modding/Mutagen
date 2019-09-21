@@ -306,7 +306,7 @@ namespace Mutagen.Bethesda.Tests
             XElement node,
             MissingCreate missing = MissingCreate.New)
         {
-            CopyInXml_Internal(
+            CopyInXmlInternal(
                 missing: missing,
                 node: node,
                 errorMask: null,
@@ -321,7 +321,7 @@ namespace Mutagen.Bethesda.Tests
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            CopyInXml_Internal(
+            CopyInXmlInternal(
                 missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -329,19 +329,18 @@ namespace Mutagen.Bethesda.Tests
             errorMask = PassthroughSettings_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        protected void CopyInXml_Internal(
+        protected void CopyInXmlInternal(
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             MissingCreate missing = MissingCreate.New)
         {
-            LoquiXmlTranslation<PassthroughSettings>.Instance.CopyIn(
+            var obj = PassthroughSettings.CreateFromXml(
                 missing: missing,
                 node: node,
-                item: this,
-                skipProtected: true,
                 errorMask: errorMask,
                 translationMask: translationMask);
+            this.CopyFieldsFrom(obj);
         }
 
         public void CopyInXml(

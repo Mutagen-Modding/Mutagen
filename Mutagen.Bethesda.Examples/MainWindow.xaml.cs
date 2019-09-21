@@ -1,18 +1,7 @@
 ﻿using MahApps.Metro.Controls;
+using Noggog;
+using Noggog.WPF;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Mutagen.Bethesda.Examples
 {
@@ -24,7 +13,11 @@ namespace Mutagen.Bethesda.Examples
         public MainWindow()
         {
             InitializeComponent();
-            this.DataContext = new MainVM(this);
+            this.WireMainVM(
+                new MainVM(this),
+                System.IO.Path.Combine(Environment.GetEnvironmentVariable("LocalAppData"), $"Mutagen Examples/Settings.xml"),
+                load: (s, vm) => vm.CopyInXml(s),
+                save: (s, vm) => vm.WriteToXml(s, "MutagenExamples"));
         }
     }
 }

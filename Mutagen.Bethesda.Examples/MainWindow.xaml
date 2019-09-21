@@ -4,8 +4,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
     xmlns:local="clr-namespace:Mutagen.Bethesda.Examples"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:noggog="clr-namespace:Noggog.WPF;assembly=Noggog.WPF"
     Title="Mutagen Examples"
     Width="800"
     Height="450"
@@ -17,39 +19,67 @@
             <ColumnDefinition Width="150" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid
+            Grid.Row="0"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            Background="{StaticResource BackgroundLightBrush}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBlock
+                Grid.Column="0"
+                Margin="5"
+                VerticalAlignment="Center"
+                FontSize="14"
+                FontWeight="Bold"
+                Text="Path to Mod:" />
+            <noggog:FilePicker
+                Grid.Column="1"
+                Margin="3"
+                PathType="File"
+                TargetPath="{Binding ModFilePath}" />
+        </Grid>
         <ListBox
+            Grid.Row="1"
             Grid.Column="0"
             BorderBrush="{StaticResource BorderBrush}"
-            BorderThickness="0,0,1,0"
+            BorderThickness="0,1,1,0"
             ItemsSource="{Binding Examples}"
             SelectedItem="{Binding SelectedExample}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Margin="6" Text="{Binding Name}" />
+                    <TextBlock
+                        Margin="6"
+                        Text="{Binding Name}"
+                        ToolTip="{Binding Description}" />
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <Grid Grid.Column="1" DataContext="{Binding SelectedExample}">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-            <TextBlock
-                Grid.Row="0"
-                Margin="8"
-                FontSize="14"
-                FontWeight="SemiBold"
-                Text="{Binding Name}" />
-            <ContentControl Grid.Row="1" Content="{Binding}">
-                <ContentControl.Resources>
-                    <DataTemplate DataType="{x:Type local:ImportComparisonVM}">
-                        <local:ImportComparisonView />
-                    </DataTemplate>
-                    <DataTemplate DataType="{x:Type local:PrintContentVM}">
-                        <local:PrintContentView />
-                    </DataTemplate>
-                </ContentControl.Resources>
-            </ContentControl>
-        </Grid>
+        <Border
+            Grid.Row="1"
+            Grid.Column="1"
+            BorderBrush="{StaticResource BorderBrush}"
+            BorderThickness="0,1,0,0">
+            <Grid DataContext="{Binding SelectedExample}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <ContentControl Grid.Row="1" Content="{Binding}">
+                    <ContentControl.Resources>
+                        <DataTemplate DataType="{x:Type local:SimpleOutputVM}">
+                            <local:SimpleOutputView />
+                        </DataTemplate>
+                    </ContentControl.Resources>
+                </ContentControl>
+            </Grid>
+        </Border>
     </Grid>
 </Controls:MetroWindow>

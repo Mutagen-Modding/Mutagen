@@ -1,4 +1,5 @@
-﻿using DynamicData.Binding;
+﻿using DynamicData;
+using DynamicData.Binding;
 using Noggog.WPF;
 using ReactiveUI;
 using System;
@@ -9,20 +10,20 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Examples
 {
-    public class PrintContentVM : ViewModel, IExampleVM
+    public class PrintContentVM : SimpleOutputVM
     {
-        public string Name => "Print Content";
+        public override string Name => "Print Content";
 
-        public ObservableCollectionExtended<string> Names { get; } = new ObservableCollectionExtended<string>();
+        public override string Description => "Print all unique names of NPCs";
 
-        public IReactiveCommand RunCommand { get; }
-
-        public PrintContentVM()
+        public PrintContentVM(MainVM mvm)
+            : base(mvm)
         {
-            this.RunCommand = ReactiveCommand.Create(
-                execute: () =>
-                {
-                });
+        }
+
+        protected override void ToDo()
+        {
+            PrintContentCode.PrintContent(this.MainVM.ModFilePath, (s) => this.Output.Add(s));
         }
     }
 }

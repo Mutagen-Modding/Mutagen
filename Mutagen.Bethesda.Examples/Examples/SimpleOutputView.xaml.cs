@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace Mutagen.Bethesda.Examples
 {
     /// <summary>
-    /// Interaction logic for ImportComparisonView.xaml
+    /// Interaction logic for PrintContentView.xaml
     /// </summary>
-    public partial class ImportComparisonView : UserControl
+    public partial class SimpleOutputView : UserControl
     {
-        public ImportComparisonView()
+        public SimpleOutputView()
         {
             InitializeComponent();
         }

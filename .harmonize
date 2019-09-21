@@ -2,28 +2,28 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>68961d1d3e916722473489fc8239886486620f06</Sha>
+         <Sha>9b301ff39daac8a83cb63934c4e67865d1cfab46</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>09-21-2019 16:57:34</CommitDate>
-         <Description>Dynamic data library updates</Description>
+         <CommitDate>09-21-2019 19:07:51</CommitDate>
+         <Description>ForegroundDarkBrush</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/CSharpExt.git</OriginHint>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>0e58353da0a69b09b77bd5db5167643bab920511</Sha>
+         <Sha>512dfe8325b45d7f4b91417f526bf04752d7cd4f</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>09-21-2019 17:00:27</CommitDate>
+         <CommitDate>09-21-2019 17:38:49</CommitDate>
          <Description>DynamicData library updates</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/Loqui.git</OriginHint>
       </RepoListing>
       <RepoListing>
          <Nickname>DynamicData</Nickname>
-         <Sha>a6e952176aa0fd545c067222593cbcc67a7ac466</Sha>
+         <Sha>e07de13ef2bc5ae6d0352b26c5129796c165ddbd</Sha>
          <Path>../DynamicData</Path>
-         <CommitDate>09-21-2019 16:55:47</CommitDate>
-         <Description>IReadOnlyCache</Description>
+         <CommitDate>09-21-2019 17:08:07</CommitDate>
+         <Description>Merge branch 'BufferIf-clearing-fix'</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/DynamicData.git</OriginHint>
       </RepoListing>

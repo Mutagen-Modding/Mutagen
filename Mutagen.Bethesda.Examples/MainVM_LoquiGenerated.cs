@@ -11,7 +11,8 @@ using System.Text;
 using Loqui;
 using Noggog;
 using Noggog.Notifying;
-using Mutagen.Bethesda.Tests.Internals;
+using Mutagen.Bethesda.Examples.Internals;
+using Noggog.WPF;
 using ReactiveUI;
 using System.Xml;
 using System.Xml.Linq;
@@ -22,18 +23,18 @@ using Loqui.Internal;
 using System.Diagnostics;
 using System.Collections.Specialized;
 
-namespace Mutagen.Bethesda.Tests
+namespace Mutagen.Bethesda.Examples
 {
     #region Class
-    public partial class DataFolderLocations :
-        LoquiNotifyingObject,
-        IDataFolderLocationsInternal,
-        ILoquiObjectSetter<DataFolderLocations>,
-        IEquatable<DataFolderLocations>,
+    public partial class MainVM :
+        ViewModel,
+        IMainVMInternal,
+        ILoquiObjectSetter<MainVM>,
+        IEquatable<MainVM>,
         IEqualsMask
     {
         #region Ctor
-        public DataFolderLocations()
+        public MainVM()
         {
             _hasBeenSetTracker = new BitArray(((ILoquiObject)this).Registration.FieldCount);
             CustomCtor();
@@ -41,28 +42,20 @@ namespace Mutagen.Bethesda.Tests
         partial void CustomCtor();
         #endregion
 
-        #region Oblivion
-        private String _Oblivion;
-        public String Oblivion
+        #region ModFilePath
+        private String _ModFilePath;
+        public String ModFilePath
         {
-            get => this._Oblivion;
-            set => this.RaiseAndSetIfChanged(ref this._Oblivion, value, nameof(Oblivion));
-        }
-        #endregion
-        #region Skyrim
-        private String _Skyrim;
-        public String Skyrim
-        {
-            get => this._Skyrim;
-            set => this.RaiseAndSetIfChanged(ref this._Skyrim, value, nameof(Skyrim));
+            get => this._ModFilePath;
+            set => this.RaiseAndSetIfChanged(ref this._ModFilePath, value, nameof(ModFilePath));
         }
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDataFolderLocationsInternalGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMainVMInternalGetter)rhs, include);
         #region To String
         public override string ToString()
         {
-            return DataFolderLocationsMixIn.ToString(item: this);
+            return MainVMMixIn.ToString(item: this);
         }
 
 
@@ -70,7 +63,7 @@ namespace Mutagen.Bethesda.Tests
             FileGeneration fg,
             string name = null)
         {
-            DataFolderLocationsMixIn.ToString(
+            MainVMMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -81,21 +74,21 @@ namespace Mutagen.Bethesda.Tests
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is IDataFolderLocationsInternalGetter rhs)) return false;
-            return ((DataFolderLocationsCommon)((IDataFolderLocationsInternalGetter)this).CommonInstance()).Equals(this, rhs);
+            if (!(obj is IMainVMInternalGetter rhs)) return false;
+            return ((MainVMCommon)((IMainVMInternalGetter)this).CommonInstance()).Equals(this, rhs);
         }
 
-        public bool Equals(DataFolderLocations obj)
+        public bool Equals(MainVM obj)
         {
-            return ((DataFolderLocationsCommon)((IDataFolderLocationsInternalGetter)this).CommonInstance()).Equals(this, obj);
+            return ((MainVMCommon)((IMainVMInternalGetter)this).CommonInstance()).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((DataFolderLocationsCommon)((IDataFolderLocationsInternalGetter)this).CommonInstance()).GetHashCode(this);
+        public override int GetHashCode() => ((MainVMCommon)((IMainVMInternalGetter)this).CommonInstance()).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
-        protected object XmlWriteTranslator => DataFolderLocationsXmlWriteTranslation.Instance;
+        protected object XmlWriteTranslator => MainVMXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -103,7 +96,7 @@ namespace Mutagen.Bethesda.Tests
             TranslationCrystal translationMask,
             string name = null)
         {
-            ((DataFolderLocationsXmlWriteTranslation)this.XmlWriteTranslator).Write(
+            ((MainVMXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
                 name: name,
                 node: node,
@@ -112,10 +105,10 @@ namespace Mutagen.Bethesda.Tests
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static DataFolderLocations CreateFromXml(
+        public static MainVM CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
-            DataFolderLocations_TranslationMask translationMask = null)
+            MainVM_TranslationMask translationMask = null)
         {
             return CreateFromXml(
                 missing: missing,
@@ -125,11 +118,11 @@ namespace Mutagen.Bethesda.Tests
         }
 
         [DebuggerStepThrough]
-        public static DataFolderLocations CreateFromXml(
+        public static MainVM CreateFromXml(
             XElement node,
-            out DataFolderLocations_ErrorMask errorMask,
+            out MainVM_ErrorMask errorMask,
             bool doMasks = true,
-            DataFolderLocations_TranslationMask translationMask = null,
+            MainVM_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
@@ -138,11 +131,11 @@ namespace Mutagen.Bethesda.Tests
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask.GetCrystal());
-            errorMask = DataFolderLocations_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = MainVM_ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
-        public static DataFolderLocations CreateFromXml(
+        public static MainVM CreateFromXml(
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
@@ -152,17 +145,17 @@ namespace Mutagen.Bethesda.Tests
             {
                 case MissingCreate.New:
                 case MissingCreate.Null:
-                    if (node == null) return missing == MissingCreate.New ? new DataFolderLocations() : null;
+                    if (node == null) return missing == MissingCreate.New ? new MainVM() : null;
                     break;
                 default:
                     break;
             }
-            var ret = new DataFolderLocations();
+            var ret = new MainVM();
             try
             {
                 foreach (var elem in node.Elements())
                 {
-                    DataFolderLocationsXmlCreateTranslation.FillPublicElementXml(
+                    MainVMXmlCreateTranslation.FillPublicElementXml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -178,10 +171,10 @@ namespace Mutagen.Bethesda.Tests
             return ret;
         }
 
-        public static DataFolderLocations CreateFromXml(
+        public static MainVM CreateFromXml(
             string path,
             MissingCreate missing = MissingCreate.New,
-            DataFolderLocations_TranslationMask translationMask = null)
+            MainVM_TranslationMask translationMask = null)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
             return CreateFromXml(
@@ -190,10 +183,10 @@ namespace Mutagen.Bethesda.Tests
                 translationMask: translationMask);
         }
 
-        public static DataFolderLocations CreateFromXml(
+        public static MainVM CreateFromXml(
             string path,
-            out DataFolderLocations_ErrorMask errorMask,
-            DataFolderLocations_TranslationMask translationMask = null,
+            out MainVM_ErrorMask errorMask,
+            MainVM_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
@@ -204,10 +197,10 @@ namespace Mutagen.Bethesda.Tests
                 translationMask: translationMask);
         }
 
-        public static DataFolderLocations CreateFromXml(
+        public static MainVM CreateFromXml(
             string path,
             ErrorMaskBuilder errorMask,
-            DataFolderLocations_TranslationMask translationMask = null,
+            MainVM_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
@@ -218,10 +211,10 @@ namespace Mutagen.Bethesda.Tests
                 translationMask: translationMask?.GetCrystal());
         }
 
-        public static DataFolderLocations CreateFromXml(
+        public static MainVM CreateFromXml(
             Stream stream,
             MissingCreate missing = MissingCreate.New,
-            DataFolderLocations_TranslationMask translationMask = null)
+            MainVM_TranslationMask translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -230,10 +223,10 @@ namespace Mutagen.Bethesda.Tests
                 translationMask: translationMask);
         }
 
-        public static DataFolderLocations CreateFromXml(
+        public static MainVM CreateFromXml(
             Stream stream,
-            out DataFolderLocations_ErrorMask errorMask,
-            DataFolderLocations_TranslationMask translationMask = null,
+            out MainVM_ErrorMask errorMask,
+            MainVM_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
@@ -244,10 +237,10 @@ namespace Mutagen.Bethesda.Tests
                 translationMask: translationMask);
         }
 
-        public static DataFolderLocations CreateFromXml(
+        public static MainVM CreateFromXml(
             Stream stream,
             ErrorMaskBuilder errorMask,
-            DataFolderLocations_TranslationMask translationMask = null,
+            MainVM_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
@@ -274,8 +267,8 @@ namespace Mutagen.Bethesda.Tests
 
         public virtual void CopyInXml(
             XElement node,
-            out DataFolderLocations_ErrorMask errorMask,
-            DataFolderLocations_TranslationMask translationMask = null,
+            out MainVM_ErrorMask errorMask,
+            MainVM_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New,
             bool doMasks = true)
         {
@@ -285,7 +278,7 @@ namespace Mutagen.Bethesda.Tests
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = DataFolderLocations_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = MainVM_ErrorMask.Factory(errorMaskBuilder);
         }
 
         protected void CopyInXmlInternal(
@@ -294,7 +287,7 @@ namespace Mutagen.Bethesda.Tests
             TranslationCrystal translationMask,
             MissingCreate missing = MissingCreate.New)
         {
-            var obj = DataFolderLocations.CreateFromXml(
+            var obj = MainVM.CreateFromXml(
                 missing: missing,
                 node: node,
                 errorMask: errorMask,
@@ -314,8 +307,8 @@ namespace Mutagen.Bethesda.Tests
 
         public void CopyInXml(
             string path,
-            out DataFolderLocations_ErrorMask errorMask,
-            DataFolderLocations_TranslationMask translationMask,
+            out MainVM_ErrorMask errorMask,
+            MainVM_TranslationMask translationMask,
             MissingCreate missing = MissingCreate.New,
             bool doMasks = true)
         {
@@ -340,8 +333,8 @@ namespace Mutagen.Bethesda.Tests
 
         public void CopyInXml(
             Stream stream,
-            out DataFolderLocations_ErrorMask errorMask,
-            DataFolderLocations_TranslationMask translationMask,
+            out MainVM_ErrorMask errorMask,
+            MainVM_TranslationMask translationMask,
             MissingCreate missing = MissingCreate.New,
             bool doMasks = true)
         {
@@ -361,39 +354,38 @@ namespace Mutagen.Bethesda.Tests
         protected readonly BitArray _hasBeenSetTracker;
         protected bool GetHasBeenSet(int index)
         {
-            switch ((DataFolderLocations_FieldIndex)index)
+            switch ((MainVM_FieldIndex)index)
             {
-                case DataFolderLocations_FieldIndex.Oblivion:
-                case DataFolderLocations_FieldIndex.Skyrim:
+                case MainVM_FieldIndex.ModFilePath:
                     return true;
                 default:
                     throw new ArgumentException($"Unknown field index: {index}");
             }
         }
 
-        public DataFolderLocations Copy(
-            DataFolderLocations_CopyMask copyMask = null,
-            DataFolderLocations def = null)
+        public MainVM Copy(
+            MainVM_CopyMask copyMask = null,
+            MainVM def = null)
         {
-            return DataFolderLocations.Copy(
+            return MainVM.Copy(
                 this,
                 copyMask: copyMask,
                 def: def);
         }
 
-        public static DataFolderLocations Copy(
-            DataFolderLocations item,
-            DataFolderLocations_CopyMask copyMask = null,
-            DataFolderLocations def = null)
+        public static MainVM Copy(
+            MainVM item,
+            MainVM_CopyMask copyMask = null,
+            MainVM def = null)
         {
-            DataFolderLocations ret;
-            if (item.GetType().Equals(typeof(DataFolderLocations)))
+            MainVM ret;
+            if (item.GetType().Equals(typeof(MainVM)))
             {
-                ret = new DataFolderLocations();
+                ret = new MainVM();
             }
             else
             {
-                ret = (DataFolderLocations)System.Activator.CreateInstance(item.GetType());
+                ret = (MainVM)System.Activator.CreateInstance(item.GetType());
             }
             ret.CopyFieldsFrom(
                 item,
@@ -402,19 +394,19 @@ namespace Mutagen.Bethesda.Tests
             return ret;
         }
 
-        public static DataFolderLocations Copy_ToLoqui(
-            DataFolderLocations item,
-            DataFolderLocations_CopyMask copyMask = null,
-            DataFolderLocations def = null)
+        public static MainVM Copy_ToLoqui(
+            MainVM item,
+            MainVM_CopyMask copyMask = null,
+            MainVM def = null)
         {
-            DataFolderLocations ret;
-            if (item.GetType().Equals(typeof(DataFolderLocations)))
+            MainVM ret;
+            if (item.GetType().Equals(typeof(MainVM)))
             {
-                ret = new DataFolderLocations() as DataFolderLocations;
+                ret = new MainVM() as MainVM;
             }
             else
             {
-                ret = (DataFolderLocations)System.Activator.CreateInstance(item.GetType());
+                ret = (MainVM)System.Activator.CreateInstance(item.GetType());
             }
             ret.CopyFieldsFrom(
                 item,
@@ -423,7 +415,7 @@ namespace Mutagen.Bethesda.Tests
             return ret;
         }
 
-        public void CopyFieldsFrom(DataFolderLocations rhs)
+        public void CopyFieldsFrom(MainVM rhs)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
@@ -434,9 +426,9 @@ namespace Mutagen.Bethesda.Tests
         }
 
         public void CopyFieldsFrom(
-            DataFolderLocations rhs,
-            DataFolderLocations_CopyMask copyMask,
-            DataFolderLocations def = null)
+            MainVM rhs,
+            MainVM_CopyMask copyMask,
+            MainVM def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
@@ -447,29 +439,29 @@ namespace Mutagen.Bethesda.Tests
         }
 
         public void CopyFieldsFrom(
-            DataFolderLocations rhs,
-            out DataFolderLocations_ErrorMask errorMask,
-            DataFolderLocations_CopyMask copyMask = null,
-            DataFolderLocations def = null,
+            MainVM rhs,
+            out MainVM_ErrorMask errorMask,
+            MainVM_CopyMask copyMask = null,
+            MainVM def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            DataFolderLocationsSetterCopyCommon.CopyFieldsFrom(
+            MainVMSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
-            errorMask = DataFolderLocations_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = MainVM_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public void CopyFieldsFrom(
-            DataFolderLocations rhs,
+            MainVM rhs,
             ErrorMaskBuilder errorMask,
-            DataFolderLocations_CopyMask copyMask = null,
-            DataFolderLocations def = null)
+            MainVM_CopyMask copyMask = null,
+            MainVM def = null)
         {
-            DataFolderLocationsSetterCopyCommon.CopyFieldsFrom(
+            MainVMSetterCopyCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -479,14 +471,11 @@ namespace Mutagen.Bethesda.Tests
 
         protected void SetNthObject(ushort index, object obj)
         {
-            DataFolderLocations_FieldIndex enu = (DataFolderLocations_FieldIndex)index;
+            MainVM_FieldIndex enu = (MainVM_FieldIndex)index;
             switch (enu)
             {
-                case DataFolderLocations_FieldIndex.Oblivion:
-                    this.Oblivion = (String)obj;
-                    break;
-                case DataFolderLocations_FieldIndex.Skyrim:
-                    this.Skyrim = (String)obj;
+                case MainVM_FieldIndex.ModFilePath:
+                    this.ModFilePath = (String)obj;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -495,32 +484,29 @@ namespace Mutagen.Bethesda.Tests
 
         public void Clear()
         {
-            DataFolderLocationsSetterCommon.Instance.Clear(this);
+            MainVMSetterCommon.Instance.Clear(this);
         }
 
-        public static DataFolderLocations Create(IEnumerable<KeyValuePair<ushort, object>> fields)
+        public static MainVM Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
-            var ret = new DataFolderLocations();
+            var ret = new MainVM();
             foreach (var pair in fields)
             {
-                CopyInInternal_DataFolderLocations(ret, pair);
+                CopyInInternal_MainVM(ret, pair);
             }
             return ret;
         }
 
-        protected static void CopyInInternal_DataFolderLocations(DataFolderLocations obj, KeyValuePair<ushort, object> pair)
+        protected static void CopyInInternal_MainVM(MainVM obj, KeyValuePair<ushort, object> pair)
         {
-            if (!EnumExt.TryParse(pair.Key, out DataFolderLocations_FieldIndex enu))
+            if (!EnumExt.TryParse(pair.Key, out MainVM_FieldIndex enu))
             {
                 throw new ArgumentException($"Unknown index: {pair.Key}");
             }
             switch (enu)
             {
-                case DataFolderLocations_FieldIndex.Oblivion:
-                    obj.Oblivion = (String)pair.Value;
-                    break;
-                case DataFolderLocations_FieldIndex.Skyrim:
-                    obj.Skyrim = (String)pair.Value;
+                case MainVM_FieldIndex.ModFilePath:
+                    obj.ModFilePath = (String)pair.Value;
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -530,44 +516,38 @@ namespace Mutagen.Bethesda.Tests
     #endregion
 
     #region Interface
-    public partial interface IDataFolderLocations :
-        IDataFolderLocationsInternalGetter,
-        ILoquiObjectSetter<IDataFolderLocationsInternal>
+    public partial interface IMainVM :
+        IMainVMInternalGetter,
+        ILoquiObjectSetter<IMainVMInternal>
     {
-        new String Oblivion { get; set; }
-
-        new String Skyrim { get; set; }
+        new String ModFilePath { get; set; }
 
         void CopyFieldsFrom(
-            DataFolderLocations rhs,
+            MainVM rhs,
             ErrorMaskBuilder errorMask = null,
-            DataFolderLocations_CopyMask copyMask = null,
-            DataFolderLocations def = null);
+            MainVM_CopyMask copyMask = null,
+            MainVM def = null);
     }
 
-    public partial interface IDataFolderLocationsInternal :
-        IDataFolderLocations,
-        IDataFolderLocationsInternalGetter
+    public partial interface IMainVMInternal :
+        IMainVM,
+        IMainVMInternalGetter
     {
     }
 
-    public partial interface IDataFolderLocationsGetter :
+    public partial interface IMainVMGetter :
         ILoquiObject,
-        ILoquiObject<IDataFolderLocationsInternalGetter>,
+        ILoquiObject<IMainVMInternalGetter>,
         IXmlItem
     {
-        #region Oblivion
-        String Oblivion { get; }
-
-        #endregion
-        #region Skyrim
-        String Skyrim { get; }
+        #region ModFilePath
+        String ModFilePath { get; }
 
         #endregion
 
     }
 
-    public partial interface IDataFolderLocationsInternalGetter : IDataFolderLocationsGetter
+    public partial interface IMainVMInternalGetter : IMainVMGetter
     {
         object CommonInstance();
         object CommonSetterInstance();
@@ -578,42 +558,42 @@ namespace Mutagen.Bethesda.Tests
     #endregion
 
     #region Common MixIn
-    public static class DataFolderLocationsMixIn
+    public static class MainVMMixIn
     {
-        public static void Clear(this IDataFolderLocationsInternal item)
+        public static void Clear(this IMainVMInternal item)
         {
-            ((DataFolderLocationsSetterCommon)((IDataFolderLocationsInternalGetter)item).CommonSetterInstance()).Clear(item: item);
+            ((MainVMSetterCommon)((IMainVMInternalGetter)item).CommonSetterInstance()).Clear(item: item);
         }
 
-        public static DataFolderLocations_Mask<bool> GetEqualsMask(
-            this IDataFolderLocationsInternalGetter item,
-            IDataFolderLocationsInternalGetter rhs,
+        public static MainVM_Mask<bool> GetEqualsMask(
+            this IMainVMInternalGetter item,
+            IMainVMInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((DataFolderLocationsCommon)((IDataFolderLocationsInternalGetter)item).CommonInstance()).GetEqualsMask(
+            return ((MainVMCommon)((IMainVMInternalGetter)item).CommonInstance()).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IDataFolderLocationsInternalGetter item,
+            this IMainVMInternalGetter item,
             string name = null,
-            DataFolderLocations_Mask<bool> printMask = null)
+            MainVM_Mask<bool> printMask = null)
         {
-            return ((DataFolderLocationsCommon)((IDataFolderLocationsInternalGetter)item).CommonInstance()).ToString(
+            return ((MainVMCommon)((IMainVMInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IDataFolderLocationsInternalGetter item,
+            this IMainVMInternalGetter item,
             FileGeneration fg,
             string name = null,
-            DataFolderLocations_Mask<bool> printMask = null)
+            MainVM_Mask<bool> printMask = null)
         {
-            ((DataFolderLocationsCommon)((IDataFolderLocationsInternalGetter)item).CommonInstance()).ToString(
+            ((MainVMCommon)((IMainVMInternalGetter)item).CommonInstance()).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -621,28 +601,28 @@ namespace Mutagen.Bethesda.Tests
         }
 
         public static bool HasBeenSet(
-            this IDataFolderLocationsInternalGetter item,
-            DataFolderLocations_Mask<bool?> checkMask)
+            this IMainVMInternalGetter item,
+            MainVM_Mask<bool?> checkMask)
         {
-            return ((DataFolderLocationsCommon)((IDataFolderLocationsInternalGetter)item).CommonInstance()).HasBeenSet(
+            return ((MainVMCommon)((IMainVMInternalGetter)item).CommonInstance()).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static DataFolderLocations_Mask<bool> GetHasBeenSetMask(this IDataFolderLocationsInternalGetter item)
+        public static MainVM_Mask<bool> GetHasBeenSetMask(this IMainVMInternalGetter item)
         {
-            var ret = new DataFolderLocations_Mask<bool>();
-            ((DataFolderLocationsCommon)((IDataFolderLocationsInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
+            var ret = new MainVM_Mask<bool>();
+            ((MainVMCommon)((IMainVMInternalGetter)item).CommonInstance()).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this IDataFolderLocationsInternalGetter item,
-            IDataFolderLocationsInternalGetter rhs)
+            this IMainVMInternalGetter item,
+            IMainVMInternalGetter rhs)
         {
-            return ((DataFolderLocationsCommon)((IDataFolderLocationsInternalGetter)item).CommonInstance()).Equals(
+            return ((MainVMCommon)((IMainVMInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -652,53 +632,52 @@ namespace Mutagen.Bethesda.Tests
 
 }
 
-namespace Mutagen.Bethesda.Tests.Internals
+namespace Mutagen.Bethesda.Examples.Internals
 {
     #region Field Index
-    public enum DataFolderLocations_FieldIndex
+    public enum MainVM_FieldIndex
     {
-        Oblivion = 0,
-        Skyrim = 1,
+        ModFilePath = 0,
     }
     #endregion
 
     #region Registration
-    public class DataFolderLocations_Registration : ILoquiRegistration
+    public class MainVM_Registration : ILoquiRegistration
     {
-        public static readonly DataFolderLocations_Registration Instance = new DataFolderLocations_Registration();
+        public static readonly MainVM_Registration Instance = new MainVM_Registration();
 
-        public static ProtocolKey ProtocolKey => ProtocolDefinition_Tests.ProtocolKey;
+        public static ProtocolKey ProtocolKey => ProtocolDefinition_Examples.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Tests.ProtocolKey,
-            msgID: 4,
+            protocolKey: ProtocolDefinition_Examples.ProtocolKey,
+            msgID: 1,
             version: 0);
 
-        public const string GUID = "352acadd-2222-4274-a2a2-5678a465527e";
+        public const string GUID = "e4d52690-eae1-4493-961a-cc5d2b974896";
 
-        public const ushort AdditionalFieldCount = 2;
+        public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 2;
+        public const ushort FieldCount = 1;
 
-        public static readonly Type MaskType = typeof(DataFolderLocations_Mask<>);
+        public static readonly Type MaskType = typeof(MainVM_Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(DataFolderLocations_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(MainVM_ErrorMask);
 
-        public static readonly Type ClassType = typeof(DataFolderLocations);
+        public static readonly Type ClassType = typeof(MainVM);
 
-        public static readonly Type GetterType = typeof(IDataFolderLocationsGetter);
+        public static readonly Type GetterType = typeof(IMainVMGetter);
 
-        public static readonly Type InternalGetterType = typeof(IDataFolderLocationsInternalGetter);
+        public static readonly Type InternalGetterType = typeof(IMainVMInternalGetter);
 
-        public static readonly Type SetterType = typeof(IDataFolderLocations);
+        public static readonly Type SetterType = typeof(IMainVM);
 
-        public static readonly Type InternalSetterType = typeof(IDataFolderLocationsInternal);
+        public static readonly Type InternalSetterType = typeof(IMainVMInternal);
 
-        public const string FullName = "Mutagen.Bethesda.Tests.DataFolderLocations";
+        public const string FullName = "Mutagen.Bethesda.Examples.MainVM";
 
-        public const string Name = "DataFolderLocations";
+        public const string Name = "MainVM";
 
-        public const string Namespace = "Mutagen.Bethesda.Tests";
+        public const string Namespace = "Mutagen.Bethesda.Examples";
 
         public const byte GenericCount = 0;
 
@@ -708,10 +687,8 @@ namespace Mutagen.Bethesda.Tests.Internals
         {
             switch (str.Upper)
             {
-                case "OBLIVION":
-                    return (ushort)DataFolderLocations_FieldIndex.Oblivion;
-                case "SKYRIM":
-                    return (ushort)DataFolderLocations_FieldIndex.Skyrim;
+                case "MODFILEPATH":
+                    return (ushort)MainVM_FieldIndex.ModFilePath;
                 default:
                     return null;
             }
@@ -719,11 +696,10 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         public static bool GetNthIsEnumerable(ushort index)
         {
-            DataFolderLocations_FieldIndex enu = (DataFolderLocations_FieldIndex)index;
+            MainVM_FieldIndex enu = (MainVM_FieldIndex)index;
             switch (enu)
             {
-                case DataFolderLocations_FieldIndex.Oblivion:
-                case DataFolderLocations_FieldIndex.Skyrim:
+                case MainVM_FieldIndex.ModFilePath:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -732,11 +708,10 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         public static bool GetNthIsLoqui(ushort index)
         {
-            DataFolderLocations_FieldIndex enu = (DataFolderLocations_FieldIndex)index;
+            MainVM_FieldIndex enu = (MainVM_FieldIndex)index;
             switch (enu)
             {
-                case DataFolderLocations_FieldIndex.Oblivion:
-                case DataFolderLocations_FieldIndex.Skyrim:
+                case MainVM_FieldIndex.ModFilePath:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -745,11 +720,10 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         public static bool GetNthIsSingleton(ushort index)
         {
-            DataFolderLocations_FieldIndex enu = (DataFolderLocations_FieldIndex)index;
+            MainVM_FieldIndex enu = (MainVM_FieldIndex)index;
             switch (enu)
             {
-                case DataFolderLocations_FieldIndex.Oblivion:
-                case DataFolderLocations_FieldIndex.Skyrim:
+                case MainVM_FieldIndex.ModFilePath:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -758,13 +732,11 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         public static string GetNthName(ushort index)
         {
-            DataFolderLocations_FieldIndex enu = (DataFolderLocations_FieldIndex)index;
+            MainVM_FieldIndex enu = (MainVM_FieldIndex)index;
             switch (enu)
             {
-                case DataFolderLocations_FieldIndex.Oblivion:
-                    return "Oblivion";
-                case DataFolderLocations_FieldIndex.Skyrim:
-                    return "Skyrim";
+                case MainVM_FieldIndex.ModFilePath:
+                    return "ModFilePath";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -772,11 +744,10 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         public static bool IsNthDerivative(ushort index)
         {
-            DataFolderLocations_FieldIndex enu = (DataFolderLocations_FieldIndex)index;
+            MainVM_FieldIndex enu = (MainVM_FieldIndex)index;
             switch (enu)
             {
-                case DataFolderLocations_FieldIndex.Oblivion:
-                case DataFolderLocations_FieldIndex.Skyrim:
+                case MainVM_FieldIndex.ModFilePath:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -785,11 +756,10 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         public static bool IsProtected(ushort index)
         {
-            DataFolderLocations_FieldIndex enu = (DataFolderLocations_FieldIndex)index;
+            MainVM_FieldIndex enu = (MainVM_FieldIndex)index;
             switch (enu)
             {
-                case DataFolderLocations_FieldIndex.Oblivion:
-                case DataFolderLocations_FieldIndex.Skyrim:
+                case MainVM_FieldIndex.ModFilePath:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -798,19 +768,17 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         public static Type GetNthType(ushort index)
         {
-            DataFolderLocations_FieldIndex enu = (DataFolderLocations_FieldIndex)index;
+            MainVM_FieldIndex enu = (MainVM_FieldIndex)index;
             switch (enu)
             {
-                case DataFolderLocations_FieldIndex.Oblivion:
-                    return typeof(String);
-                case DataFolderLocations_FieldIndex.Skyrim:
+                case MainVM_FieldIndex.ModFilePath:
                     return typeof(String);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(DataFolderLocationsXmlWriteTranslation);
+        public static readonly Type XmlWriteTranslation = typeof(MainVMXmlWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -843,32 +811,31 @@ namespace Mutagen.Bethesda.Tests.Internals
     #endregion
 
     #region Common
-    public partial class DataFolderLocationsSetterCommon
+    public partial class MainVMSetterCommon
     {
-        public static readonly DataFolderLocationsSetterCommon Instance = new DataFolderLocationsSetterCommon();
+        public static readonly MainVMSetterCommon Instance = new MainVMSetterCommon();
 
         partial void ClearPartial();
         
-        public virtual void Clear(IDataFolderLocationsInternal item)
+        public virtual void Clear(IMainVMInternal item)
         {
             ClearPartial();
-            item.Oblivion = default(String);
-            item.Skyrim = default(String);
+            item.ModFilePath = default(String);
         }
         
         
     }
-    public partial class DataFolderLocationsCommon
+    public partial class MainVMCommon
     {
-        public static readonly DataFolderLocationsCommon Instance = new DataFolderLocationsCommon();
+        public static readonly MainVMCommon Instance = new MainVMCommon();
 
-        public DataFolderLocations_Mask<bool> GetEqualsMask(
-            IDataFolderLocationsInternalGetter item,
-            IDataFolderLocationsInternalGetter rhs,
+        public MainVM_Mask<bool> GetEqualsMask(
+            IMainVMInternalGetter item,
+            IMainVMInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new DataFolderLocations_Mask<bool>();
-            ((DataFolderLocationsCommon)((IDataFolderLocationsInternalGetter)item).CommonInstance()).FillEqualsMask(
+            var ret = new MainVM_Mask<bool>();
+            ((MainVMCommon)((IMainVMInternalGetter)item).CommonInstance()).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -877,20 +844,19 @@ namespace Mutagen.Bethesda.Tests.Internals
         }
         
         public void FillEqualsMask(
-            IDataFolderLocationsInternalGetter item,
-            IDataFolderLocationsInternalGetter rhs,
-            DataFolderLocations_Mask<bool> ret,
+            IMainVMInternalGetter item,
+            IMainVMInternalGetter rhs,
+            MainVM_Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Oblivion = string.Equals(item.Oblivion, rhs.Oblivion);
-            ret.Skyrim = string.Equals(item.Skyrim, rhs.Skyrim);
+            ret.ModFilePath = string.Equals(item.ModFilePath, rhs.ModFilePath);
         }
         
         public string ToString(
-            IDataFolderLocationsInternalGetter item,
+            IMainVMInternalGetter item,
             string name = null,
-            DataFolderLocations_Mask<bool> printMask = null)
+            MainVM_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -902,18 +868,18 @@ namespace Mutagen.Bethesda.Tests.Internals
         }
         
         public void ToString(
-            IDataFolderLocationsInternalGetter item,
+            IMainVMInternalGetter item,
             FileGeneration fg,
             string name = null,
-            DataFolderLocations_Mask<bool> printMask = null)
+            MainVM_Mask<bool> printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"DataFolderLocations =>");
+                fg.AppendLine($"MainVM =>");
             }
             else
             {
-                fg.AppendLine($"{name} (DataFolderLocations) =>");
+                fg.AppendLine($"{name} (MainVM) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -927,52 +893,45 @@ namespace Mutagen.Bethesda.Tests.Internals
         }
         
         protected static void ToStringFields(
-            IDataFolderLocationsInternalGetter item,
+            IMainVMInternalGetter item,
             FileGeneration fg,
-            DataFolderLocations_Mask<bool> printMask = null)
+            MainVM_Mask<bool> printMask = null)
         {
-            if (printMask?.Oblivion ?? true)
+            if (printMask?.ModFilePath ?? true)
             {
-                fg.AppendLine($"Oblivion => {item.Oblivion}");
-            }
-            if (printMask?.Skyrim ?? true)
-            {
-                fg.AppendLine($"Skyrim => {item.Skyrim}");
+                fg.AppendLine($"ModFilePath => {item.ModFilePath}");
             }
         }
         
         public bool HasBeenSet(
-            IDataFolderLocationsInternalGetter item,
-            DataFolderLocations_Mask<bool?> checkMask)
+            IMainVMInternalGetter item,
+            MainVM_Mask<bool?> checkMask)
         {
             return true;
         }
         
         public void FillHasBeenSetMask(
-            IDataFolderLocationsInternalGetter item,
-            DataFolderLocations_Mask<bool> mask)
+            IMainVMInternalGetter item,
+            MainVM_Mask<bool> mask)
         {
-            mask.Oblivion = true;
-            mask.Skyrim = true;
+            mask.ModFilePath = true;
         }
         
         #region Equals and Hash
         public virtual bool Equals(
-            IDataFolderLocationsInternalGetter lhs,
-            IDataFolderLocationsInternalGetter rhs)
+            IMainVMInternalGetter lhs,
+            IMainVMInternalGetter rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!string.Equals(lhs.Oblivion, rhs.Oblivion)) return false;
-            if (!string.Equals(lhs.Skyrim, rhs.Skyrim)) return false;
+            if (!string.Equals(lhs.ModFilePath, rhs.ModFilePath)) return false;
             return true;
         }
         
-        public virtual int GetHashCode(IDataFolderLocationsInternalGetter item)
+        public virtual int GetHashCode(IMainVMInternalGetter item)
         {
             int ret = 0;
-            ret = HashHelper.GetHashCode(item.Oblivion).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Skyrim).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.ModFilePath).CombineHashCode(ret);
             return ret;
         }
         
@@ -981,41 +940,24 @@ namespace Mutagen.Bethesda.Tests.Internals
         
         
     }
-    public partial class DataFolderLocationsSetterCopyCommon
+    public partial class MainVMSetterCopyCommon
     {
-        public static readonly DataFolderLocationsSetterCopyCommon Instance = new DataFolderLocationsSetterCopyCommon();
+        public static readonly MainVMSetterCopyCommon Instance = new MainVMSetterCopyCommon();
 
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            DataFolderLocations item,
-            DataFolderLocations rhs,
-            DataFolderLocations def,
+            MainVM item,
+            MainVM rhs,
+            MainVM def,
             ErrorMaskBuilder errorMask,
-            DataFolderLocations_CopyMask copyMask)
+            MainVM_CopyMask copyMask)
         {
-            if (copyMask?.Oblivion ?? true)
+            if (copyMask?.ModFilePath ?? true)
             {
-                errorMask?.PushIndex((int)DataFolderLocations_FieldIndex.Oblivion);
+                errorMask?.PushIndex((int)MainVM_FieldIndex.ModFilePath);
                 try
                 {
-                    item.Oblivion = rhs.Oblivion;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if (copyMask?.Skyrim ?? true)
-            {
-                errorMask?.PushIndex((int)DataFolderLocations_FieldIndex.Skyrim);
-                try
-                {
-                    item.Skyrim = rhs.Skyrim;
+                    item.ModFilePath = rhs.ModFilePath;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1037,35 +979,35 @@ namespace Mutagen.Bethesda.Tests.Internals
 
 }
 
-namespace Mutagen.Bethesda.Tests
+namespace Mutagen.Bethesda.Examples
 {
-    public partial class DataFolderLocations
+    public partial class MainVM
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => DataFolderLocations_Registration.Instance;
-        public static DataFolderLocations_Registration Registration => DataFolderLocations_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => MainVM_Registration.Instance;
+        public static MainVM_Registration Registration => MainVM_Registration.Instance;
         protected object CommonInstance()
         {
-            return DataFolderLocationsCommon.Instance;
+            return MainVMCommon.Instance;
         }
         protected object CommonSetterInstance()
         {
-            return DataFolderLocationsSetterCommon.Instance;
+            return MainVMSetterCommon.Instance;
         }
         protected object CommonSetterCopyInstance()
         {
-            return DataFolderLocationsSetterCopyCommon.Instance;
+            return MainVMSetterCopyCommon.Instance;
         }
-        object IDataFolderLocationsInternalGetter.CommonInstance()
+        object IMainVMInternalGetter.CommonInstance()
         {
             return this.CommonInstance();
         }
-        object IDataFolderLocationsInternalGetter.CommonSetterInstance()
+        object IMainVMInternalGetter.CommonSetterInstance()
         {
             return this.CommonSetterInstance();
         }
-        object IDataFolderLocationsInternalGetter.CommonSetterCopyInstance()
+        object IMainVMInternalGetter.CommonSetterCopyInstance()
         {
             return this.CommonSetterCopyInstance();
         }
@@ -1076,50 +1018,41 @@ namespace Mutagen.Bethesda.Tests
 }
 #region Modules
 #region Xml Translation
-namespace Mutagen.Bethesda.Tests.Internals
+namespace Mutagen.Bethesda.Examples.Internals
 {
-    public partial class DataFolderLocationsXmlWriteTranslation : IXmlWriteTranslator
+    public partial class MainVMXmlWriteTranslation : IXmlWriteTranslator
     {
-        public readonly static DataFolderLocationsXmlWriteTranslation Instance = new DataFolderLocationsXmlWriteTranslation();
+        public readonly static MainVMXmlWriteTranslation Instance = new MainVMXmlWriteTranslation();
 
         public static void WriteToNodeXml(
-            IDataFolderLocationsInternalGetter item,
+            IMainVMInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            if ((translationMask?.GetShouldTranslate((int)DataFolderLocations_FieldIndex.Oblivion) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)MainVM_FieldIndex.ModFilePath) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Oblivion),
-                    item: item.Oblivion,
-                    fieldIndex: (int)DataFolderLocations_FieldIndex.Oblivion,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)DataFolderLocations_FieldIndex.Skyrim) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Skyrim),
-                    item: item.Skyrim,
-                    fieldIndex: (int)DataFolderLocations_FieldIndex.Skyrim,
+                    name: nameof(item.ModFilePath),
+                    item: item.ModFilePath,
+                    fieldIndex: (int)MainVM_FieldIndex.ModFilePath,
                     errorMask: errorMask);
             }
         }
 
         public void Write(
             XElement node,
-            IDataFolderLocationsInternalGetter item,
+            IMainVMInternalGetter item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)
         {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Tests.DataFolderLocations");
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Examples.MainVM");
             node.Add(elem);
             if (name != null)
             {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Tests.DataFolderLocations");
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Examples.MainVM");
             }
             WriteToNodeXml(
                 item: item,
@@ -1136,7 +1069,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             string name = null)
         {
             Write(
-                item: (IDataFolderLocationsInternalGetter)item,
+                item: (IMainVMInternalGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1145,7 +1078,7 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         public void Write(
             XElement node,
-            IDataFolderLocationsInternalGetter item,
+            IMainVMInternalGetter item,
             ErrorMaskBuilder errorMask,
             int fieldIndex,
             TranslationCrystal translationMask,
@@ -1155,7 +1088,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 errorMask?.PushIndex(fieldIndex);
                 Write(
-                    item: (IDataFolderLocationsInternalGetter)item,
+                    item: (IMainVMInternalGetter)item,
                     name: name,
                     node: node,
                     errorMask: errorMask,
@@ -1174,12 +1107,12 @@ namespace Mutagen.Bethesda.Tests.Internals
 
     }
 
-    public partial class DataFolderLocationsXmlCreateTranslation
+    public partial class MainVMXmlCreateTranslation
     {
-        public readonly static DataFolderLocationsXmlCreateTranslation Instance = new DataFolderLocationsXmlCreateTranslation();
+        public readonly static MainVMXmlCreateTranslation Instance = new MainVMXmlCreateTranslation();
 
         public static void FillPublicXml(
-            IDataFolderLocationsInternal item,
+            IMainVMInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1188,7 +1121,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    DataFolderLocationsXmlCreateTranslation.FillPublicElementXml(
+                    MainVMXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1204,7 +1137,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         }
 
         public static void FillPublicElementXml(
-            IDataFolderLocationsInternal item,
+            IMainVMInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,
@@ -1212,51 +1145,22 @@ namespace Mutagen.Bethesda.Tests.Internals
         {
             switch (name)
             {
-                case "Oblivion":
-                    if ((translationMask?.GetShouldTranslate((int)DataFolderLocations_FieldIndex.Oblivion) ?? true))
+                case "ModFilePath":
+                    if ((translationMask?.GetShouldTranslate((int)MainVM_FieldIndex.ModFilePath) ?? true))
                     {
                         try
                         {
-                            errorMask?.PushIndex((int)DataFolderLocations_FieldIndex.Oblivion);
+                            errorMask?.PushIndex((int)MainVM_FieldIndex.ModFilePath);
                             if (StringXmlTranslation.Instance.Parse(
                                 node: node,
-                                item: out String OblivionParse,
+                                item: out String ModFilePathParse,
                                 errorMask: errorMask))
                             {
-                                item.Oblivion = OblivionParse;
+                                item.ModFilePath = ModFilePathParse;
                             }
                             else
                             {
-                                item.Oblivion = default(String);
-                            }
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
-                    }
-                    break;
-                case "Skyrim":
-                    if ((translationMask?.GetShouldTranslate((int)DataFolderLocations_FieldIndex.Skyrim) ?? true))
-                    {
-                        try
-                        {
-                            errorMask?.PushIndex((int)DataFolderLocations_FieldIndex.Skyrim);
-                            if (StringXmlTranslation.Instance.Parse(
-                                node: node,
-                                item: out String SkyrimParse,
-                                errorMask: errorMask))
-                            {
-                                item.Skyrim = SkyrimParse;
-                            }
-                            else
-                            {
-                                item.Skyrim = default(String);
+                                item.ModFilePath = default(String);
                             }
                         }
                         catch (Exception ex)
@@ -1278,34 +1182,34 @@ namespace Mutagen.Bethesda.Tests.Internals
     }
 
 }
-namespace Mutagen.Bethesda.Tests
+namespace Mutagen.Bethesda.Examples
 {
     #region Xml Write Mixins
-    public static class DataFolderLocationsXmlTranslationMixIn
+    public static class MainVMXmlTranslationMixIn
     {
         public static void WriteToXml(
-            this IDataFolderLocationsInternalGetter item,
+            this IMainVMInternalGetter item,
             XElement node,
-            out DataFolderLocations_ErrorMask errorMask,
+            out MainVM_ErrorMask errorMask,
             bool doMasks = true,
-            DataFolderLocations_TranslationMask translationMask = null,
+            MainVM_TranslationMask translationMask = null,
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((DataFolderLocationsXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((MainVMXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = DataFolderLocations_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = MainVM_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
-            this IDataFolderLocationsInternalGetter item,
+            this IMainVMInternalGetter item,
             string path,
-            out DataFolderLocations_ErrorMask errorMask,
-            DataFolderLocations_TranslationMask translationMask = null,
+            out MainVM_ErrorMask errorMask,
+            MainVM_TranslationMask translationMask = null,
             bool doMasks = true,
             string name = null)
         {
@@ -1321,7 +1225,7 @@ namespace Mutagen.Bethesda.Tests
         }
 
         public static void WriteToXml(
-            this IDataFolderLocationsInternalGetter item,
+            this IMainVMInternalGetter item,
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1339,10 +1243,10 @@ namespace Mutagen.Bethesda.Tests
         }
 
         public static void WriteToXml(
-            this IDataFolderLocationsInternalGetter item,
+            this IMainVMInternalGetter item,
             Stream stream,
-            out DataFolderLocations_ErrorMask errorMask,
-            DataFolderLocations_TranslationMask translationMask = null,
+            out MainVM_ErrorMask errorMask,
+            MainVM_TranslationMask translationMask = null,
             bool doMasks = true,
             string name = null)
         {
@@ -1358,7 +1262,7 @@ namespace Mutagen.Bethesda.Tests
         }
 
         public static void WriteToXml(
-            this IDataFolderLocationsInternalGetter item,
+            this IMainVMInternalGetter item,
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
@@ -1376,13 +1280,13 @@ namespace Mutagen.Bethesda.Tests
         }
 
         public static void WriteToXml(
-            this IDataFolderLocationsInternalGetter item,
+            this IMainVMInternalGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
             string name = null)
         {
-            ((DataFolderLocationsXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((MainVMXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1391,12 +1295,12 @@ namespace Mutagen.Bethesda.Tests
         }
 
         public static void WriteToXml(
-            this IDataFolderLocationsInternalGetter item,
+            this IMainVMInternalGetter item,
             XElement node,
             string name = null,
-            DataFolderLocations_TranslationMask translationMask = null)
+            MainVM_TranslationMask translationMask = null)
         {
-            ((DataFolderLocationsXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((MainVMXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1405,12 +1309,12 @@ namespace Mutagen.Bethesda.Tests
         }
 
         public static void WriteToXml(
-            this IDataFolderLocationsInternalGetter item,
+            this IMainVMInternalGetter item,
             string path,
             string name = null)
         {
             var node = new XElement("topnode");
-            ((DataFolderLocationsXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((MainVMXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1420,12 +1324,12 @@ namespace Mutagen.Bethesda.Tests
         }
 
         public static void WriteToXml(
-            this IDataFolderLocationsInternalGetter item,
+            this IMainVMInternalGetter item,
             Stream stream,
             string name = null)
         {
             var node = new XElement("topnode");
-            ((DataFolderLocationsXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((MainVMXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1442,46 +1346,42 @@ namespace Mutagen.Bethesda.Tests
 #endregion
 
 #region Mask
-namespace Mutagen.Bethesda.Tests.Internals
+namespace Mutagen.Bethesda.Examples.Internals
 {
-    public class DataFolderLocations_Mask<T> : IMask<T>, IEquatable<DataFolderLocations_Mask<T>>
+    public class MainVM_Mask<T> : IMask<T>, IEquatable<MainVM_Mask<T>>
     {
         #region Ctors
-        public DataFolderLocations_Mask()
+        public MainVM_Mask()
         {
         }
 
-        public DataFolderLocations_Mask(T initialValue)
+        public MainVM_Mask(T initialValue)
         {
-            this.Oblivion = initialValue;
-            this.Skyrim = initialValue;
+            this.ModFilePath = initialValue;
         }
         #endregion
 
         #region Members
-        public T Oblivion;
-        public T Skyrim;
+        public T ModFilePath;
         #endregion
 
         #region Equals
         public override bool Equals(object obj)
         {
-            if (!(obj is DataFolderLocations_Mask<T> rhs)) return false;
+            if (!(obj is MainVM_Mask<T> rhs)) return false;
             return Equals(rhs);
         }
 
-        public bool Equals(DataFolderLocations_Mask<T> rhs)
+        public bool Equals(MainVM_Mask<T> rhs)
         {
             if (rhs == null) return false;
-            if (!object.Equals(this.Oblivion, rhs.Oblivion)) return false;
-            if (!object.Equals(this.Skyrim, rhs.Skyrim)) return false;
+            if (!object.Equals(this.ModFilePath, rhs.ModFilePath)) return false;
             return true;
         }
         public override int GetHashCode()
         {
             int ret = 0;
-            ret = ret.CombineHashCode(this.Oblivion?.GetHashCode());
-            ret = ret.CombineHashCode(this.Skyrim?.GetHashCode());
+            ret = ret.CombineHashCode(this.ModFilePath?.GetHashCode());
             return ret;
         }
 
@@ -1490,24 +1390,22 @@ namespace Mutagen.Bethesda.Tests.Internals
         #region All Equal
         public bool AllEqual(Func<T, bool> eval)
         {
-            if (!eval(this.Oblivion)) return false;
-            if (!eval(this.Skyrim)) return false;
+            if (!eval(this.ModFilePath)) return false;
             return true;
         }
         #endregion
 
         #region Translate
-        public DataFolderLocations_Mask<R> Translate<R>(Func<T, R> eval)
+        public MainVM_Mask<R> Translate<R>(Func<T, R> eval)
         {
-            var ret = new DataFolderLocations_Mask<R>();
+            var ret = new MainVM_Mask<R>();
             this.Translate_InternalFill(ret, eval);
             return ret;
         }
 
-        protected void Translate_InternalFill<R>(DataFolderLocations_Mask<R> obj, Func<T, R> eval)
+        protected void Translate_InternalFill<R>(MainVM_Mask<R> obj, Func<T, R> eval)
         {
-            obj.Oblivion = eval(this.Oblivion);
-            obj.Skyrim = eval(this.Skyrim);
+            obj.ModFilePath = eval(this.ModFilePath);
         }
         #endregion
 
@@ -1523,26 +1421,22 @@ namespace Mutagen.Bethesda.Tests.Internals
             return ToString(printMask: null);
         }
 
-        public string ToString(DataFolderLocations_Mask<bool> printMask = null)
+        public string ToString(MainVM_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
             ToString(fg, printMask);
             return fg.ToString();
         }
 
-        public void ToString(FileGeneration fg, DataFolderLocations_Mask<bool> printMask = null)
+        public void ToString(FileGeneration fg, MainVM_Mask<bool> printMask = null)
         {
-            fg.AppendLine($"{nameof(DataFolderLocations_Mask<T>)} =>");
+            fg.AppendLine($"{nameof(MainVM_Mask<T>)} =>");
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Oblivion ?? true)
+                if (printMask?.ModFilePath ?? true)
                 {
-                    fg.AppendLine($"Oblivion => {Oblivion}");
-                }
-                if (printMask?.Skyrim ?? true)
-                {
-                    fg.AppendLine($"Skyrim => {Skyrim}");
+                    fg.AppendLine($"ModFilePath => {ModFilePath}");
                 }
             }
             fg.AppendLine("]");
@@ -1551,7 +1445,7 @@ namespace Mutagen.Bethesda.Tests.Internals
 
     }
 
-    public class DataFolderLocations_ErrorMask : IErrorMask, IErrorMask<DataFolderLocations_ErrorMask>
+    public class MainVM_ErrorMask : IErrorMask, IErrorMask<MainVM_ErrorMask>
     {
         #region Members
         public Exception Overall { get; set; }
@@ -1567,20 +1461,17 @@ namespace Mutagen.Bethesda.Tests.Internals
                 return _warnings;
             }
         }
-        public Exception Oblivion;
-        public Exception Skyrim;
+        public Exception ModFilePath;
         #endregion
 
         #region IErrorMask
         public object GetNthMask(int index)
         {
-            DataFolderLocations_FieldIndex enu = (DataFolderLocations_FieldIndex)index;
+            MainVM_FieldIndex enu = (MainVM_FieldIndex)index;
             switch (enu)
             {
-                case DataFolderLocations_FieldIndex.Oblivion:
-                    return Oblivion;
-                case DataFolderLocations_FieldIndex.Skyrim:
-                    return Skyrim;
+                case MainVM_FieldIndex.ModFilePath:
+                    return ModFilePath;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1588,14 +1479,11 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         public void SetNthException(int index, Exception ex)
         {
-            DataFolderLocations_FieldIndex enu = (DataFolderLocations_FieldIndex)index;
+            MainVM_FieldIndex enu = (MainVM_FieldIndex)index;
             switch (enu)
             {
-                case DataFolderLocations_FieldIndex.Oblivion:
-                    this.Oblivion = ex;
-                    break;
-                case DataFolderLocations_FieldIndex.Skyrim:
-                    this.Skyrim = ex;
+                case MainVM_FieldIndex.ModFilePath:
+                    this.ModFilePath = ex;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1604,14 +1492,11 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         public void SetNthMask(int index, object obj)
         {
-            DataFolderLocations_FieldIndex enu = (DataFolderLocations_FieldIndex)index;
+            MainVM_FieldIndex enu = (MainVM_FieldIndex)index;
             switch (enu)
             {
-                case DataFolderLocations_FieldIndex.Oblivion:
-                    this.Oblivion = (Exception)obj;
-                    break;
-                case DataFolderLocations_FieldIndex.Skyrim:
-                    this.Skyrim = (Exception)obj;
+                case MainVM_FieldIndex.ModFilePath:
+                    this.ModFilePath = (Exception)obj;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1621,8 +1506,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         public bool IsInError()
         {
             if (Overall != null) return true;
-            if (Oblivion != null) return true;
-            if (Skyrim != null) return true;
+            if (ModFilePath != null) return true;
             return false;
         }
         #endregion
@@ -1637,7 +1521,7 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         public void ToString(FileGeneration fg)
         {
-            fg.AppendLine("DataFolderLocations_ErrorMask =>");
+            fg.AppendLine("MainVM_ErrorMask =>");
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
@@ -1657,20 +1541,18 @@ namespace Mutagen.Bethesda.Tests.Internals
         }
         protected void ToString_FillInternal(FileGeneration fg)
         {
-            fg.AppendLine($"Oblivion => {Oblivion}");
-            fg.AppendLine($"Skyrim => {Skyrim}");
+            fg.AppendLine($"ModFilePath => {ModFilePath}");
         }
         #endregion
 
         #region Combine
-        public DataFolderLocations_ErrorMask Combine(DataFolderLocations_ErrorMask rhs)
+        public MainVM_ErrorMask Combine(MainVM_ErrorMask rhs)
         {
-            var ret = new DataFolderLocations_ErrorMask();
-            ret.Oblivion = this.Oblivion.Combine(rhs.Oblivion);
-            ret.Skyrim = this.Skyrim.Combine(rhs.Skyrim);
+            var ret = new MainVM_ErrorMask();
+            ret.ModFilePath = this.ModFilePath.Combine(rhs.ModFilePath);
             return ret;
         }
-        public static DataFolderLocations_ErrorMask Combine(DataFolderLocations_ErrorMask lhs, DataFolderLocations_ErrorMask rhs)
+        public static MainVM_ErrorMask Combine(MainVM_ErrorMask lhs, MainVM_ErrorMask rhs)
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
@@ -1678,50 +1560,46 @@ namespace Mutagen.Bethesda.Tests.Internals
         #endregion
 
         #region Factory
-        public static DataFolderLocations_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static MainVM_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            return new DataFolderLocations_ErrorMask();
+            return new MainVM_ErrorMask();
         }
         #endregion
 
     }
-    public class DataFolderLocations_CopyMask
+    public class MainVM_CopyMask
     {
-        public DataFolderLocations_CopyMask()
+        public MainVM_CopyMask()
         {
         }
 
-        public DataFolderLocations_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        public MainVM_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
         {
-            this.Oblivion = defaultOn;
-            this.Skyrim = defaultOn;
+            this.ModFilePath = defaultOn;
         }
 
         #region Members
-        public bool Oblivion;
-        public bool Skyrim;
+        public bool ModFilePath;
         #endregion
 
     }
 
-    public class DataFolderLocations_TranslationMask : ITranslationMask
+    public class MainVM_TranslationMask : ITranslationMask
     {
         #region Members
         private TranslationCrystal _crystal;
-        public bool Oblivion;
-        public bool Skyrim;
+        public bool ModFilePath;
         #endregion
 
         #region Ctors
-        public DataFolderLocations_TranslationMask()
+        public MainVM_TranslationMask()
         {
         }
 
-        public DataFolderLocations_TranslationMask(bool defaultOn)
+        public MainVM_TranslationMask(bool defaultOn)
         {
-            this.Oblivion = defaultOn;
-            this.Skyrim = defaultOn;
+            this.ModFilePath = defaultOn;
         }
 
         #endregion
@@ -1740,8 +1618,7 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         protected void GetCrystal(List<(bool On, TranslationCrystal SubCrystal)> ret)
         {
-            ret.Add((Oblivion, null));
-            ret.Add((Skyrim, null));
+            ret.Add((ModFilePath, null));
         }
     }
 }

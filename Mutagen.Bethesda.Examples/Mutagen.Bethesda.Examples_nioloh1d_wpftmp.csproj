@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{827AE980-C78C-4006-9161-FB6B6E3560AD}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>Mutagen.Bethesda.Examples</RootNamespace>
+    <AssemblyName>Mutagen.Bethesda.Examples</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <LangVersion>7.3</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <LangVersion>7.3</LangVersion>
+  </PropertyGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Examples\ExampleVM.cs" />
+    <Compile Include="Examples\ImportComparison\ImportComparisonVM.cs" />
+    <Compile Include="Examples\ImportComparison\ImportComparisonCode.cs" />
+    <Compile Include="Examples\PrintContent\PrintContentVM.cs" />
+    <Compile Include="Examples\PrintContent\PrintContentCode.cs" />
+    <Compile Include="Examples\SimpleOutputVM.cs" />
+    <Compile Include="MainVM.cs">
+      <DependentUpon>MainVM.xml</DependentUpon>
+    </Compile>
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ProtocolDefinition_Examples.cs" />
+    <Compile Include="MainVM_LoquiGenerated.cs">
+      <DependentUpon>MainVM.xml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Examples\SimpleOutputView.xaml.cs">
+      <DependentUpon>SimpleOutputView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Common.xsd" />
+    <None Include="MainVM.xsd">
+      <DependentUpon>MainVM.xml</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\CSharpExt\CSharpExt\CSharpExt.csproj">
+      <Project>{c56b9607-41cf-4f59-9eef-f79d57309eda}</Project>
+      <Name>CSharpExt</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\CSharpExt\Noggog.WPF\Noggog.WPF.csproj">
+      <Project>{bcbeb6f3-9d2f-4491-8ddf-7e711b1f5252}</Project>
+      <Name>Noggog.WPF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DynamicData\src\DynamicData\DynamicData.csproj">
+      <Project>{a5513654-ad62-4cc9-968b-f5f8f72c4142}</Project>
+      <Name>DynamicData</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Loqui\Loqui.Presentation\Loqui.Presentation.csproj">
+      <Project>{b5f2e08d-4a16-4b38-82e6-ad3bb2bbfb29}</Project>
+      <Name>Loqui.Presentation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Loqui\Loqui\Loqui.csproj">
+      <Project>{91f19c1e-adf8-4b84-9452-04c2cd8f46d4}</Project>
+      <Name>Loqui</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Mutagen.Bethesda.Records\Mutagen.Bethesda.Records.csproj">
+      <Project>{8b371c38-ca17-4e7f-9175-bdbc6918298f}</Project>
+      <Name>Mutagen.Bethesda.Records</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Mutagen.Bethesda\Mutagen.Bethesda.csproj">
+      <Project>{4d6dbb44-b89a-47a8-ab14-acc8391c1a59}</Project>
+      <Name>Mutagen.Bethesda</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="MahApps.Metro">
+      <Version>1.6.5</Version>
+    </PackageReference>
+    <PackageReference Include="MahApps.Metro.IconPacks">
+      <Version>2.3.0</Version>
+    </PackageReference>
+    <PackageReference Include="ReactiveUI">
+      <Version>10.2.2</Version>
+    </PackageReference>
+    <PackageReference Include="ReactiveUI.Events.WPF">
+      <Version>10.1.6</Version>
+    </PackageReference>
+    <PackageReference Include="ReactiveUI.WPF">
+      <Version>10.1.6</Version>
+    </PackageReference>
+    <PackageReference Include="Simple.Wpf.Terminal">
+      <Version>1.35.0</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <ReferencePath Include="C:\Users\Levia\.nuget\packages\controlzex\3.0.2.4\lib\net462\ControlzEx.dll" />
+    <ReferencePath Include="C:\Users\Levia\Documents\Repos\CSharpExt\CSharpExt\bin\Debug\netstandard2.0\CSharpExt.dll" />
+    <ReferencePath Include="C:\Users\Levia\.nuget\packages\dotnetzip\1.13.4\lib\net40\DotNetZip.dll" />
+    <ReferencePath Include="C:\Users\Levia\Documents\Repos\DynamicData\src\DynamicData\bin\Debug\net461\DynamicData.dll" />
+    <ReferencePath Include="C:\Users\Levia\Documents\Repos\Loqui\Loqui\bin\Debug\netstandard2.0\Loqui.dll" />
+    <ReferencePath Include="C:\Users\Levia\Documents\Repos\Loqui\Loqui.Presentation\bin\Debug\netstandard2.0\Loqui.Presentation.dll" />
+    <ReferencePath Include="C:\Users\Levia\.nuget\packages\mahapps.metro\1.6.5\lib\net47\MahApps.Metro.dll" />
+    <ReferencePath Include="C:\Users\Levia\.nuget\packages\mahapps.metro.iconpacks\2.3.0\lib\net46\MahApps.Metro.IconPacks.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\Microsoft.CSharp.dll" />
+    <ReferencePath Include="C:\Users\Levia\.nuget\packages\system.windows.interactivity.wpf\2.0.20525\lib\net40\Microsoft.Expression.Interactions.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\mscorlib.dll" />
+    <ReferencePath Include="C:\Users\Levia\Documents\Repos\Mutagen\Mutagen.Bethesda\bin\Debug\netstandard2.0\Mutagen.Bethesda.dll" />
+    <ReferencePath Include="C:\Users\Levia\Documents\Repos\Mutagen\Mutagen.Bethesda.Records\bin\Debug\netstandard2.0\Mutagen.Bethesda.Records.dll" />
+    <ReferencePath Include="C:\Users\Levia\Documents\Repos\CSharpExt\Noggog.WPF\bin\Debug\Noggog.WPF.dll" />
+    <ReferencePath Include="C:\Users\Levia\.nuget\packages\ookii.dialogs\1.0.0\lib\net35\Ookii.Dialogs.Wpf.dll" />
+    <ReferencePath Include="C:\Users\Levia\.nuget\packages\pharmacist.common\1.2.1\lib\netstandard2.0\Pharmacist.Common.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\PresentationCore.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\PresentationFramework.Aero.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\PresentationFramework.dll" />
+    <ReferencePath Include="C:\Users\Levia\.nuget\packages\reactiveui\10.2.2\lib\net461\ReactiveUI.dll" />
+    <ReferencePath Include="C:\Users\Levia\.nuget\packages\reactiveui.events.wpf\10.1.6\lib\net461\ReactiveUI.Events.WPF.dll" />
+    <ReferencePath Include="C:\Users\Levia\.nuget\packages\reactiveui.wpf\10.1.6\lib\net461\ReactiveUI.WPF.dll" />
+    <ReferencePath Include="C:\Users\Levia\.nuget\packages\simple.wpf.terminal\1.35.0\lib\net40\Simple.Wpf.Terminal.dll" />
+    <ReferencePath Include="C:\Users\Levia\.nuget\packages\simple.wpf.terminal\1.35.0\lib\net40\Simple.Wpf.Terminal.Themes.dll" />
+    <ReferencePath Include="C:\Users\Levia\.nuget\packages\splat\8.3.1\lib\net461\Splat.dll" />
+    <ReferencePath Include="C:\Users\Levia\.nuget\packages\system.buffers\4.4.0\ref\netstandard2.0\System.Buffers.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\System.Core.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\System.Data.DataSetExtensions.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\System.Data.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\System.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\System.Drawing.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\Facades\System.Drawing.Primitives.dll" />
+    <ReferencePath Include="C:\Users\Levia\.nuget\packages\system.memory\4.5.3\lib\netstandard2.0\System.Memory.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\System.Net.Http.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\System.Numerics.dll" />
+    <ReferencePath Include="C:\Users\Levia\.nuget\packages\system.numerics.vectors\4.4.0\ref\net46\System.Numerics.Vectors.dll" />
+    <ReferencePath Include="C:\Users\Levia\.nuget\packages\system.reactive\4.1.6\lib\net46\System.Reactive.dll" />
+    <ReferencePath Include="C:\Users\Levia\.nuget\packages\system.runtime.compilerservices.unsafe\4.5.2\ref\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll" />
+    <ReferencePath Include="C:\Users\Levia\.nuget\packages\system.threading.tasks.extensions\4.5.2\lib\netstandard2.0\System.Threading.Tasks.Extensions.dll" />
+    <ReferencePath Include="C:\Users\Levia\.nuget\packages\system.valuetuple\4.5.0\ref\net47\System.ValueTuple.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\System.Windows.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\System.Windows.Forms.dll" />
+    <ReferencePath Include="C:\Users\Levia\.nuget\packages\controlzex\3.0.2.4\lib\net462\System.Windows.Interactivity.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\System.Xaml.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\System.Xml.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\System.Xml.Linq.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\WindowsBase.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\Facades\netstandard.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="C:\Users\Levia\Documents\Repos\Mutagen\Mutagen.Bethesda.Examples\obj\Debug\MainWindow.g.cs" />
+    <Compile Include="C:\Users\Levia\Documents\Repos\Mutagen\Mutagen.Bethesda.Examples\obj\Debug\Examples\SimpleOutputView.g.cs" />
+    <Compile Include="C:\Users\Levia\Documents\Repos\Mutagen\Mutagen.Bethesda.Examples\obj\Debug\App.g.cs" />
+    <Compile Include="C:\Users\Levia\Documents\Repos\Mutagen\Mutagen.Bethesda.Examples\obj\Debug\GeneratedInternalTypeHelper.g.cs" />
+  </ItemGroup>
+</Project>

@@ -11,11 +11,16 @@ namespace Mutagen.Bethesda.Examples
 {
     public static class PrintContentCode
     {
-        public static void PrintContent(string pathToMod)
+        public static void PrintContent(string pathToMod, Action<string> output)
         {
-            //OblivionMod.CreateFromBinaryWrapper(pathToMod, )
-            //IOblivionModGetter mod = OblivionModBinaryWrapper.OblivionModFactory()
-            //OblivionMod
+            IOblivionModGetter mod = OblivionMod.CreateFromBinaryWrapper(pathToMod);
+            foreach (var name in mod.NPCs.Items.Values
+                .Select(npc => npc.Name)
+                .Distinct()
+                .Where(s => !string.IsNullOrWhiteSpace(s)))
+            {
+                output(name);
+            }
         }
     }
 }

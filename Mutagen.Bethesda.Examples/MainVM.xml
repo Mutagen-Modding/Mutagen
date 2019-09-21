@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="MainVM" GUID="e4d52690-eae1-4493-961a-cc5d2b974896" ID="1">
+    <Fields>
+      <String name="ModFilePath" />
+    </Fields>
+  </Object>
+</Loqui>

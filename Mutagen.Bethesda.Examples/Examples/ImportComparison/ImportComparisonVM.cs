@@ -7,8 +7,15 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Examples
 {
-    public class ImportComparisonVM : ViewModel, IExampleVM
+    public class ImportComparisonVM : ExampleVM
     {
-        public string Name => "Import Comparisons";
+        public override string Name => "Import Comparisons";
+
+        public override string Description => "";
+
+        public ImportComparisonVM(MainVM mvm) 
+            : base(mvm)
+        {
+        }
     }
 }

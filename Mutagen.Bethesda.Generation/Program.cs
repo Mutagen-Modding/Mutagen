@@ -19,6 +19,7 @@ namespace Mutagen.Bethesda.Generation
 #endif
             GenerateRecords();
             GenerateTester();
+            GenerateExamples();
         }
 
         static void GenerateRecords()
@@ -124,9 +125,34 @@ namespace Mutagen.Bethesda.Generation
             gen.Generate().Wait();
         }
 
+        static void GenerateExamples()
+        {
+            LoquiGenerator gen = new LoquiGenerator()
+            {
+                RaisePropertyChangedDefault = false,
+                NotifyingDefault = NotifyingType.ReactiveUI,
+                ObjectCentralizedDefault = true,
+                HasBeenSetDefault = false
+            };
+            gen.XmlTranslation.ShouldGenerateXSD = true;
+            var testerProto = gen.AddProtocol(
+                new ProtocolGeneration(
+                    gen,
+                    new ProtocolKey("Examples"),
+                    new DirectoryInfo("../../../Mutagen.Bethesda.Examples"))
+                {
+                    DefaultNamespace = "Mutagen.Bethesda.Examples",
+                });
+            testerProto.RxBaseOptionDefault = RxBaseOption.ViewModel;
+            testerProto.AddProjectToModify(
+                new FileInfo("../../../Mutagen.Bethesda.Examples/Mutagen.Bethesda.Examples.csproj"));
+
+            gen.Generate().Wait();
+        }
+
         static void AttachDebugInspector()
         {
-            string testString = "sing (var writer = new MutagenWriter(memStream, dispose: false, meta: MetaDataConstants.Get(item.GameMode)))";
+            string testString = "public static IOblivionModInternalGetter CreateFromBinaryWrapper(";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>
