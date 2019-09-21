@@ -2,28 +2,28 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>15c01e9461a7e56cb7acdf7fac5b85b60fc610c3</Sha>
+         <Sha>68961d1d3e916722473489fc8239886486620f06</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>09-19-2019 19:20:47</CommitDate>
-         <Description>UserControlRx.  FilePicker control</Description>
+         <CommitDate>09-21-2019 16:57:34</CommitDate>
+         <Description>Dynamic data library updates</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/CSharpExt.git</OriginHint>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>0f16c9fef38353e9e6a1fed2b37445fd0f36db32</Sha>
+         <Sha>0e58353da0a69b09b77bd5db5167643bab920511</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>09-17-2019 18:45:03</CommitDate>
-         <Description>FileGeneration LineAppended debug inspector</Description>
+         <CommitDate>09-21-2019 17:00:27</CommitDate>
+         <Description>DynamicData library updates</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/Loqui.git</OriginHint>
       </RepoListing>
       <RepoListing>
          <Nickname>DynamicData</Nickname>
-         <Sha>a5866ca375b49ede7bd91346657e8adedad09286</Sha>
+         <Sha>a6e952176aa0fd545c067222593cbcc67a7ac466</Sha>
          <Path>../DynamicData</Path>
-         <CommitDate>09-16-2019 21:38:33</CommitDate>
-         <Description>ObservableListEx.CollectionCount starts with 0</Description>
+         <CommitDate>09-21-2019 16:55:47</CommitDate>
+         <Description>IReadOnlyCache</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/DynamicData.git</OriginHint>
       </RepoListing>

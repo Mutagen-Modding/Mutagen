@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Loqui.Generation.Presentati
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Loqui.Presentation", "..\Loqui\Loqui.Presentation\Loqui.Presentation.csproj", "{B5F2E08D-4A16-4B38-82E6-AD3BB2BBFB29}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DynamicData", "..\DynamicData\DynamicData\DynamicData.csproj", "{A5513654-AD62-4CC9-968B-F5F8F72C4142}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DynamicData", "..\DynamicData\src\DynamicData\DynamicData.csproj", "{A5513654-AD62-4CC9-968B-F5F8F72C4142}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mutagen.Bethesda", "Mutagen.Bethesda\Mutagen.Bethesda.csproj", "{4D6DBB44-B89A-47A8-AB14-ACC8391C1A59}"
 EndProject

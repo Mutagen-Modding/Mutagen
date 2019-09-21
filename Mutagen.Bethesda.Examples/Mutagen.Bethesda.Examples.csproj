@@ -123,7 +123,7 @@
       <Project>{bcbeb6f3-9d2f-4491-8ddf-7e711b1f5252}</Project>
       <Name>Noggog.WPF</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\DynamicData\DynamicData\DynamicData.csproj">
+    <ProjectReference Include="..\..\DynamicData\src\DynamicData\DynamicData.csproj">
       <Project>{a5513654-ad62-4cc9-968b-f5f8f72c4142}</Project>
       <Name>DynamicData</Name>
     </ProjectReference>
