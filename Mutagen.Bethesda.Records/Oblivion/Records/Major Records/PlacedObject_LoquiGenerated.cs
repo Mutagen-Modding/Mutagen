@@ -2592,7 +2592,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IPlacedObjectInternal)item);
         }
         
-        
     }
     public partial class PlacedObjectCommon : OblivionMajorRecordCommon
     {
@@ -3205,7 +3204,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     public partial class PlacedObjectSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
@@ -3984,7 +3982,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

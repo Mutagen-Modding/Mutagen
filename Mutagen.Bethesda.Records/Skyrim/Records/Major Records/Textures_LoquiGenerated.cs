@@ -1403,7 +1403,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.BacklightMaskOrSpecular_Unset();
         }
         
-        
     }
     public partial class TexturesCommon
     {
@@ -1636,7 +1635,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #endregion
-        
         
         
     }
@@ -1895,7 +1893,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

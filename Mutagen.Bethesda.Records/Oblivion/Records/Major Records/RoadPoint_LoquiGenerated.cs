@@ -63,14 +63,7 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte[] NumConnectionsFluffBytes
         {
             get => _NumConnectionsFluffBytes;
-            set
-            {
-                this._NumConnectionsFluffBytes = value;
-                if (value == null)
-                {
-                    this._NumConnectionsFluffBytes = new byte[3];
-                }
-            }
+            set => this.RaiseAndSetIfChanged(ref _NumConnectionsFluffBytes, value ?? new byte[3], nameof(NumConnectionsFluffBytes));
         }
         ReadOnlySpan<Byte> IRoadPointGetter.NumConnectionsFluffBytes => this.NumConnectionsFluffBytes;
         #endregion
@@ -913,7 +906,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Connections.Clear();
         }
         
-        
     }
     public partial class RoadPointCommon
     {
@@ -1061,7 +1053,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
-        
     }
     public partial class RoadPointSetterCopyCommon
     {
@@ -1131,7 +1122,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

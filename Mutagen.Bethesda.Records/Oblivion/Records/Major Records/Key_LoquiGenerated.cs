@@ -1316,7 +1316,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IKeyInternal)item);
         }
         
-        
     }
     public partial class KeyCommon : ItemAbstractCommon
     {
@@ -1639,7 +1638,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        
     }
     public partial class KeySetterCopyCommon : ItemAbstractSetterCopyCommon
     {
@@ -1827,7 +1825,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

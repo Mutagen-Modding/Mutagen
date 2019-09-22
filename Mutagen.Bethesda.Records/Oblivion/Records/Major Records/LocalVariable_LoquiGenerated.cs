@@ -65,14 +65,7 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte[] Fluff
         {
             get => _Fluff;
-            set
-            {
-                this._Fluff = value;
-                if (value == null)
-                {
-                    this._Fluff = new byte[12];
-                }
-            }
+            set => this.RaiseAndSetIfChanged(ref _Fluff, value ?? new byte[12], nameof(Fluff));
         }
         ReadOnlySpan<Byte> ILocalVariableGetter.Fluff => this.Fluff;
         #endregion
@@ -93,14 +86,7 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte[] Fluff2
         {
             get => _Fluff2;
-            set
-            {
-                this._Fluff2 = value;
-                if (value == null)
-                {
-                    this._Fluff2 = new byte[4];
-                }
-            }
+            set => this.RaiseAndSetIfChanged(ref _Fluff2, value ?? new byte[4], nameof(Fluff2));
         }
         ReadOnlySpan<Byte> ILocalVariableGetter.Fluff2 => this.Fluff2;
         #endregion
@@ -1122,7 +1108,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Name_Unset();
         }
         
-        
     }
     public partial class LocalVariableCommon
     {
@@ -1283,7 +1268,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
-        
     }
     public partial class LocalVariableSetterCopyCommon
     {
@@ -1398,7 +1382,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

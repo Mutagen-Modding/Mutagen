@@ -1252,7 +1252,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Color = default(Color);
         }
         
-        
     }
     public partial class DecalCommon
     {
@@ -1445,7 +1444,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #endregion
-        
         
         
     }
@@ -1651,7 +1649,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

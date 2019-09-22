@@ -1263,7 +1263,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IEnchantmentInternal)item);
         }
         
-        
     }
     public partial class EnchantmentCommon : OblivionMajorRecordCommon
     {
@@ -1547,7 +1546,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        
     }
     public partial class EnchantmentSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
     {
@@ -1702,7 +1700,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

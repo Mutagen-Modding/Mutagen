@@ -1538,7 +1538,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IClimateInternal)item);
         }
         
-        
     }
     public partial class ClimateCommon : OblivionMajorRecordCommon
     {
@@ -1885,7 +1884,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        
     }
     public partial class ClimateSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
     {
@@ -2173,7 +2171,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

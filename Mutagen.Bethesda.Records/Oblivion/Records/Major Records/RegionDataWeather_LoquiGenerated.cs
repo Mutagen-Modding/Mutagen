@@ -923,7 +923,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IRegionDataWeatherInternal)item);
         }
         
-        
     }
     public partial class RegionDataWeatherCommon : RegionDataCommon
     {
@@ -1106,7 +1105,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
-        
     }
     public partial class RegionDataWeatherSetterCopyCommon : RegionDataSetterCopyCommon
     {
@@ -1163,7 +1161,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

@@ -691,7 +691,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ClearPartial();
         }
         
-        
     }
     public partial class ScriptReferenceCommon
     {
@@ -798,7 +797,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
-        
     }
     public partial class ScriptReferenceSetterCopyCommon
     {
@@ -815,7 +813,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

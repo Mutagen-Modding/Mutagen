@@ -1526,7 +1526,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IGrassInternal)item);
         }
         
-        
     }
     public partial class GrassCommon : OblivionMajorRecordCommon
     {
@@ -1848,7 +1847,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        
     }
     public partial class GrassSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
     {
@@ -2127,7 +2125,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

@@ -984,7 +984,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IScriptInternal)item);
         }
         
-        
     }
     public partial class ScriptCommon : OblivionMajorRecordCommon
     {
@@ -1204,7 +1203,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        
     }
     public partial class ScriptSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
     {
@@ -1249,7 +1247,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

@@ -1093,7 +1093,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ILeveledSpellInternal)item);
         }
         
-        
     }
     public partial class LeveledSpellCommon : SpellAbstractCommon
     {
@@ -1388,7 +1387,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        
     }
     public partial class LeveledSpellSetterCopyCommon : SpellAbstractSetterCopyCommon
     {
@@ -1505,7 +1503,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

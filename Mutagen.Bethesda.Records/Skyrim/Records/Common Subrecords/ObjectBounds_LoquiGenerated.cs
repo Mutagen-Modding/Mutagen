@@ -871,7 +871,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Second = default(P3Int16);
         }
         
-        
     }
     public partial class ObjectBoundsCommon
     {
@@ -994,7 +993,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         
-        
     }
     public partial class ObjectBoundsSetterCopyCommon
     {
@@ -1045,7 +1043,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

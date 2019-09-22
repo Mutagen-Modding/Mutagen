@@ -1425,7 +1425,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ISigilStoneInternal)item);
         }
         
-        
     }
     public partial class SigilStoneCommon : ItemAbstractCommon
     {
@@ -1789,7 +1788,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        
     }
     public partial class SigilStoneSetterCopyCommon : ItemAbstractSetterCopyCommon
     {
@@ -2028,7 +2026,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

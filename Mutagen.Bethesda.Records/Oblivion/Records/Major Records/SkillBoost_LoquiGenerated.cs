@@ -853,7 +853,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Boost = default(SByte);
         }
         
-        
     }
     public partial class SkillBoostCommon
     {
@@ -976,7 +975,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
-        
     }
     public partial class SkillBoostSetterCopyCommon
     {
@@ -1027,7 +1025,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

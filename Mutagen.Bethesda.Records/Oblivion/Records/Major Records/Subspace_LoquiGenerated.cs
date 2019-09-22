@@ -1066,7 +1066,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ISubspaceInternal)item);
         }
         
-        
     }
     public partial class SubspaceCommon : OblivionMajorRecordCommon
     {
@@ -1293,7 +1292,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        
     }
     public partial class SubspaceSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
     {
@@ -1367,7 +1365,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

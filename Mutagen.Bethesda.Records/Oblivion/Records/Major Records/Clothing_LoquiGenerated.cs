@@ -1032,7 +1032,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IClothingInternal)item);
         }
         
-        
     }
     public partial class ClothingCommon : ClothingAbstractCommon
     {
@@ -1343,7 +1342,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        
     }
     public partial class ClothingSetterCopyCommon : ClothingAbstractSetterCopyCommon
     {
@@ -1400,7 +1398,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

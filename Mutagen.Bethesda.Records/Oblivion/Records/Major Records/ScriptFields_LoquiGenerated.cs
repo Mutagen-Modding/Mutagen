@@ -1206,7 +1206,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.References.Unset();
         }
         
-        
     }
     public partial class ScriptFieldsCommon
     {
@@ -1434,7 +1433,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
-        
     }
     public partial class ScriptFieldsSetterCopyCommon
     {
@@ -1601,7 +1599,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

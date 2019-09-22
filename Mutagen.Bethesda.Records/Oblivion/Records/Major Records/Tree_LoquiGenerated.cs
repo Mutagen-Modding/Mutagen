@@ -1659,7 +1659,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ITreeInternal)item);
         }
         
-        
     }
     public partial class TreeCommon : OblivionMajorRecordCommon
     {
@@ -2020,7 +2019,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        
     }
     public partial class TreeSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
     {
@@ -2314,7 +2312,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

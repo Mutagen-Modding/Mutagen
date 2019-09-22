@@ -930,7 +930,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Radius = default(Single);
         }
         
-        
     }
     public partial class AIPackageLocationCommon
     {
@@ -1061,7 +1060,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
-        
     }
     public partial class AIPackageLocationSetterCopyCommon
     {
@@ -1129,7 +1127,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

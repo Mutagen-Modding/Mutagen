@@ -187,14 +187,7 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte[] Unused
         {
             get => _Unused;
-            set
-            {
-                this._Unused = value;
-                if (value == null)
-                {
-                    this._Unused = new byte[4];
-                }
-            }
+            set => this.RaiseAndSetIfChanged(ref _Unused, value ?? new byte[4], nameof(Unused));
         }
         ReadOnlySpan<Byte> IMagicEffectGetter.Unused => this.Unused;
         #endregion
@@ -1795,7 +1788,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IMagicEffectInternal)item);
         }
         
-        
     }
     public partial class MagicEffectCommon : OblivionMajorRecordCommon
     {
@@ -2182,7 +2174,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        
     }
     public partial class MagicEffectSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
     {
@@ -2564,7 +2555,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

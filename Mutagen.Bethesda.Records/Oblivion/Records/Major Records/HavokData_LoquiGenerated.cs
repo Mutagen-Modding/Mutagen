@@ -897,7 +897,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Restitution = default(Byte);
         }
         
-        
     }
     public partial class HavokDataCommon
     {
@@ -1028,7 +1027,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
-        
     }
     public partial class HavokDataSetterCopyCommon
     {
@@ -1096,7 +1094,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

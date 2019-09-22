@@ -3547,7 +3547,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ICreatureInternal)item);
         }
         
-        
     }
     public partial class CreatureCommon : NPCAbstractCommon
     {
@@ -4505,7 +4504,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     public partial class CreatureSetterCopyCommon : NPCAbstractSetterCopyCommon
@@ -5568,7 +5566,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

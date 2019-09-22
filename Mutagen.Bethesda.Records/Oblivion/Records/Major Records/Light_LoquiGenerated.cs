@@ -1725,7 +1725,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ILightInternal)item);
         }
         
-        
     }
     public partial class LightCommon : ItemAbstractCommon
     {
@@ -2128,7 +2127,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        
     }
     public partial class LightSetterCopyCommon : ItemAbstractSetterCopyCommon
     {
@@ -2467,7 +2465,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

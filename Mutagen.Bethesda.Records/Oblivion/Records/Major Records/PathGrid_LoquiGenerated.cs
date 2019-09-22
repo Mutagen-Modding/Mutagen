@@ -1119,7 +1119,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IPathGridInternal)item);
         }
         
-        
     }
     public partial class PathGridCommon : OblivionMajorRecordCommon
     {
@@ -1431,7 +1430,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        
     }
     public partial class PathGridSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
     {
@@ -1586,7 +1584,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

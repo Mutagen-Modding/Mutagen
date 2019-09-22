@@ -2,28 +2,28 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>1cc88ba4cfac84a8084c7debd06576ab2b6d2185</Sha>
+         <Sha>0d3454a6ad03a97ec8d95f6b1f5bafe32966db6e</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>09-21-2019 22:16:38</CommitDate>
-         <Description>DynamicData library update</Description>
+         <CommitDate>09-22-2019 00:55:54</CommitDate>
+         <Description>Removed NotifyingItem concepts</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/CSharpExt.git</OriginHint>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>512dfe8325b45d7f4b91417f526bf04752d7cd4f</Sha>
+         <Sha>0ca61f34441bf52d47163a02ebfee053ce02f886</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>09-21-2019 17:38:49</CommitDate>
-         <Description>DynamicData library updates</Description>
+         <CommitDate>09-22-2019 22:06:09</CommitDate>
+         <Description>Fix for ClassType notification on non HasBeenSet</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/Loqui.git</OriginHint>
       </RepoListing>
       <RepoListing>
          <Nickname>DynamicData</Nickname>
-         <Sha>5d67355b0cd4589c0bca4ab7546b86e3ab5730d2</Sha>
+         <Sha>e07de13ef2bc5ae6d0352b26c5129796c165ddbd</Sha>
          <Path>../DynamicData</Path>
-         <CommitDate>09-21-2019 21:57:00</CommitDate>
-         <Description>Large refactor to support more covariance</Description>
+         <CommitDate>09-21-2019 17:08:07</CommitDate>
+         <Description>Merge branch 'BufferIf-clearing-fix'</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/DynamicData.git</OriginHint>
       </RepoListing>

@@ -2704,7 +2704,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ICombatStyleInternal)item);
         }
         
-        
     }
     public partial class CombatStyleCommon : OblivionMajorRecordCommon
     {
@@ -3217,7 +3216,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     public partial class CombatStyleSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
@@ -3905,7 +3903,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

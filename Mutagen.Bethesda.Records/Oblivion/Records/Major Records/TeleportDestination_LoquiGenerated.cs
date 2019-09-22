@@ -930,7 +930,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Rotation = default(P3Float);
         }
         
-        
     }
     public partial class TeleportDestinationCommon
     {
@@ -1061,7 +1060,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
-        
     }
     public partial class TeleportDestinationSetterCopyCommon
     {
@@ -1129,7 +1127,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

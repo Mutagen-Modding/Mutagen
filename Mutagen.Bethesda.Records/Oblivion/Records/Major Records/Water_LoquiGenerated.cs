@@ -2713,7 +2713,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IWaterInternal)item);
         }
         
-        
     }
     public partial class WaterCommon : OblivionMajorRecordCommon
     {
@@ -3226,7 +3225,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     public partial class WaterSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
@@ -3883,7 +3881,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

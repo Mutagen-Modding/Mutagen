@@ -976,7 +976,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Duration = default(Int32);
         }
         
-        
     }
     public partial class AIPackageScheduleCommon
     {
@@ -1123,7 +1122,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
-        
     }
     public partial class AIPackageScheduleSetterCopyCommon
     {
@@ -1225,7 +1223,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

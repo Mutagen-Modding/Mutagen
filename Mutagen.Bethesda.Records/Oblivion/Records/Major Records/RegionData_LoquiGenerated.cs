@@ -957,7 +957,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Priority = default(Byte);
         }
         
-        
     }
     public partial class RegionDataCommon
     {
@@ -1094,7 +1093,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
-        
     }
     public partial class RegionDataSetterCopyCommon
     {
@@ -1145,7 +1143,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

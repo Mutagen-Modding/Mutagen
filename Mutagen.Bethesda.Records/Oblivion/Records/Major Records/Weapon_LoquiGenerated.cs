@@ -1701,7 +1701,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IWeaponInternal)item);
         }
         
-        
     }
     public partial class WeaponCommon : ItemAbstractCommon
     {
@@ -2104,7 +2103,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        
     }
     public partial class WeaponSetterCopyCommon : ItemAbstractSetterCopyCommon
     {
@@ -2443,7 +2441,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

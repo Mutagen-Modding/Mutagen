@@ -1190,7 +1190,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (ITextureSetInternal)item);
         }
         
-        
     }
     public partial class TextureSetCommon : SkyrimMajorRecordCommon
     {
@@ -1476,7 +1475,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #endregion
         
-        
     }
     public partial class TextureSetSetterCopyCommon : SkyrimMajorRecordSetterCopyCommon
     {
@@ -1685,7 +1683,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

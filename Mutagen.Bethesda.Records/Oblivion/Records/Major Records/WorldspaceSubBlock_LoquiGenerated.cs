@@ -80,14 +80,7 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte[] LastModified
         {
             get => _LastModified;
-            set
-            {
-                this._LastModified = value;
-                if (value == null)
-                {
-                    this._LastModified = new byte[4];
-                }
-            }
+            set => this.RaiseAndSetIfChanged(ref _LastModified, value ?? new byte[4], nameof(LastModified));
         }
         ReadOnlySpan<Byte> IWorldspaceSubBlockGetter.LastModified => this.LastModified;
         #endregion
@@ -1047,7 +1040,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Items.Unset();
         }
         
-        
     }
     public partial class WorldspaceSubBlockCommon
     {
@@ -1219,7 +1211,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
-        
     }
     public partial class WorldspaceSubBlockSetterCopyCommon
     {
@@ -1338,7 +1329,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

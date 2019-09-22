@@ -1197,7 +1197,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ILeveledCreatureInternal)item);
         }
         
-        
     }
     public partial class LeveledCreatureCommon : NPCSpawnCommon
     {
@@ -1524,7 +1523,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        
     }
     public partial class LeveledCreatureSetterCopyCommon : NPCSpawnSetterCopyCommon
     {
@@ -1679,7 +1677,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

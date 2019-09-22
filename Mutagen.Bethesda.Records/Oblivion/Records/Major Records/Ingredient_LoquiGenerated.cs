@@ -1458,7 +1458,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IIngredientInternal)item);
         }
         
-        
     }
     public partial class IngredientCommon : ItemAbstractCommon
     {
@@ -1830,7 +1829,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        
     }
     public partial class IngredientSetterCopyCommon : ItemAbstractSetterCopyCommon
     {
@@ -2082,7 +2080,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

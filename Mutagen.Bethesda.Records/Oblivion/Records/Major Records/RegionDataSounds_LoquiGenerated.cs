@@ -1009,7 +1009,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IRegionDataSoundsInternal)item);
         }
         
-        
     }
     public partial class RegionDataSoundsCommon : RegionDataCommon
     {
@@ -1208,7 +1207,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
-        
     }
     public partial class RegionDataSoundsSetterCopyCommon : RegionDataSetterCopyCommon
     {
@@ -1295,7 +1293,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

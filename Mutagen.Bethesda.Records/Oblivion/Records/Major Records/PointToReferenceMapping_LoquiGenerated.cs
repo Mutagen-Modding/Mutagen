@@ -871,7 +871,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Points.Clear();
         }
         
-        
     }
     public partial class PointToReferenceMappingCommon
     {
@@ -1011,7 +1010,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
-        
     }
     public partial class PointToReferenceMappingSetterCopyCommon
     {
@@ -1064,7 +1062,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

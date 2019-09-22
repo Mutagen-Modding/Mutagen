@@ -1061,7 +1061,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Quadrant = default(AlphaLayer.QuadrantEnum);
         }
         
-        
     }
     public partial class BaseLayerCommon
     {
@@ -1198,7 +1197,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
-        
     }
     public partial class BaseLayerSetterCopyCommon
     {
@@ -1249,7 +1247,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

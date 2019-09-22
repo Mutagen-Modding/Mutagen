@@ -1707,7 +1707,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.PowerAttackFatigueModMult = default(Single);
         }
         
-        
     }
     public partial class CombatStyleAdvancedCommon
     {
@@ -1980,7 +1979,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
         
     }
@@ -2356,7 +2354,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

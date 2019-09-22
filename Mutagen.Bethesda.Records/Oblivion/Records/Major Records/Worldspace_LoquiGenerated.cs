@@ -348,14 +348,7 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte[] SubCellsTimestamp
         {
             get => _SubCellsTimestamp;
-            set
-            {
-                this._SubCellsTimestamp = value;
-                if (value == null)
-                {
-                    this._SubCellsTimestamp = new byte[4];
-                }
-            }
+            set => this.RaiseAndSetIfChanged(ref _SubCellsTimestamp, value ?? new byte[4], nameof(SubCellsTimestamp));
         }
         ReadOnlySpan<Byte> IWorldspaceGetter.SubCellsTimestamp => this.SubCellsTimestamp;
         #endregion
@@ -1907,7 +1900,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IWorldspaceInternal)item);
         }
         
-        
     }
     public partial class WorldspaceCommon : PlaceCommon
     {
@@ -2414,7 +2406,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     public partial class WorldspaceSetterCopyCommon : PlaceSetterCopyCommon
@@ -2929,7 +2920,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

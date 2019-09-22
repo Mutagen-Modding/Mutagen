@@ -886,7 +886,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Type = default(WeatherSound.SoundType);
         }
         
-        
     }
     public partial class WeatherSoundCommon
     {
@@ -1009,7 +1008,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
-        
     }
     public partial class WeatherSoundSetterCopyCommon
     {
@@ -1060,7 +1058,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

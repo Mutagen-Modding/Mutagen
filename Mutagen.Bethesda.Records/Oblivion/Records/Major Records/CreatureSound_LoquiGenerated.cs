@@ -970,7 +970,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Sounds.Unset();
         }
         
-        
     }
     public partial class CreatureSoundCommon
     {
@@ -1126,7 +1125,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
-        
     }
     public partial class CreatureSoundSetterCopyCommon
     {
@@ -1207,7 +1205,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

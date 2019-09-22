@@ -1141,7 +1141,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IActivatorInternal)item);
         }
         
-        
     }
     public partial class ActivatorCommon : OblivionMajorRecordCommon
     {
@@ -1409,7 +1408,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        
     }
     public partial class ActivatorSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
     {
@@ -1552,7 +1550,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

@@ -897,7 +897,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.NextObjectID = default(UInt32);
         }
         
-        
     }
     public partial class ModStatsCommon
     {
@@ -1028,7 +1027,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         
-        
     }
     public partial class ModStatsSetterCopyCommon
     {
@@ -1096,7 +1094,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

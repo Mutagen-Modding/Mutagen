@@ -2216,7 +2216,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IClassInternal)item);
         }
         
-        
     }
     public partial class ClassCommon : SkyrimMajorRecordCommon
     {
@@ -2686,7 +2685,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #endregion
-        
         
     }
     public partial class ClassSetterCopyCommon : SkyrimMajorRecordSetterCopyCommon
@@ -3259,7 +3257,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

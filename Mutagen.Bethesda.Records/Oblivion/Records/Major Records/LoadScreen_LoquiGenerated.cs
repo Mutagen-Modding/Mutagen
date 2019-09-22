@@ -1099,7 +1099,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ILoadScreenInternal)item);
         }
         
-        
     }
     public partial class LoadScreenCommon : OblivionMajorRecordCommon
     {
@@ -1361,7 +1360,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        
     }
     public partial class LoadScreenSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
     {
@@ -1478,7 +1476,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

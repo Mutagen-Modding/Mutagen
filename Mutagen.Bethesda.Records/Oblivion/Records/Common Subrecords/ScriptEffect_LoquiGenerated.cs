@@ -1148,7 +1148,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Name_Unset();
         }
         
-        
     }
     public partial class ScriptEffectCommon
     {
@@ -1309,7 +1308,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
-        
     }
     public partial class ScriptEffectSetterCopyCommon
     {
@@ -1424,7 +1422,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

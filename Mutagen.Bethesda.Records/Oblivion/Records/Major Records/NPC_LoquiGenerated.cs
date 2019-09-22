@@ -342,14 +342,7 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte[] Fluff
         {
             get => _Fluff;
-            set
-            {
-                this._Fluff = value;
-                if (value == null)
-                {
-                    this._Fluff = new byte[2];
-                }
-            }
+            set => this.RaiseAndSetIfChanged(ref _Fluff, value ?? new byte[2], nameof(Fluff));
         }
         ReadOnlySpan<Byte> INPCGetter.Fluff => this.Fluff;
         #endregion
@@ -4148,7 +4141,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (INPCInternal)item);
         }
         
-        
     }
     public partial class NPCCommon : NPCAbstractCommon
     {
@@ -5217,7 +5209,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     public partial class NPCSetterCopyCommon : NPCAbstractSetterCopyCommon
@@ -6526,7 +6517,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

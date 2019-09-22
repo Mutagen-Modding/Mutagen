@@ -1013,7 +1013,6 @@ namespace Mutagen.Bethesda.Tests.Internals
             item.Interest = default(RecordInterest);
         }
         
-        
     }
     public partial class TargetCommon
     {
@@ -1176,7 +1175,6 @@ namespace Mutagen.Bethesda.Tests.Internals
         #endregion
         
         
-        
     }
     public partial class TargetSetterCopyCommon
     {
@@ -1336,7 +1334,6 @@ namespace Mutagen.Bethesda.Tests.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

@@ -1609,7 +1609,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IBookInternal)item);
         }
         
-        
     }
     public partial class BookCommon : ItemAbstractCommon
     {
@@ -1996,7 +1995,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        
     }
     public partial class BookSetterCopyCommon : ItemAbstractSetterCopyCommon
     {
@@ -2297,7 +2295,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

@@ -877,7 +877,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Modifier = default(Int32);
         }
         
-        
     }
     public partial class RaceRelationCommon
     {
@@ -1000,7 +999,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
-        
     }
     public partial class RaceRelationSetterCopyCommon
     {
@@ -1051,7 +1049,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

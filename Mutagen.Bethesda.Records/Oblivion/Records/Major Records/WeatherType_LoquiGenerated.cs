@@ -956,7 +956,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Night = default(Color);
         }
         
-        
     }
     public partial class WeatherTypeCommon
     {
@@ -1095,7 +1094,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
-        
     }
     public partial class WeatherTypeSetterCopyCommon
     {
@@ -1180,7 +1178,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

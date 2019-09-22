@@ -871,7 +871,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Chance = default(Int32);
         }
         
-        
     }
     public partial class WeatherChanceCommon
     {
@@ -994,7 +993,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
-        
     }
     public partial class WeatherChanceSetterCopyCommon
     {
@@ -1045,7 +1043,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

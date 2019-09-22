@@ -856,7 +856,6 @@ namespace Mutagen.Bethesda.Tests.Internals
             item.Skyrim = default(String);
         }
         
-        
     }
     public partial class DataFolderLocationsCommon
     {
@@ -979,7 +978,6 @@ namespace Mutagen.Bethesda.Tests.Internals
         #endregion
         
         
-        
     }
     public partial class DataFolderLocationsSetterCopyCommon
     {
@@ -1030,7 +1028,6 @@ namespace Mutagen.Bethesda.Tests.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

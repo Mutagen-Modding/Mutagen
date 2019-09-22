@@ -939,7 +939,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Chance_Unset();
         }
         
-        
     }
     public partial class SoundItemCommon
     {
@@ -1078,7 +1077,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
-        
     }
     public partial class SoundItemSetterCopyCommon
     {
@@ -1144,7 +1142,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

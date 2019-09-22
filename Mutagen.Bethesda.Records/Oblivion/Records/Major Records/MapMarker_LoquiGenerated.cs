@@ -1010,7 +1010,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Types.Unset();
         }
         
-        
     }
     public partial class MapMarkerCommon
     {
@@ -1182,7 +1181,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
-        
     }
     public partial class MapMarkerSetterCopyCommon
     {
@@ -1278,7 +1276,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

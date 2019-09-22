@@ -1407,7 +1407,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.VestigialData_Unset();
         }
         
-        
     }
     public partial class ModHeaderCommon
     {
@@ -1649,7 +1648,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
         
     }
@@ -1948,7 +1946,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

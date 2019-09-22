@@ -917,7 +917,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.RelatedWaterUnderwater = default(Water);
         }
         
-        
     }
     public partial class RelatedWatersCommon
     {
@@ -1048,7 +1047,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
-        
     }
     public partial class RelatedWatersSetterCopyCommon
     {
@@ -1116,7 +1114,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

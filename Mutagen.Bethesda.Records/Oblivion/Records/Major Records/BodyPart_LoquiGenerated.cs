@@ -952,7 +952,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Icon_Unset();
         }
         
-        
     }
     public partial class BodyPartCommon
     {
@@ -1091,7 +1090,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
-        
     }
     public partial class BodyPartSetterCopyCommon
     {
@@ -1168,7 +1166,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

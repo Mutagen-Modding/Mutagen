@@ -752,7 +752,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (INPCAbstractInternal)item);
         }
         
-        
     }
     public partial class NPCAbstractCommon : NPCSpawnCommon
     {
@@ -978,7 +977,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        
     }
     public partial class NPCAbstractSetterCopyCommon : NPCSpawnSetterCopyCommon
     {
@@ -1001,7 +999,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

@@ -920,7 +920,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.RegionPoints.Unset();
         }
         
-        
     }
     public partial class RegionAreaCommon
     {
@@ -1076,7 +1075,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
-        
     }
     public partial class RegionAreaSetterCopyCommon
     {
@@ -1142,7 +1140,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

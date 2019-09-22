@@ -1104,7 +1104,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.ConstantEffectBarterFactor = default(Single);
         }
         
-        
     }
     public partial class MagicEffectSubDataCommon
     {
@@ -1267,7 +1266,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
-        
     }
     public partial class MagicEffectSubDataSetterCopyCommon
     {
@@ -1403,7 +1401,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

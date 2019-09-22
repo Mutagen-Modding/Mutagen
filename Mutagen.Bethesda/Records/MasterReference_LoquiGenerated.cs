@@ -912,7 +912,6 @@ namespace Mutagen.Bethesda.Internals
             item.FileSize_Unset();
         }
         
-        
     }
     public partial class MasterReferenceCommon
     {
@@ -1043,7 +1042,6 @@ namespace Mutagen.Bethesda.Internals
         #endregion
         
         
-        
     }
     public partial class MasterReferenceSetterCopyCommon
     {
@@ -1107,7 +1105,6 @@ namespace Mutagen.Bethesda.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

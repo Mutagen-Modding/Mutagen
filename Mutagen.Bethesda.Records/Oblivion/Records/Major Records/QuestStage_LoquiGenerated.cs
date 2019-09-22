@@ -936,7 +936,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.LogEntries.Unset();
         }
         
-        
     }
     public partial class QuestStageCommon
     {
@@ -1084,7 +1083,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
-        
     }
     public partial class QuestStageSetterCopyCommon
     {
@@ -1152,7 +1150,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

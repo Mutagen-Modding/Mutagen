@@ -1235,7 +1235,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IFactionInternal)item);
         }
         
-        
     }
     public partial class FactionCommon : OblivionMajorRecordCommon
     {
@@ -1546,7 +1545,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        
     }
     public partial class FactionSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
     {
@@ -1727,7 +1725,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

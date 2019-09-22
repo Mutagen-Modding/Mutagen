@@ -938,7 +938,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IGlobalFloatInternal)item);
         }
         
-        
     }
     public partial class GlobalFloatCommon : GlobalCommon
     {
@@ -1184,7 +1183,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        
     }
     public partial class GlobalFloatSetterCopyCommon : GlobalSetterCopyCommon
     {
@@ -1237,7 +1235,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

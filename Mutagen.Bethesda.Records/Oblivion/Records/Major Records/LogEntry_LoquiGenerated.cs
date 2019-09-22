@@ -1134,7 +1134,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.ResultScript_Unset();
         }
         
-        
     }
     public partial class LogEntryCommon
     {
@@ -1329,7 +1328,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
-        
     }
     public partial class LogEntrySetterCopyCommon
     {
@@ -1492,7 +1490,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

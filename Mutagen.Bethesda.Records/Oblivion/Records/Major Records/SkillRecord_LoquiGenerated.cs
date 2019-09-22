@@ -1673,7 +1673,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ISkillRecordInternal)item);
         }
         
-        
     }
     public partial class SkillRecordCommon : OblivionMajorRecordCommon
     {
@@ -2028,7 +2027,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        
     }
     public partial class SkillRecordSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
     {
@@ -2346,7 +2344,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

@@ -340,14 +340,7 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte[] Timestamp
         {
             get => _Timestamp;
-            set
-            {
-                this._Timestamp = value;
-                if (value == null)
-                {
-                    this._Timestamp = new byte[4];
-                }
-            }
+            set => this.RaiseAndSetIfChanged(ref _Timestamp, value ?? new byte[4], nameof(Timestamp));
         }
         ReadOnlySpan<Byte> ICellGetter.Timestamp => this.Timestamp;
         #endregion
@@ -356,14 +349,7 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte[] PersistentTimestamp
         {
             get => _PersistentTimestamp;
-            set
-            {
-                this._PersistentTimestamp = value;
-                if (value == null)
-                {
-                    this._PersistentTimestamp = new byte[4];
-                }
-            }
+            set => this.RaiseAndSetIfChanged(ref _PersistentTimestamp, value ?? new byte[4], nameof(PersistentTimestamp));
         }
         ReadOnlySpan<Byte> ICellGetter.PersistentTimestamp => this.PersistentTimestamp;
         #endregion
@@ -384,14 +370,7 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte[] TemporaryTimestamp
         {
             get => _TemporaryTimestamp;
-            set
-            {
-                this._TemporaryTimestamp = value;
-                if (value == null)
-                {
-                    this._TemporaryTimestamp = new byte[4];
-                }
-            }
+            set => this.RaiseAndSetIfChanged(ref _TemporaryTimestamp, value ?? new byte[4], nameof(TemporaryTimestamp));
         }
         ReadOnlySpan<Byte> ICellGetter.TemporaryTimestamp => this.TemporaryTimestamp;
         #endregion
@@ -412,14 +391,7 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte[] VisibleWhenDistantTimestamp
         {
             get => _VisibleWhenDistantTimestamp;
-            set
-            {
-                this._VisibleWhenDistantTimestamp = value;
-                if (value == null)
-                {
-                    this._VisibleWhenDistantTimestamp = new byte[4];
-                }
-            }
+            set => this.RaiseAndSetIfChanged(ref _VisibleWhenDistantTimestamp, value ?? new byte[4], nameof(VisibleWhenDistantTimestamp));
         }
         ReadOnlySpan<Byte> ICellGetter.VisibleWhenDistantTimestamp => this.VisibleWhenDistantTimestamp;
         #endregion
@@ -2133,7 +2105,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ICellInternal)item);
         }
         
-        
     }
     public partial class CellCommon : PlaceCommon
     {
@@ -2756,7 +2727,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        
     }
     public partial class CellSetterCopyCommon : PlaceSetterCopyCommon
     {
@@ -3371,7 +3341,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

@@ -873,7 +873,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Female = default(Hair);
         }
         
-        
     }
     public partial class RaceHairCommon
     {
@@ -996,7 +995,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
-        
     }
     public partial class RaceHairSetterCopyCommon
     {
@@ -1047,7 +1045,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

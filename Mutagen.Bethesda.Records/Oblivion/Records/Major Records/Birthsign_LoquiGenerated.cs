@@ -1164,7 +1164,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IBirthsignInternal)item);
         }
         
-        
     }
     public partial class BirthsignCommon : OblivionMajorRecordCommon
     {
@@ -1442,7 +1441,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        
     }
     public partial class BirthsignSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
     {
@@ -1574,7 +1572,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

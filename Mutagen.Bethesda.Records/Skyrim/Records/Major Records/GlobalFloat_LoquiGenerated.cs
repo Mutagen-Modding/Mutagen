@@ -940,7 +940,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IGlobalFloatInternal)item);
         }
         
-        
     }
     public partial class GlobalFloatCommon : GlobalCommon
     {
@@ -1194,7 +1193,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #endregion
         
-        
     }
     public partial class GlobalFloatSetterCopyCommon : GlobalSetterCopyCommon
     {
@@ -1247,7 +1245,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

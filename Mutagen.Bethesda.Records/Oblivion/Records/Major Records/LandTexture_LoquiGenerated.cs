@@ -1161,7 +1161,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ILandTextureInternal)item);
         }
         
-        
     }
     public partial class LandTextureCommon : OblivionMajorRecordCommon
     {
@@ -1446,7 +1445,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        
     }
     public partial class LandTextureSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
     {
@@ -1600,7 +1598,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

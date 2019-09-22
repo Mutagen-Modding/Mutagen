@@ -1379,7 +1379,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IDoorInternal)item);
         }
         
-        
     }
     public partial class DoorCommon : OblivionMajorRecordCommon
     {
@@ -1728,7 +1727,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        
     }
     public partial class DoorSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
     {
@@ -1958,7 +1956,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

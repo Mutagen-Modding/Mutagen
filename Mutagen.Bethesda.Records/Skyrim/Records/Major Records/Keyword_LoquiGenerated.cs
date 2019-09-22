@@ -938,7 +938,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IKeywordInternal)item);
         }
         
-        
     }
     public partial class KeywordCommon : SkyrimMajorRecordCommon
     {
@@ -1155,7 +1154,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #endregion
         
-        
     }
     public partial class KeywordSetterCopyCommon : SkyrimMajorRecordSetterCopyCommon
     {
@@ -1208,7 +1206,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

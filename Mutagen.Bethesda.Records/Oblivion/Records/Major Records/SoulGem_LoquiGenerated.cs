@@ -1460,7 +1460,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ISoulGemInternal)item);
         }
         
-        
     }
     public partial class SoulGemCommon : ItemAbstractCommon
     {
@@ -1815,7 +1814,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        
     }
     public partial class SoulGemSetterCopyCommon : ItemAbstractSetterCopyCommon
     {
@@ -2063,7 +2061,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

@@ -931,7 +931,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.GridPoint = default(P2Int16);
         }
         
-        
     }
     public partial class LoadScreenLocationCommon
     {
@@ -1062,7 +1061,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
-        
     }
     public partial class LoadScreenLocationSetterCopyCommon
     {
@@ -1130,7 +1128,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

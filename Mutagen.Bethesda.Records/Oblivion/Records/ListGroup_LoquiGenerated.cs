@@ -55,7 +55,6 @@ namespace Mutagen.Bethesda.Oblivion
         static ListGroup()
         {
             T_RecordType = (RecordType)LoquiRegistration.GetRegister(typeof(T)).GetType().GetField(Mutagen.Bethesda.Constants.TRIGGERING_RECORDTYPE_MEMBER).GetValue(null);
-            
         }
 
         #region GroupType
@@ -965,7 +964,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Items.Clear();
         }
         
-        
     }
     public partial class ListGroupCommon<T>
         where T : IXmlItem, IBinaryItem, ILoquiObject<T>
@@ -1114,7 +1112,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
-        
     }
     public partial class ListGroupSetterCopyCommon
     {
@@ -1198,7 +1195,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

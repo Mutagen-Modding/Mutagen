@@ -949,7 +949,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Flags = default(SoundData.Flag);
         }
         
-        
     }
     public partial class SoundDataCommon
     {
@@ -1088,7 +1087,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
-        
     }
     public partial class SoundDataSetterCopyCommon
     {
@@ -1173,7 +1171,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

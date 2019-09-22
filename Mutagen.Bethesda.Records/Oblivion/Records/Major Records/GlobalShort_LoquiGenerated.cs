@@ -932,7 +932,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IGlobalShortInternal)item);
         }
         
-        
     }
     public partial class GlobalShortCommon : GlobalCommon
     {
@@ -1178,7 +1177,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        
     }
     public partial class GlobalShortSetterCopyCommon : GlobalSetterCopyCommon
     {
@@ -1231,7 +1229,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

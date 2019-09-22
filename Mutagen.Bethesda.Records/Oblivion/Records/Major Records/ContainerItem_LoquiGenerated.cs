@@ -877,7 +877,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Count = default(UInt32);
         }
         
-        
     }
     public partial class ContainerItemCommon
     {
@@ -1000,7 +999,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
-        
     }
     public partial class ContainerItemSetterCopyCommon
     {
@@ -1051,7 +1049,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

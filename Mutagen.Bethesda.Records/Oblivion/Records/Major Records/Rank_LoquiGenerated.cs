@@ -1093,7 +1093,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Insignia_Unset();
         }
         
-        
     }
     public partial class RankCommon
     {
@@ -1264,7 +1263,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
-        
     }
     public partial class RankSetterCopyCommon
     {
@@ -1401,7 +1399,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

@@ -917,7 +917,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ISoundDataExtendedInternal)item);
         }
         
-        
     }
     public partial class SoundDataExtendedCommon : SoundDataCommon
     {
@@ -1091,7 +1090,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
-        
     }
     public partial class SoundDataExtendedSetterCopyCommon : SoundDataSetterCopyCommon
     {
@@ -1165,7 +1163,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

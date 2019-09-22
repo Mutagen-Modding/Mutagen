@@ -1031,7 +1031,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.SymmetricTexture_Unset();
         }
         
-        
     }
     public partial class FaceGenDataCommon
     {
@@ -1186,7 +1185,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
-        
     }
     public partial class FaceGenDataSetterCopyCommon
     {
@@ -1293,7 +1291,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

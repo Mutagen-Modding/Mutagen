@@ -938,7 +938,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (ILocationReferenceTypeInternal)item);
         }
         
-        
     }
     public partial class LocationReferenceTypeCommon : SkyrimMajorRecordCommon
     {
@@ -1155,7 +1154,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #endregion
         
-        
     }
     public partial class LocationReferenceTypeSetterCopyCommon : SkyrimMajorRecordSetterCopyCommon
     {
@@ -1208,7 +1206,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

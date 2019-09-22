@@ -1166,7 +1166,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.FogClipDistance = default(Single);
         }
         
-        
     }
     public partial class CellLightingCommon
     {
@@ -1345,7 +1344,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
-        
     }
     public partial class CellLightingSetterCopyCommon
     {
@@ -1515,7 +1513,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

@@ -880,7 +880,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Female = default(RaceStats);
         }
         
-        
     }
     public partial class RaceStatsGenderedCommon
     {
@@ -1003,7 +1002,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
-        
     }
     public partial class RaceStatsGenderedSetterCopyCommon
     {
@@ -1110,7 +1108,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

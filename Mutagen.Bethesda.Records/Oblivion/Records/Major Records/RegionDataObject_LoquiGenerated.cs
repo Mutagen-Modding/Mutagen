@@ -70,14 +70,7 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte[] Unknown1
         {
             get => _Unknown1;
-            set
-            {
-                this._Unknown1 = value;
-                if (value == null)
-                {
-                    this._Unknown1 = new byte[2];
-                }
-            }
+            set => this.RaiseAndSetIfChanged(ref _Unknown1, value ?? new byte[2], nameof(Unknown1));
         }
         ReadOnlySpan<Byte> IRegionDataObjectGetter.Unknown1 => this.Unknown1;
         #endregion
@@ -190,14 +183,7 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte[] Unknown2
         {
             get => _Unknown2;
-            set
-            {
-                this._Unknown2 = value;
-                if (value == null)
-                {
-                    this._Unknown2 = new byte[6];
-                }
-            }
+            set => this.RaiseAndSetIfChanged(ref _Unknown2, value ?? new byte[6], nameof(Unknown2));
         }
         ReadOnlySpan<Byte> IRegionDataObjectGetter.Unknown2 => this.Unknown2;
         #endregion
@@ -1502,7 +1488,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Unknown2 = default(Byte[]);
         }
         
-        
     }
     public partial class RegionDataObjectCommon
     {
@@ -1743,7 +1728,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
         
     }
@@ -2051,7 +2035,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

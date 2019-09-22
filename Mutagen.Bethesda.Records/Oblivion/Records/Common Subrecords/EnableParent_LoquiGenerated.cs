@@ -886,7 +886,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Flags = default(EnableParent.Flag);
         }
         
-        
     }
     public partial class EnableParentCommon
     {
@@ -1009,7 +1008,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
-        
     }
     public partial class EnableParentSetterCopyCommon
     {
@@ -1060,7 +1058,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

@@ -853,7 +853,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Point = default(P3Float);
         }
         
-        
     }
     public partial class InterCellPointCommon
     {
@@ -976,7 +975,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
-        
     }
     public partial class InterCellPointSetterCopyCommon
     {
@@ -1027,7 +1025,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

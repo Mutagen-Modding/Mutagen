@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Noggog;
+using System.Reactive.Subjects;
 
 namespace Mutagen.Bethesda.Generation
 {
@@ -48,19 +49,19 @@ namespace Mutagen.Bethesda.Generation
             await base.Load(node, requireName);
             LoquiType = this.ObjectGen.ProtoGen.Gen.GetTypeGeneration<LoquiType>();
             _rawFormID = this.ObjectGen.ProtoGen.Gen.GetTypeGeneration<FormIDType>();
-            this.NotifyingProperty.Set(NotifyingType.ReactiveUI);
-            this.ObjectCentralizedProperty.Set(false);
+            this.NotifyingProperty.OnNext(NotifyingType.ReactiveUI);
+            this.ObjectCentralizedProperty.OnNext(false);
             LoquiType.SetObjectGeneration(this.ObjectGen, setDefaults: true);
             await LoquiType.Load(node, requireName: false);
             LoquiType.Name = this.Name;
             LoquiType.GetterInterfaceType = LoquiInterfaceType.IGetter;
             _rawFormID.Name = this.Name;
-            this.NotifyingProperty.Forward(LoquiType.NotifyingProperty);
-            this.NotifyingProperty.Forward(_rawFormID.NotifyingProperty);
-            this.ObjectCentralizedProperty.Forward(LoquiType.ObjectCentralizedProperty);
-            this.ObjectCentralizedProperty.Forward(_rawFormID.ObjectCentralizedProperty);
-            this.HasBeenSetProperty.Forward(LoquiType.HasBeenSetProperty);
-            this.HasBeenSetProperty.Forward(_rawFormID.HasBeenSetProperty);
+            this.NotifyingProperty.Subscribe(i => LoquiType.NotifyingProperty.OnNext(i));
+            this.NotifyingProperty.Subscribe(i => _rawFormID.NotifyingProperty.OnNext(i));
+            this.ObjectCentralizedProperty.Subscribe(i => LoquiType.ObjectCentralizedProperty.OnNext(i));
+            this.ObjectCentralizedProperty.Subscribe(i => _rawFormID.ObjectCentralizedProperty.OnNext(i));
+            this.HasBeenSetProperty.Subscribe(i => LoquiType.HasBeenSetProperty.OnNext(i));
+            this.HasBeenSetProperty.Subscribe(i => _rawFormID.HasBeenSetProperty.OnNext(i));
             this.FormIDType = node.GetAttribute<FormIDTypeEnum>("type", defaultVal: FormIDTypeEnum.Normal);
         }
 

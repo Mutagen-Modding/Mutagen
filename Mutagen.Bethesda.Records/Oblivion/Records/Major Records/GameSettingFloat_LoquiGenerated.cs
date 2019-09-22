@@ -938,7 +938,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IGameSettingFloatInternal)item);
         }
         
-        
     }
     public partial class GameSettingFloatCommon : GameSettingCommon
     {
@@ -1184,7 +1183,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        
     }
     public partial class GameSettingFloatSetterCopyCommon : GameSettingSetterCopyCommon
     {
@@ -1237,7 +1235,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

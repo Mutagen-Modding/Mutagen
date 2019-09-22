@@ -715,7 +715,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IGameSettingInternal)item);
         }
         
-        
     }
     public partial class GameSettingCommon : OblivionMajorRecordCommon
     {
@@ -908,7 +907,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        
     }
     public partial class GameSettingSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
     {
@@ -931,7 +929,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

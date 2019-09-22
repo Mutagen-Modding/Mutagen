@@ -941,7 +941,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IGameSettingStringInternal)item);
         }
         
-        
     }
     public partial class GameSettingStringCommon : GameSettingCommon
     {
@@ -1195,7 +1194,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #endregion
         
-        
     }
     public partial class GameSettingStringSetterCopyCommon : GameSettingSetterCopyCommon
     {
@@ -1248,7 +1246,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

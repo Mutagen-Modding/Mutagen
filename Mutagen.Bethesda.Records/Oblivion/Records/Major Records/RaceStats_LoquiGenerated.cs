@@ -1054,7 +1054,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Luck = default(Byte);
         }
         
-        
     }
     public partial class RaceStatsCommon
     {
@@ -1225,7 +1224,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
-        
     }
     public partial class RaceStatsSetterCopyCommon
     {
@@ -1378,7 +1376,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

@@ -122,14 +122,7 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte[] Timestamp
         {
             get => _Timestamp;
-            set
-            {
-                this._Timestamp = value;
-                if (value == null)
-                {
-                    this._Timestamp = new byte[4];
-                }
-            }
+            set => this.RaiseAndSetIfChanged(ref _Timestamp, value ?? new byte[4], nameof(Timestamp));
         }
         ReadOnlySpan<Byte> IDialogTopicGetter.Timestamp => this.Timestamp;
         #endregion
@@ -1196,7 +1189,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IDialogTopicInternal)item);
         }
         
-        
     }
     public partial class DialogTopicCommon : OblivionMajorRecordCommon
     {
@@ -1499,7 +1491,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        
     }
     public partial class DialogTopicSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
     {
@@ -1652,7 +1643,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

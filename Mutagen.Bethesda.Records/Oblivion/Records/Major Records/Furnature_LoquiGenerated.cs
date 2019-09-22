@@ -1163,7 +1163,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IFurnatureInternal)item);
         }
         
-        
     }
     public partial class FurnatureCommon : OblivionMajorRecordCommon
     {
@@ -1431,7 +1430,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        
     }
     public partial class FurnatureSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
     {
@@ -1585,7 +1583,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

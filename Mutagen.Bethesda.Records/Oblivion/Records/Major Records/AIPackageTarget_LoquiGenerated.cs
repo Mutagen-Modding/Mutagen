@@ -897,7 +897,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Count = default(Int32);
         }
         
-        
     }
     public partial class AIPackageTargetCommon
     {
@@ -1028,7 +1027,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
-        
     }
     public partial class AIPackageTargetSetterCopyCommon
     {
@@ -1096,7 +1094,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

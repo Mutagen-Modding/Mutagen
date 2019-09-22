@@ -92,7 +92,7 @@ namespace Mutagen.Bethesda.Generation
                     typeGen = await this.ObjectGen.LoadField(fieldNode, true);
                     if (typeGen.Succeeded)
                     {
-                        typeGen.Value.HasBeenSetProperty.Item = false;
+                        typeGen.Value.HasBeenSetProperty.OnNext(false);
                         if (typeGen.Value is LoquiType loqui
                             && loqui.SingletonType == SingletonLevel.None)
                         {
@@ -121,7 +121,7 @@ namespace Mutagen.Bethesda.Generation
                     }
                 }
             }
-            this.HasBeenSetProperty.Set(false);
+            this.HasBeenSetProperty.OnNext(false);
         }
 
         public IEnumerable<DataTypeIteration> IterateFieldsWithMeta()

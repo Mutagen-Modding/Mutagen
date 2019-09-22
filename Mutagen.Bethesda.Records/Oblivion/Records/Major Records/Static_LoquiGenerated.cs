@@ -941,7 +941,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IStaticInternal)item);
         }
         
-        
     }
     public partial class StaticCommon : OblivionMajorRecordCommon
     {
@@ -1161,7 +1160,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        
     }
     public partial class StaticSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
     {
@@ -1236,7 +1234,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

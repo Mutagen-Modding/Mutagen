@@ -1120,7 +1120,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ILeveledItemInternal)item);
         }
         
-        
     }
     public partial class LeveledItemCommon : ItemAbstractCommon
     {
@@ -1415,7 +1414,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        
     }
     public partial class LeveledItemSetterCopyCommon : ItemAbstractSetterCopyCommon
     {
@@ -1532,7 +1530,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

@@ -915,7 +915,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IRegionDataGrassesInternal)item);
         }
         
-        
     }
     public partial class RegionDataGrassesCommon : RegionDataCommon
     {
@@ -1098,7 +1097,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
-        
     }
     public partial class RegionDataGrassesSetterCopyCommon : RegionDataSetterCopyCommon
     {
@@ -1140,7 +1138,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

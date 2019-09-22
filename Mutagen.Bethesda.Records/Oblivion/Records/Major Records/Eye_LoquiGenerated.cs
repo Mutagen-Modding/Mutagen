@@ -1080,7 +1080,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IEyeInternal)item);
         }
         
-        
     }
     public partial class EyeCommon : OblivionMajorRecordCommon
     {
@@ -1325,7 +1324,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        
     }
     public partial class EyeSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
     {
@@ -1438,7 +1436,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

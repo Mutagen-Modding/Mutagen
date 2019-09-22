@@ -53,7 +53,6 @@ namespace Mutagen.Bethesda.Skyrim
         static Group()
         {
             T_RecordType = (RecordType)LoquiRegistration.GetRegister(typeof(T)).GetType().GetField(Mutagen.Bethesda.Constants.TRIGGERING_RECORDTYPE_MEMBER).GetValue(null);
-            
         }
 
         #region GroupType
@@ -1020,7 +1019,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Items.Clear();
         }
         
-        
     }
     public partial class GroupCommon<T>
         where T : ISkyrimMajorRecordInternalGetter, IXmlItem, IBinaryItem
@@ -1178,7 +1176,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         
-        
     }
     public partial class GroupSetterCopyCommon
     {
@@ -1279,7 +1276,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

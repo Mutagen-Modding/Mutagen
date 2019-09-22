@@ -951,7 +951,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.BodyParts.Unset();
         }
         
-        
     }
     public partial class BodyDataCommon
     {
@@ -1114,7 +1113,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
-        
     }
     public partial class BodyDataSetterCopyCommon
     {
@@ -1217,7 +1215,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

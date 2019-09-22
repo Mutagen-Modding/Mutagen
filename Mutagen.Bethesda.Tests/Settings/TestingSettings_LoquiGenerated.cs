@@ -1059,7 +1059,6 @@ namespace Mutagen.Bethesda.Tests.Internals
             item.TargetGroups.Clear();
         }
         
-        
     }
     public partial class TestingSettingsCommon
     {
@@ -1245,7 +1244,6 @@ namespace Mutagen.Bethesda.Tests.Internals
         }
         
         #endregion
-        
         
         
     }
@@ -1473,7 +1471,6 @@ namespace Mutagen.Bethesda.Tests.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

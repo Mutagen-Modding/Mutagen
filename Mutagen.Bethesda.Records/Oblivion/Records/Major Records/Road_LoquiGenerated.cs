@@ -898,7 +898,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IRoadInternal)item);
         }
         
-        
     }
     public partial class RoadCommon : OblivionMajorRecordCommon
     {
@@ -1128,7 +1127,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        
     }
     public partial class RoadSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
     {
@@ -1185,7 +1183,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

@@ -862,7 +862,6 @@ namespace Mutagen.Bethesda.Tests.Internals
             item.Targets.Clear();
         }
         
-        
     }
     public partial class TargetGroupCommon
     {
@@ -1002,7 +1001,6 @@ namespace Mutagen.Bethesda.Tests.Internals
         #endregion
         
         
-        
     }
     public partial class TargetGroupSetterCopyCommon
     {
@@ -1070,7 +1068,6 @@ namespace Mutagen.Bethesda.Tests.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

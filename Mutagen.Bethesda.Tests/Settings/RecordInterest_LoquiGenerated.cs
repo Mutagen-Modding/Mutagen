@@ -848,7 +848,6 @@ namespace Mutagen.Bethesda.Tests.Internals
             item.UninterestingTypes.Clear();
         }
         
-        
     }
     public partial class RecordInterestCommon
     {
@@ -1005,7 +1004,6 @@ namespace Mutagen.Bethesda.Tests.Internals
         #endregion
         
         
-        
     }
     public partial class RecordInterestSetterCopyCommon
     {
@@ -1060,7 +1058,6 @@ namespace Mutagen.Bethesda.Tests.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

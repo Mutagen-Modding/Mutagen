@@ -2810,7 +2810,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IWeatherInternal)item);
         }
         
-        
     }
     public partial class WeatherCommon : OblivionMajorRecordCommon
     {
@@ -3393,7 +3392,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     public partial class WeatherSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
@@ -4124,7 +4122,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

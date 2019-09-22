@@ -1036,7 +1036,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Icon_Unset();
         }
         
-        
     }
     public partial class FacePartCommon
     {
@@ -1198,7 +1197,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
-        
     }
     public partial class FacePartSetterCopyCommon
     {
@@ -1327,7 +1325,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

@@ -53,14 +53,7 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte[] Fluff
         {
             get => _Fluff;
-            set
-            {
-                this._Fluff = value;
-                if (value == null)
-                {
-                    this._Fluff = new byte[4];
-                }
-            }
+            set => this.RaiseAndSetIfChanged(ref _Fluff, value ?? new byte[4], nameof(Fluff));
         }
         ReadOnlySpan<Byte> IScriptMetaSummaryGetter.Fluff => this.Fluff;
         #endregion
@@ -1003,7 +996,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Type = default(ScriptFields.ScriptType);
         }
         
-        
     }
     public partial class ScriptMetaSummaryCommon
     {
@@ -1150,7 +1142,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
-        
     }
     public partial class ScriptMetaSummarySetterCopyCommon
     {
@@ -1235,7 +1226,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

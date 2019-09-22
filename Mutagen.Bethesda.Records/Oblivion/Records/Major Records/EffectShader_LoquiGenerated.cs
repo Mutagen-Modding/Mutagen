@@ -3803,7 +3803,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IEffectShaderInternal)item);
         }
         
-        
     }
     public partial class EffectShaderCommon : OblivionMajorRecordCommon
     {
@@ -4485,7 +4484,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     public partial class EffectShaderSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
@@ -5521,7 +5519,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

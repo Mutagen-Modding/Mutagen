@@ -823,7 +823,6 @@ namespace Mutagen.Bethesda.Examples.Internals
             item.ModFilePath = default(String);
         }
         
-        
     }
     public partial class MainVMCommon
     {
@@ -938,7 +937,6 @@ namespace Mutagen.Bethesda.Examples.Internals
         #endregion
         
         
-        
     }
     public partial class MainVMSetterCopyCommon
     {
@@ -972,7 +970,6 @@ namespace Mutagen.Bethesda.Examples.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

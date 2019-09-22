@@ -866,7 +866,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ISpellInternal)item);
         }
         
-        
     }
     public partial class SpellCommon : SpellAbstractCommon
     {
@@ -1108,7 +1107,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        
     }
     public partial class SpellSetterCopyCommon : SpellAbstractSetterCopyCommon
     {
@@ -1161,7 +1159,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

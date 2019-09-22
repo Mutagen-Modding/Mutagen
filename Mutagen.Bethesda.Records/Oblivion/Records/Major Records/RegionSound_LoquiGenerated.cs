@@ -925,7 +925,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Chance = default(Single);
         }
         
-        
     }
     public partial class RegionSoundCommon
     {
@@ -1056,7 +1055,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
-        
     }
     public partial class RegionSoundSetterCopyCommon
     {
@@ -1124,7 +1122,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

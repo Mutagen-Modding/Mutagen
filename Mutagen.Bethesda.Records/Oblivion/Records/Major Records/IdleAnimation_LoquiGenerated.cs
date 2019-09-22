@@ -1155,7 +1155,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IIdleAnimationInternal)item);
         }
         
-        
     }
     public partial class IdleAnimationCommon : OblivionMajorRecordCommon
     {
@@ -1457,7 +1456,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        
     }
     public partial class IdleAnimationSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
     {
@@ -1615,7 +1613,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

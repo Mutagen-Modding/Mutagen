@@ -926,7 +926,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IOblivionMajorRecordInternal)item);
         }
         
-        
     }
     public partial class OblivionMajorRecordCommon : MajorRecordCommon
     {
@@ -1094,7 +1093,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        
     }
     public partial class OblivionMajorRecordSetterCopyCommon : MajorRecordSetterCopyCommon
     {
@@ -1134,7 +1132,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

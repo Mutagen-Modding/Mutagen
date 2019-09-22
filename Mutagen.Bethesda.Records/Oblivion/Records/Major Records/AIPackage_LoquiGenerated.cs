@@ -1346,7 +1346,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IAIPackageInternal)item);
         }
         
-        
     }
     public partial class AIPackageCommon : OblivionMajorRecordCommon
     {
@@ -1667,7 +1666,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        
     }
     public partial class AIPackageSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
     {
@@ -1914,7 +1912,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

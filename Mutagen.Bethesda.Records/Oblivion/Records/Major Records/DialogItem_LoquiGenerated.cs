@@ -1553,7 +1553,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IDialogItemInternal)item);
         }
         
-        
     }
     public partial class DialogItemCommon : OblivionMajorRecordCommon
     {
@@ -1992,7 +1991,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        
     }
     public partial class DialogItemSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
     {
@@ -2234,7 +2232,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

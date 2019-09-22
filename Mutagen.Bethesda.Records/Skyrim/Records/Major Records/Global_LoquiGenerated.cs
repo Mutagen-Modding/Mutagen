@@ -751,7 +751,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IGlobalInternal)item);
         }
         
-        
     }
     public partial class GlobalCommon : SkyrimMajorRecordCommon
     {
@@ -948,7 +947,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #endregion
         
-        
     }
     public partial class GlobalSetterCopyCommon : SkyrimMajorRecordSetterCopyCommon
     {
@@ -971,7 +969,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

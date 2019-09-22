@@ -912,7 +912,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IAlphaLayerInternal)item);
         }
         
-        
     }
     public partial class AlphaLayerCommon : BaseLayerCommon
     {
@@ -1078,7 +1077,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
-        
     }
     public partial class AlphaLayerSetterCopyCommon : BaseLayerSetterCopyCommon
     {
@@ -1131,7 +1129,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

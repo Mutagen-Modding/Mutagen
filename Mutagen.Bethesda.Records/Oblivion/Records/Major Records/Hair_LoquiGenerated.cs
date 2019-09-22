@@ -1161,7 +1161,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IHairInternal)item);
         }
         
-        
     }
     public partial class HairCommon : OblivionMajorRecordCommon
     {
@@ -1429,7 +1428,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        
     }
     public partial class HairSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
     {
@@ -1594,7 +1592,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

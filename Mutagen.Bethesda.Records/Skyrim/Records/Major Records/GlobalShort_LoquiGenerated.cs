@@ -934,7 +934,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IGlobalShortInternal)item);
         }
         
-        
     }
     public partial class GlobalShortCommon : GlobalCommon
     {
@@ -1188,7 +1187,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #endregion
         
-        
     }
     public partial class GlobalShortSetterCopyCommon : GlobalSetterCopyCommon
     {
@@ -1241,7 +1239,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

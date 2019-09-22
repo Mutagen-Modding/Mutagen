@@ -58,11 +58,6 @@ namespace Mutagen.Bethesda
         #endregion
         #region FormKey
         public FormKey FormKey { get; protected set; }
-        protected void UnsetFormKey()
-        {
-            _hasBeenSetTracker[(int)MajorRecord_FieldIndex.FormKey] = false;
-            FormKey = default(FormKey);
-        }
         FormKey IMajorRecordInternal.FormKey
         {
             get => this.FormKey;
@@ -1144,7 +1139,6 @@ namespace Mutagen.Bethesda.Internals
             item.EditorID_Unset();
         }
         
-        
     }
     public partial class MajorRecordCommon
     {
@@ -1299,7 +1293,6 @@ namespace Mutagen.Bethesda.Internals
         
         #endregion
         
-        
     }
     public partial class MajorRecordSetterCopyCommon
     {
@@ -1380,7 +1373,6 @@ namespace Mutagen.Bethesda.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

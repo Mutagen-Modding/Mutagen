@@ -71,14 +71,7 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte[] FluffBytes
         {
             get => _FluffBytes;
-            set
-            {
-                this._FluffBytes = value;
-                if (value == null)
-                {
-                    this._FluffBytes = new byte[3];
-                }
-            }
+            set => this.RaiseAndSetIfChanged(ref _FluffBytes, value ?? new byte[3], nameof(FluffBytes));
         }
         ReadOnlySpan<Byte> IPathGridPointGetter.FluffBytes => this.FluffBytes;
         #endregion
@@ -944,7 +937,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Connections.Clear();
         }
         
-        
     }
     public partial class PathGridPointCommon
     {
@@ -1100,7 +1092,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
-        
     }
     public partial class PathGridPointSetterCopyCommon
     {
@@ -1187,7 +1178,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

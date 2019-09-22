@@ -915,7 +915,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Unknown2 = default(Single);
         }
         
-        
     }
     public partial class DistantLODDataCommon
     {
@@ -1046,7 +1045,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
-        
     }
     public partial class DistantLODDataSetterCopyCommon
     {
@@ -1114,7 +1112,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

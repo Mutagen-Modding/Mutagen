@@ -77,14 +77,7 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte[] Fluff1
         {
             get => _Fluff1;
-            set
-            {
-                this._Fluff1 = value;
-                if (value == null)
-                {
-                    this._Fluff1 = new byte[4];
-                }
-            }
+            set => this.RaiseAndSetIfChanged(ref _Fluff1, value ?? new byte[4], nameof(Fluff1));
         }
         ReadOnlySpan<Byte> IDialogResponseGetter.Fluff1 => this.Fluff1;
         #endregion
@@ -105,14 +98,7 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte[] Fluff2
         {
             get => _Fluff2;
-            set
-            {
-                this._Fluff2 = value;
-                if (value == null)
-                {
-                    this._Fluff2 = new byte[3];
-                }
-            }
+            set => this.RaiseAndSetIfChanged(ref _Fluff2, value ?? new byte[3], nameof(Fluff2));
         }
         ReadOnlySpan<Byte> IDialogResponseGetter.Fluff2 => this.Fluff2;
         #endregion
@@ -1234,7 +1220,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.ActorNotes_Unset();
         }
         
-        
     }
     public partial class DialogResponseCommon
     {
@@ -1419,7 +1404,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
-        
     }
     public partial class DialogResponseSetterCopyCommon
     {
@@ -1581,7 +1565,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

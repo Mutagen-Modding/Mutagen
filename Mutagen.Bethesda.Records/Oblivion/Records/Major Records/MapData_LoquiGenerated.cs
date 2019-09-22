@@ -915,7 +915,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.CellCoordinatesSECell = default(P2Int16);
         }
         
-        
     }
     public partial class MapDataCommon
     {
@@ -1046,7 +1045,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
-        
     }
     public partial class MapDataSetterCopyCommon
     {
@@ -1114,7 +1112,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

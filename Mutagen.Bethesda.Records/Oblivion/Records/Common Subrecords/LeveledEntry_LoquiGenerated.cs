@@ -63,14 +63,7 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte[] Fluff
         {
             get => _Fluff;
-            set
-            {
-                this._Fluff = value;
-                if (value == null)
-                {
-                    this._Fluff = new byte[2];
-                }
-            }
+            set => this.RaiseAndSetIfChanged(ref _Fluff, value ?? new byte[2], nameof(Fluff));
         }
         ReadOnlySpan<Byte> ILeveledEntryGetter<T>.Fluff => this.Fluff;
         #endregion
@@ -1103,7 +1096,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Fluff2_Unset();
         }
         
-        
     }
     public partial class LeveledEntryCommon<T>
         where T : class, IOblivionMajorRecordInternalGetter, IXmlItem, IBinaryItem
@@ -1267,7 +1259,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
-        
     }
     public partial class LeveledEntrySetterCopyCommon
     {
@@ -1397,7 +1388,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

@@ -1413,7 +1413,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IAlchemicalApparatusInternal)item);
         }
         
-        
     }
     public partial class AlchemicalApparatusCommon : ItemAbstractCommon
     {
@@ -1752,7 +1751,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        
     }
     public partial class AlchemicalApparatusSetterCopyCommon : ItemAbstractSetterCopyCommon
     {
@@ -1974,7 +1972,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

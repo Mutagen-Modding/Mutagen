@@ -1,4 +1,4 @@
-﻿using Loqui;
+using Loqui;
 using Loqui.Generation;
 using System;
 using System.Collections.Generic;
@@ -12,6 +12,18 @@ namespace Mutagen.Bethesda.Generation
 {
     class Program
     {
+        static void AttachDebugInspector()
+        {
+            string testString = "protected readonly IHasBeenSetItem<String> _Name;";
+            FileGeneration.LineAppended
+                .Where(i => i.Contains(testString))
+                .Subscribe(s =>
+                {
+                    int wer = 23;
+                    wer++;
+                });
+        }
+
         static void Main(string[] args)
         {
 #if DEBUG
@@ -26,7 +38,6 @@ namespace Mutagen.Bethesda.Generation
         { 
             LoquiGenerator gen = new LoquiGenerator(typical: false)
             {
-                RaisePropertyChangedDefault = false,
                 NotifyingDefault = NotifyingType.ReactiveUI,
                 ObjectCentralizedDefault = true,
                 HasBeenSetDefault = true,
@@ -37,7 +48,6 @@ namespace Mutagen.Bethesda.Generation
             gen.Add(gen.XmlTranslation);
             gen.Add(gen.MaskModule);
             gen.Add(gen.ObjectCentralizationModule);
-            gen.Add(new ReactiveModule());
             gen.Namespaces.Add("Mutagen.Bethesda.Internals");
             gen.XmlTranslation.ShouldGenerateXSD = false;
             gen.XmlTranslation.AddTypeAssociation<FormIDLinkType>(new FormIDLinkXmlTranslationGeneration());
@@ -105,7 +115,6 @@ namespace Mutagen.Bethesda.Generation
         {
             LoquiGenerator gen = new LoquiGenerator()
             {
-                RaisePropertyChangedDefault = false,
                 NotifyingDefault = NotifyingType.ReactiveUI,
                 ObjectCentralizedDefault = true,
                 HasBeenSetDefault = false
@@ -129,7 +138,6 @@ namespace Mutagen.Bethesda.Generation
         {
             LoquiGenerator gen = new LoquiGenerator()
             {
-                RaisePropertyChangedDefault = false,
                 NotifyingDefault = NotifyingType.ReactiveUI,
                 ObjectCentralizedDefault = true,
                 HasBeenSetDefault = false
@@ -148,18 +156,6 @@ namespace Mutagen.Bethesda.Generation
                 new FileInfo("../../../Mutagen.Bethesda.Examples/Mutagen.Bethesda.Examples.csproj"));
 
             gen.Generate().Wait();
-        }
-
-        static void AttachDebugInspector()
-        {
-            string testString = "public static IOblivionModInternalGetter CreateFromBinaryWrapper(";
-            FileGeneration.LineAppended
-                .Where(i => i.Contains(testString))
-                .Subscribe(s =>
-                {
-                    int wer = 23;
-                    wer++;
-                });
         }
     }
 }

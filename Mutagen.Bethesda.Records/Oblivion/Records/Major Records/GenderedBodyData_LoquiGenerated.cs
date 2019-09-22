@@ -970,7 +970,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Female_Unset();
         }
         
-        
     }
     public partial class GenderedBodyDataCommon
     {
@@ -1123,7 +1122,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
-        
     }
     public partial class GenderedBodyDataSetterCopyCommon
     {
@@ -1244,7 +1242,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

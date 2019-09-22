@@ -1421,7 +1421,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IContainerInternal)item);
         }
         
-        
     }
     public partial class ContainerCommon : OblivionMajorRecordCommon
     {
@@ -1760,7 +1759,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        
     }
     public partial class ContainerSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
     {
@@ -1990,7 +1988,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

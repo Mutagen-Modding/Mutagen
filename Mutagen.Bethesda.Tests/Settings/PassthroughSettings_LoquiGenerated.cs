@@ -1027,7 +1027,6 @@ namespace Mutagen.Bethesda.Tests.Internals
             item.TestFolder = default(Boolean);
         }
         
-        
     }
     public partial class PassthroughSettingsCommon
     {
@@ -1190,7 +1189,6 @@ namespace Mutagen.Bethesda.Tests.Internals
         #endregion
         
         
-        
     }
     public partial class PassthroughSettingsSetterCopyCommon
     {
@@ -1326,7 +1324,6 @@ namespace Mutagen.Bethesda.Tests.Internals
         }
         
         #endregion
-        
         
     }
     #endregion

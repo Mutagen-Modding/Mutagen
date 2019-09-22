@@ -940,7 +940,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IGameSettingFloatInternal)item);
         }
         
-        
     }
     public partial class GameSettingFloatCommon : GameSettingCommon
     {
@@ -1194,7 +1193,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #endregion
         
-        
     }
     public partial class GameSettingFloatSetterCopyCommon : GameSettingSetterCopyCommon
     {
@@ -1247,7 +1245,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #endregion
-        
         
     }
     #endregion
