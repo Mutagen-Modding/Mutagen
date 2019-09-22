@@ -10,7 +10,7 @@
       <ByteArray name="Deleted" recordType="DELE" />
       <String name="Author" recordType="CNAM" maxLength="512" />
       <String name="Description" recordType="SNAM" maxLength="512" />
-      <RefList name="MasterReferences" refName="Bethesda.MasterReference" />
+      <RefList name="MasterReferences" refName="Bethesda.MasterReference" hasBeenSet="False" />
       <UInt64 name="VestigialData" recordType="DATA" />
     </Fields>
   </Object>

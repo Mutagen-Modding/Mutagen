@@ -2,10 +2,10 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>9b301ff39daac8a83cb63934c4e67865d1cfab46</Sha>
+         <Sha>1cc88ba4cfac84a8084c7debd06576ab2b6d2185</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>09-21-2019 19:07:51</CommitDate>
-         <Description>ForegroundDarkBrush</Description>
+         <CommitDate>09-21-2019 22:16:38</CommitDate>
+         <Description>DynamicData library update</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/CSharpExt.git</OriginHint>
       </RepoListing>
@@ -20,10 +20,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>DynamicData</Nickname>
-         <Sha>e07de13ef2bc5ae6d0352b26c5129796c165ddbd</Sha>
+         <Sha>5d67355b0cd4589c0bca4ab7546b86e3ab5730d2</Sha>
          <Path>../DynamicData</Path>
-         <CommitDate>09-21-2019 17:08:07</CommitDate>
-         <Description>Merge branch 'BufferIf-clearing-fix'</Description>
+         <CommitDate>09-21-2019 21:57:00</CommitDate>
+         <Description>Large refactor to support more covariance</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/DynamicData.git</OriginHint>
       </RepoListing>
