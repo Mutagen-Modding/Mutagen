@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._ArmorValue, value, nameof(ArmorValue));
+                this._ArmorValue = value;
             }
         }
         #endregion
@@ -69,7 +69,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Value, value, nameof(Value));
+                this._Value = value;
             }
         }
         #endregion
@@ -81,7 +81,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Health, value, nameof(Health));
+                this._Health = value;
             }
         }
         #endregion
@@ -93,17 +93,12 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Weight, value, nameof(Weight));
+                this._Weight = value;
             }
         }
         #endregion
         #region DATADataTypeState
-        private Armor.DATADataType _DATADataTypeState;
-        public Armor.DATADataType DATADataTypeState
-        {
-            get => this._DATADataTypeState;
-            set => this.RaiseAndSetIfChanged(ref this._DATADataTypeState, value, nameof(DATADataTypeState));
-        }
+        public Armor.DATADataType DATADataTypeState { get; set; }
         Armor.DATADataType IArmorInternal.DATADataTypeState
         {
             get => this.DATADataTypeState;
@@ -1462,70 +1457,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.ArmorValue ?? true)
             {
                 errorMask?.PushIndex((int)Armor_FieldIndex.ArmorValue);
-                try
-                {
-                    item.ArmorValue = rhs.ArmorValue;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.ArmorValue = rhs.ArmorValue;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Value ?? true)
             {
                 errorMask?.PushIndex((int)Armor_FieldIndex.Value);
-                try
-                {
-                    item.Value = rhs.Value;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Value = rhs.Value;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Health ?? true)
             {
                 errorMask?.PushIndex((int)Armor_FieldIndex.Health);
-                try
-                {
-                    item.Health = rhs.Health;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Health = rhs.Health;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Weight ?? true)
             {
                 errorMask?.PushIndex((int)Armor_FieldIndex.Weight);
-                try
-                {
-                    item.Weight = rhs.Weight;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Weight = rhs.Weight;
+                errorMask?.PopIndex();
             }
         }
         

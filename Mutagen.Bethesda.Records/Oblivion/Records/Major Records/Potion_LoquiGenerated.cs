@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Name_IsSet
         {
             get => _hasBeenSetTracker[(int)Potion_FieldIndex.Name];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Potion_FieldIndex.Name, nameof(Name_IsSet));
+            set => _hasBeenSetTracker[(int)Potion_FieldIndex.Name] = value;
         }
         bool IPotionGetter.Name_IsSet => Name_IsSet;
         private String _Name;
@@ -72,7 +72,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Name, value, _hasBeenSetTracker, markSet, (int)Potion_FieldIndex.Name, nameof(Name), nameof(Name_IsSet));
+            _Name = value;
+            _hasBeenSetTracker[(int)Potion_FieldIndex.Name] = markSet;
         }
         public void Name_Unset()
         {
@@ -110,7 +111,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Icon_IsSet
         {
             get => _hasBeenSetTracker[(int)Potion_FieldIndex.Icon];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Potion_FieldIndex.Icon, nameof(Icon_IsSet));
+            set => _hasBeenSetTracker[(int)Potion_FieldIndex.Icon] = value;
         }
         bool IPotionGetter.Icon_IsSet => Icon_IsSet;
         private String _Icon;
@@ -125,7 +126,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Icon, value, _hasBeenSetTracker, markSet, (int)Potion_FieldIndex.Icon, nameof(Icon), nameof(Icon_IsSet));
+            _Icon = value;
+            _hasBeenSetTracker[(int)Potion_FieldIndex.Icon] = markSet;
         }
         public void Icon_Unset()
         {
@@ -144,7 +146,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Weight_IsSet
         {
             get => _hasBeenSetTracker[(int)Potion_FieldIndex.Weight];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Potion_FieldIndex.Weight, nameof(Weight_IsSet));
+            set => _hasBeenSetTracker[(int)Potion_FieldIndex.Weight] = value;
         }
         bool IPotionGetter.Weight_IsSet => Weight_IsSet;
         private Single _Weight;
@@ -159,7 +161,8 @@ namespace Mutagen.Bethesda.Oblivion
             Single value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Weight, value, _hasBeenSetTracker, markSet, (int)Potion_FieldIndex.Weight, nameof(Weight), nameof(Weight_IsSet));
+            _Weight = value;
+            _hasBeenSetTracker[(int)Potion_FieldIndex.Weight] = markSet;
         }
         public void Weight_Unset()
         {
@@ -174,7 +177,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.ENITDataTypeState |= ENITDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Value, value, nameof(Value));
+                this._Value = value;
             }
         }
         #endregion
@@ -186,7 +189,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.ENITDataTypeState |= ENITDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
+                this._Flags = value;
             }
         }
         #endregion
@@ -203,12 +206,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region ENITDataTypeState
-        private Potion.ENITDataType _ENITDataTypeState;
-        public Potion.ENITDataType ENITDataTypeState
-        {
-            get => this._ENITDataTypeState;
-            set => this.RaiseAndSetIfChanged(ref this._ENITDataTypeState, value, nameof(ENITDataTypeState));
-        }
+        public Potion.ENITDataType ENITDataTypeState { get; set; }
         Potion.ENITDataType IPotionInternal.ENITDataTypeState
         {
             get => this.ENITDataTypeState;
@@ -2012,36 +2010,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Value ?? true)
             {
                 errorMask?.PushIndex((int)Potion_FieldIndex.Value);
-                try
-                {
-                    item.Value = rhs.Value;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Value = rhs.Value;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Flags ?? true)
             {
                 errorMask?.PushIndex((int)Potion_FieldIndex.Flags);
-                try
-                {
-                    item.Flags = rhs.Flags;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Flags = rhs.Flags;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Effects.Overall != CopyOption.Skip)
             {

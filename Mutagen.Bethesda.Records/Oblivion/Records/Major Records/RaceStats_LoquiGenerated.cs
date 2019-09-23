@@ -49,68 +49,28 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Strength
-        private Byte _Strength;
-        public Byte Strength
-        {
-            get => this._Strength;
-            set => this.RaiseAndSetIfChanged(ref this._Strength, value, nameof(Strength));
-        }
+        public Byte Strength { get; set; }
         #endregion
         #region Intelligence
-        private Byte _Intelligence;
-        public Byte Intelligence
-        {
-            get => this._Intelligence;
-            set => this.RaiseAndSetIfChanged(ref this._Intelligence, value, nameof(Intelligence));
-        }
+        public Byte Intelligence { get; set; }
         #endregion
         #region Willpower
-        private Byte _Willpower;
-        public Byte Willpower
-        {
-            get => this._Willpower;
-            set => this.RaiseAndSetIfChanged(ref this._Willpower, value, nameof(Willpower));
-        }
+        public Byte Willpower { get; set; }
         #endregion
         #region Agility
-        private Byte _Agility;
-        public Byte Agility
-        {
-            get => this._Agility;
-            set => this.RaiseAndSetIfChanged(ref this._Agility, value, nameof(Agility));
-        }
+        public Byte Agility { get; set; }
         #endregion
         #region Speed
-        private Byte _Speed;
-        public Byte Speed
-        {
-            get => this._Speed;
-            set => this.RaiseAndSetIfChanged(ref this._Speed, value, nameof(Speed));
-        }
+        public Byte Speed { get; set; }
         #endregion
         #region Endurance
-        private Byte _Endurance;
-        public Byte Endurance
-        {
-            get => this._Endurance;
-            set => this.RaiseAndSetIfChanged(ref this._Endurance, value, nameof(Endurance));
-        }
+        public Byte Endurance { get; set; }
         #endregion
         #region Personality
-        private Byte _Personality;
-        public Byte Personality
-        {
-            get => this._Personality;
-            set => this.RaiseAndSetIfChanged(ref this._Personality, value, nameof(Personality));
-        }
+        public Byte Personality { get; set; }
         #endregion
         #region Luck
-        private Byte _Luck;
-        public Byte Luck
-        {
-            get => this._Luck;
-            set => this.RaiseAndSetIfChanged(ref this._Luck, value, nameof(Luck));
-        }
+        public Byte Luck { get; set; }
         #endregion
 
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRaceStatsInternalGetter)rhs, include);
@@ -1240,138 +1200,50 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Strength ?? true)
             {
                 errorMask?.PushIndex((int)RaceStats_FieldIndex.Strength);
-                try
-                {
-                    item.Strength = rhs.Strength;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Strength = rhs.Strength;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Intelligence ?? true)
             {
                 errorMask?.PushIndex((int)RaceStats_FieldIndex.Intelligence);
-                try
-                {
-                    item.Intelligence = rhs.Intelligence;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Intelligence = rhs.Intelligence;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Willpower ?? true)
             {
                 errorMask?.PushIndex((int)RaceStats_FieldIndex.Willpower);
-                try
-                {
-                    item.Willpower = rhs.Willpower;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Willpower = rhs.Willpower;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Agility ?? true)
             {
                 errorMask?.PushIndex((int)RaceStats_FieldIndex.Agility);
-                try
-                {
-                    item.Agility = rhs.Agility;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Agility = rhs.Agility;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Speed ?? true)
             {
                 errorMask?.PushIndex((int)RaceStats_FieldIndex.Speed);
-                try
-                {
-                    item.Speed = rhs.Speed;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Speed = rhs.Speed;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Endurance ?? true)
             {
                 errorMask?.PushIndex((int)RaceStats_FieldIndex.Endurance);
-                try
-                {
-                    item.Endurance = rhs.Endurance;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Endurance = rhs.Endurance;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Personality ?? true)
             {
                 errorMask?.PushIndex((int)RaceStats_FieldIndex.Personality);
-                try
-                {
-                    item.Personality = rhs.Personality;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Personality = rhs.Personality;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Luck ?? true)
             {
                 errorMask?.PushIndex((int)RaceStats_FieldIndex.Luck);
-                try
-                {
-                    item.Luck = rhs.Luck;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Luck = rhs.Luck;
+                errorMask?.PopIndex();
             }
         }
         

@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Oblivion
             protected set
             {
                 this.RDATDataTypeState |= RDATDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._DataType, value, nameof(DataType));
+                this._DataType = value;
             }
         }
         #endregion
@@ -69,7 +69,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.RDATDataTypeState |= RDATDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
+                this._Flags = value;
             }
         }
         #endregion
@@ -81,17 +81,12 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.RDATDataTypeState |= RDATDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Priority, value, nameof(Priority));
+                this._Priority = value;
             }
         }
         #endregion
         #region RDATDataTypeState
-        private RegionData.RDATDataType _RDATDataTypeState;
-        public RegionData.RDATDataType RDATDataTypeState
-        {
-            get => this._RDATDataTypeState;
-            set => this.RaiseAndSetIfChanged(ref this._RDATDataTypeState, value, nameof(RDATDataTypeState));
-        }
+        public RegionData.RDATDataType RDATDataTypeState { get; set; }
         RegionData.RDATDataType IRegionDataInternal.RDATDataTypeState
         {
             get => this.RDATDataTypeState;
@@ -1109,36 +1104,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Flags ?? true)
             {
                 errorMask?.PushIndex((int)RegionData_FieldIndex.Flags);
-                try
-                {
-                    item.Flags = rhs.Flags;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Flags = rhs.Flags;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Priority ?? true)
             {
                 errorMask?.PushIndex((int)RegionData_FieldIndex.Priority);
-                try
-                {
-                    item.Priority = rhs.Priority;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Priority = rhs.Priority;
+                errorMask?.PopIndex();
             }
         }
         

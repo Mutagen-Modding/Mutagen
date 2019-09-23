@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Name_IsSet
         {
             get => _hasBeenSetTracker[(int)Enchantment_FieldIndex.Name];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Enchantment_FieldIndex.Name, nameof(Name_IsSet));
+            set => _hasBeenSetTracker[(int)Enchantment_FieldIndex.Name] = value;
         }
         bool IEnchantmentGetter.Name_IsSet => Name_IsSet;
         private String _Name;
@@ -72,7 +72,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Name, value, _hasBeenSetTracker, markSet, (int)Enchantment_FieldIndex.Name, nameof(Name), nameof(Name_IsSet));
+            _Name = value;
+            _hasBeenSetTracker[(int)Enchantment_FieldIndex.Name] = markSet;
         }
         public void Name_Unset()
         {
@@ -87,7 +88,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.ENITDataTypeState |= ENITDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Type, value, nameof(Type));
+                this._Type = value;
             }
         }
         #endregion
@@ -99,7 +100,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.ENITDataTypeState |= ENITDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._ChargeAmount, value, nameof(ChargeAmount));
+                this._ChargeAmount = value;
             }
         }
         #endregion
@@ -111,7 +112,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.ENITDataTypeState |= ENITDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._EnchantCost, value, nameof(EnchantCost));
+                this._EnchantCost = value;
             }
         }
         #endregion
@@ -123,7 +124,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.ENITDataTypeState |= ENITDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
+                this._Flags = value;
             }
         }
         #endregion
@@ -140,12 +141,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region ENITDataTypeState
-        private Enchantment.ENITDataType _ENITDataTypeState;
-        public Enchantment.ENITDataType ENITDataTypeState
-        {
-            get => this._ENITDataTypeState;
-            set => this.RaiseAndSetIfChanged(ref this._ENITDataTypeState, value, nameof(ENITDataTypeState));
-        }
+        public Enchantment.ENITDataType ENITDataTypeState { get; set; }
         Enchantment.ENITDataType IEnchantmentInternal.ENITDataTypeState
         {
             get => this.ENITDataTypeState;
@@ -1598,70 +1594,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Type ?? true)
             {
                 errorMask?.PushIndex((int)Enchantment_FieldIndex.Type);
-                try
-                {
-                    item.Type = rhs.Type;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Type = rhs.Type;
+                errorMask?.PopIndex();
             }
             if (copyMask?.ChargeAmount ?? true)
             {
                 errorMask?.PushIndex((int)Enchantment_FieldIndex.ChargeAmount);
-                try
-                {
-                    item.ChargeAmount = rhs.ChargeAmount;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.ChargeAmount = rhs.ChargeAmount;
+                errorMask?.PopIndex();
             }
             if (copyMask?.EnchantCost ?? true)
             {
                 errorMask?.PushIndex((int)Enchantment_FieldIndex.EnchantCost);
-                try
-                {
-                    item.EnchantCost = rhs.EnchantCost;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.EnchantCost = rhs.EnchantCost;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Flags ?? true)
             {
                 errorMask?.PushIndex((int)Enchantment_FieldIndex.Flags);
-                try
-                {
-                    item.Flags = rhs.Flags;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Flags = rhs.Flags;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Effects.Overall != CopyOption.Skip)
             {

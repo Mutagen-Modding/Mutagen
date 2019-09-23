@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Skyrim
         public bool Name_IsSet
         {
             get => _hasBeenSetTracker[(int)Class_FieldIndex.Name];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Class_FieldIndex.Name, nameof(Name_IsSet));
+            set => _hasBeenSetTracker[(int)Class_FieldIndex.Name] = value;
         }
         bool IClassGetter.Name_IsSet => Name_IsSet;
         private String _Name;
@@ -69,7 +69,8 @@ namespace Mutagen.Bethesda.Skyrim
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Name, value, _hasBeenSetTracker, markSet, (int)Class_FieldIndex.Name, nameof(Name), nameof(Name_IsSet));
+            _Name = value;
+            _hasBeenSetTracker[(int)Class_FieldIndex.Name] = markSet;
         }
         public void Name_Unset()
         {
@@ -80,7 +81,7 @@ namespace Mutagen.Bethesda.Skyrim
         public bool Description_IsSet
         {
             get => _hasBeenSetTracker[(int)Class_FieldIndex.Description];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Class_FieldIndex.Description, nameof(Description_IsSet));
+            set => _hasBeenSetTracker[(int)Class_FieldIndex.Description] = value;
         }
         bool IClassGetter.Description_IsSet => Description_IsSet;
         private String _Description;
@@ -95,7 +96,8 @@ namespace Mutagen.Bethesda.Skyrim
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Description, value, _hasBeenSetTracker, markSet, (int)Class_FieldIndex.Description, nameof(Description), nameof(Description_IsSet));
+            _Description = value;
+            _hasBeenSetTracker[(int)Class_FieldIndex.Description] = markSet;
         }
         public void Description_Unset()
         {
@@ -106,7 +108,7 @@ namespace Mutagen.Bethesda.Skyrim
         public bool Icon_IsSet
         {
             get => _hasBeenSetTracker[(int)Class_FieldIndex.Icon];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Class_FieldIndex.Icon, nameof(Icon_IsSet));
+            set => _hasBeenSetTracker[(int)Class_FieldIndex.Icon] = value;
         }
         bool IClassGetter.Icon_IsSet => Icon_IsSet;
         private String _Icon;
@@ -121,7 +123,8 @@ namespace Mutagen.Bethesda.Skyrim
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Icon, value, _hasBeenSetTracker, markSet, (int)Class_FieldIndex.Icon, nameof(Icon), nameof(Icon_IsSet));
+            _Icon = value;
+            _hasBeenSetTracker[(int)Class_FieldIndex.Icon] = markSet;
         }
         public void Icon_Unset()
         {
@@ -136,7 +139,7 @@ namespace Mutagen.Bethesda.Skyrim
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Unknown, value, nameof(Unknown));
+                this._Unknown = value;
             }
         }
         #endregion
@@ -148,7 +151,7 @@ namespace Mutagen.Bethesda.Skyrim
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Teaches, value, nameof(Teaches));
+                this._Teaches = value;
             }
         }
         #endregion
@@ -160,7 +163,7 @@ namespace Mutagen.Bethesda.Skyrim
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._MaxTrainingLevel, value, nameof(MaxTrainingLevel));
+                this._MaxTrainingLevel = value;
             }
         }
         #endregion
@@ -172,7 +175,7 @@ namespace Mutagen.Bethesda.Skyrim
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._OneHandedWeight, value, nameof(OneHandedWeight));
+                this._OneHandedWeight = value;
             }
         }
         #endregion
@@ -184,7 +187,7 @@ namespace Mutagen.Bethesda.Skyrim
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._TwoHandedWeight, value, nameof(TwoHandedWeight));
+                this._TwoHandedWeight = value;
             }
         }
         #endregion
@@ -196,7 +199,7 @@ namespace Mutagen.Bethesda.Skyrim
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._MarksmanWeight, value, nameof(MarksmanWeight));
+                this._MarksmanWeight = value;
             }
         }
         #endregion
@@ -208,7 +211,7 @@ namespace Mutagen.Bethesda.Skyrim
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._BlockWeight, value, nameof(BlockWeight));
+                this._BlockWeight = value;
             }
         }
         #endregion
@@ -220,7 +223,7 @@ namespace Mutagen.Bethesda.Skyrim
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._SmithingWeight, value, nameof(SmithingWeight));
+                this._SmithingWeight = value;
             }
         }
         #endregion
@@ -232,7 +235,7 @@ namespace Mutagen.Bethesda.Skyrim
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._HeavyArmorWeight, value, nameof(HeavyArmorWeight));
+                this._HeavyArmorWeight = value;
             }
         }
         #endregion
@@ -244,7 +247,7 @@ namespace Mutagen.Bethesda.Skyrim
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._LightArmorWeight, value, nameof(LightArmorWeight));
+                this._LightArmorWeight = value;
             }
         }
         #endregion
@@ -256,7 +259,7 @@ namespace Mutagen.Bethesda.Skyrim
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._PickpocketWeight, value, nameof(PickpocketWeight));
+                this._PickpocketWeight = value;
             }
         }
         #endregion
@@ -268,7 +271,7 @@ namespace Mutagen.Bethesda.Skyrim
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._LockpickingWeight, value, nameof(LockpickingWeight));
+                this._LockpickingWeight = value;
             }
         }
         #endregion
@@ -280,7 +283,7 @@ namespace Mutagen.Bethesda.Skyrim
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._SneakWeight, value, nameof(SneakWeight));
+                this._SneakWeight = value;
             }
         }
         #endregion
@@ -292,7 +295,7 @@ namespace Mutagen.Bethesda.Skyrim
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._AlchemyWeight, value, nameof(AlchemyWeight));
+                this._AlchemyWeight = value;
             }
         }
         #endregion
@@ -304,7 +307,7 @@ namespace Mutagen.Bethesda.Skyrim
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._SpeechcraftWeight, value, nameof(SpeechcraftWeight));
+                this._SpeechcraftWeight = value;
             }
         }
         #endregion
@@ -316,7 +319,7 @@ namespace Mutagen.Bethesda.Skyrim
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._AlterationWeight, value, nameof(AlterationWeight));
+                this._AlterationWeight = value;
             }
         }
         #endregion
@@ -328,7 +331,7 @@ namespace Mutagen.Bethesda.Skyrim
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._ConjurationWeight, value, nameof(ConjurationWeight));
+                this._ConjurationWeight = value;
             }
         }
         #endregion
@@ -340,7 +343,7 @@ namespace Mutagen.Bethesda.Skyrim
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._DestructionWeight, value, nameof(DestructionWeight));
+                this._DestructionWeight = value;
             }
         }
         #endregion
@@ -352,7 +355,7 @@ namespace Mutagen.Bethesda.Skyrim
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._IllusionWeight, value, nameof(IllusionWeight));
+                this._IllusionWeight = value;
             }
         }
         #endregion
@@ -364,7 +367,7 @@ namespace Mutagen.Bethesda.Skyrim
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._RestorationWeight, value, nameof(RestorationWeight));
+                this._RestorationWeight = value;
             }
         }
         #endregion
@@ -376,7 +379,7 @@ namespace Mutagen.Bethesda.Skyrim
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._EnchantingWeight, value, nameof(EnchantingWeight));
+                this._EnchantingWeight = value;
             }
         }
         #endregion
@@ -388,7 +391,7 @@ namespace Mutagen.Bethesda.Skyrim
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._BleedoutDefault, value, nameof(BleedoutDefault));
+                this._BleedoutDefault = value;
             }
         }
         #endregion
@@ -400,7 +403,7 @@ namespace Mutagen.Bethesda.Skyrim
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._VoicePoints, value, nameof(VoicePoints));
+                this._VoicePoints = value;
             }
         }
         #endregion
@@ -412,7 +415,7 @@ namespace Mutagen.Bethesda.Skyrim
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._HealthWeight, value, nameof(HealthWeight));
+                this._HealthWeight = value;
             }
         }
         #endregion
@@ -424,7 +427,7 @@ namespace Mutagen.Bethesda.Skyrim
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._MagickaWeight, value, nameof(MagickaWeight));
+                this._MagickaWeight = value;
             }
         }
         #endregion
@@ -436,7 +439,7 @@ namespace Mutagen.Bethesda.Skyrim
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._StaminaWeight, value, nameof(StaminaWeight));
+                this._StaminaWeight = value;
             }
         }
         #endregion
@@ -448,17 +451,12 @@ namespace Mutagen.Bethesda.Skyrim
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Unknown2, value, nameof(Unknown2));
+                this._Unknown2 = value;
             }
         }
         #endregion
         #region DATADataTypeState
-        private Class.DATADataType _DATADataTypeState;
-        public Class.DATADataType DATADataTypeState
-        {
-            get => this._DATADataTypeState;
-            set => this.RaiseAndSetIfChanged(ref this._DATADataTypeState, value, nameof(DATADataTypeState));
-        }
+        public Class.DATADataType DATADataTypeState { get; set; }
         Class.DATADataType IClassInternal.DATADataTypeState
         {
             get => this.DATADataTypeState;
@@ -2798,461 +2796,164 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (copyMask?.Unknown ?? true)
             {
                 errorMask?.PushIndex((int)Class_FieldIndex.Unknown);
-                try
-                {
-                    item.Unknown = rhs.Unknown;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Unknown = rhs.Unknown;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Teaches ?? true)
             {
                 errorMask?.PushIndex((int)Class_FieldIndex.Teaches);
-                try
-                {
-                    item.Teaches = rhs.Teaches;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Teaches = rhs.Teaches;
+                errorMask?.PopIndex();
             }
             if (copyMask?.MaxTrainingLevel ?? true)
             {
                 errorMask?.PushIndex((int)Class_FieldIndex.MaxTrainingLevel);
-                try
-                {
-                    item.MaxTrainingLevel = rhs.MaxTrainingLevel;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.MaxTrainingLevel = rhs.MaxTrainingLevel;
+                errorMask?.PopIndex();
             }
             if (copyMask?.OneHandedWeight ?? true)
             {
                 errorMask?.PushIndex((int)Class_FieldIndex.OneHandedWeight);
-                try
-                {
-                    item.OneHandedWeight = rhs.OneHandedWeight;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.OneHandedWeight = rhs.OneHandedWeight;
+                errorMask?.PopIndex();
             }
             if (copyMask?.TwoHandedWeight ?? true)
             {
                 errorMask?.PushIndex((int)Class_FieldIndex.TwoHandedWeight);
-                try
-                {
-                    item.TwoHandedWeight = rhs.TwoHandedWeight;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.TwoHandedWeight = rhs.TwoHandedWeight;
+                errorMask?.PopIndex();
             }
             if (copyMask?.MarksmanWeight ?? true)
             {
                 errorMask?.PushIndex((int)Class_FieldIndex.MarksmanWeight);
-                try
-                {
-                    item.MarksmanWeight = rhs.MarksmanWeight;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.MarksmanWeight = rhs.MarksmanWeight;
+                errorMask?.PopIndex();
             }
             if (copyMask?.BlockWeight ?? true)
             {
                 errorMask?.PushIndex((int)Class_FieldIndex.BlockWeight);
-                try
-                {
-                    item.BlockWeight = rhs.BlockWeight;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.BlockWeight = rhs.BlockWeight;
+                errorMask?.PopIndex();
             }
             if (copyMask?.SmithingWeight ?? true)
             {
                 errorMask?.PushIndex((int)Class_FieldIndex.SmithingWeight);
-                try
-                {
-                    item.SmithingWeight = rhs.SmithingWeight;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.SmithingWeight = rhs.SmithingWeight;
+                errorMask?.PopIndex();
             }
             if (copyMask?.HeavyArmorWeight ?? true)
             {
                 errorMask?.PushIndex((int)Class_FieldIndex.HeavyArmorWeight);
-                try
-                {
-                    item.HeavyArmorWeight = rhs.HeavyArmorWeight;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.HeavyArmorWeight = rhs.HeavyArmorWeight;
+                errorMask?.PopIndex();
             }
             if (copyMask?.LightArmorWeight ?? true)
             {
                 errorMask?.PushIndex((int)Class_FieldIndex.LightArmorWeight);
-                try
-                {
-                    item.LightArmorWeight = rhs.LightArmorWeight;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.LightArmorWeight = rhs.LightArmorWeight;
+                errorMask?.PopIndex();
             }
             if (copyMask?.PickpocketWeight ?? true)
             {
                 errorMask?.PushIndex((int)Class_FieldIndex.PickpocketWeight);
-                try
-                {
-                    item.PickpocketWeight = rhs.PickpocketWeight;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.PickpocketWeight = rhs.PickpocketWeight;
+                errorMask?.PopIndex();
             }
             if (copyMask?.LockpickingWeight ?? true)
             {
                 errorMask?.PushIndex((int)Class_FieldIndex.LockpickingWeight);
-                try
-                {
-                    item.LockpickingWeight = rhs.LockpickingWeight;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.LockpickingWeight = rhs.LockpickingWeight;
+                errorMask?.PopIndex();
             }
             if (copyMask?.SneakWeight ?? true)
             {
                 errorMask?.PushIndex((int)Class_FieldIndex.SneakWeight);
-                try
-                {
-                    item.SneakWeight = rhs.SneakWeight;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.SneakWeight = rhs.SneakWeight;
+                errorMask?.PopIndex();
             }
             if (copyMask?.AlchemyWeight ?? true)
             {
                 errorMask?.PushIndex((int)Class_FieldIndex.AlchemyWeight);
-                try
-                {
-                    item.AlchemyWeight = rhs.AlchemyWeight;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.AlchemyWeight = rhs.AlchemyWeight;
+                errorMask?.PopIndex();
             }
             if (copyMask?.SpeechcraftWeight ?? true)
             {
                 errorMask?.PushIndex((int)Class_FieldIndex.SpeechcraftWeight);
-                try
-                {
-                    item.SpeechcraftWeight = rhs.SpeechcraftWeight;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.SpeechcraftWeight = rhs.SpeechcraftWeight;
+                errorMask?.PopIndex();
             }
             if (copyMask?.AlterationWeight ?? true)
             {
                 errorMask?.PushIndex((int)Class_FieldIndex.AlterationWeight);
-                try
-                {
-                    item.AlterationWeight = rhs.AlterationWeight;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.AlterationWeight = rhs.AlterationWeight;
+                errorMask?.PopIndex();
             }
             if (copyMask?.ConjurationWeight ?? true)
             {
                 errorMask?.PushIndex((int)Class_FieldIndex.ConjurationWeight);
-                try
-                {
-                    item.ConjurationWeight = rhs.ConjurationWeight;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.ConjurationWeight = rhs.ConjurationWeight;
+                errorMask?.PopIndex();
             }
             if (copyMask?.DestructionWeight ?? true)
             {
                 errorMask?.PushIndex((int)Class_FieldIndex.DestructionWeight);
-                try
-                {
-                    item.DestructionWeight = rhs.DestructionWeight;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.DestructionWeight = rhs.DestructionWeight;
+                errorMask?.PopIndex();
             }
             if (copyMask?.IllusionWeight ?? true)
             {
                 errorMask?.PushIndex((int)Class_FieldIndex.IllusionWeight);
-                try
-                {
-                    item.IllusionWeight = rhs.IllusionWeight;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.IllusionWeight = rhs.IllusionWeight;
+                errorMask?.PopIndex();
             }
             if (copyMask?.RestorationWeight ?? true)
             {
                 errorMask?.PushIndex((int)Class_FieldIndex.RestorationWeight);
-                try
-                {
-                    item.RestorationWeight = rhs.RestorationWeight;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.RestorationWeight = rhs.RestorationWeight;
+                errorMask?.PopIndex();
             }
             if (copyMask?.EnchantingWeight ?? true)
             {
                 errorMask?.PushIndex((int)Class_FieldIndex.EnchantingWeight);
-                try
-                {
-                    item.EnchantingWeight = rhs.EnchantingWeight;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.EnchantingWeight = rhs.EnchantingWeight;
+                errorMask?.PopIndex();
             }
             if (copyMask?.BleedoutDefault ?? true)
             {
                 errorMask?.PushIndex((int)Class_FieldIndex.BleedoutDefault);
-                try
-                {
-                    item.BleedoutDefault = rhs.BleedoutDefault;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.BleedoutDefault = rhs.BleedoutDefault;
+                errorMask?.PopIndex();
             }
             if (copyMask?.VoicePoints ?? true)
             {
                 errorMask?.PushIndex((int)Class_FieldIndex.VoicePoints);
-                try
-                {
-                    item.VoicePoints = rhs.VoicePoints;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.VoicePoints = rhs.VoicePoints;
+                errorMask?.PopIndex();
             }
             if (copyMask?.HealthWeight ?? true)
             {
                 errorMask?.PushIndex((int)Class_FieldIndex.HealthWeight);
-                try
-                {
-                    item.HealthWeight = rhs.HealthWeight;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.HealthWeight = rhs.HealthWeight;
+                errorMask?.PopIndex();
             }
             if (copyMask?.MagickaWeight ?? true)
             {
                 errorMask?.PushIndex((int)Class_FieldIndex.MagickaWeight);
-                try
-                {
-                    item.MagickaWeight = rhs.MagickaWeight;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.MagickaWeight = rhs.MagickaWeight;
+                errorMask?.PopIndex();
             }
             if (copyMask?.StaminaWeight ?? true)
             {
                 errorMask?.PushIndex((int)Class_FieldIndex.StaminaWeight);
-                try
-                {
-                    item.StaminaWeight = rhs.StaminaWeight;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.StaminaWeight = rhs.StaminaWeight;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Unknown2 ?? true)
             {
                 errorMask?.PushIndex((int)Class_FieldIndex.Unknown2);
-                try
-                {
-                    item.Unknown2 = rhs.Unknown2;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Unknown2 = rhs.Unknown2;
+                errorMask?.PopIndex();
             }
         }
         

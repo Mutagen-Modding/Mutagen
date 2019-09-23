@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Name_IsSet
         {
             get => _hasBeenSetTracker[(int)Spell_FieldIndex.Name];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Spell_FieldIndex.Name, nameof(Name_IsSet));
+            set => _hasBeenSetTracker[(int)Spell_FieldIndex.Name] = value;
         }
         bool ISpellGetter.Name_IsSet => Name_IsSet;
         private String _Name;
@@ -70,7 +70,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Name, value, _hasBeenSetTracker, markSet, (int)Spell_FieldIndex.Name, nameof(Name), nameof(Name_IsSet));
+            _Name = value;
+            _hasBeenSetTracker[(int)Spell_FieldIndex.Name] = markSet;
         }
         public void Name_Unset()
         {

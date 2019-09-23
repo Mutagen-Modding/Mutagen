@@ -58,7 +58,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool TextureLowerLayer_IsSet
         {
             get => _hasBeenSetTracker[(int)Weather_FieldIndex.TextureLowerLayer];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Weather_FieldIndex.TextureLowerLayer, nameof(TextureLowerLayer_IsSet));
+            set => _hasBeenSetTracker[(int)Weather_FieldIndex.TextureLowerLayer] = value;
         }
         bool IWeatherGetter.TextureLowerLayer_IsSet => TextureLowerLayer_IsSet;
         private String _TextureLowerLayer;
@@ -73,7 +73,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _TextureLowerLayer, value, _hasBeenSetTracker, markSet, (int)Weather_FieldIndex.TextureLowerLayer, nameof(TextureLowerLayer), nameof(TextureLowerLayer_IsSet));
+            _TextureLowerLayer = value;
+            _hasBeenSetTracker[(int)Weather_FieldIndex.TextureLowerLayer] = markSet;
         }
         public void TextureLowerLayer_Unset()
         {
@@ -84,7 +85,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool TextureUpperLayer_IsSet
         {
             get => _hasBeenSetTracker[(int)Weather_FieldIndex.TextureUpperLayer];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Weather_FieldIndex.TextureUpperLayer, nameof(TextureUpperLayer_IsSet));
+            set => _hasBeenSetTracker[(int)Weather_FieldIndex.TextureUpperLayer] = value;
         }
         bool IWeatherGetter.TextureUpperLayer_IsSet => TextureUpperLayer_IsSet;
         private String _TextureUpperLayer;
@@ -99,7 +100,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _TextureUpperLayer, value, _hasBeenSetTracker, markSet, (int)Weather_FieldIndex.TextureUpperLayer, nameof(TextureUpperLayer), nameof(TextureUpperLayer_IsSet));
+            _TextureUpperLayer = value;
+            _hasBeenSetTracker[(int)Weather_FieldIndex.TextureUpperLayer] = markSet;
         }
         public void TextureUpperLayer_Unset()
         {
@@ -153,7 +155,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.FNAMDataTypeState |= FNAMDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._FogDayNear, value, nameof(FogDayNear));
+                this._FogDayNear = value;
             }
         }
         #endregion
@@ -165,7 +167,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.FNAMDataTypeState |= FNAMDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._FogDayFar, value, nameof(FogDayFar));
+                this._FogDayFar = value;
             }
         }
         #endregion
@@ -177,7 +179,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.FNAMDataTypeState |= FNAMDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._FogNightNear, value, nameof(FogNightNear));
+                this._FogNightNear = value;
             }
         }
         #endregion
@@ -189,7 +191,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.FNAMDataTypeState |= FNAMDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._FogNightFar, value, nameof(FogNightFar));
+                this._FogNightFar = value;
             }
         }
         #endregion
@@ -201,7 +203,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.HNAMDataTypeState |= HNAMDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._HdrEyeAdaptSpeed, value, nameof(HdrEyeAdaptSpeed));
+                this._HdrEyeAdaptSpeed = value;
             }
         }
         #endregion
@@ -213,7 +215,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.HNAMDataTypeState |= HNAMDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._HdrBlurRadius, value, nameof(HdrBlurRadius));
+                this._HdrBlurRadius = value;
             }
         }
         #endregion
@@ -225,7 +227,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.HNAMDataTypeState |= HNAMDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._HdrBlurPasses, value, nameof(HdrBlurPasses));
+                this._HdrBlurPasses = value;
             }
         }
         #endregion
@@ -237,7 +239,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.HNAMDataTypeState |= HNAMDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._HdrEmissiveMult, value, nameof(HdrEmissiveMult));
+                this._HdrEmissiveMult = value;
             }
         }
         #endregion
@@ -249,7 +251,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.HNAMDataTypeState |= HNAMDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._HdrTargetLum, value, nameof(HdrTargetLum));
+                this._HdrTargetLum = value;
             }
         }
         #endregion
@@ -261,7 +263,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.HNAMDataTypeState |= HNAMDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._HdrUpperLumClamp, value, nameof(HdrUpperLumClamp));
+                this._HdrUpperLumClamp = value;
             }
         }
         #endregion
@@ -273,7 +275,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.HNAMDataTypeState |= HNAMDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._HdrBrightScale, value, nameof(HdrBrightScale));
+                this._HdrBrightScale = value;
             }
         }
         #endregion
@@ -285,7 +287,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.HNAMDataTypeState |= HNAMDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._HdrBrightClamp, value, nameof(HdrBrightClamp));
+                this._HdrBrightClamp = value;
             }
         }
         #endregion
@@ -297,7 +299,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.HNAMDataTypeState |= HNAMDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._HdrLumRampNoTex, value, nameof(HdrLumRampNoTex));
+                this._HdrLumRampNoTex = value;
             }
         }
         #endregion
@@ -309,7 +311,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.HNAMDataTypeState |= HNAMDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._HdrLumRampMin, value, nameof(HdrLumRampMin));
+                this._HdrLumRampMin = value;
             }
         }
         #endregion
@@ -321,7 +323,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.HNAMDataTypeState |= HNAMDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._HdrLumRampMax, value, nameof(HdrLumRampMax));
+                this._HdrLumRampMax = value;
             }
         }
         #endregion
@@ -333,7 +335,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.HNAMDataTypeState |= HNAMDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._HdrSunlightDimmer, value, nameof(HdrSunlightDimmer));
+                this._HdrSunlightDimmer = value;
             }
         }
         #endregion
@@ -345,7 +347,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.HNAMDataTypeState |= HNAMDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._HdrGrassDimmer, value, nameof(HdrGrassDimmer));
+                this._HdrGrassDimmer = value;
             }
         }
         #endregion
@@ -357,7 +359,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.HNAMDataTypeState |= HNAMDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._HdrTreeDimmer, value, nameof(HdrTreeDimmer));
+                this._HdrTreeDimmer = value;
             }
         }
         #endregion
@@ -369,7 +371,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._WindSpeed, value, nameof(WindSpeed));
+                this._WindSpeed = value;
             }
         }
         #endregion
@@ -381,7 +383,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._CloudSpeedLower, value, nameof(CloudSpeedLower));
+                this._CloudSpeedLower = value;
             }
         }
         #endregion
@@ -393,7 +395,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._CloudSpeedUpper, value, nameof(CloudSpeedUpper));
+                this._CloudSpeedUpper = value;
             }
         }
         #endregion
@@ -405,7 +407,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._TransDelta, value, nameof(TransDelta));
+                this._TransDelta = value;
             }
         }
         #endregion
@@ -417,7 +419,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._SunGlare, value, nameof(SunGlare));
+                this._SunGlare = value;
             }
         }
         #endregion
@@ -429,7 +431,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._SunDamage, value, nameof(SunDamage));
+                this._SunDamage = value;
             }
         }
         #endregion
@@ -441,7 +443,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._PrecipitationBeginFadeIn, value, nameof(PrecipitationBeginFadeIn));
+                this._PrecipitationBeginFadeIn = value;
             }
         }
         #endregion
@@ -453,7 +455,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._PrecipitationEndFadeOut, value, nameof(PrecipitationEndFadeOut));
+                this._PrecipitationEndFadeOut = value;
             }
         }
         #endregion
@@ -465,7 +467,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._ThunderLightningBeginFadeIn, value, nameof(ThunderLightningBeginFadeIn));
+                this._ThunderLightningBeginFadeIn = value;
             }
         }
         #endregion
@@ -477,7 +479,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._ThunderLightningEndFadeOut, value, nameof(ThunderLightningEndFadeOut));
+                this._ThunderLightningEndFadeOut = value;
             }
         }
         #endregion
@@ -489,7 +491,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._ThunderLightningFrequency, value, nameof(ThunderLightningFrequency));
+                this._ThunderLightningFrequency = value;
             }
         }
         #endregion
@@ -501,7 +503,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Classification, value, nameof(Classification));
+                this._Classification = value;
             }
         }
         #endregion
@@ -513,7 +515,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._LightningColor, value, nameof(LightningColor));
+                this._LightningColor = value;
             }
         }
         #endregion
@@ -530,12 +532,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region FNAMDataTypeState
-        private Weather.FNAMDataType _FNAMDataTypeState;
-        public Weather.FNAMDataType FNAMDataTypeState
-        {
-            get => this._FNAMDataTypeState;
-            set => this.RaiseAndSetIfChanged(ref this._FNAMDataTypeState, value, nameof(FNAMDataTypeState));
-        }
+        public Weather.FNAMDataType FNAMDataTypeState { get; set; }
         Weather.FNAMDataType IWeatherInternal.FNAMDataTypeState
         {
             get => this.FNAMDataTypeState;
@@ -547,12 +544,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region HNAMDataTypeState
-        private Weather.HNAMDataType _HNAMDataTypeState;
-        public Weather.HNAMDataType HNAMDataTypeState
-        {
-            get => this._HNAMDataTypeState;
-            set => this.RaiseAndSetIfChanged(ref this._HNAMDataTypeState, value, nameof(HNAMDataTypeState));
-        }
+        public Weather.HNAMDataType HNAMDataTypeState { get; set; }
         Weather.HNAMDataType IWeatherInternal.HNAMDataTypeState
         {
             get => this.HNAMDataTypeState;
@@ -564,12 +556,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region DATADataTypeState
-        private Weather.DATADataType _DATADataTypeState;
-        public Weather.DATADataType DATADataTypeState
-        {
-            get => this._DATADataTypeState;
-            set => this.RaiseAndSetIfChanged(ref this._DATADataTypeState, value, nameof(DATADataTypeState));
-        }
+        public Weather.DATADataType DATADataTypeState { get; set; }
         Weather.DATADataType IWeatherInternal.DATADataTypeState
         {
             get => this.DATADataTypeState;
@@ -3561,529 +3548,188 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.FogDayNear ?? true)
             {
                 errorMask?.PushIndex((int)Weather_FieldIndex.FogDayNear);
-                try
-                {
-                    item.FogDayNear = rhs.FogDayNear;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.FogDayNear = rhs.FogDayNear;
+                errorMask?.PopIndex();
             }
             if (copyMask?.FogDayFar ?? true)
             {
                 errorMask?.PushIndex((int)Weather_FieldIndex.FogDayFar);
-                try
-                {
-                    item.FogDayFar = rhs.FogDayFar;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.FogDayFar = rhs.FogDayFar;
+                errorMask?.PopIndex();
             }
             if (copyMask?.FogNightNear ?? true)
             {
                 errorMask?.PushIndex((int)Weather_FieldIndex.FogNightNear);
-                try
-                {
-                    item.FogNightNear = rhs.FogNightNear;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.FogNightNear = rhs.FogNightNear;
+                errorMask?.PopIndex();
             }
             if (copyMask?.FogNightFar ?? true)
             {
                 errorMask?.PushIndex((int)Weather_FieldIndex.FogNightFar);
-                try
-                {
-                    item.FogNightFar = rhs.FogNightFar;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.FogNightFar = rhs.FogNightFar;
+                errorMask?.PopIndex();
             }
             if (copyMask?.HdrEyeAdaptSpeed ?? true)
             {
                 errorMask?.PushIndex((int)Weather_FieldIndex.HdrEyeAdaptSpeed);
-                try
-                {
-                    item.HdrEyeAdaptSpeed = rhs.HdrEyeAdaptSpeed;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.HdrEyeAdaptSpeed = rhs.HdrEyeAdaptSpeed;
+                errorMask?.PopIndex();
             }
             if (copyMask?.HdrBlurRadius ?? true)
             {
                 errorMask?.PushIndex((int)Weather_FieldIndex.HdrBlurRadius);
-                try
-                {
-                    item.HdrBlurRadius = rhs.HdrBlurRadius;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.HdrBlurRadius = rhs.HdrBlurRadius;
+                errorMask?.PopIndex();
             }
             if (copyMask?.HdrBlurPasses ?? true)
             {
                 errorMask?.PushIndex((int)Weather_FieldIndex.HdrBlurPasses);
-                try
-                {
-                    item.HdrBlurPasses = rhs.HdrBlurPasses;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.HdrBlurPasses = rhs.HdrBlurPasses;
+                errorMask?.PopIndex();
             }
             if (copyMask?.HdrEmissiveMult ?? true)
             {
                 errorMask?.PushIndex((int)Weather_FieldIndex.HdrEmissiveMult);
-                try
-                {
-                    item.HdrEmissiveMult = rhs.HdrEmissiveMult;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.HdrEmissiveMult = rhs.HdrEmissiveMult;
+                errorMask?.PopIndex();
             }
             if (copyMask?.HdrTargetLum ?? true)
             {
                 errorMask?.PushIndex((int)Weather_FieldIndex.HdrTargetLum);
-                try
-                {
-                    item.HdrTargetLum = rhs.HdrTargetLum;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.HdrTargetLum = rhs.HdrTargetLum;
+                errorMask?.PopIndex();
             }
             if (copyMask?.HdrUpperLumClamp ?? true)
             {
                 errorMask?.PushIndex((int)Weather_FieldIndex.HdrUpperLumClamp);
-                try
-                {
-                    item.HdrUpperLumClamp = rhs.HdrUpperLumClamp;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.HdrUpperLumClamp = rhs.HdrUpperLumClamp;
+                errorMask?.PopIndex();
             }
             if (copyMask?.HdrBrightScale ?? true)
             {
                 errorMask?.PushIndex((int)Weather_FieldIndex.HdrBrightScale);
-                try
-                {
-                    item.HdrBrightScale = rhs.HdrBrightScale;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.HdrBrightScale = rhs.HdrBrightScale;
+                errorMask?.PopIndex();
             }
             if (copyMask?.HdrBrightClamp ?? true)
             {
                 errorMask?.PushIndex((int)Weather_FieldIndex.HdrBrightClamp);
-                try
-                {
-                    item.HdrBrightClamp = rhs.HdrBrightClamp;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.HdrBrightClamp = rhs.HdrBrightClamp;
+                errorMask?.PopIndex();
             }
             if (copyMask?.HdrLumRampNoTex ?? true)
             {
                 errorMask?.PushIndex((int)Weather_FieldIndex.HdrLumRampNoTex);
-                try
-                {
-                    item.HdrLumRampNoTex = rhs.HdrLumRampNoTex;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.HdrLumRampNoTex = rhs.HdrLumRampNoTex;
+                errorMask?.PopIndex();
             }
             if (copyMask?.HdrLumRampMin ?? true)
             {
                 errorMask?.PushIndex((int)Weather_FieldIndex.HdrLumRampMin);
-                try
-                {
-                    item.HdrLumRampMin = rhs.HdrLumRampMin;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.HdrLumRampMin = rhs.HdrLumRampMin;
+                errorMask?.PopIndex();
             }
             if (copyMask?.HdrLumRampMax ?? true)
             {
                 errorMask?.PushIndex((int)Weather_FieldIndex.HdrLumRampMax);
-                try
-                {
-                    item.HdrLumRampMax = rhs.HdrLumRampMax;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.HdrLumRampMax = rhs.HdrLumRampMax;
+                errorMask?.PopIndex();
             }
             if (copyMask?.HdrSunlightDimmer ?? true)
             {
                 errorMask?.PushIndex((int)Weather_FieldIndex.HdrSunlightDimmer);
-                try
-                {
-                    item.HdrSunlightDimmer = rhs.HdrSunlightDimmer;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.HdrSunlightDimmer = rhs.HdrSunlightDimmer;
+                errorMask?.PopIndex();
             }
             if (copyMask?.HdrGrassDimmer ?? true)
             {
                 errorMask?.PushIndex((int)Weather_FieldIndex.HdrGrassDimmer);
-                try
-                {
-                    item.HdrGrassDimmer = rhs.HdrGrassDimmer;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.HdrGrassDimmer = rhs.HdrGrassDimmer;
+                errorMask?.PopIndex();
             }
             if (copyMask?.HdrTreeDimmer ?? true)
             {
                 errorMask?.PushIndex((int)Weather_FieldIndex.HdrTreeDimmer);
-                try
-                {
-                    item.HdrTreeDimmer = rhs.HdrTreeDimmer;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.HdrTreeDimmer = rhs.HdrTreeDimmer;
+                errorMask?.PopIndex();
             }
             if (copyMask?.WindSpeed ?? true)
             {
                 errorMask?.PushIndex((int)Weather_FieldIndex.WindSpeed);
-                try
-                {
-                    item.WindSpeed = rhs.WindSpeed;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.WindSpeed = rhs.WindSpeed;
+                errorMask?.PopIndex();
             }
             if (copyMask?.CloudSpeedLower ?? true)
             {
                 errorMask?.PushIndex((int)Weather_FieldIndex.CloudSpeedLower);
-                try
-                {
-                    item.CloudSpeedLower = rhs.CloudSpeedLower;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.CloudSpeedLower = rhs.CloudSpeedLower;
+                errorMask?.PopIndex();
             }
             if (copyMask?.CloudSpeedUpper ?? true)
             {
                 errorMask?.PushIndex((int)Weather_FieldIndex.CloudSpeedUpper);
-                try
-                {
-                    item.CloudSpeedUpper = rhs.CloudSpeedUpper;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.CloudSpeedUpper = rhs.CloudSpeedUpper;
+                errorMask?.PopIndex();
             }
             if (copyMask?.TransDelta ?? true)
             {
                 errorMask?.PushIndex((int)Weather_FieldIndex.TransDelta);
-                try
-                {
-                    item.TransDelta = rhs.TransDelta;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.TransDelta = rhs.TransDelta;
+                errorMask?.PopIndex();
             }
             if (copyMask?.SunGlare ?? true)
             {
                 errorMask?.PushIndex((int)Weather_FieldIndex.SunGlare);
-                try
-                {
-                    item.SunGlare = rhs.SunGlare;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.SunGlare = rhs.SunGlare;
+                errorMask?.PopIndex();
             }
             if (copyMask?.SunDamage ?? true)
             {
                 errorMask?.PushIndex((int)Weather_FieldIndex.SunDamage);
-                try
-                {
-                    item.SunDamage = rhs.SunDamage;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.SunDamage = rhs.SunDamage;
+                errorMask?.PopIndex();
             }
             if (copyMask?.PrecipitationBeginFadeIn ?? true)
             {
                 errorMask?.PushIndex((int)Weather_FieldIndex.PrecipitationBeginFadeIn);
-                try
-                {
-                    item.PrecipitationBeginFadeIn = rhs.PrecipitationBeginFadeIn;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.PrecipitationBeginFadeIn = rhs.PrecipitationBeginFadeIn;
+                errorMask?.PopIndex();
             }
             if (copyMask?.PrecipitationEndFadeOut ?? true)
             {
                 errorMask?.PushIndex((int)Weather_FieldIndex.PrecipitationEndFadeOut);
-                try
-                {
-                    item.PrecipitationEndFadeOut = rhs.PrecipitationEndFadeOut;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.PrecipitationEndFadeOut = rhs.PrecipitationEndFadeOut;
+                errorMask?.PopIndex();
             }
             if (copyMask?.ThunderLightningBeginFadeIn ?? true)
             {
                 errorMask?.PushIndex((int)Weather_FieldIndex.ThunderLightningBeginFadeIn);
-                try
-                {
-                    item.ThunderLightningBeginFadeIn = rhs.ThunderLightningBeginFadeIn;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.ThunderLightningBeginFadeIn = rhs.ThunderLightningBeginFadeIn;
+                errorMask?.PopIndex();
             }
             if (copyMask?.ThunderLightningEndFadeOut ?? true)
             {
                 errorMask?.PushIndex((int)Weather_FieldIndex.ThunderLightningEndFadeOut);
-                try
-                {
-                    item.ThunderLightningEndFadeOut = rhs.ThunderLightningEndFadeOut;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.ThunderLightningEndFadeOut = rhs.ThunderLightningEndFadeOut;
+                errorMask?.PopIndex();
             }
             if (copyMask?.ThunderLightningFrequency ?? true)
             {
                 errorMask?.PushIndex((int)Weather_FieldIndex.ThunderLightningFrequency);
-                try
-                {
-                    item.ThunderLightningFrequency = rhs.ThunderLightningFrequency;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.ThunderLightningFrequency = rhs.ThunderLightningFrequency;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Classification ?? true)
             {
                 errorMask?.PushIndex((int)Weather_FieldIndex.Classification);
-                try
-                {
-                    item.Classification = rhs.Classification;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Classification = rhs.Classification;
+                errorMask?.PopIndex();
             }
             if (copyMask?.LightningColor ?? true)
             {
                 errorMask?.PushIndex((int)Weather_FieldIndex.LightningColor);
-                try
-                {
-                    item.LightningColor = rhs.LightningColor;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.LightningColor = rhs.LightningColor;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Sounds.Overall != CopyOption.Skip)
             {

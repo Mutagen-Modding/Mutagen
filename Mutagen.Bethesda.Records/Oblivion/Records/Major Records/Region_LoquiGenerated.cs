@@ -58,7 +58,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Icon_IsSet
         {
             get => _hasBeenSetTracker[(int)Region_FieldIndex.Icon];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Region_FieldIndex.Icon, nameof(Icon_IsSet));
+            set => _hasBeenSetTracker[(int)Region_FieldIndex.Icon] = value;
         }
         bool IRegionGetter.Icon_IsSet => Icon_IsSet;
         private String _Icon;
@@ -73,7 +73,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Icon, value, _hasBeenSetTracker, markSet, (int)Region_FieldIndex.Icon, nameof(Icon), nameof(Icon_IsSet));
+            _Icon = value;
+            _hasBeenSetTracker[(int)Region_FieldIndex.Icon] = markSet;
         }
         public void Icon_Unset()
         {
@@ -84,7 +85,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool MapColor_IsSet
         {
             get => _hasBeenSetTracker[(int)Region_FieldIndex.MapColor];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Region_FieldIndex.MapColor, nameof(MapColor_IsSet));
+            set => _hasBeenSetTracker[(int)Region_FieldIndex.MapColor] = value;
         }
         bool IRegionGetter.MapColor_IsSet => MapColor_IsSet;
         private Color _MapColor;
@@ -99,7 +100,8 @@ namespace Mutagen.Bethesda.Oblivion
             Color value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _MapColor, value, _hasBeenSetTracker, markSet, (int)Region_FieldIndex.MapColor, nameof(MapColor), nameof(MapColor_IsSet));
+            _MapColor = value;
+            _hasBeenSetTracker[(int)Region_FieldIndex.MapColor] = markSet;
         }
         public void MapColor_Unset()
         {

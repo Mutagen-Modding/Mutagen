@@ -49,172 +49,67 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region DodgeFatigueModMult
-        private Single _DodgeFatigueModMult;
-        public Single DodgeFatigueModMult
-        {
-            get => this._DodgeFatigueModMult;
-            set => this.RaiseAndSetIfChanged(ref this._DodgeFatigueModMult, value, nameof(DodgeFatigueModMult));
-        }
+        public Single DodgeFatigueModMult { get; set; }
         #endregion
         #region DodgeFatigueModBase
-        private Single _DodgeFatigueModBase;
-        public Single DodgeFatigueModBase
-        {
-            get => this._DodgeFatigueModBase;
-            set => this.RaiseAndSetIfChanged(ref this._DodgeFatigueModBase, value, nameof(DodgeFatigueModBase));
-        }
+        public Single DodgeFatigueModBase { get; set; }
         #endregion
         #region EncumbSpeedModBase
-        private Single _EncumbSpeedModBase;
-        public Single EncumbSpeedModBase
-        {
-            get => this._EncumbSpeedModBase;
-            set => this.RaiseAndSetIfChanged(ref this._EncumbSpeedModBase, value, nameof(EncumbSpeedModBase));
-        }
+        public Single EncumbSpeedModBase { get; set; }
         #endregion
         #region EncumbSpeedModMult
-        private Single _EncumbSpeedModMult;
-        public Single EncumbSpeedModMult
-        {
-            get => this._EncumbSpeedModMult;
-            set => this.RaiseAndSetIfChanged(ref this._EncumbSpeedModMult, value, nameof(EncumbSpeedModMult));
-        }
+        public Single EncumbSpeedModMult { get; set; }
         #endregion
         #region DodgeWhileUnderAttackMult
-        private Single _DodgeWhileUnderAttackMult;
-        public Single DodgeWhileUnderAttackMult
-        {
-            get => this._DodgeWhileUnderAttackMult;
-            set => this.RaiseAndSetIfChanged(ref this._DodgeWhileUnderAttackMult, value, nameof(DodgeWhileUnderAttackMult));
-        }
+        public Single DodgeWhileUnderAttackMult { get; set; }
         #endregion
         #region DodgeNotUnderAttackMult
-        private Single _DodgeNotUnderAttackMult;
-        public Single DodgeNotUnderAttackMult
-        {
-            get => this._DodgeNotUnderAttackMult;
-            set => this.RaiseAndSetIfChanged(ref this._DodgeNotUnderAttackMult, value, nameof(DodgeNotUnderAttackMult));
-        }
+        public Single DodgeNotUnderAttackMult { get; set; }
         #endregion
         #region DodgeBackWhileUnderAttackMult
-        private Single _DodgeBackWhileUnderAttackMult;
-        public Single DodgeBackWhileUnderAttackMult
-        {
-            get => this._DodgeBackWhileUnderAttackMult;
-            set => this.RaiseAndSetIfChanged(ref this._DodgeBackWhileUnderAttackMult, value, nameof(DodgeBackWhileUnderAttackMult));
-        }
+        public Single DodgeBackWhileUnderAttackMult { get; set; }
         #endregion
         #region DodgeBackNotUnderAttackMult
-        private Single _DodgeBackNotUnderAttackMult;
-        public Single DodgeBackNotUnderAttackMult
-        {
-            get => this._DodgeBackNotUnderAttackMult;
-            set => this.RaiseAndSetIfChanged(ref this._DodgeBackNotUnderAttackMult, value, nameof(DodgeBackNotUnderAttackMult));
-        }
+        public Single DodgeBackNotUnderAttackMult { get; set; }
         #endregion
         #region DodgeForwardWhileUnderAttackMult
-        private Single _DodgeForwardWhileUnderAttackMult;
-        public Single DodgeForwardWhileUnderAttackMult
-        {
-            get => this._DodgeForwardWhileUnderAttackMult;
-            set => this.RaiseAndSetIfChanged(ref this._DodgeForwardWhileUnderAttackMult, value, nameof(DodgeForwardWhileUnderAttackMult));
-        }
+        public Single DodgeForwardWhileUnderAttackMult { get; set; }
         #endregion
         #region DodgeForwardNotUnderAttackMult
-        private Single _DodgeForwardNotUnderAttackMult;
-        public Single DodgeForwardNotUnderAttackMult
-        {
-            get => this._DodgeForwardNotUnderAttackMult;
-            set => this.RaiseAndSetIfChanged(ref this._DodgeForwardNotUnderAttackMult, value, nameof(DodgeForwardNotUnderAttackMult));
-        }
+        public Single DodgeForwardNotUnderAttackMult { get; set; }
         #endregion
         #region BlockSkillModifierMult
-        private Single _BlockSkillModifierMult;
-        public Single BlockSkillModifierMult
-        {
-            get => this._BlockSkillModifierMult;
-            set => this.RaiseAndSetIfChanged(ref this._BlockSkillModifierMult, value, nameof(BlockSkillModifierMult));
-        }
+        public Single BlockSkillModifierMult { get; set; }
         #endregion
         #region BlockSkillModifierBase
-        private Single _BlockSkillModifierBase;
-        public Single BlockSkillModifierBase
-        {
-            get => this._BlockSkillModifierBase;
-            set => this.RaiseAndSetIfChanged(ref this._BlockSkillModifierBase, value, nameof(BlockSkillModifierBase));
-        }
+        public Single BlockSkillModifierBase { get; set; }
         #endregion
         #region BlockWhileUnderAttackMult
-        private Single _BlockWhileUnderAttackMult;
-        public Single BlockWhileUnderAttackMult
-        {
-            get => this._BlockWhileUnderAttackMult;
-            set => this.RaiseAndSetIfChanged(ref this._BlockWhileUnderAttackMult, value, nameof(BlockWhileUnderAttackMult));
-        }
+        public Single BlockWhileUnderAttackMult { get; set; }
         #endregion
         #region BlockNotUnderAttackMult
-        private Single _BlockNotUnderAttackMult;
-        public Single BlockNotUnderAttackMult
-        {
-            get => this._BlockNotUnderAttackMult;
-            set => this.RaiseAndSetIfChanged(ref this._BlockNotUnderAttackMult, value, nameof(BlockNotUnderAttackMult));
-        }
+        public Single BlockNotUnderAttackMult { get; set; }
         #endregion
         #region AttackSkillModifierMult
-        private Single _AttackSkillModifierMult;
-        public Single AttackSkillModifierMult
-        {
-            get => this._AttackSkillModifierMult;
-            set => this.RaiseAndSetIfChanged(ref this._AttackSkillModifierMult, value, nameof(AttackSkillModifierMult));
-        }
+        public Single AttackSkillModifierMult { get; set; }
         #endregion
         #region AttackSkillModifierBase
-        private Single _AttackSkillModifierBase;
-        public Single AttackSkillModifierBase
-        {
-            get => this._AttackSkillModifierBase;
-            set => this.RaiseAndSetIfChanged(ref this._AttackSkillModifierBase, value, nameof(AttackSkillModifierBase));
-        }
+        public Single AttackSkillModifierBase { get; set; }
         #endregion
         #region AttackWhileUnderAttackMult
-        private Single _AttackWhileUnderAttackMult;
-        public Single AttackWhileUnderAttackMult
-        {
-            get => this._AttackWhileUnderAttackMult;
-            set => this.RaiseAndSetIfChanged(ref this._AttackWhileUnderAttackMult, value, nameof(AttackWhileUnderAttackMult));
-        }
+        public Single AttackWhileUnderAttackMult { get; set; }
         #endregion
         #region AttackNotUnderAttackMult
-        private Single _AttackNotUnderAttackMult;
-        public Single AttackNotUnderAttackMult
-        {
-            get => this._AttackNotUnderAttackMult;
-            set => this.RaiseAndSetIfChanged(ref this._AttackNotUnderAttackMult, value, nameof(AttackNotUnderAttackMult));
-        }
+        public Single AttackNotUnderAttackMult { get; set; }
         #endregion
         #region AttackDuringBlockMult
-        private Single _AttackDuringBlockMult;
-        public Single AttackDuringBlockMult
-        {
-            get => this._AttackDuringBlockMult;
-            set => this.RaiseAndSetIfChanged(ref this._AttackDuringBlockMult, value, nameof(AttackDuringBlockMult));
-        }
+        public Single AttackDuringBlockMult { get; set; }
         #endregion
         #region PowerAttackFatigueModBase
-        private Single _PowerAttackFatigueModBase;
-        public Single PowerAttackFatigueModBase
-        {
-            get => this._PowerAttackFatigueModBase;
-            set => this.RaiseAndSetIfChanged(ref this._PowerAttackFatigueModBase, value, nameof(PowerAttackFatigueModBase));
-        }
+        public Single PowerAttackFatigueModBase { get; set; }
         #endregion
         #region PowerAttackFatigueModMult
-        private Single _PowerAttackFatigueModMult;
-        public Single PowerAttackFatigueModMult
-        {
-            get => this._PowerAttackFatigueModMult;
-            set => this.RaiseAndSetIfChanged(ref this._PowerAttackFatigueModMult, value, nameof(PowerAttackFatigueModMult));
-        }
+        public Single PowerAttackFatigueModMult { get; set; }
         #endregion
 
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICombatStyleAdvancedInternalGetter)rhs, include);
@@ -1997,359 +1892,128 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.DodgeFatigueModMult ?? true)
             {
                 errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeFatigueModMult);
-                try
-                {
-                    item.DodgeFatigueModMult = rhs.DodgeFatigueModMult;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.DodgeFatigueModMult = rhs.DodgeFatigueModMult;
+                errorMask?.PopIndex();
             }
             if (copyMask?.DodgeFatigueModBase ?? true)
             {
                 errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeFatigueModBase);
-                try
-                {
-                    item.DodgeFatigueModBase = rhs.DodgeFatigueModBase;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.DodgeFatigueModBase = rhs.DodgeFatigueModBase;
+                errorMask?.PopIndex();
             }
             if (copyMask?.EncumbSpeedModBase ?? true)
             {
                 errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.EncumbSpeedModBase);
-                try
-                {
-                    item.EncumbSpeedModBase = rhs.EncumbSpeedModBase;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.EncumbSpeedModBase = rhs.EncumbSpeedModBase;
+                errorMask?.PopIndex();
             }
             if (copyMask?.EncumbSpeedModMult ?? true)
             {
                 errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.EncumbSpeedModMult);
-                try
-                {
-                    item.EncumbSpeedModMult = rhs.EncumbSpeedModMult;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.EncumbSpeedModMult = rhs.EncumbSpeedModMult;
+                errorMask?.PopIndex();
             }
             if (copyMask?.DodgeWhileUnderAttackMult ?? true)
             {
                 errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeWhileUnderAttackMult);
-                try
-                {
-                    item.DodgeWhileUnderAttackMult = rhs.DodgeWhileUnderAttackMult;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.DodgeWhileUnderAttackMult = rhs.DodgeWhileUnderAttackMult;
+                errorMask?.PopIndex();
             }
             if (copyMask?.DodgeNotUnderAttackMult ?? true)
             {
                 errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeNotUnderAttackMult);
-                try
-                {
-                    item.DodgeNotUnderAttackMult = rhs.DodgeNotUnderAttackMult;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.DodgeNotUnderAttackMult = rhs.DodgeNotUnderAttackMult;
+                errorMask?.PopIndex();
             }
             if (copyMask?.DodgeBackWhileUnderAttackMult ?? true)
             {
                 errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeBackWhileUnderAttackMult);
-                try
-                {
-                    item.DodgeBackWhileUnderAttackMult = rhs.DodgeBackWhileUnderAttackMult;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.DodgeBackWhileUnderAttackMult = rhs.DodgeBackWhileUnderAttackMult;
+                errorMask?.PopIndex();
             }
             if (copyMask?.DodgeBackNotUnderAttackMult ?? true)
             {
                 errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeBackNotUnderAttackMult);
-                try
-                {
-                    item.DodgeBackNotUnderAttackMult = rhs.DodgeBackNotUnderAttackMult;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.DodgeBackNotUnderAttackMult = rhs.DodgeBackNotUnderAttackMult;
+                errorMask?.PopIndex();
             }
             if (copyMask?.DodgeForwardWhileUnderAttackMult ?? true)
             {
                 errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeForwardWhileUnderAttackMult);
-                try
-                {
-                    item.DodgeForwardWhileUnderAttackMult = rhs.DodgeForwardWhileUnderAttackMult;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.DodgeForwardWhileUnderAttackMult = rhs.DodgeForwardWhileUnderAttackMult;
+                errorMask?.PopIndex();
             }
             if (copyMask?.DodgeForwardNotUnderAttackMult ?? true)
             {
                 errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeForwardNotUnderAttackMult);
-                try
-                {
-                    item.DodgeForwardNotUnderAttackMult = rhs.DodgeForwardNotUnderAttackMult;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.DodgeForwardNotUnderAttackMult = rhs.DodgeForwardNotUnderAttackMult;
+                errorMask?.PopIndex();
             }
             if (copyMask?.BlockSkillModifierMult ?? true)
             {
                 errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.BlockSkillModifierMult);
-                try
-                {
-                    item.BlockSkillModifierMult = rhs.BlockSkillModifierMult;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.BlockSkillModifierMult = rhs.BlockSkillModifierMult;
+                errorMask?.PopIndex();
             }
             if (copyMask?.BlockSkillModifierBase ?? true)
             {
                 errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.BlockSkillModifierBase);
-                try
-                {
-                    item.BlockSkillModifierBase = rhs.BlockSkillModifierBase;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.BlockSkillModifierBase = rhs.BlockSkillModifierBase;
+                errorMask?.PopIndex();
             }
             if (copyMask?.BlockWhileUnderAttackMult ?? true)
             {
                 errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.BlockWhileUnderAttackMult);
-                try
-                {
-                    item.BlockWhileUnderAttackMult = rhs.BlockWhileUnderAttackMult;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.BlockWhileUnderAttackMult = rhs.BlockWhileUnderAttackMult;
+                errorMask?.PopIndex();
             }
             if (copyMask?.BlockNotUnderAttackMult ?? true)
             {
                 errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.BlockNotUnderAttackMult);
-                try
-                {
-                    item.BlockNotUnderAttackMult = rhs.BlockNotUnderAttackMult;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.BlockNotUnderAttackMult = rhs.BlockNotUnderAttackMult;
+                errorMask?.PopIndex();
             }
             if (copyMask?.AttackSkillModifierMult ?? true)
             {
                 errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.AttackSkillModifierMult);
-                try
-                {
-                    item.AttackSkillModifierMult = rhs.AttackSkillModifierMult;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.AttackSkillModifierMult = rhs.AttackSkillModifierMult;
+                errorMask?.PopIndex();
             }
             if (copyMask?.AttackSkillModifierBase ?? true)
             {
                 errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.AttackSkillModifierBase);
-                try
-                {
-                    item.AttackSkillModifierBase = rhs.AttackSkillModifierBase;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.AttackSkillModifierBase = rhs.AttackSkillModifierBase;
+                errorMask?.PopIndex();
             }
             if (copyMask?.AttackWhileUnderAttackMult ?? true)
             {
                 errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.AttackWhileUnderAttackMult);
-                try
-                {
-                    item.AttackWhileUnderAttackMult = rhs.AttackWhileUnderAttackMult;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.AttackWhileUnderAttackMult = rhs.AttackWhileUnderAttackMult;
+                errorMask?.PopIndex();
             }
             if (copyMask?.AttackNotUnderAttackMult ?? true)
             {
                 errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.AttackNotUnderAttackMult);
-                try
-                {
-                    item.AttackNotUnderAttackMult = rhs.AttackNotUnderAttackMult;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.AttackNotUnderAttackMult = rhs.AttackNotUnderAttackMult;
+                errorMask?.PopIndex();
             }
             if (copyMask?.AttackDuringBlockMult ?? true)
             {
                 errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.AttackDuringBlockMult);
-                try
-                {
-                    item.AttackDuringBlockMult = rhs.AttackDuringBlockMult;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.AttackDuringBlockMult = rhs.AttackDuringBlockMult;
+                errorMask?.PopIndex();
             }
             if (copyMask?.PowerAttackFatigueModBase ?? true)
             {
                 errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModBase);
-                try
-                {
-                    item.PowerAttackFatigueModBase = rhs.PowerAttackFatigueModBase;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.PowerAttackFatigueModBase = rhs.PowerAttackFatigueModBase;
+                errorMask?.PopIndex();
             }
             if (copyMask?.PowerAttackFatigueModMult ?? true)
             {
                 errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModMult);
-                try
-                {
-                    item.PowerAttackFatigueModMult = rhs.PowerAttackFatigueModMult;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.PowerAttackFatigueModMult = rhs.PowerAttackFatigueModMult;
+                errorMask?.PopIndex();
             }
         }
         

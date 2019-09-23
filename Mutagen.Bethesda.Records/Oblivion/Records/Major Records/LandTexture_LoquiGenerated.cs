@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Icon_IsSet
         {
             get => _hasBeenSetTracker[(int)LandTexture_FieldIndex.Icon];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)LandTexture_FieldIndex.Icon, nameof(Icon_IsSet));
+            set => _hasBeenSetTracker[(int)LandTexture_FieldIndex.Icon] = value;
         }
         bool ILandTextureGetter.Icon_IsSet => Icon_IsSet;
         private String _Icon;
@@ -71,7 +71,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Icon, value, _hasBeenSetTracker, markSet, (int)LandTexture_FieldIndex.Icon, nameof(Icon), nameof(Icon_IsSet));
+            _Icon = value;
+            _hasBeenSetTracker[(int)LandTexture_FieldIndex.Icon] = markSet;
         }
         public void Icon_Unset()
         {
@@ -109,7 +110,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool TextureSpecularExponent_IsSet
         {
             get => _hasBeenSetTracker[(int)LandTexture_FieldIndex.TextureSpecularExponent];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)LandTexture_FieldIndex.TextureSpecularExponent, nameof(TextureSpecularExponent_IsSet));
+            set => _hasBeenSetTracker[(int)LandTexture_FieldIndex.TextureSpecularExponent] = value;
         }
         bool ILandTextureGetter.TextureSpecularExponent_IsSet => TextureSpecularExponent_IsSet;
         private Byte _TextureSpecularExponent;
@@ -124,7 +125,8 @@ namespace Mutagen.Bethesda.Oblivion
             Byte value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _TextureSpecularExponent, value, _hasBeenSetTracker, markSet, (int)LandTexture_FieldIndex.TextureSpecularExponent, nameof(TextureSpecularExponent), nameof(TextureSpecularExponent_IsSet));
+            _TextureSpecularExponent = value;
+            _hasBeenSetTracker[(int)LandTexture_FieldIndex.TextureSpecularExponent] = markSet;
         }
         public void TextureSpecularExponent_Unset()
         {

@@ -92,7 +92,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Name_IsSet
         {
             get => _hasBeenSetTracker[(int)Light_FieldIndex.Name];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Light_FieldIndex.Name, nameof(Name_IsSet));
+            set => _hasBeenSetTracker[(int)Light_FieldIndex.Name] = value;
         }
         bool ILightGetter.Name_IsSet => Name_IsSet;
         private String _Name;
@@ -107,7 +107,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Name, value, _hasBeenSetTracker, markSet, (int)Light_FieldIndex.Name, nameof(Name), nameof(Name_IsSet));
+            _Name = value;
+            _hasBeenSetTracker[(int)Light_FieldIndex.Name] = markSet;
         }
         public void Name_Unset()
         {
@@ -118,7 +119,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Icon_IsSet
         {
             get => _hasBeenSetTracker[(int)Light_FieldIndex.Icon];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Light_FieldIndex.Icon, nameof(Icon_IsSet));
+            set => _hasBeenSetTracker[(int)Light_FieldIndex.Icon] = value;
         }
         bool ILightGetter.Icon_IsSet => Icon_IsSet;
         private String _Icon;
@@ -133,7 +134,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Icon, value, _hasBeenSetTracker, markSet, (int)Light_FieldIndex.Icon, nameof(Icon), nameof(Icon_IsSet));
+            _Icon = value;
+            _hasBeenSetTracker[(int)Light_FieldIndex.Icon] = markSet;
         }
         public void Icon_Unset()
         {
@@ -141,15 +143,15 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Time
-        private Int32 _Time = _Time_Default;
         public readonly static Int32 _Time_Default = -1;
+        private Int32 _Time;
         public Int32 Time
         {
             get => this._Time;
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Time, value, nameof(Time));
+                this._Time = value;
             }
         }
         #endregion
@@ -161,7 +163,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Radius, value, nameof(Radius));
+                this._Radius = value;
             }
         }
         #endregion
@@ -173,7 +175,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Color, value, nameof(Color));
+                this._Color = value;
             }
         }
         #endregion
@@ -185,33 +187,33 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
+                this._Flags = value;
             }
         }
         #endregion
         #region FalloffExponent
-        private Single _FalloffExponent = _FalloffExponent_Default;
         public readonly static Single _FalloffExponent_Default = 1;
+        private Single _FalloffExponent;
         public Single FalloffExponent
         {
             get => this._FalloffExponent;
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._FalloffExponent, value, nameof(FalloffExponent));
+                this._FalloffExponent = value;
             }
         }
         #endregion
         #region FOV
-        private Single _FOV = _FOV_Default;
         public readonly static Single _FOV_Default = 90;
+        private Single _FOV;
         public Single FOV
         {
             get => this._FOV;
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._FOV, value, nameof(FOV));
+                this._FOV = value;
             }
         }
         #endregion
@@ -224,7 +226,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.DATADataTypeState |= DATADataType.Has;
                 this.DATADataTypeState &= ~DATADataType.Break0;
-                this.RaiseAndSetIfChanged(ref this._Value, value, nameof(Value));
+                this._Value = value;
             }
         }
         #endregion
@@ -237,7 +239,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.DATADataTypeState |= DATADataType.Has;
                 this.DATADataTypeState &= ~DATADataType.Break0;
-                this.RaiseAndSetIfChanged(ref this._Weight, value, nameof(Weight));
+                this._Weight = value;
             }
         }
         #endregion
@@ -245,7 +247,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Fade_IsSet
         {
             get => _hasBeenSetTracker[(int)Light_FieldIndex.Fade];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Light_FieldIndex.Fade, nameof(Fade_IsSet));
+            set => _hasBeenSetTracker[(int)Light_FieldIndex.Fade] = value;
         }
         bool ILightGetter.Fade_IsSet => Fade_IsSet;
         private Single _Fade;
@@ -260,7 +262,8 @@ namespace Mutagen.Bethesda.Oblivion
             Single value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Fade, value, _hasBeenSetTracker, markSet, (int)Light_FieldIndex.Fade, nameof(Fade), nameof(Fade_IsSet));
+            _Fade = value;
+            _hasBeenSetTracker[(int)Light_FieldIndex.Fade] = markSet;
         }
         public void Fade_Unset()
         {
@@ -276,12 +279,7 @@ namespace Mutagen.Bethesda.Oblivion
         IFormIDSetLinkGetter<ISoundInternalGetter> ILightGetter.Sound_Property => this.Sound_Property;
         #endregion
         #region DATADataTypeState
-        private Light.DATADataType _DATADataTypeState;
-        public Light.DATADataType DATADataTypeState
-        {
-            get => this._DATADataTypeState;
-            set => this.RaiseAndSetIfChanged(ref this._DATADataTypeState, value, nameof(DATADataTypeState));
-        }
+        public Light.DATADataType DATADataTypeState { get; set; }
         Light.DATADataType ILightInternal.DATADataTypeState
         {
             get => this.DATADataTypeState;
@@ -2280,138 +2278,50 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Time ?? true)
             {
                 errorMask?.PushIndex((int)Light_FieldIndex.Time);
-                try
-                {
-                    item.Time = rhs.Time;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Time = rhs.Time;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Radius ?? true)
             {
                 errorMask?.PushIndex((int)Light_FieldIndex.Radius);
-                try
-                {
-                    item.Radius = rhs.Radius;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Radius = rhs.Radius;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Color ?? true)
             {
                 errorMask?.PushIndex((int)Light_FieldIndex.Color);
-                try
-                {
-                    item.Color = rhs.Color;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Color = rhs.Color;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Flags ?? true)
             {
                 errorMask?.PushIndex((int)Light_FieldIndex.Flags);
-                try
-                {
-                    item.Flags = rhs.Flags;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Flags = rhs.Flags;
+                errorMask?.PopIndex();
             }
             if (copyMask?.FalloffExponent ?? true)
             {
                 errorMask?.PushIndex((int)Light_FieldIndex.FalloffExponent);
-                try
-                {
-                    item.FalloffExponent = rhs.FalloffExponent;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.FalloffExponent = rhs.FalloffExponent;
+                errorMask?.PopIndex();
             }
             if (copyMask?.FOV ?? true)
             {
                 errorMask?.PushIndex((int)Light_FieldIndex.FOV);
-                try
-                {
-                    item.FOV = rhs.FOV;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.FOV = rhs.FOV;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Value ?? true)
             {
                 errorMask?.PushIndex((int)Light_FieldIndex.Value);
-                try
-                {
-                    item.Value = rhs.Value;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Value = rhs.Value;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Weight ?? true)
             {
                 errorMask?.PushIndex((int)Light_FieldIndex.Weight);
-                try
-                {
-                    item.Weight = rhs.Weight;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Weight = rhs.Weight;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Fade ?? true)
             {

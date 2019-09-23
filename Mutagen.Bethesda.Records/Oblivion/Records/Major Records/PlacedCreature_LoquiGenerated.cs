@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool FactionRank_IsSet
         {
             get => _hasBeenSetTracker[(int)PlacedCreature_FieldIndex.FactionRank];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)PlacedCreature_FieldIndex.FactionRank, nameof(FactionRank_IsSet));
+            set => _hasBeenSetTracker[(int)PlacedCreature_FieldIndex.FactionRank] = value;
         }
         bool IPlacedCreatureGetter.FactionRank_IsSet => FactionRank_IsSet;
         private Int32 _FactionRank;
@@ -85,7 +85,8 @@ namespace Mutagen.Bethesda.Oblivion
             Int32 value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _FactionRank, value, _hasBeenSetTracker, markSet, (int)PlacedCreature_FieldIndex.FactionRank, nameof(FactionRank), nameof(FactionRank_IsSet));
+            _FactionRank = value;
+            _hasBeenSetTracker[(int)PlacedCreature_FieldIndex.FactionRank] = markSet;
         }
         public void FactionRank_Unset()
         {
@@ -159,7 +160,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Scale_IsSet
         {
             get => _hasBeenSetTracker[(int)PlacedCreature_FieldIndex.Scale];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)PlacedCreature_FieldIndex.Scale, nameof(Scale_IsSet));
+            set => _hasBeenSetTracker[(int)PlacedCreature_FieldIndex.Scale] = value;
         }
         bool IPlacedCreatureGetter.Scale_IsSet => Scale_IsSet;
         private Single _Scale;
@@ -174,7 +175,8 @@ namespace Mutagen.Bethesda.Oblivion
             Single value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Scale, value, _hasBeenSetTracker, markSet, (int)PlacedCreature_FieldIndex.Scale, nameof(Scale), nameof(Scale_IsSet));
+            _Scale = value;
+            _hasBeenSetTracker[(int)PlacedCreature_FieldIndex.Scale] = markSet;
         }
         public void Scale_Unset()
         {
@@ -189,7 +191,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Position, value, nameof(Position));
+                this._Position = value;
             }
         }
         #endregion
@@ -201,17 +203,12 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Rotation, value, nameof(Rotation));
+                this._Rotation = value;
             }
         }
         #endregion
         #region DATADataTypeState
-        private PlacedCreature.DATADataType _DATADataTypeState;
-        public PlacedCreature.DATADataType DATADataTypeState
-        {
-            get => this._DATADataTypeState;
-            set => this.RaiseAndSetIfChanged(ref this._DATADataTypeState, value, nameof(DATADataTypeState));
-        }
+        public PlacedCreature.DATADataType DATADataTypeState { get; set; }
         PlacedCreature.DATADataType IPlacedCreatureInternal.DATADataTypeState
         {
             get => this.DATADataTypeState;
@@ -2059,36 +2056,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Position ?? true)
             {
                 errorMask?.PushIndex((int)PlacedCreature_FieldIndex.Position);
-                try
-                {
-                    item.Position = rhs.Position;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Position = rhs.Position;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Rotation ?? true)
             {
                 errorMask?.PushIndex((int)PlacedCreature_FieldIndex.Rotation);
-                try
-                {
-                    item.Rotation = rhs.Rotation;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Rotation = rhs.Rotation;
+                errorMask?.PopIndex();
             }
         }
         

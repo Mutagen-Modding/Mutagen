@@ -51,19 +51,14 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Level
-        private Int16 _Level;
-        public Int16 Level
-        {
-            get => this._Level;
-            set => this.RaiseAndSetIfChanged(ref this._Level, value, nameof(Level));
-        }
+        public Int16 Level { get; set; }
         #endregion
         #region Fluff
         private Byte[] _Fluff = new byte[2];
         public Byte[] Fluff
         {
             get => _Fluff;
-            set => this.RaiseAndSetIfChanged(ref _Fluff, value ?? new byte[2], nameof(Fluff));
+            set => this._Fluff = value ?? new byte[2];
         }
         ReadOnlySpan<Byte> ILeveledEntryGetter<T>.Fluff => this.Fluff;
         #endregion
@@ -79,7 +74,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Count_IsSet
         {
             get => _hasBeenSetTracker[(int)LeveledEntry_FieldIndex.Count];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)LeveledEntry_FieldIndex.Count, nameof(Count_IsSet));
+            set => _hasBeenSetTracker[(int)LeveledEntry_FieldIndex.Count] = value;
         }
         bool ILeveledEntryGetter<T>.Count_IsSet => Count_IsSet;
         private Int16 _Count;
@@ -94,7 +89,8 @@ namespace Mutagen.Bethesda.Oblivion
             Int16 value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Count, value, _hasBeenSetTracker, markSet, (int)LeveledEntry_FieldIndex.Count, nameof(Count), nameof(Count_IsSet));
+            _Count = value;
+            _hasBeenSetTracker[(int)LeveledEntry_FieldIndex.Count] = markSet;
         }
         public void Count_Unset()
         {
@@ -1277,36 +1273,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Level ?? true)
             {
                 errorMask?.PushIndex((int)LeveledEntry_FieldIndex.Level);
-                try
-                {
-                    item.Level = rhs.Level;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Level = rhs.Level;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Fluff ?? true)
             {
                 errorMask?.PushIndex((int)LeveledEntry_FieldIndex.Fluff);
-                try
-                {
-                    item.Fluff = rhs.Fluff;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Fluff = rhs.Fluff;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Reference ?? true)
             {

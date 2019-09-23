@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Skyrim
         public bool Data_IsSet
         {
             get => _hasBeenSetTracker[(int)GameSettingBool_FieldIndex.Data];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)GameSettingBool_FieldIndex.Data, nameof(Data_IsSet));
+            set => _hasBeenSetTracker[(int)GameSettingBool_FieldIndex.Data] = value;
         }
         bool IGameSettingBoolGetter.Data_IsSet => Data_IsSet;
         private Boolean _Data;
@@ -68,7 +68,8 @@ namespace Mutagen.Bethesda.Skyrim
             Boolean value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Data, value, _hasBeenSetTracker, markSet, (int)GameSettingBool_FieldIndex.Data, nameof(Data), nameof(Data_IsSet));
+            _Data = value;
+            _hasBeenSetTracker[(int)GameSettingBool_FieldIndex.Data] = markSet;
         }
         public void Data_Unset()
         {

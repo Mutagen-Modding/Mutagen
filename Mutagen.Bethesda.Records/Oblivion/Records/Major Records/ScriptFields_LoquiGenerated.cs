@@ -47,7 +47,6 @@ namespace Mutagen.Bethesda.Oblivion
         public ScriptFields()
         {
             _hasBeenSetTracker = new BitArray(((ILoquiObject)this).Registration.FieldCount);
-            _hasBeenSetTracker[(int)ScriptFields_FieldIndex.MetadataSummary] = true;
             CustomCtor();
         }
         partial void CustomCtor();
@@ -66,7 +65,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool SourceCode_IsSet
         {
             get => _hasBeenSetTracker[(int)ScriptFields_FieldIndex.SourceCode];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)ScriptFields_FieldIndex.SourceCode, nameof(SourceCode_IsSet));
+            set => _hasBeenSetTracker[(int)ScriptFields_FieldIndex.SourceCode] = value;
         }
         bool IScriptFieldsGetter.SourceCode_IsSet => SourceCode_IsSet;
         private String _SourceCode;
@@ -81,7 +80,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _SourceCode, value, _hasBeenSetTracker, markSet, (int)ScriptFields_FieldIndex.SourceCode, nameof(SourceCode), nameof(SourceCode_IsSet));
+            _SourceCode = value;
+            _hasBeenSetTracker[(int)ScriptFields_FieldIndex.SourceCode] = markSet;
         }
         public void SourceCode_Unset()
         {

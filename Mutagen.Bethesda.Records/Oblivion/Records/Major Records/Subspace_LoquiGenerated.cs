@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DNAMDataTypeState |= DNAMDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._X, value, nameof(X));
+                this._X = value;
             }
         }
         #endregion
@@ -69,7 +69,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DNAMDataTypeState |= DNAMDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Y, value, nameof(Y));
+                this._Y = value;
             }
         }
         #endregion
@@ -81,17 +81,12 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DNAMDataTypeState |= DNAMDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Z, value, nameof(Z));
+                this._Z = value;
             }
         }
         #endregion
         #region DNAMDataTypeState
-        private Subspace.DNAMDataType _DNAMDataTypeState;
-        public Subspace.DNAMDataType DNAMDataTypeState
-        {
-            get => this._DNAMDataTypeState;
-            set => this.RaiseAndSetIfChanged(ref this._DNAMDataTypeState, value, nameof(DNAMDataTypeState));
-        }
+        public Subspace.DNAMDataType DNAMDataTypeState { get; set; }
         Subspace.DNAMDataType ISubspaceInternal.DNAMDataTypeState
         {
             get => this.DNAMDataTypeState;
@@ -1314,53 +1309,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.X ?? true)
             {
                 errorMask?.PushIndex((int)Subspace_FieldIndex.X);
-                try
-                {
-                    item.X = rhs.X;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.X = rhs.X;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Y ?? true)
             {
                 errorMask?.PushIndex((int)Subspace_FieldIndex.Y);
-                try
-                {
-                    item.Y = rhs.Y;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Y = rhs.Y;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Z ?? true)
             {
                 errorMask?.PushIndex((int)Subspace_FieldIndex.Z);
-                try
-                {
-                    item.Z = rhs.Z;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Z = rhs.Z;
+                errorMask?.PopIndex();
             }
         }
         

@@ -49,28 +49,13 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Material
-        private HavokData.MaterialType _Material;
-        public HavokData.MaterialType Material
-        {
-            get => this._Material;
-            set => this.RaiseAndSetIfChanged(ref this._Material, value, nameof(Material));
-        }
+        public HavokData.MaterialType Material { get; set; }
         #endregion
         #region Friction
-        private Byte _Friction;
-        public Byte Friction
-        {
-            get => this._Friction;
-            set => this.RaiseAndSetIfChanged(ref this._Friction, value, nameof(Friction));
-        }
+        public Byte Friction { get; set; }
         #endregion
         #region Restitution
-        private Byte _Restitution;
-        public Byte Restitution
-        {
-            get => this._Restitution;
-            set => this.RaiseAndSetIfChanged(ref this._Restitution, value, nameof(Restitution));
-        }
+        public Byte Restitution { get; set; }
         #endregion
 
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IHavokDataInternalGetter)rhs, include);
@@ -1043,53 +1028,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Material ?? true)
             {
                 errorMask?.PushIndex((int)HavokData_FieldIndex.Material);
-                try
-                {
-                    item.Material = rhs.Material;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Material = rhs.Material;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Friction ?? true)
             {
                 errorMask?.PushIndex((int)HavokData_FieldIndex.Friction);
-                try
-                {
-                    item.Friction = rhs.Friction;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Friction = rhs.Friction;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Restitution ?? true)
             {
                 errorMask?.PushIndex((int)HavokData_FieldIndex.Restitution);
-                try
-                {
-                    item.Restitution = rhs.Restitution;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Restitution = rhs.Restitution;
+                errorMask?.PopIndex();
             }
         }
         

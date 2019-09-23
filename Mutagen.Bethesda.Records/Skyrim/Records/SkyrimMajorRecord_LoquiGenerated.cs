@@ -49,20 +49,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region FormVersion
-        private UInt16 _FormVersion;
-        public UInt16 FormVersion
-        {
-            get => this._FormVersion;
-            set => this.RaiseAndSetIfChanged(ref this._FormVersion, value, nameof(FormVersion));
-        }
+        public UInt16 FormVersion { get; set; }
         #endregion
         #region Version2
-        private UInt16 _Version2;
-        public UInt16 Version2
-        {
-            get => this._Version2;
-            set => this.RaiseAndSetIfChanged(ref this._Version2, value, nameof(Version2));
-        }
+        public UInt16 Version2 { get; set; }
         #endregion
 
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISkyrimMajorRecordInternalGetter)rhs, include);
@@ -1058,53 +1048,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (copyMask?.SkyrimMajorRecordFlags ?? true)
             {
                 errorMask?.PushIndex((int)SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags);
-                try
-                {
-                    item.SkyrimMajorRecordFlags = rhs.SkyrimMajorRecordFlags;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.SkyrimMajorRecordFlags = rhs.SkyrimMajorRecordFlags;
+                errorMask?.PopIndex();
             }
             if (copyMask?.FormVersion ?? true)
             {
                 errorMask?.PushIndex((int)SkyrimMajorRecord_FieldIndex.FormVersion);
-                try
-                {
-                    item.FormVersion = rhs.FormVersion;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.FormVersion = rhs.FormVersion;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Version2 ?? true)
             {
                 errorMask?.PushIndex((int)SkyrimMajorRecord_FieldIndex.Version2);
-                try
-                {
-                    item.Version2 = rhs.Version2;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Version2 = rhs.Version2;
+                errorMask?.PopIndex();
             }
         }
         

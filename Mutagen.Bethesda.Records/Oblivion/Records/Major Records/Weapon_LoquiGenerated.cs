@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Name_IsSet
         {
             get => _hasBeenSetTracker[(int)Weapon_FieldIndex.Name];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Weapon_FieldIndex.Name, nameof(Name_IsSet));
+            set => _hasBeenSetTracker[(int)Weapon_FieldIndex.Name] = value;
         }
         bool IWeaponGetter.Name_IsSet => Name_IsSet;
         private String _Name;
@@ -70,7 +70,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Name, value, _hasBeenSetTracker, markSet, (int)Weapon_FieldIndex.Name, nameof(Name), nameof(Name_IsSet));
+            _Name = value;
+            _hasBeenSetTracker[(int)Weapon_FieldIndex.Name] = markSet;
         }
         public void Name_Unset()
         {
@@ -108,7 +109,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Icon_IsSet
         {
             get => _hasBeenSetTracker[(int)Weapon_FieldIndex.Icon];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Weapon_FieldIndex.Icon, nameof(Icon_IsSet));
+            set => _hasBeenSetTracker[(int)Weapon_FieldIndex.Icon] = value;
         }
         bool IWeaponGetter.Icon_IsSet => Icon_IsSet;
         private String _Icon;
@@ -123,7 +124,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Icon, value, _hasBeenSetTracker, markSet, (int)Weapon_FieldIndex.Icon, nameof(Icon), nameof(Icon_IsSet));
+            _Icon = value;
+            _hasBeenSetTracker[(int)Weapon_FieldIndex.Icon] = markSet;
         }
         public void Icon_Unset()
         {
@@ -150,7 +152,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool EnchantmentPoints_IsSet
         {
             get => _hasBeenSetTracker[(int)Weapon_FieldIndex.EnchantmentPoints];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Weapon_FieldIndex.EnchantmentPoints, nameof(EnchantmentPoints_IsSet));
+            set => _hasBeenSetTracker[(int)Weapon_FieldIndex.EnchantmentPoints] = value;
         }
         bool IWeaponGetter.EnchantmentPoints_IsSet => EnchantmentPoints_IsSet;
         private UInt16 _EnchantmentPoints;
@@ -165,7 +167,8 @@ namespace Mutagen.Bethesda.Oblivion
             UInt16 value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _EnchantmentPoints, value, _hasBeenSetTracker, markSet, (int)Weapon_FieldIndex.EnchantmentPoints, nameof(EnchantmentPoints), nameof(EnchantmentPoints_IsSet));
+            _EnchantmentPoints = value;
+            _hasBeenSetTracker[(int)Weapon_FieldIndex.EnchantmentPoints] = markSet;
         }
         public void EnchantmentPoints_Unset()
         {
@@ -180,7 +183,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Type, value, nameof(Type));
+                this._Type = value;
             }
         }
         #endregion
@@ -192,7 +195,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Speed, value, nameof(Speed));
+                this._Speed = value;
             }
         }
         #endregion
@@ -204,7 +207,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Reach, value, nameof(Reach));
+                this._Reach = value;
             }
         }
         #endregion
@@ -216,7 +219,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
+                this._Flags = value;
             }
         }
         #endregion
@@ -228,7 +231,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Value, value, nameof(Value));
+                this._Value = value;
             }
         }
         #endregion
@@ -240,7 +243,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Health, value, nameof(Health));
+                this._Health = value;
             }
         }
         #endregion
@@ -252,7 +255,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Weight, value, nameof(Weight));
+                this._Weight = value;
             }
         }
         #endregion
@@ -264,17 +267,12 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Damage, value, nameof(Damage));
+                this._Damage = value;
             }
         }
         #endregion
         #region DATADataTypeState
-        private Weapon.DATADataType _DATADataTypeState;
-        public Weapon.DATADataType DATADataTypeState
-        {
-            get => this._DATADataTypeState;
-            set => this.RaiseAndSetIfChanged(ref this._DATADataTypeState, value, nameof(DATADataTypeState));
-        }
+        public Weapon.DATADataType DATADataTypeState { get; set; }
         Weapon.DATADataType IWeaponInternal.DATADataTypeState
         {
             get => this.DATADataTypeState;
@@ -2305,138 +2303,50 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Type ?? true)
             {
                 errorMask?.PushIndex((int)Weapon_FieldIndex.Type);
-                try
-                {
-                    item.Type = rhs.Type;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Type = rhs.Type;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Speed ?? true)
             {
                 errorMask?.PushIndex((int)Weapon_FieldIndex.Speed);
-                try
-                {
-                    item.Speed = rhs.Speed;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Speed = rhs.Speed;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Reach ?? true)
             {
                 errorMask?.PushIndex((int)Weapon_FieldIndex.Reach);
-                try
-                {
-                    item.Reach = rhs.Reach;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Reach = rhs.Reach;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Flags ?? true)
             {
                 errorMask?.PushIndex((int)Weapon_FieldIndex.Flags);
-                try
-                {
-                    item.Flags = rhs.Flags;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Flags = rhs.Flags;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Value ?? true)
             {
                 errorMask?.PushIndex((int)Weapon_FieldIndex.Value);
-                try
-                {
-                    item.Value = rhs.Value;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Value = rhs.Value;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Health ?? true)
             {
                 errorMask?.PushIndex((int)Weapon_FieldIndex.Health);
-                try
-                {
-                    item.Health = rhs.Health;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Health = rhs.Health;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Weight ?? true)
             {
                 errorMask?.PushIndex((int)Weapon_FieldIndex.Weight);
-                try
-                {
-                    item.Weight = rhs.Weight;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Weight = rhs.Weight;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Damage ?? true)
             {
                 errorMask?.PushIndex((int)Weapon_FieldIndex.Damage);
-                try
-                {
-                    item.Damage = rhs.Damage;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Damage = rhs.Damage;
+                errorMask?.PopIndex();
             }
         }
         

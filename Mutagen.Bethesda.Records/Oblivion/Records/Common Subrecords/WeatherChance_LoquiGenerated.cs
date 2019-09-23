@@ -58,12 +58,7 @@ namespace Mutagen.Bethesda.Oblivion
         IFormIDLinkGetter<IWeatherInternalGetter> IWeatherChanceGetter.Weather_Property => this.Weather_Property;
         #endregion
         #region Chance
-        private Int32 _Chance;
-        public Int32 Chance
-        {
-            get => this._Chance;
-            set => this.RaiseAndSetIfChanged(ref this._Chance, value, nameof(Chance));
-        }
+        public Int32 Chance { get; set; }
         #endregion
 
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWeatherChanceInternalGetter)rhs, include);
@@ -1026,19 +1021,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Chance ?? true)
             {
                 errorMask?.PushIndex((int)WeatherChance_FieldIndex.Chance);
-                try
-                {
-                    item.Chance = rhs.Chance;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Chance = rhs.Chance;
+                errorMask?.PopIndex();
             }
         }
         

@@ -52,35 +52,20 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region BlockNumberY
-        private Int16 _BlockNumberY;
-        public Int16 BlockNumberY
-        {
-            get => this._BlockNumberY;
-            set => this.RaiseAndSetIfChanged(ref this._BlockNumberY, value, nameof(BlockNumberY));
-        }
+        public Int16 BlockNumberY { get; set; }
         #endregion
         #region BlockNumberX
-        private Int16 _BlockNumberX;
-        public Int16 BlockNumberX
-        {
-            get => this._BlockNumberX;
-            set => this.RaiseAndSetIfChanged(ref this._BlockNumberX, value, nameof(BlockNumberX));
-        }
+        public Int16 BlockNumberX { get; set; }
         #endregion
         #region GroupType
-        private GroupTypeEnum _GroupType;
-        public GroupTypeEnum GroupType
-        {
-            get => this._GroupType;
-            set => this.RaiseAndSetIfChanged(ref this._GroupType, value, nameof(GroupType));
-        }
+        public GroupTypeEnum GroupType { get; set; }
         #endregion
         #region LastModified
         private Byte[] _LastModified = new byte[4];
         public Byte[] LastModified
         {
             get => _LastModified;
-            set => this.RaiseAndSetIfChanged(ref _LastModified, value ?? new byte[4], nameof(LastModified));
+            set => this._LastModified = value ?? new byte[4];
         }
         ReadOnlySpan<Byte> IWorldspaceBlockGetter.LastModified => this.LastModified;
         #endregion
@@ -1227,70 +1212,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.BlockNumberY ?? true)
             {
                 errorMask?.PushIndex((int)WorldspaceBlock_FieldIndex.BlockNumberY);
-                try
-                {
-                    item.BlockNumberY = rhs.BlockNumberY;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.BlockNumberY = rhs.BlockNumberY;
+                errorMask?.PopIndex();
             }
             if (copyMask?.BlockNumberX ?? true)
             {
                 errorMask?.PushIndex((int)WorldspaceBlock_FieldIndex.BlockNumberX);
-                try
-                {
-                    item.BlockNumberX = rhs.BlockNumberX;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.BlockNumberX = rhs.BlockNumberX;
+                errorMask?.PopIndex();
             }
             if (copyMask?.GroupType ?? true)
             {
                 errorMask?.PushIndex((int)WorldspaceBlock_FieldIndex.GroupType);
-                try
-                {
-                    item.GroupType = rhs.GroupType;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.GroupType = rhs.GroupType;
+                errorMask?.PopIndex();
             }
             if (copyMask?.LastModified ?? true)
             {
                 errorMask?.PushIndex((int)WorldspaceBlock_FieldIndex.LastModified);
-                try
-                {
-                    item.LastModified = rhs.LastModified;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.LastModified = rhs.LastModified;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Items.Overall != CopyOption.Skip)
             {

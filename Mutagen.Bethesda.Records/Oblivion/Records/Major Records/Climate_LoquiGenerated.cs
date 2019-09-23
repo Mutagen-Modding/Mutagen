@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool SunTexture_IsSet
         {
             get => _hasBeenSetTracker[(int)Climate_FieldIndex.SunTexture];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Climate_FieldIndex.SunTexture, nameof(SunTexture_IsSet));
+            set => _hasBeenSetTracker[(int)Climate_FieldIndex.SunTexture] = value;
         }
         bool IClimateGetter.SunTexture_IsSet => SunTexture_IsSet;
         private String _SunTexture;
@@ -83,7 +83,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _SunTexture, value, _hasBeenSetTracker, markSet, (int)Climate_FieldIndex.SunTexture, nameof(SunTexture), nameof(SunTexture_IsSet));
+            _SunTexture = value;
+            _hasBeenSetTracker[(int)Climate_FieldIndex.SunTexture] = markSet;
         }
         public void SunTexture_Unset()
         {
@@ -94,7 +95,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool SunGlareTexture_IsSet
         {
             get => _hasBeenSetTracker[(int)Climate_FieldIndex.SunGlareTexture];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Climate_FieldIndex.SunGlareTexture, nameof(SunGlareTexture_IsSet));
+            set => _hasBeenSetTracker[(int)Climate_FieldIndex.SunGlareTexture] = value;
         }
         bool IClimateGetter.SunGlareTexture_IsSet => SunGlareTexture_IsSet;
         private String _SunGlareTexture;
@@ -109,7 +110,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _SunGlareTexture, value, _hasBeenSetTracker, markSet, (int)Climate_FieldIndex.SunGlareTexture, nameof(SunGlareTexture), nameof(SunGlareTexture_IsSet));
+            _SunGlareTexture = value;
+            _hasBeenSetTracker[(int)Climate_FieldIndex.SunGlareTexture] = markSet;
         }
         public void SunGlareTexture_Unset()
         {
@@ -151,7 +153,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.TNAMDataTypeState |= TNAMDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._SunriseBegin, value, nameof(SunriseBegin));
+                this._SunriseBegin = value;
             }
         }
         #endregion
@@ -163,7 +165,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.TNAMDataTypeState |= TNAMDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._SunriseEnd, value, nameof(SunriseEnd));
+                this._SunriseEnd = value;
             }
         }
         #endregion
@@ -175,7 +177,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.TNAMDataTypeState |= TNAMDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._SunsetBegin, value, nameof(SunsetBegin));
+                this._SunsetBegin = value;
             }
         }
         #endregion
@@ -187,7 +189,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.TNAMDataTypeState |= TNAMDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._SunsetEnd, value, nameof(SunsetEnd));
+                this._SunsetEnd = value;
             }
         }
         #endregion
@@ -199,7 +201,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.TNAMDataTypeState |= TNAMDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Volatility, value, nameof(Volatility));
+                this._Volatility = value;
             }
         }
         #endregion
@@ -211,7 +213,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.TNAMDataTypeState |= TNAMDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Phase, value, nameof(Phase));
+                this._Phase = value;
             }
         }
         #endregion
@@ -223,18 +225,13 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.TNAMDataTypeState |= TNAMDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._PhaseLength, value.PutInRange(PhaseLength_Range.Min, PhaseLength_Range.Max), nameof(PhaseLength));
+                this._PhaseLength = value;
             }
         }
         public static RangeUInt8 PhaseLength_Range = new RangeUInt8(0, 63);
         #endregion
         #region TNAMDataTypeState
-        private Climate.TNAMDataType _TNAMDataTypeState;
-        public Climate.TNAMDataType TNAMDataTypeState
-        {
-            get => this._TNAMDataTypeState;
-            set => this.RaiseAndSetIfChanged(ref this._TNAMDataTypeState, value, nameof(TNAMDataTypeState));
-        }
+        public Climate.TNAMDataType TNAMDataTypeState { get; set; }
         Climate.TNAMDataType IClimateInternal.TNAMDataTypeState
         {
             get => this.TNAMDataTypeState;
@@ -2052,121 +2049,44 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.SunriseBegin ?? true)
             {
                 errorMask?.PushIndex((int)Climate_FieldIndex.SunriseBegin);
-                try
-                {
-                    item.SunriseBegin = rhs.SunriseBegin;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.SunriseBegin = rhs.SunriseBegin;
+                errorMask?.PopIndex();
             }
             if (copyMask?.SunriseEnd ?? true)
             {
                 errorMask?.PushIndex((int)Climate_FieldIndex.SunriseEnd);
-                try
-                {
-                    item.SunriseEnd = rhs.SunriseEnd;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.SunriseEnd = rhs.SunriseEnd;
+                errorMask?.PopIndex();
             }
             if (copyMask?.SunsetBegin ?? true)
             {
                 errorMask?.PushIndex((int)Climate_FieldIndex.SunsetBegin);
-                try
-                {
-                    item.SunsetBegin = rhs.SunsetBegin;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.SunsetBegin = rhs.SunsetBegin;
+                errorMask?.PopIndex();
             }
             if (copyMask?.SunsetEnd ?? true)
             {
                 errorMask?.PushIndex((int)Climate_FieldIndex.SunsetEnd);
-                try
-                {
-                    item.SunsetEnd = rhs.SunsetEnd;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.SunsetEnd = rhs.SunsetEnd;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Volatility ?? true)
             {
                 errorMask?.PushIndex((int)Climate_FieldIndex.Volatility);
-                try
-                {
-                    item.Volatility = rhs.Volatility;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Volatility = rhs.Volatility;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Phase ?? true)
             {
                 errorMask?.PushIndex((int)Climate_FieldIndex.Phase);
-                try
-                {
-                    item.Phase = rhs.Phase;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Phase = rhs.Phase;
+                errorMask?.PopIndex();
             }
             if (copyMask?.PhaseLength ?? true)
             {
                 errorMask?.PushIndex((int)Climate_FieldIndex.PhaseLength);
-                try
-                {
-                    item.PhaseLength = rhs.PhaseLength;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.PhaseLength = rhs.PhaseLength;
+                errorMask?.PopIndex();
             }
         }
         

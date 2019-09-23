@@ -66,7 +66,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.EFITDataTypeState |= EFITDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Magnitude, value, nameof(Magnitude));
+                this._Magnitude = value;
             }
         }
         #endregion
@@ -78,7 +78,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.EFITDataTypeState |= EFITDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Area, value, nameof(Area));
+                this._Area = value;
             }
         }
         #endregion
@@ -90,7 +90,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.EFITDataTypeState |= EFITDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Duration, value, nameof(Duration));
+                this._Duration = value;
             }
         }
         #endregion
@@ -102,7 +102,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.EFITDataTypeState |= EFITDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Type, value, nameof(Type));
+                this._Type = value;
             }
         }
         #endregion
@@ -114,7 +114,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.EFITDataTypeState |= EFITDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._ActorValue, value, nameof(ActorValue));
+                this._ActorValue = value;
             }
         }
         #endregion
@@ -146,12 +146,7 @@ namespace Mutagen.Bethesda.Oblivion
         IScriptEffectInternalGetter IEffectGetter.ScriptEffect => this.ScriptEffect;
         #endregion
         #region EFITDataTypeState
-        private Effect.EFITDataType _EFITDataTypeState;
-        public Effect.EFITDataType EFITDataTypeState
-        {
-            get => this._EFITDataTypeState;
-            set => this.RaiseAndSetIfChanged(ref this._EFITDataTypeState, value, nameof(EFITDataTypeState));
-        }
+        public Effect.EFITDataType EFITDataTypeState { get; set; }
         Effect.EFITDataType IEffectInternal.EFITDataTypeState
         {
             get => this.EFITDataTypeState;
@@ -1450,87 +1445,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Magnitude ?? true)
             {
                 errorMask?.PushIndex((int)Effect_FieldIndex.Magnitude);
-                try
-                {
-                    item.Magnitude = rhs.Magnitude;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Magnitude = rhs.Magnitude;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Area ?? true)
             {
                 errorMask?.PushIndex((int)Effect_FieldIndex.Area);
-                try
-                {
-                    item.Area = rhs.Area;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Area = rhs.Area;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Duration ?? true)
             {
                 errorMask?.PushIndex((int)Effect_FieldIndex.Duration);
-                try
-                {
-                    item.Duration = rhs.Duration;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Duration = rhs.Duration;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Type ?? true)
             {
                 errorMask?.PushIndex((int)Effect_FieldIndex.Type);
-                try
-                {
-                    item.Type = rhs.Type;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Type = rhs.Type;
+                errorMask?.PopIndex();
             }
             if (copyMask?.ActorValue ?? true)
             {
                 errorMask?.PushIndex((int)Effect_FieldIndex.ActorValue);
-                try
-                {
-                    item.ActorValue = rhs.ActorValue;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.ActorValue = rhs.ActorValue;
+                errorMask?.PopIndex();
             }
             if (copyMask?.ScriptEffect.Overall != CopyOption.Skip)
             {

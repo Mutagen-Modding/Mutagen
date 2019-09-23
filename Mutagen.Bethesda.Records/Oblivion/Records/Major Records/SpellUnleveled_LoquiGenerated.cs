@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.SPITDataTypeState |= SPITDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Type, value, nameof(Type));
+                this._Type = value;
             }
         }
         #endregion
@@ -72,7 +72,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.SPITDataTypeState |= SPITDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Cost, value, nameof(Cost));
+                this._Cost = value;
             }
         }
         #endregion
@@ -84,7 +84,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.SPITDataTypeState |= SPITDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Level, value, nameof(Level));
+                this._Level = value;
             }
         }
         #endregion
@@ -96,7 +96,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.SPITDataTypeState |= SPITDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Flag, value, nameof(Flag));
+                this._Flag = value;
             }
         }
         #endregion
@@ -113,12 +113,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region SPITDataTypeState
-        private SpellUnleveled.SPITDataType _SPITDataTypeState;
-        public SpellUnleveled.SPITDataType SPITDataTypeState
-        {
-            get => this._SPITDataTypeState;
-            set => this.RaiseAndSetIfChanged(ref this._SPITDataTypeState, value, nameof(SPITDataTypeState));
-        }
+        public SpellUnleveled.SPITDataType SPITDataTypeState { get; set; }
         SpellUnleveled.SPITDataType ISpellUnleveledInternal.SPITDataTypeState
         {
             get => this.SPITDataTypeState;
@@ -1565,70 +1560,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Type ?? true)
             {
                 errorMask?.PushIndex((int)SpellUnleveled_FieldIndex.Type);
-                try
-                {
-                    item.Type = rhs.Type;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Type = rhs.Type;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Cost ?? true)
             {
                 errorMask?.PushIndex((int)SpellUnleveled_FieldIndex.Cost);
-                try
-                {
-                    item.Cost = rhs.Cost;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Cost = rhs.Cost;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Level ?? true)
             {
                 errorMask?.PushIndex((int)SpellUnleveled_FieldIndex.Level);
-                try
-                {
-                    item.Level = rhs.Level;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Level = rhs.Level;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Flag ?? true)
             {
                 errorMask?.PushIndex((int)SpellUnleveled_FieldIndex.Flag);
-                try
-                {
-                    item.Flag = rhs.Flag;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Flag = rhs.Flag;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Effects.Overall != CopyOption.Skip)
             {

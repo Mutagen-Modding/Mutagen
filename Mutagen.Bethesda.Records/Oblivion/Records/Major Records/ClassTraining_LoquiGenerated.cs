@@ -49,20 +49,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region TrainedSkill
-        private Skill _TrainedSkill;
-        public Skill TrainedSkill
-        {
-            get => this._TrainedSkill;
-            set => this.RaiseAndSetIfChanged(ref this._TrainedSkill, value, nameof(TrainedSkill));
-        }
+        public Skill TrainedSkill { get; set; }
         #endregion
         #region MaximumTrainingLevel
-        private Byte _MaximumTrainingLevel;
-        public Byte MaximumTrainingLevel
-        {
-            get => this._MaximumTrainingLevel;
-            set => this.RaiseAndSetIfChanged(ref this._MaximumTrainingLevel, value.PutInRange(MaximumTrainingLevel_Range.Min, MaximumTrainingLevel_Range.Max), nameof(MaximumTrainingLevel));
-        }
+        public Byte MaximumTrainingLevel { get; set; }
         public static RangeUInt8 MaximumTrainingLevel_Range = new RangeUInt8(0, 100);
         #endregion
         #region Fluff
@@ -70,7 +60,7 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte[] Fluff
         {
             get => _Fluff;
-            set => this.RaiseAndSetIfChanged(ref _Fluff, value ?? new byte[2], nameof(Fluff));
+            set => this._Fluff = value ?? new byte[2];
         }
         ReadOnlySpan<Byte> IClassTrainingGetter.Fluff => this.Fluff;
         #endregion
@@ -1045,53 +1035,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.TrainedSkill ?? true)
             {
                 errorMask?.PushIndex((int)ClassTraining_FieldIndex.TrainedSkill);
-                try
-                {
-                    item.TrainedSkill = rhs.TrainedSkill;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.TrainedSkill = rhs.TrainedSkill;
+                errorMask?.PopIndex();
             }
             if (copyMask?.MaximumTrainingLevel ?? true)
             {
                 errorMask?.PushIndex((int)ClassTraining_FieldIndex.MaximumTrainingLevel);
-                try
-                {
-                    item.MaximumTrainingLevel = rhs.MaximumTrainingLevel;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.MaximumTrainingLevel = rhs.MaximumTrainingLevel;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Fluff ?? true)
             {
                 errorMask?.PushIndex((int)ClassTraining_FieldIndex.Fluff);
-                try
-                {
-                    item.Fluff = rhs.Fluff;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Fluff = rhs.Fluff;
+                errorMask?.PopIndex();
             }
         }
         

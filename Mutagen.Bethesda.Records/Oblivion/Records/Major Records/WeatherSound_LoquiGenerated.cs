@@ -58,12 +58,7 @@ namespace Mutagen.Bethesda.Oblivion
         IFormIDLinkGetter<ISoundInternalGetter> IWeatherSoundGetter.Sound_Property => this.Sound_Property;
         #endregion
         #region Type
-        private WeatherSound.SoundType _Type;
-        public WeatherSound.SoundType Type
-        {
-            get => this._Type;
-            set => this.RaiseAndSetIfChanged(ref this._Type, value, nameof(Type));
-        }
+        public WeatherSound.SoundType Type { get; set; }
         #endregion
 
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWeatherSoundInternalGetter)rhs, include);
@@ -1041,19 +1036,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Type ?? true)
             {
                 errorMask?.PushIndex((int)WeatherSound_FieldIndex.Type);
-                try
-                {
-                    item.Type = rhs.Type;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Type = rhs.Type;
+                errorMask?.PopIndex();
             }
         }
         

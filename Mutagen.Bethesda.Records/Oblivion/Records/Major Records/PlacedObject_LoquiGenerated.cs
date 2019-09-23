@@ -180,7 +180,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool FactionRank_IsSet
         {
             get => _hasBeenSetTracker[(int)PlacedObject_FieldIndex.FactionRank];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)PlacedObject_FieldIndex.FactionRank, nameof(FactionRank_IsSet));
+            set => _hasBeenSetTracker[(int)PlacedObject_FieldIndex.FactionRank] = value;
         }
         bool IPlacedObjectGetter.FactionRank_IsSet => FactionRank_IsSet;
         private Int32 _FactionRank;
@@ -195,7 +195,8 @@ namespace Mutagen.Bethesda.Oblivion
             Int32 value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _FactionRank, value, _hasBeenSetTracker, markSet, (int)PlacedObject_FieldIndex.FactionRank, nameof(FactionRank), nameof(FactionRank_IsSet));
+            _FactionRank = value;
+            _hasBeenSetTracker[(int)PlacedObject_FieldIndex.FactionRank] = markSet;
         }
         public void FactionRank_Unset()
         {
@@ -249,7 +250,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool SpeedTreeSeed_IsSet
         {
             get => _hasBeenSetTracker[(int)PlacedObject_FieldIndex.SpeedTreeSeed];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)PlacedObject_FieldIndex.SpeedTreeSeed, nameof(SpeedTreeSeed_IsSet));
+            set => _hasBeenSetTracker[(int)PlacedObject_FieldIndex.SpeedTreeSeed] = value;
         }
         bool IPlacedObjectGetter.SpeedTreeSeed_IsSet => SpeedTreeSeed_IsSet;
         private Byte _SpeedTreeSeed;
@@ -264,7 +265,8 @@ namespace Mutagen.Bethesda.Oblivion
             Byte value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _SpeedTreeSeed, value, _hasBeenSetTracker, markSet, (int)PlacedObject_FieldIndex.SpeedTreeSeed, nameof(SpeedTreeSeed), nameof(SpeedTreeSeed_IsSet));
+            _SpeedTreeSeed = value;
+            _hasBeenSetTracker[(int)PlacedObject_FieldIndex.SpeedTreeSeed] = markSet;
         }
         public void SpeedTreeSeed_Unset()
         {
@@ -302,7 +304,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Charge_IsSet
         {
             get => _hasBeenSetTracker[(int)PlacedObject_FieldIndex.Charge];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)PlacedObject_FieldIndex.Charge, nameof(Charge_IsSet));
+            set => _hasBeenSetTracker[(int)PlacedObject_FieldIndex.Charge] = value;
         }
         bool IPlacedObjectGetter.Charge_IsSet => Charge_IsSet;
         private Single _Charge;
@@ -317,7 +319,8 @@ namespace Mutagen.Bethesda.Oblivion
             Single value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Charge, value, _hasBeenSetTracker, markSet, (int)PlacedObject_FieldIndex.Charge, nameof(Charge), nameof(Charge_IsSet));
+            _Charge = value;
+            _hasBeenSetTracker[(int)PlacedObject_FieldIndex.Charge] = markSet;
         }
         public void Charge_Unset()
         {
@@ -328,7 +331,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Health_IsSet
         {
             get => _hasBeenSetTracker[(int)PlacedObject_FieldIndex.Health];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)PlacedObject_FieldIndex.Health, nameof(Health_IsSet));
+            set => _hasBeenSetTracker[(int)PlacedObject_FieldIndex.Health] = value;
         }
         bool IPlacedObjectGetter.Health_IsSet => Health_IsSet;
         private Int32 _Health;
@@ -343,7 +346,8 @@ namespace Mutagen.Bethesda.Oblivion
             Int32 value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Health, value, _hasBeenSetTracker, markSet, (int)PlacedObject_FieldIndex.Health, nameof(Health), nameof(Health_IsSet));
+            _Health = value;
+            _hasBeenSetTracker[(int)PlacedObject_FieldIndex.Health] = markSet;
         }
         public void Health_Unset()
         {
@@ -354,7 +358,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool LevelModifier_IsSet
         {
             get => _hasBeenSetTracker[(int)PlacedObject_FieldIndex.LevelModifier];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)PlacedObject_FieldIndex.LevelModifier, nameof(LevelModifier_IsSet));
+            set => _hasBeenSetTracker[(int)PlacedObject_FieldIndex.LevelModifier] = value;
         }
         bool IPlacedObjectGetter.LevelModifier_IsSet => LevelModifier_IsSet;
         private Int32 _LevelModifier;
@@ -369,7 +373,8 @@ namespace Mutagen.Bethesda.Oblivion
             Int32 value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _LevelModifier, value, _hasBeenSetTracker, markSet, (int)PlacedObject_FieldIndex.LevelModifier, nameof(LevelModifier), nameof(LevelModifier_IsSet));
+            _LevelModifier = value;
+            _hasBeenSetTracker[(int)PlacedObject_FieldIndex.LevelModifier] = markSet;
         }
         public void LevelModifier_Unset()
         {
@@ -388,7 +393,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool ActionFlags_IsSet
         {
             get => _hasBeenSetTracker[(int)PlacedObject_FieldIndex.ActionFlags];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)PlacedObject_FieldIndex.ActionFlags, nameof(ActionFlags_IsSet));
+            set => _hasBeenSetTracker[(int)PlacedObject_FieldIndex.ActionFlags] = value;
         }
         bool IPlacedObjectGetter.ActionFlags_IsSet => ActionFlags_IsSet;
         private PlacedObject.ActionFlag _ActionFlags;
@@ -403,7 +408,8 @@ namespace Mutagen.Bethesda.Oblivion
             PlacedObject.ActionFlag value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _ActionFlags, value, _hasBeenSetTracker, markSet, (int)PlacedObject_FieldIndex.ActionFlags, nameof(ActionFlags), nameof(ActionFlags_IsSet));
+            _ActionFlags = value;
+            _hasBeenSetTracker[(int)PlacedObject_FieldIndex.ActionFlags] = markSet;
         }
         public void ActionFlags_Unset()
         {
@@ -414,7 +420,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Count_IsSet
         {
             get => _hasBeenSetTracker[(int)PlacedObject_FieldIndex.Count];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)PlacedObject_FieldIndex.Count, nameof(Count_IsSet));
+            set => _hasBeenSetTracker[(int)PlacedObject_FieldIndex.Count] = value;
         }
         bool IPlacedObjectGetter.Count_IsSet => Count_IsSet;
         private Int32 _Count;
@@ -429,7 +435,8 @@ namespace Mutagen.Bethesda.Oblivion
             Int32 value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Count, value, _hasBeenSetTracker, markSet, (int)PlacedObject_FieldIndex.Count, nameof(Count), nameof(Count_IsSet));
+            _Count = value;
+            _hasBeenSetTracker[(int)PlacedObject_FieldIndex.Count] = markSet;
         }
         public void Count_Unset()
         {
@@ -464,12 +471,7 @@ namespace Mutagen.Bethesda.Oblivion
         IMapMarkerInternalGetter IPlacedObjectGetter.MapMarker => this.MapMarker;
         #endregion
         #region OpenByDefault
-        private Boolean _OpenByDefault;
-        public Boolean OpenByDefault
-        {
-            get => this._OpenByDefault;
-            set => this.RaiseAndSetIfChanged(ref this._OpenByDefault, value, nameof(OpenByDefault));
-        }
+        public Boolean OpenByDefault { get; set; }
         #endregion
         #region RagdollData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -503,7 +505,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Scale_IsSet
         {
             get => _hasBeenSetTracker[(int)PlacedObject_FieldIndex.Scale];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)PlacedObject_FieldIndex.Scale, nameof(Scale_IsSet));
+            set => _hasBeenSetTracker[(int)PlacedObject_FieldIndex.Scale] = value;
         }
         bool IPlacedObjectGetter.Scale_IsSet => Scale_IsSet;
         private Single _Scale;
@@ -518,7 +520,8 @@ namespace Mutagen.Bethesda.Oblivion
             Single value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Scale, value, _hasBeenSetTracker, markSet, (int)PlacedObject_FieldIndex.Scale, nameof(Scale), nameof(Scale_IsSet));
+            _Scale = value;
+            _hasBeenSetTracker[(int)PlacedObject_FieldIndex.Scale] = markSet;
         }
         public void Scale_Unset()
         {
@@ -541,7 +544,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Position, value, nameof(Position));
+                this._Position = value;
             }
         }
         #endregion
@@ -553,17 +556,12 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Rotation, value, nameof(Rotation));
+                this._Rotation = value;
             }
         }
         #endregion
         #region DATADataTypeState
-        private PlacedObject.DATADataType _DATADataTypeState;
-        public PlacedObject.DATADataType DATADataTypeState
-        {
-            get => this._DATADataTypeState;
-            set => this.RaiseAndSetIfChanged(ref this._DATADataTypeState, value, nameof(DATADataTypeState));
-        }
+        public PlacedObject.DATADataType DATADataTypeState { get; set; }
         PlacedObject.DATADataType IPlacedObjectInternal.DATADataTypeState
         {
             get => this.DATADataTypeState;
@@ -3852,19 +3850,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.OpenByDefault ?? true)
             {
                 errorMask?.PushIndex((int)PlacedObject_FieldIndex.OpenByDefault);
-                try
-                {
-                    item.OpenByDefault = rhs.OpenByDefault;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.OpenByDefault = rhs.OpenByDefault;
+                errorMask?.PopIndex();
             }
             if (copyMask?.RagdollData ?? true)
             {
@@ -3948,36 +3935,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Position ?? true)
             {
                 errorMask?.PushIndex((int)PlacedObject_FieldIndex.Position);
-                try
-                {
-                    item.Position = rhs.Position;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Position = rhs.Position;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Rotation ?? true)
             {
                 errorMask?.PushIndex((int)PlacedObject_FieldIndex.Rotation);
-                try
-                {
-                    item.Rotation = rhs.Rotation;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Rotation = rhs.Rotation;
+                errorMask?.PopIndex();
             }
         }
         

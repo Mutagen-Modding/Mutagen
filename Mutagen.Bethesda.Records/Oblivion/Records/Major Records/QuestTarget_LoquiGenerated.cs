@@ -67,7 +67,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.QSTADataTypeState |= QSTADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
+                this._Flags = value;
             }
         }
         #endregion
@@ -84,12 +84,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region QSTADataTypeState
-        private QuestTarget.QSTADataType _QSTADataTypeState;
-        public QuestTarget.QSTADataType QSTADataTypeState
-        {
-            get => this._QSTADataTypeState;
-            set => this.RaiseAndSetIfChanged(ref this._QSTADataTypeState, value, nameof(QSTADataTypeState));
-        }
+        public QuestTarget.QSTADataType QSTADataTypeState { get; set; }
         QuestTarget.QSTADataType IQuestTargetInternal.QSTADataTypeState
         {
             get => this.QSTADataTypeState;
@@ -1221,19 +1216,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Flags ?? true)
             {
                 errorMask?.PushIndex((int)QuestTarget_FieldIndex.Flags);
-                try
-                {
-                    item.Flags = rhs.Flags;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Flags = rhs.Flags;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Conditions.Overall != CopyOption.Skip)
             {

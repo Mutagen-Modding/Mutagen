@@ -577,11 +577,9 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Male
         IRaceStatsInternalGetter Male { get; }
-
         #endregion
         #region Female
         IRaceStatsInternalGetter Female { get; }
-
         #endregion
 
     }

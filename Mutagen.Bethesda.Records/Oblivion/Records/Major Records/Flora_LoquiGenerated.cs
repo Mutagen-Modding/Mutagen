@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Name_IsSet
         {
             get => _hasBeenSetTracker[(int)Flora_FieldIndex.Name];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Flora_FieldIndex.Name, nameof(Name_IsSet));
+            set => _hasBeenSetTracker[(int)Flora_FieldIndex.Name] = value;
         }
         bool IFloraGetter.Name_IsSet => Name_IsSet;
         private String _Name;
@@ -70,7 +70,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Name, value, _hasBeenSetTracker, markSet, (int)Flora_FieldIndex.Name, nameof(Name), nameof(Name_IsSet));
+            _Name = value;
+            _hasBeenSetTracker[(int)Flora_FieldIndex.Name] = markSet;
         }
         public void Name_Unset()
         {
@@ -128,7 +129,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.PFPCDataTypeState |= PFPCDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Spring, value, nameof(Spring));
+                this._Spring = value;
             }
         }
         #endregion
@@ -140,7 +141,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.PFPCDataTypeState |= PFPCDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Summer, value, nameof(Summer));
+                this._Summer = value;
             }
         }
         #endregion
@@ -152,7 +153,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.PFPCDataTypeState |= PFPCDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Fall, value, nameof(Fall));
+                this._Fall = value;
             }
         }
         #endregion
@@ -164,17 +165,12 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.PFPCDataTypeState |= PFPCDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Winter, value, nameof(Winter));
+                this._Winter = value;
             }
         }
         #endregion
         #region PFPCDataTypeState
-        private Flora.PFPCDataType _PFPCDataTypeState;
-        public Flora.PFPCDataType PFPCDataTypeState
-        {
-            get => this._PFPCDataTypeState;
-            set => this.RaiseAndSetIfChanged(ref this._PFPCDataTypeState, value, nameof(PFPCDataTypeState));
-        }
+        public Flora.PFPCDataType PFPCDataTypeState { get; set; }
         Flora.PFPCDataType IFloraInternal.PFPCDataTypeState
         {
             get => this.PFPCDataTypeState;
@@ -1806,70 +1802,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Spring ?? true)
             {
                 errorMask?.PushIndex((int)Flora_FieldIndex.Spring);
-                try
-                {
-                    item.Spring = rhs.Spring;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Spring = rhs.Spring;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Summer ?? true)
             {
                 errorMask?.PushIndex((int)Flora_FieldIndex.Summer);
-                try
-                {
-                    item.Summer = rhs.Summer;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Summer = rhs.Summer;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Fall ?? true)
             {
                 errorMask?.PushIndex((int)Flora_FieldIndex.Fall);
-                try
-                {
-                    item.Fall = rhs.Fall;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Fall = rhs.Fall;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Winter ?? true)
             {
                 errorMask?.PushIndex((int)Flora_FieldIndex.Winter);
-                try
-                {
-                    item.Winter = rhs.Winter;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Winter = rhs.Winter;
+                errorMask?.PopIndex();
             }
         }
         

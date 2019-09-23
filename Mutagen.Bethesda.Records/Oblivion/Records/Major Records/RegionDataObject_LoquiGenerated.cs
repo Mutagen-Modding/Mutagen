@@ -58,132 +58,62 @@ namespace Mutagen.Bethesda.Oblivion
         IFormIDLinkGetter<IOblivionMajorRecordInternalGetter> IRegionDataObjectGetter.Object_Property => this.Object_Property;
         #endregion
         #region ParentIndex
-        private UInt16 _ParentIndex;
-        public UInt16 ParentIndex
-        {
-            get => this._ParentIndex;
-            set => this.RaiseAndSetIfChanged(ref this._ParentIndex, value, nameof(ParentIndex));
-        }
+        public UInt16 ParentIndex { get; set; }
         #endregion
         #region Unknown1
         private Byte[] _Unknown1 = new byte[2];
         public Byte[] Unknown1
         {
             get => _Unknown1;
-            set => this.RaiseAndSetIfChanged(ref _Unknown1, value ?? new byte[2], nameof(Unknown1));
+            set => this._Unknown1 = value ?? new byte[2];
         }
         ReadOnlySpan<Byte> IRegionDataObjectGetter.Unknown1 => this.Unknown1;
         #endregion
         #region Density
-        private Single _Density;
-        public Single Density
-        {
-            get => this._Density;
-            set => this.RaiseAndSetIfChanged(ref this._Density, value, nameof(Density));
-        }
+        public Single Density { get; set; }
         #endregion
         #region Clustering
-        private Byte _Clustering;
-        public Byte Clustering
-        {
-            get => this._Clustering;
-            set => this.RaiseAndSetIfChanged(ref this._Clustering, value, nameof(Clustering));
-        }
+        public Byte Clustering { get; set; }
         #endregion
         #region MinSlope
-        private Byte _MinSlope;
-        public Byte MinSlope
-        {
-            get => this._MinSlope;
-            set => this.RaiseAndSetIfChanged(ref this._MinSlope, value, nameof(MinSlope));
-        }
+        public Byte MinSlope { get; set; }
         #endregion
         #region MaxSlope
-        private Byte _MaxSlope;
-        public Byte MaxSlope
-        {
-            get => this._MaxSlope;
-            set => this.RaiseAndSetIfChanged(ref this._MaxSlope, value, nameof(MaxSlope));
-        }
+        public Byte MaxSlope { get; set; }
         #endregion
         #region Flags
-        private RegionDataObject.Flag _Flags;
-        public RegionDataObject.Flag Flags
-        {
-            get => this._Flags;
-            set => this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
-        }
+        public RegionDataObject.Flag Flags { get; set; }
         #endregion
         #region RadiusWrtPercent
-        private UInt16 _RadiusWrtPercent;
-        public UInt16 RadiusWrtPercent
-        {
-            get => this._RadiusWrtPercent;
-            set => this.RaiseAndSetIfChanged(ref this._RadiusWrtPercent, value, nameof(RadiusWrtPercent));
-        }
+        public UInt16 RadiusWrtPercent { get; set; }
         #endregion
         #region Radius
-        private UInt16 _Radius;
-        public UInt16 Radius
-        {
-            get => this._Radius;
-            set => this.RaiseAndSetIfChanged(ref this._Radius, value, nameof(Radius));
-        }
+        public UInt16 Radius { get; set; }
         #endregion
         #region MinHeight
-        private Single _MinHeight;
-        public Single MinHeight
-        {
-            get => this._MinHeight;
-            set => this.RaiseAndSetIfChanged(ref this._MinHeight, value, nameof(MinHeight));
-        }
+        public Single MinHeight { get; set; }
         #endregion
         #region MaxHeight
-        private Single _MaxHeight;
-        public Single MaxHeight
-        {
-            get => this._MaxHeight;
-            set => this.RaiseAndSetIfChanged(ref this._MaxHeight, value, nameof(MaxHeight));
-        }
+        public Single MaxHeight { get; set; }
         #endregion
         #region Sink
-        private Single _Sink;
-        public Single Sink
-        {
-            get => this._Sink;
-            set => this.RaiseAndSetIfChanged(ref this._Sink, value, nameof(Sink));
-        }
+        public Single Sink { get; set; }
         #endregion
         #region SinkVariance
-        private Single _SinkVariance;
-        public Single SinkVariance
-        {
-            get => this._SinkVariance;
-            set => this.RaiseAndSetIfChanged(ref this._SinkVariance, value, nameof(SinkVariance));
-        }
+        public Single SinkVariance { get; set; }
         #endregion
         #region SizeVariance
-        private Single _SizeVariance;
-        public Single SizeVariance
-        {
-            get => this._SizeVariance;
-            set => this.RaiseAndSetIfChanged(ref this._SizeVariance, value, nameof(SizeVariance));
-        }
+        public Single SizeVariance { get; set; }
         #endregion
         #region AngleVariance
-        private P3UInt16 _AngleVariance;
-        public P3UInt16 AngleVariance
-        {
-            get => this._AngleVariance;
-            set => this.RaiseAndSetIfChanged(ref this._AngleVariance, value, nameof(AngleVariance));
-        }
+        public P3UInt16 AngleVariance { get; set; }
         #endregion
         #region Unknown2
         private Byte[] _Unknown2 = new byte[6];
         public Byte[] Unknown2
         {
             get => _Unknown2;
-            set => this.RaiseAndSetIfChanged(ref _Unknown2, value ?? new byte[6], nameof(Unknown2));
+            set => this._Unknown2 = value ?? new byte[6];
         }
         ReadOnlySpan<Byte> IRegionDataObjectGetter.Unknown2 => this.Unknown2;
         #endregion
@@ -1763,274 +1693,98 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.ParentIndex ?? true)
             {
                 errorMask?.PushIndex((int)RegionDataObject_FieldIndex.ParentIndex);
-                try
-                {
-                    item.ParentIndex = rhs.ParentIndex;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.ParentIndex = rhs.ParentIndex;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Unknown1 ?? true)
             {
                 errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Unknown1);
-                try
-                {
-                    item.Unknown1 = rhs.Unknown1;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Unknown1 = rhs.Unknown1;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Density ?? true)
             {
                 errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Density);
-                try
-                {
-                    item.Density = rhs.Density;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Density = rhs.Density;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Clustering ?? true)
             {
                 errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Clustering);
-                try
-                {
-                    item.Clustering = rhs.Clustering;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Clustering = rhs.Clustering;
+                errorMask?.PopIndex();
             }
             if (copyMask?.MinSlope ?? true)
             {
                 errorMask?.PushIndex((int)RegionDataObject_FieldIndex.MinSlope);
-                try
-                {
-                    item.MinSlope = rhs.MinSlope;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.MinSlope = rhs.MinSlope;
+                errorMask?.PopIndex();
             }
             if (copyMask?.MaxSlope ?? true)
             {
                 errorMask?.PushIndex((int)RegionDataObject_FieldIndex.MaxSlope);
-                try
-                {
-                    item.MaxSlope = rhs.MaxSlope;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.MaxSlope = rhs.MaxSlope;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Flags ?? true)
             {
                 errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Flags);
-                try
-                {
-                    item.Flags = rhs.Flags;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Flags = rhs.Flags;
+                errorMask?.PopIndex();
             }
             if (copyMask?.RadiusWrtPercent ?? true)
             {
                 errorMask?.PushIndex((int)RegionDataObject_FieldIndex.RadiusWrtPercent);
-                try
-                {
-                    item.RadiusWrtPercent = rhs.RadiusWrtPercent;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.RadiusWrtPercent = rhs.RadiusWrtPercent;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Radius ?? true)
             {
                 errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Radius);
-                try
-                {
-                    item.Radius = rhs.Radius;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Radius = rhs.Radius;
+                errorMask?.PopIndex();
             }
             if (copyMask?.MinHeight ?? true)
             {
                 errorMask?.PushIndex((int)RegionDataObject_FieldIndex.MinHeight);
-                try
-                {
-                    item.MinHeight = rhs.MinHeight;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.MinHeight = rhs.MinHeight;
+                errorMask?.PopIndex();
             }
             if (copyMask?.MaxHeight ?? true)
             {
                 errorMask?.PushIndex((int)RegionDataObject_FieldIndex.MaxHeight);
-                try
-                {
-                    item.MaxHeight = rhs.MaxHeight;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.MaxHeight = rhs.MaxHeight;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Sink ?? true)
             {
                 errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Sink);
-                try
-                {
-                    item.Sink = rhs.Sink;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Sink = rhs.Sink;
+                errorMask?.PopIndex();
             }
             if (copyMask?.SinkVariance ?? true)
             {
                 errorMask?.PushIndex((int)RegionDataObject_FieldIndex.SinkVariance);
-                try
-                {
-                    item.SinkVariance = rhs.SinkVariance;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.SinkVariance = rhs.SinkVariance;
+                errorMask?.PopIndex();
             }
             if (copyMask?.SizeVariance ?? true)
             {
                 errorMask?.PushIndex((int)RegionDataObject_FieldIndex.SizeVariance);
-                try
-                {
-                    item.SizeVariance = rhs.SizeVariance;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.SizeVariance = rhs.SizeVariance;
+                errorMask?.PopIndex();
             }
             if (copyMask?.AngleVariance ?? true)
             {
                 errorMask?.PushIndex((int)RegionDataObject_FieldIndex.AngleVariance);
-                try
-                {
-                    item.AngleVariance = rhs.AngleVariance;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.AngleVariance = rhs.AngleVariance;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Unknown2 ?? true)
             {
                 errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Unknown2);
-                try
-                {
-                    item.Unknown2 = rhs.Unknown2;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Unknown2 = rhs.Unknown2;
+                errorMask?.PopIndex();
             }
         }
         

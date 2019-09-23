@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool FillTexture_IsSet
         {
             get => _hasBeenSetTracker[(int)EffectShader_FieldIndex.FillTexture];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)EffectShader_FieldIndex.FillTexture, nameof(FillTexture_IsSet));
+            set => _hasBeenSetTracker[(int)EffectShader_FieldIndex.FillTexture] = value;
         }
         bool IEffectShaderGetter.FillTexture_IsSet => FillTexture_IsSet;
         private String _FillTexture;
@@ -70,7 +70,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _FillTexture, value, _hasBeenSetTracker, markSet, (int)EffectShader_FieldIndex.FillTexture, nameof(FillTexture), nameof(FillTexture_IsSet));
+            _FillTexture = value;
+            _hasBeenSetTracker[(int)EffectShader_FieldIndex.FillTexture] = markSet;
         }
         public void FillTexture_Unset()
         {
@@ -81,7 +82,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool ParticleShaderTexture_IsSet
         {
             get => _hasBeenSetTracker[(int)EffectShader_FieldIndex.ParticleShaderTexture];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)EffectShader_FieldIndex.ParticleShaderTexture, nameof(ParticleShaderTexture_IsSet));
+            set => _hasBeenSetTracker[(int)EffectShader_FieldIndex.ParticleShaderTexture] = value;
         }
         bool IEffectShaderGetter.ParticleShaderTexture_IsSet => ParticleShaderTexture_IsSet;
         private String _ParticleShaderTexture;
@@ -96,7 +97,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _ParticleShaderTexture, value, _hasBeenSetTracker, markSet, (int)EffectShader_FieldIndex.ParticleShaderTexture, nameof(ParticleShaderTexture), nameof(ParticleShaderTexture_IsSet));
+            _ParticleShaderTexture = value;
+            _hasBeenSetTracker[(int)EffectShader_FieldIndex.ParticleShaderTexture] = markSet;
         }
         public void ParticleShaderTexture_Unset()
         {
@@ -111,7 +113,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
+                this._Flags = value;
             }
         }
         #endregion
@@ -123,7 +125,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._MembraneShaderSourceBlendMode, value, nameof(MembraneShaderSourceBlendMode));
+                this._MembraneShaderSourceBlendMode = value;
             }
         }
         #endregion
@@ -135,7 +137,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._MembraneShaderBlendOperation, value, nameof(MembraneShaderBlendOperation));
+                this._MembraneShaderBlendOperation = value;
             }
         }
         #endregion
@@ -147,7 +149,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._MembraneShaderZTestFunction, value, nameof(MembraneShaderZTestFunction));
+                this._MembraneShaderZTestFunction = value;
             }
         }
         #endregion
@@ -159,7 +161,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._FillTextureEffectColor, value, nameof(FillTextureEffectColor));
+                this._FillTextureEffectColor = value;
             }
         }
         #endregion
@@ -171,7 +173,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._FillTextureEffectAlphaFadeInTime, value, nameof(FillTextureEffectAlphaFadeInTime));
+                this._FillTextureEffectAlphaFadeInTime = value;
             }
         }
         #endregion
@@ -183,7 +185,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._FillTextureEffectFullAlphaTime, value, nameof(FillTextureEffectFullAlphaTime));
+                this._FillTextureEffectFullAlphaTime = value;
             }
         }
         #endregion
@@ -195,7 +197,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._FillTextureEffectAlphaFadeOutTime, value, nameof(FillTextureEffectAlphaFadeOutTime));
+                this._FillTextureEffectAlphaFadeOutTime = value;
             }
         }
         #endregion
@@ -207,7 +209,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._FillTextureEffectPersistentAlphaRatio, value, nameof(FillTextureEffectPersistentAlphaRatio));
+                this._FillTextureEffectPersistentAlphaRatio = value;
             }
         }
         #endregion
@@ -219,7 +221,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._FillTextureEffectAlphaPulseAmplitude, value, nameof(FillTextureEffectAlphaPulseAmplitude));
+                this._FillTextureEffectAlphaPulseAmplitude = value;
             }
         }
         #endregion
@@ -231,7 +233,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._FillTextureEffectAlphaPulseFrequency, value, nameof(FillTextureEffectAlphaPulseFrequency));
+                this._FillTextureEffectAlphaPulseFrequency = value;
             }
         }
         #endregion
@@ -243,7 +245,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._FillTextureEffectTextureAnimationSpeedU, value, nameof(FillTextureEffectTextureAnimationSpeedU));
+                this._FillTextureEffectTextureAnimationSpeedU = value;
             }
         }
         #endregion
@@ -255,7 +257,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._FillTextureEffectTextureAnimationSpeedV, value, nameof(FillTextureEffectTextureAnimationSpeedV));
+                this._FillTextureEffectTextureAnimationSpeedV = value;
             }
         }
         #endregion
@@ -267,7 +269,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._EdgeEffectFallOff, value, nameof(EdgeEffectFallOff));
+                this._EdgeEffectFallOff = value;
             }
         }
         #endregion
@@ -279,7 +281,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._EdgeEffectColor, value, nameof(EdgeEffectColor));
+                this._EdgeEffectColor = value;
             }
         }
         #endregion
@@ -291,7 +293,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._EdgeEffectAlphaFadeInTime, value, nameof(EdgeEffectAlphaFadeInTime));
+                this._EdgeEffectAlphaFadeInTime = value;
             }
         }
         #endregion
@@ -303,7 +305,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._EdgeEffectFullAlphaTime, value, nameof(EdgeEffectFullAlphaTime));
+                this._EdgeEffectFullAlphaTime = value;
             }
         }
         #endregion
@@ -315,7 +317,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._EdgeEffectAlphaFadeOutTime, value, nameof(EdgeEffectAlphaFadeOutTime));
+                this._EdgeEffectAlphaFadeOutTime = value;
             }
         }
         #endregion
@@ -327,7 +329,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._EdgeEffectPersistentAlphaRatio, value, nameof(EdgeEffectPersistentAlphaRatio));
+                this._EdgeEffectPersistentAlphaRatio = value;
             }
         }
         #endregion
@@ -339,7 +341,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._EdgeEffectAlphaPulseAmplitude, value, nameof(EdgeEffectAlphaPulseAmplitude));
+                this._EdgeEffectAlphaPulseAmplitude = value;
             }
         }
         #endregion
@@ -351,7 +353,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._EdgeEffectAlphaPulseFrequency, value, nameof(EdgeEffectAlphaPulseFrequency));
+                this._EdgeEffectAlphaPulseFrequency = value;
             }
         }
         #endregion
@@ -363,7 +365,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._FillTextureEffectFullAlphaRatio, value, nameof(FillTextureEffectFullAlphaRatio));
+                this._FillTextureEffectFullAlphaRatio = value;
             }
         }
         #endregion
@@ -375,7 +377,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._EdgeEffectFullAlphaRatio, value, nameof(EdgeEffectFullAlphaRatio));
+                this._EdgeEffectFullAlphaRatio = value;
             }
         }
         #endregion
@@ -387,7 +389,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._MembraneShaderDestBlendMode, value, nameof(MembraneShaderDestBlendMode));
+                this._MembraneShaderDestBlendMode = value;
             }
         }
         #endregion
@@ -400,7 +402,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.DATADataTypeState |= DATADataType.Has;
                 this.DATADataTypeState &= ~DATADataType.Break0;
-                this.RaiseAndSetIfChanged(ref this._ParticleShaderSourceBlendMode, value, nameof(ParticleShaderSourceBlendMode));
+                this._ParticleShaderSourceBlendMode = value;
             }
         }
         #endregion
@@ -413,7 +415,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.DATADataTypeState |= DATADataType.Has;
                 this.DATADataTypeState &= ~DATADataType.Break0;
-                this.RaiseAndSetIfChanged(ref this._ParticleShaderBlendOperation, value, nameof(ParticleShaderBlendOperation));
+                this._ParticleShaderBlendOperation = value;
             }
         }
         #endregion
@@ -426,7 +428,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.DATADataTypeState |= DATADataType.Has;
                 this.DATADataTypeState &= ~DATADataType.Break0;
-                this.RaiseAndSetIfChanged(ref this._ParticleShaderZTestFunction, value, nameof(ParticleShaderZTestFunction));
+                this._ParticleShaderZTestFunction = value;
             }
         }
         #endregion
@@ -439,7 +441,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.DATADataTypeState |= DATADataType.Has;
                 this.DATADataTypeState &= ~DATADataType.Break0;
-                this.RaiseAndSetIfChanged(ref this._ParticleShaderDestBlendMode, value, nameof(ParticleShaderDestBlendMode));
+                this._ParticleShaderDestBlendMode = value;
             }
         }
         #endregion
@@ -452,7 +454,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.DATADataTypeState |= DATADataType.Has;
                 this.DATADataTypeState &= ~DATADataType.Break0;
-                this.RaiseAndSetIfChanged(ref this._ParticleShaderParticleBirthRampUpTime, value, nameof(ParticleShaderParticleBirthRampUpTime));
+                this._ParticleShaderParticleBirthRampUpTime = value;
             }
         }
         #endregion
@@ -465,7 +467,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.DATADataTypeState |= DATADataType.Has;
                 this.DATADataTypeState &= ~DATADataType.Break0;
-                this.RaiseAndSetIfChanged(ref this._ParticleShaderFullParticleBirthTime, value, nameof(ParticleShaderFullParticleBirthTime));
+                this._ParticleShaderFullParticleBirthTime = value;
             }
         }
         #endregion
@@ -478,7 +480,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.DATADataTypeState |= DATADataType.Has;
                 this.DATADataTypeState &= ~DATADataType.Break0;
-                this.RaiseAndSetIfChanged(ref this._ParticleShaderParticleBirthRampDownTime, value, nameof(ParticleShaderParticleBirthRampDownTime));
+                this._ParticleShaderParticleBirthRampDownTime = value;
             }
         }
         #endregion
@@ -491,7 +493,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.DATADataTypeState |= DATADataType.Has;
                 this.DATADataTypeState &= ~DATADataType.Break0;
-                this.RaiseAndSetIfChanged(ref this._ParticleShaderFullParticleBirthRatio, value, nameof(ParticleShaderFullParticleBirthRatio));
+                this._ParticleShaderFullParticleBirthRatio = value;
             }
         }
         #endregion
@@ -504,7 +506,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.DATADataTypeState |= DATADataType.Has;
                 this.DATADataTypeState &= ~DATADataType.Break0;
-                this.RaiseAndSetIfChanged(ref this._ParticleShaderPersistentParticleBirthRatio, value, nameof(ParticleShaderPersistentParticleBirthRatio));
+                this._ParticleShaderPersistentParticleBirthRatio = value;
             }
         }
         #endregion
@@ -517,7 +519,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.DATADataTypeState |= DATADataType.Has;
                 this.DATADataTypeState &= ~DATADataType.Break0;
-                this.RaiseAndSetIfChanged(ref this._ParticleShaderParticleLifetime, value, nameof(ParticleShaderParticleLifetime));
+                this._ParticleShaderParticleLifetime = value;
             }
         }
         #endregion
@@ -530,7 +532,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.DATADataTypeState |= DATADataType.Has;
                 this.DATADataTypeState &= ~DATADataType.Break0;
-                this.RaiseAndSetIfChanged(ref this._ParticleShaderParticleLifetimePlusMinus, value, nameof(ParticleShaderParticleLifetimePlusMinus));
+                this._ParticleShaderParticleLifetimePlusMinus = value;
             }
         }
         #endregion
@@ -543,7 +545,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.DATADataTypeState |= DATADataType.Has;
                 this.DATADataTypeState &= ~DATADataType.Break0;
-                this.RaiseAndSetIfChanged(ref this._ParticleShaderInitialSpeedAlongNormal, value, nameof(ParticleShaderInitialSpeedAlongNormal));
+                this._ParticleShaderInitialSpeedAlongNormal = value;
             }
         }
         #endregion
@@ -556,7 +558,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.DATADataTypeState |= DATADataType.Has;
                 this.DATADataTypeState &= ~DATADataType.Break0;
-                this.RaiseAndSetIfChanged(ref this._ParticleShaderAccelerationAlongNormal, value, nameof(ParticleShaderAccelerationAlongNormal));
+                this._ParticleShaderAccelerationAlongNormal = value;
             }
         }
         #endregion
@@ -569,7 +571,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.DATADataTypeState |= DATADataType.Has;
                 this.DATADataTypeState &= ~DATADataType.Break0;
-                this.RaiseAndSetIfChanged(ref this._ParticleShaderInitialVelocity1, value, nameof(ParticleShaderInitialVelocity1));
+                this._ParticleShaderInitialVelocity1 = value;
             }
         }
         #endregion
@@ -582,7 +584,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.DATADataTypeState |= DATADataType.Has;
                 this.DATADataTypeState &= ~DATADataType.Break0;
-                this.RaiseAndSetIfChanged(ref this._ParticleShaderInitialVelocity2, value, nameof(ParticleShaderInitialVelocity2));
+                this._ParticleShaderInitialVelocity2 = value;
             }
         }
         #endregion
@@ -595,7 +597,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.DATADataTypeState |= DATADataType.Has;
                 this.DATADataTypeState &= ~DATADataType.Break0;
-                this.RaiseAndSetIfChanged(ref this._ParticleShaderInitialVelocity3, value, nameof(ParticleShaderInitialVelocity3));
+                this._ParticleShaderInitialVelocity3 = value;
             }
         }
         #endregion
@@ -608,7 +610,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.DATADataTypeState |= DATADataType.Has;
                 this.DATADataTypeState &= ~DATADataType.Break0;
-                this.RaiseAndSetIfChanged(ref this._ParticleShaderAcceleration1, value, nameof(ParticleShaderAcceleration1));
+                this._ParticleShaderAcceleration1 = value;
             }
         }
         #endregion
@@ -621,7 +623,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.DATADataTypeState |= DATADataType.Has;
                 this.DATADataTypeState &= ~DATADataType.Break0;
-                this.RaiseAndSetIfChanged(ref this._ParticleShaderAcceleration2, value, nameof(ParticleShaderAcceleration2));
+                this._ParticleShaderAcceleration2 = value;
             }
         }
         #endregion
@@ -634,7 +636,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.DATADataTypeState |= DATADataType.Has;
                 this.DATADataTypeState &= ~DATADataType.Break0;
-                this.RaiseAndSetIfChanged(ref this._ParticleShaderAcceleration3, value, nameof(ParticleShaderAcceleration3));
+                this._ParticleShaderAcceleration3 = value;
             }
         }
         #endregion
@@ -647,7 +649,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.DATADataTypeState |= DATADataType.Has;
                 this.DATADataTypeState &= ~DATADataType.Break0;
-                this.RaiseAndSetIfChanged(ref this._ParticleShaderScaleKey1, value, nameof(ParticleShaderScaleKey1));
+                this._ParticleShaderScaleKey1 = value;
             }
         }
         #endregion
@@ -660,7 +662,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.DATADataTypeState |= DATADataType.Has;
                 this.DATADataTypeState &= ~DATADataType.Break0;
-                this.RaiseAndSetIfChanged(ref this._ParticleShaderScaleKey2, value, nameof(ParticleShaderScaleKey2));
+                this._ParticleShaderScaleKey2 = value;
             }
         }
         #endregion
@@ -673,7 +675,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.DATADataTypeState |= DATADataType.Has;
                 this.DATADataTypeState &= ~DATADataType.Break0;
-                this.RaiseAndSetIfChanged(ref this._ParticleShaderScaleKey1Time, value, nameof(ParticleShaderScaleKey1Time));
+                this._ParticleShaderScaleKey1Time = value;
             }
         }
         #endregion
@@ -686,7 +688,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.DATADataTypeState |= DATADataType.Has;
                 this.DATADataTypeState &= ~DATADataType.Break0;
-                this.RaiseAndSetIfChanged(ref this._ParticleShaderScaleKey2Time, value, nameof(ParticleShaderScaleKey2Time));
+                this._ParticleShaderScaleKey2Time = value;
             }
         }
         #endregion
@@ -699,7 +701,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.DATADataTypeState |= DATADataType.Has;
                 this.DATADataTypeState &= ~DATADataType.Break0;
-                this.RaiseAndSetIfChanged(ref this._ColorKey1Color, value, nameof(ColorKey1Color));
+                this._ColorKey1Color = value;
             }
         }
         #endregion
@@ -712,7 +714,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.DATADataTypeState |= DATADataType.Has;
                 this.DATADataTypeState &= ~DATADataType.Break0;
-                this.RaiseAndSetIfChanged(ref this._ColorKey2Color, value, nameof(ColorKey2Color));
+                this._ColorKey2Color = value;
             }
         }
         #endregion
@@ -725,7 +727,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.DATADataTypeState |= DATADataType.Has;
                 this.DATADataTypeState &= ~DATADataType.Break0;
-                this.RaiseAndSetIfChanged(ref this._ColorKey3Color, value, nameof(ColorKey3Color));
+                this._ColorKey3Color = value;
             }
         }
         #endregion
@@ -738,7 +740,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.DATADataTypeState |= DATADataType.Has;
                 this.DATADataTypeState &= ~DATADataType.Break0;
-                this.RaiseAndSetIfChanged(ref this._ColorKey1ColorAlpha, value, nameof(ColorKey1ColorAlpha));
+                this._ColorKey1ColorAlpha = value;
             }
         }
         #endregion
@@ -751,7 +753,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.DATADataTypeState |= DATADataType.Has;
                 this.DATADataTypeState &= ~DATADataType.Break0;
-                this.RaiseAndSetIfChanged(ref this._ColorKey2ColorAlpha, value, nameof(ColorKey2ColorAlpha));
+                this._ColorKey2ColorAlpha = value;
             }
         }
         #endregion
@@ -764,7 +766,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.DATADataTypeState |= DATADataType.Has;
                 this.DATADataTypeState &= ~DATADataType.Break0;
-                this.RaiseAndSetIfChanged(ref this._ColorKey3ColorAlpha, value, nameof(ColorKey3ColorAlpha));
+                this._ColorKey3ColorAlpha = value;
             }
         }
         #endregion
@@ -777,7 +779,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.DATADataTypeState |= DATADataType.Has;
                 this.DATADataTypeState &= ~DATADataType.Break0;
-                this.RaiseAndSetIfChanged(ref this._ColorKey1ColorKeyTime, value, nameof(ColorKey1ColorKeyTime));
+                this._ColorKey1ColorKeyTime = value;
             }
         }
         #endregion
@@ -790,7 +792,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.DATADataTypeState |= DATADataType.Has;
                 this.DATADataTypeState &= ~DATADataType.Break0;
-                this.RaiseAndSetIfChanged(ref this._ColorKey2ColorKeyTime, value, nameof(ColorKey2ColorKeyTime));
+                this._ColorKey2ColorKeyTime = value;
             }
         }
         #endregion
@@ -803,17 +805,12 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.DATADataTypeState |= DATADataType.Has;
                 this.DATADataTypeState &= ~DATADataType.Break0;
-                this.RaiseAndSetIfChanged(ref this._ColorKey3ColorKeyTime, value, nameof(ColorKey3ColorKeyTime));
+                this._ColorKey3ColorKeyTime = value;
             }
         }
         #endregion
         #region DATADataTypeState
-        private EffectShader.DATADataType _DATADataTypeState;
-        public EffectShader.DATADataType DATADataTypeState
-        {
-            get => this._DATADataTypeState;
-            set => this.RaiseAndSetIfChanged(ref this._DATADataTypeState, value, nameof(DATADataTypeState));
-        }
+        public EffectShader.DATADataType DATADataTypeState { get; set; }
         EffectShader.DATADataType IEffectShaderInternal.DATADataTypeState
         {
             get => this.DATADataTypeState;
@@ -4567,954 +4564,338 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Flags ?? true)
             {
                 errorMask?.PushIndex((int)EffectShader_FieldIndex.Flags);
-                try
-                {
-                    item.Flags = rhs.Flags;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Flags = rhs.Flags;
+                errorMask?.PopIndex();
             }
             if (copyMask?.MembraneShaderSourceBlendMode ?? true)
             {
                 errorMask?.PushIndex((int)EffectShader_FieldIndex.MembraneShaderSourceBlendMode);
-                try
-                {
-                    item.MembraneShaderSourceBlendMode = rhs.MembraneShaderSourceBlendMode;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.MembraneShaderSourceBlendMode = rhs.MembraneShaderSourceBlendMode;
+                errorMask?.PopIndex();
             }
             if (copyMask?.MembraneShaderBlendOperation ?? true)
             {
                 errorMask?.PushIndex((int)EffectShader_FieldIndex.MembraneShaderBlendOperation);
-                try
-                {
-                    item.MembraneShaderBlendOperation = rhs.MembraneShaderBlendOperation;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.MembraneShaderBlendOperation = rhs.MembraneShaderBlendOperation;
+                errorMask?.PopIndex();
             }
             if (copyMask?.MembraneShaderZTestFunction ?? true)
             {
                 errorMask?.PushIndex((int)EffectShader_FieldIndex.MembraneShaderZTestFunction);
-                try
-                {
-                    item.MembraneShaderZTestFunction = rhs.MembraneShaderZTestFunction;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.MembraneShaderZTestFunction = rhs.MembraneShaderZTestFunction;
+                errorMask?.PopIndex();
             }
             if (copyMask?.FillTextureEffectColor ?? true)
             {
                 errorMask?.PushIndex((int)EffectShader_FieldIndex.FillTextureEffectColor);
-                try
-                {
-                    item.FillTextureEffectColor = rhs.FillTextureEffectColor;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.FillTextureEffectColor = rhs.FillTextureEffectColor;
+                errorMask?.PopIndex();
             }
             if (copyMask?.FillTextureEffectAlphaFadeInTime ?? true)
             {
                 errorMask?.PushIndex((int)EffectShader_FieldIndex.FillTextureEffectAlphaFadeInTime);
-                try
-                {
-                    item.FillTextureEffectAlphaFadeInTime = rhs.FillTextureEffectAlphaFadeInTime;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.FillTextureEffectAlphaFadeInTime = rhs.FillTextureEffectAlphaFadeInTime;
+                errorMask?.PopIndex();
             }
             if (copyMask?.FillTextureEffectFullAlphaTime ?? true)
             {
                 errorMask?.PushIndex((int)EffectShader_FieldIndex.FillTextureEffectFullAlphaTime);
-                try
-                {
-                    item.FillTextureEffectFullAlphaTime = rhs.FillTextureEffectFullAlphaTime;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.FillTextureEffectFullAlphaTime = rhs.FillTextureEffectFullAlphaTime;
+                errorMask?.PopIndex();
             }
             if (copyMask?.FillTextureEffectAlphaFadeOutTime ?? true)
             {
                 errorMask?.PushIndex((int)EffectShader_FieldIndex.FillTextureEffectAlphaFadeOutTime);
-                try
-                {
-                    item.FillTextureEffectAlphaFadeOutTime = rhs.FillTextureEffectAlphaFadeOutTime;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.FillTextureEffectAlphaFadeOutTime = rhs.FillTextureEffectAlphaFadeOutTime;
+                errorMask?.PopIndex();
             }
             if (copyMask?.FillTextureEffectPersistentAlphaRatio ?? true)
             {
                 errorMask?.PushIndex((int)EffectShader_FieldIndex.FillTextureEffectPersistentAlphaRatio);
-                try
-                {
-                    item.FillTextureEffectPersistentAlphaRatio = rhs.FillTextureEffectPersistentAlphaRatio;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.FillTextureEffectPersistentAlphaRatio = rhs.FillTextureEffectPersistentAlphaRatio;
+                errorMask?.PopIndex();
             }
             if (copyMask?.FillTextureEffectAlphaPulseAmplitude ?? true)
             {
                 errorMask?.PushIndex((int)EffectShader_FieldIndex.FillTextureEffectAlphaPulseAmplitude);
-                try
-                {
-                    item.FillTextureEffectAlphaPulseAmplitude = rhs.FillTextureEffectAlphaPulseAmplitude;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.FillTextureEffectAlphaPulseAmplitude = rhs.FillTextureEffectAlphaPulseAmplitude;
+                errorMask?.PopIndex();
             }
             if (copyMask?.FillTextureEffectAlphaPulseFrequency ?? true)
             {
                 errorMask?.PushIndex((int)EffectShader_FieldIndex.FillTextureEffectAlphaPulseFrequency);
-                try
-                {
-                    item.FillTextureEffectAlphaPulseFrequency = rhs.FillTextureEffectAlphaPulseFrequency;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.FillTextureEffectAlphaPulseFrequency = rhs.FillTextureEffectAlphaPulseFrequency;
+                errorMask?.PopIndex();
             }
             if (copyMask?.FillTextureEffectTextureAnimationSpeedU ?? true)
             {
                 errorMask?.PushIndex((int)EffectShader_FieldIndex.FillTextureEffectTextureAnimationSpeedU);
-                try
-                {
-                    item.FillTextureEffectTextureAnimationSpeedU = rhs.FillTextureEffectTextureAnimationSpeedU;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.FillTextureEffectTextureAnimationSpeedU = rhs.FillTextureEffectTextureAnimationSpeedU;
+                errorMask?.PopIndex();
             }
             if (copyMask?.FillTextureEffectTextureAnimationSpeedV ?? true)
             {
                 errorMask?.PushIndex((int)EffectShader_FieldIndex.FillTextureEffectTextureAnimationSpeedV);
-                try
-                {
-                    item.FillTextureEffectTextureAnimationSpeedV = rhs.FillTextureEffectTextureAnimationSpeedV;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.FillTextureEffectTextureAnimationSpeedV = rhs.FillTextureEffectTextureAnimationSpeedV;
+                errorMask?.PopIndex();
             }
             if (copyMask?.EdgeEffectFallOff ?? true)
             {
                 errorMask?.PushIndex((int)EffectShader_FieldIndex.EdgeEffectFallOff);
-                try
-                {
-                    item.EdgeEffectFallOff = rhs.EdgeEffectFallOff;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.EdgeEffectFallOff = rhs.EdgeEffectFallOff;
+                errorMask?.PopIndex();
             }
             if (copyMask?.EdgeEffectColor ?? true)
             {
                 errorMask?.PushIndex((int)EffectShader_FieldIndex.EdgeEffectColor);
-                try
-                {
-                    item.EdgeEffectColor = rhs.EdgeEffectColor;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.EdgeEffectColor = rhs.EdgeEffectColor;
+                errorMask?.PopIndex();
             }
             if (copyMask?.EdgeEffectAlphaFadeInTime ?? true)
             {
                 errorMask?.PushIndex((int)EffectShader_FieldIndex.EdgeEffectAlphaFadeInTime);
-                try
-                {
-                    item.EdgeEffectAlphaFadeInTime = rhs.EdgeEffectAlphaFadeInTime;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.EdgeEffectAlphaFadeInTime = rhs.EdgeEffectAlphaFadeInTime;
+                errorMask?.PopIndex();
             }
             if (copyMask?.EdgeEffectFullAlphaTime ?? true)
             {
                 errorMask?.PushIndex((int)EffectShader_FieldIndex.EdgeEffectFullAlphaTime);
-                try
-                {
-                    item.EdgeEffectFullAlphaTime = rhs.EdgeEffectFullAlphaTime;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.EdgeEffectFullAlphaTime = rhs.EdgeEffectFullAlphaTime;
+                errorMask?.PopIndex();
             }
             if (copyMask?.EdgeEffectAlphaFadeOutTime ?? true)
             {
                 errorMask?.PushIndex((int)EffectShader_FieldIndex.EdgeEffectAlphaFadeOutTime);
-                try
-                {
-                    item.EdgeEffectAlphaFadeOutTime = rhs.EdgeEffectAlphaFadeOutTime;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.EdgeEffectAlphaFadeOutTime = rhs.EdgeEffectAlphaFadeOutTime;
+                errorMask?.PopIndex();
             }
             if (copyMask?.EdgeEffectPersistentAlphaRatio ?? true)
             {
                 errorMask?.PushIndex((int)EffectShader_FieldIndex.EdgeEffectPersistentAlphaRatio);
-                try
-                {
-                    item.EdgeEffectPersistentAlphaRatio = rhs.EdgeEffectPersistentAlphaRatio;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.EdgeEffectPersistentAlphaRatio = rhs.EdgeEffectPersistentAlphaRatio;
+                errorMask?.PopIndex();
             }
             if (copyMask?.EdgeEffectAlphaPulseAmplitude ?? true)
             {
                 errorMask?.PushIndex((int)EffectShader_FieldIndex.EdgeEffectAlphaPulseAmplitude);
-                try
-                {
-                    item.EdgeEffectAlphaPulseAmplitude = rhs.EdgeEffectAlphaPulseAmplitude;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.EdgeEffectAlphaPulseAmplitude = rhs.EdgeEffectAlphaPulseAmplitude;
+                errorMask?.PopIndex();
             }
             if (copyMask?.EdgeEffectAlphaPulseFrequency ?? true)
             {
                 errorMask?.PushIndex((int)EffectShader_FieldIndex.EdgeEffectAlphaPulseFrequency);
-                try
-                {
-                    item.EdgeEffectAlphaPulseFrequency = rhs.EdgeEffectAlphaPulseFrequency;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.EdgeEffectAlphaPulseFrequency = rhs.EdgeEffectAlphaPulseFrequency;
+                errorMask?.PopIndex();
             }
             if (copyMask?.FillTextureEffectFullAlphaRatio ?? true)
             {
                 errorMask?.PushIndex((int)EffectShader_FieldIndex.FillTextureEffectFullAlphaRatio);
-                try
-                {
-                    item.FillTextureEffectFullAlphaRatio = rhs.FillTextureEffectFullAlphaRatio;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.FillTextureEffectFullAlphaRatio = rhs.FillTextureEffectFullAlphaRatio;
+                errorMask?.PopIndex();
             }
             if (copyMask?.EdgeEffectFullAlphaRatio ?? true)
             {
                 errorMask?.PushIndex((int)EffectShader_FieldIndex.EdgeEffectFullAlphaRatio);
-                try
-                {
-                    item.EdgeEffectFullAlphaRatio = rhs.EdgeEffectFullAlphaRatio;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.EdgeEffectFullAlphaRatio = rhs.EdgeEffectFullAlphaRatio;
+                errorMask?.PopIndex();
             }
             if (copyMask?.MembraneShaderDestBlendMode ?? true)
             {
                 errorMask?.PushIndex((int)EffectShader_FieldIndex.MembraneShaderDestBlendMode);
-                try
-                {
-                    item.MembraneShaderDestBlendMode = rhs.MembraneShaderDestBlendMode;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.MembraneShaderDestBlendMode = rhs.MembraneShaderDestBlendMode;
+                errorMask?.PopIndex();
             }
             if (copyMask?.ParticleShaderSourceBlendMode ?? true)
             {
                 errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderSourceBlendMode);
-                try
-                {
-                    item.ParticleShaderSourceBlendMode = rhs.ParticleShaderSourceBlendMode;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.ParticleShaderSourceBlendMode = rhs.ParticleShaderSourceBlendMode;
+                errorMask?.PopIndex();
             }
             if (copyMask?.ParticleShaderBlendOperation ?? true)
             {
                 errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderBlendOperation);
-                try
-                {
-                    item.ParticleShaderBlendOperation = rhs.ParticleShaderBlendOperation;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.ParticleShaderBlendOperation = rhs.ParticleShaderBlendOperation;
+                errorMask?.PopIndex();
             }
             if (copyMask?.ParticleShaderZTestFunction ?? true)
             {
                 errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderZTestFunction);
-                try
-                {
-                    item.ParticleShaderZTestFunction = rhs.ParticleShaderZTestFunction;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.ParticleShaderZTestFunction = rhs.ParticleShaderZTestFunction;
+                errorMask?.PopIndex();
             }
             if (copyMask?.ParticleShaderDestBlendMode ?? true)
             {
                 errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderDestBlendMode);
-                try
-                {
-                    item.ParticleShaderDestBlendMode = rhs.ParticleShaderDestBlendMode;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.ParticleShaderDestBlendMode = rhs.ParticleShaderDestBlendMode;
+                errorMask?.PopIndex();
             }
             if (copyMask?.ParticleShaderParticleBirthRampUpTime ?? true)
             {
                 errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderParticleBirthRampUpTime);
-                try
-                {
-                    item.ParticleShaderParticleBirthRampUpTime = rhs.ParticleShaderParticleBirthRampUpTime;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.ParticleShaderParticleBirthRampUpTime = rhs.ParticleShaderParticleBirthRampUpTime;
+                errorMask?.PopIndex();
             }
             if (copyMask?.ParticleShaderFullParticleBirthTime ?? true)
             {
                 errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderFullParticleBirthTime);
-                try
-                {
-                    item.ParticleShaderFullParticleBirthTime = rhs.ParticleShaderFullParticleBirthTime;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.ParticleShaderFullParticleBirthTime = rhs.ParticleShaderFullParticleBirthTime;
+                errorMask?.PopIndex();
             }
             if (copyMask?.ParticleShaderParticleBirthRampDownTime ?? true)
             {
                 errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderParticleBirthRampDownTime);
-                try
-                {
-                    item.ParticleShaderParticleBirthRampDownTime = rhs.ParticleShaderParticleBirthRampDownTime;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.ParticleShaderParticleBirthRampDownTime = rhs.ParticleShaderParticleBirthRampDownTime;
+                errorMask?.PopIndex();
             }
             if (copyMask?.ParticleShaderFullParticleBirthRatio ?? true)
             {
                 errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderFullParticleBirthRatio);
-                try
-                {
-                    item.ParticleShaderFullParticleBirthRatio = rhs.ParticleShaderFullParticleBirthRatio;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.ParticleShaderFullParticleBirthRatio = rhs.ParticleShaderFullParticleBirthRatio;
+                errorMask?.PopIndex();
             }
             if (copyMask?.ParticleShaderPersistentParticleBirthRatio ?? true)
             {
                 errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderPersistentParticleBirthRatio);
-                try
-                {
-                    item.ParticleShaderPersistentParticleBirthRatio = rhs.ParticleShaderPersistentParticleBirthRatio;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.ParticleShaderPersistentParticleBirthRatio = rhs.ParticleShaderPersistentParticleBirthRatio;
+                errorMask?.PopIndex();
             }
             if (copyMask?.ParticleShaderParticleLifetime ?? true)
             {
                 errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderParticleLifetime);
-                try
-                {
-                    item.ParticleShaderParticleLifetime = rhs.ParticleShaderParticleLifetime;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.ParticleShaderParticleLifetime = rhs.ParticleShaderParticleLifetime;
+                errorMask?.PopIndex();
             }
             if (copyMask?.ParticleShaderParticleLifetimePlusMinus ?? true)
             {
                 errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderParticleLifetimePlusMinus);
-                try
-                {
-                    item.ParticleShaderParticleLifetimePlusMinus = rhs.ParticleShaderParticleLifetimePlusMinus;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.ParticleShaderParticleLifetimePlusMinus = rhs.ParticleShaderParticleLifetimePlusMinus;
+                errorMask?.PopIndex();
             }
             if (copyMask?.ParticleShaderInitialSpeedAlongNormal ?? true)
             {
                 errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderInitialSpeedAlongNormal);
-                try
-                {
-                    item.ParticleShaderInitialSpeedAlongNormal = rhs.ParticleShaderInitialSpeedAlongNormal;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.ParticleShaderInitialSpeedAlongNormal = rhs.ParticleShaderInitialSpeedAlongNormal;
+                errorMask?.PopIndex();
             }
             if (copyMask?.ParticleShaderAccelerationAlongNormal ?? true)
             {
                 errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderAccelerationAlongNormal);
-                try
-                {
-                    item.ParticleShaderAccelerationAlongNormal = rhs.ParticleShaderAccelerationAlongNormal;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.ParticleShaderAccelerationAlongNormal = rhs.ParticleShaderAccelerationAlongNormal;
+                errorMask?.PopIndex();
             }
             if (copyMask?.ParticleShaderInitialVelocity1 ?? true)
             {
                 errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderInitialVelocity1);
-                try
-                {
-                    item.ParticleShaderInitialVelocity1 = rhs.ParticleShaderInitialVelocity1;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.ParticleShaderInitialVelocity1 = rhs.ParticleShaderInitialVelocity1;
+                errorMask?.PopIndex();
             }
             if (copyMask?.ParticleShaderInitialVelocity2 ?? true)
             {
                 errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderInitialVelocity2);
-                try
-                {
-                    item.ParticleShaderInitialVelocity2 = rhs.ParticleShaderInitialVelocity2;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.ParticleShaderInitialVelocity2 = rhs.ParticleShaderInitialVelocity2;
+                errorMask?.PopIndex();
             }
             if (copyMask?.ParticleShaderInitialVelocity3 ?? true)
             {
                 errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderInitialVelocity3);
-                try
-                {
-                    item.ParticleShaderInitialVelocity3 = rhs.ParticleShaderInitialVelocity3;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.ParticleShaderInitialVelocity3 = rhs.ParticleShaderInitialVelocity3;
+                errorMask?.PopIndex();
             }
             if (copyMask?.ParticleShaderAcceleration1 ?? true)
             {
                 errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderAcceleration1);
-                try
-                {
-                    item.ParticleShaderAcceleration1 = rhs.ParticleShaderAcceleration1;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.ParticleShaderAcceleration1 = rhs.ParticleShaderAcceleration1;
+                errorMask?.PopIndex();
             }
             if (copyMask?.ParticleShaderAcceleration2 ?? true)
             {
                 errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderAcceleration2);
-                try
-                {
-                    item.ParticleShaderAcceleration2 = rhs.ParticleShaderAcceleration2;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.ParticleShaderAcceleration2 = rhs.ParticleShaderAcceleration2;
+                errorMask?.PopIndex();
             }
             if (copyMask?.ParticleShaderAcceleration3 ?? true)
             {
                 errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderAcceleration3);
-                try
-                {
-                    item.ParticleShaderAcceleration3 = rhs.ParticleShaderAcceleration3;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.ParticleShaderAcceleration3 = rhs.ParticleShaderAcceleration3;
+                errorMask?.PopIndex();
             }
             if (copyMask?.ParticleShaderScaleKey1 ?? true)
             {
                 errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderScaleKey1);
-                try
-                {
-                    item.ParticleShaderScaleKey1 = rhs.ParticleShaderScaleKey1;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.ParticleShaderScaleKey1 = rhs.ParticleShaderScaleKey1;
+                errorMask?.PopIndex();
             }
             if (copyMask?.ParticleShaderScaleKey2 ?? true)
             {
                 errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderScaleKey2);
-                try
-                {
-                    item.ParticleShaderScaleKey2 = rhs.ParticleShaderScaleKey2;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.ParticleShaderScaleKey2 = rhs.ParticleShaderScaleKey2;
+                errorMask?.PopIndex();
             }
             if (copyMask?.ParticleShaderScaleKey1Time ?? true)
             {
                 errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderScaleKey1Time);
-                try
-                {
-                    item.ParticleShaderScaleKey1Time = rhs.ParticleShaderScaleKey1Time;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.ParticleShaderScaleKey1Time = rhs.ParticleShaderScaleKey1Time;
+                errorMask?.PopIndex();
             }
             if (copyMask?.ParticleShaderScaleKey2Time ?? true)
             {
                 errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderScaleKey2Time);
-                try
-                {
-                    item.ParticleShaderScaleKey2Time = rhs.ParticleShaderScaleKey2Time;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.ParticleShaderScaleKey2Time = rhs.ParticleShaderScaleKey2Time;
+                errorMask?.PopIndex();
             }
             if (copyMask?.ColorKey1Color ?? true)
             {
                 errorMask?.PushIndex((int)EffectShader_FieldIndex.ColorKey1Color);
-                try
-                {
-                    item.ColorKey1Color = rhs.ColorKey1Color;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.ColorKey1Color = rhs.ColorKey1Color;
+                errorMask?.PopIndex();
             }
             if (copyMask?.ColorKey2Color ?? true)
             {
                 errorMask?.PushIndex((int)EffectShader_FieldIndex.ColorKey2Color);
-                try
-                {
-                    item.ColorKey2Color = rhs.ColorKey2Color;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.ColorKey2Color = rhs.ColorKey2Color;
+                errorMask?.PopIndex();
             }
             if (copyMask?.ColorKey3Color ?? true)
             {
                 errorMask?.PushIndex((int)EffectShader_FieldIndex.ColorKey3Color);
-                try
-                {
-                    item.ColorKey3Color = rhs.ColorKey3Color;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.ColorKey3Color = rhs.ColorKey3Color;
+                errorMask?.PopIndex();
             }
             if (copyMask?.ColorKey1ColorAlpha ?? true)
             {
                 errorMask?.PushIndex((int)EffectShader_FieldIndex.ColorKey1ColorAlpha);
-                try
-                {
-                    item.ColorKey1ColorAlpha = rhs.ColorKey1ColorAlpha;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.ColorKey1ColorAlpha = rhs.ColorKey1ColorAlpha;
+                errorMask?.PopIndex();
             }
             if (copyMask?.ColorKey2ColorAlpha ?? true)
             {
                 errorMask?.PushIndex((int)EffectShader_FieldIndex.ColorKey2ColorAlpha);
-                try
-                {
-                    item.ColorKey2ColorAlpha = rhs.ColorKey2ColorAlpha;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.ColorKey2ColorAlpha = rhs.ColorKey2ColorAlpha;
+                errorMask?.PopIndex();
             }
             if (copyMask?.ColorKey3ColorAlpha ?? true)
             {
                 errorMask?.PushIndex((int)EffectShader_FieldIndex.ColorKey3ColorAlpha);
-                try
-                {
-                    item.ColorKey3ColorAlpha = rhs.ColorKey3ColorAlpha;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.ColorKey3ColorAlpha = rhs.ColorKey3ColorAlpha;
+                errorMask?.PopIndex();
             }
             if (copyMask?.ColorKey1ColorKeyTime ?? true)
             {
                 errorMask?.PushIndex((int)EffectShader_FieldIndex.ColorKey1ColorKeyTime);
-                try
-                {
-                    item.ColorKey1ColorKeyTime = rhs.ColorKey1ColorKeyTime;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.ColorKey1ColorKeyTime = rhs.ColorKey1ColorKeyTime;
+                errorMask?.PopIndex();
             }
             if (copyMask?.ColorKey2ColorKeyTime ?? true)
             {
                 errorMask?.PushIndex((int)EffectShader_FieldIndex.ColorKey2ColorKeyTime);
-                try
-                {
-                    item.ColorKey2ColorKeyTime = rhs.ColorKey2ColorKeyTime;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.ColorKey2ColorKeyTime = rhs.ColorKey2ColorKeyTime;
+                errorMask?.PopIndex();
             }
             if (copyMask?.ColorKey3ColorKeyTime ?? true)
             {
                 errorMask?.PushIndex((int)EffectShader_FieldIndex.ColorKey3ColorKeyTime);
-                try
-                {
-                    item.ColorKey3ColorKeyTime = rhs.ColorKey3ColorKeyTime;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.ColorKey3ColorKeyTime = rhs.ColorKey3ColorKeyTime;
+                errorMask?.PopIndex();
             }
         }
         

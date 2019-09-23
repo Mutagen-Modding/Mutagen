@@ -58,7 +58,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Name_IsSet
         {
             get => _hasBeenSetTracker[(int)Cell_FieldIndex.Name];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Cell_FieldIndex.Name, nameof(Name_IsSet));
+            set => _hasBeenSetTracker[(int)Cell_FieldIndex.Name] = value;
         }
         bool ICellGetter.Name_IsSet => Name_IsSet;
         private String _Name;
@@ -73,7 +73,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Name, value, _hasBeenSetTracker, markSet, (int)Cell_FieldIndex.Name, nameof(Name), nameof(Name_IsSet));
+            _Name = value;
+            _hasBeenSetTracker[(int)Cell_FieldIndex.Name] = markSet;
         }
         public void Name_Unset()
         {
@@ -84,7 +85,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Flags_IsSet
         {
             get => _hasBeenSetTracker[(int)Cell_FieldIndex.Flags];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Cell_FieldIndex.Flags, nameof(Flags_IsSet));
+            set => _hasBeenSetTracker[(int)Cell_FieldIndex.Flags] = value;
         }
         bool ICellGetter.Flags_IsSet => Flags_IsSet;
         private Cell.Flag _Flags;
@@ -99,7 +100,8 @@ namespace Mutagen.Bethesda.Oblivion
             Cell.Flag value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Flags, value, _hasBeenSetTracker, markSet, (int)Cell_FieldIndex.Flags, nameof(Flags), nameof(Flags_IsSet));
+            _Flags = value;
+            _hasBeenSetTracker[(int)Cell_FieldIndex.Flags] = markSet;
         }
         public void Flags_Unset()
         {
@@ -110,7 +112,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Grid_IsSet
         {
             get => _hasBeenSetTracker[(int)Cell_FieldIndex.Grid];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Cell_FieldIndex.Grid, nameof(Grid_IsSet));
+            set => _hasBeenSetTracker[(int)Cell_FieldIndex.Grid] = value;
         }
         bool ICellGetter.Grid_IsSet => Grid_IsSet;
         private P2Int _Grid;
@@ -125,7 +127,8 @@ namespace Mutagen.Bethesda.Oblivion
             P2Int value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Grid, value, _hasBeenSetTracker, markSet, (int)Cell_FieldIndex.Grid, nameof(Grid), nameof(Grid_IsSet));
+            _Grid = value;
+            _hasBeenSetTracker[(int)Cell_FieldIndex.Grid] = markSet;
         }
         public void Grid_Unset()
         {
@@ -175,7 +178,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool MusicType_IsSet
         {
             get => _hasBeenSetTracker[(int)Cell_FieldIndex.MusicType];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Cell_FieldIndex.MusicType, nameof(MusicType_IsSet));
+            set => _hasBeenSetTracker[(int)Cell_FieldIndex.MusicType] = value;
         }
         bool ICellGetter.MusicType_IsSet => MusicType_IsSet;
         private MusicType _MusicType;
@@ -190,7 +193,8 @@ namespace Mutagen.Bethesda.Oblivion
             MusicType value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _MusicType, value, _hasBeenSetTracker, markSet, (int)Cell_FieldIndex.MusicType, nameof(MusicType), nameof(MusicType_IsSet));
+            _MusicType = value;
+            _hasBeenSetTracker[(int)Cell_FieldIndex.MusicType] = markSet;
         }
         public void MusicType_Unset()
         {
@@ -201,7 +205,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool WaterHeight_IsSet
         {
             get => _hasBeenSetTracker[(int)Cell_FieldIndex.WaterHeight];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Cell_FieldIndex.WaterHeight, nameof(WaterHeight_IsSet));
+            set => _hasBeenSetTracker[(int)Cell_FieldIndex.WaterHeight] = value;
         }
         bool ICellGetter.WaterHeight_IsSet => WaterHeight_IsSet;
         private Single _WaterHeight;
@@ -216,7 +220,8 @@ namespace Mutagen.Bethesda.Oblivion
             Single value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _WaterHeight, value, _hasBeenSetTracker, markSet, (int)Cell_FieldIndex.WaterHeight, nameof(WaterHeight), nameof(WaterHeight_IsSet));
+            _WaterHeight = value;
+            _hasBeenSetTracker[(int)Cell_FieldIndex.WaterHeight] = markSet;
         }
         public void WaterHeight_Unset()
         {
@@ -251,7 +256,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool FactionRank_IsSet
         {
             get => _hasBeenSetTracker[(int)Cell_FieldIndex.FactionRank];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Cell_FieldIndex.FactionRank, nameof(FactionRank_IsSet));
+            set => _hasBeenSetTracker[(int)Cell_FieldIndex.FactionRank] = value;
         }
         bool ICellGetter.FactionRank_IsSet => FactionRank_IsSet;
         private Int32 _FactionRank;
@@ -266,7 +271,8 @@ namespace Mutagen.Bethesda.Oblivion
             Int32 value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _FactionRank, value, _hasBeenSetTracker, markSet, (int)Cell_FieldIndex.FactionRank, nameof(FactionRank), nameof(FactionRank_IsSet));
+            _FactionRank = value;
+            _hasBeenSetTracker[(int)Cell_FieldIndex.FactionRank] = markSet;
         }
         public void FactionRank_Unset()
         {
@@ -340,7 +346,7 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte[] Timestamp
         {
             get => _Timestamp;
-            set => this.RaiseAndSetIfChanged(ref _Timestamp, value ?? new byte[4], nameof(Timestamp));
+            set => this._Timestamp = value ?? new byte[4];
         }
         ReadOnlySpan<Byte> ICellGetter.Timestamp => this.Timestamp;
         #endregion
@@ -349,7 +355,7 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte[] PersistentTimestamp
         {
             get => _PersistentTimestamp;
-            set => this.RaiseAndSetIfChanged(ref _PersistentTimestamp, value ?? new byte[4], nameof(PersistentTimestamp));
+            set => this._PersistentTimestamp = value ?? new byte[4];
         }
         ReadOnlySpan<Byte> ICellGetter.PersistentTimestamp => this.PersistentTimestamp;
         #endregion
@@ -370,7 +376,7 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte[] TemporaryTimestamp
         {
             get => _TemporaryTimestamp;
-            set => this.RaiseAndSetIfChanged(ref _TemporaryTimestamp, value ?? new byte[4], nameof(TemporaryTimestamp));
+            set => this._TemporaryTimestamp = value ?? new byte[4];
         }
         ReadOnlySpan<Byte> ICellGetter.TemporaryTimestamp => this.TemporaryTimestamp;
         #endregion
@@ -391,7 +397,7 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte[] VisibleWhenDistantTimestamp
         {
             get => _VisibleWhenDistantTimestamp;
-            set => this.RaiseAndSetIfChanged(ref _VisibleWhenDistantTimestamp, value ?? new byte[4], nameof(VisibleWhenDistantTimestamp));
+            set => this._VisibleWhenDistantTimestamp = value ?? new byte[4];
         }
         ReadOnlySpan<Byte> ICellGetter.VisibleWhenDistantTimestamp => this.VisibleWhenDistantTimestamp;
         #endregion
@@ -3180,36 +3186,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Timestamp ?? true)
             {
                 errorMask?.PushIndex((int)Cell_FieldIndex.Timestamp);
-                try
-                {
-                    item.Timestamp = rhs.Timestamp;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Timestamp = rhs.Timestamp;
+                errorMask?.PopIndex();
             }
             if (copyMask?.PersistentTimestamp ?? true)
             {
                 errorMask?.PushIndex((int)Cell_FieldIndex.PersistentTimestamp);
-                try
-                {
-                    item.PersistentTimestamp = rhs.PersistentTimestamp;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.PersistentTimestamp = rhs.PersistentTimestamp;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Persistent != CopyOption.Skip)
             {
@@ -3245,19 +3229,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.TemporaryTimestamp ?? true)
             {
                 errorMask?.PushIndex((int)Cell_FieldIndex.TemporaryTimestamp);
-                try
-                {
-                    item.TemporaryTimestamp = rhs.TemporaryTimestamp;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.TemporaryTimestamp = rhs.TemporaryTimestamp;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Temporary != CopyOption.Skip)
             {
@@ -3293,19 +3266,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.VisibleWhenDistantTimestamp ?? true)
             {
                 errorMask?.PushIndex((int)Cell_FieldIndex.VisibleWhenDistantTimestamp);
-                try
-                {
-                    item.VisibleWhenDistantTimestamp = rhs.VisibleWhenDistantTimestamp;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.VisibleWhenDistantTimestamp = rhs.VisibleWhenDistantTimestamp;
+                errorMask?.PopIndex();
             }
             if (copyMask?.VisibleWhenDistant != CopyOption.Skip)
             {

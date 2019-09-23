@@ -65,7 +65,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.BTXTDataTypeState |= BTXTDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Quadrant, value, nameof(Quadrant));
+                this._Quadrant = value;
             }
         }
         #endregion
@@ -77,17 +77,12 @@ namespace Mutagen.Bethesda.Oblivion
             protected set
             {
                 this.BTXTDataTypeState |= BTXTDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._LayerNumber, value, nameof(LayerNumber));
+                this._LayerNumber = value;
             }
         }
         #endregion
         #region BTXTDataTypeState
-        private BaseLayer.BTXTDataType _BTXTDataTypeState;
-        public BaseLayer.BTXTDataType BTXTDataTypeState
-        {
-            get => this._BTXTDataTypeState;
-            set => this.RaiseAndSetIfChanged(ref this._BTXTDataTypeState, value, nameof(BTXTDataTypeState));
-        }
+        public BaseLayer.BTXTDataType BTXTDataTypeState { get; set; }
         BaseLayer.BTXTDataType IBaseLayerInternal.BTXTDataTypeState
         {
             get => this.BTXTDataTypeState;
@@ -1230,19 +1225,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Quadrant ?? true)
             {
                 errorMask?.PushIndex((int)BaseLayer_FieldIndex.Quadrant);
-                try
-                {
-                    item.Quadrant = rhs.Quadrant;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Quadrant = rhs.Quadrant;
+                errorMask?.PopIndex();
             }
         }
         

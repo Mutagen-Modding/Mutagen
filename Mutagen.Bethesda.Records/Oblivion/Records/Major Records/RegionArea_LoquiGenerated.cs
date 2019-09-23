@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool EdgeFallOff_IsSet
         {
             get => _hasBeenSetTracker[(int)RegionArea_FieldIndex.EdgeFallOff];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)RegionArea_FieldIndex.EdgeFallOff, nameof(EdgeFallOff_IsSet));
+            set => _hasBeenSetTracker[(int)RegionArea_FieldIndex.EdgeFallOff] = value;
         }
         bool IRegionAreaGetter.EdgeFallOff_IsSet => EdgeFallOff_IsSet;
         private UInt32 _EdgeFallOff;
@@ -69,7 +69,8 @@ namespace Mutagen.Bethesda.Oblivion
             UInt32 value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _EdgeFallOff, value, _hasBeenSetTracker, markSet, (int)RegionArea_FieldIndex.EdgeFallOff, nameof(EdgeFallOff), nameof(EdgeFallOff_IsSet));
+            _EdgeFallOff = value;
+            _hasBeenSetTracker[(int)RegionArea_FieldIndex.EdgeFallOff] = markSet;
         }
         public void EdgeFallOff_Unset()
         {

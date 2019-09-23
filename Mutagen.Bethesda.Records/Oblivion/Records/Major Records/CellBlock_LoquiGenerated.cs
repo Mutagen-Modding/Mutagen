@@ -52,27 +52,17 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region BlockNumber
-        private Int32 _BlockNumber;
-        public Int32 BlockNumber
-        {
-            get => this._BlockNumber;
-            set => this.RaiseAndSetIfChanged(ref this._BlockNumber, value, nameof(BlockNumber));
-        }
+        public Int32 BlockNumber { get; set; }
         #endregion
         #region GroupType
-        private GroupTypeEnum _GroupType;
-        public GroupTypeEnum GroupType
-        {
-            get => this._GroupType;
-            set => this.RaiseAndSetIfChanged(ref this._GroupType, value, nameof(GroupType));
-        }
+        public GroupTypeEnum GroupType { get; set; }
         #endregion
         #region LastModified
         private Byte[] _LastModified = new byte[4];
         public Byte[] LastModified
         {
             get => _LastModified;
-            set => this.RaiseAndSetIfChanged(ref _LastModified, value ?? new byte[4], nameof(LastModified));
+            set => this._LastModified = value ?? new byte[4];
         }
         ReadOnlySpan<Byte> ICellBlockGetter.LastModified => this.LastModified;
         #endregion
@@ -1184,53 +1174,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.BlockNumber ?? true)
             {
                 errorMask?.PushIndex((int)CellBlock_FieldIndex.BlockNumber);
-                try
-                {
-                    item.BlockNumber = rhs.BlockNumber;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.BlockNumber = rhs.BlockNumber;
+                errorMask?.PopIndex();
             }
             if (copyMask?.GroupType ?? true)
             {
                 errorMask?.PushIndex((int)CellBlock_FieldIndex.GroupType);
-                try
-                {
-                    item.GroupType = rhs.GroupType;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.GroupType = rhs.GroupType;
+                errorMask?.PopIndex();
             }
             if (copyMask?.LastModified ?? true)
             {
                 errorMask?.PushIndex((int)CellBlock_FieldIndex.LastModified);
-                try
-                {
-                    item.LastModified = rhs.LastModified;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.LastModified = rhs.LastModified;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Items.Overall != CopyOption.Skip)
             {

@@ -49,20 +49,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region PointID
-        private Int32 _PointID;
-        public Int32 PointID
-        {
-            get => this._PointID;
-            set => this.RaiseAndSetIfChanged(ref this._PointID, value, nameof(PointID));
-        }
+        public Int32 PointID { get; set; }
         #endregion
         #region Point
-        private P3Float _Point;
-        public P3Float Point
-        {
-            get => this._Point;
-            set => this.RaiseAndSetIfChanged(ref this._Point, value, nameof(Point));
-        }
+        public P3Float Point { get; set; }
         #endregion
 
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IInterCellPointInternalGetter)rhs, include);
@@ -991,36 +981,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.PointID ?? true)
             {
                 errorMask?.PushIndex((int)InterCellPoint_FieldIndex.PointID);
-                try
-                {
-                    item.PointID = rhs.PointID;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.PointID = rhs.PointID;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Point ?? true)
             {
                 errorMask?.PushIndex((int)InterCellPoint_FieldIndex.Point);
-                try
-                {
-                    item.Point = rhs.Point;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Point = rhs.Point;
+                errorMask?.PopIndex();
             }
         }
         

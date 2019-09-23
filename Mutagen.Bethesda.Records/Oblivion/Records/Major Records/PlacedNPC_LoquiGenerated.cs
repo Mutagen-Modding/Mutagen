@@ -216,7 +216,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Scale_IsSet
         {
             get => _hasBeenSetTracker[(int)PlacedNPC_FieldIndex.Scale];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)PlacedNPC_FieldIndex.Scale, nameof(Scale_IsSet));
+            set => _hasBeenSetTracker[(int)PlacedNPC_FieldIndex.Scale] = value;
         }
         bool IPlacedNPCGetter.Scale_IsSet => Scale_IsSet;
         private Single _Scale;
@@ -231,7 +231,8 @@ namespace Mutagen.Bethesda.Oblivion
             Single value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Scale, value, _hasBeenSetTracker, markSet, (int)PlacedNPC_FieldIndex.Scale, nameof(Scale), nameof(Scale_IsSet));
+            _Scale = value;
+            _hasBeenSetTracker[(int)PlacedNPC_FieldIndex.Scale] = markSet;
         }
         public void Scale_Unset()
         {
@@ -246,7 +247,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Position, value, nameof(Position));
+                this._Position = value;
             }
         }
         #endregion
@@ -258,17 +259,12 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Rotation, value, nameof(Rotation));
+                this._Rotation = value;
             }
         }
         #endregion
         #region DATADataTypeState
-        private PlacedNPC.DATADataType _DATADataTypeState;
-        public PlacedNPC.DATADataType DATADataTypeState
-        {
-            get => this._DATADataTypeState;
-            set => this.RaiseAndSetIfChanged(ref this._DATADataTypeState, value, nameof(DATADataTypeState));
-        }
+        public PlacedNPC.DATADataType DATADataTypeState { get; set; }
         PlacedNPC.DATADataType IPlacedNPCInternal.DATADataTypeState
         {
             get => this.DATADataTypeState;
@@ -2345,36 +2341,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Position ?? true)
             {
                 errorMask?.PushIndex((int)PlacedNPC_FieldIndex.Position);
-                try
-                {
-                    item.Position = rhs.Position;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Position = rhs.Position;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Rotation ?? true)
             {
                 errorMask?.PushIndex((int)PlacedNPC_FieldIndex.Rotation);
-                try
-                {
-                    item.Rotation = rhs.Rotation;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Rotation = rhs.Rotation;
+                errorMask?.PopIndex();
             }
         }
         

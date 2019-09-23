@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Name_IsSet
         {
             get => _hasBeenSetTracker[(int)SigilStone_FieldIndex.Name];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)SigilStone_FieldIndex.Name, nameof(Name_IsSet));
+            set => _hasBeenSetTracker[(int)SigilStone_FieldIndex.Name] = value;
         }
         bool ISigilStoneGetter.Name_IsSet => Name_IsSet;
         private String _Name;
@@ -72,7 +72,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Name, value, _hasBeenSetTracker, markSet, (int)SigilStone_FieldIndex.Name, nameof(Name), nameof(Name_IsSet));
+            _Name = value;
+            _hasBeenSetTracker[(int)SigilStone_FieldIndex.Name] = markSet;
         }
         public void Name_Unset()
         {
@@ -110,7 +111,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Icon_IsSet
         {
             get => _hasBeenSetTracker[(int)SigilStone_FieldIndex.Icon];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)SigilStone_FieldIndex.Icon, nameof(Icon_IsSet));
+            set => _hasBeenSetTracker[(int)SigilStone_FieldIndex.Icon] = value;
         }
         bool ISigilStoneGetter.Icon_IsSet => Icon_IsSet;
         private String _Icon;
@@ -125,7 +126,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Icon, value, _hasBeenSetTracker, markSet, (int)SigilStone_FieldIndex.Icon, nameof(Icon), nameof(Icon_IsSet));
+            _Icon = value;
+            _hasBeenSetTracker[(int)SigilStone_FieldIndex.Icon] = markSet;
         }
         public void Icon_Unset()
         {
@@ -160,7 +162,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Uses, value, nameof(Uses));
+                this._Uses = value;
             }
         }
         #endregion
@@ -172,7 +174,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Value, value, nameof(Value));
+                this._Value = value;
             }
         }
         #endregion
@@ -184,17 +186,12 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Weight, value, nameof(Weight));
+                this._Weight = value;
             }
         }
         #endregion
         #region DATADataTypeState
-        private SigilStone.DATADataType _DATADataTypeState;
-        public SigilStone.DATADataType DATADataTypeState
-        {
-            get => this._DATADataTypeState;
-            set => this.RaiseAndSetIfChanged(ref this._DATADataTypeState, value, nameof(DATADataTypeState));
-        }
+        public SigilStone.DATADataType DATADataTypeState { get; set; }
         SigilStone.DATADataType ISigilStoneInternal.DATADataTypeState
         {
             get => this.DATADataTypeState;
@@ -1975,53 +1972,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Uses ?? true)
             {
                 errorMask?.PushIndex((int)SigilStone_FieldIndex.Uses);
-                try
-                {
-                    item.Uses = rhs.Uses;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Uses = rhs.Uses;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Value ?? true)
             {
                 errorMask?.PushIndex((int)SigilStone_FieldIndex.Value);
-                try
-                {
-                    item.Value = rhs.Value;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Value = rhs.Value;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Weight ?? true)
             {
                 errorMask?.PushIndex((int)SigilStone_FieldIndex.Weight);
-                try
-                {
-                    item.Weight = rhs.Weight;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Weight = rhs.Weight;
+                errorMask?.PopIndex();
             }
         }
         

@@ -49,20 +49,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Skill
-        private ActorValue _Skill;
-        public ActorValue Skill
-        {
-            get => this._Skill;
-            set => this.RaiseAndSetIfChanged(ref this._Skill, value, nameof(Skill));
-        }
+        public ActorValue Skill { get; set; }
         #endregion
         #region Boost
-        private SByte _Boost;
-        public SByte Boost
-        {
-            get => this._Boost;
-            set => this.RaiseAndSetIfChanged(ref this._Boost, value, nameof(Boost));
-        }
+        public SByte Boost { get; set; }
         #endregion
 
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISkillBoostInternalGetter)rhs, include);
@@ -991,36 +981,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Skill ?? true)
             {
                 errorMask?.PushIndex((int)SkillBoost_FieldIndex.Skill);
-                try
-                {
-                    item.Skill = rhs.Skill;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Skill = rhs.Skill;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Boost ?? true)
             {
                 errorMask?.PushIndex((int)SkillBoost_FieldIndex.Boost);
-                try
-                {
-                    item.Boost = rhs.Boost;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Boost = rhs.Boost;
+                errorMask?.PopIndex();
             }
         }
         

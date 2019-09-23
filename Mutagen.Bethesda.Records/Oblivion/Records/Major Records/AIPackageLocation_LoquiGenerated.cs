@@ -50,12 +50,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Type
-        private AIPackageLocation.LocationType _Type;
-        public AIPackageLocation.LocationType Type
-        {
-            get => this._Type;
-            set => this.RaiseAndSetIfChanged(ref this._Type, value, nameof(Type));
-        }
+        public AIPackageLocation.LocationType Type { get; set; }
         #endregion
         #region LocationReference
         public IFormIDLink<IPlaced> LocationReference_Property { get; } = new FormIDLink<IPlaced>();
@@ -66,12 +61,7 @@ namespace Mutagen.Bethesda.Oblivion
         IFormIDLinkGetter<IPlacedGetter> IAIPackageLocationGetter.LocationReference_Property => this.LocationReference_Property;
         #endregion
         #region Radius
-        private Single _Radius;
-        public Single Radius
-        {
-            get => this._Radius;
-            set => this.RaiseAndSetIfChanged(ref this._Radius, value, nameof(Radius));
-        }
+        public Single Radius { get; set; }
         #endregion
 
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAIPackageLocationInternalGetter)rhs, include);
@@ -1076,19 +1066,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Type ?? true)
             {
                 errorMask?.PushIndex((int)AIPackageLocation_FieldIndex.Type);
-                try
-                {
-                    item.Type = rhs.Type;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Type = rhs.Type;
+                errorMask?.PopIndex();
             }
             if (copyMask?.LocationReference ?? true)
             {
@@ -1110,19 +1089,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Radius ?? true)
             {
                 errorMask?.PushIndex((int)AIPackageLocation_FieldIndex.Radius);
-                try
-                {
-                    item.Radius = rhs.Radius;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Radius = rhs.Radius;
+                errorMask?.PopIndex();
             }
         }
         

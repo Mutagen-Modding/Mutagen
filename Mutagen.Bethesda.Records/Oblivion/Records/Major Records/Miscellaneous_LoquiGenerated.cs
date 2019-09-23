@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Name_IsSet
         {
             get => _hasBeenSetTracker[(int)Miscellaneous_FieldIndex.Name];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Miscellaneous_FieldIndex.Name, nameof(Name_IsSet));
+            set => _hasBeenSetTracker[(int)Miscellaneous_FieldIndex.Name] = value;
         }
         bool IMiscellaneousGetter.Name_IsSet => Name_IsSet;
         private String _Name;
@@ -70,7 +70,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Name, value, _hasBeenSetTracker, markSet, (int)Miscellaneous_FieldIndex.Name, nameof(Name), nameof(Name_IsSet));
+            _Name = value;
+            _hasBeenSetTracker[(int)Miscellaneous_FieldIndex.Name] = markSet;
         }
         public void Name_Unset()
         {
@@ -108,7 +109,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Icon_IsSet
         {
             get => _hasBeenSetTracker[(int)Miscellaneous_FieldIndex.Icon];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Miscellaneous_FieldIndex.Icon, nameof(Icon_IsSet));
+            set => _hasBeenSetTracker[(int)Miscellaneous_FieldIndex.Icon] = value;
         }
         bool IMiscellaneousGetter.Icon_IsSet => Icon_IsSet;
         private String _Icon;
@@ -123,7 +124,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Icon, value, _hasBeenSetTracker, markSet, (int)Miscellaneous_FieldIndex.Icon, nameof(Icon), nameof(Icon_IsSet));
+            _Icon = value;
+            _hasBeenSetTracker[(int)Miscellaneous_FieldIndex.Icon] = markSet;
         }
         public void Icon_Unset()
         {
@@ -146,7 +148,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Value, value, nameof(Value));
+                this._Value = value;
             }
         }
         #endregion
@@ -158,17 +160,12 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Weight, value, nameof(Weight));
+                this._Weight = value;
             }
         }
         #endregion
         #region DATADataTypeState
-        private Miscellaneous.DATADataType _DATADataTypeState;
-        public Miscellaneous.DATADataType DATADataTypeState
-        {
-            get => this._DATADataTypeState;
-            set => this.RaiseAndSetIfChanged(ref this._DATADataTypeState, value, nameof(DATADataTypeState));
-        }
+        public Miscellaneous.DATADataType DATADataTypeState { get; set; }
         Miscellaneous.DATADataType IMiscellaneousInternal.DATADataTypeState
         {
             get => this.DATADataTypeState;
@@ -1791,36 +1788,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Value ?? true)
             {
                 errorMask?.PushIndex((int)Miscellaneous_FieldIndex.Value);
-                try
-                {
-                    item.Value = rhs.Value;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Value = rhs.Value;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Weight ?? true)
             {
                 errorMask?.PushIndex((int)Miscellaneous_FieldIndex.Weight);
-                try
-                {
-                    item.Weight = rhs.Weight;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Weight = rhs.Weight;
+                errorMask?.PopIndex();
             }
         }
         

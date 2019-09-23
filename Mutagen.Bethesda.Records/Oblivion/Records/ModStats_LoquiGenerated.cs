@@ -49,28 +49,13 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Version
-        private Single _Version;
-        public Single Version
-        {
-            get => this._Version;
-            set => this.RaiseAndSetIfChanged(ref this._Version, value, nameof(Version));
-        }
+        public Single Version { get; set; }
         #endregion
         #region NumRecords
-        private Int32 _NumRecords;
-        public Int32 NumRecords
-        {
-            get => this._NumRecords;
-            set => this.RaiseAndSetIfChanged(ref this._NumRecords, value, nameof(NumRecords));
-        }
+        public Int32 NumRecords { get; set; }
         #endregion
         #region NextObjectID
-        private UInt32 _NextObjectID;
-        public UInt32 NextObjectID
-        {
-            get => this._NextObjectID;
-            set => this.RaiseAndSetIfChanged(ref this._NextObjectID, value, nameof(NextObjectID));
-        }
+        public UInt32 NextObjectID { get; set; }
         #endregion
 
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IModStatsInternalGetter)rhs, include);
@@ -1043,53 +1028,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Version ?? true)
             {
                 errorMask?.PushIndex((int)ModStats_FieldIndex.Version);
-                try
-                {
-                    item.Version = rhs.Version;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Version = rhs.Version;
+                errorMask?.PopIndex();
             }
             if (copyMask?.NumRecords ?? true)
             {
                 errorMask?.PushIndex((int)ModStats_FieldIndex.NumRecords);
-                try
-                {
-                    item.NumRecords = rhs.NumRecords;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.NumRecords = rhs.NumRecords;
+                errorMask?.PopIndex();
             }
             if (copyMask?.NextObjectID ?? true)
             {
                 errorMask?.PushIndex((int)ModStats_FieldIndex.NextObjectID);
-                try
-                {
-                    item.NextObjectID = rhs.NextObjectID;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.NextObjectID = rhs.NextObjectID;
+                errorMask?.PopIndex();
             }
         }
         

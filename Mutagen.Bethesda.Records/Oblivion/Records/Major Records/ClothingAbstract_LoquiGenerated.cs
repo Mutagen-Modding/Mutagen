@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Name_IsSet
         {
             get => _hasBeenSetTracker[(int)ClothingAbstract_FieldIndex.Name];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)ClothingAbstract_FieldIndex.Name, nameof(Name_IsSet));
+            set => _hasBeenSetTracker[(int)ClothingAbstract_FieldIndex.Name] = value;
         }
         bool IClothingAbstractGetter.Name_IsSet => Name_IsSet;
         private String _Name;
@@ -70,7 +70,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Name, value, _hasBeenSetTracker, markSet, (int)ClothingAbstract_FieldIndex.Name, nameof(Name), nameof(Name_IsSet));
+            _Name = value;
+            _hasBeenSetTracker[(int)ClothingAbstract_FieldIndex.Name] = markSet;
         }
         public void Name_Unset()
         {
@@ -97,7 +98,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool EnchantmentPoints_IsSet
         {
             get => _hasBeenSetTracker[(int)ClothingAbstract_FieldIndex.EnchantmentPoints];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)ClothingAbstract_FieldIndex.EnchantmentPoints, nameof(EnchantmentPoints_IsSet));
+            set => _hasBeenSetTracker[(int)ClothingAbstract_FieldIndex.EnchantmentPoints] = value;
         }
         bool IClothingAbstractGetter.EnchantmentPoints_IsSet => EnchantmentPoints_IsSet;
         private UInt16 _EnchantmentPoints;
@@ -112,7 +113,8 @@ namespace Mutagen.Bethesda.Oblivion
             UInt16 value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _EnchantmentPoints, value, _hasBeenSetTracker, markSet, (int)ClothingAbstract_FieldIndex.EnchantmentPoints, nameof(EnchantmentPoints), nameof(EnchantmentPoints_IsSet));
+            _EnchantmentPoints = value;
+            _hasBeenSetTracker[(int)ClothingAbstract_FieldIndex.EnchantmentPoints] = markSet;
         }
         public void EnchantmentPoints_Unset()
         {
@@ -127,7 +129,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.BMDTDataTypeState |= BMDTDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._BipedFlags, value, nameof(BipedFlags));
+                this._BipedFlags = value;
             }
         }
         #endregion
@@ -139,7 +141,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.BMDTDataTypeState |= BMDTDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
+                this._Flags = value;
             }
         }
         #endregion
@@ -201,7 +203,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool MaleIcon_IsSet
         {
             get => _hasBeenSetTracker[(int)ClothingAbstract_FieldIndex.MaleIcon];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)ClothingAbstract_FieldIndex.MaleIcon, nameof(MaleIcon_IsSet));
+            set => _hasBeenSetTracker[(int)ClothingAbstract_FieldIndex.MaleIcon] = value;
         }
         bool IClothingAbstractGetter.MaleIcon_IsSet => MaleIcon_IsSet;
         private String _MaleIcon;
@@ -216,7 +218,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _MaleIcon, value, _hasBeenSetTracker, markSet, (int)ClothingAbstract_FieldIndex.MaleIcon, nameof(MaleIcon), nameof(MaleIcon_IsSet));
+            _MaleIcon = value;
+            _hasBeenSetTracker[(int)ClothingAbstract_FieldIndex.MaleIcon] = markSet;
         }
         public void MaleIcon_Unset()
         {
@@ -281,7 +284,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool FemaleIcon_IsSet
         {
             get => _hasBeenSetTracker[(int)ClothingAbstract_FieldIndex.FemaleIcon];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)ClothingAbstract_FieldIndex.FemaleIcon, nameof(FemaleIcon_IsSet));
+            set => _hasBeenSetTracker[(int)ClothingAbstract_FieldIndex.FemaleIcon] = value;
         }
         bool IClothingAbstractGetter.FemaleIcon_IsSet => FemaleIcon_IsSet;
         private String _FemaleIcon;
@@ -296,7 +299,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _FemaleIcon, value, _hasBeenSetTracker, markSet, (int)ClothingAbstract_FieldIndex.FemaleIcon, nameof(FemaleIcon), nameof(FemaleIcon_IsSet));
+            _FemaleIcon = value;
+            _hasBeenSetTracker[(int)ClothingAbstract_FieldIndex.FemaleIcon] = markSet;
         }
         public void FemaleIcon_Unset()
         {
@@ -304,12 +308,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region BMDTDataTypeState
-        private ClothingAbstract.BMDTDataType _BMDTDataTypeState;
-        public ClothingAbstract.BMDTDataType BMDTDataTypeState
-        {
-            get => this._BMDTDataTypeState;
-            set => this.RaiseAndSetIfChanged(ref this._BMDTDataTypeState, value, nameof(BMDTDataTypeState));
-        }
+        public ClothingAbstract.BMDTDataType BMDTDataTypeState { get; set; }
         ClothingAbstract.BMDTDataType IClothingAbstractInternal.BMDTDataTypeState
         {
             get => this.BMDTDataTypeState;
@@ -2260,36 +2259,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.BipedFlags ?? true)
             {
                 errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.BipedFlags);
-                try
-                {
-                    item.BipedFlags = rhs.BipedFlags;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.BipedFlags = rhs.BipedFlags;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Flags ?? true)
             {
                 errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.Flags);
-                try
-                {
-                    item.Flags = rhs.Flags;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Flags = rhs.Flags;
+                errorMask?.PopIndex();
             }
             if (copyMask?.MaleBipedModel.Overall != CopyOption.Skip)
             {

@@ -58,20 +58,10 @@ namespace Mutagen.Bethesda.Oblivion
         IFormIDLinkGetter<IPlacedGetter> ITeleportDestinationGetter.Destination_Property => this.Destination_Property;
         #endregion
         #region Position
-        private P3Float _Position;
-        public P3Float Position
-        {
-            get => this._Position;
-            set => this.RaiseAndSetIfChanged(ref this._Position, value, nameof(Position));
-        }
+        public P3Float Position { get; set; }
         #endregion
         #region Rotation
-        private P3Float _Rotation;
-        public P3Float Rotation
-        {
-            get => this._Rotation;
-            set => this.RaiseAndSetIfChanged(ref this._Rotation, value, nameof(Rotation));
-        }
+        public P3Float Rotation { get; set; }
         #endregion
 
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ITeleportDestinationInternalGetter)rhs, include);
@@ -1093,36 +1083,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Position ?? true)
             {
                 errorMask?.PushIndex((int)TeleportDestination_FieldIndex.Position);
-                try
-                {
-                    item.Position = rhs.Position;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Position = rhs.Position;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Rotation ?? true)
             {
                 errorMask?.PushIndex((int)TeleportDestination_FieldIndex.Rotation);
-                try
-                {
-                    item.Rotation = rhs.Rotation;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Rotation = rhs.Rotation;
+                errorMask?.PopIndex();
             }
         }
         

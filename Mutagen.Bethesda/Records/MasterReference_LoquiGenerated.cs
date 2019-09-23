@@ -48,18 +48,13 @@ namespace Mutagen.Bethesda
         #endregion
 
         #region Master
-        private ModKey _Master;
-        public ModKey Master
-        {
-            get => this._Master;
-            set => this.RaiseAndSetIfChanged(ref this._Master, value, nameof(Master));
-        }
+        public ModKey Master { get; set; }
         #endregion
         #region FileSize
         public bool FileSize_IsSet
         {
             get => _hasBeenSetTracker[(int)MasterReference_FieldIndex.FileSize];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)MasterReference_FieldIndex.FileSize, nameof(FileSize_IsSet));
+            set => _hasBeenSetTracker[(int)MasterReference_FieldIndex.FileSize] = value;
         }
         bool IMasterReferenceGetter.FileSize_IsSet => FileSize_IsSet;
         private UInt64 _FileSize;
@@ -74,7 +69,8 @@ namespace Mutagen.Bethesda
             UInt64 value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _FileSize, value, _hasBeenSetTracker, markSet, (int)MasterReference_FieldIndex.FileSize, nameof(FileSize), nameof(FileSize_IsSet));
+            _FileSize = value;
+            _hasBeenSetTracker[(int)MasterReference_FieldIndex.FileSize] = markSet;
         }
         public void FileSize_Unset()
         {
@@ -1058,19 +1054,8 @@ namespace Mutagen.Bethesda.Internals
             if (copyMask?.Master ?? true)
             {
                 errorMask?.PushIndex((int)MasterReference_FieldIndex.Master);
-                try
-                {
-                    item.Master = rhs.Master;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Master = rhs.Master;
+                errorMask?.PopIndex();
             }
             if (copyMask?.FileSize ?? true)
             {

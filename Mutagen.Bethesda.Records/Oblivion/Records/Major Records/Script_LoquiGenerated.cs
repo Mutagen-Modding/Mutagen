@@ -45,7 +45,6 @@ namespace Mutagen.Bethesda.Oblivion
         #region Ctor
         protected Script()
         {
-            _hasBeenSetTracker[(int)Script_FieldIndex.Fields] = true;
             CustomCtor();
         }
         partial void CustomCtor();

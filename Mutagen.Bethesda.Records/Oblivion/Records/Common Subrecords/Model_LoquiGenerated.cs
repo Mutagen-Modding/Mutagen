@@ -49,20 +49,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region File
-        private String _File;
-        public String File
-        {
-            get => this._File;
-            set => this.RaiseAndSetIfChanged(ref this._File, value, nameof(File));
-        }
+        public String File { get; set; }
         #endregion
         #region BoundRadius
-        private Single _BoundRadius;
-        public Single BoundRadius
-        {
-            get => this._BoundRadius;
-            set => this.RaiseAndSetIfChanged(ref this._BoundRadius, value, nameof(BoundRadius));
-        }
+        public Single BoundRadius { get; set; }
         #endregion
         #region Hashes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1129,36 +1119,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.File ?? true)
             {
                 errorMask?.PushIndex((int)Model_FieldIndex.File);
-                try
-                {
-                    item.File = rhs.File;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.File = rhs.File;
+                errorMask?.PopIndex();
             }
             if (copyMask?.BoundRadius ?? true)
             {
                 errorMask?.PushIndex((int)Model_FieldIndex.BoundRadius);
-                try
-                {
-                    item.BoundRadius = rhs.BoundRadius;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.BoundRadius = rhs.BoundRadius;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Hashes ?? true)
             {

@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Texture_IsSet
         {
             get => _hasBeenSetTracker[(int)Water_FieldIndex.Texture];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Water_FieldIndex.Texture, nameof(Texture_IsSet));
+            set => _hasBeenSetTracker[(int)Water_FieldIndex.Texture] = value;
         }
         bool IWaterGetter.Texture_IsSet => Texture_IsSet;
         private String _Texture;
@@ -71,7 +71,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Texture, value, _hasBeenSetTracker, markSet, (int)Water_FieldIndex.Texture, nameof(Texture), nameof(Texture_IsSet));
+            _Texture = value;
+            _hasBeenSetTracker[(int)Water_FieldIndex.Texture] = markSet;
         }
         public void Texture_Unset()
         {
@@ -82,7 +83,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Opacity_IsSet
         {
             get => _hasBeenSetTracker[(int)Water_FieldIndex.Opacity];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Water_FieldIndex.Opacity, nameof(Opacity_IsSet));
+            set => _hasBeenSetTracker[(int)Water_FieldIndex.Opacity] = value;
         }
         bool IWaterGetter.Opacity_IsSet => Opacity_IsSet;
         private Byte _Opacity;
@@ -97,7 +98,8 @@ namespace Mutagen.Bethesda.Oblivion
             Byte value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Opacity, value, _hasBeenSetTracker, markSet, (int)Water_FieldIndex.Opacity, nameof(Opacity), nameof(Opacity_IsSet));
+            _Opacity = value;
+            _hasBeenSetTracker[(int)Water_FieldIndex.Opacity] = markSet;
         }
         public void Opacity_Unset()
         {
@@ -108,7 +110,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Flags_IsSet
         {
             get => _hasBeenSetTracker[(int)Water_FieldIndex.Flags];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Water_FieldIndex.Flags, nameof(Flags_IsSet));
+            set => _hasBeenSetTracker[(int)Water_FieldIndex.Flags] = value;
         }
         bool IWaterGetter.Flags_IsSet => Flags_IsSet;
         private Water.Flag _Flags;
@@ -123,7 +125,8 @@ namespace Mutagen.Bethesda.Oblivion
             Water.Flag value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Flags, value, _hasBeenSetTracker, markSet, (int)Water_FieldIndex.Flags, nameof(Flags), nameof(Flags_IsSet));
+            _Flags = value;
+            _hasBeenSetTracker[(int)Water_FieldIndex.Flags] = markSet;
         }
         public void Flags_Unset()
         {
@@ -134,7 +137,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool MaterialID_IsSet
         {
             get => _hasBeenSetTracker[(int)Water_FieldIndex.MaterialID];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Water_FieldIndex.MaterialID, nameof(MaterialID_IsSet));
+            set => _hasBeenSetTracker[(int)Water_FieldIndex.MaterialID] = value;
         }
         bool IWaterGetter.MaterialID_IsSet => MaterialID_IsSet;
         private String _MaterialID;
@@ -149,7 +152,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _MaterialID, value, _hasBeenSetTracker, markSet, (int)Water_FieldIndex.MaterialID, nameof(MaterialID), nameof(MaterialID_IsSet));
+            _MaterialID = value;
+            _hasBeenSetTracker[(int)Water_FieldIndex.MaterialID] = markSet;
         }
         public void MaterialID_Unset()
         {
@@ -173,7 +177,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.DATADataTypeState |= DATADataType.Has;
                 this.DATADataTypeState &= ~DATADataType.Break0;
-                this.RaiseAndSetIfChanged(ref this._WindVelocity, value, nameof(WindVelocity));
+                this._WindVelocity = value;
             }
         }
         #endregion
@@ -186,7 +190,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.DATADataTypeState |= DATADataType.Has;
                 this.DATADataTypeState &= ~DATADataType.Break0;
-                this.RaiseAndSetIfChanged(ref this._WindDirection, value, nameof(WindDirection));
+                this._WindDirection = value;
             }
         }
         #endregion
@@ -199,7 +203,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.DATADataTypeState |= DATADataType.Has;
                 this.DATADataTypeState &= ~DATADataType.Break0;
-                this.RaiseAndSetIfChanged(ref this._WaveAmplitude, value, nameof(WaveAmplitude));
+                this._WaveAmplitude = value;
             }
         }
         #endregion
@@ -212,7 +216,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.DATADataTypeState |= DATADataType.Has;
                 this.DATADataTypeState &= ~DATADataType.Break0;
-                this.RaiseAndSetIfChanged(ref this._WaveFrequency, value, nameof(WaveFrequency));
+                this._WaveFrequency = value;
             }
         }
         #endregion
@@ -225,7 +229,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.DATADataTypeState |= DATADataType.Has;
                 this.DATADataTypeState &= ~DATADataType.Break0;
-                this.RaiseAndSetIfChanged(ref this._SunPower, value, nameof(SunPower));
+                this._SunPower = value;
             }
         }
         #endregion
@@ -238,7 +242,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.DATADataTypeState |= DATADataType.Has;
                 this.DATADataTypeState &= ~DATADataType.Break0;
-                this.RaiseAndSetIfChanged(ref this._ReflectivityAmount, value, nameof(ReflectivityAmount));
+                this._ReflectivityAmount = value;
             }
         }
         #endregion
@@ -251,7 +255,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.DATADataTypeState |= DATADataType.Has;
                 this.DATADataTypeState &= ~DATADataType.Break0;
-                this.RaiseAndSetIfChanged(ref this._FresnelAmount, value, nameof(FresnelAmount));
+                this._FresnelAmount = value;
             }
         }
         #endregion
@@ -264,7 +268,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.DATADataTypeState |= DATADataType.Has;
                 this.DATADataTypeState &= ~DATADataType.Break0;
-                this.RaiseAndSetIfChanged(ref this._ScrollXSpeed, value, nameof(ScrollXSpeed));
+                this._ScrollXSpeed = value;
             }
         }
         #endregion
@@ -277,7 +281,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.DATADataTypeState |= DATADataType.Has;
                 this.DATADataTypeState &= ~DATADataType.Break0;
-                this.RaiseAndSetIfChanged(ref this._ScrollYSpeed, value, nameof(ScrollYSpeed));
+                this._ScrollYSpeed = value;
             }
         }
         #endregion
@@ -290,7 +294,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.DATADataTypeState |= DATADataType.Has;
                 this.DATADataTypeState &= ~DATADataType.Break0;
-                this.RaiseAndSetIfChanged(ref this._FogDistanceNearPlane, value, nameof(FogDistanceNearPlane));
+                this._FogDistanceNearPlane = value;
             }
         }
         #endregion
@@ -304,7 +308,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.DATADataTypeState |= DATADataType.Has;
                 this.DATADataTypeState &= ~DATADataType.Break0;
                 this.DATADataTypeState &= ~DATADataType.Break1;
-                this.RaiseAndSetIfChanged(ref this._FogDistanceFarPlane, value, nameof(FogDistanceFarPlane));
+                this._FogDistanceFarPlane = value;
             }
         }
         #endregion
@@ -318,7 +322,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.DATADataTypeState |= DATADataType.Has;
                 this.DATADataTypeState &= ~DATADataType.Break0;
                 this.DATADataTypeState &= ~DATADataType.Break1;
-                this.RaiseAndSetIfChanged(ref this._ShallowColor, value, nameof(ShallowColor));
+                this._ShallowColor = value;
             }
         }
         #endregion
@@ -332,7 +336,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.DATADataTypeState |= DATADataType.Has;
                 this.DATADataTypeState &= ~DATADataType.Break0;
                 this.DATADataTypeState &= ~DATADataType.Break1;
-                this.RaiseAndSetIfChanged(ref this._DeepColor, value, nameof(DeepColor));
+                this._DeepColor = value;
             }
         }
         #endregion
@@ -346,7 +350,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.DATADataTypeState |= DATADataType.Has;
                 this.DATADataTypeState &= ~DATADataType.Break0;
                 this.DATADataTypeState &= ~DATADataType.Break1;
-                this.RaiseAndSetIfChanged(ref this._ReflectionColor, value, nameof(ReflectionColor));
+                this._ReflectionColor = value;
             }
         }
         #endregion
@@ -360,7 +364,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.DATADataTypeState |= DATADataType.Has;
                 this.DATADataTypeState &= ~DATADataType.Break0;
                 this.DATADataTypeState &= ~DATADataType.Break1;
-                this.RaiseAndSetIfChanged(ref this._TextureBlend, value, nameof(TextureBlend));
+                this._TextureBlend = value;
             }
         }
         #endregion
@@ -375,7 +379,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.DATADataTypeState &= ~DATADataType.Break0;
                 this.DATADataTypeState &= ~DATADataType.Break1;
                 this.DATADataTypeState &= ~DATADataType.Break2;
-                this.RaiseAndSetIfChanged(ref this._RainSimulatorForce, value, nameof(RainSimulatorForce));
+                this._RainSimulatorForce = value;
             }
         }
         #endregion
@@ -390,7 +394,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.DATADataTypeState &= ~DATADataType.Break0;
                 this.DATADataTypeState &= ~DATADataType.Break1;
                 this.DATADataTypeState &= ~DATADataType.Break2;
-                this.RaiseAndSetIfChanged(ref this._RainSimulatorVelocity, value, nameof(RainSimulatorVelocity));
+                this._RainSimulatorVelocity = value;
             }
         }
         #endregion
@@ -405,7 +409,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.DATADataTypeState &= ~DATADataType.Break0;
                 this.DATADataTypeState &= ~DATADataType.Break1;
                 this.DATADataTypeState &= ~DATADataType.Break2;
-                this.RaiseAndSetIfChanged(ref this._RainSimulatorFalloff, value, nameof(RainSimulatorFalloff));
+                this._RainSimulatorFalloff = value;
             }
         }
         #endregion
@@ -420,7 +424,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.DATADataTypeState &= ~DATADataType.Break0;
                 this.DATADataTypeState &= ~DATADataType.Break1;
                 this.DATADataTypeState &= ~DATADataType.Break2;
-                this.RaiseAndSetIfChanged(ref this._RainSimulatorDampner, value, nameof(RainSimulatorDampner));
+                this._RainSimulatorDampner = value;
             }
         }
         #endregion
@@ -435,7 +439,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.DATADataTypeState &= ~DATADataType.Break0;
                 this.DATADataTypeState &= ~DATADataType.Break1;
                 this.DATADataTypeState &= ~DATADataType.Break2;
-                this.RaiseAndSetIfChanged(ref this._RainSimulatorStartingSize, value, nameof(RainSimulatorStartingSize));
+                this._RainSimulatorStartingSize = value;
             }
         }
         #endregion
@@ -450,7 +454,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.DATADataTypeState &= ~DATADataType.Break0;
                 this.DATADataTypeState &= ~DATADataType.Break1;
                 this.DATADataTypeState &= ~DATADataType.Break2;
-                this.RaiseAndSetIfChanged(ref this._DisplacementSimulatorForce, value, nameof(DisplacementSimulatorForce));
+                this._DisplacementSimulatorForce = value;
             }
         }
         #endregion
@@ -466,7 +470,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.DATADataTypeState &= ~DATADataType.Break1;
                 this.DATADataTypeState &= ~DATADataType.Break2;
                 this.DATADataTypeState &= ~DATADataType.Break3;
-                this.RaiseAndSetIfChanged(ref this._DisplacementSimulatorVelocity, value, nameof(DisplacementSimulatorVelocity));
+                this._DisplacementSimulatorVelocity = value;
             }
         }
         #endregion
@@ -482,7 +486,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.DATADataTypeState &= ~DATADataType.Break1;
                 this.DATADataTypeState &= ~DATADataType.Break2;
                 this.DATADataTypeState &= ~DATADataType.Break3;
-                this.RaiseAndSetIfChanged(ref this._DisplacementSimulatorFalloff, value, nameof(DisplacementSimulatorFalloff));
+                this._DisplacementSimulatorFalloff = value;
             }
         }
         #endregion
@@ -498,7 +502,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.DATADataTypeState &= ~DATADataType.Break1;
                 this.DATADataTypeState &= ~DATADataType.Break2;
                 this.DATADataTypeState &= ~DATADataType.Break3;
-                this.RaiseAndSetIfChanged(ref this._DisplacementSimulatorDampner, value, nameof(DisplacementSimulatorDampner));
+                this._DisplacementSimulatorDampner = value;
             }
         }
         #endregion
@@ -514,7 +518,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.DATADataTypeState &= ~DATADataType.Break1;
                 this.DATADataTypeState &= ~DATADataType.Break2;
                 this.DATADataTypeState &= ~DATADataType.Break3;
-                this.RaiseAndSetIfChanged(ref this._DisplacementSimulatorStartingSize, value, nameof(DisplacementSimulatorStartingSize));
+                this._DisplacementSimulatorStartingSize = value;
             }
         }
         #endregion
@@ -530,7 +534,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.DATADataTypeState &= ~DATADataType.Break1;
                 this.DATADataTypeState &= ~DATADataType.Break2;
                 this.DATADataTypeState &= ~DATADataType.Break3;
-                this.RaiseAndSetIfChanged(ref this._Damage, value, nameof(Damage));
+                this._Damage = value;
             }
         }
         #endregion
@@ -562,12 +566,7 @@ namespace Mutagen.Bethesda.Oblivion
         IRelatedWatersInternalGetter IWaterGetter.RelatedWaters => this.RelatedWaters;
         #endregion
         #region DATADataTypeState
-        private Water.DATADataType _DATADataTypeState;
-        public Water.DATADataType DATADataTypeState
-        {
-            get => this._DATADataTypeState;
-            set => this.RaiseAndSetIfChanged(ref this._DATADataTypeState, value, nameof(DATADataTypeState));
-        }
+        public Water.DATADataType DATADataTypeState { get; set; }
         Water.DATADataType IWaterInternal.DATADataTypeState
         {
             get => this.DATADataTypeState;
@@ -3387,444 +3386,158 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.WindVelocity ?? true)
             {
                 errorMask?.PushIndex((int)Water_FieldIndex.WindVelocity);
-                try
-                {
-                    item.WindVelocity = rhs.WindVelocity;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.WindVelocity = rhs.WindVelocity;
+                errorMask?.PopIndex();
             }
             if (copyMask?.WindDirection ?? true)
             {
                 errorMask?.PushIndex((int)Water_FieldIndex.WindDirection);
-                try
-                {
-                    item.WindDirection = rhs.WindDirection;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.WindDirection = rhs.WindDirection;
+                errorMask?.PopIndex();
             }
             if (copyMask?.WaveAmplitude ?? true)
             {
                 errorMask?.PushIndex((int)Water_FieldIndex.WaveAmplitude);
-                try
-                {
-                    item.WaveAmplitude = rhs.WaveAmplitude;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.WaveAmplitude = rhs.WaveAmplitude;
+                errorMask?.PopIndex();
             }
             if (copyMask?.WaveFrequency ?? true)
             {
                 errorMask?.PushIndex((int)Water_FieldIndex.WaveFrequency);
-                try
-                {
-                    item.WaveFrequency = rhs.WaveFrequency;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.WaveFrequency = rhs.WaveFrequency;
+                errorMask?.PopIndex();
             }
             if (copyMask?.SunPower ?? true)
             {
                 errorMask?.PushIndex((int)Water_FieldIndex.SunPower);
-                try
-                {
-                    item.SunPower = rhs.SunPower;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.SunPower = rhs.SunPower;
+                errorMask?.PopIndex();
             }
             if (copyMask?.ReflectivityAmount ?? true)
             {
                 errorMask?.PushIndex((int)Water_FieldIndex.ReflectivityAmount);
-                try
-                {
-                    item.ReflectivityAmount = rhs.ReflectivityAmount;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.ReflectivityAmount = rhs.ReflectivityAmount;
+                errorMask?.PopIndex();
             }
             if (copyMask?.FresnelAmount ?? true)
             {
                 errorMask?.PushIndex((int)Water_FieldIndex.FresnelAmount);
-                try
-                {
-                    item.FresnelAmount = rhs.FresnelAmount;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.FresnelAmount = rhs.FresnelAmount;
+                errorMask?.PopIndex();
             }
             if (copyMask?.ScrollXSpeed ?? true)
             {
                 errorMask?.PushIndex((int)Water_FieldIndex.ScrollXSpeed);
-                try
-                {
-                    item.ScrollXSpeed = rhs.ScrollXSpeed;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.ScrollXSpeed = rhs.ScrollXSpeed;
+                errorMask?.PopIndex();
             }
             if (copyMask?.ScrollYSpeed ?? true)
             {
                 errorMask?.PushIndex((int)Water_FieldIndex.ScrollYSpeed);
-                try
-                {
-                    item.ScrollYSpeed = rhs.ScrollYSpeed;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.ScrollYSpeed = rhs.ScrollYSpeed;
+                errorMask?.PopIndex();
             }
             if (copyMask?.FogDistanceNearPlane ?? true)
             {
                 errorMask?.PushIndex((int)Water_FieldIndex.FogDistanceNearPlane);
-                try
-                {
-                    item.FogDistanceNearPlane = rhs.FogDistanceNearPlane;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.FogDistanceNearPlane = rhs.FogDistanceNearPlane;
+                errorMask?.PopIndex();
             }
             if (copyMask?.FogDistanceFarPlane ?? true)
             {
                 errorMask?.PushIndex((int)Water_FieldIndex.FogDistanceFarPlane);
-                try
-                {
-                    item.FogDistanceFarPlane = rhs.FogDistanceFarPlane;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.FogDistanceFarPlane = rhs.FogDistanceFarPlane;
+                errorMask?.PopIndex();
             }
             if (copyMask?.ShallowColor ?? true)
             {
                 errorMask?.PushIndex((int)Water_FieldIndex.ShallowColor);
-                try
-                {
-                    item.ShallowColor = rhs.ShallowColor;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.ShallowColor = rhs.ShallowColor;
+                errorMask?.PopIndex();
             }
             if (copyMask?.DeepColor ?? true)
             {
                 errorMask?.PushIndex((int)Water_FieldIndex.DeepColor);
-                try
-                {
-                    item.DeepColor = rhs.DeepColor;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.DeepColor = rhs.DeepColor;
+                errorMask?.PopIndex();
             }
             if (copyMask?.ReflectionColor ?? true)
             {
                 errorMask?.PushIndex((int)Water_FieldIndex.ReflectionColor);
-                try
-                {
-                    item.ReflectionColor = rhs.ReflectionColor;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.ReflectionColor = rhs.ReflectionColor;
+                errorMask?.PopIndex();
             }
             if (copyMask?.TextureBlend ?? true)
             {
                 errorMask?.PushIndex((int)Water_FieldIndex.TextureBlend);
-                try
-                {
-                    item.TextureBlend = rhs.TextureBlend;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.TextureBlend = rhs.TextureBlend;
+                errorMask?.PopIndex();
             }
             if (copyMask?.RainSimulatorForce ?? true)
             {
                 errorMask?.PushIndex((int)Water_FieldIndex.RainSimulatorForce);
-                try
-                {
-                    item.RainSimulatorForce = rhs.RainSimulatorForce;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.RainSimulatorForce = rhs.RainSimulatorForce;
+                errorMask?.PopIndex();
             }
             if (copyMask?.RainSimulatorVelocity ?? true)
             {
                 errorMask?.PushIndex((int)Water_FieldIndex.RainSimulatorVelocity);
-                try
-                {
-                    item.RainSimulatorVelocity = rhs.RainSimulatorVelocity;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.RainSimulatorVelocity = rhs.RainSimulatorVelocity;
+                errorMask?.PopIndex();
             }
             if (copyMask?.RainSimulatorFalloff ?? true)
             {
                 errorMask?.PushIndex((int)Water_FieldIndex.RainSimulatorFalloff);
-                try
-                {
-                    item.RainSimulatorFalloff = rhs.RainSimulatorFalloff;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.RainSimulatorFalloff = rhs.RainSimulatorFalloff;
+                errorMask?.PopIndex();
             }
             if (copyMask?.RainSimulatorDampner ?? true)
             {
                 errorMask?.PushIndex((int)Water_FieldIndex.RainSimulatorDampner);
-                try
-                {
-                    item.RainSimulatorDampner = rhs.RainSimulatorDampner;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.RainSimulatorDampner = rhs.RainSimulatorDampner;
+                errorMask?.PopIndex();
             }
             if (copyMask?.RainSimulatorStartingSize ?? true)
             {
                 errorMask?.PushIndex((int)Water_FieldIndex.RainSimulatorStartingSize);
-                try
-                {
-                    item.RainSimulatorStartingSize = rhs.RainSimulatorStartingSize;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.RainSimulatorStartingSize = rhs.RainSimulatorStartingSize;
+                errorMask?.PopIndex();
             }
             if (copyMask?.DisplacementSimulatorForce ?? true)
             {
                 errorMask?.PushIndex((int)Water_FieldIndex.DisplacementSimulatorForce);
-                try
-                {
-                    item.DisplacementSimulatorForce = rhs.DisplacementSimulatorForce;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.DisplacementSimulatorForce = rhs.DisplacementSimulatorForce;
+                errorMask?.PopIndex();
             }
             if (copyMask?.DisplacementSimulatorVelocity ?? true)
             {
                 errorMask?.PushIndex((int)Water_FieldIndex.DisplacementSimulatorVelocity);
-                try
-                {
-                    item.DisplacementSimulatorVelocity = rhs.DisplacementSimulatorVelocity;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.DisplacementSimulatorVelocity = rhs.DisplacementSimulatorVelocity;
+                errorMask?.PopIndex();
             }
             if (copyMask?.DisplacementSimulatorFalloff ?? true)
             {
                 errorMask?.PushIndex((int)Water_FieldIndex.DisplacementSimulatorFalloff);
-                try
-                {
-                    item.DisplacementSimulatorFalloff = rhs.DisplacementSimulatorFalloff;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.DisplacementSimulatorFalloff = rhs.DisplacementSimulatorFalloff;
+                errorMask?.PopIndex();
             }
             if (copyMask?.DisplacementSimulatorDampner ?? true)
             {
                 errorMask?.PushIndex((int)Water_FieldIndex.DisplacementSimulatorDampner);
-                try
-                {
-                    item.DisplacementSimulatorDampner = rhs.DisplacementSimulatorDampner;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.DisplacementSimulatorDampner = rhs.DisplacementSimulatorDampner;
+                errorMask?.PopIndex();
             }
             if (copyMask?.DisplacementSimulatorStartingSize ?? true)
             {
                 errorMask?.PushIndex((int)Water_FieldIndex.DisplacementSimulatorStartingSize);
-                try
-                {
-                    item.DisplacementSimulatorStartingSize = rhs.DisplacementSimulatorStartingSize;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.DisplacementSimulatorStartingSize = rhs.DisplacementSimulatorStartingSize;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Damage ?? true)
             {
                 errorMask?.PushIndex((int)Water_FieldIndex.Damage);
-                try
-                {
-                    item.Damage = rhs.Damage;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Damage = rhs.Damage;
+                errorMask?.PopIndex();
             }
             if (copyMask?.RelatedWaters.Overall != CopyOption.Skip)
             {

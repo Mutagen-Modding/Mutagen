@@ -51,76 +51,31 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region AmbientColor
-        private Color _AmbientColor;
-        public Color AmbientColor
-        {
-            get => this._AmbientColor;
-            set => this.RaiseAndSetIfChanged(ref this._AmbientColor, value, nameof(AmbientColor));
-        }
+        public Color AmbientColor { get; set; }
         #endregion
         #region DirectionalColor
-        private Color _DirectionalColor;
-        public Color DirectionalColor
-        {
-            get => this._DirectionalColor;
-            set => this.RaiseAndSetIfChanged(ref this._DirectionalColor, value, nameof(DirectionalColor));
-        }
+        public Color DirectionalColor { get; set; }
         #endregion
         #region FogColor
-        private Color _FogColor;
-        public Color FogColor
-        {
-            get => this._FogColor;
-            set => this.RaiseAndSetIfChanged(ref this._FogColor, value, nameof(FogColor));
-        }
+        public Color FogColor { get; set; }
         #endregion
         #region FogNear
-        private Single _FogNear;
-        public Single FogNear
-        {
-            get => this._FogNear;
-            set => this.RaiseAndSetIfChanged(ref this._FogNear, value, nameof(FogNear));
-        }
+        public Single FogNear { get; set; }
         #endregion
         #region FogFar
-        private Single _FogFar;
-        public Single FogFar
-        {
-            get => this._FogFar;
-            set => this.RaiseAndSetIfChanged(ref this._FogFar, value, nameof(FogFar));
-        }
+        public Single FogFar { get; set; }
         #endregion
         #region DirectionalRotationXY
-        private Int32 _DirectionalRotationXY;
-        public Int32 DirectionalRotationXY
-        {
-            get => this._DirectionalRotationXY;
-            set => this.RaiseAndSetIfChanged(ref this._DirectionalRotationXY, value, nameof(DirectionalRotationXY));
-        }
+        public Int32 DirectionalRotationXY { get; set; }
         #endregion
         #region DirectionalRotationZ
-        private Int32 _DirectionalRotationZ;
-        public Int32 DirectionalRotationZ
-        {
-            get => this._DirectionalRotationZ;
-            set => this.RaiseAndSetIfChanged(ref this._DirectionalRotationZ, value, nameof(DirectionalRotationZ));
-        }
+        public Int32 DirectionalRotationZ { get; set; }
         #endregion
         #region DirectionalFade
-        private Single _DirectionalFade;
-        public Single DirectionalFade
-        {
-            get => this._DirectionalFade;
-            set => this.RaiseAndSetIfChanged(ref this._DirectionalFade, value, nameof(DirectionalFade));
-        }
+        public Single DirectionalFade { get; set; }
         #endregion
         #region FogClipDistance
-        private Single _FogClipDistance;
-        public Single FogClipDistance
-        {
-            get => this._FogClipDistance;
-            set => this.RaiseAndSetIfChanged(ref this._FogClipDistance, value, nameof(FogClipDistance));
-        }
+        public Single FogClipDistance { get; set; }
         #endregion
 
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICellLightingInternalGetter)rhs, include);
@@ -1360,155 +1315,56 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.AmbientColor ?? true)
             {
                 errorMask?.PushIndex((int)CellLighting_FieldIndex.AmbientColor);
-                try
-                {
-                    item.AmbientColor = rhs.AmbientColor;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.AmbientColor = rhs.AmbientColor;
+                errorMask?.PopIndex();
             }
             if (copyMask?.DirectionalColor ?? true)
             {
                 errorMask?.PushIndex((int)CellLighting_FieldIndex.DirectionalColor);
-                try
-                {
-                    item.DirectionalColor = rhs.DirectionalColor;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.DirectionalColor = rhs.DirectionalColor;
+                errorMask?.PopIndex();
             }
             if (copyMask?.FogColor ?? true)
             {
                 errorMask?.PushIndex((int)CellLighting_FieldIndex.FogColor);
-                try
-                {
-                    item.FogColor = rhs.FogColor;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.FogColor = rhs.FogColor;
+                errorMask?.PopIndex();
             }
             if (copyMask?.FogNear ?? true)
             {
                 errorMask?.PushIndex((int)CellLighting_FieldIndex.FogNear);
-                try
-                {
-                    item.FogNear = rhs.FogNear;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.FogNear = rhs.FogNear;
+                errorMask?.PopIndex();
             }
             if (copyMask?.FogFar ?? true)
             {
                 errorMask?.PushIndex((int)CellLighting_FieldIndex.FogFar);
-                try
-                {
-                    item.FogFar = rhs.FogFar;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.FogFar = rhs.FogFar;
+                errorMask?.PopIndex();
             }
             if (copyMask?.DirectionalRotationXY ?? true)
             {
                 errorMask?.PushIndex((int)CellLighting_FieldIndex.DirectionalRotationXY);
-                try
-                {
-                    item.DirectionalRotationXY = rhs.DirectionalRotationXY;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.DirectionalRotationXY = rhs.DirectionalRotationXY;
+                errorMask?.PopIndex();
             }
             if (copyMask?.DirectionalRotationZ ?? true)
             {
                 errorMask?.PushIndex((int)CellLighting_FieldIndex.DirectionalRotationZ);
-                try
-                {
-                    item.DirectionalRotationZ = rhs.DirectionalRotationZ;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.DirectionalRotationZ = rhs.DirectionalRotationZ;
+                errorMask?.PopIndex();
             }
             if (copyMask?.DirectionalFade ?? true)
             {
                 errorMask?.PushIndex((int)CellLighting_FieldIndex.DirectionalFade);
-                try
-                {
-                    item.DirectionalFade = rhs.DirectionalFade;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.DirectionalFade = rhs.DirectionalFade;
+                errorMask?.PopIndex();
             }
             if (copyMask?.FogClipDistance ?? true)
             {
                 errorMask?.PushIndex((int)CellLighting_FieldIndex.FogClipDistance);
-                try
-                {
-                    item.FogClipDistance = rhs.FogClipDistance;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.FogClipDistance = rhs.FogClipDistance;
+                errorMask?.PopIndex();
             }
         }
         

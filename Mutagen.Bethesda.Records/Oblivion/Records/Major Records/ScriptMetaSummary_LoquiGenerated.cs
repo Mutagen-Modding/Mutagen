@@ -53,41 +53,21 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte[] Fluff
         {
             get => _Fluff;
-            set => this.RaiseAndSetIfChanged(ref _Fluff, value ?? new byte[4], nameof(Fluff));
+            set => this._Fluff = value ?? new byte[4];
         }
         ReadOnlySpan<Byte> IScriptMetaSummaryGetter.Fluff => this.Fluff;
         #endregion
         #region RefCount
-        private UInt32 _RefCount;
-        public UInt32 RefCount
-        {
-            get => this._RefCount;
-            set => this.RaiseAndSetIfChanged(ref this._RefCount, value, nameof(RefCount));
-        }
+        public UInt32 RefCount { get; set; }
         #endregion
         #region CompiledSize
-        private Int32 _CompiledSize;
-        public Int32 CompiledSize
-        {
-            get => this._CompiledSize;
-            protected set => this.RaiseAndSetIfChanged(ref this._CompiledSize, value, nameof(CompiledSize));
-        }
+        public Int32 CompiledSize { get; protected set; }
         #endregion
         #region VariableCount
-        private UInt32 _VariableCount;
-        public UInt32 VariableCount
-        {
-            get => this._VariableCount;
-            set => this.RaiseAndSetIfChanged(ref this._VariableCount, value, nameof(VariableCount));
-        }
+        public UInt32 VariableCount { get; set; }
         #endregion
         #region Type
-        private ScriptFields.ScriptType _Type;
-        public ScriptFields.ScriptType Type
-        {
-            get => this._Type;
-            set => this.RaiseAndSetIfChanged(ref this._Type, value, nameof(Type));
-        }
+        public ScriptFields.ScriptType Type { get; set; }
         #endregion
 
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IScriptMetaSummaryInternalGetter)rhs, include);
@@ -1158,70 +1138,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Fluff ?? true)
             {
                 errorMask?.PushIndex((int)ScriptMetaSummary_FieldIndex.Fluff);
-                try
-                {
-                    item.Fluff = rhs.Fluff;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Fluff = rhs.Fluff;
+                errorMask?.PopIndex();
             }
             if (copyMask?.RefCount ?? true)
             {
                 errorMask?.PushIndex((int)ScriptMetaSummary_FieldIndex.RefCount);
-                try
-                {
-                    item.RefCount = rhs.RefCount;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.RefCount = rhs.RefCount;
+                errorMask?.PopIndex();
             }
             if (copyMask?.VariableCount ?? true)
             {
                 errorMask?.PushIndex((int)ScriptMetaSummary_FieldIndex.VariableCount);
-                try
-                {
-                    item.VariableCount = rhs.VariableCount;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.VariableCount = rhs.VariableCount;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Type ?? true)
             {
                 errorMask?.PushIndex((int)ScriptMetaSummary_FieldIndex.Type);
-                try
-                {
-                    item.Type = rhs.Type;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Type = rhs.Type;
+                errorMask?.PopIndex();
             }
         }
         

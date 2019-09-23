@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Icon_IsSet
         {
             get => _hasBeenSetTracker[(int)LoadScreen_FieldIndex.Icon];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)LoadScreen_FieldIndex.Icon, nameof(Icon_IsSet));
+            set => _hasBeenSetTracker[(int)LoadScreen_FieldIndex.Icon] = value;
         }
         bool ILoadScreenGetter.Icon_IsSet => Icon_IsSet;
         private String _Icon;
@@ -71,7 +71,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Icon, value, _hasBeenSetTracker, markSet, (int)LoadScreen_FieldIndex.Icon, nameof(Icon), nameof(Icon_IsSet));
+            _Icon = value;
+            _hasBeenSetTracker[(int)LoadScreen_FieldIndex.Icon] = markSet;
         }
         public void Icon_Unset()
         {
@@ -82,7 +83,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Description_IsSet
         {
             get => _hasBeenSetTracker[(int)LoadScreen_FieldIndex.Description];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)LoadScreen_FieldIndex.Description, nameof(Description_IsSet));
+            set => _hasBeenSetTracker[(int)LoadScreen_FieldIndex.Description] = value;
         }
         bool ILoadScreenGetter.Description_IsSet => Description_IsSet;
         private String _Description;
@@ -97,7 +98,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Description, value, _hasBeenSetTracker, markSet, (int)LoadScreen_FieldIndex.Description, nameof(Description), nameof(Description_IsSet));
+            _Description = value;
+            _hasBeenSetTracker[(int)LoadScreen_FieldIndex.Description] = markSet;
         }
         public void Description_Unset()
         {

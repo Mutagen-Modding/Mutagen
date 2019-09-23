@@ -58,12 +58,7 @@ namespace Mutagen.Bethesda.Oblivion
         IFormIDLinkGetter<IRaceInternalGetter> IRaceRelationGetter.Race_Property => this.Race_Property;
         #endregion
         #region Modifier
-        private Int32 _Modifier;
-        public Int32 Modifier
-        {
-            get => this._Modifier;
-            set => this.RaiseAndSetIfChanged(ref this._Modifier, value, nameof(Modifier));
-        }
+        public Int32 Modifier { get; set; }
         #endregion
 
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRaceRelationInternalGetter)rhs, include);
@@ -1032,19 +1027,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Modifier ?? true)
             {
                 errorMask?.PushIndex((int)RaceRelation_FieldIndex.Modifier);
-                try
-                {
-                    item.Modifier = rhs.Modifier;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Modifier = rhs.Modifier;
+                errorMask?.PopIndex();
             }
         }
         

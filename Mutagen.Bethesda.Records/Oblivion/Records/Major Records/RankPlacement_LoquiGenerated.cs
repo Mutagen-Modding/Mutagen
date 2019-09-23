@@ -58,19 +58,14 @@ namespace Mutagen.Bethesda.Oblivion
         IFormIDLinkGetter<IFactionInternalGetter> IRankPlacementGetter.Faction_Property => this.Faction_Property;
         #endregion
         #region Rank
-        private Byte _Rank;
-        public Byte Rank
-        {
-            get => this._Rank;
-            set => this.RaiseAndSetIfChanged(ref this._Rank, value, nameof(Rank));
-        }
+        public Byte Rank { get; set; }
         #endregion
         #region Fluff
         private Byte[] _Fluff = new byte[3];
         public Byte[] Fluff
         {
             get => _Fluff;
-            set => this.RaiseAndSetIfChanged(ref _Fluff, value ?? new byte[3], nameof(Fluff));
+            set => this._Fluff = value ?? new byte[3];
         }
         ReadOnlySpan<Byte> IRankPlacementGetter.Fluff => this.Fluff;
         #endregion
@@ -1085,36 +1080,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Rank ?? true)
             {
                 errorMask?.PushIndex((int)RankPlacement_FieldIndex.Rank);
-                try
-                {
-                    item.Rank = rhs.Rank;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Rank = rhs.Rank;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Fluff ?? true)
             {
                 errorMask?.PushIndex((int)RankPlacement_FieldIndex.Fluff);
-                try
-                {
-                    item.Fluff = rhs.Fluff;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Fluff = rhs.Fluff;
+                errorMask?.PopIndex();
             }
         }
         

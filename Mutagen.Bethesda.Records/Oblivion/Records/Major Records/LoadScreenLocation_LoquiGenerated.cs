@@ -66,12 +66,7 @@ namespace Mutagen.Bethesda.Oblivion
         IFormIDLinkGetter<IWorldspaceInternalGetter> ILoadScreenLocationGetter.Indirect_Property => this.Indirect_Property;
         #endregion
         #region GridPoint
-        private P2Int16 _GridPoint;
-        public P2Int16 GridPoint
-        {
-            get => this._GridPoint;
-            set => this.RaiseAndSetIfChanged(ref this._GridPoint, value, nameof(GridPoint));
-        }
+        public P2Int16 GridPoint { get; set; }
         #endregion
 
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILoadScreenLocationInternalGetter)rhs, include);
@@ -1111,19 +1106,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.GridPoint ?? true)
             {
                 errorMask?.PushIndex((int)LoadScreenLocation_FieldIndex.GridPoint);
-                try
-                {
-                    item.GridPoint = rhs.GridPoint;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.GridPoint = rhs.GridPoint;
+                errorMask?.PopIndex();
             }
         }
         

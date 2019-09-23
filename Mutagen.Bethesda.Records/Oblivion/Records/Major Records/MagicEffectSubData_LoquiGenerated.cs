@@ -90,20 +90,10 @@ namespace Mutagen.Bethesda.Oblivion
         IFormIDLinkGetter<ISoundInternalGetter> IMagicEffectSubDataGetter.AreaSound_Property => this.AreaSound_Property;
         #endregion
         #region ConstantEffectEnchantmentFactor
-        private Single _ConstantEffectEnchantmentFactor;
-        public Single ConstantEffectEnchantmentFactor
-        {
-            get => this._ConstantEffectEnchantmentFactor;
-            set => this.RaiseAndSetIfChanged(ref this._ConstantEffectEnchantmentFactor, value, nameof(ConstantEffectEnchantmentFactor));
-        }
+        public Single ConstantEffectEnchantmentFactor { get; set; }
         #endregion
         #region ConstantEffectBarterFactor
-        private Single _ConstantEffectBarterFactor;
-        public Single ConstantEffectBarterFactor
-        {
-            get => this._ConstantEffectBarterFactor;
-            set => this.RaiseAndSetIfChanged(ref this._ConstantEffectBarterFactor, value, nameof(ConstantEffectBarterFactor));
-        }
+        public Single ConstantEffectBarterFactor { get; set; }
         #endregion
 
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMagicEffectSubDataInternalGetter)rhs, include);
@@ -1367,36 +1357,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.ConstantEffectEnchantmentFactor ?? true)
             {
                 errorMask?.PushIndex((int)MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor);
-                try
-                {
-                    item.ConstantEffectEnchantmentFactor = rhs.ConstantEffectEnchantmentFactor;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.ConstantEffectEnchantmentFactor = rhs.ConstantEffectEnchantmentFactor;
+                errorMask?.PopIndex();
             }
             if (copyMask?.ConstantEffectBarterFactor ?? true)
             {
                 errorMask?.PushIndex((int)MagicEffectSubData_FieldIndex.ConstantEffectBarterFactor);
-                try
-                {
-                    item.ConstantEffectBarterFactor = rhs.ConstantEffectBarterFactor;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.ConstantEffectBarterFactor = rhs.ConstantEffectBarterFactor;
+                errorMask?.PopIndex();
             }
         }
         

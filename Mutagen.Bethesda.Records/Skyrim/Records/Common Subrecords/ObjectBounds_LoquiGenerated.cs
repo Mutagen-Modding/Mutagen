@@ -49,20 +49,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region First
-        private P3Int16 _First;
-        public P3Int16 First
-        {
-            get => this._First;
-            set => this.RaiseAndSetIfChanged(ref this._First, value, nameof(First));
-        }
+        public P3Int16 First { get; set; }
         #endregion
         #region Second
-        private P3Int16 _Second;
-        public P3Int16 Second
-        {
-            get => this._Second;
-            set => this.RaiseAndSetIfChanged(ref this._Second, value, nameof(Second));
-        }
+        public P3Int16 Second { get; set; }
         #endregion
 
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IObjectBoundsInternalGetter)rhs, include);
@@ -1009,36 +999,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (copyMask?.First ?? true)
             {
                 errorMask?.PushIndex((int)ObjectBounds_FieldIndex.First);
-                try
-                {
-                    item.First = rhs.First;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.First = rhs.First;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Second ?? true)
             {
                 errorMask?.PushIndex((int)ObjectBounds_FieldIndex.Second);
-                try
-                {
-                    item.Second = rhs.Second;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Second = rhs.Second;
+                errorMask?.PopIndex();
             }
         }
         

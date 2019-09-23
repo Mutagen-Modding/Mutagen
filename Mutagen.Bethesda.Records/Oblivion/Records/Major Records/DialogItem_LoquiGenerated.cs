@@ -47,7 +47,6 @@ namespace Mutagen.Bethesda.Oblivion
         #region Ctor
         protected DialogItem()
         {
-            _hasBeenSetTracker[(int)DialogItem_FieldIndex.Script] = true;
             CustomCtor();
         }
         partial void CustomCtor();
@@ -61,7 +60,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._DialogType, value, nameof(DialogType));
+                this._DialogType = value;
             }
         }
         #endregion
@@ -74,7 +73,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.DATADataTypeState |= DATADataType.Has;
                 this.DATADataTypeState &= ~DATADataType.Break0;
-                this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
+                this._Flags = value;
             }
         }
         #endregion
@@ -164,12 +163,7 @@ namespace Mutagen.Bethesda.Oblivion
         IScriptFieldsInternalGetter IDialogItemGetter.Script => this.Script;
         #endregion
         #region DATADataTypeState
-        private DialogItem.DATADataType _DATADataTypeState;
-        public DialogItem.DATADataType DATADataTypeState
-        {
-            get => this._DATADataTypeState;
-            set => this.RaiseAndSetIfChanged(ref this._DATADataTypeState, value, nameof(DATADataTypeState));
-        }
+        public DialogItem.DATADataType DATADataTypeState { get; set; }
         DialogItem.DATADataType IDialogItemInternal.DATADataTypeState
         {
             get => this.DATADataTypeState;
@@ -2013,36 +2007,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.DialogType ?? true)
             {
                 errorMask?.PushIndex((int)DialogItem_FieldIndex.DialogType);
-                try
-                {
-                    item.DialogType = rhs.DialogType;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.DialogType = rhs.DialogType;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Flags ?? true)
             {
                 errorMask?.PushIndex((int)DialogItem_FieldIndex.Flags);
-                try
-                {
-                    item.Flags = rhs.Flags;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Flags = rhs.Flags;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Quest ?? true)
             {

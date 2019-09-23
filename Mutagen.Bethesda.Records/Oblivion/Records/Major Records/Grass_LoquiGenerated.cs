@@ -84,7 +84,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Density, value, nameof(Density));
+                this._Density = value;
             }
         }
         #endregion
@@ -96,7 +96,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._MinSlope, value, nameof(MinSlope));
+                this._MinSlope = value;
             }
         }
         #endregion
@@ -108,7 +108,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._MaxSlope, value, nameof(MaxSlope));
+                this._MaxSlope = value;
             }
         }
         #endregion
@@ -120,7 +120,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Fluff1, value, nameof(Fluff1));
+                this._Fluff1 = value;
             }
         }
         #endregion
@@ -132,7 +132,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._UnitFromWaterAmount, value, nameof(UnitFromWaterAmount));
+                this._UnitFromWaterAmount = value;
             }
         }
         #endregion
@@ -144,7 +144,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Fluff2, value, nameof(Fluff2));
+                this._Fluff2 = value;
             }
         }
         #endregion
@@ -156,7 +156,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._UnitFromWaterMode, value, nameof(UnitFromWaterMode));
+                this._UnitFromWaterMode = value;
             }
         }
         #endregion
@@ -168,7 +168,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._PositionRange, value, nameof(PositionRange));
+                this._PositionRange = value;
             }
         }
         #endregion
@@ -180,7 +180,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._HeightRange, value, nameof(HeightRange));
+                this._HeightRange = value;
             }
         }
         #endregion
@@ -192,7 +192,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._ColorRange, value, nameof(ColorRange));
+                this._ColorRange = value;
             }
         }
         #endregion
@@ -204,7 +204,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._WavePeriod, value, nameof(WavePeriod));
+                this._WavePeriod = value;
             }
         }
         #endregion
@@ -216,17 +216,12 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
+                this._Flags = value;
             }
         }
         #endregion
         #region DATADataTypeState
-        private Grass.DATADataType _DATADataTypeState;
-        public Grass.DATADataType DATADataTypeState
-        {
-            get => this._DATADataTypeState;
-            set => this.RaiseAndSetIfChanged(ref this._DATADataTypeState, value, nameof(DATADataTypeState));
-        }
+        public Grass.DATADataType DATADataTypeState { get; set; }
         Grass.DATADataType IGrassInternal.DATADataTypeState
         {
             get => this.DATADataTypeState;
@@ -1921,206 +1916,74 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Density ?? true)
             {
                 errorMask?.PushIndex((int)Grass_FieldIndex.Density);
-                try
-                {
-                    item.Density = rhs.Density;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Density = rhs.Density;
+                errorMask?.PopIndex();
             }
             if (copyMask?.MinSlope ?? true)
             {
                 errorMask?.PushIndex((int)Grass_FieldIndex.MinSlope);
-                try
-                {
-                    item.MinSlope = rhs.MinSlope;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.MinSlope = rhs.MinSlope;
+                errorMask?.PopIndex();
             }
             if (copyMask?.MaxSlope ?? true)
             {
                 errorMask?.PushIndex((int)Grass_FieldIndex.MaxSlope);
-                try
-                {
-                    item.MaxSlope = rhs.MaxSlope;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.MaxSlope = rhs.MaxSlope;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Fluff1 ?? true)
             {
                 errorMask?.PushIndex((int)Grass_FieldIndex.Fluff1);
-                try
-                {
-                    item.Fluff1 = rhs.Fluff1;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Fluff1 = rhs.Fluff1;
+                errorMask?.PopIndex();
             }
             if (copyMask?.UnitFromWaterAmount ?? true)
             {
                 errorMask?.PushIndex((int)Grass_FieldIndex.UnitFromWaterAmount);
-                try
-                {
-                    item.UnitFromWaterAmount = rhs.UnitFromWaterAmount;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.UnitFromWaterAmount = rhs.UnitFromWaterAmount;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Fluff2 ?? true)
             {
                 errorMask?.PushIndex((int)Grass_FieldIndex.Fluff2);
-                try
-                {
-                    item.Fluff2 = rhs.Fluff2;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Fluff2 = rhs.Fluff2;
+                errorMask?.PopIndex();
             }
             if (copyMask?.UnitFromWaterMode ?? true)
             {
                 errorMask?.PushIndex((int)Grass_FieldIndex.UnitFromWaterMode);
-                try
-                {
-                    item.UnitFromWaterMode = rhs.UnitFromWaterMode;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.UnitFromWaterMode = rhs.UnitFromWaterMode;
+                errorMask?.PopIndex();
             }
             if (copyMask?.PositionRange ?? true)
             {
                 errorMask?.PushIndex((int)Grass_FieldIndex.PositionRange);
-                try
-                {
-                    item.PositionRange = rhs.PositionRange;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.PositionRange = rhs.PositionRange;
+                errorMask?.PopIndex();
             }
             if (copyMask?.HeightRange ?? true)
             {
                 errorMask?.PushIndex((int)Grass_FieldIndex.HeightRange);
-                try
-                {
-                    item.HeightRange = rhs.HeightRange;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.HeightRange = rhs.HeightRange;
+                errorMask?.PopIndex();
             }
             if (copyMask?.ColorRange ?? true)
             {
                 errorMask?.PushIndex((int)Grass_FieldIndex.ColorRange);
-                try
-                {
-                    item.ColorRange = rhs.ColorRange;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.ColorRange = rhs.ColorRange;
+                errorMask?.PopIndex();
             }
             if (copyMask?.WavePeriod ?? true)
             {
                 errorMask?.PushIndex((int)Grass_FieldIndex.WavePeriod);
-                try
-                {
-                    item.WavePeriod = rhs.WavePeriod;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.WavePeriod = rhs.WavePeriod;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Flags ?? true)
             {
                 errorMask?.PushIndex((int)Grass_FieldIndex.Flags);
-                try
-                {
-                    item.Flags = rhs.Flags;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Flags = rhs.Flags;
+                errorMask?.PopIndex();
             }
         }
         

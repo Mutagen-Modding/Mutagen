@@ -95,7 +95,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool AnimationGroupSection_IsSet
         {
             get => _hasBeenSetTracker[(int)IdleAnimation_FieldIndex.AnimationGroupSection];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)IdleAnimation_FieldIndex.AnimationGroupSection, nameof(AnimationGroupSection_IsSet));
+            set => _hasBeenSetTracker[(int)IdleAnimation_FieldIndex.AnimationGroupSection] = value;
         }
         bool IIdleAnimationGetter.AnimationGroupSection_IsSet => AnimationGroupSection_IsSet;
         private IdleAnimation.AnimationGroupSectionEnum _AnimationGroupSection;
@@ -110,7 +110,8 @@ namespace Mutagen.Bethesda.Oblivion
             IdleAnimation.AnimationGroupSectionEnum value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _AnimationGroupSection, value, _hasBeenSetTracker, markSet, (int)IdleAnimation_FieldIndex.AnimationGroupSection, nameof(AnimationGroupSection), nameof(AnimationGroupSection_IsSet));
+            _AnimationGroupSection = value;
+            _hasBeenSetTracker[(int)IdleAnimation_FieldIndex.AnimationGroupSection] = markSet;
         }
         public void AnimationGroupSection_Unset()
         {

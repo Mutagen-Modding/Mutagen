@@ -49,28 +49,13 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Unknown0
-        private Single _Unknown0;
-        public Single Unknown0
-        {
-            get => this._Unknown0;
-            set => this.RaiseAndSetIfChanged(ref this._Unknown0, value, nameof(Unknown0));
-        }
+        public Single Unknown0 { get; set; }
         #endregion
         #region Unknown1
-        private Single _Unknown1;
-        public Single Unknown1
-        {
-            get => this._Unknown1;
-            set => this.RaiseAndSetIfChanged(ref this._Unknown1, value, nameof(Unknown1));
-        }
+        public Single Unknown1 { get; set; }
         #endregion
         #region Unknown2
-        private Single _Unknown2;
-        public Single Unknown2
-        {
-            get => this._Unknown2;
-            set => this.RaiseAndSetIfChanged(ref this._Unknown2, value, nameof(Unknown2));
-        }
+        public Single Unknown2 { get; set; }
         #endregion
 
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDistantLODDataInternalGetter)rhs, include);
@@ -1061,53 +1046,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Unknown0 ?? true)
             {
                 errorMask?.PushIndex((int)DistantLODData_FieldIndex.Unknown0);
-                try
-                {
-                    item.Unknown0 = rhs.Unknown0;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Unknown0 = rhs.Unknown0;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Unknown1 ?? true)
             {
                 errorMask?.PushIndex((int)DistantLODData_FieldIndex.Unknown1);
-                try
-                {
-                    item.Unknown1 = rhs.Unknown1;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Unknown1 = rhs.Unknown1;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Unknown2 ?? true)
             {
                 errorMask?.PushIndex((int)DistantLODData_FieldIndex.Unknown2);
-                try
-                {
-                    item.Unknown2 = rhs.Unknown2;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Unknown2 = rhs.Unknown2;
+                errorMask?.PopIndex();
             }
         }
         

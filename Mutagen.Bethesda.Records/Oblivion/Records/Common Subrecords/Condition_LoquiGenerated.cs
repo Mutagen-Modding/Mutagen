@@ -49,69 +49,34 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region CompareOperator
-        private CompareOperator _CompareOperator;
-        public CompareOperator CompareOperator
-        {
-            get => this._CompareOperator;
-            set => this.RaiseAndSetIfChanged(ref this._CompareOperator, value, nameof(CompareOperator));
-        }
+        public CompareOperator CompareOperator { get; set; }
         #endregion
         #region Flags
-        private Condition.Flag _Flags;
-        public Condition.Flag Flags
-        {
-            get => this._Flags;
-            set => this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
-        }
+        public Condition.Flag Flags { get; set; }
         #endregion
         #region Fluff
         private Byte[] _Fluff = new byte[3];
         public Byte[] Fluff
         {
             get => _Fluff;
-            set => this.RaiseAndSetIfChanged(ref _Fluff, value ?? new byte[3], nameof(Fluff));
+            set => this._Fluff = value ?? new byte[3];
         }
         ReadOnlySpan<Byte> IConditionGetter.Fluff => this.Fluff;
         #endregion
         #region ComparisonValue
-        private Single _ComparisonValue;
-        public Single ComparisonValue
-        {
-            get => this._ComparisonValue;
-            set => this.RaiseAndSetIfChanged(ref this._ComparisonValue, value, nameof(ComparisonValue));
-        }
+        public Single ComparisonValue { get; set; }
         #endregion
         #region Function
-        private Function _Function;
-        public Function Function
-        {
-            get => this._Function;
-            set => this.RaiseAndSetIfChanged(ref this._Function, value, nameof(Function));
-        }
+        public Function Function { get; set; }
         #endregion
         #region FirstParameter
-        private Int32 _FirstParameter;
-        public Int32 FirstParameter
-        {
-            get => this._FirstParameter;
-            set => this.RaiseAndSetIfChanged(ref this._FirstParameter, value, nameof(FirstParameter));
-        }
+        public Int32 FirstParameter { get; set; }
         #endregion
         #region SecondParameter
-        private Int32 _SecondParameter;
-        public Int32 SecondParameter
-        {
-            get => this._SecondParameter;
-            set => this.RaiseAndSetIfChanged(ref this._SecondParameter, value, nameof(SecondParameter));
-        }
+        public Int32 SecondParameter { get; set; }
         #endregion
         #region ThirdParameter
-        private Int32 _ThirdParameter;
-        public Int32 ThirdParameter
-        {
-            get => this._ThirdParameter;
-            set => this.RaiseAndSetIfChanged(ref this._ThirdParameter, value, nameof(ThirdParameter));
-        }
+        public Int32 ThirdParameter { get; set; }
         #endregion
 
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IConditionInternalGetter)rhs, include);
@@ -1304,138 +1269,50 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.CompareOperator ?? true)
             {
                 errorMask?.PushIndex((int)Condition_FieldIndex.CompareOperator);
-                try
-                {
-                    item.CompareOperator = rhs.CompareOperator;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.CompareOperator = rhs.CompareOperator;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Flags ?? true)
             {
                 errorMask?.PushIndex((int)Condition_FieldIndex.Flags);
-                try
-                {
-                    item.Flags = rhs.Flags;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Flags = rhs.Flags;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Fluff ?? true)
             {
                 errorMask?.PushIndex((int)Condition_FieldIndex.Fluff);
-                try
-                {
-                    item.Fluff = rhs.Fluff;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Fluff = rhs.Fluff;
+                errorMask?.PopIndex();
             }
             if (copyMask?.ComparisonValue ?? true)
             {
                 errorMask?.PushIndex((int)Condition_FieldIndex.ComparisonValue);
-                try
-                {
-                    item.ComparisonValue = rhs.ComparisonValue;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.ComparisonValue = rhs.ComparisonValue;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Function ?? true)
             {
                 errorMask?.PushIndex((int)Condition_FieldIndex.Function);
-                try
-                {
-                    item.Function = rhs.Function;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Function = rhs.Function;
+                errorMask?.PopIndex();
             }
             if (copyMask?.FirstParameter ?? true)
             {
                 errorMask?.PushIndex((int)Condition_FieldIndex.FirstParameter);
-                try
-                {
-                    item.FirstParameter = rhs.FirstParameter;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.FirstParameter = rhs.FirstParameter;
+                errorMask?.PopIndex();
             }
             if (copyMask?.SecondParameter ?? true)
             {
                 errorMask?.PushIndex((int)Condition_FieldIndex.SecondParameter);
-                try
-                {
-                    item.SecondParameter = rhs.SecondParameter;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.SecondParameter = rhs.SecondParameter;
+                errorMask?.PopIndex();
             }
             if (copyMask?.ThirdParameter ?? true)
             {
                 errorMask?.PushIndex((int)Condition_FieldIndex.ThirdParameter);
-                try
-                {
-                    item.ThirdParameter = rhs.ThirdParameter;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.ThirdParameter = rhs.ThirdParameter;
+                errorMask?.PopIndex();
             }
         }
         

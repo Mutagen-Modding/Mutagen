@@ -58,20 +58,10 @@ namespace Mutagen.Bethesda.Oblivion
         IFormIDLinkGetter<ISoundInternalGetter> IRegionSoundGetter.Sound_Property => this.Sound_Property;
         #endregion
         #region Flags
-        private RegionSound.Flag _Flags;
-        public RegionSound.Flag Flags
-        {
-            get => this._Flags;
-            set => this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
-        }
+        public RegionSound.Flag Flags { get; set; }
         #endregion
         #region Chance
-        private Single _Chance;
-        public Single Chance
-        {
-            get => this._Chance;
-            set => this.RaiseAndSetIfChanged(ref this._Chance, value.PutInRange(Chance_Range.Min, Chance_Range.Max), nameof(Chance));
-        }
+        public Single Chance { get; set; }
         public static RangeFloat Chance_Range = new RangeFloat(0f, 100f);
         #endregion
 
@@ -1088,36 +1078,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Flags ?? true)
             {
                 errorMask?.PushIndex((int)RegionSound_FieldIndex.Flags);
-                try
-                {
-                    item.Flags = rhs.Flags;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Flags = rhs.Flags;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Chance ?? true)
             {
                 errorMask?.PushIndex((int)RegionSound_FieldIndex.Chance);
-                try
-                {
-                    item.Chance = rhs.Chance;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Chance = rhs.Chance;
+                errorMask?.PopIndex();
             }
         }
         

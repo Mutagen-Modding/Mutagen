@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Skill_IsSet
         {
             get => _hasBeenSetTracker[(int)SkillRecord_FieldIndex.Skill];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)SkillRecord_FieldIndex.Skill, nameof(Skill_IsSet));
+            set => _hasBeenSetTracker[(int)SkillRecord_FieldIndex.Skill] = value;
         }
         bool ISkillRecordGetter.Skill_IsSet => Skill_IsSet;
         private ActorValue _Skill;
@@ -68,7 +68,8 @@ namespace Mutagen.Bethesda.Oblivion
             ActorValue value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Skill, value, _hasBeenSetTracker, markSet, (int)SkillRecord_FieldIndex.Skill, nameof(Skill), nameof(Skill_IsSet));
+            _Skill = value;
+            _hasBeenSetTracker[(int)SkillRecord_FieldIndex.Skill] = markSet;
         }
         public void Skill_Unset()
         {
@@ -79,7 +80,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Description_IsSet
         {
             get => _hasBeenSetTracker[(int)SkillRecord_FieldIndex.Description];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)SkillRecord_FieldIndex.Description, nameof(Description_IsSet));
+            set => _hasBeenSetTracker[(int)SkillRecord_FieldIndex.Description] = value;
         }
         bool ISkillRecordGetter.Description_IsSet => Description_IsSet;
         private String _Description;
@@ -94,7 +95,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Description, value, _hasBeenSetTracker, markSet, (int)SkillRecord_FieldIndex.Description, nameof(Description), nameof(Description_IsSet));
+            _Description = value;
+            _hasBeenSetTracker[(int)SkillRecord_FieldIndex.Description] = markSet;
         }
         public void Description_Unset()
         {
@@ -105,7 +107,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Icon_IsSet
         {
             get => _hasBeenSetTracker[(int)SkillRecord_FieldIndex.Icon];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)SkillRecord_FieldIndex.Icon, nameof(Icon_IsSet));
+            set => _hasBeenSetTracker[(int)SkillRecord_FieldIndex.Icon] = value;
         }
         bool ISkillRecordGetter.Icon_IsSet => Icon_IsSet;
         private String _Icon;
@@ -120,7 +122,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Icon, value, _hasBeenSetTracker, markSet, (int)SkillRecord_FieldIndex.Icon, nameof(Icon), nameof(Icon_IsSet));
+            _Icon = value;
+            _hasBeenSetTracker[(int)SkillRecord_FieldIndex.Icon] = markSet;
         }
         public void Icon_Unset()
         {
@@ -135,7 +138,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Action, value, nameof(Action));
+                this._Action = value;
             }
         }
         #endregion
@@ -147,7 +150,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Attribute, value, nameof(Attribute));
+                this._Attribute = value;
             }
         }
         #endregion
@@ -159,7 +162,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Specialization, value, nameof(Specialization));
+                this._Specialization = value;
             }
         }
         #endregion
@@ -171,7 +174,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._UseValueFirst, value, nameof(UseValueFirst));
+                this._UseValueFirst = value;
             }
         }
         #endregion
@@ -183,7 +186,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._UseValueSecond, value, nameof(UseValueSecond));
+                this._UseValueSecond = value;
             }
         }
         #endregion
@@ -191,7 +194,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool ApprenticeText_IsSet
         {
             get => _hasBeenSetTracker[(int)SkillRecord_FieldIndex.ApprenticeText];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)SkillRecord_FieldIndex.ApprenticeText, nameof(ApprenticeText_IsSet));
+            set => _hasBeenSetTracker[(int)SkillRecord_FieldIndex.ApprenticeText] = value;
         }
         bool ISkillRecordGetter.ApprenticeText_IsSet => ApprenticeText_IsSet;
         private String _ApprenticeText;
@@ -206,7 +209,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _ApprenticeText, value, _hasBeenSetTracker, markSet, (int)SkillRecord_FieldIndex.ApprenticeText, nameof(ApprenticeText), nameof(ApprenticeText_IsSet));
+            _ApprenticeText = value;
+            _hasBeenSetTracker[(int)SkillRecord_FieldIndex.ApprenticeText] = markSet;
         }
         public void ApprenticeText_Unset()
         {
@@ -217,7 +221,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool JourneymanText_IsSet
         {
             get => _hasBeenSetTracker[(int)SkillRecord_FieldIndex.JourneymanText];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)SkillRecord_FieldIndex.JourneymanText, nameof(JourneymanText_IsSet));
+            set => _hasBeenSetTracker[(int)SkillRecord_FieldIndex.JourneymanText] = value;
         }
         bool ISkillRecordGetter.JourneymanText_IsSet => JourneymanText_IsSet;
         private String _JourneymanText;
@@ -232,7 +236,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _JourneymanText, value, _hasBeenSetTracker, markSet, (int)SkillRecord_FieldIndex.JourneymanText, nameof(JourneymanText), nameof(JourneymanText_IsSet));
+            _JourneymanText = value;
+            _hasBeenSetTracker[(int)SkillRecord_FieldIndex.JourneymanText] = markSet;
         }
         public void JourneymanText_Unset()
         {
@@ -243,7 +248,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool ExpertText_IsSet
         {
             get => _hasBeenSetTracker[(int)SkillRecord_FieldIndex.ExpertText];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)SkillRecord_FieldIndex.ExpertText, nameof(ExpertText_IsSet));
+            set => _hasBeenSetTracker[(int)SkillRecord_FieldIndex.ExpertText] = value;
         }
         bool ISkillRecordGetter.ExpertText_IsSet => ExpertText_IsSet;
         private String _ExpertText;
@@ -258,7 +263,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _ExpertText, value, _hasBeenSetTracker, markSet, (int)SkillRecord_FieldIndex.ExpertText, nameof(ExpertText), nameof(ExpertText_IsSet));
+            _ExpertText = value;
+            _hasBeenSetTracker[(int)SkillRecord_FieldIndex.ExpertText] = markSet;
         }
         public void ExpertText_Unset()
         {
@@ -269,7 +275,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool MasterText_IsSet
         {
             get => _hasBeenSetTracker[(int)SkillRecord_FieldIndex.MasterText];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)SkillRecord_FieldIndex.MasterText, nameof(MasterText_IsSet));
+            set => _hasBeenSetTracker[(int)SkillRecord_FieldIndex.MasterText] = value;
         }
         bool ISkillRecordGetter.MasterText_IsSet => MasterText_IsSet;
         private String _MasterText;
@@ -284,7 +290,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _MasterText, value, _hasBeenSetTracker, markSet, (int)SkillRecord_FieldIndex.MasterText, nameof(MasterText), nameof(MasterText_IsSet));
+            _MasterText = value;
+            _hasBeenSetTracker[(int)SkillRecord_FieldIndex.MasterText] = markSet;
         }
         public void MasterText_Unset()
         {
@@ -292,12 +299,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region DATADataTypeState
-        private SkillRecord.DATADataType _DATADataTypeState;
-        public SkillRecord.DATADataType DATADataTypeState
-        {
-            get => this._DATADataTypeState;
-            set => this.RaiseAndSetIfChanged(ref this._DATADataTypeState, value, nameof(DATADataTypeState));
-        }
+        public SkillRecord.DATADataType DATADataTypeState { get; set; }
         SkillRecord.DATADataType ISkillRecordInternal.DATADataTypeState
         {
             get => this.DATADataTypeState;
@@ -2139,87 +2141,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Action ?? true)
             {
                 errorMask?.PushIndex((int)SkillRecord_FieldIndex.Action);
-                try
-                {
-                    item.Action = rhs.Action;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Action = rhs.Action;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Attribute ?? true)
             {
                 errorMask?.PushIndex((int)SkillRecord_FieldIndex.Attribute);
-                try
-                {
-                    item.Attribute = rhs.Attribute;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Attribute = rhs.Attribute;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Specialization ?? true)
             {
                 errorMask?.PushIndex((int)SkillRecord_FieldIndex.Specialization);
-                try
-                {
-                    item.Specialization = rhs.Specialization;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Specialization = rhs.Specialization;
+                errorMask?.PopIndex();
             }
             if (copyMask?.UseValueFirst ?? true)
             {
                 errorMask?.PushIndex((int)SkillRecord_FieldIndex.UseValueFirst);
-                try
-                {
-                    item.UseValueFirst = rhs.UseValueFirst;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.UseValueFirst = rhs.UseValueFirst;
+                errorMask?.PopIndex();
             }
             if (copyMask?.UseValueSecond ?? true)
             {
                 errorMask?.PushIndex((int)SkillRecord_FieldIndex.UseValueSecond);
-                try
-                {
-                    item.UseValueSecond = rhs.UseValueSecond;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.UseValueSecond = rhs.UseValueSecond;
+                errorMask?.PopIndex();
             }
             if (copyMask?.ApprenticeText ?? true)
             {

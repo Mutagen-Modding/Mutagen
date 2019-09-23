@@ -58,12 +58,7 @@ namespace Mutagen.Bethesda.Oblivion
         IFormIDLinkGetter<IPlacedGetter> IEnableParentGetter.Reference_Property => this.Reference_Property;
         #endregion
         #region Flags
-        private EnableParent.Flag _Flags;
-        public EnableParent.Flag Flags
-        {
-            get => this._Flags;
-            set => this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
-        }
+        public EnableParent.Flag Flags { get; set; }
         #endregion
 
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IEnableParentInternalGetter)rhs, include);
@@ -1041,19 +1036,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Flags ?? true)
             {
                 errorMask?.PushIndex((int)EnableParent_FieldIndex.Flags);
-                try
-                {
-                    item.Flags = rhs.Flags;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Flags = rhs.Flags;
+                errorMask?.PopIndex();
             }
         }
         

@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.PKDTDataTypeState |= PKDTDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
+                this._Flags = value;
             }
         }
         #endregion
@@ -72,7 +72,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.PKDTDataTypeState |= PKDTDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._GeneralType, value, nameof(GeneralType));
+                this._GeneralType = value;
             }
         }
         #endregion
@@ -170,12 +170,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region PKDTDataTypeState
-        private AIPackage.PKDTDataType _PKDTDataTypeState;
-        public AIPackage.PKDTDataType PKDTDataTypeState
-        {
-            get => this._PKDTDataTypeState;
-            set => this.RaiseAndSetIfChanged(ref this._PKDTDataTypeState, value, nameof(PKDTDataTypeState));
-        }
+        public AIPackage.PKDTDataType PKDTDataTypeState { get; set; }
         AIPackage.PKDTDataType IAIPackageInternal.PKDTDataTypeState
         {
             get => this.PKDTDataTypeState;
@@ -1688,36 +1683,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Flags ?? true)
             {
                 errorMask?.PushIndex((int)AIPackage_FieldIndex.Flags);
-                try
-                {
-                    item.Flags = rhs.Flags;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Flags = rhs.Flags;
+                errorMask?.PopIndex();
             }
             if (copyMask?.GeneralType ?? true)
             {
                 errorMask?.PushIndex((int)AIPackage_FieldIndex.GeneralType);
-                try
-                {
-                    item.GeneralType = rhs.GeneralType;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.GeneralType = rhs.GeneralType;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Location.Overall != CopyOption.Skip)
             {

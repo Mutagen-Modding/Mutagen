@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Flags_IsSet
         {
             get => _hasBeenSetTracker[(int)LogEntry_FieldIndex.Flags];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)LogEntry_FieldIndex.Flags, nameof(Flags_IsSet));
+            set => _hasBeenSetTracker[(int)LogEntry_FieldIndex.Flags] = value;
         }
         bool ILogEntryGetter.Flags_IsSet => Flags_IsSet;
         private LogEntry.Flag _Flags;
@@ -71,7 +71,8 @@ namespace Mutagen.Bethesda.Oblivion
             LogEntry.Flag value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Flags, value, _hasBeenSetTracker, markSet, (int)LogEntry_FieldIndex.Flags, nameof(Flags), nameof(Flags_IsSet));
+            _Flags = value;
+            _hasBeenSetTracker[(int)LogEntry_FieldIndex.Flags] = markSet;
         }
         public void Flags_Unset()
         {
@@ -94,7 +95,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Entry_IsSet
         {
             get => _hasBeenSetTracker[(int)LogEntry_FieldIndex.Entry];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)LogEntry_FieldIndex.Entry, nameof(Entry_IsSet));
+            set => _hasBeenSetTracker[(int)LogEntry_FieldIndex.Entry] = value;
         }
         bool ILogEntryGetter.Entry_IsSet => Entry_IsSet;
         private String _Entry;
@@ -109,7 +110,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Entry, value, _hasBeenSetTracker, markSet, (int)LogEntry_FieldIndex.Entry, nameof(Entry), nameof(Entry_IsSet));
+            _Entry = value;
+            _hasBeenSetTracker[(int)LogEntry_FieldIndex.Entry] = markSet;
         }
         public void Entry_Unset()
         {

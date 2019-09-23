@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Name_IsSet
         {
             get => _hasBeenSetTracker[(int)Creature_FieldIndex.Name];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Creature_FieldIndex.Name, nameof(Name_IsSet));
+            set => _hasBeenSetTracker[(int)Creature_FieldIndex.Name] = value;
         }
         bool ICreatureGetter.Name_IsSet => Name_IsSet;
         private String _Name;
@@ -72,7 +72,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Name, value, _hasBeenSetTracker, markSet, (int)Creature_FieldIndex.Name, nameof(Name), nameof(Name_IsSet));
+            _Name = value;
+            _hasBeenSetTracker[(int)Creature_FieldIndex.Name] = markSet;
         }
         public void Name_Unset()
         {
@@ -178,7 +179,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.ACBSDataTypeState |= ACBSDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
+                this._Flags = value;
             }
         }
         #endregion
@@ -190,7 +191,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.ACBSDataTypeState |= ACBSDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._BaseSpellPoints, value, nameof(BaseSpellPoints));
+                this._BaseSpellPoints = value;
             }
         }
         #endregion
@@ -202,7 +203,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.ACBSDataTypeState |= ACBSDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Fatigue, value, nameof(Fatigue));
+                this._Fatigue = value;
             }
         }
         #endregion
@@ -214,7 +215,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.ACBSDataTypeState |= ACBSDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._BarterGold, value, nameof(BarterGold));
+                this._BarterGold = value;
             }
         }
         #endregion
@@ -226,7 +227,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.ACBSDataTypeState |= ACBSDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._LevelOffset, value, nameof(LevelOffset));
+                this._LevelOffset = value;
             }
         }
         #endregion
@@ -238,7 +239,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.ACBSDataTypeState |= ACBSDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._CalcMin, value, nameof(CalcMin));
+                this._CalcMin = value;
             }
         }
         #endregion
@@ -250,7 +251,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.ACBSDataTypeState |= ACBSDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._CalcMax, value, nameof(CalcMax));
+                this._CalcMax = value;
             }
         }
         #endregion
@@ -290,7 +291,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.AIDTDataTypeState |= AIDTDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Aggression, value, nameof(Aggression));
+                this._Aggression = value;
             }
         }
         #endregion
@@ -302,7 +303,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.AIDTDataTypeState |= AIDTDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Confidence, value, nameof(Confidence));
+                this._Confidence = value;
             }
         }
         #endregion
@@ -314,7 +315,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.AIDTDataTypeState |= AIDTDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._EnergyLevel, value, nameof(EnergyLevel));
+                this._EnergyLevel = value;
             }
         }
         #endregion
@@ -326,7 +327,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.AIDTDataTypeState |= AIDTDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Responsibility, value, nameof(Responsibility));
+                this._Responsibility = value;
             }
         }
         #endregion
@@ -338,7 +339,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.AIDTDataTypeState |= AIDTDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._BuySellServices, value, nameof(BuySellServices));
+                this._BuySellServices = value;
             }
         }
         #endregion
@@ -350,7 +351,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.AIDTDataTypeState |= AIDTDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Teaches, value, nameof(Teaches));
+                this._Teaches = value;
             }
         }
         #endregion
@@ -362,7 +363,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.AIDTDataTypeState |= AIDTDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._MaximumTrainingLevel, value, nameof(MaximumTrainingLevel));
+                this._MaximumTrainingLevel = value;
             }
         }
         #endregion
@@ -398,7 +399,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._CreatureType, value, nameof(CreatureType));
+                this._CreatureType = value;
             }
         }
         #endregion
@@ -410,7 +411,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._CombatSkill, value, nameof(CombatSkill));
+                this._CombatSkill = value;
             }
         }
         #endregion
@@ -422,7 +423,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._MagicSkill, value, nameof(MagicSkill));
+                this._MagicSkill = value;
             }
         }
         #endregion
@@ -434,7 +435,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._StealthSkill, value, nameof(StealthSkill));
+                this._StealthSkill = value;
             }
         }
         #endregion
@@ -446,7 +447,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._SoulLevel, value, nameof(SoulLevel));
+                this._SoulLevel = value;
             }
         }
         #endregion
@@ -458,7 +459,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Health, value, nameof(Health));
+                this._Health = value;
             }
         }
         #endregion
@@ -470,7 +471,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._AttackDamage, value, nameof(AttackDamage));
+                this._AttackDamage = value;
             }
         }
         #endregion
@@ -482,7 +483,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Strength, value, nameof(Strength));
+                this._Strength = value;
             }
         }
         #endregion
@@ -494,7 +495,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Intelligence, value, nameof(Intelligence));
+                this._Intelligence = value;
             }
         }
         #endregion
@@ -506,7 +507,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Willpower, value, nameof(Willpower));
+                this._Willpower = value;
             }
         }
         #endregion
@@ -518,7 +519,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Agility, value, nameof(Agility));
+                this._Agility = value;
             }
         }
         #endregion
@@ -530,7 +531,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Speed, value, nameof(Speed));
+                this._Speed = value;
             }
         }
         #endregion
@@ -542,7 +543,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Endurance, value, nameof(Endurance));
+                this._Endurance = value;
             }
         }
         #endregion
@@ -554,7 +555,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Personality, value, nameof(Personality));
+                this._Personality = value;
             }
         }
         #endregion
@@ -566,7 +567,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Luck, value, nameof(Luck));
+                this._Luck = value;
             }
         }
         #endregion
@@ -574,7 +575,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool AttackReach_IsSet
         {
             get => _hasBeenSetTracker[(int)Creature_FieldIndex.AttackReach];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Creature_FieldIndex.AttackReach, nameof(AttackReach_IsSet));
+            set => _hasBeenSetTracker[(int)Creature_FieldIndex.AttackReach] = value;
         }
         bool ICreatureGetter.AttackReach_IsSet => AttackReach_IsSet;
         private Byte _AttackReach;
@@ -589,7 +590,8 @@ namespace Mutagen.Bethesda.Oblivion
             Byte value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _AttackReach, value, _hasBeenSetTracker, markSet, (int)Creature_FieldIndex.AttackReach, nameof(AttackReach), nameof(AttackReach_IsSet));
+            _AttackReach = value;
+            _hasBeenSetTracker[(int)Creature_FieldIndex.AttackReach] = markSet;
         }
         public void AttackReach_Unset()
         {
@@ -608,7 +610,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool TurningSpeed_IsSet
         {
             get => _hasBeenSetTracker[(int)Creature_FieldIndex.TurningSpeed];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Creature_FieldIndex.TurningSpeed, nameof(TurningSpeed_IsSet));
+            set => _hasBeenSetTracker[(int)Creature_FieldIndex.TurningSpeed] = value;
         }
         bool ICreatureGetter.TurningSpeed_IsSet => TurningSpeed_IsSet;
         private Single _TurningSpeed;
@@ -623,7 +625,8 @@ namespace Mutagen.Bethesda.Oblivion
             Single value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _TurningSpeed, value, _hasBeenSetTracker, markSet, (int)Creature_FieldIndex.TurningSpeed, nameof(TurningSpeed), nameof(TurningSpeed_IsSet));
+            _TurningSpeed = value;
+            _hasBeenSetTracker[(int)Creature_FieldIndex.TurningSpeed] = markSet;
         }
         public void TurningSpeed_Unset()
         {
@@ -634,7 +637,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool BaseScale_IsSet
         {
             get => _hasBeenSetTracker[(int)Creature_FieldIndex.BaseScale];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Creature_FieldIndex.BaseScale, nameof(BaseScale_IsSet));
+            set => _hasBeenSetTracker[(int)Creature_FieldIndex.BaseScale] = value;
         }
         bool ICreatureGetter.BaseScale_IsSet => BaseScale_IsSet;
         private Single _BaseScale;
@@ -649,7 +652,8 @@ namespace Mutagen.Bethesda.Oblivion
             Single value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _BaseScale, value, _hasBeenSetTracker, markSet, (int)Creature_FieldIndex.BaseScale, nameof(BaseScale), nameof(BaseScale_IsSet));
+            _BaseScale = value;
+            _hasBeenSetTracker[(int)Creature_FieldIndex.BaseScale] = markSet;
         }
         public void BaseScale_Unset()
         {
@@ -660,7 +664,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool FootWeight_IsSet
         {
             get => _hasBeenSetTracker[(int)Creature_FieldIndex.FootWeight];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Creature_FieldIndex.FootWeight, nameof(FootWeight_IsSet));
+            set => _hasBeenSetTracker[(int)Creature_FieldIndex.FootWeight] = value;
         }
         bool ICreatureGetter.FootWeight_IsSet => FootWeight_IsSet;
         private Single _FootWeight;
@@ -675,7 +679,8 @@ namespace Mutagen.Bethesda.Oblivion
             Single value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _FootWeight, value, _hasBeenSetTracker, markSet, (int)Creature_FieldIndex.FootWeight, nameof(FootWeight), nameof(FootWeight_IsSet));
+            _FootWeight = value;
+            _hasBeenSetTracker[(int)Creature_FieldIndex.FootWeight] = markSet;
         }
         public void FootWeight_Unset()
         {
@@ -686,7 +691,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool BloodSpray_IsSet
         {
             get => _hasBeenSetTracker[(int)Creature_FieldIndex.BloodSpray];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Creature_FieldIndex.BloodSpray, nameof(BloodSpray_IsSet));
+            set => _hasBeenSetTracker[(int)Creature_FieldIndex.BloodSpray] = value;
         }
         bool ICreatureGetter.BloodSpray_IsSet => BloodSpray_IsSet;
         private String _BloodSpray;
@@ -701,7 +706,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _BloodSpray, value, _hasBeenSetTracker, markSet, (int)Creature_FieldIndex.BloodSpray, nameof(BloodSpray), nameof(BloodSpray_IsSet));
+            _BloodSpray = value;
+            _hasBeenSetTracker[(int)Creature_FieldIndex.BloodSpray] = markSet;
         }
         public void BloodSpray_Unset()
         {
@@ -712,7 +718,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool BloodDecal_IsSet
         {
             get => _hasBeenSetTracker[(int)Creature_FieldIndex.BloodDecal];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Creature_FieldIndex.BloodDecal, nameof(BloodDecal_IsSet));
+            set => _hasBeenSetTracker[(int)Creature_FieldIndex.BloodDecal] = value;
         }
         bool ICreatureGetter.BloodDecal_IsSet => BloodDecal_IsSet;
         private String _BloodDecal;
@@ -727,7 +733,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _BloodDecal, value, _hasBeenSetTracker, markSet, (int)Creature_FieldIndex.BloodDecal, nameof(BloodDecal), nameof(BloodDecal_IsSet));
+            _BloodDecal = value;
+            _hasBeenSetTracker[(int)Creature_FieldIndex.BloodDecal] = markSet;
         }
         public void BloodDecal_Unset()
         {
@@ -755,12 +762,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region ACBSDataTypeState
-        private Creature.ACBSDataType _ACBSDataTypeState;
-        public Creature.ACBSDataType ACBSDataTypeState
-        {
-            get => this._ACBSDataTypeState;
-            set => this.RaiseAndSetIfChanged(ref this._ACBSDataTypeState, value, nameof(ACBSDataTypeState));
-        }
+        public Creature.ACBSDataType ACBSDataTypeState { get; set; }
         Creature.ACBSDataType ICreatureInternal.ACBSDataTypeState
         {
             get => this.ACBSDataTypeState;
@@ -772,12 +774,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region AIDTDataTypeState
-        private Creature.AIDTDataType _AIDTDataTypeState;
-        public Creature.AIDTDataType AIDTDataTypeState
-        {
-            get => this._AIDTDataTypeState;
-            set => this.RaiseAndSetIfChanged(ref this._AIDTDataTypeState, value, nameof(AIDTDataTypeState));
-        }
+        public Creature.AIDTDataType AIDTDataTypeState { get; set; }
         Creature.AIDTDataType ICreatureInternal.AIDTDataTypeState
         {
             get => this.AIDTDataTypeState;
@@ -789,12 +786,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region DATADataTypeState
-        private Creature.DATADataType _DATADataTypeState;
-        public Creature.DATADataType DATADataTypeState
-        {
-            get => this._DATADataTypeState;
-            set => this.RaiseAndSetIfChanged(ref this._DATADataTypeState, value, nameof(DATADataTypeState));
-        }
+        public Creature.DATADataType DATADataTypeState { get; set; }
         Creature.DATADataType ICreatureInternal.DATADataTypeState
         {
             get => this.DATADataTypeState;
@@ -4711,121 +4703,44 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Flags ?? true)
             {
                 errorMask?.PushIndex((int)Creature_FieldIndex.Flags);
-                try
-                {
-                    item.Flags = rhs.Flags;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Flags = rhs.Flags;
+                errorMask?.PopIndex();
             }
             if (copyMask?.BaseSpellPoints ?? true)
             {
                 errorMask?.PushIndex((int)Creature_FieldIndex.BaseSpellPoints);
-                try
-                {
-                    item.BaseSpellPoints = rhs.BaseSpellPoints;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.BaseSpellPoints = rhs.BaseSpellPoints;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Fatigue ?? true)
             {
                 errorMask?.PushIndex((int)Creature_FieldIndex.Fatigue);
-                try
-                {
-                    item.Fatigue = rhs.Fatigue;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Fatigue = rhs.Fatigue;
+                errorMask?.PopIndex();
             }
             if (copyMask?.BarterGold ?? true)
             {
                 errorMask?.PushIndex((int)Creature_FieldIndex.BarterGold);
-                try
-                {
-                    item.BarterGold = rhs.BarterGold;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.BarterGold = rhs.BarterGold;
+                errorMask?.PopIndex();
             }
             if (copyMask?.LevelOffset ?? true)
             {
                 errorMask?.PushIndex((int)Creature_FieldIndex.LevelOffset);
-                try
-                {
-                    item.LevelOffset = rhs.LevelOffset;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.LevelOffset = rhs.LevelOffset;
+                errorMask?.PopIndex();
             }
             if (copyMask?.CalcMin ?? true)
             {
                 errorMask?.PushIndex((int)Creature_FieldIndex.CalcMin);
-                try
-                {
-                    item.CalcMin = rhs.CalcMin;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.CalcMin = rhs.CalcMin;
+                errorMask?.PopIndex();
             }
             if (copyMask?.CalcMax ?? true)
             {
                 errorMask?.PushIndex((int)Creature_FieldIndex.CalcMax);
-                try
-                {
-                    item.CalcMax = rhs.CalcMax;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.CalcMax = rhs.CalcMax;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Factions.Overall != CopyOption.Skip)
             {
@@ -4902,121 +4817,44 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Aggression ?? true)
             {
                 errorMask?.PushIndex((int)Creature_FieldIndex.Aggression);
-                try
-                {
-                    item.Aggression = rhs.Aggression;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Aggression = rhs.Aggression;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Confidence ?? true)
             {
                 errorMask?.PushIndex((int)Creature_FieldIndex.Confidence);
-                try
-                {
-                    item.Confidence = rhs.Confidence;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Confidence = rhs.Confidence;
+                errorMask?.PopIndex();
             }
             if (copyMask?.EnergyLevel ?? true)
             {
                 errorMask?.PushIndex((int)Creature_FieldIndex.EnergyLevel);
-                try
-                {
-                    item.EnergyLevel = rhs.EnergyLevel;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.EnergyLevel = rhs.EnergyLevel;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Responsibility ?? true)
             {
                 errorMask?.PushIndex((int)Creature_FieldIndex.Responsibility);
-                try
-                {
-                    item.Responsibility = rhs.Responsibility;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Responsibility = rhs.Responsibility;
+                errorMask?.PopIndex();
             }
             if (copyMask?.BuySellServices ?? true)
             {
                 errorMask?.PushIndex((int)Creature_FieldIndex.BuySellServices);
-                try
-                {
-                    item.BuySellServices = rhs.BuySellServices;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.BuySellServices = rhs.BuySellServices;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Teaches ?? true)
             {
                 errorMask?.PushIndex((int)Creature_FieldIndex.Teaches);
-                try
-                {
-                    item.Teaches = rhs.Teaches;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Teaches = rhs.Teaches;
+                errorMask?.PopIndex();
             }
             if (copyMask?.MaximumTrainingLevel ?? true)
             {
                 errorMask?.PushIndex((int)Creature_FieldIndex.MaximumTrainingLevel);
-                try
-                {
-                    item.MaximumTrainingLevel = rhs.MaximumTrainingLevel;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.MaximumTrainingLevel = rhs.MaximumTrainingLevel;
+                errorMask?.PopIndex();
             }
             if (copyMask?.AIPackages != CopyOption.Skip)
             {
@@ -5059,257 +4897,92 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.CreatureType ?? true)
             {
                 errorMask?.PushIndex((int)Creature_FieldIndex.CreatureType);
-                try
-                {
-                    item.CreatureType = rhs.CreatureType;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.CreatureType = rhs.CreatureType;
+                errorMask?.PopIndex();
             }
             if (copyMask?.CombatSkill ?? true)
             {
                 errorMask?.PushIndex((int)Creature_FieldIndex.CombatSkill);
-                try
-                {
-                    item.CombatSkill = rhs.CombatSkill;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.CombatSkill = rhs.CombatSkill;
+                errorMask?.PopIndex();
             }
             if (copyMask?.MagicSkill ?? true)
             {
                 errorMask?.PushIndex((int)Creature_FieldIndex.MagicSkill);
-                try
-                {
-                    item.MagicSkill = rhs.MagicSkill;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.MagicSkill = rhs.MagicSkill;
+                errorMask?.PopIndex();
             }
             if (copyMask?.StealthSkill ?? true)
             {
                 errorMask?.PushIndex((int)Creature_FieldIndex.StealthSkill);
-                try
-                {
-                    item.StealthSkill = rhs.StealthSkill;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.StealthSkill = rhs.StealthSkill;
+                errorMask?.PopIndex();
             }
             if (copyMask?.SoulLevel ?? true)
             {
                 errorMask?.PushIndex((int)Creature_FieldIndex.SoulLevel);
-                try
-                {
-                    item.SoulLevel = rhs.SoulLevel;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.SoulLevel = rhs.SoulLevel;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Health ?? true)
             {
                 errorMask?.PushIndex((int)Creature_FieldIndex.Health);
-                try
-                {
-                    item.Health = rhs.Health;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Health = rhs.Health;
+                errorMask?.PopIndex();
             }
             if (copyMask?.AttackDamage ?? true)
             {
                 errorMask?.PushIndex((int)Creature_FieldIndex.AttackDamage);
-                try
-                {
-                    item.AttackDamage = rhs.AttackDamage;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.AttackDamage = rhs.AttackDamage;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Strength ?? true)
             {
                 errorMask?.PushIndex((int)Creature_FieldIndex.Strength);
-                try
-                {
-                    item.Strength = rhs.Strength;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Strength = rhs.Strength;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Intelligence ?? true)
             {
                 errorMask?.PushIndex((int)Creature_FieldIndex.Intelligence);
-                try
-                {
-                    item.Intelligence = rhs.Intelligence;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Intelligence = rhs.Intelligence;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Willpower ?? true)
             {
                 errorMask?.PushIndex((int)Creature_FieldIndex.Willpower);
-                try
-                {
-                    item.Willpower = rhs.Willpower;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Willpower = rhs.Willpower;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Agility ?? true)
             {
                 errorMask?.PushIndex((int)Creature_FieldIndex.Agility);
-                try
-                {
-                    item.Agility = rhs.Agility;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Agility = rhs.Agility;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Speed ?? true)
             {
                 errorMask?.PushIndex((int)Creature_FieldIndex.Speed);
-                try
-                {
-                    item.Speed = rhs.Speed;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Speed = rhs.Speed;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Endurance ?? true)
             {
                 errorMask?.PushIndex((int)Creature_FieldIndex.Endurance);
-                try
-                {
-                    item.Endurance = rhs.Endurance;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Endurance = rhs.Endurance;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Personality ?? true)
             {
                 errorMask?.PushIndex((int)Creature_FieldIndex.Personality);
-                try
-                {
-                    item.Personality = rhs.Personality;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Personality = rhs.Personality;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Luck ?? true)
             {
                 errorMask?.PushIndex((int)Creature_FieldIndex.Luck);
-                try
-                {
-                    item.Luck = rhs.Luck;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Luck = rhs.Luck;
+                errorMask?.PopIndex();
             }
             if (copyMask?.AttackReach ?? true)
             {

@@ -69,7 +69,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Name_IsSet
         {
             get => _hasBeenSetTracker[(int)DialogTopic_FieldIndex.Name];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)DialogTopic_FieldIndex.Name, nameof(Name_IsSet));
+            set => _hasBeenSetTracker[(int)DialogTopic_FieldIndex.Name] = value;
         }
         bool IDialogTopicGetter.Name_IsSet => Name_IsSet;
         private String _Name;
@@ -84,7 +84,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Name, value, _hasBeenSetTracker, markSet, (int)DialogTopic_FieldIndex.Name, nameof(Name), nameof(Name_IsSet));
+            _Name = value;
+            _hasBeenSetTracker[(int)DialogTopic_FieldIndex.Name] = markSet;
         }
         public void Name_Unset()
         {
@@ -95,7 +96,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool DialogType_IsSet
         {
             get => _hasBeenSetTracker[(int)DialogTopic_FieldIndex.DialogType];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)DialogTopic_FieldIndex.DialogType, nameof(DialogType_IsSet));
+            set => _hasBeenSetTracker[(int)DialogTopic_FieldIndex.DialogType] = value;
         }
         bool IDialogTopicGetter.DialogType_IsSet => DialogType_IsSet;
         private DialogType _DialogType;
@@ -110,7 +111,8 @@ namespace Mutagen.Bethesda.Oblivion
             DialogType value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _DialogType, value, _hasBeenSetTracker, markSet, (int)DialogTopic_FieldIndex.DialogType, nameof(DialogType), nameof(DialogType_IsSet));
+            _DialogType = value;
+            _hasBeenSetTracker[(int)DialogTopic_FieldIndex.DialogType] = markSet;
         }
         public void DialogType_Unset()
         {
@@ -122,7 +124,7 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte[] Timestamp
         {
             get => _Timestamp;
-            set => this.RaiseAndSetIfChanged(ref _Timestamp, value ?? new byte[4], nameof(Timestamp));
+            set => this._Timestamp = value ?? new byte[4];
         }
         ReadOnlySpan<Byte> IDialogTopicGetter.Timestamp => this.Timestamp;
         #endregion
@@ -1592,19 +1594,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Timestamp ?? true)
             {
                 errorMask?.PushIndex((int)DialogTopic_FieldIndex.Timestamp);
-                try
-                {
-                    item.Timestamp = rhs.Timestamp;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Timestamp = rhs.Timestamp;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Items.Overall != CopyOption.Skip)
             {

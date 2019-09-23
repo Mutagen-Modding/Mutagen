@@ -48,7 +48,6 @@ namespace Mutagen.Bethesda.Oblivion
         protected OblivionMod()
         {
             _hasBeenSetTracker = new BitArray(((ILoquiObject)this).Registration.FieldCount);
-            _hasBeenSetTracker[(int)OblivionMod_FieldIndex.ModHeader] = true;
             _GameSettings_Object = new Group<GameSetting>(this);
             _Globals_Object = new Group<Global>(this);
             _Classes_Object = new Group<Class>(this);

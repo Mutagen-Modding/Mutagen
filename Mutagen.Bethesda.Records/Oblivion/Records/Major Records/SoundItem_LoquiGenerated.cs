@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Chance_IsSet
         {
             get => _hasBeenSetTracker[(int)SoundItem_FieldIndex.Chance];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)SoundItem_FieldIndex.Chance, nameof(Chance_IsSet));
+            set => _hasBeenSetTracker[(int)SoundItem_FieldIndex.Chance] = value;
         }
         bool ISoundItemGetter.Chance_IsSet => Chance_IsSet;
         private Byte _Chance;
@@ -76,7 +76,8 @@ namespace Mutagen.Bethesda.Oblivion
             Byte value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Chance, value, _hasBeenSetTracker, markSet, (int)SoundItem_FieldIndex.Chance, nameof(Chance), nameof(Chance_IsSet));
+            _Chance = value;
+            _hasBeenSetTracker[(int)SoundItem_FieldIndex.Chance] = markSet;
         }
         public void Chance_Unset()
         {

@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool MusicType_IsSet
         {
             get => _hasBeenSetTracker[(int)RegionDataSounds_FieldIndex.MusicType];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)RegionDataSounds_FieldIndex.MusicType, nameof(MusicType_IsSet));
+            set => _hasBeenSetTracker[(int)RegionDataSounds_FieldIndex.MusicType] = value;
         }
         bool IRegionDataSoundsGetter.MusicType_IsSet => MusicType_IsSet;
         private MusicType _MusicType;
@@ -70,7 +70,8 @@ namespace Mutagen.Bethesda.Oblivion
             MusicType value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _MusicType, value, _hasBeenSetTracker, markSet, (int)RegionDataSounds_FieldIndex.MusicType, nameof(MusicType), nameof(MusicType_IsSet));
+            _MusicType = value;
+            _hasBeenSetTracker[(int)RegionDataSounds_FieldIndex.MusicType] = markSet;
         }
         public void MusicType_Unset()
         {

@@ -49,28 +49,13 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region UsableDimensions
-        private P2Int _UsableDimensions;
-        public P2Int UsableDimensions
-        {
-            get => this._UsableDimensions;
-            set => this.RaiseAndSetIfChanged(ref this._UsableDimensions, value, nameof(UsableDimensions));
-        }
+        public P2Int UsableDimensions { get; set; }
         #endregion
         #region CellCoordinatesNWCell
-        private P2Int16 _CellCoordinatesNWCell;
-        public P2Int16 CellCoordinatesNWCell
-        {
-            get => this._CellCoordinatesNWCell;
-            set => this.RaiseAndSetIfChanged(ref this._CellCoordinatesNWCell, value, nameof(CellCoordinatesNWCell));
-        }
+        public P2Int16 CellCoordinatesNWCell { get; set; }
         #endregion
         #region CellCoordinatesSECell
-        private P2Int16 _CellCoordinatesSECell;
-        public P2Int16 CellCoordinatesSECell
-        {
-            get => this._CellCoordinatesSECell;
-            set => this.RaiseAndSetIfChanged(ref this._CellCoordinatesSECell, value, nameof(CellCoordinatesSECell));
-        }
+        public P2Int16 CellCoordinatesSECell { get; set; }
         #endregion
 
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMapDataInternalGetter)rhs, include);
@@ -1061,53 +1046,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.UsableDimensions ?? true)
             {
                 errorMask?.PushIndex((int)MapData_FieldIndex.UsableDimensions);
-                try
-                {
-                    item.UsableDimensions = rhs.UsableDimensions;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.UsableDimensions = rhs.UsableDimensions;
+                errorMask?.PopIndex();
             }
             if (copyMask?.CellCoordinatesNWCell ?? true)
             {
                 errorMask?.PushIndex((int)MapData_FieldIndex.CellCoordinatesNWCell);
-                try
-                {
-                    item.CellCoordinatesNWCell = rhs.CellCoordinatesNWCell;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.CellCoordinatesNWCell = rhs.CellCoordinatesNWCell;
+                errorMask?.PopIndex();
             }
             if (copyMask?.CellCoordinatesSECell ?? true)
             {
                 errorMask?.PushIndex((int)MapData_FieldIndex.CellCoordinatesSECell);
-                try
-                {
-                    item.CellCoordinatesSECell = rhs.CellCoordinatesSECell;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.CellCoordinatesSECell = rhs.CellCoordinatesSECell;
+                errorMask?.PopIndex();
             }
         }
         

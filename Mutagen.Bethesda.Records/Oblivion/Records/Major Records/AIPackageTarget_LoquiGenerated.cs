@@ -49,28 +49,13 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region ObjectType
-        private AIPackageTarget.ObjectTypeEnum _ObjectType;
-        public AIPackageTarget.ObjectTypeEnum ObjectType
-        {
-            get => this._ObjectType;
-            set => this.RaiseAndSetIfChanged(ref this._ObjectType, value, nameof(ObjectType));
-        }
+        public AIPackageTarget.ObjectTypeEnum ObjectType { get; set; }
         #endregion
         #region Object
-        private Int32 _Object;
-        public Int32 Object
-        {
-            get => this._Object;
-            set => this.RaiseAndSetIfChanged(ref this._Object, value, nameof(Object));
-        }
+        public Int32 Object { get; set; }
         #endregion
         #region Count
-        private Int32 _Count;
-        public Int32 Count
-        {
-            get => this._Count;
-            set => this.RaiseAndSetIfChanged(ref this._Count, value, nameof(Count));
-        }
+        public Int32 Count { get; set; }
         #endregion
 
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAIPackageTargetInternalGetter)rhs, include);
@@ -1043,53 +1028,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.ObjectType ?? true)
             {
                 errorMask?.PushIndex((int)AIPackageTarget_FieldIndex.ObjectType);
-                try
-                {
-                    item.ObjectType = rhs.ObjectType;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.ObjectType = rhs.ObjectType;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Object ?? true)
             {
                 errorMask?.PushIndex((int)AIPackageTarget_FieldIndex.Object);
-                try
-                {
-                    item.Object = rhs.Object;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Object = rhs.Object;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Count ?? true)
             {
                 errorMask?.PushIndex((int)AIPackageTarget_FieldIndex.Count);
-                try
-                {
-                    item.Count = rhs.Count;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Count = rhs.Count;
+                errorMask?.PopIndex();
             }
         }
         

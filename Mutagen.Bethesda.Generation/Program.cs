@@ -38,7 +38,7 @@ namespace Mutagen.Bethesda.Generation
         { 
             LoquiGenerator gen = new LoquiGenerator(typical: false)
             {
-                NotifyingDefault = NotifyingType.ReactiveUI,
+                NotifyingDefault = NotifyingType.None,
                 ObjectCentralizedDefault = true,
                 HasBeenSetDefault = true,
                 ToStringDefault = false,

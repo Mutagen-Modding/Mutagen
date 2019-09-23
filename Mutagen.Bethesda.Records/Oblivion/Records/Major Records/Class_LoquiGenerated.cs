@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Name_IsSet
         {
             get => _hasBeenSetTracker[(int)Class_FieldIndex.Name];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Class_FieldIndex.Name, nameof(Name_IsSet));
+            set => _hasBeenSetTracker[(int)Class_FieldIndex.Name] = value;
         }
         bool IClassGetter.Name_IsSet => Name_IsSet;
         private String _Name;
@@ -71,7 +71,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Name, value, _hasBeenSetTracker, markSet, (int)Class_FieldIndex.Name, nameof(Name), nameof(Name_IsSet));
+            _Name = value;
+            _hasBeenSetTracker[(int)Class_FieldIndex.Name] = markSet;
         }
         public void Name_Unset()
         {
@@ -82,7 +83,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Description_IsSet
         {
             get => _hasBeenSetTracker[(int)Class_FieldIndex.Description];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Class_FieldIndex.Description, nameof(Description_IsSet));
+            set => _hasBeenSetTracker[(int)Class_FieldIndex.Description] = value;
         }
         bool IClassGetter.Description_IsSet => Description_IsSet;
         private String _Description;
@@ -97,7 +98,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Description, value, _hasBeenSetTracker, markSet, (int)Class_FieldIndex.Description, nameof(Description), nameof(Description_IsSet));
+            _Description = value;
+            _hasBeenSetTracker[(int)Class_FieldIndex.Description] = markSet;
         }
         public void Description_Unset()
         {
@@ -108,7 +110,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Icon_IsSet
         {
             get => _hasBeenSetTracker[(int)Class_FieldIndex.Icon];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Class_FieldIndex.Icon, nameof(Icon_IsSet));
+            set => _hasBeenSetTracker[(int)Class_FieldIndex.Icon] = value;
         }
         bool IClassGetter.Icon_IsSet => Icon_IsSet;
         private String _Icon;
@@ -123,7 +125,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Icon, value, _hasBeenSetTracker, markSet, (int)Class_FieldIndex.Icon, nameof(Icon), nameof(Icon_IsSet));
+            _Icon = value;
+            _hasBeenSetTracker[(int)Class_FieldIndex.Icon] = markSet;
         }
         public void Icon_Unset()
         {
@@ -150,7 +153,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Specialization, value, nameof(Specialization));
+                this._Specialization = value;
             }
         }
         #endregion
@@ -174,7 +177,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
+                this._Flags = value;
             }
         }
         #endregion
@@ -186,7 +189,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._ClassServices, value, nameof(ClassServices));
+                this._ClassServices = value;
             }
         }
         #endregion
@@ -201,12 +204,7 @@ namespace Mutagen.Bethesda.Oblivion
         IClassTrainingInternalGetter IClassGetter.Training => _Training;
         #endregion
         #region DATADataTypeState
-        private Class.DATADataType _DATADataTypeState;
-        public Class.DATADataType DATADataTypeState
-        {
-            get => this._DATADataTypeState;
-            set => this.RaiseAndSetIfChanged(ref this._DATADataTypeState, value, nameof(DATADataTypeState));
-        }
+        public Class.DATADataType DATADataTypeState { get; set; }
         Class.DATADataType IClassInternal.DATADataTypeState
         {
             get => this.DATADataTypeState;
@@ -1017,7 +1015,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Training
         IClassTrainingInternalGetter Training { get; }
-
         #endregion
 
     }
@@ -1907,19 +1904,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Specialization ?? true)
             {
                 errorMask?.PushIndex((int)Class_FieldIndex.Specialization);
-                try
-                {
-                    item.Specialization = rhs.Specialization;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Specialization = rhs.Specialization;
+                errorMask?.PopIndex();
             }
             if (copyMask?.SecondaryAttributes != CopyOption.Skip)
             {
@@ -1943,36 +1929,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Flags ?? true)
             {
                 errorMask?.PushIndex((int)Class_FieldIndex.Flags);
-                try
-                {
-                    item.Flags = rhs.Flags;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Flags = rhs.Flags;
+                errorMask?.PopIndex();
             }
             if (copyMask?.ClassServices ?? true)
             {
                 errorMask?.PushIndex((int)Class_FieldIndex.ClassServices);
-                try
-                {
-                    item.ClassServices = rhs.ClassServices;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.ClassServices = rhs.ClassServices;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Training.Overall != CopyOption.Skip)
             {

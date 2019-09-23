@@ -49,30 +49,15 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region StaticAttenuation
-        private Single _StaticAttenuation;
-        public Single StaticAttenuation
-        {
-            get => this._StaticAttenuation;
-            set => this.RaiseAndSetIfChanged(ref this._StaticAttenuation, value.PutInRange(StaticAttenuation_Range.Min, StaticAttenuation_Range.Max), nameof(StaticAttenuation));
-        }
+        public Single StaticAttenuation { get; set; }
         public static RangeFloat StaticAttenuation_Range = new RangeFloat(0f, 655.35f);
         #endregion
         #region StopTime
-        private Single _StopTime;
-        public Single StopTime
-        {
-            get => this._StopTime;
-            set => this.RaiseAndSetIfChanged(ref this._StopTime, value.PutInRange(StopTime_Range.Min, StopTime_Range.Max), nameof(StopTime));
-        }
+        public Single StopTime { get; set; }
         public static RangeFloat StopTime_Range = new RangeFloat(0f, 1434.375f);
         #endregion
         #region StartTime
-        private Single _StartTime;
-        public Single StartTime
-        {
-            get => this._StartTime;
-            set => this.RaiseAndSetIfChanged(ref this._StartTime, value.PutInRange(StartTime_Range.Min, StartTime_Range.Max), nameof(StartTime));
-        }
+        public Single StartTime { get; set; }
         public static RangeFloat StartTime_Range = new RangeFloat(0f, 1434.375f);
         #endregion
 
@@ -1112,53 +1097,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.StaticAttenuation ?? true)
             {
                 errorMask?.PushIndex((int)SoundDataExtended_FieldIndex.StaticAttenuation);
-                try
-                {
-                    item.StaticAttenuation = rhs.StaticAttenuation;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.StaticAttenuation = rhs.StaticAttenuation;
+                errorMask?.PopIndex();
             }
             if (copyMask?.StopTime ?? true)
             {
                 errorMask?.PushIndex((int)SoundDataExtended_FieldIndex.StopTime);
-                try
-                {
-                    item.StopTime = rhs.StopTime;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.StopTime = rhs.StopTime;
+                errorMask?.PopIndex();
             }
             if (copyMask?.StartTime ?? true)
             {
                 errorMask?.PushIndex((int)SoundDataExtended_FieldIndex.StartTime);
-                try
-                {
-                    item.StartTime = rhs.StartTime;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.StartTime = rhs.StartTime;
+                errorMask?.PopIndex();
             }
         }
         

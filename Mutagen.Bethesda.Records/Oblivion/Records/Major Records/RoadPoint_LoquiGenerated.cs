@@ -51,19 +51,14 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Point
-        private P3Float _Point;
-        public P3Float Point
-        {
-            get => this._Point;
-            set => this.RaiseAndSetIfChanged(ref this._Point, value, nameof(Point));
-        }
+        public P3Float Point { get; set; }
         #endregion
         #region NumConnectionsFluffBytes
         private Byte[] _NumConnectionsFluffBytes = new byte[3];
         public Byte[] NumConnectionsFluffBytes
         {
             get => _NumConnectionsFluffBytes;
-            set => this.RaiseAndSetIfChanged(ref _NumConnectionsFluffBytes, value ?? new byte[3], nameof(NumConnectionsFluffBytes));
+            set => this._NumConnectionsFluffBytes = value ?? new byte[3];
         }
         ReadOnlySpan<Byte> IRoadPointGetter.NumConnectionsFluffBytes => this.NumConnectionsFluffBytes;
         #endregion
@@ -1069,36 +1064,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Point ?? true)
             {
                 errorMask?.PushIndex((int)RoadPoint_FieldIndex.Point);
-                try
-                {
-                    item.Point = rhs.Point;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Point = rhs.Point;
+                errorMask?.PopIndex();
             }
             if (copyMask?.NumConnectionsFluffBytes ?? true)
             {
                 errorMask?.PushIndex((int)RoadPoint_FieldIndex.NumConnectionsFluffBytes);
-                try
-                {
-                    item.NumConnectionsFluffBytes = rhs.NumConnectionsFluffBytes;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.NumConnectionsFluffBytes = rhs.NumConnectionsFluffBytes;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Connections != CopyOption.Skip)
             {

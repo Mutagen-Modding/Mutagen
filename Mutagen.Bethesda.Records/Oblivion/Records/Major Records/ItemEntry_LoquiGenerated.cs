@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Count_IsSet
         {
             get => _hasBeenSetTracker[(int)ItemEntry_FieldIndex.Count];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)ItemEntry_FieldIndex.Count, nameof(Count_IsSet));
+            set => _hasBeenSetTracker[(int)ItemEntry_FieldIndex.Count] = value;
         }
         bool IItemEntryGetter.Count_IsSet => Count_IsSet;
         private Int32 _Count;
@@ -76,7 +76,8 @@ namespace Mutagen.Bethesda.Oblivion
             Int32 value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Count, value, _hasBeenSetTracker, markSet, (int)ItemEntry_FieldIndex.Count, nameof(Count), nameof(Count_IsSet));
+            _Count = value;
+            _hasBeenSetTracker[(int)ItemEntry_FieldIndex.Count] = markSet;
         }
         public void Count_Unset()
         {

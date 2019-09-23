@@ -67,7 +67,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.SCITDataTypeState |= SCITDataType.Has;
                 this.SCITDataTypeState &= ~SCITDataType.Break0;
-                this.RaiseAndSetIfChanged(ref this._MagicSchool, value, nameof(MagicSchool));
+                this._MagicSchool = value;
             }
         }
         #endregion
@@ -89,7 +89,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.SCITDataTypeState |= SCITDataType.Has;
                 this.SCITDataTypeState &= ~SCITDataType.Break0;
                 this.SCITDataTypeState &= ~SCITDataType.Break1;
-                this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
+                this._Flags = value;
             }
         }
         #endregion
@@ -97,7 +97,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Name_IsSet
         {
             get => _hasBeenSetTracker[(int)ScriptEffect_FieldIndex.Name];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)ScriptEffect_FieldIndex.Name, nameof(Name_IsSet));
+            set => _hasBeenSetTracker[(int)ScriptEffect_FieldIndex.Name] = value;
         }
         bool IScriptEffectGetter.Name_IsSet => Name_IsSet;
         private String _Name;
@@ -112,7 +112,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Name, value, _hasBeenSetTracker, markSet, (int)ScriptEffect_FieldIndex.Name, nameof(Name), nameof(Name_IsSet));
+            _Name = value;
+            _hasBeenSetTracker[(int)ScriptEffect_FieldIndex.Name] = markSet;
         }
         public void Name_Unset()
         {
@@ -120,12 +121,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region SCITDataTypeState
-        private ScriptEffect.SCITDataType _SCITDataTypeState;
-        public ScriptEffect.SCITDataType SCITDataTypeState
-        {
-            get => this._SCITDataTypeState;
-            set => this.RaiseAndSetIfChanged(ref this._SCITDataTypeState, value, nameof(SCITDataTypeState));
-        }
+        public ScriptEffect.SCITDataType SCITDataTypeState { get; set; }
         ScriptEffect.SCITDataType IScriptEffectInternal.SCITDataTypeState
         {
             get => this.SCITDataTypeState;
@@ -1341,19 +1337,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.MagicSchool ?? true)
             {
                 errorMask?.PushIndex((int)ScriptEffect_FieldIndex.MagicSchool);
-                try
-                {
-                    item.MagicSchool = rhs.MagicSchool;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.MagicSchool = rhs.MagicSchool;
+                errorMask?.PopIndex();
             }
             if (copyMask?.VisualEffect ?? true)
             {
@@ -1375,19 +1360,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Flags ?? true)
             {
                 errorMask?.PushIndex((int)ScriptEffect_FieldIndex.Flags);
-                try
-                {
-                    item.Flags = rhs.Flags;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Flags = rhs.Flags;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Name ?? true)
             {

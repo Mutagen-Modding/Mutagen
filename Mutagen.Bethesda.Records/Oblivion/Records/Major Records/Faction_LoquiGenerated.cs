@@ -58,7 +58,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Name_IsSet
         {
             get => _hasBeenSetTracker[(int)Faction_FieldIndex.Name];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Faction_FieldIndex.Name, nameof(Name_IsSet));
+            set => _hasBeenSetTracker[(int)Faction_FieldIndex.Name] = value;
         }
         bool IFactionGetter.Name_IsSet => Name_IsSet;
         private String _Name;
@@ -73,7 +73,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Name, value, _hasBeenSetTracker, markSet, (int)Faction_FieldIndex.Name, nameof(Name), nameof(Name_IsSet));
+            _Name = value;
+            _hasBeenSetTracker[(int)Faction_FieldIndex.Name] = markSet;
         }
         public void Name_Unset()
         {
@@ -96,7 +97,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Flags_IsSet
         {
             get => _hasBeenSetTracker[(int)Faction_FieldIndex.Flags];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Faction_FieldIndex.Flags, nameof(Flags_IsSet));
+            set => _hasBeenSetTracker[(int)Faction_FieldIndex.Flags] = value;
         }
         bool IFactionGetter.Flags_IsSet => Flags_IsSet;
         private Faction.FactionFlag _Flags;
@@ -111,7 +112,8 @@ namespace Mutagen.Bethesda.Oblivion
             Faction.FactionFlag value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Flags, value, _hasBeenSetTracker, markSet, (int)Faction_FieldIndex.Flags, nameof(Flags), nameof(Flags_IsSet));
+            _Flags = value;
+            _hasBeenSetTracker[(int)Faction_FieldIndex.Flags] = markSet;
         }
         public void Flags_Unset()
         {
@@ -122,7 +124,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool CrimeGoldMultiplier_IsSet
         {
             get => _hasBeenSetTracker[(int)Faction_FieldIndex.CrimeGoldMultiplier];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Faction_FieldIndex.CrimeGoldMultiplier, nameof(CrimeGoldMultiplier_IsSet));
+            set => _hasBeenSetTracker[(int)Faction_FieldIndex.CrimeGoldMultiplier] = value;
         }
         bool IFactionGetter.CrimeGoldMultiplier_IsSet => CrimeGoldMultiplier_IsSet;
         private Single _CrimeGoldMultiplier;
@@ -137,7 +139,8 @@ namespace Mutagen.Bethesda.Oblivion
             Single value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _CrimeGoldMultiplier, value, _hasBeenSetTracker, markSet, (int)Faction_FieldIndex.CrimeGoldMultiplier, nameof(CrimeGoldMultiplier), nameof(CrimeGoldMultiplier_IsSet));
+            _CrimeGoldMultiplier = value;
+            _hasBeenSetTracker[(int)Faction_FieldIndex.CrimeGoldMultiplier] = markSet;
         }
         public void CrimeGoldMultiplier_Unset()
         {

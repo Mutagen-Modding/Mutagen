@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Name_IsSet
         {
             get => _hasBeenSetTracker[(int)Race_FieldIndex.Name];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Race_FieldIndex.Name, nameof(Name_IsSet));
+            set => _hasBeenSetTracker[(int)Race_FieldIndex.Name] = value;
         }
         bool IRaceGetter.Name_IsSet => Name_IsSet;
         private String _Name;
@@ -72,7 +72,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Name, value, _hasBeenSetTracker, markSet, (int)Race_FieldIndex.Name, nameof(Name), nameof(Name_IsSet));
+            _Name = value;
+            _hasBeenSetTracker[(int)Race_FieldIndex.Name] = markSet;
         }
         public void Name_Unset()
         {
@@ -83,7 +84,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Description_IsSet
         {
             get => _hasBeenSetTracker[(int)Race_FieldIndex.Description];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Race_FieldIndex.Description, nameof(Description_IsSet));
+            set => _hasBeenSetTracker[(int)Race_FieldIndex.Description] = value;
         }
         bool IRaceGetter.Description_IsSet => Description_IsSet;
         private String _Description;
@@ -98,7 +99,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Description, value, _hasBeenSetTracker, markSet, (int)Race_FieldIndex.Description, nameof(Description), nameof(Description_IsSet));
+            _Description = value;
+            _hasBeenSetTracker[(int)Race_FieldIndex.Description] = markSet;
         }
         public void Description_Unset()
         {
@@ -146,7 +148,7 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte[] Fluff
         {
             get => _Fluff;
-            set => this.RaiseAndSetIfChanged(ref _Fluff, value ?? new byte[4], nameof(Fluff));
+            set => this._Fluff = value ?? new byte[4];
         }
         ReadOnlySpan<Byte> IRaceGetter.Fluff => this.Fluff;
         #endregion
@@ -158,7 +160,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._MaleHeight, value, nameof(MaleHeight));
+                this._MaleHeight = value;
             }
         }
         #endregion
@@ -170,7 +172,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._FemaleHeight, value, nameof(FemaleHeight));
+                this._FemaleHeight = value;
             }
         }
         #endregion
@@ -182,7 +184,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._MaleWeight, value, nameof(MaleWeight));
+                this._MaleWeight = value;
             }
         }
         #endregion
@@ -194,7 +196,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._FemaleWeight, value, nameof(FemaleWeight));
+                this._FemaleWeight = value;
             }
         }
         #endregion
@@ -206,7 +208,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
+                this._Flags = value;
             }
         }
         #endregion
@@ -268,7 +270,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool DefaultHairColor_IsSet
         {
             get => _hasBeenSetTracker[(int)Race_FieldIndex.DefaultHairColor];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Race_FieldIndex.DefaultHairColor, nameof(DefaultHairColor_IsSet));
+            set => _hasBeenSetTracker[(int)Race_FieldIndex.DefaultHairColor] = value;
         }
         bool IRaceGetter.DefaultHairColor_IsSet => DefaultHairColor_IsSet;
         private Byte _DefaultHairColor;
@@ -283,7 +285,8 @@ namespace Mutagen.Bethesda.Oblivion
             Byte value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _DefaultHairColor, value, _hasBeenSetTracker, markSet, (int)Race_FieldIndex.DefaultHairColor, nameof(DefaultHairColor), nameof(DefaultHairColor_IsSet));
+            _DefaultHairColor = value;
+            _hasBeenSetTracker[(int)Race_FieldIndex.DefaultHairColor] = markSet;
         }
         public void DefaultHairColor_Unset()
         {
@@ -294,7 +297,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool FaceGenMainClamp_IsSet
         {
             get => _hasBeenSetTracker[(int)Race_FieldIndex.FaceGenMainClamp];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Race_FieldIndex.FaceGenMainClamp, nameof(FaceGenMainClamp_IsSet));
+            set => _hasBeenSetTracker[(int)Race_FieldIndex.FaceGenMainClamp] = value;
         }
         bool IRaceGetter.FaceGenMainClamp_IsSet => FaceGenMainClamp_IsSet;
         private Int32 _FaceGenMainClamp;
@@ -309,7 +312,8 @@ namespace Mutagen.Bethesda.Oblivion
             Int32 value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _FaceGenMainClamp, value, _hasBeenSetTracker, markSet, (int)Race_FieldIndex.FaceGenMainClamp, nameof(FaceGenMainClamp), nameof(FaceGenMainClamp_IsSet));
+            _FaceGenMainClamp = value;
+            _hasBeenSetTracker[(int)Race_FieldIndex.FaceGenMainClamp] = markSet;
         }
         public void FaceGenMainClamp_Unset()
         {
@@ -320,7 +324,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool FaceGenFaceClamp_IsSet
         {
             get => _hasBeenSetTracker[(int)Race_FieldIndex.FaceGenFaceClamp];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Race_FieldIndex.FaceGenFaceClamp, nameof(FaceGenFaceClamp_IsSet));
+            set => _hasBeenSetTracker[(int)Race_FieldIndex.FaceGenFaceClamp] = value;
         }
         bool IRaceGetter.FaceGenFaceClamp_IsSet => FaceGenFaceClamp_IsSet;
         private Int32 _FaceGenFaceClamp;
@@ -335,7 +339,8 @@ namespace Mutagen.Bethesda.Oblivion
             Int32 value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _FaceGenFaceClamp, value, _hasBeenSetTracker, markSet, (int)Race_FieldIndex.FaceGenFaceClamp, nameof(FaceGenFaceClamp), nameof(FaceGenFaceClamp_IsSet));
+            _FaceGenFaceClamp = value;
+            _hasBeenSetTracker[(int)Race_FieldIndex.FaceGenFaceClamp] = markSet;
         }
         public void FaceGenFaceClamp_Unset()
         {
@@ -488,12 +493,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region DATADataTypeState
-        private Race.DATADataType _DATADataTypeState;
-        public Race.DATADataType DATADataTypeState
-        {
-            get => this._DATADataTypeState;
-            set => this.RaiseAndSetIfChanged(ref this._DATADataTypeState, value, nameof(DATADataTypeState));
-        }
+        public Race.DATADataType DATADataTypeState { get; set; }
         Race.DATADataType IRaceInternal.DATADataTypeState
         {
             get => this.DATADataTypeState;
@@ -3247,104 +3247,38 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Fluff ?? true)
             {
                 errorMask?.PushIndex((int)Race_FieldIndex.Fluff);
-                try
-                {
-                    item.Fluff = rhs.Fluff;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Fluff = rhs.Fluff;
+                errorMask?.PopIndex();
             }
             if (copyMask?.MaleHeight ?? true)
             {
                 errorMask?.PushIndex((int)Race_FieldIndex.MaleHeight);
-                try
-                {
-                    item.MaleHeight = rhs.MaleHeight;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.MaleHeight = rhs.MaleHeight;
+                errorMask?.PopIndex();
             }
             if (copyMask?.FemaleHeight ?? true)
             {
                 errorMask?.PushIndex((int)Race_FieldIndex.FemaleHeight);
-                try
-                {
-                    item.FemaleHeight = rhs.FemaleHeight;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.FemaleHeight = rhs.FemaleHeight;
+                errorMask?.PopIndex();
             }
             if (copyMask?.MaleWeight ?? true)
             {
                 errorMask?.PushIndex((int)Race_FieldIndex.MaleWeight);
-                try
-                {
-                    item.MaleWeight = rhs.MaleWeight;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.MaleWeight = rhs.MaleWeight;
+                errorMask?.PopIndex();
             }
             if (copyMask?.FemaleWeight ?? true)
             {
                 errorMask?.PushIndex((int)Race_FieldIndex.FemaleWeight);
-                try
-                {
-                    item.FemaleWeight = rhs.FemaleWeight;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.FemaleWeight = rhs.FemaleWeight;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Flags ?? true)
             {
                 errorMask?.PushIndex((int)Race_FieldIndex.Flags);
-                try
-                {
-                    item.Flags = rhs.Flags;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Flags = rhs.Flags;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Voices.Overall != CopyOption.Skip)
             {

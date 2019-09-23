@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Name_IsSet
         {
             get => _hasBeenSetTracker[(int)SoulGem_FieldIndex.Name];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)SoulGem_FieldIndex.Name, nameof(Name_IsSet));
+            set => _hasBeenSetTracker[(int)SoulGem_FieldIndex.Name] = value;
         }
         bool ISoulGemGetter.Name_IsSet => Name_IsSet;
         private String _Name;
@@ -70,7 +70,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Name, value, _hasBeenSetTracker, markSet, (int)SoulGem_FieldIndex.Name, nameof(Name), nameof(Name_IsSet));
+            _Name = value;
+            _hasBeenSetTracker[(int)SoulGem_FieldIndex.Name] = markSet;
         }
         public void Name_Unset()
         {
@@ -108,7 +109,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Icon_IsSet
         {
             get => _hasBeenSetTracker[(int)SoulGem_FieldIndex.Icon];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)SoulGem_FieldIndex.Icon, nameof(Icon_IsSet));
+            set => _hasBeenSetTracker[(int)SoulGem_FieldIndex.Icon] = value;
         }
         bool ISoulGemGetter.Icon_IsSet => Icon_IsSet;
         private String _Icon;
@@ -123,7 +124,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Icon, value, _hasBeenSetTracker, markSet, (int)SoulGem_FieldIndex.Icon, nameof(Icon), nameof(Icon_IsSet));
+            _Icon = value;
+            _hasBeenSetTracker[(int)SoulGem_FieldIndex.Icon] = markSet;
         }
         public void Icon_Unset()
         {
@@ -146,7 +148,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Value, value, nameof(Value));
+                this._Value = value;
             }
         }
         #endregion
@@ -158,7 +160,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Weight, value, nameof(Weight));
+                this._Weight = value;
             }
         }
         #endregion
@@ -166,7 +168,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool ContainedSoul_IsSet
         {
             get => _hasBeenSetTracker[(int)SoulGem_FieldIndex.ContainedSoul];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)SoulGem_FieldIndex.ContainedSoul, nameof(ContainedSoul_IsSet));
+            set => _hasBeenSetTracker[(int)SoulGem_FieldIndex.ContainedSoul] = value;
         }
         bool ISoulGemGetter.ContainedSoul_IsSet => ContainedSoul_IsSet;
         private SoulLevel _ContainedSoul;
@@ -181,7 +183,8 @@ namespace Mutagen.Bethesda.Oblivion
             SoulLevel value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _ContainedSoul, value, _hasBeenSetTracker, markSet, (int)SoulGem_FieldIndex.ContainedSoul, nameof(ContainedSoul), nameof(ContainedSoul_IsSet));
+            _ContainedSoul = value;
+            _hasBeenSetTracker[(int)SoulGem_FieldIndex.ContainedSoul] = markSet;
         }
         public void ContainedSoul_Unset()
         {
@@ -192,7 +195,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool MaximumCapacity_IsSet
         {
             get => _hasBeenSetTracker[(int)SoulGem_FieldIndex.MaximumCapacity];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)SoulGem_FieldIndex.MaximumCapacity, nameof(MaximumCapacity_IsSet));
+            set => _hasBeenSetTracker[(int)SoulGem_FieldIndex.MaximumCapacity] = value;
         }
         bool ISoulGemGetter.MaximumCapacity_IsSet => MaximumCapacity_IsSet;
         private SoulLevel _MaximumCapacity;
@@ -207,7 +210,8 @@ namespace Mutagen.Bethesda.Oblivion
             SoulLevel value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _MaximumCapacity, value, _hasBeenSetTracker, markSet, (int)SoulGem_FieldIndex.MaximumCapacity, nameof(MaximumCapacity), nameof(MaximumCapacity_IsSet));
+            _MaximumCapacity = value;
+            _hasBeenSetTracker[(int)SoulGem_FieldIndex.MaximumCapacity] = markSet;
         }
         public void MaximumCapacity_Unset()
         {
@@ -215,12 +219,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region DATADataTypeState
-        private SoulGem.DATADataType _DATADataTypeState;
-        public SoulGem.DATADataType DATADataTypeState
-        {
-            get => this._DATADataTypeState;
-            set => this.RaiseAndSetIfChanged(ref this._DATADataTypeState, value, nameof(DATADataTypeState));
-        }
+        public SoulGem.DATADataType DATADataTypeState { get; set; }
         SoulGem.DATADataType ISoulGemInternal.DATADataTypeState
         {
             get => this.DATADataTypeState;
@@ -1967,36 +1966,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Value ?? true)
             {
                 errorMask?.PushIndex((int)SoulGem_FieldIndex.Value);
-                try
-                {
-                    item.Value = rhs.Value;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Value = rhs.Value;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Weight ?? true)
             {
                 errorMask?.PushIndex((int)SoulGem_FieldIndex.Weight);
-                try
-                {
-                    item.Weight = rhs.Weight;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Weight = rhs.Weight;
+                errorMask?.PopIndex();
             }
             if (copyMask?.ContainedSoul ?? true)
             {

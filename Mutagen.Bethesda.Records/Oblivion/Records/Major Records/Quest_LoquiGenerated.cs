@@ -65,7 +65,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Name_IsSet
         {
             get => _hasBeenSetTracker[(int)Quest_FieldIndex.Name];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Quest_FieldIndex.Name, nameof(Name_IsSet));
+            set => _hasBeenSetTracker[(int)Quest_FieldIndex.Name] = value;
         }
         bool IQuestGetter.Name_IsSet => Name_IsSet;
         private String _Name;
@@ -80,7 +80,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Name, value, _hasBeenSetTracker, markSet, (int)Quest_FieldIndex.Name, nameof(Name), nameof(Name_IsSet));
+            _Name = value;
+            _hasBeenSetTracker[(int)Quest_FieldIndex.Name] = markSet;
         }
         public void Name_Unset()
         {
@@ -91,7 +92,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Icon_IsSet
         {
             get => _hasBeenSetTracker[(int)Quest_FieldIndex.Icon];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Quest_FieldIndex.Icon, nameof(Icon_IsSet));
+            set => _hasBeenSetTracker[(int)Quest_FieldIndex.Icon] = value;
         }
         bool IQuestGetter.Icon_IsSet => Icon_IsSet;
         private String _Icon;
@@ -106,7 +107,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Icon, value, _hasBeenSetTracker, markSet, (int)Quest_FieldIndex.Icon, nameof(Icon), nameof(Icon_IsSet));
+            _Icon = value;
+            _hasBeenSetTracker[(int)Quest_FieldIndex.Icon] = markSet;
         }
         public void Icon_Unset()
         {
@@ -121,7 +123,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
+                this._Flags = value;
             }
         }
         #endregion
@@ -133,7 +135,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Priority, value, nameof(Priority));
+                this._Priority = value;
             }
         }
         #endregion
@@ -174,12 +176,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region DATADataTypeState
-        private Quest.DATADataType _DATADataTypeState;
-        public Quest.DATADataType DATADataTypeState
-        {
-            get => this._DATADataTypeState;
-            set => this.RaiseAndSetIfChanged(ref this._DATADataTypeState, value, nameof(DATADataTypeState));
-        }
+        public Quest.DATADataType DATADataTypeState { get; set; }
         Quest.DATADataType IQuestInternal.DATADataTypeState
         {
             get => this.DATADataTypeState;
@@ -1894,36 +1891,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Flags ?? true)
             {
                 errorMask?.PushIndex((int)Quest_FieldIndex.Flags);
-                try
-                {
-                    item.Flags = rhs.Flags;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Flags = rhs.Flags;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Priority ?? true)
             {
                 errorMask?.PushIndex((int)Quest_FieldIndex.Priority);
-                try
-                {
-                    item.Priority = rhs.Priority;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Priority = rhs.Priority;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Conditions.Overall != CopyOption.Skip)
             {

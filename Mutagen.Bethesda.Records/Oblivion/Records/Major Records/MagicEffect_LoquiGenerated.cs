@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Name_IsSet
         {
             get => _hasBeenSetTracker[(int)MagicEffect_FieldIndex.Name];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)MagicEffect_FieldIndex.Name, nameof(Name_IsSet));
+            set => _hasBeenSetTracker[(int)MagicEffect_FieldIndex.Name] = value;
         }
         bool IMagicEffectGetter.Name_IsSet => Name_IsSet;
         private String _Name;
@@ -72,7 +72,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Name, value, _hasBeenSetTracker, markSet, (int)MagicEffect_FieldIndex.Name, nameof(Name), nameof(Name_IsSet));
+            _Name = value;
+            _hasBeenSetTracker[(int)MagicEffect_FieldIndex.Name] = markSet;
         }
         public void Name_Unset()
         {
@@ -83,7 +84,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Description_IsSet
         {
             get => _hasBeenSetTracker[(int)MagicEffect_FieldIndex.Description];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)MagicEffect_FieldIndex.Description, nameof(Description_IsSet));
+            set => _hasBeenSetTracker[(int)MagicEffect_FieldIndex.Description] = value;
         }
         bool IMagicEffectGetter.Description_IsSet => Description_IsSet;
         private String _Description;
@@ -98,7 +99,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Description, value, _hasBeenSetTracker, markSet, (int)MagicEffect_FieldIndex.Description, nameof(Description), nameof(Description_IsSet));
+            _Description = value;
+            _hasBeenSetTracker[(int)MagicEffect_FieldIndex.Description] = markSet;
         }
         public void Description_Unset()
         {
@@ -109,7 +111,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Icon_IsSet
         {
             get => _hasBeenSetTracker[(int)MagicEffect_FieldIndex.Icon];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)MagicEffect_FieldIndex.Icon, nameof(Icon_IsSet));
+            set => _hasBeenSetTracker[(int)MagicEffect_FieldIndex.Icon] = value;
         }
         bool IMagicEffectGetter.Icon_IsSet => Icon_IsSet;
         private String _Icon;
@@ -124,7 +126,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Icon, value, _hasBeenSetTracker, markSet, (int)MagicEffect_FieldIndex.Icon, nameof(Icon), nameof(Icon_IsSet));
+            _Icon = value;
+            _hasBeenSetTracker[(int)MagicEffect_FieldIndex.Icon] = markSet;
         }
         public void Icon_Unset()
         {
@@ -166,7 +169,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
+                this._Flags = value;
             }
         }
         #endregion
@@ -178,7 +181,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._BaseCost, value, nameof(BaseCost));
+                this._BaseCost = value;
             }
         }
         #endregion
@@ -187,7 +190,7 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte[] Unused
         {
             get => _Unused;
-            set => this.RaiseAndSetIfChanged(ref _Unused, value ?? new byte[4], nameof(Unused));
+            set => this._Unused = value ?? new byte[4];
         }
         ReadOnlySpan<Byte> IMagicEffectGetter.Unused => this.Unused;
         #endregion
@@ -199,7 +202,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._MagicSchool, value, nameof(MagicSchool));
+                this._MagicSchool = value;
             }
         }
         #endregion
@@ -211,7 +214,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Resistance, value, nameof(Resistance));
+                this._Resistance = value;
             }
         }
         #endregion
@@ -223,7 +226,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._CounterEffectCount, value, nameof(CounterEffectCount));
+                this._CounterEffectCount = value;
             }
         }
         #endregion
@@ -243,7 +246,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._ProjectileSpeed, value, nameof(ProjectileSpeed));
+                this._ProjectileSpeed = value;
             }
         }
         #endregion
@@ -278,12 +281,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region DATADataTypeState
-        private MagicEffect.DATADataType _DATADataTypeState;
-        public MagicEffect.DATADataType DATADataTypeState
-        {
-            get => this._DATADataTypeState;
-            set => this.RaiseAndSetIfChanged(ref this._DATADataTypeState, value, nameof(DATADataTypeState));
-        }
+        public MagicEffect.DATADataType DATADataTypeState { get; set; }
         MagicEffect.DATADataType IMagicEffectInternal.DATADataTypeState
         {
             get => this.DATADataTypeState;
@@ -1278,7 +1276,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region SubData
         IMagicEffectSubDataInternalGetter SubData { get; }
-
         #endregion
         #region CounterEffects
         IReadOnlySetList<IEDIDLinkGetter<IMagicEffectInternalGetter>> CounterEffects { get; }
@@ -2338,104 +2335,38 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Flags ?? true)
             {
                 errorMask?.PushIndex((int)MagicEffect_FieldIndex.Flags);
-                try
-                {
-                    item.Flags = rhs.Flags;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Flags = rhs.Flags;
+                errorMask?.PopIndex();
             }
             if (copyMask?.BaseCost ?? true)
             {
                 errorMask?.PushIndex((int)MagicEffect_FieldIndex.BaseCost);
-                try
-                {
-                    item.BaseCost = rhs.BaseCost;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.BaseCost = rhs.BaseCost;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Unused ?? true)
             {
                 errorMask?.PushIndex((int)MagicEffect_FieldIndex.Unused);
-                try
-                {
-                    item.Unused = rhs.Unused;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Unused = rhs.Unused;
+                errorMask?.PopIndex();
             }
             if (copyMask?.MagicSchool ?? true)
             {
                 errorMask?.PushIndex((int)MagicEffect_FieldIndex.MagicSchool);
-                try
-                {
-                    item.MagicSchool = rhs.MagicSchool;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.MagicSchool = rhs.MagicSchool;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Resistance ?? true)
             {
                 errorMask?.PushIndex((int)MagicEffect_FieldIndex.Resistance);
-                try
-                {
-                    item.Resistance = rhs.Resistance;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Resistance = rhs.Resistance;
+                errorMask?.PopIndex();
             }
             if (copyMask?.CounterEffectCount ?? true)
             {
                 errorMask?.PushIndex((int)MagicEffect_FieldIndex.CounterEffectCount);
-                try
-                {
-                    item.CounterEffectCount = rhs.CounterEffectCount;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.CounterEffectCount = rhs.CounterEffectCount;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Light ?? true)
             {
@@ -2457,19 +2388,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.ProjectileSpeed ?? true)
             {
                 errorMask?.PushIndex((int)MagicEffect_FieldIndex.ProjectileSpeed);
-                try
-                {
-                    item.ProjectileSpeed = rhs.ProjectileSpeed;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.ProjectileSpeed = rhs.ProjectileSpeed;
+                errorMask?.PopIndex();
             }
             if (copyMask?.EffectShader ?? true)
             {

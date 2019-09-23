@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Name_IsSet
         {
             get => _hasBeenSetTracker[(int)Ammo_FieldIndex.Name];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Ammo_FieldIndex.Name, nameof(Name_IsSet));
+            set => _hasBeenSetTracker[(int)Ammo_FieldIndex.Name] = value;
         }
         bool IAmmoGetter.Name_IsSet => Name_IsSet;
         private String _Name;
@@ -70,7 +70,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Name, value, _hasBeenSetTracker, markSet, (int)Ammo_FieldIndex.Name, nameof(Name), nameof(Name_IsSet));
+            _Name = value;
+            _hasBeenSetTracker[(int)Ammo_FieldIndex.Name] = markSet;
         }
         public void Name_Unset()
         {
@@ -108,7 +109,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Icon_IsSet
         {
             get => _hasBeenSetTracker[(int)Ammo_FieldIndex.Icon];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Ammo_FieldIndex.Icon, nameof(Icon_IsSet));
+            set => _hasBeenSetTracker[(int)Ammo_FieldIndex.Icon] = value;
         }
         bool IAmmoGetter.Icon_IsSet => Icon_IsSet;
         private String _Icon;
@@ -123,7 +124,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Icon, value, _hasBeenSetTracker, markSet, (int)Ammo_FieldIndex.Icon, nameof(Icon), nameof(Icon_IsSet));
+            _Icon = value;
+            _hasBeenSetTracker[(int)Ammo_FieldIndex.Icon] = markSet;
         }
         public void Icon_Unset()
         {
@@ -142,7 +144,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool EnchantmentPoints_IsSet
         {
             get => _hasBeenSetTracker[(int)Ammo_FieldIndex.EnchantmentPoints];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Ammo_FieldIndex.EnchantmentPoints, nameof(EnchantmentPoints_IsSet));
+            set => _hasBeenSetTracker[(int)Ammo_FieldIndex.EnchantmentPoints] = value;
         }
         bool IAmmoGetter.EnchantmentPoints_IsSet => EnchantmentPoints_IsSet;
         private UInt16 _EnchantmentPoints;
@@ -157,7 +159,8 @@ namespace Mutagen.Bethesda.Oblivion
             UInt16 value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _EnchantmentPoints, value, _hasBeenSetTracker, markSet, (int)Ammo_FieldIndex.EnchantmentPoints, nameof(EnchantmentPoints), nameof(EnchantmentPoints_IsSet));
+            _EnchantmentPoints = value;
+            _hasBeenSetTracker[(int)Ammo_FieldIndex.EnchantmentPoints] = markSet;
         }
         public void EnchantmentPoints_Unset()
         {
@@ -172,7 +175,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Speed, value, nameof(Speed));
+                this._Speed = value;
             }
         }
         #endregion
@@ -184,7 +187,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
+                this._Flags = value;
             }
         }
         #endregion
@@ -196,7 +199,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Value, value, nameof(Value));
+                this._Value = value;
             }
         }
         #endregion
@@ -208,7 +211,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Weight, value, nameof(Weight));
+                this._Weight = value;
             }
         }
         #endregion
@@ -220,17 +223,12 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.DATADataTypeState |= DATADataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Damage, value, nameof(Damage));
+                this._Damage = value;
             }
         }
         #endregion
         #region DATADataTypeState
-        private Ammo.DATADataType _DATADataTypeState;
-        public Ammo.DATADataType DATADataTypeState
-        {
-            get => this._DATADataTypeState;
-            set => this.RaiseAndSetIfChanged(ref this._DATADataTypeState, value, nameof(DATADataTypeState));
-        }
+        public Ammo.DATADataType DATADataTypeState { get; set; }
         Ammo.DATADataType IAmmoInternal.DATADataTypeState
         {
             get => this.DATADataTypeState;
@@ -2059,87 +2057,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Speed ?? true)
             {
                 errorMask?.PushIndex((int)Ammo_FieldIndex.Speed);
-                try
-                {
-                    item.Speed = rhs.Speed;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Speed = rhs.Speed;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Flags ?? true)
             {
                 errorMask?.PushIndex((int)Ammo_FieldIndex.Flags);
-                try
-                {
-                    item.Flags = rhs.Flags;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Flags = rhs.Flags;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Value ?? true)
             {
                 errorMask?.PushIndex((int)Ammo_FieldIndex.Value);
-                try
-                {
-                    item.Value = rhs.Value;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Value = rhs.Value;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Weight ?? true)
             {
                 errorMask?.PushIndex((int)Ammo_FieldIndex.Weight);
-                try
-                {
-                    item.Weight = rhs.Weight;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Weight = rhs.Weight;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Damage ?? true)
             {
                 errorMask?.PushIndex((int)Ammo_FieldIndex.Damage);
-                try
-                {
-                    item.Damage = rhs.Damage;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Damage = rhs.Damage;
+                errorMask?.PopIndex();
             }
         }
         

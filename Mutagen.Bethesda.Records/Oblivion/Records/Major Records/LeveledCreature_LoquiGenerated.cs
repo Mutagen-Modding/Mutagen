@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool ChanceNone_IsSet
         {
             get => _hasBeenSetTracker[(int)LeveledCreature_FieldIndex.ChanceNone];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)LeveledCreature_FieldIndex.ChanceNone, nameof(ChanceNone_IsSet));
+            set => _hasBeenSetTracker[(int)LeveledCreature_FieldIndex.ChanceNone] = value;
         }
         bool ILeveledCreatureGetter.ChanceNone_IsSet => ChanceNone_IsSet;
         private Byte _ChanceNone;
@@ -71,7 +71,8 @@ namespace Mutagen.Bethesda.Oblivion
             Byte value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _ChanceNone, value, _hasBeenSetTracker, markSet, (int)LeveledCreature_FieldIndex.ChanceNone, nameof(ChanceNone), nameof(ChanceNone_IsSet));
+            _ChanceNone = value;
+            _hasBeenSetTracker[(int)LeveledCreature_FieldIndex.ChanceNone] = markSet;
         }
         public void ChanceNone_Unset()
         {
@@ -82,7 +83,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Flags_IsSet
         {
             get => _hasBeenSetTracker[(int)LeveledCreature_FieldIndex.Flags];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)LeveledCreature_FieldIndex.Flags, nameof(Flags_IsSet));
+            set => _hasBeenSetTracker[(int)LeveledCreature_FieldIndex.Flags] = value;
         }
         bool ILeveledCreatureGetter.Flags_IsSet => Flags_IsSet;
         private LeveledFlag _Flags;
@@ -97,7 +98,8 @@ namespace Mutagen.Bethesda.Oblivion
             LeveledFlag value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Flags, value, _hasBeenSetTracker, markSet, (int)LeveledCreature_FieldIndex.Flags, nameof(Flags), nameof(Flags_IsSet));
+            _Flags = value;
+            _hasBeenSetTracker[(int)LeveledCreature_FieldIndex.Flags] = markSet;
         }
         public void Flags_Unset()
         {

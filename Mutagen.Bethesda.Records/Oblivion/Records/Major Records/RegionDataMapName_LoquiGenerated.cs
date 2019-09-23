@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool MapName_IsSet
         {
             get => _hasBeenSetTracker[(int)RegionDataMapName_FieldIndex.MapName];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)RegionDataMapName_FieldIndex.MapName, nameof(MapName_IsSet));
+            set => _hasBeenSetTracker[(int)RegionDataMapName_FieldIndex.MapName] = value;
         }
         bool IRegionDataMapNameGetter.MapName_IsSet => MapName_IsSet;
         private String _MapName;
@@ -67,7 +67,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _MapName, value, _hasBeenSetTracker, markSet, (int)RegionDataMapName_FieldIndex.MapName, nameof(MapName), nameof(MapName_IsSet));
+            _MapName = value;
+            _hasBeenSetTracker[(int)RegionDataMapName_FieldIndex.MapName] = markSet;
         }
         public void MapName_Unset()
         {

@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Skyrim
         public bool Diffuse_IsSet
         {
             get => _hasBeenSetTracker[(int)Textures_FieldIndex.Diffuse];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Textures_FieldIndex.Diffuse, nameof(Diffuse_IsSet));
+            set => _hasBeenSetTracker[(int)Textures_FieldIndex.Diffuse] = value;
         }
         bool ITexturesGetter.Diffuse_IsSet => Diffuse_IsSet;
         private String _Diffuse;
@@ -67,7 +67,8 @@ namespace Mutagen.Bethesda.Skyrim
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Diffuse, value, _hasBeenSetTracker, markSet, (int)Textures_FieldIndex.Diffuse, nameof(Diffuse), nameof(Diffuse_IsSet));
+            _Diffuse = value;
+            _hasBeenSetTracker[(int)Textures_FieldIndex.Diffuse] = markSet;
         }
         public void Diffuse_Unset()
         {
@@ -78,7 +79,7 @@ namespace Mutagen.Bethesda.Skyrim
         public bool NormalOrGloss_IsSet
         {
             get => _hasBeenSetTracker[(int)Textures_FieldIndex.NormalOrGloss];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Textures_FieldIndex.NormalOrGloss, nameof(NormalOrGloss_IsSet));
+            set => _hasBeenSetTracker[(int)Textures_FieldIndex.NormalOrGloss] = value;
         }
         bool ITexturesGetter.NormalOrGloss_IsSet => NormalOrGloss_IsSet;
         private String _NormalOrGloss;
@@ -93,7 +94,8 @@ namespace Mutagen.Bethesda.Skyrim
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _NormalOrGloss, value, _hasBeenSetTracker, markSet, (int)Textures_FieldIndex.NormalOrGloss, nameof(NormalOrGloss), nameof(NormalOrGloss_IsSet));
+            _NormalOrGloss = value;
+            _hasBeenSetTracker[(int)Textures_FieldIndex.NormalOrGloss] = markSet;
         }
         public void NormalOrGloss_Unset()
         {
@@ -104,7 +106,7 @@ namespace Mutagen.Bethesda.Skyrim
         public bool EnvironmentMaskOrSubsurfaceTint_IsSet
         {
             get => _hasBeenSetTracker[(int)Textures_FieldIndex.EnvironmentMaskOrSubsurfaceTint];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Textures_FieldIndex.EnvironmentMaskOrSubsurfaceTint, nameof(EnvironmentMaskOrSubsurfaceTint_IsSet));
+            set => _hasBeenSetTracker[(int)Textures_FieldIndex.EnvironmentMaskOrSubsurfaceTint] = value;
         }
         bool ITexturesGetter.EnvironmentMaskOrSubsurfaceTint_IsSet => EnvironmentMaskOrSubsurfaceTint_IsSet;
         private String _EnvironmentMaskOrSubsurfaceTint;
@@ -119,7 +121,8 @@ namespace Mutagen.Bethesda.Skyrim
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _EnvironmentMaskOrSubsurfaceTint, value, _hasBeenSetTracker, markSet, (int)Textures_FieldIndex.EnvironmentMaskOrSubsurfaceTint, nameof(EnvironmentMaskOrSubsurfaceTint), nameof(EnvironmentMaskOrSubsurfaceTint_IsSet));
+            _EnvironmentMaskOrSubsurfaceTint = value;
+            _hasBeenSetTracker[(int)Textures_FieldIndex.EnvironmentMaskOrSubsurfaceTint] = markSet;
         }
         public void EnvironmentMaskOrSubsurfaceTint_Unset()
         {
@@ -130,7 +133,7 @@ namespace Mutagen.Bethesda.Skyrim
         public bool GlowOrDetailMap_IsSet
         {
             get => _hasBeenSetTracker[(int)Textures_FieldIndex.GlowOrDetailMap];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Textures_FieldIndex.GlowOrDetailMap, nameof(GlowOrDetailMap_IsSet));
+            set => _hasBeenSetTracker[(int)Textures_FieldIndex.GlowOrDetailMap] = value;
         }
         bool ITexturesGetter.GlowOrDetailMap_IsSet => GlowOrDetailMap_IsSet;
         private String _GlowOrDetailMap;
@@ -145,7 +148,8 @@ namespace Mutagen.Bethesda.Skyrim
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _GlowOrDetailMap, value, _hasBeenSetTracker, markSet, (int)Textures_FieldIndex.GlowOrDetailMap, nameof(GlowOrDetailMap), nameof(GlowOrDetailMap_IsSet));
+            _GlowOrDetailMap = value;
+            _hasBeenSetTracker[(int)Textures_FieldIndex.GlowOrDetailMap] = markSet;
         }
         public void GlowOrDetailMap_Unset()
         {
@@ -156,7 +160,7 @@ namespace Mutagen.Bethesda.Skyrim
         public bool Height_IsSet
         {
             get => _hasBeenSetTracker[(int)Textures_FieldIndex.Height];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Textures_FieldIndex.Height, nameof(Height_IsSet));
+            set => _hasBeenSetTracker[(int)Textures_FieldIndex.Height] = value;
         }
         bool ITexturesGetter.Height_IsSet => Height_IsSet;
         private String _Height;
@@ -171,7 +175,8 @@ namespace Mutagen.Bethesda.Skyrim
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Height, value, _hasBeenSetTracker, markSet, (int)Textures_FieldIndex.Height, nameof(Height), nameof(Height_IsSet));
+            _Height = value;
+            _hasBeenSetTracker[(int)Textures_FieldIndex.Height] = markSet;
         }
         public void Height_Unset()
         {
@@ -182,7 +187,7 @@ namespace Mutagen.Bethesda.Skyrim
         public bool Environment_IsSet
         {
             get => _hasBeenSetTracker[(int)Textures_FieldIndex.Environment];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Textures_FieldIndex.Environment, nameof(Environment_IsSet));
+            set => _hasBeenSetTracker[(int)Textures_FieldIndex.Environment] = value;
         }
         bool ITexturesGetter.Environment_IsSet => Environment_IsSet;
         private String _Environment;
@@ -197,7 +202,8 @@ namespace Mutagen.Bethesda.Skyrim
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Environment, value, _hasBeenSetTracker, markSet, (int)Textures_FieldIndex.Environment, nameof(Environment), nameof(Environment_IsSet));
+            _Environment = value;
+            _hasBeenSetTracker[(int)Textures_FieldIndex.Environment] = markSet;
         }
         public void Environment_Unset()
         {
@@ -208,7 +214,7 @@ namespace Mutagen.Bethesda.Skyrim
         public bool Multilayer_IsSet
         {
             get => _hasBeenSetTracker[(int)Textures_FieldIndex.Multilayer];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Textures_FieldIndex.Multilayer, nameof(Multilayer_IsSet));
+            set => _hasBeenSetTracker[(int)Textures_FieldIndex.Multilayer] = value;
         }
         bool ITexturesGetter.Multilayer_IsSet => Multilayer_IsSet;
         private String _Multilayer;
@@ -223,7 +229,8 @@ namespace Mutagen.Bethesda.Skyrim
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Multilayer, value, _hasBeenSetTracker, markSet, (int)Textures_FieldIndex.Multilayer, nameof(Multilayer), nameof(Multilayer_IsSet));
+            _Multilayer = value;
+            _hasBeenSetTracker[(int)Textures_FieldIndex.Multilayer] = markSet;
         }
         public void Multilayer_Unset()
         {
@@ -234,7 +241,7 @@ namespace Mutagen.Bethesda.Skyrim
         public bool BacklightMaskOrSpecular_IsSet
         {
             get => _hasBeenSetTracker[(int)Textures_FieldIndex.BacklightMaskOrSpecular];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Textures_FieldIndex.BacklightMaskOrSpecular, nameof(BacklightMaskOrSpecular_IsSet));
+            set => _hasBeenSetTracker[(int)Textures_FieldIndex.BacklightMaskOrSpecular] = value;
         }
         bool ITexturesGetter.BacklightMaskOrSpecular_IsSet => BacklightMaskOrSpecular_IsSet;
         private String _BacklightMaskOrSpecular;
@@ -249,7 +256,8 @@ namespace Mutagen.Bethesda.Skyrim
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _BacklightMaskOrSpecular, value, _hasBeenSetTracker, markSet, (int)Textures_FieldIndex.BacklightMaskOrSpecular, nameof(BacklightMaskOrSpecular), nameof(BacklightMaskOrSpecular_IsSet));
+            _BacklightMaskOrSpecular = value;
+            _hasBeenSetTracker[(int)Textures_FieldIndex.BacklightMaskOrSpecular] = markSet;
         }
         public void BacklightMaskOrSpecular_Unset()
         {

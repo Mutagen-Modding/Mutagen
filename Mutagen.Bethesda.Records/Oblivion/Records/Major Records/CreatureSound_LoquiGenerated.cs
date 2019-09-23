@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool SoundType_IsSet
         {
             get => _hasBeenSetTracker[(int)CreatureSound_FieldIndex.SoundType];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)CreatureSound_FieldIndex.SoundType, nameof(SoundType_IsSet));
+            set => _hasBeenSetTracker[(int)CreatureSound_FieldIndex.SoundType] = value;
         }
         bool ICreatureSoundGetter.SoundType_IsSet => SoundType_IsSet;
         private CreatureSound.CreatureSoundType _SoundType;
@@ -70,7 +70,8 @@ namespace Mutagen.Bethesda.Oblivion
             CreatureSound.CreatureSoundType value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _SoundType, value, _hasBeenSetTracker, markSet, (int)CreatureSound_FieldIndex.SoundType, nameof(SoundType), nameof(SoundType_IsSet));
+            _SoundType = value;
+            _hasBeenSetTracker[(int)CreatureSound_FieldIndex.SoundType] = markSet;
         }
         public void SoundType_Unset()
         {

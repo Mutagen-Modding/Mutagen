@@ -134,7 +134,7 @@ namespace Mutagen.Bethesda.Skyrim
         public bool Flags_IsSet
         {
             get => _hasBeenSetTracker[(int)TextureSet_FieldIndex.Flags];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)TextureSet_FieldIndex.Flags, nameof(Flags_IsSet));
+            set => _hasBeenSetTracker[(int)TextureSet_FieldIndex.Flags] = value;
         }
         bool ITextureSetGetter.Flags_IsSet => Flags_IsSet;
         private TextureSet.Flag _Flags;
@@ -149,7 +149,8 @@ namespace Mutagen.Bethesda.Skyrim
             TextureSet.Flag value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Flags, value, _hasBeenSetTracker, markSet, (int)TextureSet_FieldIndex.Flags, nameof(Flags), nameof(Flags_IsSet));
+            _Flags = value;
+            _hasBeenSetTracker[(int)TextureSet_FieldIndex.Flags] = markSet;
         }
         public void Flags_Unset()
         {

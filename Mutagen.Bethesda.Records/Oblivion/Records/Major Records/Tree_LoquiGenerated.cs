@@ -82,7 +82,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Icon_IsSet
         {
             get => _hasBeenSetTracker[(int)Tree_FieldIndex.Icon];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Tree_FieldIndex.Icon, nameof(Icon_IsSet));
+            set => _hasBeenSetTracker[(int)Tree_FieldIndex.Icon] = value;
         }
         bool ITreeGetter.Icon_IsSet => Icon_IsSet;
         private String _Icon;
@@ -97,7 +97,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Icon, value, _hasBeenSetTracker, markSet, (int)Tree_FieldIndex.Icon, nameof(Icon), nameof(Icon_IsSet));
+            _Icon = value;
+            _hasBeenSetTracker[(int)Tree_FieldIndex.Icon] = markSet;
         }
         public void Icon_Unset()
         {
@@ -124,7 +125,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.CNAMDataTypeState |= CNAMDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._LeafCurvature, value, nameof(LeafCurvature));
+                this._LeafCurvature = value;
             }
         }
         #endregion
@@ -136,7 +137,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.CNAMDataTypeState |= CNAMDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._MinimumLeafAngle, value, nameof(MinimumLeafAngle));
+                this._MinimumLeafAngle = value;
             }
         }
         #endregion
@@ -148,7 +149,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.CNAMDataTypeState |= CNAMDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._MaximumLeafAngle, value, nameof(MaximumLeafAngle));
+                this._MaximumLeafAngle = value;
             }
         }
         #endregion
@@ -160,7 +161,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.CNAMDataTypeState |= CNAMDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._BranchDimmingValue, value, nameof(BranchDimmingValue));
+                this._BranchDimmingValue = value;
             }
         }
         #endregion
@@ -172,7 +173,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.CNAMDataTypeState |= CNAMDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._LeafDimmingValue, value, nameof(LeafDimmingValue));
+                this._LeafDimmingValue = value;
             }
         }
         #endregion
@@ -184,7 +185,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.CNAMDataTypeState |= CNAMDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._ShadowRadius, value, nameof(ShadowRadius));
+                this._ShadowRadius = value;
             }
         }
         #endregion
@@ -196,7 +197,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.CNAMDataTypeState |= CNAMDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._RockingSpeed, value, nameof(RockingSpeed));
+                this._RockingSpeed = value;
             }
         }
         #endregion
@@ -208,7 +209,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.CNAMDataTypeState |= CNAMDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._RustleSpeed, value, nameof(RustleSpeed));
+                this._RustleSpeed = value;
             }
         }
         #endregion
@@ -220,7 +221,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.BNAMDataTypeState |= BNAMDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._BillboardWidth, value, nameof(BillboardWidth));
+                this._BillboardWidth = value;
             }
         }
         #endregion
@@ -232,17 +233,12 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.BNAMDataTypeState |= BNAMDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._BillboardHeight, value, nameof(BillboardHeight));
+                this._BillboardHeight = value;
             }
         }
         #endregion
         #region CNAMDataTypeState
-        private Tree.CNAMDataType _CNAMDataTypeState;
-        public Tree.CNAMDataType CNAMDataTypeState
-        {
-            get => this._CNAMDataTypeState;
-            set => this.RaiseAndSetIfChanged(ref this._CNAMDataTypeState, value, nameof(CNAMDataTypeState));
-        }
+        public Tree.CNAMDataType CNAMDataTypeState { get; set; }
         Tree.CNAMDataType ITreeInternal.CNAMDataTypeState
         {
             get => this.CNAMDataTypeState;
@@ -254,12 +250,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region BNAMDataTypeState
-        private Tree.BNAMDataType _BNAMDataTypeState;
-        public Tree.BNAMDataType BNAMDataTypeState
-        {
-            get => this._BNAMDataTypeState;
-            set => this.RaiseAndSetIfChanged(ref this._BNAMDataTypeState, value, nameof(BNAMDataTypeState));
-        }
+        public Tree.BNAMDataType BNAMDataTypeState { get; set; }
         Tree.BNAMDataType ITreeInternal.BNAMDataTypeState
         {
             get => this.BNAMDataTypeState;
@@ -2142,172 +2133,62 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.LeafCurvature ?? true)
             {
                 errorMask?.PushIndex((int)Tree_FieldIndex.LeafCurvature);
-                try
-                {
-                    item.LeafCurvature = rhs.LeafCurvature;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.LeafCurvature = rhs.LeafCurvature;
+                errorMask?.PopIndex();
             }
             if (copyMask?.MinimumLeafAngle ?? true)
             {
                 errorMask?.PushIndex((int)Tree_FieldIndex.MinimumLeafAngle);
-                try
-                {
-                    item.MinimumLeafAngle = rhs.MinimumLeafAngle;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.MinimumLeafAngle = rhs.MinimumLeafAngle;
+                errorMask?.PopIndex();
             }
             if (copyMask?.MaximumLeafAngle ?? true)
             {
                 errorMask?.PushIndex((int)Tree_FieldIndex.MaximumLeafAngle);
-                try
-                {
-                    item.MaximumLeafAngle = rhs.MaximumLeafAngle;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.MaximumLeafAngle = rhs.MaximumLeafAngle;
+                errorMask?.PopIndex();
             }
             if (copyMask?.BranchDimmingValue ?? true)
             {
                 errorMask?.PushIndex((int)Tree_FieldIndex.BranchDimmingValue);
-                try
-                {
-                    item.BranchDimmingValue = rhs.BranchDimmingValue;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.BranchDimmingValue = rhs.BranchDimmingValue;
+                errorMask?.PopIndex();
             }
             if (copyMask?.LeafDimmingValue ?? true)
             {
                 errorMask?.PushIndex((int)Tree_FieldIndex.LeafDimmingValue);
-                try
-                {
-                    item.LeafDimmingValue = rhs.LeafDimmingValue;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.LeafDimmingValue = rhs.LeafDimmingValue;
+                errorMask?.PopIndex();
             }
             if (copyMask?.ShadowRadius ?? true)
             {
                 errorMask?.PushIndex((int)Tree_FieldIndex.ShadowRadius);
-                try
-                {
-                    item.ShadowRadius = rhs.ShadowRadius;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.ShadowRadius = rhs.ShadowRadius;
+                errorMask?.PopIndex();
             }
             if (copyMask?.RockingSpeed ?? true)
             {
                 errorMask?.PushIndex((int)Tree_FieldIndex.RockingSpeed);
-                try
-                {
-                    item.RockingSpeed = rhs.RockingSpeed;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.RockingSpeed = rhs.RockingSpeed;
+                errorMask?.PopIndex();
             }
             if (copyMask?.RustleSpeed ?? true)
             {
                 errorMask?.PushIndex((int)Tree_FieldIndex.RustleSpeed);
-                try
-                {
-                    item.RustleSpeed = rhs.RustleSpeed;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.RustleSpeed = rhs.RustleSpeed;
+                errorMask?.PopIndex();
             }
             if (copyMask?.BillboardWidth ?? true)
             {
                 errorMask?.PushIndex((int)Tree_FieldIndex.BillboardWidth);
-                try
-                {
-                    item.BillboardWidth = rhs.BillboardWidth;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.BillboardWidth = rhs.BillboardWidth;
+                errorMask?.PopIndex();
             }
             if (copyMask?.BillboardHeight ?? true)
             {
                 errorMask?.PushIndex((int)Tree_FieldIndex.BillboardHeight);
-                try
-                {
-                    item.BillboardHeight = rhs.BillboardHeight;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.BillboardHeight = rhs.BillboardHeight;
+                errorMask?.PopIndex();
             }
         }
         

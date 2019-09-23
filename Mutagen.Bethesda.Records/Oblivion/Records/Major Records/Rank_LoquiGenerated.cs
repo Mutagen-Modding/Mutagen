@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool RankNumber_IsSet
         {
             get => _hasBeenSetTracker[(int)Rank_FieldIndex.RankNumber];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Rank_FieldIndex.RankNumber, nameof(RankNumber_IsSet));
+            set => _hasBeenSetTracker[(int)Rank_FieldIndex.RankNumber] = value;
         }
         bool IRankGetter.RankNumber_IsSet => RankNumber_IsSet;
         private Int32 _RankNumber;
@@ -67,7 +67,8 @@ namespace Mutagen.Bethesda.Oblivion
             Int32 value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _RankNumber, value, _hasBeenSetTracker, markSet, (int)Rank_FieldIndex.RankNumber, nameof(RankNumber), nameof(RankNumber_IsSet));
+            _RankNumber = value;
+            _hasBeenSetTracker[(int)Rank_FieldIndex.RankNumber] = markSet;
         }
         public void RankNumber_Unset()
         {
@@ -78,7 +79,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool MaleName_IsSet
         {
             get => _hasBeenSetTracker[(int)Rank_FieldIndex.MaleName];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Rank_FieldIndex.MaleName, nameof(MaleName_IsSet));
+            set => _hasBeenSetTracker[(int)Rank_FieldIndex.MaleName] = value;
         }
         bool IRankGetter.MaleName_IsSet => MaleName_IsSet;
         private String _MaleName;
@@ -93,7 +94,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _MaleName, value, _hasBeenSetTracker, markSet, (int)Rank_FieldIndex.MaleName, nameof(MaleName), nameof(MaleName_IsSet));
+            _MaleName = value;
+            _hasBeenSetTracker[(int)Rank_FieldIndex.MaleName] = markSet;
         }
         public void MaleName_Unset()
         {
@@ -104,7 +106,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool FemaleName_IsSet
         {
             get => _hasBeenSetTracker[(int)Rank_FieldIndex.FemaleName];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Rank_FieldIndex.FemaleName, nameof(FemaleName_IsSet));
+            set => _hasBeenSetTracker[(int)Rank_FieldIndex.FemaleName] = value;
         }
         bool IRankGetter.FemaleName_IsSet => FemaleName_IsSet;
         private String _FemaleName;
@@ -119,7 +121,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _FemaleName, value, _hasBeenSetTracker, markSet, (int)Rank_FieldIndex.FemaleName, nameof(FemaleName), nameof(FemaleName_IsSet));
+            _FemaleName = value;
+            _hasBeenSetTracker[(int)Rank_FieldIndex.FemaleName] = markSet;
         }
         public void FemaleName_Unset()
         {
@@ -130,7 +133,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Insignia_IsSet
         {
             get => _hasBeenSetTracker[(int)Rank_FieldIndex.Insignia];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Rank_FieldIndex.Insignia, nameof(Insignia_IsSet));
+            set => _hasBeenSetTracker[(int)Rank_FieldIndex.Insignia] = value;
         }
         bool IRankGetter.Insignia_IsSet => Insignia_IsSet;
         private String _Insignia;
@@ -145,7 +148,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Insignia, value, _hasBeenSetTracker, markSet, (int)Rank_FieldIndex.Insignia, nameof(Insignia), nameof(Insignia_IsSet));
+            _Insignia = value;
+            _hasBeenSetTracker[(int)Rank_FieldIndex.Insignia] = markSet;
         }
         public void Insignia_Unset()
         {

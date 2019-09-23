@@ -58,12 +58,7 @@ namespace Mutagen.Bethesda.Oblivion
         IFormIDLinkGetter<IItemAbstractInternalGetter> IContainerItemGetter.Item_Property => this.Item_Property;
         #endregion
         #region Count
-        private UInt32 _Count;
-        public UInt32 Count
-        {
-            get => this._Count;
-            set => this.RaiseAndSetIfChanged(ref this._Count, value, nameof(Count));
-        }
+        public UInt32 Count { get; set; }
         #endregion
 
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IContainerItemInternalGetter)rhs, include);
@@ -1032,19 +1027,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Count ?? true)
             {
                 errorMask?.PushIndex((int)ContainerItem_FieldIndex.Count);
-                try
-                {
-                    item.Count = rhs.Count;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Count = rhs.Count;
+                errorMask?.PopIndex();
             }
         }
         

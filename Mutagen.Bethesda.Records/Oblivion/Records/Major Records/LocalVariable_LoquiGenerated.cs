@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.SLSDDataTypeState |= SLSDDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Index, value, nameof(Index));
+                this._Index = value;
             }
         }
         #endregion
@@ -65,7 +65,7 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte[] Fluff
         {
             get => _Fluff;
-            set => this.RaiseAndSetIfChanged(ref _Fluff, value ?? new byte[12], nameof(Fluff));
+            set => this._Fluff = value ?? new byte[12];
         }
         ReadOnlySpan<Byte> ILocalVariableGetter.Fluff => this.Fluff;
         #endregion
@@ -77,7 +77,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.SLSDDataTypeState |= SLSDDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
+                this._Flags = value;
             }
         }
         #endregion
@@ -86,7 +86,7 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte[] Fluff2
         {
             get => _Fluff2;
-            set => this.RaiseAndSetIfChanged(ref _Fluff2, value ?? new byte[4], nameof(Fluff2));
+            set => this._Fluff2 = value ?? new byte[4];
         }
         ReadOnlySpan<Byte> ILocalVariableGetter.Fluff2 => this.Fluff2;
         #endregion
@@ -94,7 +94,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Name_IsSet
         {
             get => _hasBeenSetTracker[(int)LocalVariable_FieldIndex.Name];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)LocalVariable_FieldIndex.Name, nameof(Name_IsSet));
+            set => _hasBeenSetTracker[(int)LocalVariable_FieldIndex.Name] = value;
         }
         bool ILocalVariableGetter.Name_IsSet => Name_IsSet;
         private String _Name;
@@ -109,7 +109,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Name, value, _hasBeenSetTracker, markSet, (int)LocalVariable_FieldIndex.Name, nameof(Name), nameof(Name_IsSet));
+            _Name = value;
+            _hasBeenSetTracker[(int)LocalVariable_FieldIndex.Name] = markSet;
         }
         public void Name_Unset()
         {
@@ -117,12 +118,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region SLSDDataTypeState
-        private LocalVariable.SLSDDataType _SLSDDataTypeState;
-        public LocalVariable.SLSDDataType SLSDDataTypeState
-        {
-            get => this._SLSDDataTypeState;
-            set => this.RaiseAndSetIfChanged(ref this._SLSDDataTypeState, value, nameof(SLSDDataTypeState));
-        }
+        public LocalVariable.SLSDDataType SLSDDataTypeState { get; set; }
         LocalVariable.SLSDDataType ILocalVariableInternal.SLSDDataTypeState
         {
             get => this.SLSDDataTypeState;
@@ -1284,70 +1280,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Index ?? true)
             {
                 errorMask?.PushIndex((int)LocalVariable_FieldIndex.Index);
-                try
-                {
-                    item.Index = rhs.Index;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Index = rhs.Index;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Fluff ?? true)
             {
                 errorMask?.PushIndex((int)LocalVariable_FieldIndex.Fluff);
-                try
-                {
-                    item.Fluff = rhs.Fluff;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Fluff = rhs.Fluff;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Flags ?? true)
             {
                 errorMask?.PushIndex((int)LocalVariable_FieldIndex.Flags);
-                try
-                {
-                    item.Flags = rhs.Flags;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Flags = rhs.Flags;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Fluff2 ?? true)
             {
                 errorMask?.PushIndex((int)LocalVariable_FieldIndex.Fluff2);
-                try
-                {
-                    item.Fluff2 = rhs.Fluff2;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Fluff2 = rhs.Fluff2;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Name ?? true)
             {

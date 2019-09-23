@@ -58,7 +58,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Name_IsSet
         {
             get => _hasBeenSetTracker[(int)Worldspace_FieldIndex.Name];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Worldspace_FieldIndex.Name, nameof(Name_IsSet));
+            set => _hasBeenSetTracker[(int)Worldspace_FieldIndex.Name] = value;
         }
         bool IWorldspaceGetter.Name_IsSet => Name_IsSet;
         private String _Name;
@@ -73,7 +73,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Name, value, _hasBeenSetTracker, markSet, (int)Worldspace_FieldIndex.Name, nameof(Name), nameof(Name_IsSet));
+            _Name = value;
+            _hasBeenSetTracker[(int)Worldspace_FieldIndex.Name] = markSet;
         }
         public void Name_Unset()
         {
@@ -108,7 +109,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Icon_IsSet
         {
             get => _hasBeenSetTracker[(int)Worldspace_FieldIndex.Icon];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Worldspace_FieldIndex.Icon, nameof(Icon_IsSet));
+            set => _hasBeenSetTracker[(int)Worldspace_FieldIndex.Icon] = value;
         }
         bool IWorldspaceGetter.Icon_IsSet => Icon_IsSet;
         private String _Icon;
@@ -123,7 +124,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Icon, value, _hasBeenSetTracker, markSet, (int)Worldspace_FieldIndex.Icon, nameof(Icon), nameof(Icon_IsSet));
+            _Icon = value;
+            _hasBeenSetTracker[(int)Worldspace_FieldIndex.Icon] = markSet;
         }
         public void Icon_Unset()
         {
@@ -161,7 +163,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Flags_IsSet
         {
             get => _hasBeenSetTracker[(int)Worldspace_FieldIndex.Flags];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Worldspace_FieldIndex.Flags, nameof(Flags_IsSet));
+            set => _hasBeenSetTracker[(int)Worldspace_FieldIndex.Flags] = value;
         }
         bool IWorldspaceGetter.Flags_IsSet => Flags_IsSet;
         private Worldspace.Flag _Flags;
@@ -176,7 +178,8 @@ namespace Mutagen.Bethesda.Oblivion
             Worldspace.Flag value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Flags, value, _hasBeenSetTracker, markSet, (int)Worldspace_FieldIndex.Flags, nameof(Flags), nameof(Flags_IsSet));
+            _Flags = value;
+            _hasBeenSetTracker[(int)Worldspace_FieldIndex.Flags] = markSet;
         }
         public void Flags_Unset()
         {
@@ -187,7 +190,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool ObjectBoundsMin_IsSet
         {
             get => _hasBeenSetTracker[(int)Worldspace_FieldIndex.ObjectBoundsMin];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Worldspace_FieldIndex.ObjectBoundsMin, nameof(ObjectBoundsMin_IsSet));
+            set => _hasBeenSetTracker[(int)Worldspace_FieldIndex.ObjectBoundsMin] = value;
         }
         bool IWorldspaceGetter.ObjectBoundsMin_IsSet => ObjectBoundsMin_IsSet;
         private P2Float _ObjectBoundsMin;
@@ -202,7 +205,8 @@ namespace Mutagen.Bethesda.Oblivion
             P2Float value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _ObjectBoundsMin, value, _hasBeenSetTracker, markSet, (int)Worldspace_FieldIndex.ObjectBoundsMin, nameof(ObjectBoundsMin), nameof(ObjectBoundsMin_IsSet));
+            _ObjectBoundsMin = value;
+            _hasBeenSetTracker[(int)Worldspace_FieldIndex.ObjectBoundsMin] = markSet;
         }
         public void ObjectBoundsMin_Unset()
         {
@@ -213,7 +217,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool ObjectBoundsMax_IsSet
         {
             get => _hasBeenSetTracker[(int)Worldspace_FieldIndex.ObjectBoundsMax];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Worldspace_FieldIndex.ObjectBoundsMax, nameof(ObjectBoundsMax_IsSet));
+            set => _hasBeenSetTracker[(int)Worldspace_FieldIndex.ObjectBoundsMax] = value;
         }
         bool IWorldspaceGetter.ObjectBoundsMax_IsSet => ObjectBoundsMax_IsSet;
         private P2Float _ObjectBoundsMax;
@@ -228,7 +232,8 @@ namespace Mutagen.Bethesda.Oblivion
             P2Float value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _ObjectBoundsMax, value, _hasBeenSetTracker, markSet, (int)Worldspace_FieldIndex.ObjectBoundsMax, nameof(ObjectBoundsMax), nameof(ObjectBoundsMax_IsSet));
+            _ObjectBoundsMax = value;
+            _hasBeenSetTracker[(int)Worldspace_FieldIndex.ObjectBoundsMax] = markSet;
         }
         public void ObjectBoundsMax_Unset()
         {
@@ -239,7 +244,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Music_IsSet
         {
             get => _hasBeenSetTracker[(int)Worldspace_FieldIndex.Music];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Worldspace_FieldIndex.Music, nameof(Music_IsSet));
+            set => _hasBeenSetTracker[(int)Worldspace_FieldIndex.Music] = value;
         }
         bool IWorldspaceGetter.Music_IsSet => Music_IsSet;
         private MusicType _Music;
@@ -254,7 +259,8 @@ namespace Mutagen.Bethesda.Oblivion
             MusicType value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Music, value, _hasBeenSetTracker, markSet, (int)Worldspace_FieldIndex.Music, nameof(Music), nameof(Music_IsSet));
+            _Music = value;
+            _hasBeenSetTracker[(int)Worldspace_FieldIndex.Music] = markSet;
         }
         public void Music_Unset()
         {
@@ -348,7 +354,7 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte[] SubCellsTimestamp
         {
             get => _SubCellsTimestamp;
-            set => this.RaiseAndSetIfChanged(ref _SubCellsTimestamp, value ?? new byte[4], nameof(SubCellsTimestamp));
+            set => this._SubCellsTimestamp = value ?? new byte[4];
         }
         ReadOnlySpan<Byte> IWorldspaceGetter.SubCellsTimestamp => this.SubCellsTimestamp;
         #endregion
@@ -365,12 +371,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region UsingOffsetLength
-        private Boolean _UsingOffsetLength;
-        public Boolean UsingOffsetLength
-        {
-            get => this._UsingOffsetLength;
-            set => this.RaiseAndSetIfChanged(ref this._UsingOffsetLength, value, nameof(UsingOffsetLength));
-        }
+        public Boolean UsingOffsetLength { get; set; }
         #endregion
 
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWorldspaceInternalGetter)rhs, include);
@@ -2852,19 +2853,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.SubCellsTimestamp ?? true)
             {
                 errorMask?.PushIndex((int)Worldspace_FieldIndex.SubCellsTimestamp);
-                try
-                {
-                    item.SubCellsTimestamp = rhs.SubCellsTimestamp;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.SubCellsTimestamp = rhs.SubCellsTimestamp;
+                errorMask?.PopIndex();
             }
             if (copyMask?.SubCells.Overall != CopyOption.Skip)
             {
@@ -2903,19 +2893,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.UsingOffsetLength ?? true)
             {
                 errorMask?.PushIndex((int)Worldspace_FieldIndex.UsingOffsetLength);
-                try
-                {
-                    item.UsingOffsetLength = rhs.UsingOffsetLength;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.UsingOffsetLength = rhs.UsingOffsetLength;
+                errorMask?.PopIndex();
             }
         }
         

@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Data_IsSet
         {
             get => _hasBeenSetTracker[(int)GlobalShort_FieldIndex.Data];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)GlobalShort_FieldIndex.Data, nameof(Data_IsSet));
+            set => _hasBeenSetTracker[(int)GlobalShort_FieldIndex.Data] = value;
         }
         bool IGlobalShortGetter.Data_IsSet => Data_IsSet;
         private Int16 _Data;
@@ -68,7 +68,8 @@ namespace Mutagen.Bethesda.Oblivion
             Int16 value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Data, value, _hasBeenSetTracker, markSet, (int)GlobalShort_FieldIndex.Data, nameof(Data), nameof(Data_IsSet));
+            _Data = value;
+            _hasBeenSetTracker[(int)GlobalShort_FieldIndex.Data] = markSet;
         }
         public void Data_Unset()
         {

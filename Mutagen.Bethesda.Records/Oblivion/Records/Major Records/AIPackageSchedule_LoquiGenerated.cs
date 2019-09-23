@@ -49,44 +49,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Month
-        private Month _Month;
-        public Month Month
-        {
-            get => this._Month;
-            set => this.RaiseAndSetIfChanged(ref this._Month, value, nameof(Month));
-        }
+        public Month Month { get; set; }
         #endregion
         #region DayOfWeek
-        private Weekday _DayOfWeek;
-        public Weekday DayOfWeek
-        {
-            get => this._DayOfWeek;
-            set => this.RaiseAndSetIfChanged(ref this._DayOfWeek, value, nameof(DayOfWeek));
-        }
+        public Weekday DayOfWeek { get; set; }
         #endregion
         #region Day
-        private Byte _Day;
-        public Byte Day
-        {
-            get => this._Day;
-            set => this.RaiseAndSetIfChanged(ref this._Day, value, nameof(Day));
-        }
+        public Byte Day { get; set; }
         #endregion
         #region Time
-        private Byte _Time;
-        public Byte Time
-        {
-            get => this._Time;
-            set => this.RaiseAndSetIfChanged(ref this._Time, value, nameof(Time));
-        }
+        public Byte Time { get; set; }
         #endregion
         #region Duration
-        private Int32 _Duration;
-        public Int32 Duration
-        {
-            get => this._Duration;
-            set => this.RaiseAndSetIfChanged(ref this._Duration, value, nameof(Duration));
-        }
+        public Int32 Duration { get; set; }
         #endregion
 
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAIPackageScheduleInternalGetter)rhs, include);
@@ -1138,87 +1113,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Month ?? true)
             {
                 errorMask?.PushIndex((int)AIPackageSchedule_FieldIndex.Month);
-                try
-                {
-                    item.Month = rhs.Month;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Month = rhs.Month;
+                errorMask?.PopIndex();
             }
             if (copyMask?.DayOfWeek ?? true)
             {
                 errorMask?.PushIndex((int)AIPackageSchedule_FieldIndex.DayOfWeek);
-                try
-                {
-                    item.DayOfWeek = rhs.DayOfWeek;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.DayOfWeek = rhs.DayOfWeek;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Day ?? true)
             {
                 errorMask?.PushIndex((int)AIPackageSchedule_FieldIndex.Day);
-                try
-                {
-                    item.Day = rhs.Day;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Day = rhs.Day;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Time ?? true)
             {
                 errorMask?.PushIndex((int)AIPackageSchedule_FieldIndex.Time);
-                try
-                {
-                    item.Time = rhs.Time;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Time = rhs.Time;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Duration ?? true)
             {
                 errorMask?.PushIndex((int)AIPackageSchedule_FieldIndex.Duration);
-                try
-                {
-                    item.Duration = rhs.Duration;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Duration = rhs.Duration;
+                errorMask?.PopIndex();
             }
         }
         

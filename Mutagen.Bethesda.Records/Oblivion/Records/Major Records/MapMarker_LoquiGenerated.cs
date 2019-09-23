@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Flags_IsSet
         {
             get => _hasBeenSetTracker[(int)MapMarker_FieldIndex.Flags];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)MapMarker_FieldIndex.Flags, nameof(Flags_IsSet));
+            set => _hasBeenSetTracker[(int)MapMarker_FieldIndex.Flags] = value;
         }
         bool IMapMarkerGetter.Flags_IsSet => Flags_IsSet;
         private MapMarker.Flag _Flags;
@@ -70,7 +70,8 @@ namespace Mutagen.Bethesda.Oblivion
             MapMarker.Flag value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Flags, value, _hasBeenSetTracker, markSet, (int)MapMarker_FieldIndex.Flags, nameof(Flags), nameof(Flags_IsSet));
+            _Flags = value;
+            _hasBeenSetTracker[(int)MapMarker_FieldIndex.Flags] = markSet;
         }
         public void Flags_Unset()
         {
@@ -81,7 +82,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Name_IsSet
         {
             get => _hasBeenSetTracker[(int)MapMarker_FieldIndex.Name];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)MapMarker_FieldIndex.Name, nameof(Name_IsSet));
+            set => _hasBeenSetTracker[(int)MapMarker_FieldIndex.Name] = value;
         }
         bool IMapMarkerGetter.Name_IsSet => Name_IsSet;
         private String _Name;
@@ -96,7 +97,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Name, value, _hasBeenSetTracker, markSet, (int)MapMarker_FieldIndex.Name, nameof(Name), nameof(Name_IsSet));
+            _Name = value;
+            _hasBeenSetTracker[(int)MapMarker_FieldIndex.Name] = markSet;
         }
         public void Name_Unset()
         {

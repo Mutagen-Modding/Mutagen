@@ -50,12 +50,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region VariableIndex
-        private Int32 _VariableIndex;
-        public Int32 VariableIndex
-        {
-            get => this._VariableIndex;
-            set => this.RaiseAndSetIfChanged(ref this._VariableIndex, value, nameof(VariableIndex));
-        }
+        public Int32 VariableIndex { get; set; }
         #endregion
 
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IScriptVariableReferenceInternalGetter)rhs, include);
@@ -1018,19 +1013,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.VariableIndex ?? true)
             {
                 errorMask?.PushIndex((int)ScriptVariableReference_FieldIndex.VariableIndex);
-                try
-                {
-                    item.VariableIndex = rhs.VariableIndex;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.VariableIndex = rhs.VariableIndex;
+                errorMask?.PopIndex();
             }
         }
         

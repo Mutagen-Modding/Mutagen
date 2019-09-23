@@ -56,28 +56,13 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region GroupType
-        private GroupTypeEnum _GroupType;
-        public GroupTypeEnum GroupType
-        {
-            get => this._GroupType;
-            set => this.RaiseAndSetIfChanged(ref this._GroupType, value, nameof(GroupType));
-        }
+        public GroupTypeEnum GroupType { get; set; }
         #endregion
         #region LastModified
-        private Int32 _LastModified;
-        public Int32 LastModified
-        {
-            get => this._LastModified;
-            set => this.RaiseAndSetIfChanged(ref this._LastModified, value, nameof(LastModified));
-        }
+        public Int32 LastModified { get; set; }
         #endregion
         #region Unknown
-        private Int32 _Unknown;
-        public Int32 Unknown
-        {
-            get => this._Unknown;
-            set => this.RaiseAndSetIfChanged(ref this._Unknown, value, nameof(Unknown));
-        }
+        public Int32 Unknown { get; set; }
         #endregion
         #region Items
         private readonly SourceSetCache<T, FormKey> _Items = new SourceSetCache<T, FormKey>((item) => item.FormKey);
@@ -1194,53 +1179,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (copyMask?.GroupType ?? true)
             {
                 errorMask?.PushIndex((int)Group_FieldIndex.GroupType);
-                try
-                {
-                    item.GroupType = rhs.GroupType;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.GroupType = rhs.GroupType;
+                errorMask?.PopIndex();
             }
             if (copyMask?.LastModified ?? true)
             {
                 errorMask?.PushIndex((int)Group_FieldIndex.LastModified);
-                try
-                {
-                    item.LastModified = rhs.LastModified;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.LastModified = rhs.LastModified;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Unknown ?? true)
             {
                 errorMask?.PushIndex((int)Group_FieldIndex.Unknown);
-                try
-                {
-                    item.Unknown = rhs.Unknown;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Unknown = rhs.Unknown;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Items.Overall != CopyOption.Skip)
             {

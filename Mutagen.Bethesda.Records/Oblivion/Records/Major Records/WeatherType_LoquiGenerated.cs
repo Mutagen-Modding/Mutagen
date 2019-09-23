@@ -51,36 +51,16 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Sunrise
-        private Color _Sunrise;
-        public Color Sunrise
-        {
-            get => this._Sunrise;
-            set => this.RaiseAndSetIfChanged(ref this._Sunrise, value, nameof(Sunrise));
-        }
+        public Color Sunrise { get; set; }
         #endregion
         #region Day
-        private Color _Day;
-        public Color Day
-        {
-            get => this._Day;
-            set => this.RaiseAndSetIfChanged(ref this._Day, value, nameof(Day));
-        }
+        public Color Day { get; set; }
         #endregion
         #region Sunset
-        private Color _Sunset;
-        public Color Sunset
-        {
-            get => this._Sunset;
-            set => this.RaiseAndSetIfChanged(ref this._Sunset, value, nameof(Sunset));
-        }
+        public Color Sunset { get; set; }
         #endregion
         #region Night
-        private Color _Night;
-        public Color Night
-        {
-            get => this._Night;
-            set => this.RaiseAndSetIfChanged(ref this._Night, value, nameof(Night));
-        }
+        public Color Night { get; set; }
         #endregion
 
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWeatherTypeInternalGetter)rhs, include);
@@ -1110,70 +1090,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Sunrise ?? true)
             {
                 errorMask?.PushIndex((int)WeatherType_FieldIndex.Sunrise);
-                try
-                {
-                    item.Sunrise = rhs.Sunrise;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Sunrise = rhs.Sunrise;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Day ?? true)
             {
                 errorMask?.PushIndex((int)WeatherType_FieldIndex.Day);
-                try
-                {
-                    item.Day = rhs.Day;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Day = rhs.Day;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Sunset ?? true)
             {
                 errorMask?.PushIndex((int)WeatherType_FieldIndex.Sunset);
-                try
-                {
-                    item.Sunset = rhs.Sunset;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Sunset = rhs.Sunset;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Night ?? true)
             {
                 errorMask?.PushIndex((int)WeatherType_FieldIndex.Night);
-                try
-                {
-                    item.Night = rhs.Night;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Night = rhs.Night;
+                errorMask?.PopIndex();
             }
         }
         

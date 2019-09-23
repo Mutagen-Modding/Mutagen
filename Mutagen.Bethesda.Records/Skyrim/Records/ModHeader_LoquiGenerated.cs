@@ -53,44 +53,19 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Flags
-        private ModHeader.HeaderFlag _Flags;
-        public ModHeader.HeaderFlag Flags
-        {
-            get => this._Flags;
-            set => this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
-        }
+        public ModHeader.HeaderFlag Flags { get; set; }
         #endregion
         #region FormID
-        private UInt32 _FormID;
-        public UInt32 FormID
-        {
-            get => this._FormID;
-            set => this.RaiseAndSetIfChanged(ref this._FormID, value, nameof(FormID));
-        }
+        public UInt32 FormID { get; set; }
         #endregion
         #region Version
-        private Int32 _Version;
-        public Int32 Version
-        {
-            get => this._Version;
-            set => this.RaiseAndSetIfChanged(ref this._Version, value, nameof(Version));
-        }
+        public Int32 Version { get; set; }
         #endregion
         #region FormVersion
-        private UInt16 _FormVersion;
-        public UInt16 FormVersion
-        {
-            get => this._FormVersion;
-            set => this.RaiseAndSetIfChanged(ref this._FormVersion, value, nameof(FormVersion));
-        }
+        public UInt16 FormVersion { get; set; }
         #endregion
         #region Version2
-        private UInt16 _Version2;
-        public UInt16 Version2
-        {
-            get => this._Version2;
-            set => this.RaiseAndSetIfChanged(ref this._Version2, value, nameof(Version2));
-        }
+        public UInt16 Version2 { get; set; }
         #endregion
         #region Stats
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -162,7 +137,7 @@ namespace Mutagen.Bethesda.Skyrim
         public bool Author_IsSet
         {
             get => _hasBeenSetTracker[(int)ModHeader_FieldIndex.Author];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)ModHeader_FieldIndex.Author, nameof(Author_IsSet));
+            set => _hasBeenSetTracker[(int)ModHeader_FieldIndex.Author] = value;
         }
         bool IModHeaderGetter.Author_IsSet => Author_IsSet;
         private String _Author;
@@ -177,7 +152,8 @@ namespace Mutagen.Bethesda.Skyrim
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Author, value, _hasBeenSetTracker, markSet, (int)ModHeader_FieldIndex.Author, nameof(Author), nameof(Author_IsSet));
+            _Author = value;
+            _hasBeenSetTracker[(int)ModHeader_FieldIndex.Author] = markSet;
         }
         public void Author_Unset()
         {
@@ -188,7 +164,7 @@ namespace Mutagen.Bethesda.Skyrim
         public bool Description_IsSet
         {
             get => _hasBeenSetTracker[(int)ModHeader_FieldIndex.Description];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)ModHeader_FieldIndex.Description, nameof(Description_IsSet));
+            set => _hasBeenSetTracker[(int)ModHeader_FieldIndex.Description] = value;
         }
         bool IModHeaderGetter.Description_IsSet => Description_IsSet;
         private String _Description;
@@ -203,7 +179,8 @@ namespace Mutagen.Bethesda.Skyrim
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Description, value, _hasBeenSetTracker, markSet, (int)ModHeader_FieldIndex.Description, nameof(Description), nameof(Description_IsSet));
+            _Description = value;
+            _hasBeenSetTracker[(int)ModHeader_FieldIndex.Description] = markSet;
         }
         public void Description_Unset()
         {
@@ -238,7 +215,7 @@ namespace Mutagen.Bethesda.Skyrim
         public bool INTV_IsSet
         {
             get => _hasBeenSetTracker[(int)ModHeader_FieldIndex.INTV];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)ModHeader_FieldIndex.INTV, nameof(INTV_IsSet));
+            set => _hasBeenSetTracker[(int)ModHeader_FieldIndex.INTV] = value;
         }
         bool IModHeaderGetter.INTV_IsSet => INTV_IsSet;
         private Int32 _INTV;
@@ -253,7 +230,8 @@ namespace Mutagen.Bethesda.Skyrim
             Int32 value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _INTV, value, _hasBeenSetTracker, markSet, (int)ModHeader_FieldIndex.INTV, nameof(INTV), nameof(INTV_IsSet));
+            _INTV = value;
+            _hasBeenSetTracker[(int)ModHeader_FieldIndex.INTV] = markSet;
         }
         public void INTV_Unset()
         {
@@ -264,7 +242,7 @@ namespace Mutagen.Bethesda.Skyrim
         public bool INCC_IsSet
         {
             get => _hasBeenSetTracker[(int)ModHeader_FieldIndex.INCC];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)ModHeader_FieldIndex.INCC, nameof(INCC_IsSet));
+            set => _hasBeenSetTracker[(int)ModHeader_FieldIndex.INCC] = value;
         }
         bool IModHeaderGetter.INCC_IsSet => INCC_IsSet;
         private Int32 _INCC;
@@ -279,7 +257,8 @@ namespace Mutagen.Bethesda.Skyrim
             Int32 value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _INCC, value, _hasBeenSetTracker, markSet, (int)ModHeader_FieldIndex.INCC, nameof(INCC), nameof(INCC_IsSet));
+            _INCC = value;
+            _hasBeenSetTracker[(int)ModHeader_FieldIndex.INCC] = markSet;
         }
         public void INCC_Unset()
         {
@@ -1110,7 +1089,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Stats
         IModStatsInternalGetter Stats { get; }
-
         #endregion
         #region TypeOffsets
         ReadOnlySpan<Byte> TypeOffsets { get; }
@@ -1936,87 +1914,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (copyMask?.Flags ?? true)
             {
                 errorMask?.PushIndex((int)ModHeader_FieldIndex.Flags);
-                try
-                {
-                    item.Flags = rhs.Flags;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Flags = rhs.Flags;
+                errorMask?.PopIndex();
             }
             if (copyMask?.FormID ?? true)
             {
                 errorMask?.PushIndex((int)ModHeader_FieldIndex.FormID);
-                try
-                {
-                    item.FormID = rhs.FormID;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.FormID = rhs.FormID;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Version ?? true)
             {
                 errorMask?.PushIndex((int)ModHeader_FieldIndex.Version);
-                try
-                {
-                    item.Version = rhs.Version;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Version = rhs.Version;
+                errorMask?.PopIndex();
             }
             if (copyMask?.FormVersion ?? true)
             {
                 errorMask?.PushIndex((int)ModHeader_FieldIndex.FormVersion);
-                try
-                {
-                    item.FormVersion = rhs.FormVersion;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.FormVersion = rhs.FormVersion;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Version2 ?? true)
             {
                 errorMask?.PushIndex((int)ModHeader_FieldIndex.Version2);
-                try
-                {
-                    item.Version2 = rhs.Version2;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Version2 = rhs.Version2;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Stats.Overall != CopyOption.Skip)
             {

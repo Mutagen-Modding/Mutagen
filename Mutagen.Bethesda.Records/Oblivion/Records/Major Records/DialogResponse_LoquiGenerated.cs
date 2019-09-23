@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.TRDTDataTypeState |= TRDTDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Emotion, value, nameof(Emotion));
+                this._Emotion = value;
             }
         }
         #endregion
@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.TRDTDataTypeState |= TRDTDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._EmotionValue, value, nameof(EmotionValue));
+                this._EmotionValue = value;
             }
         }
         #endregion
@@ -77,7 +77,7 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte[] Fluff1
         {
             get => _Fluff1;
-            set => this.RaiseAndSetIfChanged(ref _Fluff1, value ?? new byte[4], nameof(Fluff1));
+            set => this._Fluff1 = value ?? new byte[4];
         }
         ReadOnlySpan<Byte> IDialogResponseGetter.Fluff1 => this.Fluff1;
         #endregion
@@ -89,7 +89,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.TRDTDataTypeState |= TRDTDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._ResponseNumber, value, nameof(ResponseNumber));
+                this._ResponseNumber = value;
             }
         }
         #endregion
@@ -98,7 +98,7 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte[] Fluff2
         {
             get => _Fluff2;
-            set => this.RaiseAndSetIfChanged(ref _Fluff2, value ?? new byte[3], nameof(Fluff2));
+            set => this._Fluff2 = value ?? new byte[3];
         }
         ReadOnlySpan<Byte> IDialogResponseGetter.Fluff2 => this.Fluff2;
         #endregion
@@ -106,7 +106,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool ResponseText_IsSet
         {
             get => _hasBeenSetTracker[(int)DialogResponse_FieldIndex.ResponseText];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)DialogResponse_FieldIndex.ResponseText, nameof(ResponseText_IsSet));
+            set => _hasBeenSetTracker[(int)DialogResponse_FieldIndex.ResponseText] = value;
         }
         bool IDialogResponseGetter.ResponseText_IsSet => ResponseText_IsSet;
         private String _ResponseText;
@@ -121,7 +121,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _ResponseText, value, _hasBeenSetTracker, markSet, (int)DialogResponse_FieldIndex.ResponseText, nameof(ResponseText), nameof(ResponseText_IsSet));
+            _ResponseText = value;
+            _hasBeenSetTracker[(int)DialogResponse_FieldIndex.ResponseText] = markSet;
         }
         public void ResponseText_Unset()
         {
@@ -132,7 +133,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool ActorNotes_IsSet
         {
             get => _hasBeenSetTracker[(int)DialogResponse_FieldIndex.ActorNotes];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)DialogResponse_FieldIndex.ActorNotes, nameof(ActorNotes_IsSet));
+            set => _hasBeenSetTracker[(int)DialogResponse_FieldIndex.ActorNotes] = value;
         }
         bool IDialogResponseGetter.ActorNotes_IsSet => ActorNotes_IsSet;
         private String _ActorNotes;
@@ -147,7 +148,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _ActorNotes, value, _hasBeenSetTracker, markSet, (int)DialogResponse_FieldIndex.ActorNotes, nameof(ActorNotes), nameof(ActorNotes_IsSet));
+            _ActorNotes = value;
+            _hasBeenSetTracker[(int)DialogResponse_FieldIndex.ActorNotes] = markSet;
         }
         public void ActorNotes_Unset()
         {
@@ -155,12 +157,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region TRDTDataTypeState
-        private DialogResponse.TRDTDataType _TRDTDataTypeState;
-        public DialogResponse.TRDTDataType TRDTDataTypeState
-        {
-            get => this._TRDTDataTypeState;
-            set => this.RaiseAndSetIfChanged(ref this._TRDTDataTypeState, value, nameof(TRDTDataTypeState));
-        }
+        public DialogResponse.TRDTDataType TRDTDataTypeState { get; set; }
         DialogResponse.TRDTDataType IDialogResponseInternal.TRDTDataTypeState
         {
             get => this.TRDTDataTypeState;
@@ -1420,87 +1417,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Emotion ?? true)
             {
                 errorMask?.PushIndex((int)DialogResponse_FieldIndex.Emotion);
-                try
-                {
-                    item.Emotion = rhs.Emotion;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Emotion = rhs.Emotion;
+                errorMask?.PopIndex();
             }
             if (copyMask?.EmotionValue ?? true)
             {
                 errorMask?.PushIndex((int)DialogResponse_FieldIndex.EmotionValue);
-                try
-                {
-                    item.EmotionValue = rhs.EmotionValue;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.EmotionValue = rhs.EmotionValue;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Fluff1 ?? true)
             {
                 errorMask?.PushIndex((int)DialogResponse_FieldIndex.Fluff1);
-                try
-                {
-                    item.Fluff1 = rhs.Fluff1;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Fluff1 = rhs.Fluff1;
+                errorMask?.PopIndex();
             }
             if (copyMask?.ResponseNumber ?? true)
             {
                 errorMask?.PushIndex((int)DialogResponse_FieldIndex.ResponseNumber);
-                try
-                {
-                    item.ResponseNumber = rhs.ResponseNumber;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.ResponseNumber = rhs.ResponseNumber;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Fluff2 ?? true)
             {
                 errorMask?.PushIndex((int)DialogResponse_FieldIndex.Fluff2);
-                try
-                {
-                    item.Fluff2 = rhs.Fluff2;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Fluff2 = rhs.Fluff2;
+                errorMask?.PopIndex();
             }
             if (copyMask?.ResponseText ?? true)
             {

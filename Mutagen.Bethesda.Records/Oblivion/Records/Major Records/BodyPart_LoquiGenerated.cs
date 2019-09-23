@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Index_IsSet
         {
             get => _hasBeenSetTracker[(int)BodyPart_FieldIndex.Index];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)BodyPart_FieldIndex.Index, nameof(Index_IsSet));
+            set => _hasBeenSetTracker[(int)BodyPart_FieldIndex.Index] = value;
         }
         bool IBodyPartGetter.Index_IsSet => Index_IsSet;
         private Race.BodyIndex _Index;
@@ -67,7 +67,8 @@ namespace Mutagen.Bethesda.Oblivion
             Race.BodyIndex value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Index, value, _hasBeenSetTracker, markSet, (int)BodyPart_FieldIndex.Index, nameof(Index), nameof(Index_IsSet));
+            _Index = value;
+            _hasBeenSetTracker[(int)BodyPart_FieldIndex.Index] = markSet;
         }
         public void Index_Unset()
         {
@@ -78,7 +79,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Icon_IsSet
         {
             get => _hasBeenSetTracker[(int)BodyPart_FieldIndex.Icon];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)BodyPart_FieldIndex.Icon, nameof(Icon_IsSet));
+            set => _hasBeenSetTracker[(int)BodyPart_FieldIndex.Icon] = value;
         }
         bool IBodyPartGetter.Icon_IsSet => Icon_IsSet;
         private String _Icon;
@@ -93,7 +94,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Icon, value, _hasBeenSetTracker, markSet, (int)BodyPart_FieldIndex.Icon, nameof(Icon), nameof(Icon_IsSet));
+            _Icon = value;
+            _hasBeenSetTracker[(int)BodyPart_FieldIndex.Icon] = markSet;
         }
         public void Icon_Unset()
         {

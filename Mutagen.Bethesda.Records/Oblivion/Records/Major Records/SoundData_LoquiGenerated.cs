@@ -49,36 +49,16 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region MinimumAttenuationDistance
-        private UInt16 _MinimumAttenuationDistance;
-        public UInt16 MinimumAttenuationDistance
-        {
-            get => this._MinimumAttenuationDistance;
-            set => this.RaiseAndSetIfChanged(ref this._MinimumAttenuationDistance, value, nameof(MinimumAttenuationDistance));
-        }
+        public UInt16 MinimumAttenuationDistance { get; set; }
         #endregion
         #region MaximumAttenuationDistance
-        private UInt16 _MaximumAttenuationDistance;
-        public UInt16 MaximumAttenuationDistance
-        {
-            get => this._MaximumAttenuationDistance;
-            set => this.RaiseAndSetIfChanged(ref this._MaximumAttenuationDistance, value, nameof(MaximumAttenuationDistance));
-        }
+        public UInt16 MaximumAttenuationDistance { get; set; }
         #endregion
         #region FrequencyAdjustment
-        private SByte _FrequencyAdjustment;
-        public SByte FrequencyAdjustment
-        {
-            get => this._FrequencyAdjustment;
-            set => this.RaiseAndSetIfChanged(ref this._FrequencyAdjustment, value, nameof(FrequencyAdjustment));
-        }
+        public SByte FrequencyAdjustment { get; set; }
         #endregion
         #region Flags
-        private SoundData.Flag _Flags;
-        public SoundData.Flag Flags
-        {
-            get => this._Flags;
-            set => this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
-        }
+        public SoundData.Flag Flags { get; set; }
         #endregion
 
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISoundDataInternalGetter)rhs, include);
@@ -1103,70 +1083,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.MinimumAttenuationDistance ?? true)
             {
                 errorMask?.PushIndex((int)SoundData_FieldIndex.MinimumAttenuationDistance);
-                try
-                {
-                    item.MinimumAttenuationDistance = rhs.MinimumAttenuationDistance;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.MinimumAttenuationDistance = rhs.MinimumAttenuationDistance;
+                errorMask?.PopIndex();
             }
             if (copyMask?.MaximumAttenuationDistance ?? true)
             {
                 errorMask?.PushIndex((int)SoundData_FieldIndex.MaximumAttenuationDistance);
-                try
-                {
-                    item.MaximumAttenuationDistance = rhs.MaximumAttenuationDistance;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.MaximumAttenuationDistance = rhs.MaximumAttenuationDistance;
+                errorMask?.PopIndex();
             }
             if (copyMask?.FrequencyAdjustment ?? true)
             {
                 errorMask?.PushIndex((int)SoundData_FieldIndex.FrequencyAdjustment);
-                try
-                {
-                    item.FrequencyAdjustment = rhs.FrequencyAdjustment;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.FrequencyAdjustment = rhs.FrequencyAdjustment;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Flags ?? true)
             {
                 errorMask?.PushIndex((int)SoundData_FieldIndex.Flags);
-                try
-                {
-                    item.Flags = rhs.Flags;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Flags = rhs.Flags;
+                errorMask?.PopIndex();
             }
         }
         

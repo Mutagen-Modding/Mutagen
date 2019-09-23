@@ -52,28 +52,13 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Flags
-        private ModHeader.HeaderFlag _Flags;
-        public ModHeader.HeaderFlag Flags
-        {
-            get => this._Flags;
-            set => this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
-        }
+        public ModHeader.HeaderFlag Flags { get; set; }
         #endregion
         #region FormID
-        private UInt32 _FormID;
-        public UInt32 FormID
-        {
-            get => this._FormID;
-            set => this.RaiseAndSetIfChanged(ref this._FormID, value, nameof(FormID));
-        }
+        public UInt32 FormID { get; set; }
         #endregion
         #region Version
-        private Int32 _Version;
-        public Int32 Version
-        {
-            get => this._Version;
-            set => this.RaiseAndSetIfChanged(ref this._Version, value, nameof(Version));
-        }
+        public Int32 Version { get; set; }
         #endregion
         #region Stats
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -145,7 +130,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Author_IsSet
         {
             get => _hasBeenSetTracker[(int)ModHeader_FieldIndex.Author];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)ModHeader_FieldIndex.Author, nameof(Author_IsSet));
+            set => _hasBeenSetTracker[(int)ModHeader_FieldIndex.Author] = value;
         }
         bool IModHeaderGetter.Author_IsSet => Author_IsSet;
         private String _Author;
@@ -160,7 +145,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Author, value, _hasBeenSetTracker, markSet, (int)ModHeader_FieldIndex.Author, nameof(Author), nameof(Author_IsSet));
+            _Author = value;
+            _hasBeenSetTracker[(int)ModHeader_FieldIndex.Author] = markSet;
         }
         public void Author_Unset()
         {
@@ -171,7 +157,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Description_IsSet
         {
             get => _hasBeenSetTracker[(int)ModHeader_FieldIndex.Description];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)ModHeader_FieldIndex.Description, nameof(Description_IsSet));
+            set => _hasBeenSetTracker[(int)ModHeader_FieldIndex.Description] = value;
         }
         bool IModHeaderGetter.Description_IsSet => Description_IsSet;
         private String _Description;
@@ -186,7 +172,8 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Description, value, _hasBeenSetTracker, markSet, (int)ModHeader_FieldIndex.Description, nameof(Description), nameof(Description_IsSet));
+            _Description = value;
+            _hasBeenSetTracker[(int)ModHeader_FieldIndex.Description] = markSet;
         }
         public void Description_Unset()
         {
@@ -209,7 +196,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool VestigialData_IsSet
         {
             get => _hasBeenSetTracker[(int)ModHeader_FieldIndex.VestigialData];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)ModHeader_FieldIndex.VestigialData, nameof(VestigialData_IsSet));
+            set => _hasBeenSetTracker[(int)ModHeader_FieldIndex.VestigialData] = value;
         }
         bool IModHeaderGetter.VestigialData_IsSet => VestigialData_IsSet;
         private UInt64 _VestigialData;
@@ -224,7 +211,8 @@ namespace Mutagen.Bethesda.Oblivion
             UInt64 value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _VestigialData, value, _hasBeenSetTracker, markSet, (int)ModHeader_FieldIndex.VestigialData, nameof(VestigialData), nameof(VestigialData_IsSet));
+            _VestigialData = value;
+            _hasBeenSetTracker[(int)ModHeader_FieldIndex.VestigialData] = markSet;
         }
         public void VestigialData_Unset()
         {
@@ -967,7 +955,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Stats
         IModStatsInternalGetter Stats { get; }
-
         #endregion
         #region TypeOffsets
         ReadOnlySpan<Byte> TypeOffsets { get; }
@@ -1666,53 +1653,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Flags ?? true)
             {
                 errorMask?.PushIndex((int)ModHeader_FieldIndex.Flags);
-                try
-                {
-                    item.Flags = rhs.Flags;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Flags = rhs.Flags;
+                errorMask?.PopIndex();
             }
             if (copyMask?.FormID ?? true)
             {
                 errorMask?.PushIndex((int)ModHeader_FieldIndex.FormID);
-                try
-                {
-                    item.FormID = rhs.FormID;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.FormID = rhs.FormID;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Version ?? true)
             {
                 errorMask?.PushIndex((int)ModHeader_FieldIndex.Version);
-                try
-                {
-                    item.Version = rhs.Version;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Version = rhs.Version;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Stats.Overall != CopyOption.Skip)
             {

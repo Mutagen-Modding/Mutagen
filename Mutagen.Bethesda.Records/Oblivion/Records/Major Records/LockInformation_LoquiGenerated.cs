@@ -50,19 +50,14 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region LockLevel
-        private Byte _LockLevel;
-        public Byte LockLevel
-        {
-            get => this._LockLevel;
-            set => this.RaiseAndSetIfChanged(ref this._LockLevel, value, nameof(LockLevel));
-        }
+        public Byte LockLevel { get; set; }
         #endregion
         #region Fluff
         private Byte[] _Fluff = new byte[3];
         public Byte[] Fluff
         {
             get => _Fluff;
-            set => this.RaiseAndSetIfChanged(ref _Fluff, value ?? new byte[3], nameof(Fluff));
+            set => this._Fluff = value ?? new byte[3];
         }
         ReadOnlySpan<Byte> ILockInformationGetter.Fluff => this.Fluff;
         #endregion
@@ -75,12 +70,7 @@ namespace Mutagen.Bethesda.Oblivion
         IFormIDLinkGetter<IKeyInternalGetter> ILockInformationGetter.Key_Property => this.Key_Property;
         #endregion
         #region Flags
-        private LockInformation.Flag _Flags;
-        public LockInformation.Flag Flags
-        {
-            get => this._Flags;
-            set => this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
-        }
+        public LockInformation.Flag Flags { get; set; }
         #endregion
 
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILockInformationInternalGetter)rhs, include);
@@ -1120,36 +1110,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.LockLevel ?? true)
             {
                 errorMask?.PushIndex((int)LockInformation_FieldIndex.LockLevel);
-                try
-                {
-                    item.LockLevel = rhs.LockLevel;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.LockLevel = rhs.LockLevel;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Fluff ?? true)
             {
                 errorMask?.PushIndex((int)LockInformation_FieldIndex.Fluff);
-                try
-                {
-                    item.Fluff = rhs.Fluff;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Fluff = rhs.Fluff;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Key ?? true)
             {
@@ -1171,19 +1139,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Flags ?? true)
             {
                 errorMask?.PushIndex((int)LockInformation_FieldIndex.Flags);
-                try
-                {
-                    item.Flags = rhs.Flags;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Flags = rhs.Flags;
+                errorMask?.PopIndex();
             }
         }
         

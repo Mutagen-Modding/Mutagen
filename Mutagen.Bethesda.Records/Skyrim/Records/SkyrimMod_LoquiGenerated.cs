@@ -48,7 +48,6 @@ namespace Mutagen.Bethesda.Skyrim
         protected SkyrimMod()
         {
             _hasBeenSetTracker = new BitArray(((ILoquiObject)this).Registration.FieldCount);
-            _hasBeenSetTracker[(int)SkyrimMod_FieldIndex.ModHeader] = true;
             _GameSettings_Object = new Group<GameSetting>(this);
             _Keywords_Object = new Group<Keyword>(this);
             _LocationReferenceTypes_Object = new Group<LocationReferenceType>(this);

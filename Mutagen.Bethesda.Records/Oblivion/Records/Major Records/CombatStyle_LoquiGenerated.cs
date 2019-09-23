@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.CSTDDataTypeState |= CSTDDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._DodgePercentChance, value.PutInRange(DodgePercentChance_Range.Min, DodgePercentChance_Range.Max), nameof(DodgePercentChance));
+                this._DodgePercentChance = value;
             }
         }
         public static RangeUInt8 DodgePercentChance_Range = new RangeUInt8(0, 100);
@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.CSTDDataTypeState |= CSTDDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._LeftRightPercentChance, value.PutInRange(LeftRightPercentChance_Range.Min, LeftRightPercentChance_Range.Max), nameof(LeftRightPercentChance));
+                this._LeftRightPercentChance = value;
             }
         }
         public static RangeUInt8 LeftRightPercentChance_Range = new RangeUInt8(0, 100);
@@ -83,7 +83,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.CSTDDataTypeState |= CSTDDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._DodgeLeftRightTimerMin, value, nameof(DodgeLeftRightTimerMin));
+                this._DodgeLeftRightTimerMin = value;
             }
         }
         #endregion
@@ -95,7 +95,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.CSTDDataTypeState |= CSTDDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._DodgeLeftRightTimerMax, value, nameof(DodgeLeftRightTimerMax));
+                this._DodgeLeftRightTimerMax = value;
             }
         }
         #endregion
@@ -107,7 +107,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.CSTDDataTypeState |= CSTDDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._DodgeForwardTimerMin, value, nameof(DodgeForwardTimerMin));
+                this._DodgeForwardTimerMin = value;
             }
         }
         #endregion
@@ -119,7 +119,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.CSTDDataTypeState |= CSTDDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._DodgeForwardTimerMax, value, nameof(DodgeForwardTimerMax));
+                this._DodgeForwardTimerMax = value;
             }
         }
         #endregion
@@ -131,7 +131,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.CSTDDataTypeState |= CSTDDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._DodgeBackTimerMin, value, nameof(DodgeBackTimerMin));
+                this._DodgeBackTimerMin = value;
             }
         }
         #endregion
@@ -143,7 +143,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.CSTDDataTypeState |= CSTDDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._DodgeBackTimerMax, value, nameof(DodgeBackTimerMax));
+                this._DodgeBackTimerMax = value;
             }
         }
         #endregion
@@ -155,7 +155,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.CSTDDataTypeState |= CSTDDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._IdleTimerMin, value, nameof(IdleTimerMin));
+                this._IdleTimerMin = value;
             }
         }
         #endregion
@@ -167,7 +167,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.CSTDDataTypeState |= CSTDDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._IdleTimerMax, value, nameof(IdleTimerMax));
+                this._IdleTimerMax = value;
             }
         }
         #endregion
@@ -179,7 +179,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.CSTDDataTypeState |= CSTDDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._BlockPercentChance, value.PutInRange(BlockPercentChance_Range.Min, BlockPercentChance_Range.Max), nameof(BlockPercentChance));
+                this._BlockPercentChance = value;
             }
         }
         public static RangeUInt8 BlockPercentChance_Range = new RangeUInt8(0, 100);
@@ -192,7 +192,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.CSTDDataTypeState |= CSTDDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._AttackPercentChance, value.PutInRange(AttackPercentChance_Range.Min, AttackPercentChance_Range.Max), nameof(AttackPercentChance));
+                this._AttackPercentChance = value;
             }
         }
         public static RangeUInt8 AttackPercentChance_Range = new RangeUInt8(0, 100);
@@ -205,7 +205,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.CSTDDataTypeState |= CSTDDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._RecoilStaggerBonusToAttack, value, nameof(RecoilStaggerBonusToAttack));
+                this._RecoilStaggerBonusToAttack = value;
             }
         }
         #endregion
@@ -217,7 +217,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.CSTDDataTypeState |= CSTDDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._UnconsciousBonusToAttack, value, nameof(UnconsciousBonusToAttack));
+                this._UnconsciousBonusToAttack = value;
             }
         }
         #endregion
@@ -229,7 +229,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.CSTDDataTypeState |= CSTDDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._HandToHandBonusToAttack, value, nameof(HandToHandBonusToAttack));
+                this._HandToHandBonusToAttack = value;
             }
         }
         #endregion
@@ -241,7 +241,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.CSTDDataTypeState |= CSTDDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._PowerAttackPercentChance, value.PutInRange(PowerAttackPercentChance_Range.Min, PowerAttackPercentChance_Range.Max), nameof(PowerAttackPercentChance));
+                this._PowerAttackPercentChance = value;
             }
         }
         public static RangeUInt8 PowerAttackPercentChance_Range = new RangeUInt8(0, 100);
@@ -254,7 +254,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.CSTDDataTypeState |= CSTDDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._RecoilStaggerBonusToPowerAttack, value, nameof(RecoilStaggerBonusToPowerAttack));
+                this._RecoilStaggerBonusToPowerAttack = value;
             }
         }
         #endregion
@@ -266,7 +266,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.CSTDDataTypeState |= CSTDDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._UnconsciousBonusToPowerAttack, value, nameof(UnconsciousBonusToPowerAttack));
+                this._UnconsciousBonusToPowerAttack = value;
             }
         }
         #endregion
@@ -278,7 +278,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.CSTDDataTypeState |= CSTDDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._PowerAttackNormal, value.PutInRange(PowerAttackNormal_Range.Min, PowerAttackNormal_Range.Max), nameof(PowerAttackNormal));
+                this._PowerAttackNormal = value;
             }
         }
         public static RangeUInt8 PowerAttackNormal_Range = new RangeUInt8(0, 100);
@@ -291,7 +291,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.CSTDDataTypeState |= CSTDDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._PowerAttackForward, value.PutInRange(PowerAttackForward_Range.Min, PowerAttackForward_Range.Max), nameof(PowerAttackForward));
+                this._PowerAttackForward = value;
             }
         }
         public static RangeUInt8 PowerAttackForward_Range = new RangeUInt8(0, 100);
@@ -304,7 +304,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.CSTDDataTypeState |= CSTDDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._PowerAttackBack, value.PutInRange(PowerAttackBack_Range.Min, PowerAttackBack_Range.Max), nameof(PowerAttackBack));
+                this._PowerAttackBack = value;
             }
         }
         public static RangeUInt8 PowerAttackBack_Range = new RangeUInt8(0, 100);
@@ -317,7 +317,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.CSTDDataTypeState |= CSTDDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._PowerAttackLeft, value.PutInRange(PowerAttackLeft_Range.Min, PowerAttackLeft_Range.Max), nameof(PowerAttackLeft));
+                this._PowerAttackLeft = value;
             }
         }
         public static RangeUInt8 PowerAttackLeft_Range = new RangeUInt8(0, 100);
@@ -330,7 +330,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.CSTDDataTypeState |= CSTDDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._PowerAttackRight, value.PutInRange(PowerAttackRight_Range.Min, PowerAttackRight_Range.Max), nameof(PowerAttackRight));
+                this._PowerAttackRight = value;
             }
         }
         public static RangeUInt8 PowerAttackRight_Range = new RangeUInt8(0, 100);
@@ -343,7 +343,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.CSTDDataTypeState |= CSTDDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._HoldTimerMin, value, nameof(HoldTimerMin));
+                this._HoldTimerMin = value;
             }
         }
         #endregion
@@ -355,7 +355,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.CSTDDataTypeState |= CSTDDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._HoldTimerMax, value, nameof(HoldTimerMax));
+                this._HoldTimerMax = value;
             }
         }
         #endregion
@@ -367,7 +367,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.CSTDDataTypeState |= CSTDDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
+                this._Flags = value;
             }
         }
         #endregion
@@ -379,7 +379,7 @@ namespace Mutagen.Bethesda.Oblivion
             set
             {
                 this.CSTDDataTypeState |= CSTDDataType.Has;
-                this.RaiseAndSetIfChanged(ref this._AcrobaticDodgePercentChance, value.PutInRange(AcrobaticDodgePercentChance_Range.Min, AcrobaticDodgePercentChance_Range.Max), nameof(AcrobaticDodgePercentChance));
+                this._AcrobaticDodgePercentChance = value;
             }
         }
         public static RangeUInt8 AcrobaticDodgePercentChance_Range = new RangeUInt8(0, 100);
@@ -393,7 +393,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.CSTDDataTypeState |= CSTDDataType.Has;
                 this.CSTDDataTypeState &= ~CSTDDataType.Break0;
-                this.RaiseAndSetIfChanged(ref this._RangeMultOptimal, value, nameof(RangeMultOptimal));
+                this._RangeMultOptimal = value;
             }
         }
         #endregion
@@ -406,7 +406,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.CSTDDataTypeState |= CSTDDataType.Has;
                 this.CSTDDataTypeState &= ~CSTDDataType.Break0;
-                this.RaiseAndSetIfChanged(ref this._RangeMultMax, value, nameof(RangeMultMax));
+                this._RangeMultMax = value;
             }
         }
         #endregion
@@ -420,7 +420,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.CSTDDataTypeState |= CSTDDataType.Has;
                 this.CSTDDataTypeState &= ~CSTDDataType.Break0;
                 this.CSTDDataTypeState &= ~CSTDDataType.Break1;
-                this.RaiseAndSetIfChanged(ref this._SwitchDistanceMelee, value, nameof(SwitchDistanceMelee));
+                this._SwitchDistanceMelee = value;
             }
         }
         #endregion
@@ -434,7 +434,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.CSTDDataTypeState |= CSTDDataType.Has;
                 this.CSTDDataTypeState &= ~CSTDDataType.Break0;
                 this.CSTDDataTypeState &= ~CSTDDataType.Break1;
-                this.RaiseAndSetIfChanged(ref this._SwitchDistanceRanged, value, nameof(SwitchDistanceRanged));
+                this._SwitchDistanceRanged = value;
             }
         }
         #endregion
@@ -448,7 +448,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.CSTDDataTypeState |= CSTDDataType.Has;
                 this.CSTDDataTypeState &= ~CSTDDataType.Break0;
                 this.CSTDDataTypeState &= ~CSTDDataType.Break1;
-                this.RaiseAndSetIfChanged(ref this._BuffStandoffDistance, value, nameof(BuffStandoffDistance));
+                this._BuffStandoffDistance = value;
             }
         }
         #endregion
@@ -463,7 +463,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.CSTDDataTypeState &= ~CSTDDataType.Break0;
                 this.CSTDDataTypeState &= ~CSTDDataType.Break1;
                 this.CSTDDataTypeState &= ~CSTDDataType.Break2;
-                this.RaiseAndSetIfChanged(ref this._RangedStandoffDistance, value, nameof(RangedStandoffDistance));
+                this._RangedStandoffDistance = value;
             }
         }
         #endregion
@@ -478,7 +478,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.CSTDDataTypeState &= ~CSTDDataType.Break0;
                 this.CSTDDataTypeState &= ~CSTDDataType.Break1;
                 this.CSTDDataTypeState &= ~CSTDDataType.Break2;
-                this.RaiseAndSetIfChanged(ref this._GroupStandoffDistance, value, nameof(GroupStandoffDistance));
+                this._GroupStandoffDistance = value;
             }
         }
         #endregion
@@ -494,7 +494,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.CSTDDataTypeState &= ~CSTDDataType.Break1;
                 this.CSTDDataTypeState &= ~CSTDDataType.Break2;
                 this.CSTDDataTypeState &= ~CSTDDataType.Break3;
-                this.RaiseAndSetIfChanged(ref this._RushingAttackPercentChance, value.PutInRange(RushingAttackPercentChance_Range.Min, RushingAttackPercentChance_Range.Max), nameof(RushingAttackPercentChance));
+                this._RushingAttackPercentChance = value;
             }
         }
         public static RangeUInt8 RushingAttackPercentChance_Range = new RangeUInt8(0, 100);
@@ -511,7 +511,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.CSTDDataTypeState &= ~CSTDDataType.Break1;
                 this.CSTDDataTypeState &= ~CSTDDataType.Break2;
                 this.CSTDDataTypeState &= ~CSTDDataType.Break3;
-                this.RaiseAndSetIfChanged(ref this._RushingAttackDistanceMult, value, nameof(RushingAttackDistanceMult));
+                this._RushingAttackDistanceMult = value;
             }
         }
         #endregion
@@ -543,12 +543,7 @@ namespace Mutagen.Bethesda.Oblivion
         ICombatStyleAdvancedInternalGetter ICombatStyleGetter.Advanced => this.Advanced;
         #endregion
         #region CSTDDataTypeState
-        private CombatStyle.CSTDDataType _CSTDDataTypeState;
-        public CombatStyle.CSTDDataType CSTDDataTypeState
-        {
-            get => this._CSTDDataTypeState;
-            set => this.RaiseAndSetIfChanged(ref this._CSTDDataTypeState, value, nameof(CSTDDataTypeState));
-        }
+        public CombatStyle.CSTDDataType CSTDDataTypeState { get; set; }
         CombatStyle.CSTDDataType ICombatStyleInternal.CSTDDataTypeState
         {
             get => this.CSTDDataTypeState;
@@ -3239,614 +3234,218 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.DodgePercentChance ?? true)
             {
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgePercentChance);
-                try
-                {
-                    item.DodgePercentChance = rhs.DodgePercentChance;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.DodgePercentChance = rhs.DodgePercentChance;
+                errorMask?.PopIndex();
             }
             if (copyMask?.LeftRightPercentChance ?? true)
             {
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.LeftRightPercentChance);
-                try
-                {
-                    item.LeftRightPercentChance = rhs.LeftRightPercentChance;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.LeftRightPercentChance = rhs.LeftRightPercentChance;
+                errorMask?.PopIndex();
             }
             if (copyMask?.DodgeLeftRightTimerMin ?? true)
             {
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeLeftRightTimerMin);
-                try
-                {
-                    item.DodgeLeftRightTimerMin = rhs.DodgeLeftRightTimerMin;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.DodgeLeftRightTimerMin = rhs.DodgeLeftRightTimerMin;
+                errorMask?.PopIndex();
             }
             if (copyMask?.DodgeLeftRightTimerMax ?? true)
             {
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeLeftRightTimerMax);
-                try
-                {
-                    item.DodgeLeftRightTimerMax = rhs.DodgeLeftRightTimerMax;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.DodgeLeftRightTimerMax = rhs.DodgeLeftRightTimerMax;
+                errorMask?.PopIndex();
             }
             if (copyMask?.DodgeForwardTimerMin ?? true)
             {
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeForwardTimerMin);
-                try
-                {
-                    item.DodgeForwardTimerMin = rhs.DodgeForwardTimerMin;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.DodgeForwardTimerMin = rhs.DodgeForwardTimerMin;
+                errorMask?.PopIndex();
             }
             if (copyMask?.DodgeForwardTimerMax ?? true)
             {
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeForwardTimerMax);
-                try
-                {
-                    item.DodgeForwardTimerMax = rhs.DodgeForwardTimerMax;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.DodgeForwardTimerMax = rhs.DodgeForwardTimerMax;
+                errorMask?.PopIndex();
             }
             if (copyMask?.DodgeBackTimerMin ?? true)
             {
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeBackTimerMin);
-                try
-                {
-                    item.DodgeBackTimerMin = rhs.DodgeBackTimerMin;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.DodgeBackTimerMin = rhs.DodgeBackTimerMin;
+                errorMask?.PopIndex();
             }
             if (copyMask?.DodgeBackTimerMax ?? true)
             {
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeBackTimerMax);
-                try
-                {
-                    item.DodgeBackTimerMax = rhs.DodgeBackTimerMax;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.DodgeBackTimerMax = rhs.DodgeBackTimerMax;
+                errorMask?.PopIndex();
             }
             if (copyMask?.IdleTimerMin ?? true)
             {
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.IdleTimerMin);
-                try
-                {
-                    item.IdleTimerMin = rhs.IdleTimerMin;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.IdleTimerMin = rhs.IdleTimerMin;
+                errorMask?.PopIndex();
             }
             if (copyMask?.IdleTimerMax ?? true)
             {
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.IdleTimerMax);
-                try
-                {
-                    item.IdleTimerMax = rhs.IdleTimerMax;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.IdleTimerMax = rhs.IdleTimerMax;
+                errorMask?.PopIndex();
             }
             if (copyMask?.BlockPercentChance ?? true)
             {
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.BlockPercentChance);
-                try
-                {
-                    item.BlockPercentChance = rhs.BlockPercentChance;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.BlockPercentChance = rhs.BlockPercentChance;
+                errorMask?.PopIndex();
             }
             if (copyMask?.AttackPercentChance ?? true)
             {
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.AttackPercentChance);
-                try
-                {
-                    item.AttackPercentChance = rhs.AttackPercentChance;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.AttackPercentChance = rhs.AttackPercentChance;
+                errorMask?.PopIndex();
             }
             if (copyMask?.RecoilStaggerBonusToAttack ?? true)
             {
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.RecoilStaggerBonusToAttack);
-                try
-                {
-                    item.RecoilStaggerBonusToAttack = rhs.RecoilStaggerBonusToAttack;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.RecoilStaggerBonusToAttack = rhs.RecoilStaggerBonusToAttack;
+                errorMask?.PopIndex();
             }
             if (copyMask?.UnconsciousBonusToAttack ?? true)
             {
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.UnconsciousBonusToAttack);
-                try
-                {
-                    item.UnconsciousBonusToAttack = rhs.UnconsciousBonusToAttack;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.UnconsciousBonusToAttack = rhs.UnconsciousBonusToAttack;
+                errorMask?.PopIndex();
             }
             if (copyMask?.HandToHandBonusToAttack ?? true)
             {
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.HandToHandBonusToAttack);
-                try
-                {
-                    item.HandToHandBonusToAttack = rhs.HandToHandBonusToAttack;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.HandToHandBonusToAttack = rhs.HandToHandBonusToAttack;
+                errorMask?.PopIndex();
             }
             if (copyMask?.PowerAttackPercentChance ?? true)
             {
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackPercentChance);
-                try
-                {
-                    item.PowerAttackPercentChance = rhs.PowerAttackPercentChance;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.PowerAttackPercentChance = rhs.PowerAttackPercentChance;
+                errorMask?.PopIndex();
             }
             if (copyMask?.RecoilStaggerBonusToPowerAttack ?? true)
             {
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.RecoilStaggerBonusToPowerAttack);
-                try
-                {
-                    item.RecoilStaggerBonusToPowerAttack = rhs.RecoilStaggerBonusToPowerAttack;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.RecoilStaggerBonusToPowerAttack = rhs.RecoilStaggerBonusToPowerAttack;
+                errorMask?.PopIndex();
             }
             if (copyMask?.UnconsciousBonusToPowerAttack ?? true)
             {
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.UnconsciousBonusToPowerAttack);
-                try
-                {
-                    item.UnconsciousBonusToPowerAttack = rhs.UnconsciousBonusToPowerAttack;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.UnconsciousBonusToPowerAttack = rhs.UnconsciousBonusToPowerAttack;
+                errorMask?.PopIndex();
             }
             if (copyMask?.PowerAttackNormal ?? true)
             {
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackNormal);
-                try
-                {
-                    item.PowerAttackNormal = rhs.PowerAttackNormal;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.PowerAttackNormal = rhs.PowerAttackNormal;
+                errorMask?.PopIndex();
             }
             if (copyMask?.PowerAttackForward ?? true)
             {
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackForward);
-                try
-                {
-                    item.PowerAttackForward = rhs.PowerAttackForward;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.PowerAttackForward = rhs.PowerAttackForward;
+                errorMask?.PopIndex();
             }
             if (copyMask?.PowerAttackBack ?? true)
             {
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackBack);
-                try
-                {
-                    item.PowerAttackBack = rhs.PowerAttackBack;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.PowerAttackBack = rhs.PowerAttackBack;
+                errorMask?.PopIndex();
             }
             if (copyMask?.PowerAttackLeft ?? true)
             {
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackLeft);
-                try
-                {
-                    item.PowerAttackLeft = rhs.PowerAttackLeft;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.PowerAttackLeft = rhs.PowerAttackLeft;
+                errorMask?.PopIndex();
             }
             if (copyMask?.PowerAttackRight ?? true)
             {
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackRight);
-                try
-                {
-                    item.PowerAttackRight = rhs.PowerAttackRight;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.PowerAttackRight = rhs.PowerAttackRight;
+                errorMask?.PopIndex();
             }
             if (copyMask?.HoldTimerMin ?? true)
             {
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.HoldTimerMin);
-                try
-                {
-                    item.HoldTimerMin = rhs.HoldTimerMin;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.HoldTimerMin = rhs.HoldTimerMin;
+                errorMask?.PopIndex();
             }
             if (copyMask?.HoldTimerMax ?? true)
             {
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.HoldTimerMax);
-                try
-                {
-                    item.HoldTimerMax = rhs.HoldTimerMax;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.HoldTimerMax = rhs.HoldTimerMax;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Flags ?? true)
             {
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.Flags);
-                try
-                {
-                    item.Flags = rhs.Flags;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Flags = rhs.Flags;
+                errorMask?.PopIndex();
             }
             if (copyMask?.AcrobaticDodgePercentChance ?? true)
             {
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.AcrobaticDodgePercentChance);
-                try
-                {
-                    item.AcrobaticDodgePercentChance = rhs.AcrobaticDodgePercentChance;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.AcrobaticDodgePercentChance = rhs.AcrobaticDodgePercentChance;
+                errorMask?.PopIndex();
             }
             if (copyMask?.RangeMultOptimal ?? true)
             {
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.RangeMultOptimal);
-                try
-                {
-                    item.RangeMultOptimal = rhs.RangeMultOptimal;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.RangeMultOptimal = rhs.RangeMultOptimal;
+                errorMask?.PopIndex();
             }
             if (copyMask?.RangeMultMax ?? true)
             {
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.RangeMultMax);
-                try
-                {
-                    item.RangeMultMax = rhs.RangeMultMax;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.RangeMultMax = rhs.RangeMultMax;
+                errorMask?.PopIndex();
             }
             if (copyMask?.SwitchDistanceMelee ?? true)
             {
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.SwitchDistanceMelee);
-                try
-                {
-                    item.SwitchDistanceMelee = rhs.SwitchDistanceMelee;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.SwitchDistanceMelee = rhs.SwitchDistanceMelee;
+                errorMask?.PopIndex();
             }
             if (copyMask?.SwitchDistanceRanged ?? true)
             {
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.SwitchDistanceRanged);
-                try
-                {
-                    item.SwitchDistanceRanged = rhs.SwitchDistanceRanged;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.SwitchDistanceRanged = rhs.SwitchDistanceRanged;
+                errorMask?.PopIndex();
             }
             if (copyMask?.BuffStandoffDistance ?? true)
             {
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.BuffStandoffDistance);
-                try
-                {
-                    item.BuffStandoffDistance = rhs.BuffStandoffDistance;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.BuffStandoffDistance = rhs.BuffStandoffDistance;
+                errorMask?.PopIndex();
             }
             if (copyMask?.RangedStandoffDistance ?? true)
             {
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.RangedStandoffDistance);
-                try
-                {
-                    item.RangedStandoffDistance = rhs.RangedStandoffDistance;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.RangedStandoffDistance = rhs.RangedStandoffDistance;
+                errorMask?.PopIndex();
             }
             if (copyMask?.GroupStandoffDistance ?? true)
             {
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.GroupStandoffDistance);
-                try
-                {
-                    item.GroupStandoffDistance = rhs.GroupStandoffDistance;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.GroupStandoffDistance = rhs.GroupStandoffDistance;
+                errorMask?.PopIndex();
             }
             if (copyMask?.RushingAttackPercentChance ?? true)
             {
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.RushingAttackPercentChance);
-                try
-                {
-                    item.RushingAttackPercentChance = rhs.RushingAttackPercentChance;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.RushingAttackPercentChance = rhs.RushingAttackPercentChance;
+                errorMask?.PopIndex();
             }
             if (copyMask?.RushingAttackDistanceMult ?? true)
             {
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.RushingAttackDistanceMult);
-                try
-                {
-                    item.RushingAttackDistanceMult = rhs.RushingAttackDistanceMult;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.RushingAttackDistanceMult = rhs.RushingAttackDistanceMult;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Advanced.Overall != CopyOption.Skip)
             {

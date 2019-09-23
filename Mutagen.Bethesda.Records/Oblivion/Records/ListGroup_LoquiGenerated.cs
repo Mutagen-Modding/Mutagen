@@ -58,20 +58,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region GroupType
-        private GroupTypeEnum _GroupType;
-        public GroupTypeEnum GroupType
-        {
-            get => this._GroupType;
-            set => this.RaiseAndSetIfChanged(ref this._GroupType, value, nameof(GroupType));
-        }
+        public GroupTypeEnum GroupType { get; set; }
         #endregion
         #region LastModified
-        private Int32 _LastModified;
-        public Int32 LastModified
-        {
-            get => this._LastModified;
-            set => this.RaiseAndSetIfChanged(ref this._LastModified, value, nameof(LastModified));
-        }
+        public Int32 LastModified { get; set; }
         #endregion
         #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1130,36 +1120,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.GroupType ?? true)
             {
                 errorMask?.PushIndex((int)ListGroup_FieldIndex.GroupType);
-                try
-                {
-                    item.GroupType = rhs.GroupType;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.GroupType = rhs.GroupType;
+                errorMask?.PopIndex();
             }
             if (copyMask?.LastModified ?? true)
             {
                 errorMask?.PushIndex((int)ListGroup_FieldIndex.LastModified);
-                try
-                {
-                    item.LastModified = rhs.LastModified;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.LastModified = rhs.LastModified;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Items.Overall != CopyOption.Skip)
             {

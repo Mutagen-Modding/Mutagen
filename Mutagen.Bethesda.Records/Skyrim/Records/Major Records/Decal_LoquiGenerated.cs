@@ -51,92 +51,37 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region MinWidth
-        private Single _MinWidth;
-        public Single MinWidth
-        {
-            get => this._MinWidth;
-            set => this.RaiseAndSetIfChanged(ref this._MinWidth, value, nameof(MinWidth));
-        }
+        public Single MinWidth { get; set; }
         #endregion
         #region MaxWidth
-        private Single _MaxWidth;
-        public Single MaxWidth
-        {
-            get => this._MaxWidth;
-            set => this.RaiseAndSetIfChanged(ref this._MaxWidth, value, nameof(MaxWidth));
-        }
+        public Single MaxWidth { get; set; }
         #endregion
         #region MinHeight
-        private Single _MinHeight;
-        public Single MinHeight
-        {
-            get => this._MinHeight;
-            set => this.RaiseAndSetIfChanged(ref this._MinHeight, value, nameof(MinHeight));
-        }
+        public Single MinHeight { get; set; }
         #endregion
         #region MaxHeight
-        private Single _MaxHeight;
-        public Single MaxHeight
-        {
-            get => this._MaxHeight;
-            set => this.RaiseAndSetIfChanged(ref this._MaxHeight, value, nameof(MaxHeight));
-        }
+        public Single MaxHeight { get; set; }
         #endregion
         #region Depth
-        private Single _Depth;
-        public Single Depth
-        {
-            get => this._Depth;
-            set => this.RaiseAndSetIfChanged(ref this._Depth, value, nameof(Depth));
-        }
+        public Single Depth { get; set; }
         #endregion
         #region Shininess
-        private Single _Shininess;
-        public Single Shininess
-        {
-            get => this._Shininess;
-            set => this.RaiseAndSetIfChanged(ref this._Shininess, value, nameof(Shininess));
-        }
+        public Single Shininess { get; set; }
         #endregion
         #region ParallaxScale
-        private Single _ParallaxScale;
-        public Single ParallaxScale
-        {
-            get => this._ParallaxScale;
-            set => this.RaiseAndSetIfChanged(ref this._ParallaxScale, value, nameof(ParallaxScale));
-        }
+        public Single ParallaxScale { get; set; }
         #endregion
         #region ParallaxPasses
-        private Byte _ParallaxPasses;
-        public Byte ParallaxPasses
-        {
-            get => this._ParallaxPasses;
-            set => this.RaiseAndSetIfChanged(ref this._ParallaxPasses, value, nameof(ParallaxPasses));
-        }
+        public Byte ParallaxPasses { get; set; }
         #endregion
         #region Flags
-        private Decal.Flag _Flags;
-        public Decal.Flag Flags
-        {
-            get => this._Flags;
-            set => this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
-        }
+        public Decal.Flag Flags { get; set; }
         #endregion
         #region Unknown
-        private UInt16 _Unknown;
-        public UInt16 Unknown
-        {
-            get => this._Unknown;
-            set => this.RaiseAndSetIfChanged(ref this._Unknown, value, nameof(Unknown));
-        }
+        public UInt16 Unknown { get; set; }
         #endregion
         #region Color
-        private Color _Color;
-        public Color Color
-        {
-            get => this._Color;
-            set => this.RaiseAndSetIfChanged(ref this._Color, value, nameof(Color));
-        }
+        public Color Color { get; set; }
         #endregion
 
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDecalInternalGetter)rhs, include);
@@ -1462,189 +1407,68 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (copyMask?.MinWidth ?? true)
             {
                 errorMask?.PushIndex((int)Decal_FieldIndex.MinWidth);
-                try
-                {
-                    item.MinWidth = rhs.MinWidth;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.MinWidth = rhs.MinWidth;
+                errorMask?.PopIndex();
             }
             if (copyMask?.MaxWidth ?? true)
             {
                 errorMask?.PushIndex((int)Decal_FieldIndex.MaxWidth);
-                try
-                {
-                    item.MaxWidth = rhs.MaxWidth;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.MaxWidth = rhs.MaxWidth;
+                errorMask?.PopIndex();
             }
             if (copyMask?.MinHeight ?? true)
             {
                 errorMask?.PushIndex((int)Decal_FieldIndex.MinHeight);
-                try
-                {
-                    item.MinHeight = rhs.MinHeight;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.MinHeight = rhs.MinHeight;
+                errorMask?.PopIndex();
             }
             if (copyMask?.MaxHeight ?? true)
             {
                 errorMask?.PushIndex((int)Decal_FieldIndex.MaxHeight);
-                try
-                {
-                    item.MaxHeight = rhs.MaxHeight;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.MaxHeight = rhs.MaxHeight;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Depth ?? true)
             {
                 errorMask?.PushIndex((int)Decal_FieldIndex.Depth);
-                try
-                {
-                    item.Depth = rhs.Depth;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Depth = rhs.Depth;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Shininess ?? true)
             {
                 errorMask?.PushIndex((int)Decal_FieldIndex.Shininess);
-                try
-                {
-                    item.Shininess = rhs.Shininess;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Shininess = rhs.Shininess;
+                errorMask?.PopIndex();
             }
             if (copyMask?.ParallaxScale ?? true)
             {
                 errorMask?.PushIndex((int)Decal_FieldIndex.ParallaxScale);
-                try
-                {
-                    item.ParallaxScale = rhs.ParallaxScale;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.ParallaxScale = rhs.ParallaxScale;
+                errorMask?.PopIndex();
             }
             if (copyMask?.ParallaxPasses ?? true)
             {
                 errorMask?.PushIndex((int)Decal_FieldIndex.ParallaxPasses);
-                try
-                {
-                    item.ParallaxPasses = rhs.ParallaxPasses;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.ParallaxPasses = rhs.ParallaxPasses;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Flags ?? true)
             {
                 errorMask?.PushIndex((int)Decal_FieldIndex.Flags);
-                try
-                {
-                    item.Flags = rhs.Flags;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Flags = rhs.Flags;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Unknown ?? true)
             {
                 errorMask?.PushIndex((int)Decal_FieldIndex.Unknown);
-                try
-                {
-                    item.Unknown = rhs.Unknown;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Unknown = rhs.Unknown;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Color ?? true)
             {
                 errorMask?.PushIndex((int)Decal_FieldIndex.Color);
-                try
-                {
-                    item.Color = rhs.Color;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Color = rhs.Color;
+                errorMask?.PopIndex();
             }
         }
         

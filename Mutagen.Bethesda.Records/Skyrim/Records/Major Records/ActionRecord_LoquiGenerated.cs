@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Skyrim
         public bool Color_IsSet
         {
             get => _hasBeenSetTracker[(int)ActionRecord_FieldIndex.Color];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)ActionRecord_FieldIndex.Color, nameof(Color_IsSet));
+            set => _hasBeenSetTracker[(int)ActionRecord_FieldIndex.Color] = value;
         }
         bool IActionRecordGetter.Color_IsSet => Color_IsSet;
         private Color _Color;
@@ -70,7 +70,8 @@ namespace Mutagen.Bethesda.Skyrim
             Color value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Color, value, _hasBeenSetTracker, markSet, (int)ActionRecord_FieldIndex.Color, nameof(Color), nameof(Color_IsSet));
+            _Color = value;
+            _hasBeenSetTracker[(int)ActionRecord_FieldIndex.Color] = markSet;
         }
         public void Color_Unset()
         {

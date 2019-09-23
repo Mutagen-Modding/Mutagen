@@ -52,12 +52,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Stage
-        private UInt16 _Stage;
-        public UInt16 Stage
-        {
-            get => this._Stage;
-            set => this.RaiseAndSetIfChanged(ref this._Stage, value, nameof(Stage));
-        }
+        public UInt16 Stage { get; set; }
         #endregion
         #region LogEntries
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1099,19 +1094,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Stage ?? true)
             {
                 errorMask?.PushIndex((int)QuestStage_FieldIndex.Stage);
-                try
-                {
-                    item.Stage = rhs.Stage;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Stage = rhs.Stage;
+                errorMask?.PopIndex();
             }
             if (copyMask?.LogEntries.Overall != CopyOption.Skip)
             {

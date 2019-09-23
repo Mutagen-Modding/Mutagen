@@ -1115,19 +1115,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.OblivionMajorRecordFlags ?? true)
             {
                 errorMask?.PushIndex((int)OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags);
-                try
-                {
-                    item.OblivionMajorRecordFlags = rhs.OblivionMajorRecordFlags;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.OblivionMajorRecordFlags = rhs.OblivionMajorRecordFlags;
+                errorMask?.PopIndex();
             }
         }
         

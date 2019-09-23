@@ -49,12 +49,7 @@ namespace Mutagen.Bethesda
         #endregion
 
         #region MajorRecordFlagsRaw
-        private Int32 _MajorRecordFlagsRaw;
-        public Int32 MajorRecordFlagsRaw
-        {
-            get => this._MajorRecordFlagsRaw;
-            set => this.RaiseAndSetIfChanged(ref this._MajorRecordFlagsRaw, value, nameof(MajorRecordFlagsRaw));
-        }
+        public Int32 MajorRecordFlagsRaw { get; set; }
         #endregion
         #region FormKey
         public FormKey FormKey { get; protected set; }
@@ -65,18 +60,13 @@ namespace Mutagen.Bethesda
         }
         #endregion
         #region Version
-        private UInt32 _Version;
-        public UInt32 Version
-        {
-            get => this._Version;
-            set => this.RaiseAndSetIfChanged(ref this._Version, value, nameof(Version));
-        }
+        public UInt32 Version { get; set; }
         #endregion
         #region EditorID
         public bool EditorID_IsSet
         {
             get => _hasBeenSetTracker[(int)MajorRecord_FieldIndex.EditorID];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)MajorRecord_FieldIndex.EditorID, nameof(EditorID_IsSet));
+            set => _hasBeenSetTracker[(int)MajorRecord_FieldIndex.EditorID] = value;
         }
         bool IMajorRecordGetter.EditorID_IsSet => EditorID_IsSet;
         private String _EditorID;
@@ -91,7 +81,8 @@ namespace Mutagen.Bethesda
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _EditorID, value, _hasBeenSetTracker, markSet, (int)MajorRecord_FieldIndex.EditorID, nameof(EditorID), nameof(EditorID_IsSet));
+            _EditorID = value;
+            _hasBeenSetTracker[(int)MajorRecord_FieldIndex.EditorID] = markSet;
         }
         public void EditorID_Unset()
         {
@@ -1309,36 +1300,14 @@ namespace Mutagen.Bethesda.Internals
             if (copyMask?.MajorRecordFlagsRaw ?? true)
             {
                 errorMask?.PushIndex((int)MajorRecord_FieldIndex.MajorRecordFlagsRaw);
-                try
-                {
-                    item.MajorRecordFlagsRaw = rhs.MajorRecordFlagsRaw;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.MajorRecordFlagsRaw = rhs.MajorRecordFlagsRaw;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Version ?? true)
             {
                 errorMask?.PushIndex((int)MajorRecord_FieldIndex.Version);
-                try
-                {
-                    item.Version = rhs.Version;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Version = rhs.Version;
+                errorMask?.PopIndex();
             }
             if (copyMask?.EditorID ?? true)
             {
