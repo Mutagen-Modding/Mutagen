@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             public static CompareOperator GetCompareOperator(byte b)
             {
-                return (CompareOperator)((Mask & b) / 16);
+                return (CompareOperator)((Mask & b) >> 4);
             }
 
             static partial void FillBinaryInitialParserCustom(MutagenFrame frame, Condition item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
