@@ -1,4 +1,4 @@
-﻿using Noggog;
+using Noggog;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -43,7 +43,7 @@ namespace Mutagen.Bethesda
             var outMod = await processor(outModKey, modList).ConfigureAwait(false);
             foreach (var npc in outMod.MajorRecords.Items)
             {
-                npc.MajorRecordFlagsRaw &= ~(int)MajorRecord.MajorRecordFlag.Compressed;
+                npc.IsCompressed = false;
             }
             outMod.MasterReferences.SetTo(
                 outMod.Links

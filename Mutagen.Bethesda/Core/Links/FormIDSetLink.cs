@@ -1,4 +1,4 @@
-﻿using Loqui;
+using Loqui;
 using Mutagen.Bethesda.Tests;
 using Noggog;
 using Noggog.Notifying;
@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace Mutagen.Bethesda
 {
     public class FormIDSetLink<T> : LoquiNotifyingObject, IFormIDSetLink<T>, IEquatable<ILink<T>>
-       where T : class, IMajorRecordInternalGetter
+       where T : class, IMajorRecordCommonGetter
     {
         public static readonly IFormIDSetLinkGetter<T> Empty = new FormIDSetLink<T>();
 

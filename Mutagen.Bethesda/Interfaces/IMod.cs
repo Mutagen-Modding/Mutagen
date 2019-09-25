@@ -1,4 +1,4 @@
-﻿using CSharpExt.Rx;
+using CSharpExt.Rx;
 using DynamicData;
 using Noggog.Notifying;
 using System;
@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda
         GameMode GameMode { get; }
         IReadOnlyList<IMasterReferenceGetter> MasterReferences { get; }
         IReadOnlyCache<IMajorRecordInternalGetter, FormKey> MajorRecords { get; }
-        IReadOnlyCache<T, FormKey> GetGroupGetter<T>() where T : IMajorRecordInternalGetter;
+        IReadOnlyCache<T, FormKey> GetGroupGetter<T>() where T : IMajorRecordCommonGetter;
         void WriteToBinary(string path, ModKey modKeyOverride = null);
         Task WriteToBinaryAsync(string path, ModKey modKeyOverride = null);
         void WriteToBinaryParallel(string path, ModKey modKeyOverride = null);
@@ -25,7 +25,7 @@ namespace Mutagen.Bethesda
     {
         new ISourceList<MasterReference> MasterReferences { get; }
         new IObservableCache<IMajorRecord, FormKey> MajorRecords { get; }
-        ISourceCache<T, FormKey> GetGroup<T>() where T : IMajorRecordInternal;
+        ICache<T, FormKey> GetGroup<T>() where T : IMajorRecordCommon;
         FormKey GetNextFormKey();
         void SyncRecordCount();
     }

@@ -1,4 +1,4 @@
-﻿using Noggog.Notifying;
+using Noggog.Notifying;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,13 +30,13 @@ namespace Mutagen.Bethesda
     }
 
     public interface ILinkGetter<out T> : ILinkGetter
-        where T : IMajorRecordInternalGetter
+        where T : IMajorRecordCommonGetter
     {
         T Item { get; }
     }
 
     public interface ILink<T> : ILink, ILinkGetter<T>
-        where T : IMajorRecordInternalGetter
+        where T : IMajorRecordCommonGetter
     {
         new T Item { get; set; }
         void Set(FormKey form);
@@ -47,13 +47,13 @@ namespace Mutagen.Bethesda
     }
 
     public interface ISetLinkGetter<out T> : ILinkGetter<T>
-        where T : IMajorRecordInternalGetter
+        where T : IMajorRecordCommonGetter
     {
         bool HasBeenSet { get; }
     }
 
     public interface ISetLink<T> : ILink<T>, ISetLinkGetter<T>
-        where T : IMajorRecordInternalGetter
+        where T : IMajorRecordCommonGetter
     {
         new bool HasBeenSet { get; set; }
         void SetLink(ISetLink<T> rhs, ISetLink<T> def);

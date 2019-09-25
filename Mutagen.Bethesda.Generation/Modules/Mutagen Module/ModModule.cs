@@ -1,4 +1,4 @@
-﻿using Loqui;
+using Loqui;
 using Loqui.Generation;
 using Noggog;
 using System;
@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Generation
             obj.CustomData[Mutagen.Bethesda.Generation.Constants.GameMode] = gameMode;
             fg.AppendLine($"public {nameof(GameMode)} GameMode => {nameof(GameMode)}.{gameMode};");
             fg.AppendLine($"IReadOnlyCache<T, {nameof(FormKey)}> {nameof(IModGetter)}.{nameof(IModGetter.GetGroupGetter)}<T>() => this.GetGroupGetter<T>();");
-            fg.AppendLine($"ISourceCache<T, {nameof(FormKey)}> {nameof(IMod)}.{nameof(IMod.GetGroup)}<T>() => this.GetGroup<T>();");
+            fg.AppendLine($"ICache<T, {nameof(FormKey)}> {nameof(IMod)}.{nameof(IMod.GetGroup)}<T>() => this.GetGroup<T>();");
             fg.AppendLine($"private ISourceCache<IMajorRecord, FormKey> _majorRecords = new SourceCache<IMajorRecord, FormKey>(m => m.FormKey);");
             fg.AppendLine($"public IObservableCache<IMajorRecord, FormKey> MajorRecords => _majorRecords;");
             fg.AppendLine($"public IMajorRecord this[FormKey id]");
@@ -282,7 +282,7 @@ namespace Mutagen.Bethesda.Generation
             using (var args = new FunctionWrapper(fg,
                 "public static IReadOnlyCache<T, FormKey> GetGroupGetter<T>"))
             {
-                args.Wheres.Add($"where T : {nameof(IMajorRecordInternalGetter)}");
+                args.Wheres.Add($"where T : {nameof(IMajorRecordCommonGetter)}");
                 args.Add($"this {obj.Interface(getter: true)} obj");
             }
             using (new BraceWrapper(fg))
@@ -296,15 +296,15 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine();
 
             using (var args = new FunctionWrapper(fg,
-                "public static ISourceCache<T, FormKey> GetGroup<T>"))
+                "public static ICache<T, FormKey> GetGroup<T>"))
             {
-                args.Wheres.Add($"where T : {nameof(IMajorRecordInternal)}");
+                args.Wheres.Add($"where T : {nameof(IMajorRecordCommon)}");
                 args.Add($"this {obj.Interface(getter: false)} obj");
             }
             using (new BraceWrapper(fg))
             {
                 using (var args = new ArgsWrapper(fg,
-                    $"return (ISourceCache<T, FormKey>){obj.CommonClassInstance("obj", LoquiInterfaceType.IGetter, CommonGenerics.Class, MaskType.Normal)}.GetGroup<T>"))
+                    $"return (ICache<T, FormKey>){obj.CommonClassInstance("obj", LoquiInterfaceType.IGetter, CommonGenerics.Class, MaskType.Normal)}.GetGroup<T>"))
                 {
                     args.AddPassArg("obj");
                 }
@@ -402,7 +402,7 @@ namespace Mutagen.Bethesda.Generation
             using (var args = new FunctionWrapper(fg,
                 "public object GetGroup<T>"))
             {
-                args.Wheres.Add($"where T : {nameof(IMajorRecordInternalGetter)}");
+                args.Wheres.Add($"where T : {nameof(IMajorRecordCommonGetter)}");
                 args.Add($"{obj.Interface(getter: true)} obj");
             }
             using (new BraceWrapper(fg))

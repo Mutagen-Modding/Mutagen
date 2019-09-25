@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda.Generation
     {
         static void AttachDebugInspector()
         {
-            string testString = "protected readonly IHasBeenSetItem<String> _Name;";
+            string testString = "public ISetList<BodyPart> BodyParts => _BodyParts;";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>

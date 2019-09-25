@@ -63,7 +63,7 @@ namespace Mutagen.Bethesda
             MasterReferences masterReferences,
             RecordStructFill<M> fillStructs,
             RecordTypeFill<M> fillTyped)
-            where M : MajorRecord
+            where M : IMajorRecordCommonGetter
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseRecord(
                 frame.Reader,
@@ -75,7 +75,7 @@ namespace Mutagen.Bethesda
                 errorMask: errorMask);
             if (fillTyped == null) return record;
             MutagenFrame targetFrame = frame;
-            if (record.MajorRecordFlags.HasFlag(MajorRecord.MajorRecordFlag.Compressed))
+            if (record.IsCompressed)
             {
                 targetFrame = frame.Decompress();
             }
@@ -408,7 +408,7 @@ namespace Mutagen.Bethesda
         }
 
         public static void FillEdidLinkCache<T>(IModGetter mod, RecordType recordType, BinaryWrapperFactoryPackage package)
-            where T : IMajorRecordInternalGetter
+            where T : IMajorRecordCommonGetter
         {
             var group = mod.GetGroupGetter<T>();
             var cache = new Dictionary<RecordType, object>();
@@ -613,7 +613,7 @@ namespace Mutagen.Bethesda
             MasterReferences masterReferences,
             RecordStructFill<M> fillStructs,
             RecordTypeFill<M> fillTyped)
-            where M : MajorRecord
+            where M : IMajorRecordCommonGetter
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseRecord(
                 frame.Reader,
@@ -625,7 +625,7 @@ namespace Mutagen.Bethesda
                 errorMask: errorMask);
             if (fillTyped == null) return record;
             MutagenFrame targetFrame = frame;
-            if (record.MajorRecordFlags.HasFlag(MajorRecord.MajorRecordFlag.Compressed))
+            if (record.IsCompressed)
             {
                 targetFrame = frame.Decompress();
             }

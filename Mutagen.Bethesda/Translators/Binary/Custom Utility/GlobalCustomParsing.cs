@@ -38,7 +38,7 @@ namespace Mutagen.Bethesda.Binary
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask,
             Func<MutagenFrame, MasterReferences, char, T> getter)
-            where T : MajorRecord, IGlobalCommon
+            where T : IMajorRecordCommon, IGlobalCommon
         {
             var initialPos = frame.Position;
             var majorMeta = frame.MetaData.GetMajorRecordFrame(frame);

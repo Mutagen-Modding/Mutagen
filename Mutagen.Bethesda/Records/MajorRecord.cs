@@ -20,7 +20,7 @@ namespace Mutagen.Bethesda
         new FormKey FormKey { get; }
     }
 
-    public partial interface IMajorRecordGetter : IDuplicatable
+    public partial interface IMajorRecordGetter : IMajorRecordCommonGetter, IDuplicatable
     {
     }
 
@@ -63,29 +63,6 @@ namespace Mutagen.Bethesda
 namespace Mutagen.Bethesda.Internals
 {
     public delegate T MajorRecordActivator<T>(FormKey formKey) where T : IMajorRecordInternal;
-    public static class MajorRecordInstantiator<T>
-        where T : IMajorRecordInternal
-    {
-        public static readonly MajorRecordActivator<T> Activator;
-
-        static MajorRecordInstantiator()
-        {
-            if (!LoquiRegistration.TryGetRegister(typeof(T), out var regis))
-            {
-                throw new ArgumentException();
-            }
-
-            var ctorInfo = regis.ClassType.GetConstructors()
-                .Where(c => c.GetParameters().Length == 1)
-                .Where(c => c.GetParameters()[0].ParameterType == typeof(FormKey))
-                .First();
-            var paramInfo = ctorInfo.GetParameters();
-            ParameterExpression param = Expression.Parameter(typeof(FormKey), "formKey");
-            NewExpression newExp = Expression.New(ctorInfo, param);
-            LambdaExpression lambda = Expression.Lambda(typeof(MajorRecordActivator<T>), newExp, param);
-            Activator = (MajorRecordActivator<T>)lambda.Compile();
-        }
-    }
 
     public partial class MajorRecordBinaryWrapper : IMajorRecordCommonGetter
     {

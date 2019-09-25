@@ -1,4 +1,4 @@
-﻿using Noggog;
+using Noggog;
 using Noggog.Notifying;
 using ReactiveUI;
 using System;
@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace Mutagen.Bethesda
 {
     public class EDIDSetLink<T> : FormIDSetLink<T>, IEDIDSetLink<T>
-       where T : class, IMajorRecordInternalGetter
+       where T : class, IMajorRecordCommonGetter
     {
         public new static readonly IEDIDSetLinkGetter<T> Empty = new EDIDSetLink<T>();
 

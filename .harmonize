@@ -2,10 +2,10 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>0d3454a6ad03a97ec8d95f6b1f5bafe32966db6e</Sha>
+         <Sha>3e4cd142778c0b35a4f63cecfd2f1df439e0afc0</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>09-22-2019 00:55:54</CommitDate>
-         <Description>Removed NotifyingItem concepts</Description>
+         <CommitDate>09-24-2019 23:13:04</CommitDate>
+         <Description>ISetList Count override</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/CSharpExt.git</OriginHint>
       </RepoListing>
@@ -20,10 +20,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>DynamicData</Nickname>
-         <Sha>e07de13ef2bc5ae6d0352b26c5129796c165ddbd</Sha>
+         <Sha>0888f865ef734ae1c1876389ecc972c14f8e6b52</Sha>
          <Path>../DynamicData</Path>
-         <CommitDate>09-21-2019 17:08:07</CommitDate>
-         <Description>Merge branch 'BufferIf-clearing-fix'</Description>
+         <CommitDate>09-23-2019 12:43:15</CommitDate>
+         <Description>Updated proj to point to latest .NET</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/DynamicData.git</OriginHint>
       </RepoListing>

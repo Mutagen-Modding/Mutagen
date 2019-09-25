@@ -13,7 +13,7 @@ namespace Mutagen.Bethesda.Binary
             MutagenFrame frame,
             out IFormIDLink<T> item,
             MasterReferences masterReferences)
-            where T : class, IMajorRecordInternalGetter
+            where T : class, IMajorRecordCommonGetter
         {
             if (FormKeyBinaryTranslation.Instance.Parse(frame, out FormKey id, masterReferences))
             {
@@ -28,7 +28,7 @@ namespace Mutagen.Bethesda.Binary
             MutagenFrame frame,
             out IFormIDSetLink<T> item,
             MasterReferences masterReferences)
-            where T : class, IMajorRecordInternalGetter
+            where T : class, IMajorRecordCommonGetter
         {
             if (FormKeyBinaryTranslation.Instance.Parse(frame, out FormKey id, masterReferences))
             {
@@ -44,7 +44,7 @@ namespace Mutagen.Bethesda.Binary
             MutagenFrame frame,
             MasterReferences masterReferences,
             IFormIDSetLink<T> item)
-            where T : class, IMajorRecordInternalGetter
+            where T : class, IMajorRecordCommonGetter
         {
             if (FormKeyBinaryTranslation.Instance.Parse(
                 frame: frame,
@@ -63,7 +63,7 @@ namespace Mutagen.Bethesda.Binary
             MutagenFrame frame,
             MasterReferences masterReferences,
             IFormIDLink<T> item)
-            where T : class, IMajorRecordInternalGetter
+            where T : class, IMajorRecordCommonGetter
         {
             if (FormKeyBinaryTranslation.Instance.Parse(
                 frame: frame,
@@ -83,7 +83,7 @@ namespace Mutagen.Bethesda.Binary
             IFormIDLinkGetter<T> item,
             MasterReferences masterReferences,
             bool nullable = false)
-            where T : class, IMajorRecordInternalGetter
+            where T : class, IMajorRecordCommonGetter
         {
             FormKeyBinaryTranslation.Instance.Write(
                 writer,
@@ -96,7 +96,7 @@ namespace Mutagen.Bethesda.Binary
             IFormIDSetLinkGetter<T> item,
             MasterReferences masterReferences,
             bool nullable = false)
-            where T : class, IMajorRecordInternalGetter
+            where T : class, IMajorRecordCommonGetter
         {
             FormKeyBinaryTranslation.Instance.Write(
                 writer,
@@ -109,7 +109,7 @@ namespace Mutagen.Bethesda.Binary
             IEDIDLinkGetter<T> item,
             MasterReferences masterReferences,
             bool nullable = false)
-            where T : class, IMajorRecordInternalGetter
+            where T : class, IMajorRecordCommonGetter
         {
             this.Write(
                 writer,
@@ -123,7 +123,7 @@ namespace Mutagen.Bethesda.Binary
             MasterReferences masterReferences,
             RecordType header,
             bool nullable = false)
-            where T : class, IMajorRecordInternalGetter
+            where T : class, IMajorRecordCommonGetter
         {
             FormKeyBinaryTranslation.Instance.Write(
                 writer,
@@ -138,7 +138,7 @@ namespace Mutagen.Bethesda.Binary
             MasterReferences masterReferences,
             RecordType header,
             bool nullable = false)
-            where T : class, IMajorRecordInternalGetter
+            where T : class, IMajorRecordCommonGetter
         {
             if (!item.HasBeenSet) return;
             FormKeyBinaryTranslation.Instance.Write(

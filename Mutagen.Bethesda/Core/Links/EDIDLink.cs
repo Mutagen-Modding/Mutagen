@@ -1,4 +1,4 @@
-﻿using Noggog;
+using Noggog;
 using Noggog.Notifying;
 using ReactiveUI;
 using System;
@@ -13,7 +13,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda
 {
     public class EDIDLink<T> : FormIDLink<T>, IEDIDLink<T>
-       where T : class, IMajorRecordInternalGetter
+       where T : class, IMajorRecordCommonGetter
     {
         public new static readonly IEDIDLinkGetter<T> Empty = new EDIDLink<T>();
 

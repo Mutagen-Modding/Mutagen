@@ -391,7 +391,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public GameMode GameMode => GameMode.Skyrim;
         IReadOnlyCache<T, FormKey> IModGetter.GetGroupGetter<T>() => this.GetGroupGetter<T>();
-        ISourceCache<T, FormKey> IMod.GetGroup<T>() => this.GetGroup<T>();
+        ICache<T, FormKey> IMod.GetGroup<T>() => this.GetGroup<T>();
         private ISourceCache<IMajorRecord, FormKey> _majorRecords = new SourceCache<IMajorRecord, FormKey>(m => m.FormKey);
         public IObservableCache<IMajorRecord, FormKey> MajorRecords => _majorRecords;
         public IMajorRecord this[FormKey id]
@@ -1537,15 +1537,15 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static IReadOnlyCache<T, FormKey> GetGroupGetter<T>(this ISkyrimModInternalGetter obj)
-            where T : IMajorRecordInternalGetter
+            where T : IMajorRecordCommonGetter
         {
             return (IReadOnlyCache<T, FormKey>)((SkyrimModCommon)((ISkyrimModInternalGetter)obj).CommonInstance()).GetGroup<T>(obj: obj);
         }
 
-        public static ISourceCache<T, FormKey> GetGroup<T>(this ISkyrimModInternal obj)
-            where T : IMajorRecordInternal
+        public static ICache<T, FormKey> GetGroup<T>(this ISkyrimModInternal obj)
+            where T : IMajorRecordCommon
         {
-            return (ISourceCache<T, FormKey>)((SkyrimModCommon)((ISkyrimModInternalGetter)obj).CommonInstance()).GetGroup<T>(obj: obj);
+            return (ICache<T, FormKey>)((SkyrimModCommon)((ISkyrimModInternalGetter)obj).CommonInstance()).GetGroup<T>(obj: obj);
         }
 
         public static Task WriteToBinaryAsync(
@@ -2088,7 +2088,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #region Mutagen
         public object GetGroup<T>(ISkyrimModInternalGetter obj)
-            where T : IMajorRecordInternalGetter
+            where T : IMajorRecordCommonGetter
         {
             switch (typeof(T).Name)
             {

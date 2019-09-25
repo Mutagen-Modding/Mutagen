@@ -18,7 +18,7 @@ namespace Mutagen.Bethesda
             return true;
         }
 
-        public static string GetFileString(IMajorRecord rec, int counter)
+        public static string GetFileString(IMajorRecordCommonGetter rec, int counter)
         {
             return $"{counter} - {rec.EditorID} - {rec.FormKey.ToString()}";
         }
