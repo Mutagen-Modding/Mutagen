@@ -13,7 +13,7 @@ namespace Mutagen.Bethesda
     {
         GameMode GameMode { get; }
         IReadOnlyList<IMasterReferenceGetter> MasterReferences { get; }
-        IReadOnlyCache<IMajorRecordInternalGetter, FormKey> MajorRecords { get; }
+        IReadOnlyCache<IMajorRecordCommonGetter, FormKey> MajorRecords { get; }
         IReadOnlyCache<T, FormKey> GetGroupGetter<T>() where T : IMajorRecordCommonGetter;
         void WriteToBinary(string path, ModKey modKeyOverride = null);
         Task WriteToBinaryAsync(string path, ModKey modKeyOverride = null);
@@ -23,10 +23,22 @@ namespace Mutagen.Bethesda
 
     public interface IMod : IModGetter, ILinkContainer
     {
-        new ISourceList<MasterReference> MasterReferences { get; }
-        new IObservableCache<IMajorRecord, FormKey> MajorRecords { get; }
+        new IList<MasterReference> MasterReferences { get; }
+        new IReadOnlyCache<IMajorRecordCommon, FormKey> MajorRecords { get; }
         ICache<T, FormKey> GetGroup<T>() where T : IMajorRecordCommon;
         FormKey GetNextFormKey();
         void SyncRecordCount();
+    }
+
+    public interface IModObservableGetter : IModGetter
+    {
+        IObservableList<IMasterReferenceGetter> MasterReferencesObservableList { get; }
+        IObservable<ChangeSet<IMajorRecordCommonGetter, FormKey>> MajorRecordsObservable { get; }
+    }
+
+    public interface IModObservable : IMod, IModObservableGetter
+    {
+        new ISourceList<MasterReference> MasterReferencesObservableList { get; }
+        new IObservable<ChangeSet<IMajorRecordCommon, FormKey>> MajorRecordsObservable { get; }
     }
 }

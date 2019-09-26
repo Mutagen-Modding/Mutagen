@@ -33,9 +33,10 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial class OblivionMod
     {
-        public ISourceList<MasterReference> MasterReferences => this.ModHeader.MasterReferences;
+        IList<MasterReference> IMod.MasterReferences => this.ModHeader.MasterReferences;
+        IReadOnlyCache<IMajorRecordCommon, FormKey> IMod.MajorRecords => this.MajorRecords;
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;
-        IReadOnlyCache<IMajorRecordInternalGetter, FormKey> IModGetter.MajorRecords => this.MajorRecords;
+        IReadOnlyCache<IMajorRecordCommonGetter, FormKey> IModGetter.MajorRecords => this.MajorRecords;
 
         public ModKey ModKey { get; }
 

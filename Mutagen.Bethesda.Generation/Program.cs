@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda.Generation
     {
         static void AttachDebugInspector()
         {
-            string testString = "link.Link(modList: null, sourceMod: this);";
+            string testString = "IReadOnlyCache<IMajorRecordInternalGetter, FormKey> IModGetter.MajorRecords => throw new NotImplementedException();";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>

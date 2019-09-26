@@ -4018,7 +4018,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Task IModGetter.WriteToBinaryAsync(string path, ModKey modKey) => this.WriteToBinaryAsync(path, modKey);
         void IModGetter.WriteToBinaryParallel(string path, ModKey modKey) => this.WriteToBinaryParallel(path, modKey);
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;
-        IReadOnlyCache<IMajorRecordInternalGetter, FormKey> IModGetter.MajorRecords => throw new NotImplementedException();
+        IReadOnlyCache<IMajorRecordCommonGetter, FormKey> IModGetter.MajorRecords => throw new NotImplementedException();
         protected object XmlWriteTranslator => SkyrimModXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(

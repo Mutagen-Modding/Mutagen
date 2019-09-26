@@ -70,9 +70,9 @@ namespace Mutagen.Bethesda
         private IReadOnlyDictionary<FormKey, IMajorRecordCommon> GetDictionary(M mod)
         {
             Dictionary<FormKey, IMajorRecordCommon> majorRecords = new Dictionary<FormKey, IMajorRecordCommon>();
-            foreach (var majorRec in mod.MajorRecords.Items)
+            foreach (var majorRec in mod.MajorRecords)
             {
-                majorRecords[majorRec.FormKey] = majorRec;
+                majorRecords[majorRec.Key] = majorRec.Value;
             }
             return majorRecords;
         }
