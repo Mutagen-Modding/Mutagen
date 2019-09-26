@@ -623,10 +623,11 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask,
                         translationMask: translationMask);
                 }
+                var package = new LinkingPackage<OblivionMod>(ret, default);
                 foreach (var link in ret.Links)
                 {
                     if (link.Linked) continue;
-                    link.Link(modList: null, sourceMod: ret);
+                    link.Link(package);
                 }
             }
             catch (Exception ex)
@@ -1683,11 +1684,12 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                 }
             }
+            var package = new LinkingPackage<OblivionMod>(this, default);
             foreach (var rec in router.Values)
             {
                 foreach (var link in rec.Links)
                 {
-                    link.Link(modList: null, sourceMod: this);
+                    link.Link(package);
                 }
             }
             return router;
@@ -2473,10 +2475,11 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 index: (int)OblivionMod_FieldIndex.EffectShaders)));
             await Task.WhenAll(tasks);
+            var package = new LinkingPackage<OblivionMod>(ret, default);
             foreach (var link in ret.Links)
             {
                 if (link.Linked) continue;
-                link.Link(modList: null, sourceMod: ret);
+                link.Link(package);
             }
             return ret;
         }
@@ -2831,10 +2834,11 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes).ConfigureAwait(false);
+            var package = new LinkingPackage<OblivionMod>(ret, default);
             foreach (var link in ret.Links)
             {
                 if (link.Linked) continue;
-                link.Link(modList: null, sourceMod: ret);
+                link.Link(package);
             }
             return ret;
         }

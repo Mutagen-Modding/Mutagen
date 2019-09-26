@@ -655,34 +655,20 @@ namespace Mutagen.Bethesda.Oblivion
             yield break;
         }
 
-        public override void Link<M>(
-            ModList<M> modList,
-            M sourceMod)
+        public override void Link<M>(LinkingPackage<M> package)
             
         {
-            base.Link(
-                modList,
-                sourceMod);
-            Parent_Property.Link(
-                modList,
-                sourceMod);
-            Climate_Property.Link(
-                modList,
-                sourceMod);
-            Water_Property.Link(
-                modList,
-                sourceMod);
+            base.Link(package: package);
+            Parent_Property.Link(package);
+            Climate_Property.Link(package);
+            Water_Property.Link(package);
             if (TopCell != null)
             {
-                TopCell?.Link(
-                    modList,
-                    sourceMod);
+                TopCell?.Link(package: package);
             }
             foreach (var item in SubCells.Items)
             {
-                item.Link(
-                    modList,
-                    sourceMod);
+                item.Link(package: package);
             }
         }
 

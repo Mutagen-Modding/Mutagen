@@ -282,14 +282,10 @@ namespace Mutagen.Bethesda.Oblivion
             yield break;
         }
 
-        public void Link<M>(
-            ModList<M> modList,
-            M sourceMod)
+        public void Link<M>(LinkingPackage<M> package)
             where M : IMod
         {
-            Faction_Property.Link(
-                modList,
-                sourceMod);
+            Faction_Property.Link(package);
         }
 
         #endregion

@@ -556,29 +556,17 @@ namespace Mutagen.Bethesda.Oblivion
             yield break;
         }
 
-        public override void Link<M>(
-            ModList<M> modList,
-            M sourceMod)
+        public override void Link<M>(LinkingPackage<M> package)
             
         {
-            base.Link(
-                modList,
-                sourceMod);
-            Base_Property.Link(
-                modList,
-                sourceMod);
+            base.Link(package: package);
+            Base_Property.Link(package);
             if (EnableParent != null)
             {
-                EnableParent?.Link(
-                    modList,
-                    sourceMod);
+                EnableParent?.Link(package: package);
             }
-            MerchantContainer_Property.Link(
-                modList,
-                sourceMod);
-            Horse_Property.Link(
-                modList,
-                sourceMod);
+            MerchantContainer_Property.Link(package);
+            Horse_Property.Link(package);
         }
 
         public PlacedNPC(FormKey formKey)

@@ -13,6 +13,8 @@ namespace Mutagen.Bethesda
     {
         private readonly List<ModListing<TMod>> _modsByLoadOrder = new List<ModListing<TMod>>();
 
+        public int Count => _modsByLoadOrder.Count;
+
         public bool TryGetListing(ModKey key, out (ModID Index, ModListing<TMod> Listing) result)
         {
             for (int i = 0; i < _modsByLoadOrder.Count; i++)
@@ -51,6 +53,11 @@ namespace Mutagen.Bethesda
             return result != null;
         }
 
+        public ModListing<TMod> GetIndex(ModID index)
+        {
+            return _modsByLoadOrder[index.ID];
+        }
+
         public void Add(ModKey key, TMod mod)
         {
             if (this.Contains(key))
@@ -85,19 +92,6 @@ namespace Mutagen.Bethesda
                 }
             }
             return -1;
-        }
-
-        private void Link()
-        {
-            foreach (var listing in this._modsByLoadOrder)
-            {
-                if (!listing.Loaded) continue;
-                foreach (var link in listing.Mod.Links)
-                {
-                    if (link.Linked) continue;
-                    link.Link(this, listing.Mod);
-                }
-            }
         }
 
         public void Clear()
@@ -139,11 +133,13 @@ namespace Mutagen.Bethesda
                         new ModListing<TMod>(item.modKey));
                 }
             }
+            LinkingPackage<TMod> package = new LinkingPackage<TMod>(this);
             foreach (var mod in this._modsByLoadOrder)
             {
                 foreach (var link in mod.Mod.Links)
                 {
-                    link.Link(this, mod.Mod);
+                    package.SetSourceMod(mod.Mod);
+                    link.Link(package);
                 }
             }
         }

@@ -122,8 +122,7 @@ namespace Mutagen.Bethesda
 
         public static bool TryGetLink<M>(
             FormKey? unlinkedForm,
-            ModList<M> modList,
-            M sourceMod,
+            LinkingPackage<M> package,
             out T item)
             where M : IMod
         {
@@ -133,26 +132,12 @@ namespace Mutagen.Bethesda
                 item = default(T);
                 return false;
             }
-            M mod;
-            if (sourceMod.ModKey == unlinkedForm.Value.ModKey)
-            {
-                mod = sourceMod;
-            }
-            else if (modList != null)
-            {
-                if (!modList.TryGetMod(unlinkedForm.Value.ModKey, out var modListing))
-                {
-                    item = default(T);
-                    return false;
-                }
-                mod = modListing.Mod;
-            }
-            else
+            if (!package.TryGetMajorRecords(unlinkedForm.Value.ModKey, out var majorRecs))
             {
                 item = default;
                 return false;
             }
-            if (!mod.MajorRecords.TryGetValue(unlinkedForm.Value, out var rec))
+            if (!majorRecs.TryGetValue(unlinkedForm.Value, out var rec))
             {
                 item = default(T);
                 return false;
@@ -166,9 +151,7 @@ namespace Mutagen.Bethesda
             return false;
         }
 
-        public virtual bool Link<M>(
-            ModList<M> modList,
-            M sourceMod)
+        public virtual bool Link<M>(LinkingPackage<M> package)
             where M : IMod
         {
 #if DEBUG
@@ -176,8 +159,7 @@ namespace Mutagen.Bethesda
 #endif
             if (!TryGetLink(
                 this.UnlinkedForm,
-                modList,
-                sourceMod,
+                package,
                 out var item))
             {
                 this.Item = default;

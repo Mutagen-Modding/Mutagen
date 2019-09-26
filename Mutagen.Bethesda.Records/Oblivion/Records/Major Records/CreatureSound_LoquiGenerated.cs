@@ -315,16 +315,12 @@ namespace Mutagen.Bethesda.Oblivion
             yield break;
         }
 
-        public void Link<M>(
-            ModList<M> modList,
-            M sourceMod)
+        public void Link<M>(LinkingPackage<M> package)
             where M : IMod
         {
             foreach (var item in Sounds.Items)
             {
-                item.Link(
-                    modList,
-                    sourceMod);
+                item.Link(package: package);
             }
         }
 

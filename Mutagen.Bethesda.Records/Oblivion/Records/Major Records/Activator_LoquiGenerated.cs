@@ -376,20 +376,12 @@ namespace Mutagen.Bethesda.Oblivion
             yield break;
         }
 
-        public override void Link<M>(
-            ModList<M> modList,
-            M sourceMod)
+        public override void Link<M>(LinkingPackage<M> package)
             
         {
-            base.Link(
-                modList,
-                sourceMod);
-            Script_Property.Link(
-                modList,
-                sourceMod);
-            Sound_Property.Link(
-                modList,
-                sourceMod);
+            base.Link(package: package);
+            Script_Property.Link(package);
+            Sound_Property.Link(package);
         }
 
         public Activator(FormKey formKey)

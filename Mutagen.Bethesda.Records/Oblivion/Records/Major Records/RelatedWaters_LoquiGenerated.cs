@@ -283,20 +283,12 @@ namespace Mutagen.Bethesda.Oblivion
             yield break;
         }
 
-        public void Link<M>(
-            ModList<M> modList,
-            M sourceMod)
+        public void Link<M>(LinkingPackage<M> package)
             where M : IMod
         {
-            RelatedWaterDaytime_Property.Link(
-                modList,
-                sourceMod);
-            RelatedWaterNighttime_Property.Link(
-                modList,
-                sourceMod);
-            RelatedWaterUnderwater_Property.Link(
-                modList,
-                sourceMod);
+            RelatedWaterDaytime_Property.Link(package);
+            RelatedWaterNighttime_Property.Link(package);
+            RelatedWaterUnderwater_Property.Link(package);
         }
 
         #endregion

@@ -266,8 +266,7 @@ namespace Mutagen.Bethesda.Generation
                     $"public{await obj.FunctionOverride(async (o) => (await HasLinks(o, includeBaseClass: false)) != LinkCase.No)}void Link<M>"))
                 {
                     args.Wheres.Add(((await obj.GetFunctionOverrideType(async (o) => (await HasLinks(o, includeBaseClass: false)) != LinkCase.No) != OverrideType.HasBase) ? "where M : IMod" : null));
-                    args.Add("ModList<M> modList");
-                    args.Add("M sourceMod");
+                    args.Add($"LinkingPackage<M> package");
                 }
                 using (new BraceWrapper(fg))
                 {
@@ -279,15 +278,13 @@ namespace Mutagen.Bethesda.Generation
 
         private async Task FillLinkCode(ObjectGeneration obj, FileGeneration fg)
         {
-            string sourceModAccessor = obj.GetObjectType() == ObjectType.Mod ? "this" : "sourceMod";
             if (obj.BaseClass != null
                 && await HasLinks(obj.BaseClass, includeBaseClass: true) != LinkCase.No)
             {
                 using (var args = new ArgsWrapper(fg,
-                $"base.Link"))
+                    $"base.Link"))
                 {
-                    args.Add("modList");
-                    args.Add(sourceModAccessor);
+                    args.AddPassArg("package");
                 }
             }
             foreach (var field in obj.IterateFields())
@@ -297,8 +294,7 @@ namespace Mutagen.Bethesda.Generation
                     using (var args = new ArgsWrapper(fg,
                         $"{field.ProtectedProperty}.Link"))
                     {
-                        args.Add("modList");
-                        args.Add(sourceModAccessor);
+                        args.Add("package");
                     }
                 }
                 else if (field is LoquiType loqui)
@@ -331,8 +327,7 @@ namespace Mutagen.Bethesda.Generation
                         using (var args = new ArgsWrapper(fg,
                             $"{(subLinkCase == LinkCase.Maybe ? $"{field.Name}linkCont" : field.Name)}?.Link"))
                         {
-                            args.Add("modList");
-                            args.Add(sourceModAccessor);
+                            args.AddPassArg("package");
                         }
                     }
                 }
@@ -367,8 +362,7 @@ namespace Mutagen.Bethesda.Generation
                         using (var args = new ArgsWrapper(fg,
                             $"item.Link"))
                         {
-                            args.Add("modList");
-                            args.Add(sourceModAccessor);
+                            args.AddPassArg("package");
                         }
                     }
                 }
@@ -404,8 +398,7 @@ namespace Mutagen.Bethesda.Generation
                         using (var args = new ArgsWrapper(fg,
                             $"item.Link"))
                         {
-                            args.Add("modList");
-                            args.Add(sourceModAccessor);
+                            args.AddPassArg("package");
                         }
                     }
                 }

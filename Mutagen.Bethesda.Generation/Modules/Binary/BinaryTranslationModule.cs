@@ -776,11 +776,12 @@ namespace Mutagen.Bethesda.Generation
         public static void GenerateModLinking(ObjectGeneration obj, FileGeneration fg)
         {
             if (obj.GetObjectType() != ObjectType.Mod) return;
+            fg.AppendLine($"var package = new LinkingPackage<{obj.Name}>(ret, default);");
             fg.AppendLine("foreach (var link in ret.Links)");
             using (new BraceWrapper(fg))
             {
                 fg.AppendLine("if (link.Linked) continue;");
-                fg.AppendLine("link.Link(modList: null, sourceMod: ret);");
+                fg.AppendLine("link.Link(package);");
             }
         }
 

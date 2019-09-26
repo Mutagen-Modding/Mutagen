@@ -362,9 +362,7 @@ namespace Mutagen.Bethesda
             yield break;
         }
 
-        public virtual void Link<M>(
-            ModList<M> modList,
-            M sourceMod)
+        public virtual void Link<M>(LinkingPackage<M> package)
             where M : IMod
         {
         }

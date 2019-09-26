@@ -88,13 +88,13 @@ namespace Mutagen.Bethesda
             this.HasBeenSet = true;
         }
 
-        public override bool Link<M>(ModList<M> modList, M sourceMod)
+        public override bool Link<M>(LinkingPackage<M> package)
         {
             if (this.UnlinkedForm.HasValue)
             {
-                return base.Link(modList, sourceMod);
+                return base.Link(package);
             }
-            return EDIDLink<T>.TryLink(this, modList, sourceMod);
+            return EDIDLink<T>.TryLink(this, package);
         }
     }
 }

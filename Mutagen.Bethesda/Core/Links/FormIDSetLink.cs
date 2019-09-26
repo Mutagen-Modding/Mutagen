@@ -159,9 +159,7 @@ namespace Mutagen.Bethesda
             }
         }
 
-        public virtual bool Link<M>(
-            ModList<M> modList,
-            M sourceMod)
+        public virtual bool Link<M>(LinkingPackage<M> package)
             where M : IMod
         {
 #if DEBUG
@@ -170,8 +168,7 @@ namespace Mutagen.Bethesda
             if (!this.HasBeenSet) return false;
             if (!FormIDLink<T>.TryGetLink(
                 this.UnlinkedForm,
-                modList,
-                sourceMod,
+                package,
                 out var item))
             {
                 this.Item = default;

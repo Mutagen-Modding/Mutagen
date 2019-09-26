@@ -727,61 +727,37 @@ namespace Mutagen.Bethesda.Oblivion
             yield break;
         }
 
-        public override void Link<M>(
-            ModList<M> modList,
-            M sourceMod)
+        public override void Link<M>(LinkingPackage<M> package)
             
         {
-            base.Link(
-                modList,
-                sourceMod);
+            base.Link(package: package);
             foreach (var item in Regions)
             {
-                item.Link(
-                    modList,
-                    sourceMod);
+                item.Link(package: package);
             }
-            Climate_Property.Link(
-                modList,
-                sourceMod);
-            Water_Property.Link(
-                modList,
-                sourceMod);
-            Owner_Property.Link(
-                modList,
-                sourceMod);
-            GlobalVariable_Property.Link(
-                modList,
-                sourceMod);
+            Climate_Property.Link(package);
+            Water_Property.Link(package);
+            Owner_Property.Link(package);
+            GlobalVariable_Property.Link(package);
             if (PathGrid != null)
             {
-                PathGrid?.Link(
-                    modList,
-                    sourceMod);
+                PathGrid?.Link(package: package);
             }
             if (Landscape != null)
             {
-                Landscape?.Link(
-                    modList,
-                    sourceMod);
+                Landscape?.Link(package: package);
             }
             foreach (var item in Persistent.Items.WhereCastable<IPlaced, ILinkSubContainer>())
             {
-                item.Link(
-                    modList,
-                    sourceMod);
+                item.Link(package: package);
             }
             foreach (var item in Temporary.Items.WhereCastable<IPlaced, ILinkSubContainer>())
             {
-                item.Link(
-                    modList,
-                    sourceMod);
+                item.Link(package: package);
             }
             foreach (var item in VisibleWhenDistant.Items.WhereCastable<IPlaced, ILinkSubContainer>())
             {
-                item.Link(
-                    modList,
-                    sourceMod);
+                item.Link(package: package);
             }
         }
 

@@ -1347,62 +1347,36 @@ namespace Mutagen.Bethesda.Oblivion
             yield break;
         }
 
-        public override void Link<M>(
-            ModList<M> modList,
-            M sourceMod)
+        public override void Link<M>(LinkingPackage<M> package)
             
         {
-            base.Link(
-                modList,
-                sourceMod);
+            base.Link(package: package);
             foreach (var item in Factions.Items)
             {
-                item.Link(
-                    modList,
-                    sourceMod);
+                item.Link(package: package);
             }
-            DeathItem_Property.Link(
-                modList,
-                sourceMod);
-            Race_Property.Link(
-                modList,
-                sourceMod);
+            DeathItem_Property.Link(package);
+            Race_Property.Link(package);
             foreach (var item in Spells)
             {
-                item.Link(
-                    modList,
-                    sourceMod);
+                item.Link(package: package);
             }
-            Script_Property.Link(
-                modList,
-                sourceMod);
+            Script_Property.Link(package);
             foreach (var item in Items.Items)
             {
-                item.Link(
-                    modList,
-                    sourceMod);
+                item.Link(package: package);
             }
             foreach (var item in AIPackages)
             {
-                item.Link(
-                    modList,
-                    sourceMod);
+                item.Link(package: package);
             }
-            Class_Property.Link(
-                modList,
-                sourceMod);
-            Hair_Property.Link(
-                modList,
-                sourceMod);
+            Class_Property.Link(package);
+            Hair_Property.Link(package);
             foreach (var item in Eyes)
             {
-                item.Link(
-                    modList,
-                    sourceMod);
+                item.Link(package: package);
             }
-            CombatStyle_Property.Link(
-                modList,
-                sourceMod);
+            CombatStyle_Property.Link(package);
         }
 
         public NPC(FormKey formKey)

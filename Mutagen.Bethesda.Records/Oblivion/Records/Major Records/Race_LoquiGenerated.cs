@@ -819,49 +819,33 @@ namespace Mutagen.Bethesda.Oblivion
             yield break;
         }
 
-        public override void Link<M>(
-            ModList<M> modList,
-            M sourceMod)
+        public override void Link<M>(LinkingPackage<M> package)
             
         {
-            base.Link(
-                modList,
-                sourceMod);
+            base.Link(package: package);
             foreach (var item in Spells)
             {
-                item.Link(
-                    modList,
-                    sourceMod);
+                item.Link(package: package);
             }
             foreach (var item in Relations.Items)
             {
-                item.Link(
-                    modList,
-                    sourceMod);
+                item.Link(package: package);
             }
             if (Voices != null)
             {
-                Voices?.Link(
-                    modList,
-                    sourceMod);
+                Voices?.Link(package: package);
             }
             if (DefaultHair != null)
             {
-                DefaultHair?.Link(
-                    modList,
-                    sourceMod);
+                DefaultHair?.Link(package: package);
             }
             foreach (var item in Hairs)
             {
-                item.Link(
-                    modList,
-                    sourceMod);
+                item.Link(package: package);
             }
             foreach (var item in Eyes)
             {
-                item.Link(
-                    modList,
-                    sourceMod);
+                item.Link(package: package);
             }
         }
 

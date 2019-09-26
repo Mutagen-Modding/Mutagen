@@ -153,16 +153,15 @@ namespace Mutagen.Bethesda
 
         public static bool TryLink<M>(
             IEDIDLink<T> link,
-            ModList<M> modList, 
-            M sourceMod)
+            LinkingPackage<M> package)
             where M : IMod
         {
 #if DEBUG
             link.AttemptedLink = true;
 #endif
-            if (TryLinkToMod(link, sourceMod)) return true;
-            if (modList == null) return false;
-            foreach (var listing in modList)
+            if (package.SourceMod != null && TryLinkToMod(link, package.SourceMod)) return true;
+            if (package.ModList == null) return false;
+            foreach (var listing in package.ModList)
             {
                 if (!listing.Loaded) return false;
                 if (TryLinkToMod(link, listing.Mod)) return true;
@@ -170,13 +169,13 @@ namespace Mutagen.Bethesda
             return false;
         }
 
-        public override bool Link<M>(ModList<M> modList, M sourceMod)
+        public override bool Link<M>(LinkingPackage<M> package)
         {
             if (this.UnlinkedForm.HasValue)
             {
-                return base.Link(modList, sourceMod);
+                return base.Link(package);
             }
-            return TryLink(this, modList, sourceMod);
+            return TryLink(this, package);
         }
     }
 }

@@ -550,40 +550,26 @@ namespace Mutagen.Bethesda.Oblivion
             yield break;
         }
 
-        public override void Link<M>(
-            ModList<M> modList,
-            M sourceMod)
+        public override void Link<M>(LinkingPackage<M> package)
             
         {
-            base.Link(
-                modList,
-                sourceMod);
-            Worldspace_Property.Link(
-                modList,
-                sourceMod);
+            base.Link(package: package);
+            Worldspace_Property.Link(package);
             if (Objects != null)
             {
-                Objects?.Link(
-                    modList,
-                    sourceMod);
+                Objects?.Link(package: package);
             }
             if (Weather != null)
             {
-                Weather?.Link(
-                    modList,
-                    sourceMod);
+                Weather?.Link(package: package);
             }
             if (Grasses != null)
             {
-                Grasses?.Link(
-                    modList,
-                    sourceMod);
+                Grasses?.Link(package: package);
             }
             if (Sounds != null)
             {
-                Sounds?.Link(
-                    modList,
-                    sourceMod);
+                Sounds?.Link(package: package);
             }
         }
 

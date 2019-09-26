@@ -887,50 +887,28 @@ namespace Mutagen.Bethesda.Oblivion
             yield break;
         }
 
-        public override void Link<M>(
-            ModList<M> modList,
-            M sourceMod)
+        public override void Link<M>(LinkingPackage<M> package)
             
         {
-            base.Link(
-                modList,
-                sourceMod);
-            Base_Property.Link(
-                modList,
-                sourceMod);
+            base.Link(package: package);
+            Base_Property.Link(package);
             if (TeleportDestination != null)
             {
-                TeleportDestination?.Link(
-                    modList,
-                    sourceMod);
+                TeleportDestination?.Link(package: package);
             }
             if (Lock != null)
             {
-                Lock?.Link(
-                    modList,
-                    sourceMod);
+                Lock?.Link(package: package);
             }
-            Owner_Property.Link(
-                modList,
-                sourceMod);
-            GlobalVariable_Property.Link(
-                modList,
-                sourceMod);
+            Owner_Property.Link(package);
+            GlobalVariable_Property.Link(package);
             if (EnableParent != null)
             {
-                EnableParent?.Link(
-                    modList,
-                    sourceMod);
+                EnableParent?.Link(package: package);
             }
-            Target_Property.Link(
-                modList,
-                sourceMod);
-            Unknown_Property.Link(
-                modList,
-                sourceMod);
-            ContainedSoul_Property.Link(
-                modList,
-                sourceMod);
+            Target_Property.Link(package);
+            Unknown_Property.Link(package);
+            ContainedSoul_Property.Link(package);
         }
 
         public PlacedObject(FormKey formKey)

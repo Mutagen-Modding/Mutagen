@@ -20,10 +20,7 @@ namespace Mutagen.Bethesda
     public interface ILink : ILinkGetter
     {
         new FormKey FormKey { get; set; }
-        bool Link<M>(
-            ModList<M> modList,
-            M sourceMod)
-            where M : IMod;
+        bool Link<M>(LinkingPackage<M> package) where M : IMod;
 #if DEBUG
         new bool AttemptedLink { get; set; }
 #endif

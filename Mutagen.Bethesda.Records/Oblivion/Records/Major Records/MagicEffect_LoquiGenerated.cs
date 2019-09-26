@@ -577,28 +577,16 @@ namespace Mutagen.Bethesda.Oblivion
             yield break;
         }
 
-        public override void Link<M>(
-            ModList<M> modList,
-            M sourceMod)
+        public override void Link<M>(LinkingPackage<M> package)
             
         {
-            base.Link(
-                modList,
-                sourceMod);
-            Light_Property.Link(
-                modList,
-                sourceMod);
-            EffectShader_Property.Link(
-                modList,
-                sourceMod);
-            SubData?.Link(
-                modList,
-                sourceMod);
+            base.Link(package: package);
+            Light_Property.Link(package);
+            EffectShader_Property.Link(package);
+            SubData?.Link(package: package);
             foreach (var item in CounterEffects)
             {
-                item.Link(
-                    modList,
-                    sourceMod);
+                item.Link(package: package);
             }
         }
 

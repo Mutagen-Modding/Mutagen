@@ -233,10 +233,11 @@ namespace Mutagen.Bethesda.Skyrim
                         errorMask: errorMask,
                         translationMask: translationMask);
                 }
+                var package = new LinkingPackage<SkyrimMod>(ret, default);
                 foreach (var link in ret.Links)
                 {
                     if (link.Linked) continue;
-                    link.Link(modList: null, sourceMod: ret);
+                    link.Link(package);
                 }
             }
             catch (Exception ex)
@@ -535,11 +536,12 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
             }
+            var package = new LinkingPackage<SkyrimMod>(this, default);
             foreach (var rec in router.Values)
             {
                 foreach (var link in rec.Links)
                 {
-                    link.Link(modList: null, sourceMod: this);
+                    link.Link(package);
                 }
             }
             return router;
@@ -646,10 +648,11 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask,
                 index: (int)SkyrimMod_FieldIndex.Classes)));
             await Task.WhenAll(tasks);
+            var package = new LinkingPackage<SkyrimMod>(ret, default);
             foreach (var link in ret.Links)
             {
                 if (link.Linked) continue;
-                link.Link(modList: null, sourceMod: ret);
+                link.Link(package);
             }
             return ret;
         }
@@ -759,10 +762,11 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes).ConfigureAwait(false);
+            var package = new LinkingPackage<SkyrimMod>(ret, default);
             foreach (var link in ret.Links)
             {
                 if (link.Linked) continue;
-                link.Link(modList: null, sourceMod: ret);
+                link.Link(package);
             }
             return ret;
         }

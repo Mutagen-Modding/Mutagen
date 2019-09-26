@@ -325,26 +325,14 @@ namespace Mutagen.Bethesda.Oblivion
             yield break;
         }
 
-        public void Link<M>(
-            ModList<M> modList,
-            M sourceMod)
+        public void Link<M>(LinkingPackage<M> package)
             where M : IMod
         {
-            EnchantEffect_Property.Link(
-                modList,
-                sourceMod);
-            CastingSound_Property.Link(
-                modList,
-                sourceMod);
-            BoltSound_Property.Link(
-                modList,
-                sourceMod);
-            HitSound_Property.Link(
-                modList,
-                sourceMod);
-            AreaSound_Property.Link(
-                modList,
-                sourceMod);
+            EnchantEffect_Property.Link(package);
+            CastingSound_Property.Link(package);
+            BoltSound_Property.Link(package);
+            HitSound_Property.Link(package);
+            AreaSound_Property.Link(package);
         }
 
         #endregion

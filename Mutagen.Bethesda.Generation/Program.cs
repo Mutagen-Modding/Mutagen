@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda.Generation
     {
         static void AttachDebugInspector()
         {
-            string testString = "public ISetList<BodyPart> BodyParts => _BodyParts;";
+            string testString = "link.Link(modList: null, sourceMod: this);";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>

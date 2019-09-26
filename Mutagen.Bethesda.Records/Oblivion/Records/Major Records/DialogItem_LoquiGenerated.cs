@@ -494,43 +494,27 @@ namespace Mutagen.Bethesda.Oblivion
             yield break;
         }
 
-        public override void Link<M>(
-            ModList<M> modList,
-            M sourceMod)
+        public override void Link<M>(LinkingPackage<M> package)
             
         {
-            base.Link(
-                modList,
-                sourceMod);
-            Quest_Property.Link(
-                modList,
-                sourceMod);
-            PreviousTopic_Property.Link(
-                modList,
-                sourceMod);
+            base.Link(package: package);
+            Quest_Property.Link(package);
+            PreviousTopic_Property.Link(package);
             foreach (var item in Topics)
             {
-                item.Link(
-                    modList,
-                    sourceMod);
+                item.Link(package: package);
             }
             foreach (var item in Choices)
             {
-                item.Link(
-                    modList,
-                    sourceMod);
+                item.Link(package: package);
             }
             foreach (var item in LinkFrom)
             {
-                item.Link(
-                    modList,
-                    sourceMod);
+                item.Link(package: package);
             }
             if (Script is ILinkSubContainer ScriptlinkCont)
             {
-                ScriptlinkCont?.Link(
-                    modList,
-                    sourceMod);
+                ScriptlinkCont?.Link(package: package);
             }
         }
 

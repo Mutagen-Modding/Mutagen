@@ -160,13 +160,14 @@ namespace Mutagen.Bethesda.Generation
                         }
                     }
                 }
+                fg.AppendLine($"var package = new LinkingPackage<{obj.Name}>(this, default);");
                 fg.AppendLine("foreach (var rec in router.Values)");
                 using (new BraceWrapper(fg))
                 {
                     fg.AppendLine($"foreach (var link in rec.Links)");
                     using (new BraceWrapper(fg))
                     {
-                        fg.AppendLine($"link.Link(modList: null, sourceMod: this);");
+                        fg.AppendLine($"link.Link(package);");
                     }
                 }
                 fg.AppendLine($"return router;");
