@@ -65,12 +65,12 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Examples\ExampleVM.cs" />
-    <Compile Include="Examples\ImportComparison\ImportComparisonVM.cs" />
-    <Compile Include="Examples\ImportComparison\ImportComparisonCode.cs" />
-    <Compile Include="Examples\PrintContent\PrintContentVM.cs" />
-    <Compile Include="Examples\PrintContent\PrintContentCode.cs" />
-    <Compile Include="Examples\SimpleOutputVM.cs" />
+    <Compile Include="Example VMs\ExampleVM.cs" />
+    <Compile Include="Example VMs\ImportComparisonVM.cs" />
+    <Compile Include="Example Code\ImportComparisonCode.cs" />
+    <Compile Include="Example VMs\PrintContentVM.cs" />
+    <Compile Include="Example Code\PrintContentCode.cs" />
+    <Compile Include="Example VMs\SimpleOutputVM.cs" />
     <Compile Include="MainVM.cs">
       <DependentUpon>MainVM.xml</DependentUpon>
     </Compile>
@@ -78,7 +78,7 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Examples\SimpleOutputView.xaml">
+    <Page Include="Example VMs\SimpleOutputView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -88,7 +88,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Examples\SimpleOutputView.xaml.cs">
+    <Compile Include="Example VMs\SimpleOutputView.xaml.cs">
       <DependentUpon>SimpleOutputView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
