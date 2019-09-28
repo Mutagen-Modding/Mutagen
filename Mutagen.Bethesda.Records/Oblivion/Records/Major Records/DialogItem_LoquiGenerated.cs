@@ -95,8 +95,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Topics
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<IFormIDLink<DialogTopic>> _Topics = new SourceSetList<IFormIDLink<DialogTopic>>();
-        public ISourceSetList<IFormIDLink<DialogTopic>> Topics => _Topics;
+        private readonly SetList<IFormIDLink<DialogTopic>> _Topics = new SetList<IFormIDLink<DialogTopic>>();
+        public ISetList<IFormIDLink<DialogTopic>> Topics => _Topics;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<IFormIDLink<DialogTopic>> IDialogItem.Topics => _Topics;
@@ -107,8 +107,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Responses
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<DialogResponse> _Responses = new SourceSetList<DialogResponse>();
-        public ISourceSetList<DialogResponse> Responses => _Responses;
+        private readonly SetList<DialogResponse> _Responses = new SetList<DialogResponse>();
+        public ISetList<DialogResponse> Responses => _Responses;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<DialogResponse> IDialogItem.Responses => _Responses;
@@ -119,8 +119,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<Condition> _Conditions = new SourceSetList<Condition>();
-        public ISourceSetList<Condition> Conditions => _Conditions;
+        private readonly SetList<Condition> _Conditions = new SetList<Condition>();
+        public ISetList<Condition> Conditions => _Conditions;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<Condition> IDialogItem.Conditions => _Conditions;
@@ -131,8 +131,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Choices
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<IFormIDLink<DialogTopic>> _Choices = new SourceSetList<IFormIDLink<DialogTopic>>();
-        public ISourceSetList<IFormIDLink<DialogTopic>> Choices => _Choices;
+        private readonly SetList<IFormIDLink<DialogTopic>> _Choices = new SetList<IFormIDLink<DialogTopic>>();
+        public ISetList<IFormIDLink<DialogTopic>> Choices => _Choices;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<IFormIDLink<DialogTopic>> IDialogItem.Choices => _Choices;
@@ -143,8 +143,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region LinkFrom
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<IFormIDLink<DialogTopic>> _LinkFrom = new SourceSetList<IFormIDLink<DialogTopic>>();
-        public ISourceSetList<IFormIDLink<DialogTopic>> LinkFrom => _LinkFrom;
+        private readonly SetList<IFormIDLink<DialogTopic>> _LinkFrom = new SetList<IFormIDLink<DialogTopic>>();
+        public ISetList<IFormIDLink<DialogTopic>> LinkFrom => _LinkFrom;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<IFormIDLink<DialogTopic>> IDialogItem.LinkFrom => _LinkFrom;

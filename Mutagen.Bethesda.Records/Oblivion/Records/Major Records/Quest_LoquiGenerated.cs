@@ -141,8 +141,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<Condition> _Conditions = new SourceSetList<Condition>();
-        public ISourceSetList<Condition> Conditions => _Conditions;
+        private readonly SetList<Condition> _Conditions = new SetList<Condition>();
+        public ISetList<Condition> Conditions => _Conditions;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<Condition> IQuest.Conditions => _Conditions;
@@ -153,8 +153,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Stages
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<QuestStage> _Stages = new SourceSetList<QuestStage>();
-        public ISourceSetList<QuestStage> Stages => _Stages;
+        private readonly SetList<QuestStage> _Stages = new SetList<QuestStage>();
+        public ISetList<QuestStage> Stages => _Stages;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<QuestStage> IQuest.Stages => _Stages;
@@ -165,8 +165,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Targets
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<QuestTarget> _Targets = new SourceSetList<QuestTarget>();
-        public ISourceSetList<QuestTarget> Targets => _Targets;
+        private readonly SetList<QuestTarget> _Targets = new SetList<QuestTarget>();
+        public ISetList<QuestTarget> Targets => _Targets;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<QuestTarget> IQuest.Targets => _Targets;
@@ -454,12 +454,12 @@ namespace Mutagen.Bethesda.Oblivion
                 yield return item;
             }
             yield return Script_Property;
-            foreach (var item in Stages.Items.WhereCastable<QuestStage, ILinkContainer>()
+            foreach (var item in Stages.WhereCastable<QuestStage, ILinkContainer>()
                 .SelectMany((f) => f.Links))
             {
                 yield return item;
             }
-            foreach (var item in Targets.Items.SelectMany(f => f.Links))
+            foreach (var item in Targets.SelectMany(f => f.Links))
             {
                 yield return item;
             }
@@ -471,11 +471,11 @@ namespace Mutagen.Bethesda.Oblivion
         {
             base.Link(package: package);
             Script_Property.Link(package);
-            foreach (var item in Stages.Items.WhereCastable<QuestStage, ILinkSubContainer>())
+            foreach (var item in Stages.WhereCastable<QuestStage, ILinkSubContainer>())
             {
                 item.Link(package: package);
             }
-            foreach (var item in Targets.Items)
+            foreach (var item in Targets)
             {
                 item.Link(package: package);
             }

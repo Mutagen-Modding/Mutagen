@@ -11,7 +11,9 @@
       <RefList name="Relations" refName="RaceRelation" />
       <Data>
         <Fields>
-          <RefList name="SkillBoosts" maxSize="7" refName="SkillBoost" />
+          <Array name="SkillBoosts" fixedSize="7" nullable="false" >
+            <RefDirect refName="SkillBoost" />
+          </Array>
           <ByteArray name="Fluff" byteLength="4" nullable="NotNull" />
           <Float name="MaleHeight" />
           <Float name="FemaleHeight" />

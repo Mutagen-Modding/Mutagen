@@ -137,8 +137,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region WeatherTypes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<WeatherType> _WeatherTypes = new SourceSetList<WeatherType>();
-        public ISourceSetList<WeatherType> WeatherTypes => _WeatherTypes;
+        private readonly SetList<WeatherType> _WeatherTypes = new SetList<WeatherType>();
+        public ISetList<WeatherType> WeatherTypes => _WeatherTypes;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<WeatherType> IWeather.WeatherTypes => _WeatherTypes;
@@ -521,8 +521,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Sounds
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<WeatherSound> _Sounds = new SourceSetList<WeatherSound>();
-        public ISourceSetList<WeatherSound> Sounds => _Sounds;
+        private readonly SetList<WeatherSound> _Sounds = new SetList<WeatherSound>();
+        public ISetList<WeatherSound> Sounds => _Sounds;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<WeatherSound> IWeather.Sounds => _Sounds;
@@ -877,7 +877,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 yield return item;
             }
-            foreach (var item in Sounds.Items.SelectMany(f => f.Links))
+            foreach (var item in Sounds.SelectMany(f => f.Links))
             {
                 yield return item;
             }
@@ -888,7 +888,7 @@ namespace Mutagen.Bethesda.Oblivion
             
         {
             base.Link(package: package);
-            foreach (var item in Sounds.Items)
+            foreach (var item in Sounds)
             {
                 item.Link(package: package);
             }

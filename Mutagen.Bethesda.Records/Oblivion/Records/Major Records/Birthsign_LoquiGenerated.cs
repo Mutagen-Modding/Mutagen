@@ -136,8 +136,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Spells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<IFormIDLink<Spell>> _Spells = new SourceSetList<IFormIDLink<Spell>>();
-        public ISourceSetList<IFormIDLink<Spell>> Spells => _Spells;
+        private readonly SetList<IFormIDLink<Spell>> _Spells = new SetList<IFormIDLink<Spell>>();
+        public ISetList<IFormIDLink<Spell>> Spells => _Spells;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<IFormIDLink<Spell>> IBirthsign.Spells => _Spells;

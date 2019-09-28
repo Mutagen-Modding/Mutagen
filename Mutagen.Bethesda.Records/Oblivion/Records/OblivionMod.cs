@@ -49,68 +49,6 @@ namespace Mutagen.Bethesda.Oblivion
         partial void CustomCtor()
         {
             this.ModHeader.Stats.NextObjectID = 0xD62; // first available ID on empty CS plugins
-
-            Observable.Merge<IChangeSet<IMajorRecord>>(
-                    this.Cells.Items.Connect()
-                        .TransformMany(cellBlock => cellBlock.Items)
-                        .TransformMany(cellSubBlock => cellSubBlock.Items)
-                        .MergeMany(cell => GetCellRecords(cell)),
-                    this.Worldspaces.Items.Connect()
-                        .RemoveKey()
-                        .MergeMany(worldSpace => GetWorldspaceRecords(worldSpace)),
-                    this.DialogTopics.Items.Connect()
-                        .RemoveKey()
-                        .MergeMany(dialog => GetDialogRecords(dialog)))
-                .AddKey(c => c.FormKey)
-                .PopulateInto(this._majorRecords);
-        }
-
-        private IObservable<IChangeSet<IMajorRecord>> GetCellRecords(Cell cell)
-        {
-            if (cell == null) return Observable.Empty<IChangeSet<IMajorRecord>>();
-            return Observable.Merge<IChangeSet<IMajorRecord>>(
-                Observable
-                    .Return<IMajorRecord>(cell)
-                    .ToObservableChangeSet(),
-                cell.WhenAny(x => x.PathGrid)
-                    .Select<PathGrid, IMajorRecord>(l => l)
-                    .ToObservableChangeSet_SingleItemNotNull(),
-                cell.WhenAny(x => x.Landscape)
-                    .Select<Landscape, IMajorRecord>(l => l)
-                    .ToObservableChangeSet_SingleItemNotNull(),
-                Observable.Merge(
-                    cell.Persistent.Connect(),
-                    cell.Temporary.Connect(),
-                    cell.VisibleWhenDistant.Connect())
-                    .Transform<IPlaced, IMajorRecord>(p => p));
-        }
-
-        private IObservable<IChangeSet<IMajorRecord>> GetWorldspaceRecords(Worldspace worldspace)
-        {
-            return Observable.Merge<IChangeSet<IMajorRecord>>(
-                Observable
-                    .Return<IMajorRecord>(worldspace)
-                    .ToObservableChangeSet(),
-                worldspace.WhenAny(x => x.Road)
-                    .Select<Road, IMajorRecord>(l => l)
-                    .ToObservableChangeSet_SingleItemNotNull(),
-                worldspace.WhenAny(x => x.TopCell)
-                    .Select(c => GetCellRecords(c))
-                    .Switch(),
-                worldspace.SubCells.Connect()
-                    .TransformMany(block => block.Items)
-                    .TransformMany(subBlock => subBlock.Items)
-                    .MergeMany(c => GetCellRecords(c)));
-        }
-
-        private IObservable<IChangeSet<IMajorRecord>> GetDialogRecords(DialogTopic dialog)
-        {
-            return Observable.Merge<IChangeSet<IMajorRecord>>(
-                Observable
-                    .Return<IMajorRecord>(dialog)
-                    .ToObservableChangeSet(),
-                dialog.Items.Connect()
-                    .Transform<DialogItem, IMajorRecord>(i => i));
         }
 
         public FormKey GetNextFormKey()
@@ -158,10 +96,10 @@ namespace Mutagen.Bethesda.Oblivion
             // Tally Worldspace Group Counts
             count += this.Worldspaces.Sum(wrld => wrld.SubCells.Count); // Cell Blocks
             count += this.Worldspaces
-                .SelectMany(wrld => wrld.SubCells.Items)
+                .SelectMany(wrld => wrld.SubCells)
                 .Sum(block => block.Items.Count); // Cell Sub Blocks
             count += this.Worldspaces
-                .SelectMany(wrld => wrld.SubCells.Items)
+                .SelectMany(wrld => wrld.SubCells)
                 .SelectMany(block => block.Items)
                 .SelectMany(subBlock => subBlock.Items)
                 .Sum(cellSubGroupCount); // Cell sub groups

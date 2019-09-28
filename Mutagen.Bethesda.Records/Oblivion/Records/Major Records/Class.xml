@@ -8,13 +8,13 @@
       <String name="Icon" recordType="ICON" />
       <Data>
         <Fields>
-          <List name="PrimaryAttributes" maxSize="2">
+          <Array name="PrimaryAttributes" fixedSize="2" nullable="false">
             <Enum enumName="ActorValue" />
-          </List>
+          </Array>
           <Enum name="Specialization" enumName="Class.SpecializationFlag" />
-          <List name="SecondaryAttributes" maxSize="7">
+          <Array name="SecondaryAttributes" fixedSize="7" nullable="false">
             <Enum enumName="ActorValue" />
-          </List>
+          </Array>
           <Enum name="Flags" enumName="ClassFlag" />
           <Enum name="ClassServices" enumName="ClassService" />
           <Break />

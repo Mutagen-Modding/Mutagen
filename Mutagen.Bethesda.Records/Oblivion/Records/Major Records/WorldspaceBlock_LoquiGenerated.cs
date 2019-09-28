@@ -71,8 +71,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<WorldspaceSubBlock> _Items = new SourceSetList<WorldspaceSubBlock>();
-        public ISourceSetList<WorldspaceSubBlock> Items => _Items;
+        private readonly SetList<WorldspaceSubBlock> _Items = new SetList<WorldspaceSubBlock>();
+        public ISetList<WorldspaceSubBlock> Items => _Items;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<WorldspaceSubBlock> IWorldspaceBlock.Items => _Items;
@@ -303,7 +303,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IEnumerable<ILink> Links => GetLinks();
         private IEnumerable<ILink> GetLinks()
         {
-            foreach (var item in Items.Items.SelectMany(f => f.Links))
+            foreach (var item in Items.SelectMany(f => f.Links))
             {
                 yield return item;
             }
@@ -313,7 +313,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Link<M>(LinkingPackage<M> package)
             where M : IMod
         {
-            foreach (var item in Items.Items)
+            foreach (var item in Items)
             {
                 item.Link(package: package);
             }

@@ -168,8 +168,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region RandomTeleportDestinations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<IFormIDLink<Place>> _RandomTeleportDestinations = new SourceSetList<IFormIDLink<Place>>();
-        public ISourceSetList<IFormIDLink<Place>> RandomTeleportDestinations => _RandomTeleportDestinations;
+        private readonly SetList<IFormIDLink<Place>> _RandomTeleportDestinations = new SetList<IFormIDLink<Place>>();
+        public ISetList<IFormIDLink<Place>> RandomTeleportDestinations => _RandomTeleportDestinations;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<IFormIDLink<Place>> IDoor.RandomTeleportDestinations => _RandomTeleportDestinations;

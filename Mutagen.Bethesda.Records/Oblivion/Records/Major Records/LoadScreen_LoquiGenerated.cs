@@ -108,8 +108,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Locations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<LoadScreenLocation> _Locations = new SourceSetList<LoadScreenLocation>();
-        public ISourceSetList<LoadScreenLocation> Locations => _Locations;
+        private readonly SetList<LoadScreenLocation> _Locations = new SetList<LoadScreenLocation>();
+        public ISetList<LoadScreenLocation> Locations => _Locations;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<LoadScreenLocation> ILoadScreen.Locations => _Locations;
@@ -366,7 +366,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 yield return item;
             }
-            foreach (var item in Locations.Items.SelectMany(f => f.Links))
+            foreach (var item in Locations.SelectMany(f => f.Links))
             {
                 yield return item;
             }
@@ -377,7 +377,7 @@ namespace Mutagen.Bethesda.Oblivion
             
         {
             base.Link(package: package);
-            foreach (var item in Locations.Items)
+            foreach (var item in Locations)
             {
                 item.Link(package: package);
             }

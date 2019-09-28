@@ -31,6 +31,7 @@
     <Compile Include="Core\LoadOrder.cs" />
     <Compile Include="Core\MajorRecordInstantiator.cs" />
     <Compile Include="Records\ListGroupAbstract.cs" />
+    <Compile Include="Translators\Binary\Binary Wrapper\BinaryWrapperArrayHelper.cs" />
     <Compile Include="Translators\Binary\Binary Wrapper\BinaryWrapperFactoryPackage.cs" />
     <Compile Include="Translators\Binary\Binary Wrapper\EmptySetList.cs" />
     <Compile Include="Translators\Binary\Binary Wrapper\BinaryWrapperSetList.cs" />

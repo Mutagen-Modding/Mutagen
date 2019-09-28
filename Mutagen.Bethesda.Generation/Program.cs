@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda.Generation
     {
         static void AttachDebugInspector()
         {
-            string testString = "IReadOnlyCache<IMajorRecordInternalGetter, FormKey> IModGetter.MajorRecords => throw new NotImplementedException();";
+            string testString = "Mutagen.Bethesda.Binary.ListBinaryTranslation<SkillBoost>.Instance.ParseRepeatedItem(";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>
@@ -115,7 +115,7 @@ namespace Mutagen.Bethesda.Generation
         {
             LoquiGenerator gen = new LoquiGenerator()
             {
-                NotifyingDefault = NotifyingType.ReactiveUI,
+                NotifyingDefault = NotifyingType.None,
                 ObjectCentralizedDefault = true,
                 HasBeenSetDefault = false
             };

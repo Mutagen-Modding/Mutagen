@@ -53,8 +53,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Grasses
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<IFormIDLink<Grass>> _Grasses = new SourceSetList<IFormIDLink<Grass>>();
-        public ISourceSetList<IFormIDLink<Grass>> Grasses => _Grasses;
+        private readonly SetList<IFormIDLink<Grass>> _Grasses = new SetList<IFormIDLink<Grass>>();
+        public ISetList<IFormIDLink<Grass>> Grasses => _Grasses;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<IFormIDLink<Grass>> IRegionDataGrasses.Grasses => _Grasses;

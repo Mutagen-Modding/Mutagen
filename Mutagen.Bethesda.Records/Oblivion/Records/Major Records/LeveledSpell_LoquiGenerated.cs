@@ -108,8 +108,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Entries
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<LeveledEntry<SpellAbstract>> _Entries = new SourceSetList<LeveledEntry<SpellAbstract>>();
-        public ISourceSetList<LeveledEntry<SpellAbstract>> Entries => _Entries;
+        private readonly SetList<LeveledEntry<SpellAbstract>> _Entries = new SetList<LeveledEntry<SpellAbstract>>();
+        public ISetList<LeveledEntry<SpellAbstract>> Entries => _Entries;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<LeveledEntry<SpellAbstract>> ILeveledSpell.Entries => _Entries;
@@ -366,7 +366,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 yield return item;
             }
-            foreach (var item in Entries.Items.SelectMany(f => f.Links))
+            foreach (var item in Entries.SelectMany(f => f.Links))
             {
                 yield return item;
             }
@@ -377,7 +377,7 @@ namespace Mutagen.Bethesda.Oblivion
             
         {
             base.Link(package: package);
-            foreach (var item in Entries.Items)
+            foreach (var item in Entries)
             {
                 item.Link(package: package);
             }

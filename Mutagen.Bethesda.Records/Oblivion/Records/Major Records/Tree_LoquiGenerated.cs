@@ -107,8 +107,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region SpeedTreeSeeds
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<UInt32> _SpeedTreeSeeds = new SourceSetList<UInt32>();
-        public ISourceSetList<UInt32> SpeedTreeSeeds => _SpeedTreeSeeds;
+        private readonly SetList<UInt32> _SpeedTreeSeeds = new SetList<UInt32>();
+        public ISetList<UInt32> SpeedTreeSeeds => _SpeedTreeSeeds;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<UInt32> ITree.SpeedTreeSeeds => _SpeedTreeSeeds;

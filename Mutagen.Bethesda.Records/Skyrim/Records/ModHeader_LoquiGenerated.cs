@@ -189,11 +189,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region MasterReferences
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceList<MasterReference> _MasterReferences = new SourceList<MasterReference>();
-        public ISourceList<MasterReference> MasterReferences => _MasterReferences;
+        private readonly ExtendedList<MasterReference> _MasterReferences = new ExtendedList<MasterReference>();
+        public IExtendedList<MasterReference> MasterReferences => _MasterReferences;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IList<MasterReference> IModHeader.MasterReferences => _MasterReferences;
+        IExtendedList<MasterReference> IModHeader.MasterReferences => _MasterReferences;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IReadOnlyList<IMasterReferenceInternalGetter> IModHeaderGetter.MasterReferences => _MasterReferences;
         #endregion
@@ -201,8 +201,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region OverriddenForms
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<IFormIDLink<SkyrimMajorRecord>> _OverriddenForms = new SourceSetList<IFormIDLink<SkyrimMajorRecord>>();
-        public ISourceSetList<IFormIDLink<SkyrimMajorRecord>> OverriddenForms => _OverriddenForms;
+        private readonly SetList<IFormIDLink<SkyrimMajorRecord>> _OverriddenForms = new SetList<IFormIDLink<SkyrimMajorRecord>>();
+        public ISetList<IFormIDLink<SkyrimMajorRecord>> OverriddenForms => _OverriddenForms;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<IFormIDLink<SkyrimMajorRecord>> IModHeader.OverriddenForms => _OverriddenForms;
@@ -907,7 +907,7 @@ namespace Mutagen.Bethesda.Skyrim
                     this.Description = (String)obj;
                     break;
                 case ModHeader_FieldIndex.MasterReferences:
-                    this._MasterReferences.SetTo((IList<MasterReference>)obj);
+                    this._MasterReferences.SetTo((IExtendedList<MasterReference>)obj);
                     break;
                 case ModHeader_FieldIndex.OverriddenForms:
                     this._OverriddenForms.SetTo((ISetList<IFormIDLink<SkyrimMajorRecord>>)obj);
@@ -977,7 +977,7 @@ namespace Mutagen.Bethesda.Skyrim
                     obj.Description = (String)pair.Value;
                     break;
                 case ModHeader_FieldIndex.MasterReferences:
-                    obj._MasterReferences.SetTo((IList<MasterReference>)pair.Value);
+                    obj._MasterReferences.SetTo((IExtendedList<MasterReference>)pair.Value);
                     break;
                 case ModHeader_FieldIndex.OverriddenForms:
                     obj._OverriddenForms.SetTo((ISetList<IFormIDLink<SkyrimMajorRecord>>)pair.Value);
@@ -1032,7 +1032,7 @@ namespace Mutagen.Bethesda.Skyrim
         void Description_Set(String value, bool hasBeenSet = true);
         void Description_Unset();
 
-        new IList<MasterReference> MasterReferences { get; }
+        new IExtendedList<MasterReference> MasterReferences { get; }
         new ISetList<IFormIDLink<SkyrimMajorRecord>> OverriddenForms { get; }
         new Int32 INTV { get; set; }
         new bool INTV_IsSet { get; set; }
@@ -1502,7 +1502,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case ModHeader_FieldIndex.Description:
                     return typeof(String);
                 case ModHeader_FieldIndex.MasterReferences:
-                    return typeof(IList<MasterReference>);
+                    return typeof(IExtendedList<MasterReference>);
                 case ModHeader_FieldIndex.OverriddenForms:
                     return typeof(ISetList<IFormIDLink<SkyrimMajorRecord>>);
                 case ModHeader_FieldIndex.INTV:

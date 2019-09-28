@@ -54,8 +54,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region PointToPointConnections
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<PathGridPoint> _PointToPointConnections = new SourceSetList<PathGridPoint>();
-        public ISourceSetList<PathGridPoint> PointToPointConnections => _PointToPointConnections;
+        private readonly SetList<PathGridPoint> _PointToPointConnections = new SetList<PathGridPoint>();
+        public ISetList<PathGridPoint> PointToPointConnections => _PointToPointConnections;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<PathGridPoint> IPathGrid.PointToPointConnections => _PointToPointConnections;
@@ -94,8 +94,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region InterCellConnections
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<InterCellPoint> _InterCellConnections = new SourceSetList<InterCellPoint>();
-        public ISourceSetList<InterCellPoint> InterCellConnections => _InterCellConnections;
+        private readonly SetList<InterCellPoint> _InterCellConnections = new SetList<InterCellPoint>();
+        public ISetList<InterCellPoint> InterCellConnections => _InterCellConnections;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<InterCellPoint> IPathGrid.InterCellConnections => _InterCellConnections;
@@ -106,8 +106,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region PointToReferenceMappings
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<PointToReferenceMapping> _PointToReferenceMappings = new SourceSetList<PointToReferenceMapping>();
-        public ISourceSetList<PointToReferenceMapping> PointToReferenceMappings => _PointToReferenceMappings;
+        private readonly SetList<PointToReferenceMapping> _PointToReferenceMappings = new SetList<PointToReferenceMapping>();
+        public ISetList<PointToReferenceMapping> PointToReferenceMappings => _PointToReferenceMappings;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<PointToReferenceMapping> IPathGrid.PointToReferenceMappings => _PointToReferenceMappings;
@@ -367,7 +367,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 yield return item;
             }
-            foreach (var item in PointToReferenceMappings.Items.SelectMany(f => f.Links))
+            foreach (var item in PointToReferenceMappings.SelectMany(f => f.Links))
             {
                 yield return item;
             }
@@ -378,7 +378,7 @@ namespace Mutagen.Bethesda.Oblivion
             
         {
             base.Link(package: package);
-            foreach (var item in PointToReferenceMappings.Items)
+            foreach (var item in PointToReferenceMappings)
             {
                 item.Link(package: package);
             }

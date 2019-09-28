@@ -53,8 +53,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Points
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<RoadPoint> _Points = new SourceSetList<RoadPoint>();
-        public ISourceSetList<RoadPoint> Points => _Points;
+        private readonly SetList<RoadPoint> _Points = new SetList<RoadPoint>();
+        public ISetList<RoadPoint> Points => _Points;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<RoadPoint> IRoad.Points => _Points;

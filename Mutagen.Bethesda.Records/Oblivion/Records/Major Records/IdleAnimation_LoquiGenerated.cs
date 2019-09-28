@@ -81,8 +81,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<Condition> _Conditions = new SourceSetList<Condition>();
-        public ISourceSetList<Condition> Conditions => _Conditions;
+        private readonly SetList<Condition> _Conditions = new SetList<Condition>();
+        public ISetList<Condition> Conditions => _Conditions;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<Condition> IIdleAnimation.Conditions => _Conditions;
@@ -120,8 +120,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region RelatedIdleAnimations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<IFormIDLink<IdleAnimation>> _RelatedIdleAnimations = new SourceSetList<IFormIDLink<IdleAnimation>>();
-        public ISourceSetList<IFormIDLink<IdleAnimation>> RelatedIdleAnimations => _RelatedIdleAnimations;
+        private readonly SetList<IFormIDLink<IdleAnimation>> _RelatedIdleAnimations = new SetList<IFormIDLink<IdleAnimation>>();
+        public ISetList<IFormIDLink<IdleAnimation>> RelatedIdleAnimations => _RelatedIdleAnimations;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<IFormIDLink<IdleAnimation>> IIdleAnimation.RelatedIdleAnimations => _RelatedIdleAnimations;

@@ -360,8 +360,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region SubCells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<WorldspaceBlock> _SubCells = new SourceSetList<WorldspaceBlock>();
-        public ISourceSetList<WorldspaceBlock> SubCells => _SubCells;
+        private readonly SetList<WorldspaceBlock> _SubCells = new SetList<WorldspaceBlock>();
+        public ISetList<WorldspaceBlock> SubCells => _SubCells;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<WorldspaceBlock> IWorldspace.SubCells => _SubCells;
@@ -648,7 +648,7 @@ namespace Mutagen.Bethesda.Oblivion
                     yield return item;
                 }
             }
-            foreach (var item in SubCells.Items.SelectMany(f => f.Links))
+            foreach (var item in SubCells.SelectMany(f => f.Links))
             {
                 yield return item;
             }
@@ -666,7 +666,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 TopCell?.Link(package: package);
             }
-            foreach (var item in SubCells.Items)
+            foreach (var item in SubCells)
             {
                 item.Link(package: package);
             }

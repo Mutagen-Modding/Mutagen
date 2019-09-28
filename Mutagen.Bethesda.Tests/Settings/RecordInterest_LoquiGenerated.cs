@@ -44,11 +44,11 @@ namespace Mutagen.Bethesda.Tests
 
         #region InterestingTypes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceList<String> _InterestingTypes = new SourceList<String>();
-        public ISourceList<String> InterestingTypes => _InterestingTypes;
+        private readonly ExtendedList<String> _InterestingTypes = new ExtendedList<String>();
+        public IExtendedList<String> InterestingTypes => _InterestingTypes;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IList<String> IRecordInterest.InterestingTypes => _InterestingTypes;
+        IExtendedList<String> IRecordInterest.InterestingTypes => _InterestingTypes;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IReadOnlyList<String> IRecordInterestGetter.InterestingTypes => _InterestingTypes;
         #endregion
@@ -56,11 +56,11 @@ namespace Mutagen.Bethesda.Tests
         #endregion
         #region UninterestingTypes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceList<String> _UninterestingTypes = new SourceList<String>();
-        public ISourceList<String> UninterestingTypes => _UninterestingTypes;
+        private readonly ExtendedList<String> _UninterestingTypes = new ExtendedList<String>();
+        public IExtendedList<String> UninterestingTypes => _UninterestingTypes;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IList<String> IRecordInterest.UninterestingTypes => _UninterestingTypes;
+        IExtendedList<String> IRecordInterest.UninterestingTypes => _UninterestingTypes;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IReadOnlyList<String> IRecordInterestGetter.UninterestingTypes => _UninterestingTypes;
         #endregion
@@ -479,10 +479,10 @@ namespace Mutagen.Bethesda.Tests
             switch (enu)
             {
                 case RecordInterest_FieldIndex.InterestingTypes:
-                    this._InterestingTypes.SetTo((IList<String>)obj);
+                    this._InterestingTypes.SetTo((IExtendedList<String>)obj);
                     break;
                 case RecordInterest_FieldIndex.UninterestingTypes:
-                    this._UninterestingTypes.SetTo((IList<String>)obj);
+                    this._UninterestingTypes.SetTo((IExtendedList<String>)obj);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -513,10 +513,10 @@ namespace Mutagen.Bethesda.Tests
             switch (enu)
             {
                 case RecordInterest_FieldIndex.InterestingTypes:
-                    obj._InterestingTypes.SetTo((IList<String>)pair.Value);
+                    obj._InterestingTypes.SetTo((IExtendedList<String>)pair.Value);
                     break;
                 case RecordInterest_FieldIndex.UninterestingTypes:
-                    obj._UninterestingTypes.SetTo((IList<String>)pair.Value);
+                    obj._UninterestingTypes.SetTo((IExtendedList<String>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -530,8 +530,8 @@ namespace Mutagen.Bethesda.Tests
         IRecordInterestInternalGetter,
         ILoquiObjectSetter<IRecordInterestInternal>
     {
-        new IList<String> InterestingTypes { get; }
-        new IList<String> UninterestingTypes { get; }
+        new IExtendedList<String> InterestingTypes { get; }
+        new IExtendedList<String> UninterestingTypes { get; }
         void CopyFieldsFrom(
             RecordInterest rhs,
             ErrorMaskBuilder errorMask = null,
@@ -794,9 +794,9 @@ namespace Mutagen.Bethesda.Tests.Internals
             switch (enu)
             {
                 case RecordInterest_FieldIndex.InterestingTypes:
-                    return typeof(IList<String>);
+                    return typeof(IExtendedList<String>);
                 case RecordInterest_FieldIndex.UninterestingTypes:
-                    return typeof(IList<String>);
+                    return typeof(IExtendedList<String>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

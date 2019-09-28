@@ -42,20 +42,10 @@ namespace Mutagen.Bethesda.Tests
         #endregion
 
         #region Oblivion
-        private String _Oblivion;
-        public String Oblivion
-        {
-            get => this._Oblivion;
-            set => this.RaiseAndSetIfChanged(ref this._Oblivion, value, nameof(Oblivion));
-        }
+        public String Oblivion { get; set; }
         #endregion
         #region Skyrim
-        private String _Skyrim;
-        public String Skyrim
-        {
-            get => this._Skyrim;
-            set => this.RaiseAndSetIfChanged(ref this._Skyrim, value, nameof(Skyrim));
-        }
+        public String Skyrim { get; set; }
         #endregion
 
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDataFolderLocationsInternalGetter)rhs, include);
@@ -994,36 +984,14 @@ namespace Mutagen.Bethesda.Tests.Internals
             if (copyMask?.Oblivion ?? true)
             {
                 errorMask?.PushIndex((int)DataFolderLocations_FieldIndex.Oblivion);
-                try
-                {
-                    item.Oblivion = rhs.Oblivion;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Oblivion = rhs.Oblivion;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Skyrim ?? true)
             {
                 errorMask?.PushIndex((int)DataFolderLocations_FieldIndex.Skyrim);
-                try
-                {
-                    item.Skyrim = rhs.Skyrim;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Skyrim = rhs.Skyrim;
+                errorMask?.PopIndex();
             }
         }
         

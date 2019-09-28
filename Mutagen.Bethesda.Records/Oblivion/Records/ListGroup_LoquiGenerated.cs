@@ -65,11 +65,11 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceList<T> _Items = new SourceList<T>();
-        public ISourceList<T> Items => _Items;
+        private readonly ExtendedList<T> _Items = new ExtendedList<T>();
+        public IExtendedList<T> Items => _Items;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IList<T> IListGroup<T>.Items => _Items;
+        IExtendedList<T> IListGroup<T>.Items => _Items;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IReadOnlyList<T> IListGroupGetter<T>.Items => _Items;
         #endregion
@@ -267,7 +267,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IEnumerable<ILink> Links => GetLinks();
         private IEnumerable<ILink> GetLinks()
         {
-            foreach (var item in Items.Items.WhereCastable<T, ILinkContainer>()
+            foreach (var item in Items.WhereCastable<T, ILinkContainer>()
                 .SelectMany((f) => f.Links))
             {
                 yield return item;
@@ -278,7 +278,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Link<M>(LinkingPackage<M> package)
             where M : IMod
         {
-            foreach (var item in Items.Items.WhereCastable<T, ILinkSubContainer>())
+            foreach (var item in Items.WhereCastable<T, ILinkSubContainer>())
             {
                 item.Link(package: package);
             }
@@ -529,7 +529,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.LastModified = (Int32)obj;
                     break;
                 case ListGroup_FieldIndex.Items:
-                    this._Items.SetTo((IList<T>)obj);
+                    this._Items.SetTo((IExtendedList<T>)obj);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -566,7 +566,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.LastModified = (Int32)pair.Value;
                     break;
                 case ListGroup_FieldIndex.Items:
-                    obj._Items.SetTo((IList<T>)pair.Value);
+                    obj._Items.SetTo((IExtendedList<T>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -585,7 +585,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Int32 LastModified { get; set; }
 
-        new IList<T> Items { get; }
+        new IExtendedList<T> Items { get; }
         void CopyFieldsFrom<T_CopyMask>(
             ListGroup<T> rhs,
             ErrorMaskBuilder errorMask = null,
@@ -925,7 +925,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case ListGroup_FieldIndex.LastModified:
                     return typeof(Int32);
                 case ListGroup_FieldIndex.Items:
-                    return typeof(IList<T>);
+                    return typeof(IExtendedList<T>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

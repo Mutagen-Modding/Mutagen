@@ -135,8 +135,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region PotentialGrass
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<IFormIDLink<Grass>> _PotentialGrass = new SourceSetList<IFormIDLink<Grass>>();
-        public ISourceSetList<IFormIDLink<Grass>> PotentialGrass => _PotentialGrass;
+        private readonly SetList<IFormIDLink<Grass>> _PotentialGrass = new SetList<IFormIDLink<Grass>>();
+        public ISetList<IFormIDLink<Grass>> PotentialGrass => _PotentialGrass;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<IFormIDLink<Grass>> ILandTexture.PotentialGrass => _PotentialGrass;

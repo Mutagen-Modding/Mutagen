@@ -164,8 +164,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Regions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<IFormIDLink<Region>> _Regions = new SourceSetList<IFormIDLink<Region>>();
-        public ISourceSetList<IFormIDLink<Region>> Regions => _Regions;
+        private readonly SetList<IFormIDLink<Region>> _Regions = new SetList<IFormIDLink<Region>>();
+        public ISetList<IFormIDLink<Region>> Regions => _Regions;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<IFormIDLink<Region>> ICell.Regions => _Regions;
@@ -361,8 +361,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Persistent
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<IPlaced> _Persistent = new SourceSetList<IPlaced>();
-        public ISourceSetList<IPlaced> Persistent => _Persistent;
+        private readonly SetList<IPlaced> _Persistent = new SetList<IPlaced>();
+        public ISetList<IPlaced> Persistent => _Persistent;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<IPlaced> ICell.Persistent => _Persistent;
@@ -382,8 +382,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Temporary
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<IPlaced> _Temporary = new SourceSetList<IPlaced>();
-        public ISourceSetList<IPlaced> Temporary => _Temporary;
+        private readonly SetList<IPlaced> _Temporary = new SetList<IPlaced>();
+        public ISetList<IPlaced> Temporary => _Temporary;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<IPlaced> ICell.Temporary => _Temporary;
@@ -403,8 +403,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region VisibleWhenDistant
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<IPlaced> _VisibleWhenDistant = new SourceSetList<IPlaced>();
-        public ISourceSetList<IPlaced> VisibleWhenDistant => _VisibleWhenDistant;
+        private readonly SetList<IPlaced> _VisibleWhenDistant = new SetList<IPlaced>();
+        public ISetList<IPlaced> VisibleWhenDistant => _VisibleWhenDistant;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<IPlaced> ICell.VisibleWhenDistant => _VisibleWhenDistant;
@@ -709,17 +709,17 @@ namespace Mutagen.Bethesda.Oblivion
                     yield return item;
                 }
             }
-            foreach (var item in Persistent.Items.WhereCastable<IPlaced, ILinkContainer>()
+            foreach (var item in Persistent.WhereCastable<IPlaced, ILinkContainer>()
                 .SelectMany((f) => f.Links))
             {
                 yield return item;
             }
-            foreach (var item in Temporary.Items.WhereCastable<IPlaced, ILinkContainer>()
+            foreach (var item in Temporary.WhereCastable<IPlaced, ILinkContainer>()
                 .SelectMany((f) => f.Links))
             {
                 yield return item;
             }
-            foreach (var item in VisibleWhenDistant.Items.WhereCastable<IPlaced, ILinkContainer>()
+            foreach (var item in VisibleWhenDistant.WhereCastable<IPlaced, ILinkContainer>()
                 .SelectMany((f) => f.Links))
             {
                 yield return item;
@@ -747,15 +747,15 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 Landscape?.Link(package: package);
             }
-            foreach (var item in Persistent.Items.WhereCastable<IPlaced, ILinkSubContainer>())
+            foreach (var item in Persistent.WhereCastable<IPlaced, ILinkSubContainer>())
             {
                 item.Link(package: package);
             }
-            foreach (var item in Temporary.Items.WhereCastable<IPlaced, ILinkSubContainer>())
+            foreach (var item in Temporary.WhereCastable<IPlaced, ILinkSubContainer>())
             {
                 item.Link(package: package);
             }
-            foreach (var item in VisibleWhenDistant.Items.WhereCastable<IPlaced, ILinkSubContainer>())
+            foreach (var item in VisibleWhenDistant.WhereCastable<IPlaced, ILinkSubContainer>())
             {
                 item.Link(package: package);
             }

@@ -126,13 +126,14 @@ namespace Mutagen.Bethesda.Generation
                 {
                     if (!(field is LoquiType loqui)) continue;
                     if (loqui.TargetObjectGeneration.GetObjectType() != ObjectType.Group) continue;
+                    var dictGroup = loqui.TargetObjectGeneration.Name == "Group";
                     fg.AppendLine($"if (mask?.{field.Name} ?? true)");
                     using (new BraceWrapper(fg))
                     {
-                        fg.AppendLine($"this.{field.Name}.Items.{(loqui.TargetObjectGeneration.Name == "Group" ? "Set" : "AddRange")}(");
+                        fg.AppendLine($"this.{field.Name}.Items.{(dictGroup ? "Set" : "AddRange")}(");
                         using (new DepthWrapper(fg))
                         {
-                            fg.AppendLine($"rhs.{field.Name}.Items.Items");
+                            fg.AppendLine($"rhs.{field.Name}.Items{(dictGroup ? ".Values" : null)}");
                             using (new DepthWrapper(fg))
                             {
                                 fg.AppendLine($".Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))");

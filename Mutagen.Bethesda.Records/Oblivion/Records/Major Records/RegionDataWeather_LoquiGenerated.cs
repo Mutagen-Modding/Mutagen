@@ -53,8 +53,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Weathers
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<WeatherChance> _Weathers = new SourceSetList<WeatherChance>();
-        public ISourceSetList<WeatherChance> Weathers => _Weathers;
+        private readonly SetList<WeatherChance> _Weathers = new SetList<WeatherChance>();
+        public ISetList<WeatherChance> Weathers => _Weathers;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<WeatherChance> IRegionDataWeather.Weathers => _Weathers;
@@ -297,7 +297,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 yield return item;
             }
-            foreach (var item in Weathers.Items.SelectMany(f => f.Links))
+            foreach (var item in Weathers.SelectMany(f => f.Links))
             {
                 yield return item;
             }
@@ -308,7 +308,7 @@ namespace Mutagen.Bethesda.Oblivion
             
         {
             base.Link(package: package);
-            foreach (var item in Weathers.Items)
+            foreach (var item in Weathers)
             {
                 item.Link(package: package);
             }

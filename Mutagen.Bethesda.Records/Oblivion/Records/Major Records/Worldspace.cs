@@ -256,7 +256,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     obj.TopCell = (Cell)rhs.TopCell.Duplicate(getNextFormKey, duplicatedRecords);
                 }
-                obj.SubCells.SetTo(rhs.SubCells.Items.Select((block) =>
+                obj.SubCells.SetTo(rhs.SubCells.Select((block) =>
                 {
                     var blockRet = new WorldspaceBlock();
                     blockRet.CopyFieldsFrom(block, duplicateBlockCopyMask);

@@ -196,8 +196,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Factions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<RankPlacement> _Factions = new SourceSetList<RankPlacement>();
-        public ISourceSetList<RankPlacement> Factions => _Factions;
+        private readonly SetList<RankPlacement> _Factions = new SetList<RankPlacement>();
+        public ISetList<RankPlacement> Factions => _Factions;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<RankPlacement> INPC.Factions => _Factions;
@@ -224,8 +224,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Spells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<IFormIDLink<SpellAbstract>> _Spells = new SourceSetList<IFormIDLink<SpellAbstract>>();
-        public ISourceSetList<IFormIDLink<SpellAbstract>> Spells => _Spells;
+        private readonly SetList<IFormIDLink<SpellAbstract>> _Spells = new SetList<IFormIDLink<SpellAbstract>>();
+        public ISetList<IFormIDLink<SpellAbstract>> Spells => _Spells;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<IFormIDLink<SpellAbstract>> INPC.Spells => _Spells;
@@ -244,8 +244,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<ItemEntry> _Items = new SourceSetList<ItemEntry>();
-        public ISourceSetList<ItemEntry> Items => _Items;
+        private readonly SetList<ItemEntry> _Items = new SetList<ItemEntry>();
+        public ISetList<ItemEntry> Items => _Items;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<ItemEntry> INPC.Items => _Items;
@@ -349,8 +349,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region AIPackages
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<IFormIDLink<AIPackage>> _AIPackages = new SourceSetList<IFormIDLink<AIPackage>>();
-        public ISourceSetList<IFormIDLink<AIPackage>> AIPackages => _AIPackages;
+        private readonly SetList<IFormIDLink<AIPackage>> _AIPackages = new SetList<IFormIDLink<AIPackage>>();
+        public ISetList<IFormIDLink<AIPackage>> AIPackages => _AIPackages;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<IFormIDLink<AIPackage>> INPC.AIPackages => _AIPackages;
@@ -361,8 +361,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Animations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<String> _Animations = new SourceSetList<String>();
-        public ISourceSetList<String> Animations => _Animations;
+        private readonly SetList<String> _Animations = new SetList<String>();
+        public ISetList<String> Animations => _Animations;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<String> INPC.Animations => _Animations;
@@ -776,8 +776,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Eyes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<IFormIDLink<Eye>> _Eyes = new SourceSetList<IFormIDLink<Eye>>();
-        public ISourceSetList<IFormIDLink<Eye>> Eyes => _Eyes;
+        private readonly SetList<IFormIDLink<Eye>> _Eyes = new SetList<IFormIDLink<Eye>>();
+        public ISetList<IFormIDLink<Eye>> Eyes => _Eyes;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<IFormIDLink<Eye>> INPC.Eyes => _Eyes;
@@ -1318,7 +1318,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 yield return item;
             }
-            foreach (var item in Factions.Items.SelectMany(f => f.Links))
+            foreach (var item in Factions.SelectMany(f => f.Links))
             {
                 yield return item;
             }
@@ -1329,7 +1329,7 @@ namespace Mutagen.Bethesda.Oblivion
                 yield return item;
             }
             yield return Script_Property;
-            foreach (var item in Items.Items.SelectMany(f => f.Links))
+            foreach (var item in Items.SelectMany(f => f.Links))
             {
                 yield return item;
             }
@@ -1351,7 +1351,7 @@ namespace Mutagen.Bethesda.Oblivion
             
         {
             base.Link(package: package);
-            foreach (var item in Factions.Items)
+            foreach (var item in Factions)
             {
                 item.Link(package: package);
             }
@@ -1362,7 +1362,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item.Link(package: package);
             }
             Script_Property.Link(package);
-            foreach (var item in Items.Items)
+            foreach (var item in Items)
             {
                 item.Link(package: package);
             }

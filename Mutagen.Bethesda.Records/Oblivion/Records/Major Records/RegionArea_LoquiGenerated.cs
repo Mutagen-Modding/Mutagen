@@ -79,8 +79,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region RegionPoints
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<P2Float> _RegionPoints = new SourceSetList<P2Float>();
-        public ISourceSetList<P2Float> RegionPoints => _RegionPoints;
+        private readonly SetList<P2Float> _RegionPoints = new SetList<P2Float>();
+        public ISetList<P2Float> RegionPoints => _RegionPoints;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<P2Float> IRegionArea.RegionPoints => _RegionPoints;

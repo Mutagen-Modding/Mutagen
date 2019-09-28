@@ -43,42 +43,22 @@ namespace Mutagen.Bethesda.Tests
         #endregion
 
         #region Do
-        private Boolean _Do;
-        public Boolean Do
-        {
-            get => this._Do;
-            set => this.RaiseAndSetIfChanged(ref this._Do, value, nameof(Do));
-        }
+        public Boolean Do { get; set; }
         #endregion
         #region Path
-        private String _Path;
-        public String Path
-        {
-            get => this._Path;
-            set => this.RaiseAndSetIfChanged(ref this._Path, value, nameof(Path));
-        }
+        public String Path { get; set; }
         #endregion
         #region NumMasters
-        private Byte _NumMasters;
-        public Byte NumMasters
-        {
-            get => this._NumMasters;
-            set => this.RaiseAndSetIfChanged(ref this._NumMasters, value, nameof(NumMasters));
-        }
+        public Byte NumMasters { get; set; }
         #endregion
         #region GameMode
-        private Mutagen.Bethesda.GameMode _GameMode;
-        public Mutagen.Bethesda.GameMode GameMode
-        {
-            get => this._GameMode;
-            set => this.RaiseAndSetIfChanged(ref this._GameMode, value, nameof(GameMode));
-        }
+        public Mutagen.Bethesda.GameMode GameMode { get; set; }
         #endregion
         #region ExpectedBaseGroupCount
         public bool ExpectedBaseGroupCount_IsSet
         {
             get => _hasBeenSetTracker[(int)Target_FieldIndex.ExpectedBaseGroupCount];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Target_FieldIndex.ExpectedBaseGroupCount, nameof(ExpectedBaseGroupCount_IsSet));
+            set => _hasBeenSetTracker[(int)Target_FieldIndex.ExpectedBaseGroupCount] = value;
         }
         bool ITargetGetter.ExpectedBaseGroupCount_IsSet => ExpectedBaseGroupCount_IsSet;
         private Byte _ExpectedBaseGroupCount;
@@ -93,7 +73,8 @@ namespace Mutagen.Bethesda.Tests
             Byte value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _ExpectedBaseGroupCount, value, _hasBeenSetTracker, markSet, (int)Target_FieldIndex.ExpectedBaseGroupCount, nameof(ExpectedBaseGroupCount), nameof(ExpectedBaseGroupCount_IsSet));
+            _ExpectedBaseGroupCount = value;
+            _hasBeenSetTracker[(int)Target_FieldIndex.ExpectedBaseGroupCount] = markSet;
         }
         public void ExpectedBaseGroupCount_Unset()
         {
@@ -666,7 +647,6 @@ namespace Mutagen.Bethesda.Tests
         #endregion
         #region Interest
         IRecordInterestInternalGetter Interest { get; }
-
         #endregion
 
     }
@@ -1191,70 +1171,26 @@ namespace Mutagen.Bethesda.Tests.Internals
             if (copyMask?.Do ?? true)
             {
                 errorMask?.PushIndex((int)Target_FieldIndex.Do);
-                try
-                {
-                    item.Do = rhs.Do;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Do = rhs.Do;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Path ?? true)
             {
                 errorMask?.PushIndex((int)Target_FieldIndex.Path);
-                try
-                {
-                    item.Path = rhs.Path;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Path = rhs.Path;
+                errorMask?.PopIndex();
             }
             if (copyMask?.NumMasters ?? true)
             {
                 errorMask?.PushIndex((int)Target_FieldIndex.NumMasters);
-                try
-                {
-                    item.NumMasters = rhs.NumMasters;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.NumMasters = rhs.NumMasters;
+                errorMask?.PopIndex();
             }
             if (copyMask?.GameMode ?? true)
             {
                 errorMask?.PushIndex((int)Target_FieldIndex.GameMode);
-                try
-                {
-                    item.GameMode = rhs.GameMode;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.GameMode = rhs.GameMode;
+                errorMask?.PopIndex();
             }
             if (copyMask?.ExpectedBaseGroupCount ?? true)
             {

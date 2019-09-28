@@ -109,8 +109,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<ItemEntry> _Items = new SourceSetList<ItemEntry>();
-        public ISourceSetList<ItemEntry> Items => _Items;
+        private readonly SetList<ItemEntry> _Items = new SetList<ItemEntry>();
+        public ISetList<ItemEntry> Items => _Items;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<ItemEntry> ICreature.Items => _Items;
@@ -121,8 +121,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Spells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<IFormIDLink<SpellAbstract>> _Spells = new SourceSetList<IFormIDLink<SpellAbstract>>();
-        public ISourceSetList<IFormIDLink<SpellAbstract>> Spells => _Spells;
+        private readonly SetList<IFormIDLink<SpellAbstract>> _Spells = new SetList<IFormIDLink<SpellAbstract>>();
+        public ISetList<IFormIDLink<SpellAbstract>> Spells => _Spells;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<IFormIDLink<SpellAbstract>> ICreature.Spells => _Spells;
@@ -133,8 +133,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Models
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<String> _Models = new SourceSetList<String>();
-        public ISourceSetList<String> Models => _Models;
+        private readonly SetList<String> _Models = new SetList<String>();
+        public ISetList<String> Models => _Models;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<String> ICreature.Models => _Models;
@@ -257,8 +257,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Factions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<RankPlacement> _Factions = new SourceSetList<RankPlacement>();
-        public ISourceSetList<RankPlacement> Factions => _Factions;
+        private readonly SetList<RankPlacement> _Factions = new SetList<RankPlacement>();
+        public ISetList<RankPlacement> Factions => _Factions;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<RankPlacement> ICreature.Factions => _Factions;
@@ -369,8 +369,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region AIPackages
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<IFormIDLink<AIPackage>> _AIPackages = new SourceSetList<IFormIDLink<AIPackage>>();
-        public ISourceSetList<IFormIDLink<AIPackage>> AIPackages => _AIPackages;
+        private readonly SetList<IFormIDLink<AIPackage>> _AIPackages = new SetList<IFormIDLink<AIPackage>>();
+        public ISetList<IFormIDLink<AIPackage>> AIPackages => _AIPackages;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<IFormIDLink<AIPackage>> ICreature.AIPackages => _AIPackages;
@@ -381,8 +381,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Animations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<String> _Animations = new SourceSetList<String>();
-        public ISourceSetList<String> Animations => _Animations;
+        private readonly SetList<String> _Animations = new SetList<String>();
+        public ISetList<String> Animations => _Animations;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<String> ICreature.Animations => _Animations;
@@ -751,8 +751,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Sounds
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<CreatureSound> _Sounds = new SourceSetList<CreatureSound>();
-        public ISourceSetList<CreatureSound> Sounds => _Sounds;
+        private readonly SetList<CreatureSound> _Sounds = new SetList<CreatureSound>();
+        public ISetList<CreatureSound> Sounds => _Sounds;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<CreatureSound> ICreature.Sounds => _Sounds;
@@ -1129,7 +1129,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 yield return item;
             }
-            foreach (var item in Items.Items.SelectMany(f => f.Links))
+            foreach (var item in Items.SelectMany(f => f.Links))
             {
                 yield return item;
             }
@@ -1137,7 +1137,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 yield return item;
             }
-            foreach (var item in Factions.Items.SelectMany(f => f.Links))
+            foreach (var item in Factions.SelectMany(f => f.Links))
             {
                 yield return item;
             }
@@ -1149,7 +1149,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             yield return CombatStyle_Property;
             yield return InheritsSoundFrom_Property;
-            foreach (var item in Sounds.Items.SelectMany(f => f.Links))
+            foreach (var item in Sounds.SelectMany(f => f.Links))
             {
                 yield return item;
             }
@@ -1160,7 +1160,7 @@ namespace Mutagen.Bethesda.Oblivion
             
         {
             base.Link(package: package);
-            foreach (var item in Items.Items)
+            foreach (var item in Items)
             {
                 item.Link(package: package);
             }
@@ -1168,7 +1168,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 item.Link(package: package);
             }
-            foreach (var item in Factions.Items)
+            foreach (var item in Factions)
             {
                 item.Link(package: package);
             }
@@ -1180,7 +1180,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             CombatStyle_Property.Link(package);
             InheritsSoundFrom_Property.Link(package);
-            foreach (var item in Sounds.Items)
+            foreach (var item in Sounds)
             {
                 item.Link(package: package);
             }

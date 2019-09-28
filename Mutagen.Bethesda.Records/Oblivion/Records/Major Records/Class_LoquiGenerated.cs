@@ -135,13 +135,13 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region PrimaryAttributes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly ISourceList<ActorValue> _PrimaryAttributes = new SourceBoundedList<ActorValue>(max: 2);
-        public ISourceList<ActorValue> PrimaryAttributes => _PrimaryAttributes;
+        private readonly ActorValue[] _PrimaryAttributes = new ActorValue[2];
+        public ActorValue[] PrimaryAttributes => _PrimaryAttributes;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IList<ActorValue> IClass.PrimaryAttributes => _PrimaryAttributes;
+        ActorValue[] IClass.PrimaryAttributes => _PrimaryAttributes;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<ActorValue> IClassGetter.PrimaryAttributes => _PrimaryAttributes;
+        ReadOnlyMemorySlice<ActorValue> IClassGetter.PrimaryAttributes => _PrimaryAttributes;
         #endregion
 
         #endregion
@@ -159,13 +159,13 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region SecondaryAttributes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly ISourceList<ActorValue> _SecondaryAttributes = new SourceBoundedList<ActorValue>(max: 7);
-        public ISourceList<ActorValue> SecondaryAttributes => _SecondaryAttributes;
+        private readonly ActorValue[] _SecondaryAttributes = new ActorValue[7];
+        public ActorValue[] SecondaryAttributes => _SecondaryAttributes;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IList<ActorValue> IClass.SecondaryAttributes => _SecondaryAttributes;
+        ActorValue[] IClass.SecondaryAttributes => _SecondaryAttributes;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<ActorValue> IClassGetter.SecondaryAttributes => _SecondaryAttributes;
+        ReadOnlyMemorySlice<ActorValue> IClassGetter.SecondaryAttributes => _SecondaryAttributes;
         #endregion
 
         #endregion
@@ -841,13 +841,13 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Icon = (String)obj;
                     break;
                 case Class_FieldIndex.PrimaryAttributes:
-                    this._PrimaryAttributes.SetTo((IList<ActorValue>)obj);
+                    this._PrimaryAttributes.SetTo((ActorValue[])obj);
                     break;
                 case Class_FieldIndex.Specialization:
                     this.Specialization = (Class.SpecializationFlag)obj;
                     break;
                 case Class_FieldIndex.SecondaryAttributes:
-                    this._SecondaryAttributes.SetTo((IList<ActorValue>)obj);
+                    this._SecondaryAttributes.SetTo((ActorValue[])obj);
                     break;
                 case Class_FieldIndex.Flags:
                     this.Flags = (ClassFlag)obj;
@@ -900,13 +900,13 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Icon = (String)pair.Value;
                     break;
                 case Class_FieldIndex.PrimaryAttributes:
-                    obj._PrimaryAttributes.SetTo((IList<ActorValue>)pair.Value);
+                    obj._PrimaryAttributes.SetTo((ActorValue[])pair.Value);
                     break;
                 case Class_FieldIndex.Specialization:
                     obj.Specialization = (Class.SpecializationFlag)pair.Value;
                     break;
                 case Class_FieldIndex.SecondaryAttributes:
-                    obj._SecondaryAttributes.SetTo((IList<ActorValue>)pair.Value);
+                    obj._SecondaryAttributes.SetTo((ActorValue[])pair.Value);
                     break;
                 case Class_FieldIndex.Flags:
                     obj.Flags = (ClassFlag)pair.Value;
@@ -948,10 +948,10 @@ namespace Mutagen.Bethesda.Oblivion
         void Icon_Set(String value, bool hasBeenSet = true);
         void Icon_Unset();
 
-        new IList<ActorValue> PrimaryAttributes { get; }
+        new ActorValue[] PrimaryAttributes { get; }
         new Class.SpecializationFlag Specialization { get; set; }
 
-        new IList<ActorValue> SecondaryAttributes { get; }
+        new ActorValue[] SecondaryAttributes { get; }
         new ClassFlag Flags { get; set; }
 
         new ClassService ClassServices { get; set; }
@@ -996,14 +996,14 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region PrimaryAttributes
-        IReadOnlyList<ActorValue> PrimaryAttributes { get; }
+        ReadOnlyMemorySlice<ActorValue> PrimaryAttributes { get; }
         #endregion
         #region Specialization
         Class.SpecializationFlag Specialization { get; }
 
         #endregion
         #region SecondaryAttributes
-        IReadOnlyList<ActorValue> SecondaryAttributes { get; }
+        ReadOnlyMemorySlice<ActorValue> SecondaryAttributes { get; }
         #endregion
         #region Flags
         ClassFlag Flags { get; }
@@ -1350,11 +1350,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Class_FieldIndex.Icon:
                     return typeof(String);
                 case Class_FieldIndex.PrimaryAttributes:
-                    return typeof(IList<ActorValue>);
+                    return typeof(ActorValue[]);
                 case Class_FieldIndex.Specialization:
                     return typeof(Class.SpecializationFlag);
                 case Class_FieldIndex.SecondaryAttributes:
-                    return typeof(IList<ActorValue>);
+                    return typeof(ActorValue[]);
                 case Class_FieldIndex.Flags:
                     return typeof(ClassFlag);
                 case Class_FieldIndex.ClassServices:
@@ -1470,12 +1470,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Name = item.Name_IsSet == rhs.Name_IsSet && string.Equals(item.Name, rhs.Name);
             ret.Description = item.Description_IsSet == rhs.Description_IsSet && string.Equals(item.Description, rhs.Description);
             ret.Icon = item.Icon_IsSet == rhs.Icon_IsSet && string.Equals(item.Icon, rhs.Icon);
-            ret.PrimaryAttributes = item.PrimaryAttributes.CollectionEqualsHelper(
+            ret.PrimaryAttributes = item.PrimaryAttributes.SpanEqualsHelper(
                 rhs.PrimaryAttributes,
                 (l, r) => l == r,
                 include);
             ret.Specialization = item.Specialization == rhs.Specialization;
-            ret.SecondaryAttributes = item.SecondaryAttributes.CollectionEqualsHelper(
+            ret.SecondaryAttributes = item.SecondaryAttributes.SpanEqualsHelper(
                 rhs.SecondaryAttributes,
                 (l, r) => l == r,
                 include);
@@ -1885,21 +1885,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.PrimaryAttributes != CopyOption.Skip)
             {
                 errorMask?.PushIndex((int)Class_FieldIndex.PrimaryAttributes);
-                try
-                {
-                    item.PrimaryAttributes.SetToWithDefault(
-                        rhs.PrimaryAttributes,
-                        def?.PrimaryAttributes);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.PrimaryAttributes.SetToWithDefault(
+                    rhs.PrimaryAttributes,
+                    def?.PrimaryAttributes);
+                errorMask?.PopIndex();
             }
             if (copyMask?.Specialization ?? true)
             {
@@ -1910,21 +1899,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.SecondaryAttributes != CopyOption.Skip)
             {
                 errorMask?.PushIndex((int)Class_FieldIndex.SecondaryAttributes);
-                try
-                {
-                    item.SecondaryAttributes.SetToWithDefault(
-                        rhs.SecondaryAttributes,
-                        def?.SecondaryAttributes);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.SecondaryAttributes.SetToWithDefault(
+                    rhs.SecondaryAttributes,
+                    def?.SecondaryAttributes);
+                errorMask?.PopIndex();
             }
             if (copyMask?.Flags ?? true)
             {
@@ -3559,13 +3537,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         private int? _DATALocation;
         public Class.DATADataType DATADataTypeState { get; private set; }
-        public IReadOnlyList<ActorValue> PrimaryAttributes => BinaryWrapperNumberedList.FactoryForEnum<ActorValue>(_DATALocation.HasValue ? _data.Slice(_DATALocation.Value + 0) : default, amount: 2, enumLength: 4);
+        public ReadOnlyMemorySlice<ActorValue> PrimaryAttributes => BinaryWrapperArrayHelper.EnumSliceFromFixedSize<ActorValue>(_DATALocation.HasValue ? _data.Slice(_DATALocation.Value + 0) : default, amount: 2, enumLength: 4);
         #region Specialization
         private int _SpecializationLocation => _DATALocation.Value + 0x8;
         private bool _Specialization_IsSet => _DATALocation.HasValue;
         public Class.SpecializationFlag Specialization => _Specialization_IsSet ? (Class.SpecializationFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_SpecializationLocation, 4)) : default;
         #endregion
-        public IReadOnlyList<ActorValue> SecondaryAttributes => BinaryWrapperNumberedList.FactoryForEnum<ActorValue>(_DATALocation.HasValue ? _data.Slice(_DATALocation.Value + 12) : default, amount: 7, enumLength: 4);
+        public ReadOnlyMemorySlice<ActorValue> SecondaryAttributes => BinaryWrapperArrayHelper.EnumSliceFromFixedSize<ActorValue>(_DATALocation.HasValue ? _data.Slice(_DATALocation.Value + 12) : default, amount: 7, enumLength: 4);
         #region Flags
         private int _FlagsLocation => _DATALocation.Value + 0x28;
         private bool _Flags_IsSet => _DATALocation.HasValue;

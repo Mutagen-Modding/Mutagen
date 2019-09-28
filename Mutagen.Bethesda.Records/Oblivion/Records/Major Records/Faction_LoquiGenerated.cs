@@ -83,8 +83,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Relations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<Relation> _Relations = new SourceSetList<Relation>();
-        public ISourceSetList<Relation> Relations => _Relations;
+        private readonly SetList<Relation> _Relations = new SetList<Relation>();
+        public ISetList<Relation> Relations => _Relations;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<Relation> IFaction.Relations => _Relations;
@@ -149,8 +149,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Ranks
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<Rank> _Ranks = new SourceSetList<Rank>();
-        public ISourceSetList<Rank> Ranks => _Ranks;
+        private readonly SetList<Rank> _Ranks = new SetList<Rank>();
+        public ISetList<Rank> Ranks => _Ranks;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<Rank> IFaction.Ranks => _Ranks;
@@ -410,7 +410,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 yield return item;
             }
-            foreach (var item in Relations.Items.SelectMany(f => f.Links))
+            foreach (var item in Relations.SelectMany(f => f.Links))
             {
                 yield return item;
             }
@@ -421,7 +421,7 @@ namespace Mutagen.Bethesda.Oblivion
             
         {
             base.Link(package: package);
-            foreach (var item in Relations.Items)
+            foreach (var item in Relations)
             {
                 item.Link(package: package);
             }

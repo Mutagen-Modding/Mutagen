@@ -2,28 +2,28 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>3e4cd142778c0b35a4f63cecfd2f1df439e0afc0</Sha>
+         <Sha>4e6541eb2d9dbb31c3f7c8de91cfd580c4980c9a</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>09-24-2019 23:13:04</CommitDate>
-         <Description>ISetList Count override</Description>
+         <CommitDate>09-28-2019 11:59:06</CommitDate>
+         <Description>SetList implementation</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/CSharpExt.git</OriginHint>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>eabecf61ec8182111a6dbe9244f3284e61b04cfe</Sha>
+         <Sha>f8c823804abd0f0602154181adacb26ec4ffd01c</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>09-22-2019 22:51:05</CommitDate>
-         <Description>Fixes for no-notification setups</Description>
+         <CommitDate>09-28-2019 11:27:58</CommitDate>
+         <Description>Some ArraySupport.  Non-notifying collection work</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/Loqui.git</OriginHint>
       </RepoListing>
       <RepoListing>
          <Nickname>DynamicData</Nickname>
-         <Sha>0888f865ef734ae1c1876389ecc972c14f8e6b52</Sha>
+         <Sha>3b512df4ac8d2ae999ab2ee37c09e9e3d5287277</Sha>
          <Path>../DynamicData</Path>
-         <CommitDate>09-23-2019 12:43:15</CommitDate>
-         <Description>Updated proj to point to latest .NET</Description>
+         <CommitDate>09-28-2019 11:27:42</CommitDate>
+         <Description>IExtendedList implements IReadOnlyList</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/DynamicData.git</OriginHint>
       </RepoListing>

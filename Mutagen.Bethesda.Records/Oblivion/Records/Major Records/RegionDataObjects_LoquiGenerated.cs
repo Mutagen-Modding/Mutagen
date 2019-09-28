@@ -53,8 +53,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Objects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<RegionDataObject> _Objects = new SourceSetList<RegionDataObject>();
-        public ISourceSetList<RegionDataObject> Objects => _Objects;
+        private readonly SetList<RegionDataObject> _Objects = new SetList<RegionDataObject>();
+        public ISetList<RegionDataObject> Objects => _Objects;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<RegionDataObject> IRegionDataObjects.Objects => _Objects;
@@ -297,7 +297,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 yield return item;
             }
-            foreach (var item in Objects.Items.SelectMany(f => f.Links))
+            foreach (var item in Objects.SelectMany(f => f.Links))
             {
                 yield return item;
             }
@@ -308,7 +308,7 @@ namespace Mutagen.Bethesda.Oblivion
             
         {
             base.Link(package: package);
-            foreach (var item in Objects.Items)
+            foreach (var item in Objects)
             {
                 item.Link(package: package);
             }

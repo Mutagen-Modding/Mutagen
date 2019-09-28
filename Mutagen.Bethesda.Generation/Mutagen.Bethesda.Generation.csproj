@@ -72,6 +72,7 @@
     <Compile Include="Fields\StringType.cs" />
     <Compile Include="Fields\TransferType.cs" />
     <Compile Include="Fields\ZeroType.cs" />
+    <Compile Include="Modules\Binary\ArrayBinaryTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\BinaryTranslationModule.cs" />
     <Compile Include="Modules\Binary\ByteArrayBinaryTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\ByteBinaryTranslationGeneration.cs" />

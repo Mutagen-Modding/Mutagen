@@ -80,8 +80,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Sounds
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<SoundItem> _Sounds = new SourceSetList<SoundItem>();
-        public ISourceSetList<SoundItem> Sounds => _Sounds;
+        private readonly SetList<SoundItem> _Sounds = new SetList<SoundItem>();
+        public ISetList<SoundItem> Sounds => _Sounds;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<SoundItem> ICreatureSound.Sounds => _Sounds;
@@ -308,7 +308,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IEnumerable<ILink> Links => GetLinks();
         private IEnumerable<ILink> GetLinks()
         {
-            foreach (var item in Sounds.Items.SelectMany(f => f.Links))
+            foreach (var item in Sounds.SelectMany(f => f.Links))
             {
                 yield return item;
             }
@@ -318,7 +318,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Link<M>(LinkingPackage<M> package)
             where M : IMod
         {
-            foreach (var item in Sounds.Items)
+            foreach (var item in Sounds)
             {
                 item.Link(package: package);
             }

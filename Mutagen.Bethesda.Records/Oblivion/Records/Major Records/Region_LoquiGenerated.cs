@@ -118,8 +118,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Areas
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<RegionArea> _Areas = new SourceSetList<RegionArea>();
-        public ISourceSetList<RegionArea> Areas => _Areas;
+        private readonly SetList<RegionArea> _Areas = new SetList<RegionArea>();
+        public ISetList<RegionArea> Areas => _Areas;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<RegionArea> IRegion.Areas => _Areas;

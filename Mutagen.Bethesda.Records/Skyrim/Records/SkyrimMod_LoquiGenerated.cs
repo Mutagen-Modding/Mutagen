@@ -477,49 +477,49 @@ namespace Mutagen.Bethesda.Skyrim
             if (mask?.GameSettings ?? true)
             {
                 this.GameSettings.Items.Set(
-                    rhs.GameSettings.Items.Items
+                    rhs.GameSettings.Items.Values
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<GameSetting>());
             }
             if (mask?.Keywords ?? true)
             {
                 this.Keywords.Items.Set(
-                    rhs.Keywords.Items.Items
+                    rhs.Keywords.Items.Values
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Keyword>());
             }
             if (mask?.LocationReferenceTypes ?? true)
             {
                 this.LocationReferenceTypes.Items.Set(
-                    rhs.LocationReferenceTypes.Items.Items
+                    rhs.LocationReferenceTypes.Items.Values
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<LocationReferenceType>());
             }
             if (mask?.Actions ?? true)
             {
                 this.Actions.Items.Set(
-                    rhs.Actions.Items.Items
+                    rhs.Actions.Items.Values
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<ActionRecord>());
             }
             if (mask?.TextureSets ?? true)
             {
                 this.TextureSets.Items.Set(
-                    rhs.TextureSets.Items.Items
+                    rhs.TextureSets.Items.Values
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<TextureSet>());
             }
             if (mask?.Globals ?? true)
             {
                 this.Globals.Items.Set(
-                    rhs.Globals.Items.Items
+                    rhs.Globals.Items.Values
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Global>());
             }
             if (mask?.Classes ?? true)
             {
                 this.Classes.Items.Set(
-                    rhs.Classes.Items.Items
+                    rhs.Classes.Items.Values
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Class>());
             }

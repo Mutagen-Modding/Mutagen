@@ -55,8 +55,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Quests
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<IFormIDLink<Quest>> _Quests = new SourceSetList<IFormIDLink<Quest>>();
-        public ISourceSetList<IFormIDLink<Quest>> Quests => _Quests;
+        private readonly SetList<IFormIDLink<Quest>> _Quests = new SetList<IFormIDLink<Quest>>();
+        public ISetList<IFormIDLink<Quest>> Quests => _Quests;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<IFormIDLink<Quest>> IDialogTopic.Quests => _Quests;
@@ -130,8 +130,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<DialogItem> _Items = new SourceSetList<DialogItem>();
-        public ISourceSetList<DialogItem> Items => _Items;
+        private readonly SetList<DialogItem> _Items = new SetList<DialogItem>();
+        public ISetList<DialogItem> Items => _Items;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<DialogItem> IDialogTopic.Items => _Items;
@@ -396,7 +396,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 yield return item;
             }
-            foreach (var item in Items.Items.SelectMany(f => f.Links))
+            foreach (var item in Items.SelectMany(f => f.Links))
             {
                 yield return item;
             }
@@ -411,7 +411,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 item.Link(package: package);
             }
-            foreach (var item in Items.Items)
+            foreach (var item in Items)
             {
                 item.Link(package: package);
             }

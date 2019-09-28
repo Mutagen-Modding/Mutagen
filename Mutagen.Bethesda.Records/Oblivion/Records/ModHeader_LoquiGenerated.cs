@@ -182,11 +182,11 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region MasterReferences
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceList<MasterReference> _MasterReferences = new SourceList<MasterReference>();
-        public ISourceList<MasterReference> MasterReferences => _MasterReferences;
+        private readonly ExtendedList<MasterReference> _MasterReferences = new ExtendedList<MasterReference>();
+        public IExtendedList<MasterReference> MasterReferences => _MasterReferences;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IList<MasterReference> IModHeader.MasterReferences => _MasterReferences;
+        IExtendedList<MasterReference> IModHeader.MasterReferences => _MasterReferences;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IReadOnlyList<IMasterReferenceInternalGetter> IModHeaderGetter.MasterReferences => _MasterReferences;
         #endregion
@@ -813,7 +813,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Description = (String)obj;
                     break;
                 case ModHeader_FieldIndex.MasterReferences:
-                    this._MasterReferences.SetTo((IList<MasterReference>)obj);
+                    this._MasterReferences.SetTo((IExtendedList<MasterReference>)obj);
                     break;
                 case ModHeader_FieldIndex.VestigialData:
                     this.VestigialData = (UInt64)obj;
@@ -871,7 +871,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Description = (String)pair.Value;
                     break;
                 case ModHeader_FieldIndex.MasterReferences:
-                    obj._MasterReferences.SetTo((IList<MasterReference>)pair.Value);
+                    obj._MasterReferences.SetTo((IExtendedList<MasterReference>)pair.Value);
                     break;
                 case ModHeader_FieldIndex.VestigialData:
                     obj.VestigialData = (UInt64)pair.Value;
@@ -916,7 +916,7 @@ namespace Mutagen.Bethesda.Oblivion
         void Description_Set(String value, bool hasBeenSet = true);
         void Description_Unset();
 
-        new IList<MasterReference> MasterReferences { get; }
+        new IExtendedList<MasterReference> MasterReferences { get; }
         new UInt64 VestigialData { get; set; }
         new bool VestigialData_IsSet { get; set; }
         void VestigialData_Set(UInt64 value, bool hasBeenSet = true);
@@ -1320,7 +1320,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case ModHeader_FieldIndex.Description:
                     return typeof(String);
                 case ModHeader_FieldIndex.MasterReferences:
-                    return typeof(IList<MasterReference>);
+                    return typeof(IExtendedList<MasterReference>);
                 case ModHeader_FieldIndex.VestigialData:
                     return typeof(UInt64);
                 default:

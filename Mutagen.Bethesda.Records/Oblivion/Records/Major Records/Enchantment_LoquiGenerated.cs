@@ -130,8 +130,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Effects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<Effect> _Effects = new SourceSetList<Effect>();
-        public ISourceSetList<Effect> Effects => _Effects;
+        private readonly SetList<Effect> _Effects = new SetList<Effect>();
+        public ISetList<Effect> Effects => _Effects;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<Effect> IEnchantment.Effects => _Effects;
@@ -413,7 +413,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 yield return item;
             }
-            foreach (var item in Effects.Items.SelectMany(f => f.Links))
+            foreach (var item in Effects.SelectMany(f => f.Links))
             {
                 yield return item;
             }
@@ -424,7 +424,7 @@ namespace Mutagen.Bethesda.Oblivion
             
         {
             base.Link(package: package);
-            foreach (var item in Effects.Items)
+            foreach (var item in Effects)
             {
                 item.Link(package: package);
             }

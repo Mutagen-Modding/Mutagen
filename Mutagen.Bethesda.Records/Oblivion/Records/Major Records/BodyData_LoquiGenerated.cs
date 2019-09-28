@@ -80,8 +80,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region BodyParts
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<BodyPart> _BodyParts = new SourceSetList<BodyPart>();
-        public ISourceSetList<BodyPart> BodyParts => _BodyParts;
+        private readonly SetList<BodyPart> _BodyParts = new SetList<BodyPart>();
+        public ISetList<BodyPart> BodyParts => _BodyParts;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<BodyPart> IBodyData.BodyParts => _BodyParts;

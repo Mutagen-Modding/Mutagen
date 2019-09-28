@@ -130,7 +130,7 @@ namespace Mutagen.Bethesda.Oblivion
                 Cell obj,
                 int fieldIndex,
                 MasterReferences masterReferences,
-                ISourceSetList<IPlaced> coll,
+                ISetList<IPlaced> coll,
                 ErrorMaskBuilder errorMask,
                 bool persistentParse)
             {

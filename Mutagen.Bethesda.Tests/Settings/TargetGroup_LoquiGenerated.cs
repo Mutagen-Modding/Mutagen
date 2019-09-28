@@ -44,20 +44,15 @@ namespace Mutagen.Bethesda.Tests
         #endregion
 
         #region Do
-        private Boolean _Do;
-        public Boolean Do
-        {
-            get => this._Do;
-            set => this.RaiseAndSetIfChanged(ref this._Do, value, nameof(Do));
-        }
+        public Boolean Do { get; set; }
         #endregion
         #region Targets
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceList<Target> _Targets = new SourceList<Target>();
-        public ISourceList<Target> Targets => _Targets;
+        private readonly ExtendedList<Target> _Targets = new ExtendedList<Target>();
+        public IExtendedList<Target> Targets => _Targets;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IList<Target> ITargetGroup.Targets => _Targets;
+        IExtendedList<Target> ITargetGroup.Targets => _Targets;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IReadOnlyList<ITargetInternalGetter> ITargetGroupGetter.Targets => _Targets;
         #endregion
@@ -492,7 +487,7 @@ namespace Mutagen.Bethesda.Tests
                     this.Do = (Boolean)obj;
                     break;
                 case TargetGroup_FieldIndex.Targets:
-                    this._Targets.SetTo((IList<Target>)obj);
+                    this._Targets.SetTo((IExtendedList<Target>)obj);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -526,7 +521,7 @@ namespace Mutagen.Bethesda.Tests
                     obj.Do = (Boolean)pair.Value;
                     break;
                 case TargetGroup_FieldIndex.Targets:
-                    obj._Targets.SetTo((IList<Target>)pair.Value);
+                    obj._Targets.SetTo((IExtendedList<Target>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -542,7 +537,7 @@ namespace Mutagen.Bethesda.Tests
     {
         new Boolean Do { get; set; }
 
-        new IList<Target> Targets { get; }
+        new IExtendedList<Target> Targets { get; }
         void CopyFieldsFrom(
             TargetGroup rhs,
             ErrorMaskBuilder errorMask = null,
@@ -810,7 +805,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case TargetGroup_FieldIndex.Do:
                     return typeof(Boolean);
                 case TargetGroup_FieldIndex.Targets:
-                    return typeof(IList<Target>);
+                    return typeof(IExtendedList<Target>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1017,19 +1012,8 @@ namespace Mutagen.Bethesda.Tests.Internals
             if (copyMask?.Do ?? true)
             {
                 errorMask?.PushIndex((int)TargetGroup_FieldIndex.Do);
-                try
-                {
-                    item.Do = rhs.Do;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Do = rhs.Do;
+                errorMask?.PopIndex();
             }
             if (copyMask?.Targets.Overall != CopyOption.Skip)
             {

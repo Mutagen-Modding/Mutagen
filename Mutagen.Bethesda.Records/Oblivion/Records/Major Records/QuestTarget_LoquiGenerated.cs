@@ -73,8 +73,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<Condition> _Conditions = new SourceSetList<Condition>();
-        public ISourceSetList<Condition> Conditions => _Conditions;
+        private readonly SetList<Condition> _Conditions = new SetList<Condition>();
+        public ISetList<Condition> Conditions => _Conditions;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<Condition> IQuestTarget.Conditions => _Conditions;

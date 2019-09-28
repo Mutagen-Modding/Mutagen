@@ -56,8 +56,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region LogEntries
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<LogEntry> _LogEntries = new SourceSetList<LogEntry>();
-        public ISourceSetList<LogEntry> LogEntries => _LogEntries;
+        private readonly SetList<LogEntry> _LogEntries = new SetList<LogEntry>();
+        public ISetList<LogEntry> LogEntries => _LogEntries;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<LogEntry> IQuestStage.LogEntries => _LogEntries;
@@ -285,7 +285,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IEnumerable<ILink> Links => GetLinks();
         private IEnumerable<ILink> GetLinks()
         {
-            foreach (var item in LogEntries.Items.WhereCastable<LogEntry, ILinkContainer>()
+            foreach (var item in LogEntries.WhereCastable<LogEntry, ILinkContainer>()
                 .SelectMany((f) => f.Links))
             {
                 yield return item;
@@ -296,7 +296,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Link<M>(LinkingPackage<M> package)
             where M : IMod
         {
-            foreach (var item in LogEntries.Items.WhereCastable<LogEntry, ILinkSubContainer>())
+            foreach (var item in LogEntries.WhereCastable<LogEntry, ILinkSubContainer>())
             {
                 item.Link(package: package);
             }

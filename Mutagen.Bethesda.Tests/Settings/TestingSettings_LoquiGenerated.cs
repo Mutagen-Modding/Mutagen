@@ -45,44 +45,19 @@ namespace Mutagen.Bethesda.Tests
         #endregion
 
         #region TestGroupMasks
-        private Boolean _TestGroupMasks;
-        public Boolean TestGroupMasks
-        {
-            get => this._TestGroupMasks;
-            set => this.RaiseAndSetIfChanged(ref this._TestGroupMasks, value, nameof(TestGroupMasks));
-        }
+        public Boolean TestGroupMasks { get; set; }
         #endregion
         #region TestModList
-        private Boolean _TestModList;
-        public Boolean TestModList
-        {
-            get => this._TestModList;
-            set => this.RaiseAndSetIfChanged(ref this._TestModList, value, nameof(TestModList));
-        }
+        public Boolean TestModList { get; set; }
         #endregion
         #region TestFlattenedMod
-        private Boolean _TestFlattenedMod;
-        public Boolean TestFlattenedMod
-        {
-            get => this._TestFlattenedMod;
-            set => this.RaiseAndSetIfChanged(ref this._TestFlattenedMod, value, nameof(TestFlattenedMod));
-        }
+        public Boolean TestFlattenedMod { get; set; }
         #endregion
         #region TestBenchmarks
-        private Boolean _TestBenchmarks;
-        public Boolean TestBenchmarks
-        {
-            get => this._TestBenchmarks;
-            set => this.RaiseAndSetIfChanged(ref this._TestBenchmarks, value, nameof(TestBenchmarks));
-        }
+        public Boolean TestBenchmarks { get; set; }
         #endregion
         #region TestLocators
-        private Boolean _TestLocators;
-        public Boolean TestLocators
-        {
-            get => this._TestLocators;
-            set => this.RaiseAndSetIfChanged(ref this._TestLocators, value, nameof(TestLocators));
-        }
+        public Boolean TestLocators { get; set; }
         #endregion
         #region DataFolderLocations
         public DataFolderLocations DataFolderLocations { get; set; }
@@ -94,11 +69,11 @@ namespace Mutagen.Bethesda.Tests
         #endregion
         #region TargetGroups
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceList<TargetGroup> _TargetGroups = new SourceList<TargetGroup>();
-        public ISourceList<TargetGroup> TargetGroups => _TargetGroups;
+        private readonly ExtendedList<TargetGroup> _TargetGroups = new ExtendedList<TargetGroup>();
+        public IExtendedList<TargetGroup> TargetGroups => _TargetGroups;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IList<TargetGroup> ITestingSettings.TargetGroups => _TargetGroups;
+        IExtendedList<TargetGroup> ITestingSettings.TargetGroups => _TargetGroups;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IReadOnlyList<ITargetGroupInternalGetter> ITestingSettingsGetter.TargetGroups => _TargetGroups;
         #endregion
@@ -557,7 +532,7 @@ namespace Mutagen.Bethesda.Tests
                     this.PassthroughSettings = (PassthroughSettings)obj;
                     break;
                 case TestingSettings_FieldIndex.TargetGroups:
-                    this._TargetGroups.SetTo((IList<TargetGroup>)obj);
+                    this._TargetGroups.SetTo((IExtendedList<TargetGroup>)obj);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -609,7 +584,7 @@ namespace Mutagen.Bethesda.Tests
                     obj.PassthroughSettings = (PassthroughSettings)pair.Value;
                     break;
                 case TestingSettings_FieldIndex.TargetGroups:
-                    obj._TargetGroups.SetTo((IList<TargetGroup>)pair.Value);
+                    obj._TargetGroups.SetTo((IExtendedList<TargetGroup>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -637,7 +612,7 @@ namespace Mutagen.Bethesda.Tests
 
         new PassthroughSettings PassthroughSettings { get; set; }
 
-        new IList<TargetGroup> TargetGroups { get; }
+        new IExtendedList<TargetGroup> TargetGroups { get; }
         void CopyFieldsFrom(
             TestingSettings rhs,
             ErrorMaskBuilder errorMask = null,
@@ -678,11 +653,9 @@ namespace Mutagen.Bethesda.Tests
         #endregion
         #region DataFolderLocations
         IDataFolderLocationsInternalGetter DataFolderLocations { get; }
-
         #endregion
         #region PassthroughSettings
         IPassthroughSettingsInternalGetter PassthroughSettings { get; }
-
         #endregion
         #region TargetGroups
         IReadOnlyList<ITargetGroupInternalGetter> TargetGroups { get; }
@@ -1001,7 +974,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case TestingSettings_FieldIndex.PassthroughSettings:
                     return typeof(PassthroughSettings);
                 case TestingSettings_FieldIndex.TargetGroups:
-                    return typeof(IList<TargetGroup>);
+                    return typeof(IExtendedList<TargetGroup>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1262,87 +1235,32 @@ namespace Mutagen.Bethesda.Tests.Internals
             if (copyMask?.TestGroupMasks ?? true)
             {
                 errorMask?.PushIndex((int)TestingSettings_FieldIndex.TestGroupMasks);
-                try
-                {
-                    item.TestGroupMasks = rhs.TestGroupMasks;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.TestGroupMasks = rhs.TestGroupMasks;
+                errorMask?.PopIndex();
             }
             if (copyMask?.TestModList ?? true)
             {
                 errorMask?.PushIndex((int)TestingSettings_FieldIndex.TestModList);
-                try
-                {
-                    item.TestModList = rhs.TestModList;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.TestModList = rhs.TestModList;
+                errorMask?.PopIndex();
             }
             if (copyMask?.TestFlattenedMod ?? true)
             {
                 errorMask?.PushIndex((int)TestingSettings_FieldIndex.TestFlattenedMod);
-                try
-                {
-                    item.TestFlattenedMod = rhs.TestFlattenedMod;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.TestFlattenedMod = rhs.TestFlattenedMod;
+                errorMask?.PopIndex();
             }
             if (copyMask?.TestBenchmarks ?? true)
             {
                 errorMask?.PushIndex((int)TestingSettings_FieldIndex.TestBenchmarks);
-                try
-                {
-                    item.TestBenchmarks = rhs.TestBenchmarks;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.TestBenchmarks = rhs.TestBenchmarks;
+                errorMask?.PopIndex();
             }
             if (copyMask?.TestLocators ?? true)
             {
                 errorMask?.PushIndex((int)TestingSettings_FieldIndex.TestLocators);
-                try
-                {
-                    item.TestLocators = rhs.TestLocators;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.TestLocators = rhs.TestLocators;
+                errorMask?.PopIndex();
             }
             if (copyMask?.DataFolderLocations.Overall != CopyOption.Skip)
             {

@@ -107,8 +107,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Types
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<MapMarker.Type> _Types = new SourceSetList<MapMarker.Type>();
-        public ISourceSetList<MapMarker.Type> Types => _Types;
+        private readonly SetList<MapMarker.Type> _Types = new SetList<MapMarker.Type>();
+        public ISetList<MapMarker.Type> Types => _Types;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<MapMarker.Type> IMapMarker.Types => _Types;

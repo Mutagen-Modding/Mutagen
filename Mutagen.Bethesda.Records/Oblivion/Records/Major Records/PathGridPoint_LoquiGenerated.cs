@@ -67,11 +67,11 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Connections
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceList<Int16> _Connections = new SourceList<Int16>();
-        public ISourceList<Int16> Connections => _Connections;
+        private readonly ExtendedList<Int16> _Connections = new ExtendedList<Int16>();
+        public IExtendedList<Int16> Connections => _Connections;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IList<Int16> IPathGridPoint.Connections => _Connections;
+        IExtendedList<Int16> IPathGridPoint.Connections => _Connections;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IReadOnlyList<Int16> IPathGridPointGetter.Connections => _Connections;
         #endregion
@@ -510,7 +510,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.FluffBytes = (Byte[])obj;
                     break;
                 case PathGridPoint_FieldIndex.Connections:
-                    this._Connections.SetTo((IList<Int16>)obj);
+                    this._Connections.SetTo((IExtendedList<Int16>)obj);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -550,7 +550,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.FluffBytes = (Byte[])pair.Value;
                     break;
                 case PathGridPoint_FieldIndex.Connections:
-                    obj._Connections.SetTo((IList<Int16>)pair.Value);
+                    obj._Connections.SetTo((IExtendedList<Int16>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -570,7 +570,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Byte[] FluffBytes { get; set; }
 
-        new IList<Int16> Connections { get; }
+        new IExtendedList<Int16> Connections { get; }
         void CopyFieldsFrom(
             PathGridPoint rhs,
             ErrorMaskBuilder errorMask = null,
@@ -870,7 +870,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PathGridPoint_FieldIndex.FluffBytes:
                     return typeof(Byte[]);
                 case PathGridPoint_FieldIndex.Connections:
-                    return typeof(IList<Int16>);
+                    return typeof(IExtendedList<Int16>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

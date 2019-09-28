@@ -270,8 +270,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region CounterEffects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<IEDIDLink<MagicEffect>> _CounterEffects = new SourceSetList<IEDIDLink<MagicEffect>>();
-        public ISourceSetList<IEDIDLink<MagicEffect>> CounterEffects => _CounterEffects;
+        private readonly SetList<IEDIDLink<MagicEffect>> _CounterEffects = new SetList<IEDIDLink<MagicEffect>>();
+        public ISetList<IEDIDLink<MagicEffect>> CounterEffects => _CounterEffects;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<IEDIDLink<MagicEffect>> IMagicEffect.CounterEffects => _CounterEffects;

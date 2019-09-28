@@ -117,8 +117,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<ContainerItem> _Items = new SourceSetList<ContainerItem>();
-        public ISourceSetList<ContainerItem> Items => _Items;
+        private readonly SetList<ContainerItem> _Items = new SetList<ContainerItem>();
+        public ISetList<ContainerItem> Items => _Items;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<ContainerItem> IContainer.Items => _Items;
@@ -446,7 +446,7 @@ namespace Mutagen.Bethesda.Oblivion
                 yield return item;
             }
             yield return Script_Property;
-            foreach (var item in Items.Items.SelectMany(f => f.Links))
+            foreach (var item in Items.SelectMany(f => f.Links))
             {
                 yield return item;
             }
@@ -460,7 +460,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             base.Link(package: package);
             Script_Property.Link(package);
-            foreach (var item in Items.Items)
+            foreach (var item in Items)
             {
                 item.Link(package: package);
             }

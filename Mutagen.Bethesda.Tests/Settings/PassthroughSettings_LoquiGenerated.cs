@@ -42,61 +42,26 @@ namespace Mutagen.Bethesda.Tests
         #endregion
 
         #region ReuseCaches
-        private Boolean _ReuseCaches;
-        public Boolean ReuseCaches
-        {
-            get => this._ReuseCaches;
-            set => this.RaiseAndSetIfChanged(ref this._ReuseCaches, value, nameof(ReuseCaches));
-        }
+        public Boolean ReuseCaches { get; set; }
         #endregion
         #region ReorderRecords
-        private Boolean _ReorderRecords;
-        public Boolean ReorderRecords
-        {
-            get => this._ReorderRecords;
-            set => this.RaiseAndSetIfChanged(ref this._ReorderRecords, value, nameof(ReorderRecords));
-        }
+        public Boolean ReorderRecords { get; set; }
         #endregion
         #region DeleteCachesAfter
-        private Boolean _DeleteCachesAfter = _DeleteCachesAfter_Default;
         public readonly static Boolean _DeleteCachesAfter_Default = true;
-        public Boolean DeleteCachesAfter
-        {
-            get => this._DeleteCachesAfter;
-            set => this.RaiseAndSetIfChanged(ref this._DeleteCachesAfter, value, nameof(DeleteCachesAfter));
-        }
+        public Boolean DeleteCachesAfter { get; set; }
         #endregion
         #region TestNormal
-        private Boolean _TestNormal;
-        public Boolean TestNormal
-        {
-            get => this._TestNormal;
-            set => this.RaiseAndSetIfChanged(ref this._TestNormal, value, nameof(TestNormal));
-        }
+        public Boolean TestNormal { get; set; }
         #endregion
         #region TestBinaryWrapper
-        private Boolean _TestBinaryWrapper;
-        public Boolean TestBinaryWrapper
-        {
-            get => this._TestBinaryWrapper;
-            set => this.RaiseAndSetIfChanged(ref this._TestBinaryWrapper, value, nameof(TestBinaryWrapper));
-        }
+        public Boolean TestBinaryWrapper { get; set; }
         #endregion
         #region TestImport
-        private Boolean _TestImport;
-        public Boolean TestImport
-        {
-            get => this._TestImport;
-            set => this.RaiseAndSetIfChanged(ref this._TestImport, value, nameof(TestImport));
-        }
+        public Boolean TestImport { get; set; }
         #endregion
         #region TestFolder
-        private Boolean _TestFolder;
-        public Boolean TestFolder
-        {
-            get => this._TestFolder;
-            set => this.RaiseAndSetIfChanged(ref this._TestFolder, value, nameof(TestFolder));
-        }
+        public Boolean TestFolder { get; set; }
         #endregion
 
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPassthroughSettingsInternalGetter)rhs, include);
@@ -1205,121 +1170,44 @@ namespace Mutagen.Bethesda.Tests.Internals
             if (copyMask?.ReuseCaches ?? true)
             {
                 errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.ReuseCaches);
-                try
-                {
-                    item.ReuseCaches = rhs.ReuseCaches;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.ReuseCaches = rhs.ReuseCaches;
+                errorMask?.PopIndex();
             }
             if (copyMask?.ReorderRecords ?? true)
             {
                 errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.ReorderRecords);
-                try
-                {
-                    item.ReorderRecords = rhs.ReorderRecords;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.ReorderRecords = rhs.ReorderRecords;
+                errorMask?.PopIndex();
             }
             if (copyMask?.DeleteCachesAfter ?? true)
             {
                 errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.DeleteCachesAfter);
-                try
-                {
-                    item.DeleteCachesAfter = rhs.DeleteCachesAfter;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.DeleteCachesAfter = rhs.DeleteCachesAfter;
+                errorMask?.PopIndex();
             }
             if (copyMask?.TestNormal ?? true)
             {
                 errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.TestNormal);
-                try
-                {
-                    item.TestNormal = rhs.TestNormal;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.TestNormal = rhs.TestNormal;
+                errorMask?.PopIndex();
             }
             if (copyMask?.TestBinaryWrapper ?? true)
             {
                 errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.TestBinaryWrapper);
-                try
-                {
-                    item.TestBinaryWrapper = rhs.TestBinaryWrapper;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.TestBinaryWrapper = rhs.TestBinaryWrapper;
+                errorMask?.PopIndex();
             }
             if (copyMask?.TestImport ?? true)
             {
                 errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.TestImport);
-                try
-                {
-                    item.TestImport = rhs.TestImport;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.TestImport = rhs.TestImport;
+                errorMask?.PopIndex();
             }
             if (copyMask?.TestFolder ?? true)
             {
                 errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.TestFolder);
-                try
-                {
-                    item.TestFolder = rhs.TestFolder;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.TestFolder = rhs.TestFolder;
+                errorMask?.PopIndex();
             }
         }
         

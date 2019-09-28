@@ -108,8 +108,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Entries
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<LeveledEntry<NPCSpawn>> _Entries = new SourceSetList<LeveledEntry<NPCSpawn>>();
-        public ISourceSetList<LeveledEntry<NPCSpawn>> Entries => _Entries;
+        private readonly SetList<LeveledEntry<NPCSpawn>> _Entries = new SetList<LeveledEntry<NPCSpawn>>();
+        public ISetList<LeveledEntry<NPCSpawn>> Entries => _Entries;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<LeveledEntry<NPCSpawn>> ILeveledCreature.Entries => _Entries;
@@ -386,7 +386,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 yield return item;
             }
-            foreach (var item in Entries.Items.SelectMany(f => f.Links))
+            foreach (var item in Entries.SelectMany(f => f.Links))
             {
                 yield return item;
             }
@@ -399,7 +399,7 @@ namespace Mutagen.Bethesda.Oblivion
             
         {
             base.Link(package: package);
-            foreach (var item in Entries.Items)
+            foreach (var item in Entries)
             {
                 item.Link(package: package);
             }

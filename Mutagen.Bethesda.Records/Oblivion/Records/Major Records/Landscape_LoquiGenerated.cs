@@ -166,8 +166,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Layers
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<BaseLayer> _Layers = new SourceSetList<BaseLayer>();
-        public ISourceSetList<BaseLayer> Layers => _Layers;
+        private readonly SetList<BaseLayer> _Layers = new SetList<BaseLayer>();
+        public ISetList<BaseLayer> Layers => _Layers;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<BaseLayer> ILandscape.Layers => _Layers;
@@ -178,8 +178,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Textures
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<IFormIDLink<LandTexture>> _Textures = new SourceSetList<IFormIDLink<LandTexture>>();
-        public ISourceSetList<IFormIDLink<LandTexture>> Textures => _Textures;
+        private readonly SetList<IFormIDLink<LandTexture>> _Textures = new SetList<IFormIDLink<LandTexture>>();
+        public ISetList<IFormIDLink<LandTexture>> Textures => _Textures;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<IFormIDLink<LandTexture>> ILandscape.Textures => _Textures;
@@ -440,7 +440,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 yield return item;
             }
-            foreach (var item in Layers.Items.SelectMany(f => f.Links))
+            foreach (var item in Layers.SelectMany(f => f.Links))
             {
                 yield return item;
             }
@@ -455,7 +455,7 @@ namespace Mutagen.Bethesda.Oblivion
             
         {
             base.Link(package: package);
-            foreach (var item in Layers.Items)
+            foreach (var item in Layers)
             {
                 item.Link(package: package);
             }

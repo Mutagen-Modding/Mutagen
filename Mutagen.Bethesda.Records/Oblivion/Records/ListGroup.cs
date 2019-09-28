@@ -1,4 +1,3 @@
-using DynamicData;
 using Loqui;
 using Loqui.Internal;
 using Loqui.Xml;
@@ -7,7 +6,6 @@ using Mutagen.Bethesda.Folder;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Noggog;
-using Noggog.Utility;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -117,7 +115,7 @@ namespace Mutagen.Bethesda.Oblivion
                             translationMask: XmlFolderTranslationMask.GetCrystal());
                         List<Task> tasks = new List<Task>();
                         int counter = 0;
-                        foreach (var item in list.Items.Items)
+                        foreach (var item in list.Items)
                         {
                             int stampedCounter = counter++;
                             tasks.Add(Task.Run(() =>

@@ -60,11 +60,11 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Points
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceList<Int16> _Points = new SourceList<Int16>();
-        public ISourceList<Int16> Points => _Points;
+        private readonly ExtendedList<Int16> _Points = new ExtendedList<Int16>();
+        public IExtendedList<Int16> Points => _Points;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IList<Int16> IPointToReferenceMapping.Points => _Points;
+        IExtendedList<Int16> IPointToReferenceMapping.Points => _Points;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IReadOnlyList<Int16> IPointToReferenceMappingGetter.Points => _Points;
         #endregion
@@ -489,7 +489,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Reference_Property.Set((IFormIDLink<IPlaced>)obj);
                     break;
                 case PointToReferenceMapping_FieldIndex.Points:
-                    this._Points.SetTo((IList<Int16>)obj);
+                    this._Points.SetTo((IExtendedList<Int16>)obj);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -523,7 +523,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Reference_Property.Set((IFormIDLink<IPlaced>)pair.Value);
                     break;
                 case PointToReferenceMapping_FieldIndex.Points:
-                    obj._Points.SetTo((IList<Int16>)pair.Value);
+                    obj._Points.SetTo((IExtendedList<Int16>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -539,7 +539,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new IPlaced Reference { get; set; }
         new IFormIDLink<IPlaced> Reference_Property { get; }
-        new IList<Int16> Points { get; }
+        new IExtendedList<Int16> Points { get; }
         void CopyFieldsFrom(
             PointToReferenceMapping rhs,
             ErrorMaskBuilder errorMask = null,
@@ -810,7 +810,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PointToReferenceMapping_FieldIndex.Reference:
                     return typeof(IFormIDLink<IPlaced>);
                 case PointToReferenceMapping_FieldIndex.Points:
-                    return typeof(IList<Int16>);
+                    return typeof(IExtendedList<Int16>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

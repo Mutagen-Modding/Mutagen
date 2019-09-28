@@ -64,11 +64,11 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Connections
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceList<P3Float> _Connections = new SourceList<P3Float>();
-        public ISourceList<P3Float> Connections => _Connections;
+        private readonly ExtendedList<P3Float> _Connections = new ExtendedList<P3Float>();
+        public IExtendedList<P3Float> Connections => _Connections;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IList<P3Float> IRoadPoint.Connections => _Connections;
+        IExtendedList<P3Float> IRoadPoint.Connections => _Connections;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IReadOnlyList<P3Float> IRoadPointGetter.Connections => _Connections;
         #endregion
@@ -506,7 +506,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.NumConnectionsFluffBytes = (Byte[])obj;
                     break;
                 case RoadPoint_FieldIndex.Connections:
-                    this._Connections.SetTo((IList<P3Float>)obj);
+                    this._Connections.SetTo((IExtendedList<P3Float>)obj);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -543,7 +543,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.NumConnectionsFluffBytes = (Byte[])pair.Value;
                     break;
                 case RoadPoint_FieldIndex.Connections:
-                    obj._Connections.SetTo((IList<P3Float>)pair.Value);
+                    obj._Connections.SetTo((IExtendedList<P3Float>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -561,7 +561,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Byte[] NumConnectionsFluffBytes { get; set; }
 
-        new IList<P3Float> Connections { get; }
+        new IExtendedList<P3Float> Connections { get; }
         void CopyFieldsFrom(
             RoadPoint rhs,
             ErrorMaskBuilder errorMask = null,
@@ -845,7 +845,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RoadPoint_FieldIndex.NumConnectionsFluffBytes:
                     return typeof(Byte[]);
                 case RoadPoint_FieldIndex.Connections:
-                    return typeof(IList<P3Float>);
+                    return typeof(IExtendedList<P3Float>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

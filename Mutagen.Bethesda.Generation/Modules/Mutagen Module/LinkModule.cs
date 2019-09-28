@@ -193,10 +193,10 @@ namespace Mutagen.Bethesda.Generation
                             switch (linktype)
                             {
                                 case LinkCase.Yes:
-                                    fg.AppendLine($"foreach (var item in {field.Name}.Items.SelectMany(f => f.Links))");
+                                    fg.AppendLine($"foreach (var item in {field.Name}.SelectMany(f => f.Links))");
                                     break;
                                 case LinkCase.Maybe:
-                                    fg.AppendLine($"foreach (var item in {field.Name}.Items.WhereCastable<{contLoqui.TypeName(getter: false)}, ILinkContainer>()");
+                                    fg.AppendLine($"foreach (var item in {field.Name}.WhereCastable<{contLoqui.TypeName(getter: false)}, ILinkContainer>()");
                                     using (new DepthWrapper(fg))
                                     {
                                         fg.AppendLine(".SelectMany((f) => f.Links))");
@@ -340,10 +340,10 @@ namespace Mutagen.Bethesda.Generation
                         switch (linkType)
                         {
                             case LinkCase.Yes:
-                                fg.AppendLine($"foreach (var item in {field.Name}.Items)");
+                                fg.AppendLine($"foreach (var item in {field.Name})");
                                 break;
                             case LinkCase.Maybe:
-                                fg.AppendLine($"foreach (var item in {field.Name}.Items.WhereCastable<{contLoqui.TypeName(getter: false)}, {nameof(ILinkSubContainer)}>())");
+                                fg.AppendLine($"foreach (var item in {field.Name}.WhereCastable<{contLoqui.TypeName(getter: false)}, {nameof(ILinkSubContainer)}>())");
                                 break;
                             default:
                                 break;

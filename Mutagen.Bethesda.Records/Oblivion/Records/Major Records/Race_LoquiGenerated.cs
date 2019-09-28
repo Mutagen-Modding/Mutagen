@@ -109,8 +109,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Spells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<IFormIDLink<Spell>> _Spells = new SourceSetList<IFormIDLink<Spell>>();
-        public ISourceSetList<IFormIDLink<Spell>> Spells => _Spells;
+        private readonly SetList<IFormIDLink<Spell>> _Spells = new SetList<IFormIDLink<Spell>>();
+        public ISetList<IFormIDLink<Spell>> Spells => _Spells;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<IFormIDLink<Spell>> IRace.Spells => _Spells;
@@ -121,8 +121,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Relations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<RaceRelation> _Relations = new SourceSetList<RaceRelation>();
-        public ISourceSetList<RaceRelation> Relations => _Relations;
+        private readonly SetList<RaceRelation> _Relations = new SetList<RaceRelation>();
+        public ISetList<RaceRelation> Relations => _Relations;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<RaceRelation> IRace.Relations => _Relations;
@@ -133,13 +133,13 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region SkillBoosts
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly ISourceList<SkillBoost> _SkillBoosts = new SourceBoundedList<SkillBoost>(max: 7);
-        public ISourceList<SkillBoost> SkillBoosts => _SkillBoosts;
+        private readonly SkillBoost[] _SkillBoosts = new SkillBoost[7];
+        public SkillBoost[] SkillBoosts => _SkillBoosts;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IList<SkillBoost> IRace.SkillBoosts => _SkillBoosts;
+        SkillBoost[] IRace.SkillBoosts => _SkillBoosts;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<ISkillBoostInternalGetter> IRaceGetter.SkillBoosts => _SkillBoosts;
+        ReadOnlyMemorySlice<ISkillBoostInternalGetter> IRaceGetter.SkillBoosts => _SkillBoosts;
         #endregion
 
         #endregion
@@ -376,8 +376,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region FaceData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<FacePart> _FaceData = new SourceSetList<FacePart>();
-        public ISourceSetList<FacePart> FaceData => _FaceData;
+        private readonly SetList<FacePart> _FaceData = new SetList<FacePart>();
+        public ISetList<FacePart> FaceData => _FaceData;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<FacePart> IRace.FaceData => _FaceData;
@@ -415,8 +415,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Hairs
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<IFormIDLink<Hair>> _Hairs = new SourceSetList<IFormIDLink<Hair>>();
-        public ISourceSetList<IFormIDLink<Hair>> Hairs => _Hairs;
+        private readonly SetList<IFormIDLink<Hair>> _Hairs = new SetList<IFormIDLink<Hair>>();
+        public ISetList<IFormIDLink<Hair>> Hairs => _Hairs;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<IFormIDLink<Hair>> IRace.Hairs => _Hairs;
@@ -427,8 +427,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Eyes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<IFormIDLink<Eye>> _Eyes = new SourceSetList<IFormIDLink<Eye>>();
-        public ISourceSetList<IFormIDLink<Eye>> Eyes => _Eyes;
+        private readonly SetList<IFormIDLink<Eye>> _Eyes = new SetList<IFormIDLink<Eye>>();
+        public ISetList<IFormIDLink<Eye>> Eyes => _Eyes;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<IFormIDLink<Eye>> IRace.Eyes => _Eyes;
@@ -790,7 +790,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 yield return item;
             }
-            foreach (var item in Relations.Items.SelectMany(f => f.Links))
+            foreach (var item in Relations.SelectMany(f => f.Links))
             {
                 yield return item;
             }
@@ -827,7 +827,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 item.Link(package: package);
             }
-            foreach (var item in Relations.Items)
+            foreach (var item in Relations)
             {
                 item.Link(package: package);
             }
@@ -1421,7 +1421,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this._Relations.SetTo((ISetList<RaceRelation>)obj);
                     break;
                 case Race_FieldIndex.SkillBoosts:
-                    this._SkillBoosts.SetTo((IList<SkillBoost>)obj);
+                    this._SkillBoosts.SetTo((SkillBoost[])obj);
                     break;
                 case Race_FieldIndex.Fluff:
                     this.Fluff = (Byte[])obj;
@@ -1522,7 +1522,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj._Relations.SetTo((ISetList<RaceRelation>)pair.Value);
                     break;
                 case Race_FieldIndex.SkillBoosts:
-                    obj._SkillBoosts.SetTo((IList<SkillBoost>)pair.Value);
+                    obj._SkillBoosts.SetTo((SkillBoost[])pair.Value);
                     break;
                 case Race_FieldIndex.Fluff:
                     obj.Fluff = (Byte[])pair.Value;
@@ -1606,7 +1606,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         new ISetList<IFormIDLink<Spell>> Spells { get; }
         new ISetList<RaceRelation> Relations { get; }
-        new IList<SkillBoost> SkillBoosts { get; }
+        new SkillBoost[] SkillBoosts { get; }
         new Byte[] Fluff { get; set; }
 
         new Single MaleHeight { get; set; }
@@ -1706,7 +1706,7 @@ namespace Mutagen.Bethesda.Oblivion
         IReadOnlySetList<IRaceRelationInternalGetter> Relations { get; }
         #endregion
         #region SkillBoosts
-        IReadOnlyList<ISkillBoostInternalGetter> SkillBoosts { get; }
+        ReadOnlyMemorySlice<ISkillBoostInternalGetter> SkillBoosts { get; }
         #endregion
         #region Fluff
         ReadOnlySpan<Byte> Fluff { get; }
@@ -2262,7 +2262,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Race_FieldIndex.Relations:
                     return typeof(ISetList<RaceRelation>);
                 case Race_FieldIndex.SkillBoosts:
-                    return typeof(IList<SkillBoost>);
+                    return typeof(SkillBoost[]);
                 case Race_FieldIndex.Fluff:
                     return typeof(Byte[]);
                 case Race_FieldIndex.MaleHeight:
@@ -2447,7 +2447,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Relations,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.SkillBoosts = item.SkillBoosts.CollectionEqualsHelper(
+            ret.SkillBoosts = item.SkillBoosts.SpanEqualsHelper(
                 rhs.SkillBoosts,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
@@ -3197,36 +3197,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.SkillBoosts.Overall != CopyOption.Skip)
             {
                 errorMask?.PushIndex((int)Race_FieldIndex.SkillBoosts);
-                try
-                {
-                    item.SkillBoosts.SetToWithDefault<SkillBoost, SkillBoost>(
-                        rhs: rhs.SkillBoosts,
-                        def: def?.SkillBoosts,
-                        converter: (r, d) =>
+                item.SkillBoosts.SetToWithDefault<SkillBoost, SkillBoost>(
+                    rhs: rhs.SkillBoosts,
+                    def: def?.SkillBoosts,
+                    converter: (r, d) =>
+                    {
+                        switch (copyMask?.SkillBoosts.Overall ?? CopyOption.Reference)
                         {
-                            switch (copyMask?.SkillBoosts.Overall ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return (SkillBoost)r;
-                                case CopyOption.MakeCopy:
-                                    return SkillBoost.Copy(
-                                        r,
-                                        copyMask?.SkillBoosts?.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.SkillBoosts.Overall}. Cannot execute copy.");
-                            }
-                        });
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                            case CopyOption.Reference:
+                                return (SkillBoost)r;
+                            case CopyOption.MakeCopy:
+                                return SkillBoost.Copy(
+                                    r,
+                                    copyMask.SkillBoosts?.Specific,
+                                    def: d);
+                            default:
+                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.SkillBoosts.Overall}. Cannot execute copy.");
+                        }
+                    });
+                errorMask?.PopIndex();
             }
             if (copyMask?.Fluff ?? true)
             {
@@ -6722,7 +6711,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IReadOnlySetList<IRaceRelationInternalGetter> Relations { get; private set; } = EmptySetList<RaceRelationBinaryWrapper>.Instance;
         private int? _DATALocation;
         public Race.DATADataType DATADataTypeState { get; private set; }
-        public IReadOnlyList<ISkillBoostInternalGetter> SkillBoosts => BinaryWrapperNumberedList.FactoryForLoqui<ISkillBoostInternalGetter>(_DATALocation.HasValue ? _data.Slice(_DATALocation.Value + 0) : default, amount: 7, length: 2, _package, null, SkillBoostBinaryWrapper.SkillBoostFactory);
+        public ReadOnlyMemorySlice<ISkillBoostInternalGetter> SkillBoosts => BinaryWrapperArrayHelper.LoquiSliceFromFixedSize<ISkillBoostInternalGetter>(_DATALocation.HasValue ? _data.Slice(_DATALocation.Value + 0) : default, amount: 7, length: 2, _package, null, SkillBoostBinaryWrapper.SkillBoostFactory);
         #region Fluff
         private int _FluffLocation => _DATALocation.Value + 0xE;
         private bool _Fluff_IsSet => _DATALocation.HasValue;

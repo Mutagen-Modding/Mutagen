@@ -90,8 +90,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region LocalVariables
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<LocalVariable> _LocalVariables = new SourceSetList<LocalVariable>();
-        public ISourceSetList<LocalVariable> LocalVariables => _LocalVariables;
+        private readonly SetList<LocalVariable> _LocalVariables = new SetList<LocalVariable>();
+        public ISetList<LocalVariable> LocalVariables => _LocalVariables;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<LocalVariable> IScriptFields.LocalVariables => _LocalVariables;
@@ -102,8 +102,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region References
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<ScriptReference> _References = new SourceSetList<ScriptReference>();
-        public ISourceSetList<ScriptReference> References => _References;
+        private readonly SetList<ScriptReference> _References = new SetList<ScriptReference>();
+        public ISetList<ScriptReference> References => _References;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISetList<ScriptReference> IScriptFields.References => _References;
@@ -377,7 +377,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IEnumerable<ILink> Links => GetLinks();
         private IEnumerable<ILink> GetLinks()
         {
-            foreach (var item in References.Items.WhereCastable<ScriptReference, ILinkContainer>()
+            foreach (var item in References.WhereCastable<ScriptReference, ILinkContainer>()
                 .SelectMany((f) => f.Links))
             {
                 yield return item;
@@ -388,7 +388,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Link<M>(LinkingPackage<M> package)
             where M : IMod
         {
-            foreach (var item in References.Items.WhereCastable<ScriptReference, ILinkSubContainer>())
+            foreach (var item in References.WhereCastable<ScriptReference, ILinkSubContainer>())
             {
                 item.Link(package: package);
             }
