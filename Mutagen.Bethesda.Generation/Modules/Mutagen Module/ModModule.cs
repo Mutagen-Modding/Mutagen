@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine($"Task IModGetter.WriteToBinaryAsync(string path, ModKey modKeyOverride) => this.WriteToBinaryAsync(path, modKeyOverride);");
             fg.AppendLine($"void IModGetter.WriteToBinaryParallel(string path, ModKey modKeyOverride) => this.WriteToBinaryParallel(path, modKeyOverride);");
 
-            using (var args = new FunctionWrapper(fg, 
+            using (var args = new FunctionWrapper(fg,
                 "protected void SetMajorRecord"))
             {
                 args.Add("FormKey id");
@@ -401,6 +401,14 @@ namespace Mutagen.Bethesda.Generation
             await base.GenerateInCommon(obj, fg, maskTypes);
             if (obj.GetObjectType() != ObjectType.Mod) return;
             if (!maskTypes.Applicable(LoquiInterfaceType.IGetter, CommonGenerics.Class, MaskType.Normal)) return;
+
+            GenerateGetGroup(obj, fg);
+            GenerateWriteParallel(obj, fg);
+            GenerateWriteAsync(obj, fg);
+        }
+
+        private void GenerateGetGroup(ObjectGeneration obj, FileGeneration fg)
+        {
             using (var args = new FunctionWrapper(fg,
                 "public object GetGroup<T>"))
             {
@@ -436,7 +444,10 @@ namespace Mutagen.Bethesda.Generation
                 }
             }
             fg.AppendLine();
+        }
 
+        private void GenerateWriteParallel(ObjectGeneration obj, FileGeneration fg)
+        {
             LoquiType groupInstance = null;
             LoquiType listGroupInstance = null;
             fg.AppendLine("const int CutCount = 100;");
@@ -544,7 +555,12 @@ namespace Mutagen.Bethesda.Generation
                 }
                 fg.AppendLine();
             }
+        }
 
+        private void GenerateWriteAsync(ObjectGeneration obj, FileGeneration fg)
+        {
+            LoquiType groupInstance = null;
+            LoquiType listGroupInstance = null;
             using (var args = new FunctionWrapper(fg,
                 "public static async Task WriteAsync"))
             {
