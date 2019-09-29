@@ -212,6 +212,11 @@ namespace Mutagen.Bethesda.Generation
         public override async Task GenerateInCtor(ObjectGeneration obj, FileGeneration fg)
         {
             if (obj.GetObjectType() != ObjectType.Mod) return;
+            await base.GenerateInCtor(obj, fg);
+        }
+
+        private async Task GenerateObservableMajorRecordPopulation(ObjectGeneration obj, FileGeneration fg)
+        {
             await obj.FieldCtorsGeneratedSignal;
             using (var args = new ArgsWrapper(fg,
                 $"Observable.Merge")
@@ -237,7 +242,6 @@ namespace Mutagen.Bethesda.Generation
             {
                 fg.AppendLine(".PopulateInto(_majorRecords);");
             }
-            await base.GenerateInCtor(obj, fg);
         }
 
         public override async Task GenerateInVoid(ObjectGeneration obj, FileGeneration fg)

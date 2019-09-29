@@ -55,15 +55,6 @@ namespace Mutagen.Bethesda.Skyrim
             _TextureSets_Object = new Group<TextureSet>(this);
             _Globals_Object = new Group<Global>(this);
             _Classes_Object = new Group<Class>(this);
-            Observable.Merge(
-                _GameSettings_Object.Items.Connect().Transform<IMajorRecord, GameSetting, FormKey>((i) => i),
-                _Keywords_Object.Items.Connect().Transform<IMajorRecord, Keyword, FormKey>((i) => i),
-                _LocationReferenceTypes_Object.Items.Connect().Transform<IMajorRecord, LocationReferenceType, FormKey>((i) => i),
-                _Actions_Object.Items.Connect().Transform<IMajorRecord, ActionRecord, FormKey>((i) => i),
-                _TextureSets_Object.Items.Connect().Transform<IMajorRecord, TextureSet, FormKey>((i) => i),
-                _Globals_Object.Items.Connect().Transform<IMajorRecord, Global, FormKey>((i) => i),
-                _Classes_Object.Items.Connect().Transform<IMajorRecord, Class, FormKey>((i) => i))
-                .PopulateInto(_majorRecords);
             CustomCtor();
         }
         partial void CustomCtor();
