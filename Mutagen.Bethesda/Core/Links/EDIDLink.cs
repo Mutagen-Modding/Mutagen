@@ -139,7 +139,7 @@ namespace Mutagen.Bethesda
             // ToDo
             // Improve to not be a forloop
             var group = mod.GetGroupGetter<T>();
-            foreach (var rec in group.Values)
+            foreach (var rec in group.Items)
             {
                 if (link.EDID.Type.Equals(rec.EditorID))
                 {

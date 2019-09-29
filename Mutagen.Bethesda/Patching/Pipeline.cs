@@ -41,7 +41,7 @@ namespace Mutagen.Bethesda
                 loadOrder,
                 importer).ConfigureAwait(false);
             var outMod = await processor(outModKey, modList).ConfigureAwait(false);
-            foreach (var npc in outMod.MajorRecords.Values)
+            foreach (var npc in outMod.MajorRecords.Items)
             {
                 npc.IsCompressed = false;
             }

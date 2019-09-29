@@ -920,7 +920,7 @@ namespace Mutagen.Bethesda.Binary
         public async Task ParseRepeatedItem<K>(
             MutagenFrame frame,
             int fieldIndex,
-            CSharpExt.Rx.ISourceSetCache<T, K> item,
+            ISourceCache<T, K> item,
             RecordType triggeringRecord,
             int lengthLength,
             ErrorMaskBuilder errorMask,
@@ -942,7 +942,7 @@ namespace Mutagen.Bethesda.Binary
                     }
                     else
                     {
-                        item.Unset();
+                        item.Clear();
                     }
                 }
                 catch (Exception ex)

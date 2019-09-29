@@ -94,7 +94,7 @@ namespace Mutagen.Bethesda
 
             public IEnumerable<FormKey> Keys => this._locs.Keys;
 
-            public IEnumerable<T> Values => this.Select(kv => kv.Value);
+            public IEnumerable<T> Items => this.Select(kv => kv.Value);
 
             public bool ContainsKey(FormKey key) => this._locs.ContainsKey(key);
 

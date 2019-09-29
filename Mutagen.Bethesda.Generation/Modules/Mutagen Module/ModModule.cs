@@ -512,7 +512,7 @@ namespace Mutagen.Bethesda.Generation
                 using (new BraceWrapper(fg))
                 {
                     fg.AppendLine("if (group.Items.Count == 0) return;");
-                    fg.AppendLine($"var cuts = group.Items.Values.Cut(CutCount).ToArray();");
+                    fg.AppendLine($"var cuts = group.Items.Items.Cut(CutCount).ToArray();");
                     fg.AppendLine($"Stream[] subStreams = new Stream[cuts.Length + 1];");
                     fg.AppendLine($"byte[] groupBytes = new byte[MetaDataConstants.Oblivion.GroupConstants.HeaderLength];");
                     fg.AppendLine($"BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), Group_Registration.GRUP_HEADER.TypeInt);");

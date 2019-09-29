@@ -160,7 +160,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         async Task WriteToXmlFolderWorldspaces(DirectoryPath dir, string name, int index, ErrorMaskBuilder errorMask)
         {
-            if (!this.Worldspaces.Items.HasBeenSet) return;
+            if (this.Worldspaces.Items.Count == 0) return;
             dir = new DirectoryPath(Path.Combine(dir.Path, nameof(this.Worldspaces)));
             using (errorMask?.PushIndex(index))
             {
@@ -247,7 +247,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         async Task WriteToXmlFolderScripts(DirectoryPath dir, string name, int index, ErrorMaskBuilder errorMask)
         {
-            if (!this.Scripts.Items.HasBeenSet) return;
+            if (this.Scripts.Items.Count == 0) return;
             dir = new DirectoryPath(Path.Combine(dir.Path, nameof(this.Scripts)));
             using (errorMask?.PushIndex(index))
             {
@@ -391,7 +391,7 @@ namespace Mutagen.Bethesda.Oblivion
                     GroupBinaryWriteTranslation.Write_Embedded<IWorldspaceInternalGetter>(group, stream, default, default);
                 }
                 streams[0] = groupByteStream;
-                Parallel.ForEach(group.Items.Values, (worldspace, worldspaceState, worldspaceCounter) =>
+                Parallel.ForEach(group.Items.Items, (worldspace, worldspaceState, worldspaceCounter) =>
                 {
                     var worldTrib = new MemoryTributary();
                     using (var writer = new MutagenWriter(worldTrib, MetaDataConstants.Oblivion, dispose: false))

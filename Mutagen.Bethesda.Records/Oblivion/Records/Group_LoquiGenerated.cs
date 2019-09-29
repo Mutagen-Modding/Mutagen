@@ -1116,7 +1116,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             mask.GroupType = true;
             mask.LastModified = true;
-            mask.Items = new MaskItem<bool, IEnumerable<MaskItemIndexed<FormKey, bool, OblivionMajorRecord_Mask<bool>>>>(true, item.Items.Values.Select((i) => new MaskItemIndexed<FormKey, bool, OblivionMajorRecord_Mask<bool>>(i.FormKey, true, i.GetHasBeenSetMask())));
+            mask.Items = new MaskItem<bool, IEnumerable<MaskItemIndexed<FormKey, bool, OblivionMajorRecord_Mask<bool>>>>(true, item.Items.Items.Select((i) => new MaskItemIndexed<FormKey, bool, OblivionMajorRecord_Mask<bool>>(i.FormKey, true, i.GetHasBeenSetMask())));
         }
         
         #region Equals and Hash
@@ -1290,7 +1290,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     KeyedDictXmlTranslation<FormKey, T>.Instance.Write(
                         node: node,
                         name: nameof(item.Items),
-                        items: item.Items.Values,
+                        items: item.Items.Items,
                         translationMask: translationMask,
                         errorMask: errorMask,
                         valTransl: (XElement subNode, T subItem, ErrorMaskBuilder dictSubMask, TranslationCrystal dictTranslMask) =>
@@ -2130,7 +2130,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Mutagen.Bethesda.Binary.ListBinaryTranslation<T>.Instance.Write(
                 writer: writer,
-                items: item.Items.Values,
+                items: item.Items.Items,
                 fieldIndex: (int)Group_FieldIndex.Items,
                 errorMask: errorMask,
                 transl: (MutagenWriter r, T dictSubItem, ErrorMaskBuilder dictSubMask) =>

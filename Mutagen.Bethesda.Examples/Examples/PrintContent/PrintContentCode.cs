@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda.Examples
         public static void PrintContent(string pathToMod, Action<string> output)
         {
             IOblivionModGetter mod = OblivionMod.CreateFromBinaryWrapper(pathToMod);
-            foreach (var name in mod.NPCs.Items.Values
+            foreach (var name in mod.NPCs.Items.Items
                 .Select(npc => npc.Name)
                 .Distinct()
                 .Where(s => !string.IsNullOrWhiteSpace(s)))
