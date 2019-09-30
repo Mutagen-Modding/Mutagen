@@ -65,6 +65,8 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Example Code\RecordAccessThroughFormLinks.cs" />
+    <Compile Include="Example VMs\RecordAccessThroughFormLinksVM.cs" />
     <Compile Include="Example VMs\ExampleVM.cs" />
     <Compile Include="Example VMs\ImportComparisonVM.cs" />
     <Compile Include="Example Code\ImportComparisonCode.cs" />
