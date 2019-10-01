@@ -21,6 +21,7 @@ namespace Mutagen.Bethesda.Examples
         {
             this.Examples.Add(new PrintContentVM(this));
             this.Examples.Add(new RecordAccessThroughFormLinksVM(this));
+            this.Examples.Add(new ImportComparisonVM(this));
         }
     }
 }
