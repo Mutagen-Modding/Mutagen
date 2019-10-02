@@ -990,57 +990,6 @@ namespace Mutagen.Bethesda.Oblivion
             ClothingAbstractSetterCommon.Instance.Clear(this);
         }
 
-        protected new static void CopyInInternal_ClothingAbstract(ClothingAbstract obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out ClothingAbstract_FieldIndex enu))
-            {
-                CopyInInternal_ItemAbstract(obj, pair);
-            }
-            switch (enu)
-            {
-                case ClothingAbstract_FieldIndex.Name:
-                    obj.Name = (String)pair.Value;
-                    break;
-                case ClothingAbstract_FieldIndex.Script:
-                    obj.Script_Property.Set((IFormIDSetLink<Script>)pair.Value);
-                    break;
-                case ClothingAbstract_FieldIndex.Enchantment:
-                    obj.Enchantment_Property.Set((IFormIDSetLink<Enchantment>)pair.Value);
-                    break;
-                case ClothingAbstract_FieldIndex.EnchantmentPoints:
-                    obj.EnchantmentPoints = (UInt16)pair.Value;
-                    break;
-                case ClothingAbstract_FieldIndex.BipedFlags:
-                    obj.BipedFlags = (BipedFlag)pair.Value;
-                    break;
-                case ClothingAbstract_FieldIndex.Flags:
-                    obj.Flags = (EquipmentFlag)pair.Value;
-                    break;
-                case ClothingAbstract_FieldIndex.MaleBipedModel:
-                    obj.MaleBipedModel = (Model)pair.Value;
-                    break;
-                case ClothingAbstract_FieldIndex.MaleWorldModel:
-                    obj.MaleWorldModel = (Model)pair.Value;
-                    break;
-                case ClothingAbstract_FieldIndex.MaleIcon:
-                    obj.MaleIcon = (String)pair.Value;
-                    break;
-                case ClothingAbstract_FieldIndex.FemaleBipedModel:
-                    obj.FemaleBipedModel = (Model)pair.Value;
-                    break;
-                case ClothingAbstract_FieldIndex.FemaleWorldModel:
-                    obj.FemaleWorldModel = (Model)pair.Value;
-                    break;
-                case ClothingAbstract_FieldIndex.FemaleIcon:
-                    obj.FemaleIcon = (String)pair.Value;
-                    break;
-                case ClothingAbstract_FieldIndex.BMDTDataTypeState:
-                    obj.BMDTDataTypeState = (ClothingAbstract.BMDTDataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

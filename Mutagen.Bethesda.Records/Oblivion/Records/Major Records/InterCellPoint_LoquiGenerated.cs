@@ -481,34 +481,6 @@ namespace Mutagen.Bethesda.Oblivion
             InterCellPointSetterCommon.Instance.Clear(this);
         }
 
-        public static InterCellPoint Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new InterCellPoint();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_InterCellPoint(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_InterCellPoint(InterCellPoint obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out InterCellPoint_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case InterCellPoint_FieldIndex.PointID:
-                    obj.PointID = (Int32)pair.Value;
-                    break;
-                case InterCellPoint_FieldIndex.Point:
-                    obj.Point = (P3Float)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

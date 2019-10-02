@@ -374,18 +374,6 @@ namespace Mutagen.Bethesda.Oblivion
             ScriptReferenceSetterCommon.Instance.Clear(this);
         }
 
-        protected static void CopyInInternal_ScriptReference(ScriptReference obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out ScriptReference_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

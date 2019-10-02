@@ -516,34 +516,6 @@ namespace Mutagen.Bethesda.Oblivion
             RaceStatsGenderedSetterCommon.Instance.Clear(this);
         }
 
-        public static RaceStatsGendered Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new RaceStatsGendered();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_RaceStatsGendered(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_RaceStatsGendered(RaceStatsGendered obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out RaceStatsGendered_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case RaceStatsGendered_FieldIndex.Male:
-                    obj.Male = (RaceStats)pair.Value;
-                    break;
-                case RaceStatsGendered_FieldIndex.Female:
-                    obj.Female = (RaceStats)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

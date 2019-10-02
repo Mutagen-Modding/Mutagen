@@ -751,43 +751,6 @@ namespace Mutagen.Bethesda.Oblivion
             ScriptFieldsSetterCommon.Instance.Clear(this);
         }
 
-        public static ScriptFields Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new ScriptFields();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_ScriptFields(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_ScriptFields(ScriptFields obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out ScriptFields_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case ScriptFields_FieldIndex.MetadataSummary:
-                    obj.MetadataSummary.CopyFieldsFrom(rhs: (ScriptMetaSummary)pair.Value);
-                    break;
-                case ScriptFields_FieldIndex.CompiledScript:
-                    obj.CompiledScript = (Byte[])pair.Value;
-                    break;
-                case ScriptFields_FieldIndex.SourceCode:
-                    obj.SourceCode = (String)pair.Value;
-                    break;
-                case ScriptFields_FieldIndex.LocalVariables:
-                    obj._LocalVariables.SetTo((ISetList<LocalVariable>)pair.Value);
-                    break;
-                case ScriptFields_FieldIndex.References:
-                    obj._References.SetTo((ISetList<ScriptReference>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

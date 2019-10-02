@@ -545,37 +545,6 @@ namespace Mutagen.Bethesda.Oblivion
             ListGroupSetterCommon<T>.Instance.Clear(this);
         }
 
-        public static ListGroup<T> Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new ListGroup<T>();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_ListGroup(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_ListGroup(ListGroup<T> obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out ListGroup_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case ListGroup_FieldIndex.GroupType:
-                    obj.GroupType = (GroupTypeEnum)pair.Value;
-                    break;
-                case ListGroup_FieldIndex.LastModified:
-                    obj.LastModified = (Int32)pair.Value;
-                    break;
-                case ListGroup_FieldIndex.Items:
-                    obj._Items.SetTo((IList<T>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

@@ -521,43 +521,6 @@ namespace Mutagen.Bethesda.Oblivion
             AIPackageScheduleSetterCommon.Instance.Clear(this);
         }
 
-        public static AIPackageSchedule Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new AIPackageSchedule();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_AIPackageSchedule(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_AIPackageSchedule(AIPackageSchedule obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out AIPackageSchedule_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case AIPackageSchedule_FieldIndex.Month:
-                    obj.Month = (Month)pair.Value;
-                    break;
-                case AIPackageSchedule_FieldIndex.DayOfWeek:
-                    obj.DayOfWeek = (Weekday)pair.Value;
-                    break;
-                case AIPackageSchedule_FieldIndex.Day:
-                    obj.Day = (Byte)pair.Value;
-                    break;
-                case AIPackageSchedule_FieldIndex.Time:
-                    obj.Time = (Byte)pair.Value;
-                    break;
-                case AIPackageSchedule_FieldIndex.Duration:
-                    obj.Duration = (Int32)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

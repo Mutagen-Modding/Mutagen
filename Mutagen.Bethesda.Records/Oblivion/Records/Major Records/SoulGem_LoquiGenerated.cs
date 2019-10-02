@@ -889,55 +889,6 @@ namespace Mutagen.Bethesda.Oblivion
             SoulGemSetterCommon.Instance.Clear(this);
         }
 
-        public new static SoulGem Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new SoulGem();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_SoulGem(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_SoulGem(SoulGem obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out SoulGem_FieldIndex enu))
-            {
-                CopyInInternal_ItemAbstract(obj, pair);
-            }
-            switch (enu)
-            {
-                case SoulGem_FieldIndex.Name:
-                    obj.Name = (String)pair.Value;
-                    break;
-                case SoulGem_FieldIndex.Model:
-                    obj.Model = (Model)pair.Value;
-                    break;
-                case SoulGem_FieldIndex.Icon:
-                    obj.Icon = (String)pair.Value;
-                    break;
-                case SoulGem_FieldIndex.Script:
-                    obj.Script_Property.Set((IFormIDSetLink<Script>)pair.Value);
-                    break;
-                case SoulGem_FieldIndex.Value:
-                    obj.Value = (UInt32)pair.Value;
-                    break;
-                case SoulGem_FieldIndex.Weight:
-                    obj.Weight = (Single)pair.Value;
-                    break;
-                case SoulGem_FieldIndex.ContainedSoul:
-                    obj.ContainedSoul = (SoulLevel)pair.Value;
-                    break;
-                case SoulGem_FieldIndex.MaximumCapacity:
-                    obj.MaximumCapacity = (SoulLevel)pair.Value;
-                    break;
-                case SoulGem_FieldIndex.DATADataTypeState:
-                    obj.DATADataTypeState = (SoulGem.DATADataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

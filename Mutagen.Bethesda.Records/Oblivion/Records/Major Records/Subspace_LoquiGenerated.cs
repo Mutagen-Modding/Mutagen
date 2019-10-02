@@ -636,40 +636,6 @@ namespace Mutagen.Bethesda.Oblivion
             SubspaceSetterCommon.Instance.Clear(this);
         }
 
-        public new static Subspace Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Subspace();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Subspace(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_Subspace(Subspace obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Subspace_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case Subspace_FieldIndex.X:
-                    obj.X = (Single)pair.Value;
-                    break;
-                case Subspace_FieldIndex.Y:
-                    obj.Y = (Single)pair.Value;
-                    break;
-                case Subspace_FieldIndex.Z:
-                    obj.Z = (Single)pair.Value;
-                    break;
-                case Subspace_FieldIndex.DNAMDataTypeState:
-                    obj.DNAMDataTypeState = (Subspace.DNAMDataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

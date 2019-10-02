@@ -577,31 +577,6 @@ namespace Mutagen.Bethesda.Oblivion
             StaticSetterCommon.Instance.Clear(this);
         }
 
-        public new static Static Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Static();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Static(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_Static(Static obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Static_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case Static_FieldIndex.Model:
-                    obj.Model = (Model)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

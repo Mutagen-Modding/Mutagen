@@ -514,37 +514,6 @@ namespace Mutagen.Bethesda.Oblivion
             DistantLODDataSetterCommon.Instance.Clear(this);
         }
 
-        public static DistantLODData Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new DistantLODData();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_DistantLODData(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_DistantLODData(DistantLODData obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out DistantLODData_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case DistantLODData_FieldIndex.Unknown0:
-                    obj.Unknown0 = (Single)pair.Value;
-                    break;
-                case DistantLODData_FieldIndex.Unknown1:
-                    obj.Unknown1 = (Single)pair.Value;
-                    break;
-                case DistantLODData_FieldIndex.Unknown2:
-                    obj.Unknown2 = (Single)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

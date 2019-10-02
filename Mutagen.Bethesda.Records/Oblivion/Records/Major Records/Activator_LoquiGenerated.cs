@@ -698,40 +698,6 @@ namespace Mutagen.Bethesda.Oblivion
             ActivatorSetterCommon.Instance.Clear(this);
         }
 
-        public new static Activator Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Activator();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Activator(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_Activator(Activator obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Activator_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case Activator_FieldIndex.Name:
-                    obj.Name = (String)pair.Value;
-                    break;
-                case Activator_FieldIndex.Model:
-                    obj.Model = (Model)pair.Value;
-                    break;
-                case Activator_FieldIndex.Script:
-                    obj.Script_Property.Set((IFormIDSetLink<Script>)pair.Value);
-                    break;
-                case Activator_FieldIndex.Sound:
-                    obj.Sound_Property.Set((IFormIDSetLink<Sound>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

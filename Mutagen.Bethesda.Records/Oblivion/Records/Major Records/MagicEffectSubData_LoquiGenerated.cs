@@ -607,49 +607,6 @@ namespace Mutagen.Bethesda.Oblivion
             MagicEffectSubDataSetterCommon.Instance.Clear(this);
         }
 
-        public static MagicEffectSubData Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new MagicEffectSubData();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_MagicEffectSubData(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_MagicEffectSubData(MagicEffectSubData obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out MagicEffectSubData_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case MagicEffectSubData_FieldIndex.EnchantEffect:
-                    obj.EnchantEffect_Property.Set((IFormIDLink<EffectShader>)pair.Value);
-                    break;
-                case MagicEffectSubData_FieldIndex.CastingSound:
-                    obj.CastingSound_Property.Set((IFormIDLink<Sound>)pair.Value);
-                    break;
-                case MagicEffectSubData_FieldIndex.BoltSound:
-                    obj.BoltSound_Property.Set((IFormIDLink<Sound>)pair.Value);
-                    break;
-                case MagicEffectSubData_FieldIndex.HitSound:
-                    obj.HitSound_Property.Set((IFormIDLink<Sound>)pair.Value);
-                    break;
-                case MagicEffectSubData_FieldIndex.AreaSound:
-                    obj.AreaSound_Property.Set((IFormIDLink<Sound>)pair.Value);
-                    break;
-                case MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor:
-                    obj.ConstantEffectEnchantmentFactor = (Single)pair.Value;
-                    break;
-                case MagicEffectSubData_FieldIndex.ConstantEffectBarterFactor:
-                    obj.ConstantEffectBarterFactor = (Single)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

@@ -531,34 +531,6 @@ namespace Mutagen.Bethesda.Oblivion
             ItemEntrySetterCommon.Instance.Clear(this);
         }
 
-        public static ItemEntry Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new ItemEntry();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_ItemEntry(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_ItemEntry(ItemEntry obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out ItemEntry_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case ItemEntry_FieldIndex.Item:
-                    obj.Item_Property.Set((IFormIDLink<ItemAbstract>)pair.Value);
-                    break;
-                case ItemEntry_FieldIndex.Count:
-                    obj.Count = (Int32)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

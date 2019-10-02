@@ -570,31 +570,6 @@ namespace Mutagen.Bethesda.Skyrim
             GameSettingFloatSetterCommon.Instance.Clear(this);
         }
 
-        public new static GameSettingFloat Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new GameSettingFloat();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_GameSettingFloat(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_GameSettingFloat(GameSettingFloat obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out GameSettingFloat_FieldIndex enu))
-            {
-                CopyInInternal_GameSetting(obj, pair);
-            }
-            switch (enu)
-            {
-                case GameSettingFloat_FieldIndex.Data:
-                    obj.Data = (Single)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

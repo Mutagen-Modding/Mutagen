@@ -518,37 +518,6 @@ namespace Mutagen.Bethesda.Oblivion
             RoadPointSetterCommon.Instance.Clear(this);
         }
 
-        public static RoadPoint Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new RoadPoint();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_RoadPoint(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_RoadPoint(RoadPoint obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out RoadPoint_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case RoadPoint_FieldIndex.Point:
-                    obj.Point = (P3Float)pair.Value;
-                    break;
-                case RoadPoint_FieldIndex.NumConnectionsFluffBytes:
-                    obj.NumConnectionsFluffBytes = (Byte[])pair.Value;
-                    break;
-                case RoadPoint_FieldIndex.Connections:
-                    obj._Connections.SetTo((IList<P3Float>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

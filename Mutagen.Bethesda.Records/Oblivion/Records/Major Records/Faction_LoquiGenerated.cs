@@ -773,43 +773,6 @@ namespace Mutagen.Bethesda.Oblivion
             FactionSetterCommon.Instance.Clear(this);
         }
 
-        public new static Faction Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Faction();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Faction(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_Faction(Faction obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Faction_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case Faction_FieldIndex.Name:
-                    obj.Name = (String)pair.Value;
-                    break;
-                case Faction_FieldIndex.Relations:
-                    obj._Relations.SetTo((ISetList<Relation>)pair.Value);
-                    break;
-                case Faction_FieldIndex.Flags:
-                    obj.Flags = (Faction.FactionFlag)pair.Value;
-                    break;
-                case Faction_FieldIndex.CrimeGoldMultiplier:
-                    obj.CrimeGoldMultiplier = (Single)pair.Value;
-                    break;
-                case Faction_FieldIndex.Ranks:
-                    obj._Ranks.SetTo((ISetList<Rank>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

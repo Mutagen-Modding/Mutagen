@@ -534,37 +534,6 @@ namespace Mutagen.Bethesda.Oblivion
             LoadScreenLocationSetterCommon.Instance.Clear(this);
         }
 
-        public static LoadScreenLocation Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new LoadScreenLocation();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_LoadScreenLocation(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_LoadScreenLocation(LoadScreenLocation obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out LoadScreenLocation_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case LoadScreenLocation_FieldIndex.Direct:
-                    obj.Direct_Property.Set((IFormIDLink<Place>)pair.Value);
-                    break;
-                case LoadScreenLocation_FieldIndex.Indirect:
-                    obj.Indirect_Property.Set((IFormIDLink<Worldspace>)pair.Value);
-                    break;
-                case LoadScreenLocation_FieldIndex.GridPoint:
-                    obj.GridPoint = (P2Int16)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

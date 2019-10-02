@@ -657,40 +657,6 @@ namespace Mutagen.Bethesda.Oblivion
             RankSetterCommon.Instance.Clear(this);
         }
 
-        public static Rank Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Rank();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Rank(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_Rank(Rank obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Rank_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case Rank_FieldIndex.RankNumber:
-                    obj.RankNumber = (Int32)pair.Value;
-                    break;
-                case Rank_FieldIndex.MaleName:
-                    obj.MaleName = (String)pair.Value;
-                    break;
-                case Rank_FieldIndex.FemaleName:
-                    obj.FemaleName = (String)pair.Value;
-                    break;
-                case Rank_FieldIndex.Insignia:
-                    obj.Insignia = (String)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

@@ -557,34 +557,6 @@ namespace Mutagen.Bethesda.Oblivion
             SoundItemSetterCommon.Instance.Clear(this);
         }
 
-        public static SoundItem Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new SoundItem();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_SoundItem(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_SoundItem(SoundItem obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out SoundItem_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case SoundItem_FieldIndex.Sound:
-                    obj.Sound_Property.Set((IFormIDSetLink<Sound>)pair.Value);
-                    break;
-                case SoundItem_FieldIndex.Chance:
-                    obj.Chance = (Byte)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

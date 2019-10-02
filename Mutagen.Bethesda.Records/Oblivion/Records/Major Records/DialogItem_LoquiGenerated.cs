@@ -958,61 +958,6 @@ namespace Mutagen.Bethesda.Oblivion
             DialogItemSetterCommon.Instance.Clear(this);
         }
 
-        public new static DialogItem Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new DialogItem();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_DialogItem(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_DialogItem(DialogItem obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out DialogItem_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case DialogItem_FieldIndex.DialogType:
-                    obj.DialogType = (DialogType)pair.Value;
-                    break;
-                case DialogItem_FieldIndex.Flags:
-                    obj.Flags = (DialogItem.Flag)pair.Value;
-                    break;
-                case DialogItem_FieldIndex.Quest:
-                    obj.Quest_Property.Set((IFormIDSetLink<Quest>)pair.Value);
-                    break;
-                case DialogItem_FieldIndex.PreviousTopic:
-                    obj.PreviousTopic_Property.Set((IFormIDSetLink<DialogItem>)pair.Value);
-                    break;
-                case DialogItem_FieldIndex.Topics:
-                    obj._Topics.SetTo((ISetList<IFormIDLink<DialogTopic>>)pair.Value);
-                    break;
-                case DialogItem_FieldIndex.Responses:
-                    obj._Responses.SetTo((ISetList<DialogResponse>)pair.Value);
-                    break;
-                case DialogItem_FieldIndex.Conditions:
-                    obj._Conditions.SetTo((ISetList<Condition>)pair.Value);
-                    break;
-                case DialogItem_FieldIndex.Choices:
-                    obj._Choices.SetTo((ISetList<IFormIDLink<DialogTopic>>)pair.Value);
-                    break;
-                case DialogItem_FieldIndex.LinkFrom:
-                    obj._LinkFrom.SetTo((ISetList<IFormIDLink<DialogTopic>>)pair.Value);
-                    break;
-                case DialogItem_FieldIndex.Script:
-                    obj.Script.CopyFieldsFrom(rhs: (ScriptFields)pair.Value);
-                    break;
-                case DialogItem_FieldIndex.DATADataTypeState:
-                    obj.DATADataTypeState = (DialogItem.DATADataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

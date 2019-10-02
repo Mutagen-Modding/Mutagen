@@ -619,37 +619,6 @@ namespace Mutagen.Bethesda.Oblivion
             FaceGenDataSetterCommon.Instance.Clear(this);
         }
 
-        public static FaceGenData Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new FaceGenData();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_FaceGenData(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_FaceGenData(FaceGenData obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out FaceGenData_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case FaceGenData_FieldIndex.SymmetricGeometry:
-                    obj.SymmetricGeometry = (Byte[])pair.Value;
-                    break;
-                case FaceGenData_FieldIndex.AsymmetricGeometry:
-                    obj.AsymmetricGeometry = (Byte[])pair.Value;
-                    break;
-                case FaceGenData_FieldIndex.SymmetricTexture:
-                    obj.SymmetricTexture = (Byte[])pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

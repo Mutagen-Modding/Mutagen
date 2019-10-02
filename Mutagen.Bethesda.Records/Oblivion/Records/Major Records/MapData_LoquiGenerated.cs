@@ -514,37 +514,6 @@ namespace Mutagen.Bethesda.Oblivion
             MapDataSetterCommon.Instance.Clear(this);
         }
 
-        public static MapData Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new MapData();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_MapData(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_MapData(MapData obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out MapData_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case MapData_FieldIndex.UsableDimensions:
-                    obj.UsableDimensions = (P2Int)pair.Value;
-                    break;
-                case MapData_FieldIndex.CellCoordinatesNWCell:
-                    obj.CellCoordinatesNWCell = (P2Int16)pair.Value;
-                    break;
-                case MapData_FieldIndex.CellCoordinatesSECell:
-                    obj.CellCoordinatesSECell = (P2Int16)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

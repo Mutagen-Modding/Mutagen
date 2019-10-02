@@ -573,31 +573,6 @@ namespace Mutagen.Bethesda.Skyrim
             KeywordSetterCommon.Instance.Clear(this);
         }
 
-        public new static Keyword Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Keyword();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Keyword(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_Keyword(Keyword obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Keyword_FieldIndex enu))
-            {
-                CopyInInternal_SkyrimMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case Keyword_FieldIndex.Color:
-                    obj.Color = (Color)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

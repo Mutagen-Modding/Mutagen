@@ -562,30 +562,6 @@ namespace Mutagen.Bethesda
             MajorRecordSetterCommon.Instance.Clear(this);
         }
 
-        protected static void CopyInInternal_MajorRecord(MajorRecord obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out MajorRecord_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    obj.MajorRecordFlagsRaw = (Int32)pair.Value;
-                    break;
-                case MajorRecord_FieldIndex.FormKey:
-                    obj.FormKey = (FormKey)pair.Value;
-                    break;
-                case MajorRecord_FieldIndex.Version:
-                    obj.Version = (UInt32)pair.Value;
-                    break;
-                case MajorRecord_FieldIndex.EditorID:
-                    obj.EditorID = (String)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

@@ -522,40 +522,6 @@ namespace Mutagen.Bethesda.Oblivion
             PathGridPointSetterCommon.Instance.Clear(this);
         }
 
-        public static PathGridPoint Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new PathGridPoint();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_PathGridPoint(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_PathGridPoint(PathGridPoint obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out PathGridPoint_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case PathGridPoint_FieldIndex.Point:
-                    obj.Point = (P3Float)pair.Value;
-                    break;
-                case PathGridPoint_FieldIndex.NumConnections:
-                    obj.NumConnections = (Byte)pair.Value;
-                    break;
-                case PathGridPoint_FieldIndex.FluffBytes:
-                    obj.FluffBytes = (Byte[])pair.Value;
-                    break;
-                case PathGridPoint_FieldIndex.Connections:
-                    obj._Connections.SetTo((IList<Int16>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

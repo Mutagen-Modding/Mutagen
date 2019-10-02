@@ -696,40 +696,6 @@ namespace Mutagen.Bethesda.Oblivion
             LogEntrySetterCommon.Instance.Clear(this);
         }
 
-        public static LogEntry Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new LogEntry();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_LogEntry(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_LogEntry(LogEntry obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out LogEntry_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case LogEntry_FieldIndex.Flags:
-                    obj.Flags = (LogEntry.Flag)pair.Value;
-                    break;
-                case LogEntry_FieldIndex.Conditions:
-                    obj._Conditions.SetTo((ISetList<Condition>)pair.Value);
-                    break;
-                case LogEntry_FieldIndex.Entry:
-                    obj.Entry = (String)pair.Value;
-                    break;
-                case LogEntry_FieldIndex.ResultScript:
-                    obj.ResultScript = (ScriptFields)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

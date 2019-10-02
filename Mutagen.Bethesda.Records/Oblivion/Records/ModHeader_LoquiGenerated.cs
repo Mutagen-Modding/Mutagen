@@ -828,58 +828,6 @@ namespace Mutagen.Bethesda.Oblivion
             ModHeaderSetterCommon.Instance.Clear(this);
         }
 
-        public static ModHeader Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new ModHeader();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_ModHeader(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_ModHeader(ModHeader obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out ModHeader_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case ModHeader_FieldIndex.Flags:
-                    obj.Flags = (ModHeader.HeaderFlag)pair.Value;
-                    break;
-                case ModHeader_FieldIndex.FormID:
-                    obj.FormID = (UInt32)pair.Value;
-                    break;
-                case ModHeader_FieldIndex.Version:
-                    obj.Version = (Int32)pair.Value;
-                    break;
-                case ModHeader_FieldIndex.Stats:
-                    obj.Stats = (ModStats)pair.Value;
-                    break;
-                case ModHeader_FieldIndex.TypeOffsets:
-                    obj.TypeOffsets = (Byte[])pair.Value;
-                    break;
-                case ModHeader_FieldIndex.Deleted:
-                    obj.Deleted = (Byte[])pair.Value;
-                    break;
-                case ModHeader_FieldIndex.Author:
-                    obj.Author = (String)pair.Value;
-                    break;
-                case ModHeader_FieldIndex.Description:
-                    obj.Description = (String)pair.Value;
-                    break;
-                case ModHeader_FieldIndex.MasterReferences:
-                    obj._MasterReferences.SetTo((IList<MasterReference>)pair.Value);
-                    break;
-                case ModHeader_FieldIndex.VestigialData:
-                    obj.VestigialData = (UInt64)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

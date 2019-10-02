@@ -11,10 +11,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>eabecf61ec8182111a6dbe9244f3284e61b04cfe</Sha>
+         <Sha>2efe61b7bbeae9e8f7398dcc3e179b5f564919af</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>09-22-2019 22:51:05</CommitDate>
-         <Description>Fixes for no-notification setups</Description>
+         <CommitDate>10-02-2019 07:41:42</CommitDate>
+         <Description>Disabled generic create</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/Loqui.git</OriginHint>
       </RepoListing>

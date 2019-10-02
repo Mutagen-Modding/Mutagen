@@ -542,34 +542,6 @@ namespace Mutagen.Bethesda.Oblivion
             RegionAreaSetterCommon.Instance.Clear(this);
         }
 
-        public static RegionArea Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new RegionArea();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_RegionArea(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_RegionArea(RegionArea obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out RegionArea_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case RegionArea_FieldIndex.EdgeFallOff:
-                    obj.EdgeFallOff = (UInt32)pair.Value;
-                    break;
-                case RegionArea_FieldIndex.RegionPoints:
-                    obj._RegionPoints.SetTo((ISetList<P2Float>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

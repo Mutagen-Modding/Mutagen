@@ -569,52 +569,6 @@ namespace Mutagen.Bethesda.Tests
             TestingSettingsSetterCommon.Instance.Clear(this);
         }
 
-        public static TestingSettings Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new TestingSettings();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_TestingSettings(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_TestingSettings(TestingSettings obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out TestingSettings_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case TestingSettings_FieldIndex.TestGroupMasks:
-                    obj.TestGroupMasks = (Boolean)pair.Value;
-                    break;
-                case TestingSettings_FieldIndex.TestModList:
-                    obj.TestModList = (Boolean)pair.Value;
-                    break;
-                case TestingSettings_FieldIndex.TestFlattenedMod:
-                    obj.TestFlattenedMod = (Boolean)pair.Value;
-                    break;
-                case TestingSettings_FieldIndex.TestBenchmarks:
-                    obj.TestBenchmarks = (Boolean)pair.Value;
-                    break;
-                case TestingSettings_FieldIndex.TestLocators:
-                    obj.TestLocators = (Boolean)pair.Value;
-                    break;
-                case TestingSettings_FieldIndex.DataFolderLocations:
-                    obj.DataFolderLocations = (DataFolderLocations)pair.Value;
-                    break;
-                case TestingSettings_FieldIndex.PassthroughSettings:
-                    obj.PassthroughSettings = (PassthroughSettings)pair.Value;
-                    break;
-                case TestingSettings_FieldIndex.TargetGroups:
-                    obj._TargetGroups.SetTo((IList<TargetGroup>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

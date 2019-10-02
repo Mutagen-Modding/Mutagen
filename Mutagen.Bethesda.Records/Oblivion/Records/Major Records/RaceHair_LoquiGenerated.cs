@@ -503,34 +503,6 @@ namespace Mutagen.Bethesda.Oblivion
             RaceHairSetterCommon.Instance.Clear(this);
         }
 
-        public static RaceHair Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new RaceHair();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_RaceHair(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_RaceHair(RaceHair obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out RaceHair_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case RaceHair_FieldIndex.Male:
-                    obj.Male_Property.Set((IFormIDLink<Hair>)pair.Value);
-                    break;
-                case RaceHair_FieldIndex.Female:
-                    obj.Female_Property.Set((IFormIDLink<Hair>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

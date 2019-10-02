@@ -625,37 +625,6 @@ namespace Mutagen.Bethesda.Oblivion
             FacePartSetterCommon.Instance.Clear(this);
         }
 
-        public static FacePart Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new FacePart();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_FacePart(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_FacePart(FacePart obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out FacePart_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case FacePart_FieldIndex.Index:
-                    obj.Index = (Race.FaceIndex)pair.Value;
-                    break;
-                case FacePart_FieldIndex.Model:
-                    obj.Model = (Model)pair.Value;
-                    break;
-                case FacePart_FieldIndex.Icon:
-                    obj.Icon = (String)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

@@ -505,37 +505,6 @@ namespace Mutagen.Bethesda.Oblivion
             SoundDataExtendedSetterCommon.Instance.Clear(this);
         }
 
-        public new static SoundDataExtended Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new SoundDataExtended();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_SoundDataExtended(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_SoundDataExtended(SoundDataExtended obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out SoundDataExtended_FieldIndex enu))
-            {
-                CopyInInternal_SoundData(obj, pair);
-            }
-            switch (enu)
-            {
-                case SoundDataExtended_FieldIndex.StaticAttenuation:
-                    obj.StaticAttenuation = (Single)pair.Value;
-                    break;
-                case SoundDataExtended_FieldIndex.StopTime:
-                    obj.StopTime = (Single)pair.Value;
-                    break;
-                case SoundDataExtended_FieldIndex.StartTime:
-                    obj.StartTime = (Single)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

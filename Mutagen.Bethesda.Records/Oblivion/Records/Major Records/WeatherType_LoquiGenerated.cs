@@ -530,40 +530,6 @@ namespace Mutagen.Bethesda.Oblivion
             WeatherTypeSetterCommon.Instance.Clear(this);
         }
 
-        public static WeatherType Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new WeatherType();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_WeatherType(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_WeatherType(WeatherType obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out WeatherType_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case WeatherType_FieldIndex.Sunrise:
-                    obj.Sunrise = (Color)pair.Value;
-                    break;
-                case WeatherType_FieldIndex.Day:
-                    obj.Day = (Color)pair.Value;
-                    break;
-                case WeatherType_FieldIndex.Sunset:
-                    obj.Sunset = (Color)pair.Value;
-                    break;
-                case WeatherType_FieldIndex.Night:
-                    obj.Night = (Color)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

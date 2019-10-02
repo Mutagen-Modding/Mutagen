@@ -831,46 +831,6 @@ namespace Mutagen.Bethesda.Oblivion
             LandscapeSetterCommon.Instance.Clear(this);
         }
 
-        public new static Landscape Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Landscape();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Landscape(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_Landscape(Landscape obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Landscape_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case Landscape_FieldIndex.Unknown:
-                    obj.Unknown = (Byte[])pair.Value;
-                    break;
-                case Landscape_FieldIndex.VertexNormals:
-                    obj.VertexNormals = (Byte[])pair.Value;
-                    break;
-                case Landscape_FieldIndex.VertexHeightMap:
-                    obj.VertexHeightMap = (Byte[])pair.Value;
-                    break;
-                case Landscape_FieldIndex.VertexColors:
-                    obj.VertexColors = (Byte[])pair.Value;
-                    break;
-                case Landscape_FieldIndex.Layers:
-                    obj._Layers.SetTo((ISetList<BaseLayer>)pair.Value);
-                    break;
-                case Landscape_FieldIndex.Textures:
-                    obj._Textures.SetTo((ISetList<IFormIDLink<LandTexture>>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

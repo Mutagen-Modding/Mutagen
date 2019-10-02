@@ -736,40 +736,6 @@ namespace Mutagen.Bethesda.Skyrim
             TextureSetSetterCommon.Instance.Clear(this);
         }
 
-        public new static TextureSet Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new TextureSet();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_TextureSet(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_TextureSet(TextureSet obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out TextureSet_FieldIndex enu))
-            {
-                CopyInInternal_SkyrimMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case TextureSet_FieldIndex.ObjectBounds:
-                    obj.ObjectBounds = (ObjectBounds)pair.Value;
-                    break;
-                case TextureSet_FieldIndex.Textures:
-                    obj.Textures = (Textures)pair.Value;
-                    break;
-                case TextureSet_FieldIndex.Decal:
-                    obj.Decal = (Decal)pair.Value;
-                    break;
-                case TextureSet_FieldIndex.Flags:
-                    obj.Flags = (TextureSet.Flag)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

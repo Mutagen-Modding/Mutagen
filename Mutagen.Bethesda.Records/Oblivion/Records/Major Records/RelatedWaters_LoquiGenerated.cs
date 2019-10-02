@@ -522,37 +522,6 @@ namespace Mutagen.Bethesda.Oblivion
             RelatedWatersSetterCommon.Instance.Clear(this);
         }
 
-        public static RelatedWaters Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new RelatedWaters();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_RelatedWaters(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_RelatedWaters(RelatedWaters obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out RelatedWaters_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case RelatedWaters_FieldIndex.RelatedWaterDaytime:
-                    obj.RelatedWaterDaytime_Property.Set((IFormIDLink<Water>)pair.Value);
-                    break;
-                case RelatedWaters_FieldIndex.RelatedWaterNighttime:
-                    obj.RelatedWaterNighttime_Property.Set((IFormIDLink<Water>)pair.Value);
-                    break;
-                case RelatedWaters_FieldIndex.RelatedWaterUnderwater:
-                    obj.RelatedWaterUnderwater_Property.Set((IFormIDLink<Water>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

@@ -559,49 +559,6 @@ namespace Mutagen.Bethesda.Tests
             PassthroughSettingsSetterCommon.Instance.Clear(this);
         }
 
-        public static PassthroughSettings Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new PassthroughSettings();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_PassthroughSettings(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_PassthroughSettings(PassthroughSettings obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out PassthroughSettings_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case PassthroughSettings_FieldIndex.ReuseCaches:
-                    obj.ReuseCaches = (Boolean)pair.Value;
-                    break;
-                case PassthroughSettings_FieldIndex.ReorderRecords:
-                    obj.ReorderRecords = (Boolean)pair.Value;
-                    break;
-                case PassthroughSettings_FieldIndex.DeleteCachesAfter:
-                    obj.DeleteCachesAfter = (Boolean)pair.Value;
-                    break;
-                case PassthroughSettings_FieldIndex.TestNormal:
-                    obj.TestNormal = (Boolean)pair.Value;
-                    break;
-                case PassthroughSettings_FieldIndex.TestBinaryWrapper:
-                    obj.TestBinaryWrapper = (Boolean)pair.Value;
-                    break;
-                case PassthroughSettings_FieldIndex.TestImport:
-                    obj.TestImport = (Boolean)pair.Value;
-                    break;
-                case PassthroughSettings_FieldIndex.TestFolder:
-                    obj.TestFolder = (Boolean)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

@@ -722,40 +722,6 @@ namespace Mutagen.Bethesda.Oblivion
             LandTextureSetterCommon.Instance.Clear(this);
         }
 
-        public new static LandTexture Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new LandTexture();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_LandTexture(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_LandTexture(LandTexture obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out LandTexture_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case LandTexture_FieldIndex.Icon:
-                    obj.Icon = (String)pair.Value;
-                    break;
-                case LandTexture_FieldIndex.Havok:
-                    obj.Havok = (HavokData)pair.Value;
-                    break;
-                case LandTexture_FieldIndex.TextureSpecularExponent:
-                    obj.TextureSpecularExponent = (Byte)pair.Value;
-                    break;
-                case LandTexture_FieldIndex.PotentialGrass:
-                    obj._PotentialGrass.SetTo((ISetList<IFormIDLink<Grass>>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

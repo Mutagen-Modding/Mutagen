@@ -727,40 +727,6 @@ namespace Mutagen.Bethesda.Oblivion
             BirthsignSetterCommon.Instance.Clear(this);
         }
 
-        public new static Birthsign Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Birthsign();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Birthsign(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_Birthsign(Birthsign obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Birthsign_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case Birthsign_FieldIndex.Name:
-                    obj.Name = (String)pair.Value;
-                    break;
-                case Birthsign_FieldIndex.Icon:
-                    obj.Icon = (String)pair.Value;
-                    break;
-                case Birthsign_FieldIndex.Description:
-                    obj.Description = (String)pair.Value;
-                    break;
-                case Birthsign_FieldIndex.Spells:
-                    obj._Spells.SetTo((ISetList<IFormIDLink<Spell>>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

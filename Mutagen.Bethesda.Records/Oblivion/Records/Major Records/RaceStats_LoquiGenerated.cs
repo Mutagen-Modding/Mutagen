@@ -520,52 +520,6 @@ namespace Mutagen.Bethesda.Oblivion
             RaceStatsSetterCommon.Instance.Clear(this);
         }
 
-        public static RaceStats Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new RaceStats();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_RaceStats(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_RaceStats(RaceStats obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out RaceStats_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case RaceStats_FieldIndex.Strength:
-                    obj.Strength = (Byte)pair.Value;
-                    break;
-                case RaceStats_FieldIndex.Intelligence:
-                    obj.Intelligence = (Byte)pair.Value;
-                    break;
-                case RaceStats_FieldIndex.Willpower:
-                    obj.Willpower = (Byte)pair.Value;
-                    break;
-                case RaceStats_FieldIndex.Agility:
-                    obj.Agility = (Byte)pair.Value;
-                    break;
-                case RaceStats_FieldIndex.Speed:
-                    obj.Speed = (Byte)pair.Value;
-                    break;
-                case RaceStats_FieldIndex.Endurance:
-                    obj.Endurance = (Byte)pair.Value;
-                    break;
-                case RaceStats_FieldIndex.Personality:
-                    obj.Personality = (Byte)pair.Value;
-                    break;
-                case RaceStats_FieldIndex.Luck:
-                    obj.Luck = (Byte)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

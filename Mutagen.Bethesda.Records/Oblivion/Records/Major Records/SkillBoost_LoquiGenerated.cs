@@ -481,34 +481,6 @@ namespace Mutagen.Bethesda.Oblivion
             SkillBoostSetterCommon.Instance.Clear(this);
         }
 
-        public static SkillBoost Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new SkillBoost();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_SkillBoost(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_SkillBoost(SkillBoost obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out SkillBoost_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case SkillBoost_FieldIndex.Skill:
-                    obj.Skill = (ActorValue)pair.Value;
-                    break;
-                case SkillBoost_FieldIndex.Boost:
-                    obj.Boost = (SByte)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

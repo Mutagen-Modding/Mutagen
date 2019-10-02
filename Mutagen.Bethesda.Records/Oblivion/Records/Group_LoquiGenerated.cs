@@ -592,37 +592,6 @@ namespace Mutagen.Bethesda.Oblivion
             GroupSetterCommon<T>.Instance.Clear(this);
         }
 
-        public static Group<T> Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Group<T>();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Group(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_Group(Group<T> obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Group_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case Group_FieldIndex.GroupType:
-                    obj.GroupType = (GroupTypeEnum)pair.Value;
-                    break;
-                case Group_FieldIndex.LastModified:
-                    obj.LastModified = (Int32)pair.Value;
-                    break;
-                case Group_FieldIndex.Items:
-                    obj.Items.SetTo((IEnumerable<T>)(SourceSetCache<T, FormKey>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

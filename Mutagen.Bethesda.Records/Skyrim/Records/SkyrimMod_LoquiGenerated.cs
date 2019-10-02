@@ -1338,52 +1338,6 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimModSetterCommon.Instance.Clear(this);
         }
 
-        public static SkyrimMod Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new SkyrimMod();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_SkyrimMod(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_SkyrimMod(SkyrimMod obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out SkyrimMod_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case SkyrimMod_FieldIndex.ModHeader:
-                    obj.ModHeader.CopyFieldsFrom(rhs: (ModHeader)pair.Value);
-                    break;
-                case SkyrimMod_FieldIndex.GameSettings:
-                    obj._GameSettings_Object.CopyFieldsFrom<GameSetting_CopyMask>(rhs: (Group<GameSetting>)pair.Value);
-                    break;
-                case SkyrimMod_FieldIndex.Keywords:
-                    obj._Keywords_Object.CopyFieldsFrom<Keyword_CopyMask>(rhs: (Group<Keyword>)pair.Value);
-                    break;
-                case SkyrimMod_FieldIndex.LocationReferenceTypes:
-                    obj._LocationReferenceTypes_Object.CopyFieldsFrom<LocationReferenceType_CopyMask>(rhs: (Group<LocationReferenceType>)pair.Value);
-                    break;
-                case SkyrimMod_FieldIndex.Actions:
-                    obj._Actions_Object.CopyFieldsFrom<ActionRecord_CopyMask>(rhs: (Group<ActionRecord>)pair.Value);
-                    break;
-                case SkyrimMod_FieldIndex.TextureSets:
-                    obj._TextureSets_Object.CopyFieldsFrom<TextureSet_CopyMask>(rhs: (Group<TextureSet>)pair.Value);
-                    break;
-                case SkyrimMod_FieldIndex.Globals:
-                    obj._Globals_Object.CopyFieldsFrom<Global_CopyMask>(rhs: (Group<Global>)pair.Value);
-                    break;
-                case SkyrimMod_FieldIndex.Classes:
-                    obj._Classes_Object.CopyFieldsFrom<Class_CopyMask>(rhs: (Group<Class>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

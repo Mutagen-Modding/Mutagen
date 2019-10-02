@@ -648,46 +648,6 @@ namespace Mutagen.Bethesda.Oblivion
             LocalVariableSetterCommon.Instance.Clear(this);
         }
 
-        public static LocalVariable Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new LocalVariable();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_LocalVariable(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_LocalVariable(LocalVariable obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out LocalVariable_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case LocalVariable_FieldIndex.Index:
-                    obj.Index = (Int32)pair.Value;
-                    break;
-                case LocalVariable_FieldIndex.Fluff:
-                    obj.Fluff = (Byte[])pair.Value;
-                    break;
-                case LocalVariable_FieldIndex.Flags:
-                    obj.Flags = (Script.LocalVariableFlag)pair.Value;
-                    break;
-                case LocalVariable_FieldIndex.Fluff2:
-                    obj.Fluff2 = (Byte[])pair.Value;
-                    break;
-                case LocalVariable_FieldIndex.Name:
-                    obj.Name = (String)pair.Value;
-                    break;
-                case LocalVariable_FieldIndex.SLSDDataTypeState:
-                    obj.SLSDDataTypeState = (LocalVariable.SLSDDataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

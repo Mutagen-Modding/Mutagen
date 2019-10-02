@@ -720,40 +720,6 @@ namespace Mutagen.Bethesda.Oblivion
             IdleAnimationSetterCommon.Instance.Clear(this);
         }
 
-        public new static IdleAnimation Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new IdleAnimation();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_IdleAnimation(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_IdleAnimation(IdleAnimation obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out IdleAnimation_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case IdleAnimation_FieldIndex.Model:
-                    obj.Model = (Model)pair.Value;
-                    break;
-                case IdleAnimation_FieldIndex.Conditions:
-                    obj._Conditions.SetTo((ISetList<Condition>)pair.Value);
-                    break;
-                case IdleAnimation_FieldIndex.AnimationGroupSection:
-                    obj.AnimationGroupSection = (IdleAnimation.AnimationGroupSectionEnum)pair.Value;
-                    break;
-                case IdleAnimation_FieldIndex.RelatedIdleAnimations:
-                    obj._RelatedIdleAnimations.SetTo((ISetList<IFormIDLink<IdleAnimation>>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

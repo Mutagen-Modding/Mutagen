@@ -498,34 +498,6 @@ namespace Mutagen.Bethesda.Tests
             DataFolderLocationsSetterCommon.Instance.Clear(this);
         }
 
-        public static DataFolderLocations Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new DataFolderLocations();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_DataFolderLocations(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_DataFolderLocations(DataFolderLocations obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out DataFolderLocations_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case DataFolderLocations_FieldIndex.Oblivion:
-                    obj.Oblivion = (String)pair.Value;
-                    break;
-                case DataFolderLocations_FieldIndex.Skyrim:
-                    obj.Skyrim = (String)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

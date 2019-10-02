@@ -702,37 +702,6 @@ namespace Mutagen.Bethesda.Oblivion
             LeveledItemSetterCommon.Instance.Clear(this);
         }
 
-        public new static LeveledItem Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new LeveledItem();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_LeveledItem(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_LeveledItem(LeveledItem obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out LeveledItem_FieldIndex enu))
-            {
-                CopyInInternal_ItemAbstract(obj, pair);
-            }
-            switch (enu)
-            {
-                case LeveledItem_FieldIndex.ChanceNone:
-                    obj.ChanceNone = (Byte)pair.Value;
-                    break;
-                case LeveledItem_FieldIndex.Flags:
-                    obj.Flags = (LeveledFlag)pair.Value;
-                    break;
-                case LeveledItem_FieldIndex.Entries:
-                    obj._Entries.SetTo((ISetList<LeveledEntry<ItemAbstract>>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

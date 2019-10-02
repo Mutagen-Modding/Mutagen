@@ -682,46 +682,6 @@ namespace Mutagen.Bethesda.Oblivion
             ScriptEffectSetterCommon.Instance.Clear(this);
         }
 
-        public static ScriptEffect Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new ScriptEffect();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_ScriptEffect(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_ScriptEffect(ScriptEffect obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out ScriptEffect_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case ScriptEffect_FieldIndex.Script:
-                    obj.Script_Property.Set((IFormIDLink<Script>)pair.Value);
-                    break;
-                case ScriptEffect_FieldIndex.MagicSchool:
-                    obj.MagicSchool = (MagicSchool)pair.Value;
-                    break;
-                case ScriptEffect_FieldIndex.VisualEffect:
-                    obj.VisualEffect_Property.Set((IEDIDLink<MagicEffect>)pair.Value);
-                    break;
-                case ScriptEffect_FieldIndex.Flags:
-                    obj.Flags = (ScriptEffect.Flag)pair.Value;
-                    break;
-                case ScriptEffect_FieldIndex.Name:
-                    obj.Name = (String)pair.Value;
-                    break;
-                case ScriptEffect_FieldIndex.SCITDataTypeState:
-                    obj.SCITDataTypeState = (ScriptEffect.SCITDataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

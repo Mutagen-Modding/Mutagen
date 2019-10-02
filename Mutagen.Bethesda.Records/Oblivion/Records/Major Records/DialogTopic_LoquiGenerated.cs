@@ -734,43 +734,6 @@ namespace Mutagen.Bethesda.Oblivion
             DialogTopicSetterCommon.Instance.Clear(this);
         }
 
-        public new static DialogTopic Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new DialogTopic();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_DialogTopic(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_DialogTopic(DialogTopic obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out DialogTopic_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case DialogTopic_FieldIndex.Quests:
-                    obj._Quests.SetTo((ISetList<IFormIDLink<Quest>>)pair.Value);
-                    break;
-                case DialogTopic_FieldIndex.Name:
-                    obj.Name = (String)pair.Value;
-                    break;
-                case DialogTopic_FieldIndex.DialogType:
-                    obj.DialogType = (DialogType)pair.Value;
-                    break;
-                case DialogTopic_FieldIndex.Timestamp:
-                    obj.Timestamp = (Byte[])pair.Value;
-                    break;
-                case DialogTopic_FieldIndex.Items:
-                    obj._Items.SetTo((ISetList<DialogItem>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

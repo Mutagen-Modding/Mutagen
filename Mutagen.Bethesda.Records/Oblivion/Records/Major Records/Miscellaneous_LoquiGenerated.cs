@@ -797,49 +797,6 @@ namespace Mutagen.Bethesda.Oblivion
             MiscellaneousSetterCommon.Instance.Clear(this);
         }
 
-        public new static Miscellaneous Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Miscellaneous();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Miscellaneous(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_Miscellaneous(Miscellaneous obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Miscellaneous_FieldIndex enu))
-            {
-                CopyInInternal_ItemAbstract(obj, pair);
-            }
-            switch (enu)
-            {
-                case Miscellaneous_FieldIndex.Name:
-                    obj.Name = (String)pair.Value;
-                    break;
-                case Miscellaneous_FieldIndex.Model:
-                    obj.Model = (Model)pair.Value;
-                    break;
-                case Miscellaneous_FieldIndex.Icon:
-                    obj.Icon = (String)pair.Value;
-                    break;
-                case Miscellaneous_FieldIndex.Script:
-                    obj.Script_Property.Set((IFormIDSetLink<Script>)pair.Value);
-                    break;
-                case Miscellaneous_FieldIndex.Value:
-                    obj.Value = (Int32)pair.Value;
-                    break;
-                case Miscellaneous_FieldIndex.Weight:
-                    obj.Weight = (Single)pair.Value;
-                    break;
-                case Miscellaneous_FieldIndex.DATADataTypeState:
-                    obj.DATADataTypeState = (Miscellaneous.DATADataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

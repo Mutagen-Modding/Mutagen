@@ -487,31 +487,6 @@ namespace Mutagen.Bethesda.Examples
             MainVMSetterCommon.Instance.Clear(this);
         }
 
-        public static MainVM Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new MainVM();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_MainVM(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_MainVM(MainVM obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out MainVM_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case MainVM_FieldIndex.ModFilePath:
-                    obj.ModFilePath = (String)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

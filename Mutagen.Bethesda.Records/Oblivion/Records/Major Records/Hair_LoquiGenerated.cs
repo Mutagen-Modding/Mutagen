@@ -718,40 +718,6 @@ namespace Mutagen.Bethesda.Oblivion
             HairSetterCommon.Instance.Clear(this);
         }
 
-        public new static Hair Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Hair();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Hair(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_Hair(Hair obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Hair_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case Hair_FieldIndex.Name:
-                    obj.Name = (String)pair.Value;
-                    break;
-                case Hair_FieldIndex.Model:
-                    obj.Model = (Model)pair.Value;
-                    break;
-                case Hair_FieldIndex.Icon:
-                    obj.Icon = (String)pair.Value;
-                    break;
-                case Hair_FieldIndex.Flags:
-                    obj.Flags = (Hair.HairFlag)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

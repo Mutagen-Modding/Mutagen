@@ -891,55 +891,6 @@ namespace Mutagen.Bethesda.Oblivion
             IngredientSetterCommon.Instance.Clear(this);
         }
 
-        public new static Ingredient Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Ingredient();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Ingredient(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_Ingredient(Ingredient obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Ingredient_FieldIndex enu))
-            {
-                CopyInInternal_ItemAbstract(obj, pair);
-            }
-            switch (enu)
-            {
-                case Ingredient_FieldIndex.Name:
-                    obj.Name = (String)pair.Value;
-                    break;
-                case Ingredient_FieldIndex.Model:
-                    obj.Model = (Model)pair.Value;
-                    break;
-                case Ingredient_FieldIndex.Icon:
-                    obj.Icon = (String)pair.Value;
-                    break;
-                case Ingredient_FieldIndex.Script:
-                    obj.Script_Property.Set((IFormIDSetLink<Script>)pair.Value);
-                    break;
-                case Ingredient_FieldIndex.Weight:
-                    obj.Weight = (Single)pair.Value;
-                    break;
-                case Ingredient_FieldIndex.Value:
-                    obj.Value = (UInt32)pair.Value;
-                    break;
-                case Ingredient_FieldIndex.Flags:
-                    obj.Flags = (IngredientFlag)pair.Value;
-                    break;
-                case Ingredient_FieldIndex.Effects:
-                    obj._Effects.SetTo((ISetList<Effect>)pair.Value);
-                    break;
-                case Ingredient_FieldIndex.ENITDataTypeState:
-                    obj.ENITDataTypeState = (Ingredient.ENITDataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

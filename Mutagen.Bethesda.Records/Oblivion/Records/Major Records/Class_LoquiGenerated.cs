@@ -872,58 +872,6 @@ namespace Mutagen.Bethesda.Oblivion
             ClassSetterCommon.Instance.Clear(this);
         }
 
-        public new static Class Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Class();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Class(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_Class(Class obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Class_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case Class_FieldIndex.Name:
-                    obj.Name = (String)pair.Value;
-                    break;
-                case Class_FieldIndex.Description:
-                    obj.Description = (String)pair.Value;
-                    break;
-                case Class_FieldIndex.Icon:
-                    obj.Icon = (String)pair.Value;
-                    break;
-                case Class_FieldIndex.PrimaryAttributes:
-                    obj._PrimaryAttributes.SetTo((IList<ActorValue>)pair.Value);
-                    break;
-                case Class_FieldIndex.Specialization:
-                    obj.Specialization = (Class.SpecializationFlag)pair.Value;
-                    break;
-                case Class_FieldIndex.SecondaryAttributes:
-                    obj._SecondaryAttributes.SetTo((IList<ActorValue>)pair.Value);
-                    break;
-                case Class_FieldIndex.Flags:
-                    obj.Flags = (ClassFlag)pair.Value;
-                    break;
-                case Class_FieldIndex.ClassServices:
-                    obj.ClassServices = (ClassService)pair.Value;
-                    break;
-                case Class_FieldIndex.Training:
-                    obj.Training = (ClassTraining)pair.Value;
-                    break;
-                case Class_FieldIndex.DATADataTypeState:
-                    obj.DATADataTypeState = (Class.DATADataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

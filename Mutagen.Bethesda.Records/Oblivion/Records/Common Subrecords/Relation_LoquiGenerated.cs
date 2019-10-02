@@ -505,34 +505,6 @@ namespace Mutagen.Bethesda.Oblivion
             RelationSetterCommon.Instance.Clear(this);
         }
 
-        public static Relation Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Relation();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Relation(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_Relation(Relation obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Relation_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case Relation_FieldIndex.Faction:
-                    obj.Faction_Property.Set((IFormIDLink<Faction>)pair.Value);
-                    break;
-                case Relation_FieldIndex.Modifier:
-                    obj.Modifier = (Int32)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

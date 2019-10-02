@@ -545,40 +545,6 @@ namespace Mutagen.Bethesda.Oblivion
             LockInformationSetterCommon.Instance.Clear(this);
         }
 
-        public static LockInformation Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new LockInformation();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_LockInformation(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_LockInformation(LockInformation obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out LockInformation_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case LockInformation_FieldIndex.LockLevel:
-                    obj.LockLevel = (Byte)pair.Value;
-                    break;
-                case LockInformation_FieldIndex.Fluff:
-                    obj.Fluff = (Byte[])pair.Value;
-                    break;
-                case LockInformation_FieldIndex.Key:
-                    obj.Key_Property.Set((IFormIDLink<Key>)pair.Value);
-                    break;
-                case LockInformation_FieldIndex.Flags:
-                    obj.Flags = (LockInformation.Flag)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

@@ -531,37 +531,6 @@ namespace Mutagen.Bethesda.Oblivion
             AIPackageLocationSetterCommon.Instance.Clear(this);
         }
 
-        public static AIPackageLocation Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new AIPackageLocation();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_AIPackageLocation(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_AIPackageLocation(AIPackageLocation obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out AIPackageLocation_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case AIPackageLocation_FieldIndex.Type:
-                    obj.Type = (AIPackageLocation.LocationType)pair.Value;
-                    break;
-                case AIPackageLocation_FieldIndex.LocationReference:
-                    obj.LocationReference_Property.Set((IFormIDLink<IPlaced>)pair.Value);
-                    break;
-                case AIPackageLocation_FieldIndex.Radius:
-                    obj.Radius = (Single)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

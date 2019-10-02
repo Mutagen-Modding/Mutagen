@@ -1016,64 +1016,6 @@ namespace Mutagen.Bethesda.Oblivion
             PlacedNPCSetterCommon.Instance.Clear(this);
         }
 
-        public new static PlacedNPC Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new PlacedNPC();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_PlacedNPC(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_PlacedNPC(PlacedNPC obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out PlacedNPC_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case PlacedNPC_FieldIndex.Base:
-                    obj.Base_Property.Set((IFormIDSetLink<NPC>)pair.Value);
-                    break;
-                case PlacedNPC_FieldIndex.XPCIFluff:
-                    obj.XPCIFluff = (Byte[])pair.Value;
-                    break;
-                case PlacedNPC_FieldIndex.FULLFluff:
-                    obj.FULLFluff = (Byte[])pair.Value;
-                    break;
-                case PlacedNPC_FieldIndex.DistantLODData:
-                    obj.DistantLODData = (DistantLODData)pair.Value;
-                    break;
-                case PlacedNPC_FieldIndex.EnableParent:
-                    obj.EnableParent = (EnableParent)pair.Value;
-                    break;
-                case PlacedNPC_FieldIndex.MerchantContainer:
-                    obj.MerchantContainer_Property.Set((IFormIDSetLink<PlacedObject>)pair.Value);
-                    break;
-                case PlacedNPC_FieldIndex.Horse:
-                    obj.Horse_Property.Set((IFormIDSetLink<PlacedCreature>)pair.Value);
-                    break;
-                case PlacedNPC_FieldIndex.RagdollData:
-                    obj.RagdollData = (Byte[])pair.Value;
-                    break;
-                case PlacedNPC_FieldIndex.Scale:
-                    obj.Scale = (Single)pair.Value;
-                    break;
-                case PlacedNPC_FieldIndex.Position:
-                    obj.Position = (P3Float)pair.Value;
-                    break;
-                case PlacedNPC_FieldIndex.Rotation:
-                    obj.Rotation = (P3Float)pair.Value;
-                    break;
-                case PlacedNPC_FieldIndex.DATADataTypeState:
-                    obj.DATADataTypeState = (PlacedNPC.DATADataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

@@ -505,34 +505,6 @@ namespace Mutagen.Bethesda.Oblivion
             PointToReferenceMappingSetterCommon.Instance.Clear(this);
         }
 
-        public static PointToReferenceMapping Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new PointToReferenceMapping();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_PointToReferenceMapping(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_PointToReferenceMapping(PointToReferenceMapping obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out PointToReferenceMapping_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case PointToReferenceMapping_FieldIndex.Reference:
-                    obj.Reference_Property.Set((IFormIDLink<IPlaced>)pair.Value);
-                    break;
-                case PointToReferenceMapping_FieldIndex.Points:
-                    obj._Points.SetTo((IList<Int16>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

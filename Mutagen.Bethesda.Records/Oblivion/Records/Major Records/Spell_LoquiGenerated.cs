@@ -495,21 +495,6 @@ namespace Mutagen.Bethesda.Oblivion
             SpellSetterCommon.Instance.Clear(this);
         }
 
-        protected new static void CopyInInternal_Spell(Spell obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Spell_FieldIndex enu))
-            {
-                CopyInInternal_SpellAbstract(obj, pair);
-            }
-            switch (enu)
-            {
-                case Spell_FieldIndex.Name:
-                    obj.Name = (String)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

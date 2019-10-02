@@ -550,31 +550,6 @@ namespace Mutagen.Bethesda.Oblivion
             AlphaLayerSetterCommon.Instance.Clear(this);
         }
 
-        public new static AlphaLayer Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new AlphaLayer();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_AlphaLayer(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_AlphaLayer(AlphaLayer obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out AlphaLayer_FieldIndex enu))
-            {
-                CopyInInternal_BaseLayer(obj, pair);
-            }
-            switch (enu)
-            {
-                case AlphaLayer_FieldIndex.AlphaLayerData:
-                    obj.AlphaLayerData = (Byte[])pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

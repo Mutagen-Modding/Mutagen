@@ -687,37 +687,6 @@ namespace Mutagen.Bethesda.Oblivion
             LoadScreenSetterCommon.Instance.Clear(this);
         }
 
-        public new static LoadScreen Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new LoadScreen();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_LoadScreen(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_LoadScreen(LoadScreen obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out LoadScreen_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case LoadScreen_FieldIndex.Icon:
-                    obj.Icon = (String)pair.Value;
-                    break;
-                case LoadScreen_FieldIndex.Description:
-                    obj.Description = (String)pair.Value;
-                    break;
-                case LoadScreen_FieldIndex.Locations:
-                    obj._Locations.SetTo((ISetList<LoadScreenLocation>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

@@ -570,34 +570,6 @@ namespace Mutagen.Bethesda.Oblivion
             BodyDataSetterCommon.Instance.Clear(this);
         }
 
-        public static BodyData Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new BodyData();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_BodyData(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_BodyData(BodyData obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out BodyData_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case BodyData_FieldIndex.Model:
-                    obj.Model = (Model)pair.Value;
-                    break;
-                case BodyData_FieldIndex.BodyParts:
-                    obj._BodyParts.SetTo((ISetList<BodyPart>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

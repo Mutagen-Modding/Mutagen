@@ -562,46 +562,6 @@ namespace Mutagen.Bethesda.Tests
             TargetSetterCommon.Instance.Clear(this);
         }
 
-        public static Target Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Target();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Target(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_Target(Target obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Target_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case Target_FieldIndex.Do:
-                    obj.Do = (Boolean)pair.Value;
-                    break;
-                case Target_FieldIndex.Path:
-                    obj.Path = (String)pair.Value;
-                    break;
-                case Target_FieldIndex.NumMasters:
-                    obj.NumMasters = (Byte)pair.Value;
-                    break;
-                case Target_FieldIndex.GameMode:
-                    obj.GameMode = (Mutagen.Bethesda.GameMode)pair.Value;
-                    break;
-                case Target_FieldIndex.ExpectedBaseGroupCount:
-                    obj.ExpectedBaseGroupCount = (Byte)pair.Value;
-                    break;
-                case Target_FieldIndex.Interest:
-                    obj.Interest = (RecordInterest)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

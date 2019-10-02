@@ -439,21 +439,6 @@ namespace Mutagen.Bethesda.Oblivion
             OblivionMajorRecordSetterCommon.Instance.Clear(this);
         }
 
-        protected new static void CopyInInternal_OblivionMajorRecord(OblivionMajorRecord obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out OblivionMajorRecord_FieldIndex enu))
-            {
-                CopyInInternal_MajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
-                    obj.OblivionMajorRecordFlags = (OblivionMajorRecord.OblivionMajorRecordFlag)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

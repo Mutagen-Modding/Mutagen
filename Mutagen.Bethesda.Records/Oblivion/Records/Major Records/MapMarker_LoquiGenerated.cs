@@ -605,37 +605,6 @@ namespace Mutagen.Bethesda.Oblivion
             MapMarkerSetterCommon.Instance.Clear(this);
         }
 
-        public static MapMarker Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new MapMarker();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_MapMarker(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_MapMarker(MapMarker obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out MapMarker_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case MapMarker_FieldIndex.Flags:
-                    obj.Flags = (MapMarker.Flag)pair.Value;
-                    break;
-                case MapMarker_FieldIndex.Name:
-                    obj.Name = (String)pair.Value;
-                    break;
-                case MapMarker_FieldIndex.Types:
-                    obj._Types.SetTo((ISetList<MapMarker.Type>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

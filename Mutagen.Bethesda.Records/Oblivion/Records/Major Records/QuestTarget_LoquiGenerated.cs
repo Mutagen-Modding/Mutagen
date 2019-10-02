@@ -610,40 +610,6 @@ namespace Mutagen.Bethesda.Oblivion
             QuestTargetSetterCommon.Instance.Clear(this);
         }
 
-        public static QuestTarget Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new QuestTarget();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_QuestTarget(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_QuestTarget(QuestTarget obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out QuestTarget_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case QuestTarget_FieldIndex.Target:
-                    obj.Target_Property.Set((IFormIDLink<IPlaced>)pair.Value);
-                    break;
-                case QuestTarget_FieldIndex.Flags:
-                    obj.Flags = (QuestTarget.Flag)pair.Value;
-                    break;
-                case QuestTarget_FieldIndex.Conditions:
-                    obj._Conditions.SetTo((ISetList<Condition>)pair.Value);
-                    break;
-                case QuestTarget_FieldIndex.QSTADataTypeState:
-                    obj.QSTADataTypeState = (QuestTarget.QSTADataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

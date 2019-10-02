@@ -1017,67 +1017,6 @@ namespace Mutagen.Bethesda.Oblivion
             SkillRecordSetterCommon.Instance.Clear(this);
         }
 
-        public new static SkillRecord Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new SkillRecord();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_SkillRecord(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_SkillRecord(SkillRecord obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out SkillRecord_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case SkillRecord_FieldIndex.Skill:
-                    obj.Skill = (ActorValue)pair.Value;
-                    break;
-                case SkillRecord_FieldIndex.Description:
-                    obj.Description = (String)pair.Value;
-                    break;
-                case SkillRecord_FieldIndex.Icon:
-                    obj.Icon = (String)pair.Value;
-                    break;
-                case SkillRecord_FieldIndex.Action:
-                    obj.Action = (ActorValue)pair.Value;
-                    break;
-                case SkillRecord_FieldIndex.Attribute:
-                    obj.Attribute = (ActorValue)pair.Value;
-                    break;
-                case SkillRecord_FieldIndex.Specialization:
-                    obj.Specialization = (Specialization)pair.Value;
-                    break;
-                case SkillRecord_FieldIndex.UseValueFirst:
-                    obj.UseValueFirst = (Single)pair.Value;
-                    break;
-                case SkillRecord_FieldIndex.UseValueSecond:
-                    obj.UseValueSecond = (Single)pair.Value;
-                    break;
-                case SkillRecord_FieldIndex.ApprenticeText:
-                    obj.ApprenticeText = (String)pair.Value;
-                    break;
-                case SkillRecord_FieldIndex.JourneymanText:
-                    obj.JourneymanText = (String)pair.Value;
-                    break;
-                case SkillRecord_FieldIndex.ExpertText:
-                    obj.ExpertText = (String)pair.Value;
-                    break;
-                case SkillRecord_FieldIndex.MasterText:
-                    obj.MasterText = (String)pair.Value;
-                    break;
-                case SkillRecord_FieldIndex.DATADataTypeState:
-                    obj.DATADataTypeState = (SkillRecord.DATADataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

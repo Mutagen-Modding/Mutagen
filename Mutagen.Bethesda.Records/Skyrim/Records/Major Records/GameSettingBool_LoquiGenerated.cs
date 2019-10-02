@@ -564,31 +564,6 @@ namespace Mutagen.Bethesda.Skyrim
             GameSettingBoolSetterCommon.Instance.Clear(this);
         }
 
-        public new static GameSettingBool Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new GameSettingBool();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_GameSettingBool(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_GameSettingBool(GameSettingBool obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out GameSettingBool_FieldIndex enu))
-            {
-                CopyInInternal_GameSetting(obj, pair);
-            }
-            switch (enu)
-            {
-                case GameSettingBool_FieldIndex.Data:
-                    obj.Data = (Boolean)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

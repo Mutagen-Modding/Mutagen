@@ -561,34 +561,6 @@ namespace Mutagen.Bethesda.Oblivion
             QuestStageSetterCommon.Instance.Clear(this);
         }
 
-        public static QuestStage Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new QuestStage();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_QuestStage(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_QuestStage(QuestStage obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out QuestStage_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case QuestStage_FieldIndex.Stage:
-                    obj.Stage = (UInt16)pair.Value;
-                    break;
-                case QuestStage_FieldIndex.LogEntries:
-                    obj._LogEntries.SetTo((ISetList<LogEntry>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

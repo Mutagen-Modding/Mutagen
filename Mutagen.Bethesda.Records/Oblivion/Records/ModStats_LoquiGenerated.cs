@@ -496,37 +496,6 @@ namespace Mutagen.Bethesda.Oblivion
             ModStatsSetterCommon.Instance.Clear(this);
         }
 
-        public static ModStats Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new ModStats();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_ModStats(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_ModStats(ModStats obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out ModStats_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case ModStats_FieldIndex.Version:
-                    obj.Version = (Single)pair.Value;
-                    break;
-                case ModStats_FieldIndex.NumRecords:
-                    obj.NumRecords = (Int32)pair.Value;
-                    break;
-                case ModStats_FieldIndex.NextObjectID:
-                    obj.NextObjectID = (UInt32)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

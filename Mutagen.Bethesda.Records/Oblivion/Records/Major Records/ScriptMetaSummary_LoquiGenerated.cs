@@ -550,40 +550,6 @@ namespace Mutagen.Bethesda.Oblivion
             ScriptMetaSummarySetterCommon.Instance.Clear(this);
         }
 
-        public static ScriptMetaSummary Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new ScriptMetaSummary();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_ScriptMetaSummary(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_ScriptMetaSummary(ScriptMetaSummary obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out ScriptMetaSummary_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case ScriptMetaSummary_FieldIndex.Fluff:
-                    obj.Fluff = (Byte[])pair.Value;
-                    break;
-                case ScriptMetaSummary_FieldIndex.RefCount:
-                    obj.RefCount = (UInt32)pair.Value;
-                    break;
-                case ScriptMetaSummary_FieldIndex.VariableCount:
-                    obj.VariableCount = (UInt32)pair.Value;
-                    break;
-                case ScriptMetaSummary_FieldIndex.Type:
-                    obj.Type = (ScriptFields.ScriptType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

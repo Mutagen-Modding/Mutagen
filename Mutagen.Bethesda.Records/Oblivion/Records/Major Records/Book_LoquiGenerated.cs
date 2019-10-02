@@ -968,64 +968,6 @@ namespace Mutagen.Bethesda.Oblivion
             BookSetterCommon.Instance.Clear(this);
         }
 
-        public new static Book Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Book();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Book(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_Book(Book obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Book_FieldIndex enu))
-            {
-                CopyInInternal_ItemAbstract(obj, pair);
-            }
-            switch (enu)
-            {
-                case Book_FieldIndex.Name:
-                    obj.Name = (String)pair.Value;
-                    break;
-                case Book_FieldIndex.Model:
-                    obj.Model = (Model)pair.Value;
-                    break;
-                case Book_FieldIndex.Icon:
-                    obj.Icon = (String)pair.Value;
-                    break;
-                case Book_FieldIndex.Script:
-                    obj.Script_Property.Set((IFormIDSetLink<Script>)pair.Value);
-                    break;
-                case Book_FieldIndex.Enchantment:
-                    obj.Enchantment_Property.Set((IFormIDSetLink<Enchantment>)pair.Value);
-                    break;
-                case Book_FieldIndex.EnchantmentPoints:
-                    obj.EnchantmentPoints = (UInt16)pair.Value;
-                    break;
-                case Book_FieldIndex.Description:
-                    obj.Description = (String)pair.Value;
-                    break;
-                case Book_FieldIndex.Flags:
-                    obj.Flags = (Book.BookFlag)pair.Value;
-                    break;
-                case Book_FieldIndex.Teaches:
-                    obj.Teaches = (Skill)pair.Value;
-                    break;
-                case Book_FieldIndex.Value:
-                    obj.Value = (Single)pair.Value;
-                    break;
-                case Book_FieldIndex.Weight:
-                    obj.Weight = (Single)pair.Value;
-                    break;
-                case Book_FieldIndex.DATADataTypeState:
-                    obj.DATADataTypeState = (Book.DATADataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

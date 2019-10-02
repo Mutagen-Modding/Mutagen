@@ -413,18 +413,6 @@ namespace Mutagen.Bethesda.Oblivion
             NPCSpawnSetterCommon.Instance.Clear(this);
         }
 
-        protected new static void CopyInInternal_NPCSpawn(NPCSpawn obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out NPCSpawn_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

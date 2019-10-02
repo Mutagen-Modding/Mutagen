@@ -505,34 +505,6 @@ namespace Mutagen.Bethesda.Oblivion
             ContainerItemSetterCommon.Instance.Clear(this);
         }
 
-        public static ContainerItem Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new ContainerItem();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_ContainerItem(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_ContainerItem(ContainerItem obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out ContainerItem_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case ContainerItem_FieldIndex.Item:
-                    obj.Item_Property.Set((IFormIDLink<ItemAbstract>)pair.Value);
-                    break;
-                case ContainerItem_FieldIndex.Count:
-                    obj.Count = (UInt32)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

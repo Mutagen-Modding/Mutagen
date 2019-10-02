@@ -504,34 +504,6 @@ namespace Mutagen.Bethesda.Tests
             TargetGroupSetterCommon.Instance.Clear(this);
         }
 
-        public static TargetGroup Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new TargetGroup();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_TargetGroup(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_TargetGroup(TargetGroup obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out TargetGroup_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case TargetGroup_FieldIndex.Do:
-                    obj.Do = (Boolean)pair.Value;
-                    break;
-                case TargetGroup_FieldIndex.Targets:
-                    obj._Targets.SetTo((IList<Target>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

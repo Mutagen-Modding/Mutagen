@@ -586,34 +586,6 @@ namespace Mutagen.Bethesda.Oblivion
             GenderedBodyDataSetterCommon.Instance.Clear(this);
         }
 
-        public static GenderedBodyData Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new GenderedBodyData();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_GenderedBodyData(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_GenderedBodyData(GenderedBodyData obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out GenderedBodyData_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case GenderedBodyData_FieldIndex.Male:
-                    obj.Male = (BodyData)pair.Value;
-                    break;
-                case GenderedBodyData_FieldIndex.Female:
-                    obj.Female = (BodyData)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

@@ -891,55 +891,6 @@ namespace Mutagen.Bethesda.Oblivion
             PotionSetterCommon.Instance.Clear(this);
         }
 
-        public new static Potion Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Potion();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Potion(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_Potion(Potion obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Potion_FieldIndex enu))
-            {
-                CopyInInternal_ItemAbstract(obj, pair);
-            }
-            switch (enu)
-            {
-                case Potion_FieldIndex.Name:
-                    obj.Name = (String)pair.Value;
-                    break;
-                case Potion_FieldIndex.Model:
-                    obj.Model = (Model)pair.Value;
-                    break;
-                case Potion_FieldIndex.Icon:
-                    obj.Icon = (String)pair.Value;
-                    break;
-                case Potion_FieldIndex.Script:
-                    obj.Script_Property.Set((IFormIDSetLink<Script>)pair.Value);
-                    break;
-                case Potion_FieldIndex.Weight:
-                    obj.Weight = (Single)pair.Value;
-                    break;
-                case Potion_FieldIndex.Value:
-                    obj.Value = (UInt32)pair.Value;
-                    break;
-                case Potion_FieldIndex.Flags:
-                    obj.Flags = (IngredientFlag)pair.Value;
-                    break;
-                case Potion_FieldIndex.Effects:
-                    obj._Effects.SetTo((ISetList<Effect>)pair.Value);
-                    break;
-                case Potion_FieldIndex.ENITDataTypeState:
-                    obj.ENITDataTypeState = (Potion.ENITDataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

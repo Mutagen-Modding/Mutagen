@@ -496,37 +496,6 @@ namespace Mutagen.Bethesda.Oblivion
             HavokDataSetterCommon.Instance.Clear(this);
         }
 
-        public static HavokData Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new HavokData();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_HavokData(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_HavokData(HavokData obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out HavokData_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case HavokData_FieldIndex.Material:
-                    obj.Material = (HavokData.MaterialType)pair.Value;
-                    break;
-                case HavokData_FieldIndex.Friction:
-                    obj.Friction = (Byte)pair.Value;
-                    break;
-                case HavokData_FieldIndex.Restitution:
-                    obj.Restitution = (Byte)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

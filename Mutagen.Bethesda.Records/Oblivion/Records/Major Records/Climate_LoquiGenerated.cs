@@ -918,64 +918,6 @@ namespace Mutagen.Bethesda.Oblivion
             ClimateSetterCommon.Instance.Clear(this);
         }
 
-        public new static Climate Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Climate();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Climate(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_Climate(Climate obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Climate_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case Climate_FieldIndex.Weathers:
-                    obj._Weathers.SetTo((ISetList<WeatherChance>)pair.Value);
-                    break;
-                case Climate_FieldIndex.SunTexture:
-                    obj.SunTexture = (String)pair.Value;
-                    break;
-                case Climate_FieldIndex.SunGlareTexture:
-                    obj.SunGlareTexture = (String)pair.Value;
-                    break;
-                case Climate_FieldIndex.Model:
-                    obj.Model = (Model)pair.Value;
-                    break;
-                case Climate_FieldIndex.SunriseBegin:
-                    obj.SunriseBegin = (DateTime)pair.Value;
-                    break;
-                case Climate_FieldIndex.SunriseEnd:
-                    obj.SunriseEnd = (DateTime)pair.Value;
-                    break;
-                case Climate_FieldIndex.SunsetBegin:
-                    obj.SunsetBegin = (DateTime)pair.Value;
-                    break;
-                case Climate_FieldIndex.SunsetEnd:
-                    obj.SunsetEnd = (DateTime)pair.Value;
-                    break;
-                case Climate_FieldIndex.Volatility:
-                    obj.Volatility = (Byte)pair.Value;
-                    break;
-                case Climate_FieldIndex.Phase:
-                    obj.Phase = (Climate.MoonPhase)pair.Value;
-                    break;
-                case Climate_FieldIndex.PhaseLength:
-                    obj.PhaseLength = (Byte)pair.Value;
-                    break;
-                case Climate_FieldIndex.TNAMDataTypeState:
-                    obj.TNAMDataTypeState = (Climate.TNAMDataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

@@ -531,37 +531,6 @@ namespace Mutagen.Bethesda.Oblivion
             TeleportDestinationSetterCommon.Instance.Clear(this);
         }
 
-        public static TeleportDestination Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new TeleportDestination();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_TeleportDestination(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_TeleportDestination(TeleportDestination obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out TeleportDestination_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case TeleportDestination_FieldIndex.Destination:
-                    obj.Destination_Property.Set((IFormIDLink<IPlaced>)pair.Value);
-                    break;
-                case TeleportDestination_FieldIndex.Position:
-                    obj.Position = (P3Float)pair.Value;
-                    break;
-                case TeleportDestination_FieldIndex.Rotation:
-                    obj.Rotation = (P3Float)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

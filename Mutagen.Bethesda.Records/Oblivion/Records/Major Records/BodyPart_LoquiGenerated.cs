@@ -570,34 +570,6 @@ namespace Mutagen.Bethesda.Oblivion
             BodyPartSetterCommon.Instance.Clear(this);
         }
 
-        public static BodyPart Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new BodyPart();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_BodyPart(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_BodyPart(BodyPart obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out BodyPart_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case BodyPart_FieldIndex.Index:
-                    obj.Index = (Race.BodyIndex)pair.Value;
-                    break;
-                case BodyPart_FieldIndex.Icon:
-                    obj.Icon = (String)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

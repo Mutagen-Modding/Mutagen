@@ -561,31 +561,6 @@ namespace Mutagen.Bethesda.Oblivion
             GameSettingIntSetterCommon.Instance.Clear(this);
         }
 
-        public new static GameSettingInt Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new GameSettingInt();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_GameSettingInt(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_GameSettingInt(GameSettingInt obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out GameSettingInt_FieldIndex enu))
-            {
-                CopyInInternal_GameSetting(obj, pair);
-            }
-            switch (enu)
-            {
-                case GameSettingInt_FieldIndex.Data:
-                    obj.Data = (Int32)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

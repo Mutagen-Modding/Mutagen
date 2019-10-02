@@ -540,31 +540,6 @@ namespace Mutagen.Bethesda.Oblivion
             RoadSetterCommon.Instance.Clear(this);
         }
 
-        public new static Road Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Road();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Road(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_Road(Road obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Road_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case Road_FieldIndex.Points:
-                    obj._Points.SetTo((ISetList<RoadPoint>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

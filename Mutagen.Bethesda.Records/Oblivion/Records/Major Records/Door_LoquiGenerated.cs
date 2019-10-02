@@ -836,52 +836,6 @@ namespace Mutagen.Bethesda.Oblivion
             DoorSetterCommon.Instance.Clear(this);
         }
 
-        public new static Door Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Door();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Door(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_Door(Door obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Door_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case Door_FieldIndex.Name:
-                    obj.Name = (String)pair.Value;
-                    break;
-                case Door_FieldIndex.Model:
-                    obj.Model = (Model)pair.Value;
-                    break;
-                case Door_FieldIndex.Script:
-                    obj.Script_Property.Set((IFormIDSetLink<Script>)pair.Value);
-                    break;
-                case Door_FieldIndex.OpenSound:
-                    obj.OpenSound_Property.Set((IFormIDSetLink<Sound>)pair.Value);
-                    break;
-                case Door_FieldIndex.CloseSound:
-                    obj.CloseSound_Property.Set((IFormIDSetLink<Sound>)pair.Value);
-                    break;
-                case Door_FieldIndex.LoopSound:
-                    obj.LoopSound_Property.Set((IFormIDSetLink<Sound>)pair.Value);
-                    break;
-                case Door_FieldIndex.Flags:
-                    obj.Flags = (Door.DoorFlag)pair.Value;
-                    break;
-                case Door_FieldIndex.RandomTeleportDestinations:
-                    obj._RandomTeleportDestinations.SetTo((ISetList<IFormIDLink<Place>>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

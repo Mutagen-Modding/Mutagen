@@ -573,31 +573,6 @@ namespace Mutagen.Bethesda.Skyrim
             LocationReferenceTypeSetterCommon.Instance.Clear(this);
         }
 
-        public new static LocationReferenceType Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new LocationReferenceType();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_LocationReferenceType(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_LocationReferenceType(LocationReferenceType obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out LocationReferenceType_FieldIndex enu))
-            {
-                CopyInInternal_SkyrimMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case LocationReferenceType_FieldIndex.Color:
-                    obj.Color = (Color)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

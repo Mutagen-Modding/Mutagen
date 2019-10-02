@@ -571,31 +571,6 @@ namespace Mutagen.Bethesda.Oblivion
             RegionDataWeatherSetterCommon.Instance.Clear(this);
         }
 
-        public new static RegionDataWeather Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new RegionDataWeather();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_RegionDataWeather(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_RegionDataWeather(RegionDataWeather obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out RegionDataWeather_FieldIndex enu))
-            {
-                CopyInInternal_RegionData(obj, pair);
-            }
-            switch (enu)
-            {
-                case RegionDataWeather_FieldIndex.Weathers:
-                    obj._Weathers.SetTo((ISetList<WeatherChance>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

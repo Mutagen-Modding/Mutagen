@@ -601,37 +601,6 @@ namespace Mutagen.Bethesda.Oblivion
             ClothingSetterCommon.Instance.Clear(this);
         }
 
-        public new static Clothing Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Clothing();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Clothing(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_Clothing(Clothing obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Clothing_FieldIndex enu))
-            {
-                CopyInInternal_ClothingAbstract(obj, pair);
-            }
-            switch (enu)
-            {
-                case Clothing_FieldIndex.Value:
-                    obj.Value = (UInt32)pair.Value;
-                    break;
-                case Clothing_FieldIndex.Weight:
-                    obj.Weight = (Single)pair.Value;
-                    break;
-                case Clothing_FieldIndex.DATADataTypeState:
-                    obj.DATADataTypeState = (Clothing.DATADataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

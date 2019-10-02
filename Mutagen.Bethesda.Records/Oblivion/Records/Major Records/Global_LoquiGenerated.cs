@@ -426,18 +426,6 @@ namespace Mutagen.Bethesda.Oblivion
             GlobalSetterCommon.Instance.Clear(this);
         }
 
-        protected new static void CopyInInternal_Global(Global obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Global_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

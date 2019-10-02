@@ -903,61 +903,6 @@ namespace Mutagen.Bethesda.Oblivion
             AmmoSetterCommon.Instance.Clear(this);
         }
 
-        public new static Ammo Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Ammo();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Ammo(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_Ammo(Ammo obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Ammo_FieldIndex enu))
-            {
-                CopyInInternal_ItemAbstract(obj, pair);
-            }
-            switch (enu)
-            {
-                case Ammo_FieldIndex.Name:
-                    obj.Name = (String)pair.Value;
-                    break;
-                case Ammo_FieldIndex.Model:
-                    obj.Model = (Model)pair.Value;
-                    break;
-                case Ammo_FieldIndex.Icon:
-                    obj.Icon = (String)pair.Value;
-                    break;
-                case Ammo_FieldIndex.Enchantment:
-                    obj.Enchantment_Property.Set((IFormIDSetLink<Enchantment>)pair.Value);
-                    break;
-                case Ammo_FieldIndex.EnchantmentPoints:
-                    obj.EnchantmentPoints = (UInt16)pair.Value;
-                    break;
-                case Ammo_FieldIndex.Speed:
-                    obj.Speed = (Single)pair.Value;
-                    break;
-                case Ammo_FieldIndex.Flags:
-                    obj.Flags = (Ammo.AmmoFlag)pair.Value;
-                    break;
-                case Ammo_FieldIndex.Value:
-                    obj.Value = (UInt32)pair.Value;
-                    break;
-                case Ammo_FieldIndex.Weight:
-                    obj.Weight = (Single)pair.Value;
-                    break;
-                case Ammo_FieldIndex.Damage:
-                    obj.Damage = (UInt16)pair.Value;
-                    break;
-                case Ammo_FieldIndex.DATADataTypeState:
-                    obj.DATADataTypeState = (Ammo.DATADataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

@@ -728,43 +728,6 @@ namespace Mutagen.Bethesda.Oblivion
             LeveledCreatureSetterCommon.Instance.Clear(this);
         }
 
-        public new static LeveledCreature Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new LeveledCreature();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_LeveledCreature(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_LeveledCreature(LeveledCreature obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out LeveledCreature_FieldIndex enu))
-            {
-                CopyInInternal_NPCSpawn(obj, pair);
-            }
-            switch (enu)
-            {
-                case LeveledCreature_FieldIndex.ChanceNone:
-                    obj.ChanceNone = (Byte)pair.Value;
-                    break;
-                case LeveledCreature_FieldIndex.Flags:
-                    obj.Flags = (LeveledFlag)pair.Value;
-                    break;
-                case LeveledCreature_FieldIndex.Entries:
-                    obj._Entries.SetTo((ISetList<LeveledEntry<NPCSpawn>>)pair.Value);
-                    break;
-                case LeveledCreature_FieldIndex.Script:
-                    obj.Script_Property.Set((IFormIDSetLink<Script>)pair.Value);
-                    break;
-                case LeveledCreature_FieldIndex.Template:
-                    obj.Template_Property.Set((IFormIDSetLink<NPCAbstract>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

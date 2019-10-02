@@ -503,34 +503,6 @@ namespace Mutagen.Bethesda.Oblivion
             RaceVoicesSetterCommon.Instance.Clear(this);
         }
 
-        public static RaceVoices Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new RaceVoices();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_RaceVoices(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_RaceVoices(RaceVoices obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out RaceVoices_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case RaceVoices_FieldIndex.Male:
-                    obj.Male_Property.Set((IFormIDLink<Race>)pair.Value);
-                    break;
-                case RaceVoices_FieldIndex.Female:
-                    obj.Female_Property.Set((IFormIDLink<Race>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

@@ -724,52 +724,6 @@ namespace Mutagen.Bethesda.Oblivion
             EffectSetterCommon.Instance.Clear(this);
         }
 
-        public static Effect Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Effect();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Effect(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_Effect(Effect obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Effect_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case Effect_FieldIndex.MagicEffect:
-                    obj.MagicEffect_Property.Set((IEDIDLink<MagicEffect>)pair.Value);
-                    break;
-                case Effect_FieldIndex.Magnitude:
-                    obj.Magnitude = (UInt32)pair.Value;
-                    break;
-                case Effect_FieldIndex.Area:
-                    obj.Area = (UInt32)pair.Value;
-                    break;
-                case Effect_FieldIndex.Duration:
-                    obj.Duration = (UInt32)pair.Value;
-                    break;
-                case Effect_FieldIndex.Type:
-                    obj.Type = (Effect.EffectType)pair.Value;
-                    break;
-                case Effect_FieldIndex.ActorValue:
-                    obj.ActorValue = (ActorValueExtended)pair.Value;
-                    break;
-                case Effect_FieldIndex.ScriptEffect:
-                    obj.ScriptEffect = (ScriptEffect)pair.Value;
-                    break;
-                case Effect_FieldIndex.EFITDataTypeState:
-                    obj.EFITDataTypeState = (Effect.EFITDataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

@@ -859,55 +859,6 @@ namespace Mutagen.Bethesda.Oblivion
             ContainerSetterCommon.Instance.Clear(this);
         }
 
-        public new static Container Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Container();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Container(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_Container(Container obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Container_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case Container_FieldIndex.Name:
-                    obj.Name = (String)pair.Value;
-                    break;
-                case Container_FieldIndex.Model:
-                    obj.Model = (Model)pair.Value;
-                    break;
-                case Container_FieldIndex.Script:
-                    obj.Script_Property.Set((IFormIDSetLink<Script>)pair.Value);
-                    break;
-                case Container_FieldIndex.Items:
-                    obj._Items.SetTo((ISetList<ContainerItem>)pair.Value);
-                    break;
-                case Container_FieldIndex.Flags:
-                    obj.Flags = (Container.ContainerFlag)pair.Value;
-                    break;
-                case Container_FieldIndex.Weight:
-                    obj.Weight = (Single)pair.Value;
-                    break;
-                case Container_FieldIndex.OpenSound:
-                    obj.OpenSound_Property.Set((IFormIDSetLink<Sound>)pair.Value);
-                    break;
-                case Container_FieldIndex.CloseSound:
-                    obj.CloseSound_Property.Set((IFormIDSetLink<Sound>)pair.Value);
-                    break;
-                case Container_FieldIndex.DATADataTypeState:
-                    obj.DATADataTypeState = (Container.DATADataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

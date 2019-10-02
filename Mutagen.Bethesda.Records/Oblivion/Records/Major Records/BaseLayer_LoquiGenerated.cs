@@ -636,40 +636,6 @@ namespace Mutagen.Bethesda.Oblivion
             BaseLayerSetterCommon.Instance.Clear(this);
         }
 
-        public static BaseLayer Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new BaseLayer();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_BaseLayer(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_BaseLayer(BaseLayer obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out BaseLayer_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case BaseLayer_FieldIndex.Texture:
-                    obj.Texture_Property.Set((IFormIDLink<LandTexture>)pair.Value);
-                    break;
-                case BaseLayer_FieldIndex.Quadrant:
-                    obj.Quadrant = (AlphaLayer.QuadrantEnum)pair.Value;
-                    break;
-                case BaseLayer_FieldIndex.LayerNumber:
-                    obj.LayerNumber = (UInt16)pair.Value;
-                    break;
-                case BaseLayer_FieldIndex.BTXTDataTypeState:
-                    obj.BTXTDataTypeState = (BaseLayer.BTXTDataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

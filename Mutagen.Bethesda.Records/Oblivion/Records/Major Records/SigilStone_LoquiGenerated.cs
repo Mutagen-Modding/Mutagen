@@ -862,55 +862,6 @@ namespace Mutagen.Bethesda.Oblivion
             SigilStoneSetterCommon.Instance.Clear(this);
         }
 
-        public new static SigilStone Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new SigilStone();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_SigilStone(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_SigilStone(SigilStone obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out SigilStone_FieldIndex enu))
-            {
-                CopyInInternal_ItemAbstract(obj, pair);
-            }
-            switch (enu)
-            {
-                case SigilStone_FieldIndex.Name:
-                    obj.Name = (String)pair.Value;
-                    break;
-                case SigilStone_FieldIndex.Model:
-                    obj.Model = (Model)pair.Value;
-                    break;
-                case SigilStone_FieldIndex.Icon:
-                    obj.Icon = (String)pair.Value;
-                    break;
-                case SigilStone_FieldIndex.Script:
-                    obj.Script_Property.Set((IFormIDSetLink<Script>)pair.Value);
-                    break;
-                case SigilStone_FieldIndex.Effects:
-                    obj._Effects.SetTo((ISetList<Effect>)pair.Value);
-                    break;
-                case SigilStone_FieldIndex.Uses:
-                    obj.Uses = (Byte)pair.Value;
-                    break;
-                case SigilStone_FieldIndex.Value:
-                    obj.Value = (UInt32)pair.Value;
-                    break;
-                case SigilStone_FieldIndex.Weight:
-                    obj.Weight = (Single)pair.Value;
-                    break;
-                case SigilStone_FieldIndex.DATADataTypeState:
-                    obj.DATADataTypeState = (SigilStone.DATADataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

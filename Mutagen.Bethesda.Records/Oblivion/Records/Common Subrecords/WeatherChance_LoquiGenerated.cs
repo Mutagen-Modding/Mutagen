@@ -501,34 +501,6 @@ namespace Mutagen.Bethesda.Oblivion
             WeatherChanceSetterCommon.Instance.Clear(this);
         }
 
-        public static WeatherChance Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new WeatherChance();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_WeatherChance(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_WeatherChance(WeatherChance obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out WeatherChance_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case WeatherChance_FieldIndex.Weather:
-                    obj.Weather_Property.Set((IFormIDLink<Weather>)pair.Value);
-                    break;
-                case WeatherChance_FieldIndex.Chance:
-                    obj.Chance = (Int32)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

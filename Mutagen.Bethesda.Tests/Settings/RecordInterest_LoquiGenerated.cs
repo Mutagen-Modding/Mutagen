@@ -494,34 +494,6 @@ namespace Mutagen.Bethesda.Tests
             RecordInterestSetterCommon.Instance.Clear(this);
         }
 
-        public static RecordInterest Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new RecordInterest();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_RecordInterest(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_RecordInterest(RecordInterest obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out RecordInterest_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case RecordInterest_FieldIndex.InterestingTypes:
-                    obj._InterestingTypes.SetTo((IList<String>)pair.Value);
-                    break;
-                case RecordInterest_FieldIndex.UninterestingTypes:
-                    obj._UninterestingTypes.SetTo((IList<String>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

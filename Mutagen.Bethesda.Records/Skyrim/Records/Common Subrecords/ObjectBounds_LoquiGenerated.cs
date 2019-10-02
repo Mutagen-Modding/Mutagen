@@ -497,34 +497,6 @@ namespace Mutagen.Bethesda.Skyrim
             ObjectBoundsSetterCommon.Instance.Clear(this);
         }
 
-        public static ObjectBounds Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new ObjectBounds();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_ObjectBounds(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_ObjectBounds(ObjectBounds obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out ObjectBounds_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case ObjectBounds_FieldIndex.First:
-                    obj.First = (P3Int16)pair.Value;
-                    break;
-                case ObjectBounds_FieldIndex.Second:
-                    obj.Second = (P3Int16)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

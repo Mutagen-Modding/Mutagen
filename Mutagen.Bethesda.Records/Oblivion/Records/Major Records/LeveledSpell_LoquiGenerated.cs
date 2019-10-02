@@ -676,37 +676,6 @@ namespace Mutagen.Bethesda.Oblivion
             LeveledSpellSetterCommon.Instance.Clear(this);
         }
 
-        public new static LeveledSpell Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new LeveledSpell();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_LeveledSpell(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_LeveledSpell(LeveledSpell obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out LeveledSpell_FieldIndex enu))
-            {
-                CopyInInternal_SpellAbstract(obj, pair);
-            }
-            switch (enu)
-            {
-                case LeveledSpell_FieldIndex.ChanceNone:
-                    obj.ChanceNone = (Byte)pair.Value;
-                    break;
-                case LeveledSpell_FieldIndex.Flags:
-                    obj.Flags = (LeveledFlag)pair.Value;
-                    break;
-                case LeveledSpell_FieldIndex.Entries:
-                    obj._Entries.SetTo((ISetList<LeveledEntry<SpellAbstract>>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

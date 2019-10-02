@@ -562,31 +562,6 @@ namespace Mutagen.Bethesda.Oblivion
             RegionDataMapNameSetterCommon.Instance.Clear(this);
         }
 
-        public new static RegionDataMapName Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new RegionDataMapName();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_RegionDataMapName(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_RegionDataMapName(RegionDataMapName obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out RegionDataMapName_FieldIndex enu))
-            {
-                CopyInInternal_RegionData(obj, pair);
-            }
-            switch (enu)
-            {
-                case RegionDataMapName_FieldIndex.MapName:
-                    obj.MapName = (String)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

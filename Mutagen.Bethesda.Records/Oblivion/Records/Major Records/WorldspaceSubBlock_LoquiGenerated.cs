@@ -594,43 +594,6 @@ namespace Mutagen.Bethesda.Oblivion
             WorldspaceSubBlockSetterCommon.Instance.Clear(this);
         }
 
-        public static WorldspaceSubBlock Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new WorldspaceSubBlock();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_WorldspaceSubBlock(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_WorldspaceSubBlock(WorldspaceSubBlock obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out WorldspaceSubBlock_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case WorldspaceSubBlock_FieldIndex.BlockNumberY:
-                    obj.BlockNumberY = (Int16)pair.Value;
-                    break;
-                case WorldspaceSubBlock_FieldIndex.BlockNumberX:
-                    obj.BlockNumberX = (Int16)pair.Value;
-                    break;
-                case WorldspaceSubBlock_FieldIndex.GroupType:
-                    obj.GroupType = (GroupTypeEnum)pair.Value;
-                    break;
-                case WorldspaceSubBlock_FieldIndex.LastModified:
-                    obj.LastModified = (Byte[])pair.Value;
-                    break;
-                case WorldspaceSubBlock_FieldIndex.Items:
-                    obj._Items.SetTo((ISetList<Cell>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

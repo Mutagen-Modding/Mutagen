@@ -570,31 +570,6 @@ namespace Mutagen.Bethesda.Skyrim
             GlobalFloatSetterCommon.Instance.Clear(this);
         }
 
-        public new static GlobalFloat Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new GlobalFloat();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_GlobalFloat(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_GlobalFloat(GlobalFloat obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out GlobalFloat_FieldIndex enu))
-            {
-                CopyInInternal_Global(obj, pair);
-            }
-            switch (enu)
-            {
-                case GlobalFloat_FieldIndex.Data:
-                    obj.Data = (Single)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

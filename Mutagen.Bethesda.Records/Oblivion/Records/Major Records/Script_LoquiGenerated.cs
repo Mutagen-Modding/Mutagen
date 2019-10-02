@@ -622,31 +622,6 @@ namespace Mutagen.Bethesda.Oblivion
             ScriptSetterCommon.Instance.Clear(this);
         }
 
-        public new static Script Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Script();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Script(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_Script(Script obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Script_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case Script_FieldIndex.Fields:
-                    obj.Fields.CopyFieldsFrom(rhs: (ScriptFields)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

@@ -563,31 +563,6 @@ namespace Mutagen.Bethesda.Oblivion
             RegionDataGrassesSetterCommon.Instance.Clear(this);
         }
 
-        public new static RegionDataGrasses Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new RegionDataGrasses();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_RegionDataGrasses(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_RegionDataGrasses(RegionDataGrasses obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out RegionDataGrasses_FieldIndex enu))
-            {
-                CopyInInternal_RegionData(obj, pair);
-            }
-            switch (enu)
-            {
-                case RegionDataGrasses_FieldIndex.Grasses:
-                    obj._Grasses.SetTo((ISetList<IFormIDLink<Grass>>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

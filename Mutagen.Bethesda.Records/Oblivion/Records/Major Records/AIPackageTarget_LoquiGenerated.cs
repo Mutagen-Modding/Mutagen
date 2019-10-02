@@ -496,37 +496,6 @@ namespace Mutagen.Bethesda.Oblivion
             AIPackageTargetSetterCommon.Instance.Clear(this);
         }
 
-        public static AIPackageTarget Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new AIPackageTarget();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_AIPackageTarget(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_AIPackageTarget(AIPackageTarget obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out AIPackageTarget_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case AIPackageTarget_FieldIndex.ObjectType:
-                    obj.ObjectType = (AIPackageTarget.ObjectTypeEnum)pair.Value;
-                    break;
-                case AIPackageTarget_FieldIndex.Object:
-                    obj.Object = (Int32)pair.Value;
-                    break;
-                case AIPackageTarget_FieldIndex.Count:
-                    obj.Count = (Int32)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

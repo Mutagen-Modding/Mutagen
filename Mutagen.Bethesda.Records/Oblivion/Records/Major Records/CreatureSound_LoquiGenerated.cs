@@ -589,34 +589,6 @@ namespace Mutagen.Bethesda.Oblivion
             CreatureSoundSetterCommon.Instance.Clear(this);
         }
 
-        public static CreatureSound Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new CreatureSound();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_CreatureSound(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_CreatureSound(CreatureSound obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out CreatureSound_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case CreatureSound_FieldIndex.SoundType:
-                    obj.SoundType = (CreatureSound.CreatureSoundType)pair.Value;
-                    break;
-                case CreatureSound_FieldIndex.Sounds:
-                    obj._Sounds.SetTo((ISetList<SoundItem>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

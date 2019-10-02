@@ -539,34 +539,6 @@ namespace Mutagen.Bethesda
             MasterReferenceSetterCommon.Instance.Clear(this);
         }
 
-        public static MasterReference Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new MasterReference();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_MasterReference(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_MasterReference(MasterReference obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out MasterReference_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case MasterReference_FieldIndex.Master:
-                    obj.Master = (ModKey)pair.Value;
-                    break;
-                case MasterReference_FieldIndex.FileSize:
-                    obj.FileSize = (UInt64)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

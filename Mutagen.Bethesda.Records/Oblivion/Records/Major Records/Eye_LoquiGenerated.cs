@@ -665,37 +665,6 @@ namespace Mutagen.Bethesda.Oblivion
             EyeSetterCommon.Instance.Clear(this);
         }
 
-        public new static Eye Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Eye();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Eye(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_Eye(Eye obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Eye_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case Eye_FieldIndex.Name:
-                    obj.Name = (String)pair.Value;
-                    break;
-                case Eye_FieldIndex.Icon:
-                    obj.Icon = (String)pair.Value;
-                    break;
-                case Eye_FieldIndex.Flags:
-                    obj.Flags = (Eye.Flag)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

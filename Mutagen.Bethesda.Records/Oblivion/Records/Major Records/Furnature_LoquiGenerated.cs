@@ -719,40 +719,6 @@ namespace Mutagen.Bethesda.Oblivion
             FurnatureSetterCommon.Instance.Clear(this);
         }
 
-        public new static Furnature Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Furnature();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Furnature(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_Furnature(Furnature obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Furnature_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case Furnature_FieldIndex.Name:
-                    obj.Name = (String)pair.Value;
-                    break;
-                case Furnature_FieldIndex.Model:
-                    obj.Model = (Model)pair.Value;
-                    break;
-                case Furnature_FieldIndex.Script:
-                    obj.Script_Property.Set((IFormIDSetLink<Script>)pair.Value);
-                    break;
-                case Furnature_FieldIndex.MarkerFlags:
-                    obj.MarkerFlags = (Byte[])pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

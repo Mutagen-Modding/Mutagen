@@ -850,55 +850,6 @@ namespace Mutagen.Bethesda.Oblivion
             AlchemicalApparatusSetterCommon.Instance.Clear(this);
         }
 
-        public new static AlchemicalApparatus Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new AlchemicalApparatus();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_AlchemicalApparatus(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_AlchemicalApparatus(AlchemicalApparatus obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out AlchemicalApparatus_FieldIndex enu))
-            {
-                CopyInInternal_ItemAbstract(obj, pair);
-            }
-            switch (enu)
-            {
-                case AlchemicalApparatus_FieldIndex.Name:
-                    obj.Name = (String)pair.Value;
-                    break;
-                case AlchemicalApparatus_FieldIndex.Model:
-                    obj.Model = (Model)pair.Value;
-                    break;
-                case AlchemicalApparatus_FieldIndex.Icon:
-                    obj.Icon = (String)pair.Value;
-                    break;
-                case AlchemicalApparatus_FieldIndex.Script:
-                    obj.Script_Property.Set((IFormIDSetLink<Script>)pair.Value);
-                    break;
-                case AlchemicalApparatus_FieldIndex.Type:
-                    obj.Type = (AlchemicalApparatus.ApparatusType)pair.Value;
-                    break;
-                case AlchemicalApparatus_FieldIndex.Value:
-                    obj.Value = (UInt32)pair.Value;
-                    break;
-                case AlchemicalApparatus_FieldIndex.Weight:
-                    obj.Weight = (Single)pair.Value;
-                    break;
-                case AlchemicalApparatus_FieldIndex.Quality:
-                    obj.Quality = (Single)pair.Value;
-                    break;
-                case AlchemicalApparatus_FieldIndex.DATADataTypeState:
-                    obj.DATADataTypeState = (AlchemicalApparatus.DATADataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

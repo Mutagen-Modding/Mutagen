@@ -514,34 +514,6 @@ namespace Mutagen.Bethesda.Oblivion
             WeatherSoundSetterCommon.Instance.Clear(this);
         }
 
-        public static WeatherSound Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new WeatherSound();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_WeatherSound(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_WeatherSound(WeatherSound obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out WeatherSound_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case WeatherSound_FieldIndex.Sound:
-                    obj.Sound_Property.Set((IFormIDLink<Sound>)pair.Value);
-                    break;
-                case WeatherSound_FieldIndex.Type:
-                    obj.Type = (WeatherSound.SoundType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

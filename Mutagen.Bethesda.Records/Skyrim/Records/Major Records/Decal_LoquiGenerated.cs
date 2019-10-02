@@ -635,61 +635,6 @@ namespace Mutagen.Bethesda.Skyrim
             DecalSetterCommon.Instance.Clear(this);
         }
 
-        public static Decal Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Decal();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Decal(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_Decal(Decal obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Decal_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case Decal_FieldIndex.MinWidth:
-                    obj.MinWidth = (Single)pair.Value;
-                    break;
-                case Decal_FieldIndex.MaxWidth:
-                    obj.MaxWidth = (Single)pair.Value;
-                    break;
-                case Decal_FieldIndex.MinHeight:
-                    obj.MinHeight = (Single)pair.Value;
-                    break;
-                case Decal_FieldIndex.MaxHeight:
-                    obj.MaxHeight = (Single)pair.Value;
-                    break;
-                case Decal_FieldIndex.Depth:
-                    obj.Depth = (Single)pair.Value;
-                    break;
-                case Decal_FieldIndex.Shininess:
-                    obj.Shininess = (Single)pair.Value;
-                    break;
-                case Decal_FieldIndex.ParallaxScale:
-                    obj.ParallaxScale = (Single)pair.Value;
-                    break;
-                case Decal_FieldIndex.ParallaxPasses:
-                    obj.ParallaxPasses = (Byte)pair.Value;
-                    break;
-                case Decal_FieldIndex.Flags:
-                    obj.Flags = (Decal.Flag)pair.Value;
-                    break;
-                case Decal_FieldIndex.Unknown:
-                    obj.Unknown = (UInt16)pair.Value;
-                    break;
-                case Decal_FieldIndex.Color:
-                    obj.Color = (Color)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

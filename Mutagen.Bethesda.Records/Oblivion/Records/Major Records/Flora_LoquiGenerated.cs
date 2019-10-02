@@ -801,55 +801,6 @@ namespace Mutagen.Bethesda.Oblivion
             FloraSetterCommon.Instance.Clear(this);
         }
 
-        public new static Flora Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Flora();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Flora(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_Flora(Flora obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Flora_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case Flora_FieldIndex.Name:
-                    obj.Name = (String)pair.Value;
-                    break;
-                case Flora_FieldIndex.Model:
-                    obj.Model = (Model)pair.Value;
-                    break;
-                case Flora_FieldIndex.Script:
-                    obj.Script_Property.Set((IFormIDSetLink<Script>)pair.Value);
-                    break;
-                case Flora_FieldIndex.Ingredient:
-                    obj.Ingredient_Property.Set((IFormIDSetLink<Ingredient>)pair.Value);
-                    break;
-                case Flora_FieldIndex.Spring:
-                    obj.Spring = (Byte)pair.Value;
-                    break;
-                case Flora_FieldIndex.Summer:
-                    obj.Summer = (Byte)pair.Value;
-                    break;
-                case Flora_FieldIndex.Fall:
-                    obj.Fall = (Byte)pair.Value;
-                    break;
-                case Flora_FieldIndex.Winter:
-                    obj.Winter = (Byte)pair.Value;
-                    break;
-                case Flora_FieldIndex.PFPCDataTypeState:
-                    obj.PFPCDataTypeState = (Flora.PFPCDataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

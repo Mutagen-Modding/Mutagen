@@ -509,40 +509,6 @@ namespace Mutagen.Bethesda.Oblivion
             SoundDataSetterCommon.Instance.Clear(this);
         }
 
-        public static SoundData Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new SoundData();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_SoundData(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_SoundData(SoundData obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out SoundData_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case SoundData_FieldIndex.MinimumAttenuationDistance:
-                    obj.MinimumAttenuationDistance = (UInt16)pair.Value;
-                    break;
-                case SoundData_FieldIndex.MaximumAttenuationDistance:
-                    obj.MaximumAttenuationDistance = (UInt16)pair.Value;
-                    break;
-                case SoundData_FieldIndex.FrequencyAdjustment:
-                    obj.FrequencyAdjustment = (SByte)pair.Value;
-                    break;
-                case SoundData_FieldIndex.Flags:
-                    obj.Flags = (SoundData.Flag)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

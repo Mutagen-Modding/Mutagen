@@ -712,52 +712,6 @@ namespace Mutagen.Bethesda.Oblivion
             DialogResponseSetterCommon.Instance.Clear(this);
         }
 
-        public static DialogResponse Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new DialogResponse();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_DialogResponse(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_DialogResponse(DialogResponse obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out DialogResponse_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case DialogResponse_FieldIndex.Emotion:
-                    obj.Emotion = (EmotionType)pair.Value;
-                    break;
-                case DialogResponse_FieldIndex.EmotionValue:
-                    obj.EmotionValue = (Int32)pair.Value;
-                    break;
-                case DialogResponse_FieldIndex.Fluff1:
-                    obj.Fluff1 = (Byte[])pair.Value;
-                    break;
-                case DialogResponse_FieldIndex.ResponseNumber:
-                    obj.ResponseNumber = (Byte)pair.Value;
-                    break;
-                case DialogResponse_FieldIndex.Fluff2:
-                    obj.Fluff2 = (Byte[])pair.Value;
-                    break;
-                case DialogResponse_FieldIndex.ResponseText:
-                    obj.ResponseText = (String)pair.Value;
-                    break;
-                case DialogResponse_FieldIndex.ActorNotes:
-                    obj.ActorNotes = (String)pair.Value;
-                    break;
-                case DialogResponse_FieldIndex.TRDTDataTypeState:
-                    obj.TRDTDataTypeState = (DialogResponse.TRDTDataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

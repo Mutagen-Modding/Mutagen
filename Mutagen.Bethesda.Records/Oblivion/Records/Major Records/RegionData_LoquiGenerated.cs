@@ -557,30 +557,6 @@ namespace Mutagen.Bethesda.Oblivion
             RegionDataSetterCommon.Instance.Clear(this);
         }
 
-        protected static void CopyInInternal_RegionData(RegionData obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out RegionData_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case RegionData_FieldIndex.DataType:
-                    obj.DataType = (RegionData.RegionDataType)pair.Value;
-                    break;
-                case RegionData_FieldIndex.Flags:
-                    obj.Flags = (RegionData.RegionDataFlag)pair.Value;
-                    break;
-                case RegionData_FieldIndex.Priority:
-                    obj.Priority = (Byte)pair.Value;
-                    break;
-                case RegionData_FieldIndex.RDATDataTypeState:
-                    obj.RDATDataTypeState = (RegionData.RDATDataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

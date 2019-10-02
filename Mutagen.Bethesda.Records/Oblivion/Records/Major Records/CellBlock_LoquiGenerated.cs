@@ -587,40 +587,6 @@ namespace Mutagen.Bethesda.Oblivion
             CellBlockSetterCommon.Instance.Clear(this);
         }
 
-        public static CellBlock Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new CellBlock();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_CellBlock(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_CellBlock(CellBlock obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out CellBlock_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case CellBlock_FieldIndex.BlockNumber:
-                    obj.BlockNumber = (Int32)pair.Value;
-                    break;
-                case CellBlock_FieldIndex.GroupType:
-                    obj.GroupType = (GroupTypeEnum)pair.Value;
-                    break;
-                case CellBlock_FieldIndex.LastModified:
-                    obj.LastModified = (Byte[])pair.Value;
-                    break;
-                case CellBlock_FieldIndex.Items:
-                    obj._Items.SetTo((ISetList<CellSubBlock>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

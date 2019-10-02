@@ -573,31 +573,6 @@ namespace Mutagen.Bethesda.Skyrim
             ActionRecordSetterCommon.Instance.Clear(this);
         }
 
-        public new static ActionRecord Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new ActionRecord();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_ActionRecord(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_ActionRecord(ActionRecord obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out ActionRecord_FieldIndex enu))
-            {
-                CopyInInternal_SkyrimMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case ActionRecord_FieldIndex.Color:
-                    obj.Color = (Color)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

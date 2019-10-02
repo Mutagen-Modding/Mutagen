@@ -505,34 +505,6 @@ namespace Mutagen.Bethesda.Oblivion
             RaceRelationSetterCommon.Instance.Clear(this);
         }
 
-        public static RaceRelation Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new RaceRelation();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_RaceRelation(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_RaceRelation(RaceRelation obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out RaceRelation_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case RaceRelation_FieldIndex.Race:
-                    obj.Race_Property.Set((IFormIDLink<Race>)pair.Value);
-                    break;
-                case RaceRelation_FieldIndex.Modifier:
-                    obj.Modifier = (Int32)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

@@ -628,43 +628,6 @@ namespace Mutagen.Bethesda.Oblivion
             LeveledEntrySetterCommon<T>.Instance.Clear(this);
         }
 
-        public static LeveledEntry<T> Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new LeveledEntry<T>();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_LeveledEntry(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_LeveledEntry(LeveledEntry<T> obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out LeveledEntry_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case LeveledEntry_FieldIndex.Level:
-                    obj.Level = (Int16)pair.Value;
-                    break;
-                case LeveledEntry_FieldIndex.Fluff:
-                    obj.Fluff = (Byte[])pair.Value;
-                    break;
-                case LeveledEntry_FieldIndex.Reference:
-                    obj.Reference_Property.Set((IFormIDLink<T>)pair.Value);
-                    break;
-                case LeveledEntry_FieldIndex.Count:
-                    obj.Count = (Int16)pair.Value;
-                    break;
-                case LeveledEntry_FieldIndex.Fluff2:
-                    obj.Fluff2 = (Byte[])pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

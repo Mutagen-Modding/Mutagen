@@ -434,27 +434,6 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecordSetterCommon.Instance.Clear(this);
         }
 
-        protected new static void CopyInInternal_SkyrimMajorRecord(SkyrimMajorRecord obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out SkyrimMajorRecord_FieldIndex enu))
-            {
-                CopyInInternal_MajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
-                    obj.SkyrimMajorRecordFlags = (SkyrimMajorRecord.SkyrimMajorRecordFlag)pair.Value;
-                    break;
-                case SkyrimMajorRecord_FieldIndex.FormVersion:
-                    obj.FormVersion = (UInt16)pair.Value;
-                    break;
-                case SkyrimMajorRecord_FieldIndex.Version2:
-                    obj.Version2 = (UInt16)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

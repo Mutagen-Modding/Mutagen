@@ -859,52 +859,6 @@ namespace Mutagen.Bethesda.Skyrim
             TexturesSetterCommon.Instance.Clear(this);
         }
 
-        public static Textures Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Textures();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Textures(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_Textures(Textures obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Textures_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case Textures_FieldIndex.Diffuse:
-                    obj.Diffuse = (String)pair.Value;
-                    break;
-                case Textures_FieldIndex.NormalOrGloss:
-                    obj.NormalOrGloss = (String)pair.Value;
-                    break;
-                case Textures_FieldIndex.EnvironmentMaskOrSubsurfaceTint:
-                    obj.EnvironmentMaskOrSubsurfaceTint = (String)pair.Value;
-                    break;
-                case Textures_FieldIndex.GlowOrDetailMap:
-                    obj.GlowOrDetailMap = (String)pair.Value;
-                    break;
-                case Textures_FieldIndex.Height:
-                    obj.Height = (String)pair.Value;
-                    break;
-                case Textures_FieldIndex.Environment:
-                    obj.Environment = (String)pair.Value;
-                    break;
-                case Textures_FieldIndex.Multilayer:
-                    obj.Multilayer = (String)pair.Value;
-                    break;
-                case Textures_FieldIndex.BacklightMaskOrSpecular:
-                    obj.BacklightMaskOrSpecular = (String)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

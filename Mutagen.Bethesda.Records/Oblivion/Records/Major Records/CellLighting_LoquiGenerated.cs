@@ -603,55 +603,6 @@ namespace Mutagen.Bethesda.Oblivion
             CellLightingSetterCommon.Instance.Clear(this);
         }
 
-        public static CellLighting Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new CellLighting();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_CellLighting(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_CellLighting(CellLighting obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out CellLighting_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case CellLighting_FieldIndex.AmbientColor:
-                    obj.AmbientColor = (Color)pair.Value;
-                    break;
-                case CellLighting_FieldIndex.DirectionalColor:
-                    obj.DirectionalColor = (Color)pair.Value;
-                    break;
-                case CellLighting_FieldIndex.FogColor:
-                    obj.FogColor = (Color)pair.Value;
-                    break;
-                case CellLighting_FieldIndex.FogNear:
-                    obj.FogNear = (Single)pair.Value;
-                    break;
-                case CellLighting_FieldIndex.FogFar:
-                    obj.FogFar = (Single)pair.Value;
-                    break;
-                case CellLighting_FieldIndex.DirectionalRotationXY:
-                    obj.DirectionalRotationXY = (Int32)pair.Value;
-                    break;
-                case CellLighting_FieldIndex.DirectionalRotationZ:
-                    obj.DirectionalRotationZ = (Int32)pair.Value;
-                    break;
-                case CellLighting_FieldIndex.DirectionalFade:
-                    obj.DirectionalFade = (Single)pair.Value;
-                    break;
-                case CellLighting_FieldIndex.FogClipDistance:
-                    obj.FogClipDistance = (Single)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

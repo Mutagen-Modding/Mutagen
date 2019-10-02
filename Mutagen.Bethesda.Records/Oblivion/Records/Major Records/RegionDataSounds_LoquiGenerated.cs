@@ -629,34 +629,6 @@ namespace Mutagen.Bethesda.Oblivion
             RegionDataSoundsSetterCommon.Instance.Clear(this);
         }
 
-        public new static RegionDataSounds Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new RegionDataSounds();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_RegionDataSounds(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_RegionDataSounds(RegionDataSounds obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out RegionDataSounds_FieldIndex enu))
-            {
-                CopyInInternal_RegionData(obj, pair);
-            }
-            switch (enu)
-            {
-                case RegionDataSounds_FieldIndex.MusicType:
-                    obj.MusicType = (MusicType)pair.Value;
-                    break;
-                case RegionDataSounds_FieldIndex.Sounds:
-                    obj._Sounds.SetTo((ISetList<RegionSound>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

@@ -922,55 +922,6 @@ namespace Mutagen.Bethesda.Oblivion
             RegionSetterCommon.Instance.Clear(this);
         }
 
-        public new static Region Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Region();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Region(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_Region(Region obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Region_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case Region_FieldIndex.Icon:
-                    obj.Icon = (String)pair.Value;
-                    break;
-                case Region_FieldIndex.MapColor:
-                    obj.MapColor = (Color)pair.Value;
-                    break;
-                case Region_FieldIndex.Worldspace:
-                    obj.Worldspace_Property.Set((IFormIDSetLink<Worldspace>)pair.Value);
-                    break;
-                case Region_FieldIndex.Areas:
-                    obj._Areas.SetTo((ISetList<RegionArea>)pair.Value);
-                    break;
-                case Region_FieldIndex.Objects:
-                    obj.Objects = (RegionDataObjects)pair.Value;
-                    break;
-                case Region_FieldIndex.Weather:
-                    obj.Weather = (RegionDataWeather)pair.Value;
-                    break;
-                case Region_FieldIndex.MapName:
-                    obj.MapName = (RegionDataMapName)pair.Value;
-                    break;
-                case Region_FieldIndex.Grasses:
-                    obj.Grasses = (RegionDataGrasses)pair.Value;
-                    break;
-                case Region_FieldIndex.Sounds:
-                    obj.Sounds = (RegionDataSounds)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

@@ -797,49 +797,6 @@ namespace Mutagen.Bethesda.Oblivion
             KeySetterCommon.Instance.Clear(this);
         }
 
-        public new static Key Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Key();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Key(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_Key(Key obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Key_FieldIndex enu))
-            {
-                CopyInInternal_ItemAbstract(obj, pair);
-            }
-            switch (enu)
-            {
-                case Key_FieldIndex.Name:
-                    obj.Name = (String)pair.Value;
-                    break;
-                case Key_FieldIndex.Model:
-                    obj.Model = (Model)pair.Value;
-                    break;
-                case Key_FieldIndex.Icon:
-                    obj.Icon = (String)pair.Value;
-                    break;
-                case Key_FieldIndex.Script:
-                    obj.Script_Property.Set((IFormIDSetLink<Script>)pair.Value);
-                    break;
-                case Key_FieldIndex.Value:
-                    obj.Value = (UInt32)pair.Value;
-                    break;
-                case Key_FieldIndex.Weight:
-                    obj.Weight = (Single)pair.Value;
-                    break;
-                case Key_FieldIndex.DATADataTypeState:
-                    obj.DATADataTypeState = (Key.DATADataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

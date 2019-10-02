@@ -639,43 +639,6 @@ namespace Mutagen.Bethesda.Oblivion
             ArmorSetterCommon.Instance.Clear(this);
         }
 
-        public new static Armor Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Armor();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Armor(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_Armor(Armor obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Armor_FieldIndex enu))
-            {
-                CopyInInternal_ClothingAbstract(obj, pair);
-            }
-            switch (enu)
-            {
-                case Armor_FieldIndex.ArmorValue:
-                    obj.ArmorValue = (Single)pair.Value;
-                    break;
-                case Armor_FieldIndex.Value:
-                    obj.Value = (UInt32)pair.Value;
-                    break;
-                case Armor_FieldIndex.Health:
-                    obj.Health = (UInt32)pair.Value;
-                    break;
-                case Armor_FieldIndex.Weight:
-                    obj.Weight = (Single)pair.Value;
-                    break;
-                case Armor_FieldIndex.DATADataTypeState:
-                    obj.DATADataTypeState = (Armor.DATADataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

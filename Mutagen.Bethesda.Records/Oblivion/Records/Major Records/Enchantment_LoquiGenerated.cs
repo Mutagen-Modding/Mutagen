@@ -762,49 +762,6 @@ namespace Mutagen.Bethesda.Oblivion
             EnchantmentSetterCommon.Instance.Clear(this);
         }
 
-        public new static Enchantment Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Enchantment();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Enchantment(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_Enchantment(Enchantment obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Enchantment_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case Enchantment_FieldIndex.Name:
-                    obj.Name = (String)pair.Value;
-                    break;
-                case Enchantment_FieldIndex.Type:
-                    obj.Type = (Enchantment.EnchantmentType)pair.Value;
-                    break;
-                case Enchantment_FieldIndex.ChargeAmount:
-                    obj.ChargeAmount = (UInt32)pair.Value;
-                    break;
-                case Enchantment_FieldIndex.EnchantCost:
-                    obj.EnchantCost = (UInt32)pair.Value;
-                    break;
-                case Enchantment_FieldIndex.Flags:
-                    obj.Flags = (Enchantment.Flag)pair.Value;
-                    break;
-                case Enchantment_FieldIndex.Effects:
-                    obj._Effects.SetTo((ISetList<Effect>)pair.Value);
-                    break;
-                case Enchantment_FieldIndex.ENITDataTypeState:
-                    obj.ENITDataTypeState = (Enchantment.ENITDataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

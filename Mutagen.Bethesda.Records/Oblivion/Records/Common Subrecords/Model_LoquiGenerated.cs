@@ -573,37 +573,6 @@ namespace Mutagen.Bethesda.Oblivion
             ModelSetterCommon.Instance.Clear(this);
         }
 
-        public static Model Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Model();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Model(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_Model(Model obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Model_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case Model_FieldIndex.File:
-                    obj.File = (String)pair.Value;
-                    break;
-                case Model_FieldIndex.BoundRadius:
-                    obj.BoundRadius = (Single)pair.Value;
-                    break;
-                case Model_FieldIndex.Hashes:
-                    obj.Hashes = (Byte[])pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

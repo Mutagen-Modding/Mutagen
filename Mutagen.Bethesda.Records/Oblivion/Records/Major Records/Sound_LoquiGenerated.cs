@@ -646,34 +646,6 @@ namespace Mutagen.Bethesda.Oblivion
             SoundSetterCommon.Instance.Clear(this);
         }
 
-        public new static Sound Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Sound();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Sound(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_Sound(Sound obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Sound_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case Sound_FieldIndex.File:
-                    obj.File = (String)pair.Value;
-                    break;
-                case Sound_FieldIndex.Data:
-                    obj.Data = (SoundData)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

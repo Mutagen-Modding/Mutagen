@@ -833,49 +833,6 @@ namespace Mutagen.Bethesda.Oblivion
             AIPackageSetterCommon.Instance.Clear(this);
         }
 
-        public new static AIPackage Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new AIPackage();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_AIPackage(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_AIPackage(AIPackage obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out AIPackage_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case AIPackage_FieldIndex.Flags:
-                    obj.Flags = (AIPackage.Flag)pair.Value;
-                    break;
-                case AIPackage_FieldIndex.GeneralType:
-                    obj.GeneralType = (AIPackage.GeneralTypeEnum)pair.Value;
-                    break;
-                case AIPackage_FieldIndex.Location:
-                    obj.Location = (AIPackageLocation)pair.Value;
-                    break;
-                case AIPackage_FieldIndex.Schedule:
-                    obj.Schedule = (AIPackageSchedule)pair.Value;
-                    break;
-                case AIPackage_FieldIndex.Target:
-                    obj.Target = (AIPackageTarget)pair.Value;
-                    break;
-                case AIPackage_FieldIndex.Conditions:
-                    obj._Conditions.SetTo((ISetList<Condition>)pair.Value);
-                    break;
-                case AIPackage_FieldIndex.PKDTDataTypeState:
-                    obj.PKDTDataTypeState = (AIPackage.PKDTDataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

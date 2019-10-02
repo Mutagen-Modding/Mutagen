@@ -575,52 +575,6 @@ namespace Mutagen.Bethesda.Oblivion
             ConditionSetterCommon.Instance.Clear(this);
         }
 
-        public static Condition Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Condition();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Condition(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_Condition(Condition obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Condition_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case Condition_FieldIndex.CompareOperator:
-                    obj.CompareOperator = (CompareOperator)pair.Value;
-                    break;
-                case Condition_FieldIndex.Flags:
-                    obj.Flags = (Condition.Flag)pair.Value;
-                    break;
-                case Condition_FieldIndex.Fluff:
-                    obj.Fluff = (Byte[])pair.Value;
-                    break;
-                case Condition_FieldIndex.ComparisonValue:
-                    obj.ComparisonValue = (Single)pair.Value;
-                    break;
-                case Condition_FieldIndex.Function:
-                    obj.Function = (Function)pair.Value;
-                    break;
-                case Condition_FieldIndex.FirstParameter:
-                    obj.FirstParameter = (Int32)pair.Value;
-                    break;
-                case Condition_FieldIndex.SecondParameter:
-                    obj.SecondParameter = (Int32)pair.Value;
-                    break;
-                case Condition_FieldIndex.ThirdParameter:
-                    obj.ThirdParameter = (Int32)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

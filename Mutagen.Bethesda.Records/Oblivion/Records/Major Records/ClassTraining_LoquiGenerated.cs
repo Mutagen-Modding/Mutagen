@@ -505,37 +505,6 @@ namespace Mutagen.Bethesda.Oblivion
             ClassTrainingSetterCommon.Instance.Clear(this);
         }
 
-        public static ClassTraining Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new ClassTraining();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_ClassTraining(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_ClassTraining(ClassTraining obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out ClassTraining_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case ClassTraining_FieldIndex.TrainedSkill:
-                    obj.TrainedSkill = (Skill)pair.Value;
-                    break;
-                case ClassTraining_FieldIndex.MaximumTrainingLevel:
-                    obj.MaximumTrainingLevel = (Byte)pair.Value;
-                    break;
-                case ClassTraining_FieldIndex.Fluff:
-                    obj.Fluff = (Byte[])pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

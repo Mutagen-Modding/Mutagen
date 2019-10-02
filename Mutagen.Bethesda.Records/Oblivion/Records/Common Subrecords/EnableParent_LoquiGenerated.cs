@@ -514,34 +514,6 @@ namespace Mutagen.Bethesda.Oblivion
             EnableParentSetterCommon.Instance.Clear(this);
         }
 
-        public static EnableParent Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new EnableParent();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_EnableParent(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_EnableParent(EnableParent obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out EnableParent_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case EnableParent_FieldIndex.Reference:
-                    obj.Reference_Property.Set((IFormIDLink<IPlaced>)pair.Value);
-                    break;
-                case EnableParent_FieldIndex.Flags:
-                    obj.Flags = (EnableParent.Flag)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

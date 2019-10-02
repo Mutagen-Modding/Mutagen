@@ -906,58 +906,6 @@ namespace Mutagen.Bethesda.Oblivion
             PlacedCreatureSetterCommon.Instance.Clear(this);
         }
 
-        public new static PlacedCreature Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new PlacedCreature();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_PlacedCreature(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_PlacedCreature(PlacedCreature obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out PlacedCreature_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case PlacedCreature_FieldIndex.Base:
-                    obj.Base_Property.Set((IFormIDSetLink<Creature>)pair.Value);
-                    break;
-                case PlacedCreature_FieldIndex.Owner:
-                    obj.Owner_Property.Set((IFormIDSetLink<Faction>)pair.Value);
-                    break;
-                case PlacedCreature_FieldIndex.FactionRank:
-                    obj.FactionRank = (Int32)pair.Value;
-                    break;
-                case PlacedCreature_FieldIndex.GlobalVariable:
-                    obj.GlobalVariable_Property.Set((IFormIDSetLink<Global>)pair.Value);
-                    break;
-                case PlacedCreature_FieldIndex.EnableParent:
-                    obj.EnableParent = (EnableParent)pair.Value;
-                    break;
-                case PlacedCreature_FieldIndex.RagdollData:
-                    obj.RagdollData = (Byte[])pair.Value;
-                    break;
-                case PlacedCreature_FieldIndex.Scale:
-                    obj.Scale = (Single)pair.Value;
-                    break;
-                case PlacedCreature_FieldIndex.Position:
-                    obj.Position = (P3Float)pair.Value;
-                    break;
-                case PlacedCreature_FieldIndex.Rotation:
-                    obj.Rotation = (P3Float)pair.Value;
-                    break;
-                case PlacedCreature_FieldIndex.DATADataTypeState:
-                    obj.DATADataTypeState = (PlacedCreature.DATADataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

@@ -413,18 +413,6 @@ namespace Mutagen.Bethesda.Oblivion
             NPCAbstractSetterCommon.Instance.Clear(this);
         }
 
-        protected new static void CopyInInternal_NPCAbstract(NPCAbstract obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out NPCAbstract_FieldIndex enu))
-            {
-                CopyInInternal_NPCSpawn(obj, pair);
-            }
-            switch (enu)
-            {
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

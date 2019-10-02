@@ -564,31 +564,6 @@ namespace Mutagen.Bethesda.Oblivion
             GlobalShortSetterCommon.Instance.Clear(this);
         }
 
-        public new static GlobalShort Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new GlobalShort();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_GlobalShort(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_GlobalShort(GlobalShort obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out GlobalShort_FieldIndex enu))
-            {
-                CopyInInternal_Global(obj, pair);
-            }
-            switch (enu)
-            {
-                case GlobalShort_FieldIndex.Data:
-                    obj.Data = (Int16)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

@@ -690,40 +690,6 @@ namespace Mutagen.Bethesda.Oblivion
             PathGridSetterCommon.Instance.Clear(this);
         }
 
-        public new static PathGrid Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new PathGrid();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_PathGrid(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_PathGrid(PathGrid obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out PathGrid_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case PathGrid_FieldIndex.PointToPointConnections:
-                    obj._PointToPointConnections.SetTo((ISetList<PathGridPoint>)pair.Value);
-                    break;
-                case PathGrid_FieldIndex.Unknown:
-                    obj.Unknown = (Byte[])pair.Value;
-                    break;
-                case PathGrid_FieldIndex.InterCellConnections:
-                    obj._InterCellConnections.SetTo((ISetList<InterCellPoint>)pair.Value);
-                    break;
-                case PathGrid_FieldIndex.PointToReferenceMappings:
-                    obj._PointToReferenceMappings.SetTo((ISetList<PointToReferenceMapping>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

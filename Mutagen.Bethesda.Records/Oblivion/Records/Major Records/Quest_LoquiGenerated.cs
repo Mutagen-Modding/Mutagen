@@ -876,55 +876,6 @@ namespace Mutagen.Bethesda.Oblivion
             QuestSetterCommon.Instance.Clear(this);
         }
 
-        public new static Quest Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Quest();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Quest(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_Quest(Quest obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Quest_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case Quest_FieldIndex.Script:
-                    obj.Script_Property.Set((IFormIDSetLink<Script>)pair.Value);
-                    break;
-                case Quest_FieldIndex.Name:
-                    obj.Name = (String)pair.Value;
-                    break;
-                case Quest_FieldIndex.Icon:
-                    obj.Icon = (String)pair.Value;
-                    break;
-                case Quest_FieldIndex.Flags:
-                    obj.Flags = (Quest.Flag)pair.Value;
-                    break;
-                case Quest_FieldIndex.Priority:
-                    obj.Priority = (Byte)pair.Value;
-                    break;
-                case Quest_FieldIndex.Conditions:
-                    obj._Conditions.SetTo((ISetList<Condition>)pair.Value);
-                    break;
-                case Quest_FieldIndex.Stages:
-                    obj._Stages.SetTo((ISetList<QuestStage>)pair.Value);
-                    break;
-                case Quest_FieldIndex.Targets:
-                    obj._Targets.SetTo((ISetList<QuestTarget>)pair.Value);
-                    break;
-                case Quest_FieldIndex.DATADataTypeState:
-                    obj.DATADataTypeState = (Quest.DATADataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 

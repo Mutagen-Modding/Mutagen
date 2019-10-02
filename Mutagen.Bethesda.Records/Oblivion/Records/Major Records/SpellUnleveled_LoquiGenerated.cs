@@ -722,46 +722,6 @@ namespace Mutagen.Bethesda.Oblivion
             SpellUnleveledSetterCommon.Instance.Clear(this);
         }
 
-        public new static SpellUnleveled Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new SpellUnleveled();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_SpellUnleveled(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_SpellUnleveled(SpellUnleveled obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out SpellUnleveled_FieldIndex enu))
-            {
-                CopyInInternal_Spell(obj, pair);
-            }
-            switch (enu)
-            {
-                case SpellUnleveled_FieldIndex.Type:
-                    obj.Type = (Spell.SpellType)pair.Value;
-                    break;
-                case SpellUnleveled_FieldIndex.Cost:
-                    obj.Cost = (UInt32)pair.Value;
-                    break;
-                case SpellUnleveled_FieldIndex.Level:
-                    obj.Level = (Spell.SpellLevel)pair.Value;
-                    break;
-                case SpellUnleveled_FieldIndex.Flag:
-                    obj.Flag = (Spell.SpellFlag)pair.Value;
-                    break;
-                case SpellUnleveled_FieldIndex.Effects:
-                    obj._Effects.SetTo((ISetList<Effect>)pair.Value);
-                    break;
-                case SpellUnleveled_FieldIndex.SPITDataTypeState:
-                    obj.SPITDataTypeState = (SpellUnleveled.SPITDataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
