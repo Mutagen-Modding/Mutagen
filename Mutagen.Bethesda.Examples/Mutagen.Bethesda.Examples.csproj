@@ -65,7 +65,8 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Example Code\RecordAccessThroughFormLinks.cs" />
+    <Compile Include="Example Code\RecordAccessThroughFormLinksCode.cs" />
+    <Compile Include="Example Code\RecordOverrideOrDuplicationCode.cs" />
     <Compile Include="Example VMs\RecordAccessThroughFormLinksVM.cs" />
     <Compile Include="Example VMs\ExampleVM.cs" />
     <Compile Include="Example VMs\ImportComparisonVM.cs" />
@@ -73,6 +74,7 @@
     <Compile Include="Example VMs\PrintContentVM.cs" />
     <Compile Include="Example Code\PrintContentCode.cs" />
     <Compile Include="Example VMs\SimpleOutputVM.cs" />
+    <Compile Include="Example VMs\SingleModProcessingVM.cs" />
     <Compile Include="MainVM.cs">
       <DependentUpon>MainVM.xml</DependentUpon>
     </Compile>
