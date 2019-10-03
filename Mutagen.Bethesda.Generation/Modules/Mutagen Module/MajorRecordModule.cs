@@ -10,13 +10,13 @@ namespace Mutagen.Bethesda.Generation
 {
     public class MajorRecordModule : GenerationModule
     {
-        public override async Task PostLoad(ObjectGeneration obj)
+        public override async Task LoadWrapup(ObjectGeneration obj)
         {
             if (await obj.IsMajorRecord())
             {
                 obj.BasicCtorPermission = PermissionLevel.@protected;
             }
-            await base.PostLoad(obj);
+            await base.LoadWrapup(obj);
         }
 
         public override async Task GenerateInCommon(ObjectGeneration obj, FileGeneration fg, MaskTypeSet maskTypes)

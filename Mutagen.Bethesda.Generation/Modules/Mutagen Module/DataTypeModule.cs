@@ -11,9 +11,9 @@ namespace Mutagen.Bethesda.Generation
 {
     public class DataTypeModule : GenerationModule
     {
-        public override async Task PostLoad(ObjectGeneration obj)
+        public override async Task LoadWrapup(ObjectGeneration obj)
         {
-            await base.PostLoad(obj);
+            await base.LoadWrapup(obj);
             foreach (var field in obj.IterateFields(expandSets: SetMarkerType.ExpandSets.FalseAndInclude))
             {
                 if (!(field is DataType dataType)) continue;

@@ -10,7 +10,7 @@ namespace Mutagen.Bethesda.Generation
 {
     public class CorrectnessModule : GenerationModule
     {
-        public override async Task PostLoad(ObjectGeneration obj)
+        public override async Task LoadWrapup(ObjectGeneration obj)
         {
             var objData = obj.GetObjectData();
             await objData.WiringComplete.Task
@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda.Generation
                     throw new ArgumentException($"{obj.Name} cannot have an embedded field without a record type after ones with record types have been defined: {field.Name}");
                 }
             }
-            await base.PostLoad(obj);
+            await base.LoadWrapup(obj);
         }
     }
 }

@@ -181,9 +181,9 @@ namespace Mutagen.Bethesda.Generation
             this.CustomLogic = new CustomLogicTranslationGeneration() { Module = this };
         }
 
-        public override async Task PostLoad(ObjectGeneration obj)
+        public override async Task LoadWrapup(ObjectGeneration obj)
         {
-            await base.PostLoad(obj);
+            await base.LoadWrapup(obj);
             foreach (var gen in _typeGenerations.Values)
             {
                 gen.Module = this;

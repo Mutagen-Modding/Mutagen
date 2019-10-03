@@ -77,7 +77,7 @@ namespace Mutagen.Bethesda.Generation
             return base.PreLoad(obj);
         }
 
-        public override async Task PostLoad(ObjectGeneration obj)
+        public override async Task LoadWrapup(ObjectGeneration obj)
         {
             try
             {
@@ -86,7 +86,7 @@ namespace Mutagen.Bethesda.Generation
                         .Select((field) => SetRecordTrigger(obj, field, field.GetFieldData())));
                 await SetObjectTrigger(obj);
                 obj.GetObjectData().WiringComplete.Complete();
-                await base.PostLoad(obj);
+                await base.LoadWrapup(obj);
             }
             catch (Exception ex)
             {
