@@ -294,6 +294,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
         }
 
+        IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         #endregion
 
         #region Binary Translation
@@ -457,6 +459,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IOblivionMajorRecord :
         IOblivionMajorRecordInternalGetter,
         IMajorRecord,
+        IMajorRecordEnumerable,
         ILoquiObjectSetter<IOblivionMajorRecordInternal>
     {
         new OblivionMajorRecord.OblivionMajorRecordFlag OblivionMajorRecordFlags { get; set; }
@@ -477,6 +480,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IOblivionMajorRecordGetter :
         IMajorRecordGetter,
+        IMajorRecordGetterEnumerable,
         ILoquiObject<IOblivionMajorRecordInternalGetter>,
         IXmlItem,
         IBinaryItem
@@ -566,6 +570,19 @@ namespace Mutagen.Bethesda.Oblivion
                 lhs: item,
                 rhs: rhs);
         }
+
+        #region Mutagen
+        public static IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(this IOblivionMajorRecordInternalGetter obj)
+        {
+            return ((OblivionMajorRecordCommon)((IOblivionMajorRecordInternalGetter)obj).CommonInstance()).EnumerateMajorRecords(obj: obj);
+        }
+
+        public static IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(this IOblivionMajorRecordInternal obj)
+        {
+            return ((OblivionMajorRecordSetterCommon)((IOblivionMajorRecordInternalGetter)obj).CommonSetterInstance()).EnumerateMajorRecords(obj: obj);
+        }
+
+        #endregion
 
     }
     #endregion
@@ -922,6 +939,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IOblivionMajorRecordInternal)item);
         }
         
+        #region Mutagen
+        public virtual IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(IOblivionMajorRecordInternal obj)
+        {
+            yield break;
+        }
+        #endregion
+        
     }
     public partial class OblivionMajorRecordCommon : MajorRecordCommon
     {
@@ -1087,6 +1111,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             throw new NotImplementedException();
         }
         
+        public virtual IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(IOblivionMajorRecordInternalGetter obj)
+        {
+            yield break;
+        }
         #endregion
         
     }
@@ -1771,6 +1799,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IOblivionMajorRecordInternalGetter)rhs, include);
 
+        IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         protected override object XmlWriteTranslator => OblivionMajorRecordXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,

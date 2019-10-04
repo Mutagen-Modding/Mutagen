@@ -104,6 +104,7 @@
     <Compile Include="Modules\Mutagen Module\DictTypeModule.cs" />
     <Compile Include="Modules\Mutagen Module\ListTypeModule.cs" />
     <Compile Include="Modules\Mutagen Module\LinkModule.cs" />
+    <Compile Include="Modules\Mutagen Module\MajorRecordEnumerationModule.cs" />
     <Compile Include="Modules\Mutagen Module\MajorRecordModule.cs" />
     <Compile Include="Modules\Mutagen Module\ModModule.cs" />
     <Compile Include="Modules\Mutagen Module\MutagenModule.cs" />

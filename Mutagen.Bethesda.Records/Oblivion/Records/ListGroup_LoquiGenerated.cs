@@ -284,6 +284,8 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
+        IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         #endregion
 
         #region Binary Translation
@@ -578,6 +580,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IListGroup<T> :
         IListGroupInternalGetter<T>,
+        IMajorRecordEnumerable,
         ILoquiObjectSetter<IListGroupInternal<T>>
         where T : IXmlItem, IBinaryItem, ILoquiObjectSetter<T>
     {
@@ -603,6 +606,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IListGroupGetter<out T> :
         ILoquiObject,
+        IMajorRecordGetterEnumerable,
         ILoquiObject<IListGroupInternalGetter<T>>,
         IXmlItem,
         IBinaryItem
@@ -710,6 +714,21 @@ namespace Mutagen.Bethesda.Oblivion
                 lhs: item,
                 rhs: rhs);
         }
+
+        #region Mutagen
+        public static IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords<T>(this IListGroupInternalGetter<T> obj)
+            where T : IXmlItem, IBinaryItem, ILoquiObject<T>
+        {
+            return ((ListGroupCommon<T>)((IListGroupInternalGetter<T>)obj).CommonInstance()).EnumerateMajorRecords(obj: obj);
+        }
+
+        public static IEnumerable<IMajorRecordCommon> EnumerateMajorRecords<T>(this IListGroupInternal<T> obj)
+            where T : IXmlItem, IBinaryItem, ILoquiObjectSetter<T>
+        {
+            return ((ListGroupSetterCommon<T>)((IListGroupInternalGetter<T>)obj).CommonSetterInstance()).EnumerateMajorRecords(obj: obj);
+        }
+
+        #endregion
 
     }
     #endregion
@@ -950,6 +969,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Items.Clear();
         }
         
+        #region Mutagen
+        public IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(IListGroupInternal<T> obj)
+        {
+            foreach (var subItem in obj.Items.WhereCastable<T, IMajorRecordEnumerable>())
+            {
+                foreach (var item in subItem.EnumerateMajorRecords())
+                {
+                    yield return item;
+                }
+            }
+        }
+        #endregion
+        
     }
     public partial class ListGroupCommon<T>
         where T : IXmlItem, IBinaryItem, ILoquiObject<T>
@@ -1097,6 +1129,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
+        
+        #region Mutagen
+        public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(IListGroupInternalGetter<T> obj)
+        {
+            foreach (var subItem in obj.Items.WhereCastable<T, IMajorRecordGetterEnumerable>())
+            {
+                foreach (var item in subItem.EnumerateMajorRecords())
+                {
+                    yield return item;
+                }
+            }
+        }
+        #endregion
         
     }
     public partial class ListGroupSetterCopyCommon
@@ -2272,6 +2317,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IListGroupInternalGetter<T>)rhs, include);
 
+        IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         protected object XmlWriteTranslator => ListGroupXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(

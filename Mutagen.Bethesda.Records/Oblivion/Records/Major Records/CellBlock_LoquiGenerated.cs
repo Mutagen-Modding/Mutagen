@@ -315,6 +315,8 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
+        IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         #endregion
 
         #region Binary Translation
@@ -623,6 +625,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface ICellBlock :
         ICellBlockInternalGetter,
+        IMajorRecordEnumerable,
         ILoquiObjectSetter<ICellBlockInternal>
     {
         new Int32 BlockNumber { get; set; }
@@ -647,6 +650,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface ICellBlockGetter :
         ILoquiObject,
+        IMajorRecordGetterEnumerable,
         ILoquiObject<ICellBlockInternalGetter>,
         IXmlItem,
         IBinaryItem
@@ -748,6 +752,19 @@ namespace Mutagen.Bethesda.Oblivion
                 lhs: item,
                 rhs: rhs);
         }
+
+        #region Mutagen
+        public static IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(this ICellBlockInternalGetter obj)
+        {
+            return ((CellBlockCommon)((ICellBlockInternalGetter)obj).CommonInstance()).EnumerateMajorRecords(obj: obj);
+        }
+
+        public static IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(this ICellBlockInternal obj)
+        {
+            return ((CellBlockSetterCommon)((ICellBlockInternalGetter)obj).CommonSetterInstance()).EnumerateMajorRecords(obj: obj);
+        }
+
+        #endregion
 
     }
     #endregion
@@ -991,6 +1008,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Items.Unset();
         }
         
+        #region Mutagen
+        public IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(ICellBlockInternal obj)
+        {
+            foreach (var subItem in obj.Items)
+            {
+                foreach (var item in subItem.EnumerateMajorRecords())
+                {
+                    yield return item;
+                }
+            }
+        }
+        #endregion
+        
     }
     public partial class CellBlockCommon
     {
@@ -1153,6 +1183,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
+        
+        #region Mutagen
+        public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(ICellBlockInternalGetter obj)
+        {
+            foreach (var subItem in obj.Items)
+            {
+                foreach (var item in subItem.EnumerateMajorRecords())
+                {
+                    yield return item;
+                }
+            }
+        }
+        #endregion
         
     }
     public partial class CellBlockSetterCopyCommon
@@ -2335,6 +2378,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICellBlockInternalGetter)rhs, include);
 
+        IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         protected object XmlWriteTranslator => CellBlockXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(

@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda.Generation
     {
         static void AttachDebugInspector()
         {
-            string testString = "Mutagen.Bethesda.Binary.ListBinaryTranslation<SkillBoost>.Instance.ParseRepeatedItem(";
+            string testString = "MaskItemIndexed<FormKey, bool, OblivionMajorRecord_Mask<bool>>>>(true, item.Items.Values.Select((i) => new MaskItemInde";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>

@@ -1523,6 +1523,11 @@ namespace Mutagen.Bethesda.Generation
                     fg.AppendLine($"IReadOnlyCache<{nameof(IMajorRecordCommonGetter)}, {nameof(FormKey)}> {nameof(IModGetter)}.MajorRecords => throw new NotImplementedException();");
                 }
 
+                if (await MajorRecordEnumerationModule.HasMajorRecordsInTree(obj, includeBaseClass: false) != MajorRecordEnumerationModule.Case.No)
+                {
+                    MajorRecordEnumerationModule.GenerateClassImplementation(fg, onlyGetter: true);
+                }
+
                 foreach (var transl in obj.ProtoGen.Gen.GenerationModules
                     .WhereCastable<IGenerationModule, ITranslationModule>())
                 {

@@ -333,6 +333,17 @@ namespace Mutagen.Bethesda
         }
 
         #region Mutagen
+        public virtual IEnumerable<ILink> Links => GetLinks();
+        private IEnumerable<ILink> GetLinks()
+        {
+            yield break;
+        }
+
+        public virtual void Link<M>(LinkingPackage<M> package)
+            where M : IMod
+        {
+        }
+
         public virtual async Task WriteToXmlFolder(
             DirectoryPath? dir,
             string name,
@@ -356,17 +367,8 @@ namespace Mutagen.Bethesda
         {
         }
 
-        public virtual IEnumerable<ILink> Links => GetLinks();
-        private IEnumerable<ILink> GetLinks()
-        {
-            yield break;
-        }
-
-        public virtual void Link<M>(LinkingPackage<M> package)
-            where M : IMod
-        {
-        }
-
+        IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         #endregion
 
         #region Binary Translation
@@ -590,6 +592,7 @@ namespace Mutagen.Bethesda
     #region Interface
     public partial interface IMajorRecord :
         IMajorRecordInternalGetter,
+        IMajorRecordEnumerable,
         ILoquiObjectSetter<IMajorRecordInternal>
     {
         new Int32 MajorRecordFlagsRaw { get; set; }
@@ -618,6 +621,7 @@ namespace Mutagen.Bethesda
 
     public partial interface IMajorRecordGetter :
         ILoquiObject,
+        IMajorRecordGetterEnumerable,
         ILoquiObject<IMajorRecordInternalGetter>,
         IXmlItem,
         IBinaryItem
@@ -733,6 +737,16 @@ namespace Mutagen.Bethesda
                 getNextFormKey: getNextFormKey,
                 duplicatedRecords: duplicatedRecords);
         }
+        public static IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(this IMajorRecordInternalGetter obj)
+        {
+            return ((MajorRecordCommon)((IMajorRecordInternalGetter)obj).CommonInstance()).EnumerateMajorRecords(obj: obj);
+        }
+
+        public static IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(this IMajorRecordInternal obj)
+        {
+            return ((MajorRecordSetterCommon)((IMajorRecordInternalGetter)obj).CommonSetterInstance()).EnumerateMajorRecords(obj: obj);
+        }
+
         #endregion
 
     }
@@ -1128,6 +1142,13 @@ namespace Mutagen.Bethesda.Internals
             item.EditorID_Unset();
         }
         
+        #region Mutagen
+        public virtual IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(IMajorRecordInternal obj)
+        {
+            yield break;
+        }
+        #endregion
+        
     }
     public partial class MajorRecordCommon
     {
@@ -1280,6 +1301,10 @@ namespace Mutagen.Bethesda.Internals
             throw new NotImplementedException();
         }
         
+        public virtual IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(IMajorRecordInternalGetter obj)
+        {
+            yield break;
+        }
         #endregion
         
     }
@@ -2318,6 +2343,7 @@ namespace Mutagen.Bethesda.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMajorRecordInternalGetter)rhs, include);
 
+        IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         protected virtual object XmlWriteTranslator => MajorRecordXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(

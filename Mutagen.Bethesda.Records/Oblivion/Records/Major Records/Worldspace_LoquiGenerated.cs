@@ -683,6 +683,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
         }
 
+        IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         #endregion
 
         #region Binary Translation
@@ -1206,6 +1208,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IWorldspace :
         IWorldspaceInternalGetter,
         IPlace,
+        IMajorRecordEnumerable,
         ILoquiObjectSetter<IWorldspaceInternal>
     {
         new String Name { get; set; }
@@ -1291,6 +1294,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IWorldspaceGetter :
         IPlaceGetter,
+        IMajorRecordGetterEnumerable,
         ILoquiObject<IWorldspaceInternalGetter>,
         IXmlItem,
         IBinaryItem
@@ -1452,6 +1456,19 @@ namespace Mutagen.Bethesda.Oblivion
                 lhs: item,
                 rhs: rhs);
         }
+
+        #region Mutagen
+        public static IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(this IWorldspaceInternalGetter obj)
+        {
+            return ((WorldspaceCommon)((IWorldspaceInternalGetter)obj).CommonInstance()).EnumerateMajorRecords(obj: obj);
+        }
+
+        public static IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(this IWorldspaceInternal obj)
+        {
+            return ((WorldspaceSetterCommon)((IWorldspaceInternalGetter)obj).CommonSetterInstance()).EnumerateMajorRecords(obj: obj);
+        }
+
+        #endregion
 
     }
     #endregion
@@ -1886,6 +1903,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Clear(item: (IWorldspaceInternal)item);
         }
+        
+        #region Mutagen
+        public IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(IWorldspaceInternal obj)
+        {
+            if (obj.Road != null)
+            {
+                yield return obj.Road;
+            }
+            if (obj.TopCell != null)
+            {
+                yield return obj.TopCell;
+                foreach (var item in obj.TopCell.EnumerateMajorRecords())
+                {
+                    yield return item;
+                }
+            }
+            foreach (var subItem in obj.SubCells)
+            {
+                foreach (var item in subItem.EnumerateMajorRecords())
+                {
+                    yield return item;
+                }
+            }
+        }
+        #endregion
         
     }
     public partial class WorldspaceCommon : PlaceCommon
@@ -2392,6 +2434,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
         
+        public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(IWorldspaceInternalGetter obj)
+        {
+            if (obj.Road != null)
+            {
+                yield return obj.Road;
+            }
+            if (obj.TopCell != null)
+            {
+                yield return obj.TopCell;
+                foreach (var item in obj.TopCell.EnumerateMajorRecords())
+                {
+                    yield return item;
+                }
+            }
+            foreach (var subItem in obj.SubCells)
+            {
+                foreach (var item in subItem.EnumerateMajorRecords())
+                {
+                    yield return item;
+                }
+            }
+        }
         #endregion
         
     }
@@ -4838,6 +4902,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWorldspaceInternalGetter)rhs, include);
 
+        IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         protected override object XmlWriteTranslator => WorldspaceXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,

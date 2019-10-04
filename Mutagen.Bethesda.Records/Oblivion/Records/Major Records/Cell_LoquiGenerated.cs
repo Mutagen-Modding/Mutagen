@@ -772,6 +772,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
         }
 
+        IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         #endregion
 
         #region Binary Translation
@@ -1316,6 +1318,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ICell :
         ICellInternalGetter,
         IPlace,
+        IMajorRecordEnumerable,
         ILoquiObjectSetter<ICellInternal>
     {
         new String Name { get; set; }
@@ -1407,6 +1410,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface ICellGetter :
         IPlaceGetter,
+        IMajorRecordGetterEnumerable,
         ILoquiObject<ICellInternalGetter>,
         IXmlItem,
         IBinaryItem
@@ -1585,6 +1589,19 @@ namespace Mutagen.Bethesda.Oblivion
                 lhs: item,
                 rhs: rhs);
         }
+
+        #region Mutagen
+        public static IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(this ICellInternalGetter obj)
+        {
+            return ((CellCommon)((ICellInternalGetter)obj).CommonInstance()).EnumerateMajorRecords(obj: obj);
+        }
+
+        public static IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(this ICellInternal obj)
+        {
+            return ((CellSetterCommon)((ICellInternalGetter)obj).CommonSetterInstance()).EnumerateMajorRecords(obj: obj);
+        }
+
+        #endregion
 
     }
     #endregion
@@ -2086,6 +2103,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Clear(item: (ICellInternal)item);
         }
+        
+        #region Mutagen
+        public IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(ICellInternal obj)
+        {
+            if (obj.PathGrid != null)
+            {
+                yield return obj.PathGrid;
+            }
+            if (obj.Landscape != null)
+            {
+                yield return obj.Landscape;
+            }
+            foreach (var subItem in obj.Persistent)
+            {
+                yield return subItem;
+            }
+            foreach (var subItem in obj.Temporary)
+            {
+                yield return subItem;
+            }
+            foreach (var subItem in obj.VisibleWhenDistant)
+            {
+                yield return subItem;
+            }
+        }
+        #endregion
         
     }
     public partial class CellCommon : PlaceCommon
@@ -2707,6 +2750,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
         
+        public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(ICellInternalGetter obj)
+        {
+            if (obj.PathGrid != null)
+            {
+                yield return obj.PathGrid;
+            }
+            if (obj.Landscape != null)
+            {
+                yield return obj.Landscape;
+            }
+            foreach (var subItem in obj.Persistent)
+            {
+                yield return subItem;
+            }
+            foreach (var subItem in obj.Temporary)
+            {
+                yield return subItem;
+            }
+            foreach (var subItem in obj.VisibleWhenDistant)
+            {
+                yield return subItem;
+            }
+        }
         #endregion
         
     }
@@ -5716,6 +5782,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICellInternalGetter)rhs, include);
 
+        IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         protected override object XmlWriteTranslator => CellXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
