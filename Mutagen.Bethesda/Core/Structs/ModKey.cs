@@ -26,6 +26,7 @@ namespace Mutagen.Bethesda
         public bool Master { get; private set; }
         public string FileName => this.ToString();
         private static Dictionary<string, ModKey[]> cache_ = new Dictionary<string, ModKey[]>();
+        private readonly int _hash;
 
         /// </summary>
         /// <summary>
@@ -43,6 +44,9 @@ namespace Mutagen.Bethesda
         {
             this.Name = name;
             this.Master = master;
+            // Cache the hash on construction, as ModKeys are typically created rarely, but hashed often.
+            this._hash = Name.ToUpper().GetHashCode()
+                .CombineHashCode(Master.GetHashCode());
         }
 
         public bool Equals(ModKey other)
@@ -59,8 +63,7 @@ namespace Mutagen.Bethesda
 
         public override int GetHashCode()
         {
-            return Name.ToUpper().GetHashCode()
-                .CombineHashCode(Master.GetHashCode());
+            return _hash;
         }
 
         public override string ToString()
