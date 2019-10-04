@@ -406,166 +406,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static RaceStats Copy_ToLoqui(
-            RaceStats item,
-            RaceStats_CopyMask copyMask = null,
-            RaceStats def = null)
+        void IClearable.Clear()
         {
-            RaceStats ret;
-            if (item.GetType().Equals(typeof(RaceStats)))
-            {
-                ret = new RaceStats() as RaceStats;
-            }
-            else
-            {
-                ret = (RaceStats)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((RaceStatsSetterCommon)((IRaceStatsInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public void CopyFieldsFrom(RaceStats rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            RaceStats rhs,
-            RaceStats_CopyMask copyMask,
-            RaceStats def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            RaceStats rhs,
-            out RaceStats_ErrorMask errorMask,
-            RaceStats_CopyMask copyMask = null,
-            RaceStats def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            RaceStatsSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = RaceStats_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            RaceStats rhs,
-            ErrorMaskBuilder errorMask,
-            RaceStats_CopyMask copyMask = null,
-            RaceStats def = null)
-        {
-            RaceStatsSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected void SetNthObject(ushort index, object obj)
-        {
-            RaceStats_FieldIndex enu = (RaceStats_FieldIndex)index;
-            switch (enu)
-            {
-                case RaceStats_FieldIndex.Strength:
-                    this.Strength = (Byte)obj;
-                    break;
-                case RaceStats_FieldIndex.Intelligence:
-                    this.Intelligence = (Byte)obj;
-                    break;
-                case RaceStats_FieldIndex.Willpower:
-                    this.Willpower = (Byte)obj;
-                    break;
-                case RaceStats_FieldIndex.Agility:
-                    this.Agility = (Byte)obj;
-                    break;
-                case RaceStats_FieldIndex.Speed:
-                    this.Speed = (Byte)obj;
-                    break;
-                case RaceStats_FieldIndex.Endurance:
-                    this.Endurance = (Byte)obj;
-                    break;
-                case RaceStats_FieldIndex.Personality:
-                    this.Personality = (Byte)obj;
-                    break;
-                case RaceStats_FieldIndex.Luck:
-                    this.Luck = (Byte)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void Clear()
-        {
-            RaceStatsSetterCommon.Instance.Clear(this);
-        }
-
-        public static RaceStats Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new RaceStats();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_RaceStats(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_RaceStats(RaceStats obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out RaceStats_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case RaceStats_FieldIndex.Strength:
-                    obj.Strength = (Byte)pair.Value;
-                    break;
-                case RaceStats_FieldIndex.Intelligence:
-                    obj.Intelligence = (Byte)pair.Value;
-                    break;
-                case RaceStats_FieldIndex.Willpower:
-                    obj.Willpower = (Byte)pair.Value;
-                    break;
-                case RaceStats_FieldIndex.Agility:
-                    obj.Agility = (Byte)pair.Value;
-                    break;
-                case RaceStats_FieldIndex.Speed:
-                    obj.Speed = (Byte)pair.Value;
-                    break;
-                case RaceStats_FieldIndex.Endurance:
-                    obj.Endurance = (Byte)pair.Value;
-                    break;
-                case RaceStats_FieldIndex.Personality:
-                    obj.Personality = (Byte)pair.Value;
-                    break;
-                case RaceStats_FieldIndex.Luck:
-                    obj.Luck = (Byte)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -590,11 +435,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Byte Luck { get; set; }
 
-        void CopyFieldsFrom(
-            RaceStats rhs,
-            ErrorMaskBuilder errorMask = null,
-            RaceStats_CopyMask copyMask = null,
-            RaceStats def = null);
     }
 
     public partial interface IRaceStatsInternal :
@@ -722,6 +562,67 @@ namespace Mutagen.Bethesda.Oblivion
             return ((RaceStatsCommon)((IRaceStatsInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this RaceStats lhs,
+            RaceStats rhs)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null);
+        }
+
+        public static void CopyFieldsFrom(
+            this RaceStats lhs,
+            RaceStats rhs,
+            RaceStats_CopyMask copyMask,
+            RaceStats def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this RaceStats lhs,
+            RaceStats rhs,
+            out RaceStats_ErrorMask errorMask,
+            RaceStats_CopyMask copyMask = null,
+            RaceStats def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            RaceStatsSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = RaceStats_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this RaceStats lhs,
+            RaceStats rhs,
+            ErrorMaskBuilder errorMask,
+            RaceStats_CopyMask copyMask = null,
+            RaceStats def = null)
+        {
+            RaceStatsSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

@@ -484,160 +484,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static MagicEffectSubData Copy_ToLoqui(
-            MagicEffectSubData item,
-            MagicEffectSubData_CopyMask copyMask = null,
-            MagicEffectSubData def = null)
+        void IClearable.Clear()
         {
-            MagicEffectSubData ret;
-            if (item.GetType().Equals(typeof(MagicEffectSubData)))
-            {
-                ret = new MagicEffectSubData() as MagicEffectSubData;
-            }
-            else
-            {
-                ret = (MagicEffectSubData)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((MagicEffectSubDataSetterCommon)((IMagicEffectSubDataInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public void CopyFieldsFrom(MagicEffectSubData rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            MagicEffectSubData rhs,
-            MagicEffectSubData_CopyMask copyMask,
-            MagicEffectSubData def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            MagicEffectSubData rhs,
-            out MagicEffectSubData_ErrorMask errorMask,
-            MagicEffectSubData_CopyMask copyMask = null,
-            MagicEffectSubData def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            MagicEffectSubDataSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = MagicEffectSubData_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            MagicEffectSubData rhs,
-            ErrorMaskBuilder errorMask,
-            MagicEffectSubData_CopyMask copyMask = null,
-            MagicEffectSubData def = null)
-        {
-            MagicEffectSubDataSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected void SetNthObject(ushort index, object obj)
-        {
-            MagicEffectSubData_FieldIndex enu = (MagicEffectSubData_FieldIndex)index;
-            switch (enu)
-            {
-                case MagicEffectSubData_FieldIndex.EnchantEffect:
-                    this.EnchantEffect_Property.Set((IFormIDLink<EffectShader>)obj);
-                    break;
-                case MagicEffectSubData_FieldIndex.CastingSound:
-                    this.CastingSound_Property.Set((IFormIDLink<Sound>)obj);
-                    break;
-                case MagicEffectSubData_FieldIndex.BoltSound:
-                    this.BoltSound_Property.Set((IFormIDLink<Sound>)obj);
-                    break;
-                case MagicEffectSubData_FieldIndex.HitSound:
-                    this.HitSound_Property.Set((IFormIDLink<Sound>)obj);
-                    break;
-                case MagicEffectSubData_FieldIndex.AreaSound:
-                    this.AreaSound_Property.Set((IFormIDLink<Sound>)obj);
-                    break;
-                case MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor:
-                    this.ConstantEffectEnchantmentFactor = (Single)obj;
-                    break;
-                case MagicEffectSubData_FieldIndex.ConstantEffectBarterFactor:
-                    this.ConstantEffectBarterFactor = (Single)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void Clear()
-        {
-            MagicEffectSubDataSetterCommon.Instance.Clear(this);
-        }
-
-        public static MagicEffectSubData Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new MagicEffectSubData();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_MagicEffectSubData(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_MagicEffectSubData(MagicEffectSubData obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out MagicEffectSubData_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case MagicEffectSubData_FieldIndex.EnchantEffect:
-                    obj.EnchantEffect_Property.Set((IFormIDLink<EffectShader>)pair.Value);
-                    break;
-                case MagicEffectSubData_FieldIndex.CastingSound:
-                    obj.CastingSound_Property.Set((IFormIDLink<Sound>)pair.Value);
-                    break;
-                case MagicEffectSubData_FieldIndex.BoltSound:
-                    obj.BoltSound_Property.Set((IFormIDLink<Sound>)pair.Value);
-                    break;
-                case MagicEffectSubData_FieldIndex.HitSound:
-                    obj.HitSound_Property.Set((IFormIDLink<Sound>)pair.Value);
-                    break;
-                case MagicEffectSubData_FieldIndex.AreaSound:
-                    obj.AreaSound_Property.Set((IFormIDLink<Sound>)pair.Value);
-                    break;
-                case MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor:
-                    obj.ConstantEffectEnchantmentFactor = (Single)pair.Value;
-                    break;
-                case MagicEffectSubData_FieldIndex.ConstantEffectBarterFactor:
-                    obj.ConstantEffectBarterFactor = (Single)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -660,11 +511,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Single ConstantEffectBarterFactor { get; set; }
 
-        void CopyFieldsFrom(
-            MagicEffectSubData rhs,
-            ErrorMaskBuilder errorMask = null,
-            MagicEffectSubData_CopyMask copyMask = null,
-            MagicEffectSubData def = null);
     }
 
     public partial interface IMagicEffectSubDataInternal :
@@ -803,6 +649,67 @@ namespace Mutagen.Bethesda.Oblivion
             return ((MagicEffectSubDataCommon)((IMagicEffectSubDataInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this MagicEffectSubData lhs,
+            MagicEffectSubData rhs)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null);
+        }
+
+        public static void CopyFieldsFrom(
+            this MagicEffectSubData lhs,
+            MagicEffectSubData rhs,
+            MagicEffectSubData_CopyMask copyMask,
+            MagicEffectSubData def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this MagicEffectSubData lhs,
+            MagicEffectSubData rhs,
+            out MagicEffectSubData_ErrorMask errorMask,
+            MagicEffectSubData_CopyMask copyMask = null,
+            MagicEffectSubData def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            MagicEffectSubDataSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = MagicEffectSubData_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this MagicEffectSubData lhs,
+            MagicEffectSubData rhs,
+            ErrorMaskBuilder errorMask,
+            MagicEffectSubData_CopyMask copyMask = null,
+            MagicEffectSubData def = null)
+        {
+            MagicEffectSubDataSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

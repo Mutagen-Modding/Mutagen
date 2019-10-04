@@ -414,130 +414,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static WeatherSound Copy_ToLoqui(
-            WeatherSound item,
-            WeatherSound_CopyMask copyMask = null,
-            WeatherSound def = null)
+        void IClearable.Clear()
         {
-            WeatherSound ret;
-            if (item.GetType().Equals(typeof(WeatherSound)))
-            {
-                ret = new WeatherSound() as WeatherSound;
-            }
-            else
-            {
-                ret = (WeatherSound)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((WeatherSoundSetterCommon)((IWeatherSoundInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public void CopyFieldsFrom(WeatherSound rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            WeatherSound rhs,
-            WeatherSound_CopyMask copyMask,
-            WeatherSound def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            WeatherSound rhs,
-            out WeatherSound_ErrorMask errorMask,
-            WeatherSound_CopyMask copyMask = null,
-            WeatherSound def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            WeatherSoundSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = WeatherSound_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            WeatherSound rhs,
-            ErrorMaskBuilder errorMask,
-            WeatherSound_CopyMask copyMask = null,
-            WeatherSound def = null)
-        {
-            WeatherSoundSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected void SetNthObject(ushort index, object obj)
-        {
-            WeatherSound_FieldIndex enu = (WeatherSound_FieldIndex)index;
-            switch (enu)
-            {
-                case WeatherSound_FieldIndex.Sound:
-                    this.Sound_Property.Set((IFormIDLink<Sound>)obj);
-                    break;
-                case WeatherSound_FieldIndex.Type:
-                    this.Type = (WeatherSound.SoundType)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void Clear()
-        {
-            WeatherSoundSetterCommon.Instance.Clear(this);
-        }
-
-        public static WeatherSound Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new WeatherSound();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_WeatherSound(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_WeatherSound(WeatherSound obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out WeatherSound_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case WeatherSound_FieldIndex.Sound:
-                    obj.Sound_Property.Set((IFormIDLink<Sound>)pair.Value);
-                    break;
-                case WeatherSound_FieldIndex.Type:
-                    obj.Type = (WeatherSound.SoundType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -550,11 +431,6 @@ namespace Mutagen.Bethesda.Oblivion
         new IFormIDLink<Sound> Sound_Property { get; }
         new WeatherSound.SoundType Type { get; set; }
 
-        void CopyFieldsFrom(
-            WeatherSound rhs,
-            ErrorMaskBuilder errorMask = null,
-            WeatherSound_CopyMask copyMask = null,
-            WeatherSound def = null);
     }
 
     public partial interface IWeatherSoundInternal :
@@ -661,6 +537,67 @@ namespace Mutagen.Bethesda.Oblivion
             return ((WeatherSoundCommon)((IWeatherSoundInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this WeatherSound lhs,
+            WeatherSound rhs)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null);
+        }
+
+        public static void CopyFieldsFrom(
+            this WeatherSound lhs,
+            WeatherSound rhs,
+            WeatherSound_CopyMask copyMask,
+            WeatherSound def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this WeatherSound lhs,
+            WeatherSound rhs,
+            out WeatherSound_ErrorMask errorMask,
+            WeatherSound_CopyMask copyMask = null,
+            WeatherSound def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            WeatherSoundSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = WeatherSound_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this WeatherSound lhs,
+            WeatherSound rhs,
+            ErrorMaskBuilder errorMask,
+            WeatherSound_CopyMask copyMask = null,
+            WeatherSound def = null)
+        {
+            WeatherSoundSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

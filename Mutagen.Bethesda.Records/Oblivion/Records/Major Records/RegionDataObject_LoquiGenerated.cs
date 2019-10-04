@@ -578,220 +578,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static RegionDataObject Copy_ToLoqui(
-            RegionDataObject item,
-            RegionDataObject_CopyMask copyMask = null,
-            RegionDataObject def = null)
+        void IClearable.Clear()
         {
-            RegionDataObject ret;
-            if (item.GetType().Equals(typeof(RegionDataObject)))
-            {
-                ret = new RegionDataObject() as RegionDataObject;
-            }
-            else
-            {
-                ret = (RegionDataObject)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((RegionDataObjectSetterCommon)((IRegionDataObjectInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public void CopyFieldsFrom(RegionDataObject rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            RegionDataObject rhs,
-            RegionDataObject_CopyMask copyMask,
-            RegionDataObject def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            RegionDataObject rhs,
-            out RegionDataObject_ErrorMask errorMask,
-            RegionDataObject_CopyMask copyMask = null,
-            RegionDataObject def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            RegionDataObjectSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = RegionDataObject_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            RegionDataObject rhs,
-            ErrorMaskBuilder errorMask,
-            RegionDataObject_CopyMask copyMask = null,
-            RegionDataObject def = null)
-        {
-            RegionDataObjectSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected void SetNthObject(ushort index, object obj)
-        {
-            RegionDataObject_FieldIndex enu = (RegionDataObject_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionDataObject_FieldIndex.Object:
-                    this.Object_Property.Set((IFormIDLink<OblivionMajorRecord>)obj);
-                    break;
-                case RegionDataObject_FieldIndex.ParentIndex:
-                    this.ParentIndex = (UInt16)obj;
-                    break;
-                case RegionDataObject_FieldIndex.Unknown1:
-                    this.Unknown1 = (Byte[])obj;
-                    break;
-                case RegionDataObject_FieldIndex.Density:
-                    this.Density = (Single)obj;
-                    break;
-                case RegionDataObject_FieldIndex.Clustering:
-                    this.Clustering = (Byte)obj;
-                    break;
-                case RegionDataObject_FieldIndex.MinSlope:
-                    this.MinSlope = (Byte)obj;
-                    break;
-                case RegionDataObject_FieldIndex.MaxSlope:
-                    this.MaxSlope = (Byte)obj;
-                    break;
-                case RegionDataObject_FieldIndex.Flags:
-                    this.Flags = (RegionDataObject.Flag)obj;
-                    break;
-                case RegionDataObject_FieldIndex.RadiusWrtPercent:
-                    this.RadiusWrtPercent = (UInt16)obj;
-                    break;
-                case RegionDataObject_FieldIndex.Radius:
-                    this.Radius = (UInt16)obj;
-                    break;
-                case RegionDataObject_FieldIndex.MinHeight:
-                    this.MinHeight = (Single)obj;
-                    break;
-                case RegionDataObject_FieldIndex.MaxHeight:
-                    this.MaxHeight = (Single)obj;
-                    break;
-                case RegionDataObject_FieldIndex.Sink:
-                    this.Sink = (Single)obj;
-                    break;
-                case RegionDataObject_FieldIndex.SinkVariance:
-                    this.SinkVariance = (Single)obj;
-                    break;
-                case RegionDataObject_FieldIndex.SizeVariance:
-                    this.SizeVariance = (Single)obj;
-                    break;
-                case RegionDataObject_FieldIndex.AngleVariance:
-                    this.AngleVariance = (P3UInt16)obj;
-                    break;
-                case RegionDataObject_FieldIndex.Unknown2:
-                    this.Unknown2 = (Byte[])obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void Clear()
-        {
-            RegionDataObjectSetterCommon.Instance.Clear(this);
-        }
-
-        public static RegionDataObject Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new RegionDataObject();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_RegionDataObject(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_RegionDataObject(RegionDataObject obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out RegionDataObject_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case RegionDataObject_FieldIndex.Object:
-                    obj.Object_Property.Set((IFormIDLink<OblivionMajorRecord>)pair.Value);
-                    break;
-                case RegionDataObject_FieldIndex.ParentIndex:
-                    obj.ParentIndex = (UInt16)pair.Value;
-                    break;
-                case RegionDataObject_FieldIndex.Unknown1:
-                    obj.Unknown1 = (Byte[])pair.Value;
-                    break;
-                case RegionDataObject_FieldIndex.Density:
-                    obj.Density = (Single)pair.Value;
-                    break;
-                case RegionDataObject_FieldIndex.Clustering:
-                    obj.Clustering = (Byte)pair.Value;
-                    break;
-                case RegionDataObject_FieldIndex.MinSlope:
-                    obj.MinSlope = (Byte)pair.Value;
-                    break;
-                case RegionDataObject_FieldIndex.MaxSlope:
-                    obj.MaxSlope = (Byte)pair.Value;
-                    break;
-                case RegionDataObject_FieldIndex.Flags:
-                    obj.Flags = (RegionDataObject.Flag)pair.Value;
-                    break;
-                case RegionDataObject_FieldIndex.RadiusWrtPercent:
-                    obj.RadiusWrtPercent = (UInt16)pair.Value;
-                    break;
-                case RegionDataObject_FieldIndex.Radius:
-                    obj.Radius = (UInt16)pair.Value;
-                    break;
-                case RegionDataObject_FieldIndex.MinHeight:
-                    obj.MinHeight = (Single)pair.Value;
-                    break;
-                case RegionDataObject_FieldIndex.MaxHeight:
-                    obj.MaxHeight = (Single)pair.Value;
-                    break;
-                case RegionDataObject_FieldIndex.Sink:
-                    obj.Sink = (Single)pair.Value;
-                    break;
-                case RegionDataObject_FieldIndex.SinkVariance:
-                    obj.SinkVariance = (Single)pair.Value;
-                    break;
-                case RegionDataObject_FieldIndex.SizeVariance:
-                    obj.SizeVariance = (Single)pair.Value;
-                    break;
-                case RegionDataObject_FieldIndex.AngleVariance:
-                    obj.AngleVariance = (P3UInt16)pair.Value;
-                    break;
-                case RegionDataObject_FieldIndex.Unknown2:
-                    obj.Unknown2 = (Byte[])pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -834,11 +625,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Byte[] Unknown2 { get; set; }
 
-        void CopyFieldsFrom(
-            RegionDataObject rhs,
-            ErrorMaskBuilder errorMask = null,
-            RegionDataObject_CopyMask copyMask = null,
-            RegionDataObject def = null);
     }
 
     public partial interface IRegionDataObjectInternal :
@@ -1005,6 +791,67 @@ namespace Mutagen.Bethesda.Oblivion
             return ((RegionDataObjectCommon)((IRegionDataObjectInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this RegionDataObject lhs,
+            RegionDataObject rhs)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null);
+        }
+
+        public static void CopyFieldsFrom(
+            this RegionDataObject lhs,
+            RegionDataObject rhs,
+            RegionDataObject_CopyMask copyMask,
+            RegionDataObject def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this RegionDataObject lhs,
+            RegionDataObject rhs,
+            out RegionDataObject_ErrorMask errorMask,
+            RegionDataObject_CopyMask copyMask = null,
+            RegionDataObject def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            RegionDataObjectSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = RegionDataObject_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this RegionDataObject lhs,
+            RegionDataObject rhs,
+            ErrorMaskBuilder errorMask,
+            RegionDataObject_CopyMask copyMask = null,
+            RegionDataObject def = null)
+        {
+            RegionDataObjectSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

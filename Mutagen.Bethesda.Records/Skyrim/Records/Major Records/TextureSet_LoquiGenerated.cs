@@ -633,143 +633,11 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static TextureSet Copy_ToLoqui(
-            TextureSet item,
-            TextureSet_CopyMask copyMask = null,
-            TextureSet def = null)
+        void IClearable.Clear()
         {
-            TextureSet ret;
-            if (item.GetType().Equals(typeof(TextureSet)))
-            {
-                ret = new TextureSet() as TextureSet;
-            }
-            else
-            {
-                ret = (TextureSet)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((TextureSetSetterCommon)((ITextureSetInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            TextureSet rhs,
-            TextureSet_CopyMask copyMask,
-            TextureSet def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            TextureSet rhs,
-            out TextureSet_ErrorMask errorMask,
-            TextureSet_CopyMask copyMask = null,
-            TextureSet def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            TextureSetSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = TextureSet_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            TextureSet rhs,
-            ErrorMaskBuilder errorMask,
-            TextureSet_CopyMask copyMask = null,
-            TextureSet def = null)
-        {
-            TextureSetSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            TextureSet_FieldIndex enu = (TextureSet_FieldIndex)index;
-            switch (enu)
-            {
-                case TextureSet_FieldIndex.ObjectBounds:
-                    this.ObjectBounds = (ObjectBounds)obj;
-                    break;
-                case TextureSet_FieldIndex.Textures:
-                    this.Textures = (Textures)obj;
-                    break;
-                case TextureSet_FieldIndex.Decal:
-                    this.Decal = (Decal)obj;
-                    break;
-                case TextureSet_FieldIndex.Flags:
-                    this.Flags = (TextureSet.Flag)obj;
-                    break;
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            TextureSetSetterCommon.Instance.Clear(this);
-        }
-
-        public new static TextureSet Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new TextureSet();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_TextureSet(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_TextureSet(TextureSet obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out TextureSet_FieldIndex enu))
-            {
-                CopyInInternal_SkyrimMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case TextureSet_FieldIndex.ObjectBounds:
-                    obj.ObjectBounds = (ObjectBounds)pair.Value;
-                    break;
-                case TextureSet_FieldIndex.Textures:
-                    obj.Textures = (Textures)pair.Value;
-                    break;
-                case TextureSet_FieldIndex.Decal:
-                    obj.Decal = (Decal)pair.Value;
-                    break;
-                case TextureSet_FieldIndex.Flags:
-                    obj.Flags = (TextureSet.Flag)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -799,11 +667,6 @@ namespace Mutagen.Bethesda.Skyrim
         void Flags_Set(TextureSet.Flag value, bool hasBeenSet = true);
         void Flags_Unset();
 
-        void CopyFieldsFrom(
-            TextureSet rhs,
-            ErrorMaskBuilder errorMask = null,
-            TextureSet_CopyMask copyMask = null,
-            TextureSet def = null);
     }
 
     public partial interface ITextureSetInternal :
@@ -919,6 +782,54 @@ namespace Mutagen.Bethesda.Skyrim
             return ((TextureSetCommon)((ITextureSetInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this TextureSet lhs,
+            TextureSet rhs,
+            TextureSet_CopyMask copyMask,
+            TextureSet def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this TextureSet lhs,
+            TextureSet rhs,
+            out TextureSet_ErrorMask errorMask,
+            TextureSet_CopyMask copyMask = null,
+            TextureSet def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            TextureSetSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = TextureSet_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this TextureSet lhs,
+            TextureSet rhs,
+            ErrorMaskBuilder errorMask,
+            TextureSet_CopyMask copyMask = null,
+            TextureSet def = null)
+        {
+            TextureSetSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

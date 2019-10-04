@@ -1887,473 +1887,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static EffectShader Copy_ToLoqui(
-            EffectShader item,
-            EffectShader_CopyMask copyMask = null,
-            EffectShader def = null)
+        void IClearable.Clear()
         {
-            EffectShader ret;
-            if (item.GetType().Equals(typeof(EffectShader)))
-            {
-                ret = new EffectShader() as EffectShader;
-            }
-            else
-            {
-                ret = (EffectShader)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((EffectShaderSetterCommon)((IEffectShaderInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            EffectShader rhs,
-            EffectShader_CopyMask copyMask,
-            EffectShader def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            EffectShader rhs,
-            out EffectShader_ErrorMask errorMask,
-            EffectShader_CopyMask copyMask = null,
-            EffectShader def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            EffectShaderSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = EffectShader_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            EffectShader rhs,
-            ErrorMaskBuilder errorMask,
-            EffectShader_CopyMask copyMask = null,
-            EffectShader def = null)
-        {
-            EffectShaderSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            EffectShader_FieldIndex enu = (EffectShader_FieldIndex)index;
-            switch (enu)
-            {
-                case EffectShader_FieldIndex.FillTexture:
-                    this.FillTexture = (String)obj;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderTexture:
-                    this.ParticleShaderTexture = (String)obj;
-                    break;
-                case EffectShader_FieldIndex.Flags:
-                    this.Flags = (EffectShader.Flag)obj;
-                    break;
-                case EffectShader_FieldIndex.MembraneShaderSourceBlendMode:
-                    this.MembraneShaderSourceBlendMode = (EffectShader.SourceBlendMode)obj;
-                    break;
-                case EffectShader_FieldIndex.MembraneShaderBlendOperation:
-                    this.MembraneShaderBlendOperation = (EffectShader.BlendOperation)obj;
-                    break;
-                case EffectShader_FieldIndex.MembraneShaderZTestFunction:
-                    this.MembraneShaderZTestFunction = (EffectShader.ZTestFunction)obj;
-                    break;
-                case EffectShader_FieldIndex.FillTextureEffectColor:
-                    this.FillTextureEffectColor = (Color)obj;
-                    break;
-                case EffectShader_FieldIndex.FillTextureEffectAlphaFadeInTime:
-                    this.FillTextureEffectAlphaFadeInTime = (Single)obj;
-                    break;
-                case EffectShader_FieldIndex.FillTextureEffectFullAlphaTime:
-                    this.FillTextureEffectFullAlphaTime = (Single)obj;
-                    break;
-                case EffectShader_FieldIndex.FillTextureEffectAlphaFadeOutTime:
-                    this.FillTextureEffectAlphaFadeOutTime = (Single)obj;
-                    break;
-                case EffectShader_FieldIndex.FillTextureEffectPersistentAlphaRatio:
-                    this.FillTextureEffectPersistentAlphaRatio = (Single)obj;
-                    break;
-                case EffectShader_FieldIndex.FillTextureEffectAlphaPulseAmplitude:
-                    this.FillTextureEffectAlphaPulseAmplitude = (Single)obj;
-                    break;
-                case EffectShader_FieldIndex.FillTextureEffectAlphaPulseFrequency:
-                    this.FillTextureEffectAlphaPulseFrequency = (Single)obj;
-                    break;
-                case EffectShader_FieldIndex.FillTextureEffectTextureAnimationSpeedU:
-                    this.FillTextureEffectTextureAnimationSpeedU = (Single)obj;
-                    break;
-                case EffectShader_FieldIndex.FillTextureEffectTextureAnimationSpeedV:
-                    this.FillTextureEffectTextureAnimationSpeedV = (Single)obj;
-                    break;
-                case EffectShader_FieldIndex.EdgeEffectFallOff:
-                    this.EdgeEffectFallOff = (Single)obj;
-                    break;
-                case EffectShader_FieldIndex.EdgeEffectColor:
-                    this.EdgeEffectColor = (Color)obj;
-                    break;
-                case EffectShader_FieldIndex.EdgeEffectAlphaFadeInTime:
-                    this.EdgeEffectAlphaFadeInTime = (Single)obj;
-                    break;
-                case EffectShader_FieldIndex.EdgeEffectFullAlphaTime:
-                    this.EdgeEffectFullAlphaTime = (Single)obj;
-                    break;
-                case EffectShader_FieldIndex.EdgeEffectAlphaFadeOutTime:
-                    this.EdgeEffectAlphaFadeOutTime = (Single)obj;
-                    break;
-                case EffectShader_FieldIndex.EdgeEffectPersistentAlphaRatio:
-                    this.EdgeEffectPersistentAlphaRatio = (Single)obj;
-                    break;
-                case EffectShader_FieldIndex.EdgeEffectAlphaPulseAmplitude:
-                    this.EdgeEffectAlphaPulseAmplitude = (Single)obj;
-                    break;
-                case EffectShader_FieldIndex.EdgeEffectAlphaPulseFrequency:
-                    this.EdgeEffectAlphaPulseFrequency = (Single)obj;
-                    break;
-                case EffectShader_FieldIndex.FillTextureEffectFullAlphaRatio:
-                    this.FillTextureEffectFullAlphaRatio = (Single)obj;
-                    break;
-                case EffectShader_FieldIndex.EdgeEffectFullAlphaRatio:
-                    this.EdgeEffectFullAlphaRatio = (Single)obj;
-                    break;
-                case EffectShader_FieldIndex.MembraneShaderDestBlendMode:
-                    this.MembraneShaderDestBlendMode = (EffectShader.SourceBlendMode)obj;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderSourceBlendMode:
-                    this.ParticleShaderSourceBlendMode = (EffectShader.SourceBlendMode)obj;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderBlendOperation:
-                    this.ParticleShaderBlendOperation = (EffectShader.BlendOperation)obj;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderZTestFunction:
-                    this.ParticleShaderZTestFunction = (EffectShader.ZTestFunction)obj;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderDestBlendMode:
-                    this.ParticleShaderDestBlendMode = (EffectShader.SourceBlendMode)obj;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderParticleBirthRampUpTime:
-                    this.ParticleShaderParticleBirthRampUpTime = (Single)obj;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderFullParticleBirthTime:
-                    this.ParticleShaderFullParticleBirthTime = (Single)obj;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderParticleBirthRampDownTime:
-                    this.ParticleShaderParticleBirthRampDownTime = (Single)obj;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderFullParticleBirthRatio:
-                    this.ParticleShaderFullParticleBirthRatio = (Single)obj;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderPersistentParticleBirthRatio:
-                    this.ParticleShaderPersistentParticleBirthRatio = (Single)obj;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderParticleLifetime:
-                    this.ParticleShaderParticleLifetime = (Single)obj;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderParticleLifetimePlusMinus:
-                    this.ParticleShaderParticleLifetimePlusMinus = (Single)obj;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderInitialSpeedAlongNormal:
-                    this.ParticleShaderInitialSpeedAlongNormal = (Single)obj;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderAccelerationAlongNormal:
-                    this.ParticleShaderAccelerationAlongNormal = (Single)obj;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderInitialVelocity1:
-                    this.ParticleShaderInitialVelocity1 = (Single)obj;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderInitialVelocity2:
-                    this.ParticleShaderInitialVelocity2 = (Single)obj;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderInitialVelocity3:
-                    this.ParticleShaderInitialVelocity3 = (Single)obj;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderAcceleration1:
-                    this.ParticleShaderAcceleration1 = (Single)obj;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderAcceleration2:
-                    this.ParticleShaderAcceleration2 = (Single)obj;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderAcceleration3:
-                    this.ParticleShaderAcceleration3 = (Single)obj;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderScaleKey1:
-                    this.ParticleShaderScaleKey1 = (Single)obj;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderScaleKey2:
-                    this.ParticleShaderScaleKey2 = (Single)obj;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderScaleKey1Time:
-                    this.ParticleShaderScaleKey1Time = (Single)obj;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderScaleKey2Time:
-                    this.ParticleShaderScaleKey2Time = (Single)obj;
-                    break;
-                case EffectShader_FieldIndex.ColorKey1Color:
-                    this.ColorKey1Color = (Color)obj;
-                    break;
-                case EffectShader_FieldIndex.ColorKey2Color:
-                    this.ColorKey2Color = (Color)obj;
-                    break;
-                case EffectShader_FieldIndex.ColorKey3Color:
-                    this.ColorKey3Color = (Color)obj;
-                    break;
-                case EffectShader_FieldIndex.ColorKey1ColorAlpha:
-                    this.ColorKey1ColorAlpha = (Single)obj;
-                    break;
-                case EffectShader_FieldIndex.ColorKey2ColorAlpha:
-                    this.ColorKey2ColorAlpha = (Single)obj;
-                    break;
-                case EffectShader_FieldIndex.ColorKey3ColorAlpha:
-                    this.ColorKey3ColorAlpha = (Single)obj;
-                    break;
-                case EffectShader_FieldIndex.ColorKey1ColorKeyTime:
-                    this.ColorKey1ColorKeyTime = (Single)obj;
-                    break;
-                case EffectShader_FieldIndex.ColorKey2ColorKeyTime:
-                    this.ColorKey2ColorKeyTime = (Single)obj;
-                    break;
-                case EffectShader_FieldIndex.ColorKey3ColorKeyTime:
-                    this.ColorKey3ColorKeyTime = (Single)obj;
-                    break;
-                case EffectShader_FieldIndex.DATADataTypeState:
-                    this.DATADataTypeState = (EffectShader.DATADataType)obj;
-                    break;
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            EffectShaderSetterCommon.Instance.Clear(this);
-        }
-
-        public new static EffectShader Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new EffectShader();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_EffectShader(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_EffectShader(EffectShader obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out EffectShader_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case EffectShader_FieldIndex.FillTexture:
-                    obj.FillTexture = (String)pair.Value;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderTexture:
-                    obj.ParticleShaderTexture = (String)pair.Value;
-                    break;
-                case EffectShader_FieldIndex.Flags:
-                    obj.Flags = (EffectShader.Flag)pair.Value;
-                    break;
-                case EffectShader_FieldIndex.MembraneShaderSourceBlendMode:
-                    obj.MembraneShaderSourceBlendMode = (EffectShader.SourceBlendMode)pair.Value;
-                    break;
-                case EffectShader_FieldIndex.MembraneShaderBlendOperation:
-                    obj.MembraneShaderBlendOperation = (EffectShader.BlendOperation)pair.Value;
-                    break;
-                case EffectShader_FieldIndex.MembraneShaderZTestFunction:
-                    obj.MembraneShaderZTestFunction = (EffectShader.ZTestFunction)pair.Value;
-                    break;
-                case EffectShader_FieldIndex.FillTextureEffectColor:
-                    obj.FillTextureEffectColor = (Color)pair.Value;
-                    break;
-                case EffectShader_FieldIndex.FillTextureEffectAlphaFadeInTime:
-                    obj.FillTextureEffectAlphaFadeInTime = (Single)pair.Value;
-                    break;
-                case EffectShader_FieldIndex.FillTextureEffectFullAlphaTime:
-                    obj.FillTextureEffectFullAlphaTime = (Single)pair.Value;
-                    break;
-                case EffectShader_FieldIndex.FillTextureEffectAlphaFadeOutTime:
-                    obj.FillTextureEffectAlphaFadeOutTime = (Single)pair.Value;
-                    break;
-                case EffectShader_FieldIndex.FillTextureEffectPersistentAlphaRatio:
-                    obj.FillTextureEffectPersistentAlphaRatio = (Single)pair.Value;
-                    break;
-                case EffectShader_FieldIndex.FillTextureEffectAlphaPulseAmplitude:
-                    obj.FillTextureEffectAlphaPulseAmplitude = (Single)pair.Value;
-                    break;
-                case EffectShader_FieldIndex.FillTextureEffectAlphaPulseFrequency:
-                    obj.FillTextureEffectAlphaPulseFrequency = (Single)pair.Value;
-                    break;
-                case EffectShader_FieldIndex.FillTextureEffectTextureAnimationSpeedU:
-                    obj.FillTextureEffectTextureAnimationSpeedU = (Single)pair.Value;
-                    break;
-                case EffectShader_FieldIndex.FillTextureEffectTextureAnimationSpeedV:
-                    obj.FillTextureEffectTextureAnimationSpeedV = (Single)pair.Value;
-                    break;
-                case EffectShader_FieldIndex.EdgeEffectFallOff:
-                    obj.EdgeEffectFallOff = (Single)pair.Value;
-                    break;
-                case EffectShader_FieldIndex.EdgeEffectColor:
-                    obj.EdgeEffectColor = (Color)pair.Value;
-                    break;
-                case EffectShader_FieldIndex.EdgeEffectAlphaFadeInTime:
-                    obj.EdgeEffectAlphaFadeInTime = (Single)pair.Value;
-                    break;
-                case EffectShader_FieldIndex.EdgeEffectFullAlphaTime:
-                    obj.EdgeEffectFullAlphaTime = (Single)pair.Value;
-                    break;
-                case EffectShader_FieldIndex.EdgeEffectAlphaFadeOutTime:
-                    obj.EdgeEffectAlphaFadeOutTime = (Single)pair.Value;
-                    break;
-                case EffectShader_FieldIndex.EdgeEffectPersistentAlphaRatio:
-                    obj.EdgeEffectPersistentAlphaRatio = (Single)pair.Value;
-                    break;
-                case EffectShader_FieldIndex.EdgeEffectAlphaPulseAmplitude:
-                    obj.EdgeEffectAlphaPulseAmplitude = (Single)pair.Value;
-                    break;
-                case EffectShader_FieldIndex.EdgeEffectAlphaPulseFrequency:
-                    obj.EdgeEffectAlphaPulseFrequency = (Single)pair.Value;
-                    break;
-                case EffectShader_FieldIndex.FillTextureEffectFullAlphaRatio:
-                    obj.FillTextureEffectFullAlphaRatio = (Single)pair.Value;
-                    break;
-                case EffectShader_FieldIndex.EdgeEffectFullAlphaRatio:
-                    obj.EdgeEffectFullAlphaRatio = (Single)pair.Value;
-                    break;
-                case EffectShader_FieldIndex.MembraneShaderDestBlendMode:
-                    obj.MembraneShaderDestBlendMode = (EffectShader.SourceBlendMode)pair.Value;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderSourceBlendMode:
-                    obj.ParticleShaderSourceBlendMode = (EffectShader.SourceBlendMode)pair.Value;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderBlendOperation:
-                    obj.ParticleShaderBlendOperation = (EffectShader.BlendOperation)pair.Value;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderZTestFunction:
-                    obj.ParticleShaderZTestFunction = (EffectShader.ZTestFunction)pair.Value;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderDestBlendMode:
-                    obj.ParticleShaderDestBlendMode = (EffectShader.SourceBlendMode)pair.Value;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderParticleBirthRampUpTime:
-                    obj.ParticleShaderParticleBirthRampUpTime = (Single)pair.Value;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderFullParticleBirthTime:
-                    obj.ParticleShaderFullParticleBirthTime = (Single)pair.Value;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderParticleBirthRampDownTime:
-                    obj.ParticleShaderParticleBirthRampDownTime = (Single)pair.Value;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderFullParticleBirthRatio:
-                    obj.ParticleShaderFullParticleBirthRatio = (Single)pair.Value;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderPersistentParticleBirthRatio:
-                    obj.ParticleShaderPersistentParticleBirthRatio = (Single)pair.Value;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderParticleLifetime:
-                    obj.ParticleShaderParticleLifetime = (Single)pair.Value;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderParticleLifetimePlusMinus:
-                    obj.ParticleShaderParticleLifetimePlusMinus = (Single)pair.Value;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderInitialSpeedAlongNormal:
-                    obj.ParticleShaderInitialSpeedAlongNormal = (Single)pair.Value;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderAccelerationAlongNormal:
-                    obj.ParticleShaderAccelerationAlongNormal = (Single)pair.Value;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderInitialVelocity1:
-                    obj.ParticleShaderInitialVelocity1 = (Single)pair.Value;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderInitialVelocity2:
-                    obj.ParticleShaderInitialVelocity2 = (Single)pair.Value;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderInitialVelocity3:
-                    obj.ParticleShaderInitialVelocity3 = (Single)pair.Value;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderAcceleration1:
-                    obj.ParticleShaderAcceleration1 = (Single)pair.Value;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderAcceleration2:
-                    obj.ParticleShaderAcceleration2 = (Single)pair.Value;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderAcceleration3:
-                    obj.ParticleShaderAcceleration3 = (Single)pair.Value;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderScaleKey1:
-                    obj.ParticleShaderScaleKey1 = (Single)pair.Value;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderScaleKey2:
-                    obj.ParticleShaderScaleKey2 = (Single)pair.Value;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderScaleKey1Time:
-                    obj.ParticleShaderScaleKey1Time = (Single)pair.Value;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderScaleKey2Time:
-                    obj.ParticleShaderScaleKey2Time = (Single)pair.Value;
-                    break;
-                case EffectShader_FieldIndex.ColorKey1Color:
-                    obj.ColorKey1Color = (Color)pair.Value;
-                    break;
-                case EffectShader_FieldIndex.ColorKey2Color:
-                    obj.ColorKey2Color = (Color)pair.Value;
-                    break;
-                case EffectShader_FieldIndex.ColorKey3Color:
-                    obj.ColorKey3Color = (Color)pair.Value;
-                    break;
-                case EffectShader_FieldIndex.ColorKey1ColorAlpha:
-                    obj.ColorKey1ColorAlpha = (Single)pair.Value;
-                    break;
-                case EffectShader_FieldIndex.ColorKey2ColorAlpha:
-                    obj.ColorKey2ColorAlpha = (Single)pair.Value;
-                    break;
-                case EffectShader_FieldIndex.ColorKey3ColorAlpha:
-                    obj.ColorKey3ColorAlpha = (Single)pair.Value;
-                    break;
-                case EffectShader_FieldIndex.ColorKey1ColorKeyTime:
-                    obj.ColorKey1ColorKeyTime = (Single)pair.Value;
-                    break;
-                case EffectShader_FieldIndex.ColorKey2ColorKeyTime:
-                    obj.ColorKey2ColorKeyTime = (Single)pair.Value;
-                    break;
-                case EffectShader_FieldIndex.ColorKey3ColorKeyTime:
-                    obj.ColorKey3ColorKeyTime = (Single)pair.Value;
-                    break;
-                case EffectShader_FieldIndex.DATADataTypeState:
-                    obj.DATADataTypeState = (EffectShader.DATADataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -2485,11 +2023,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Single ColorKey3ColorKeyTime { get; set; }
 
-        void CopyFieldsFrom(
-            EffectShader rhs,
-            ErrorMaskBuilder errorMask = null,
-            EffectShader_CopyMask copyMask = null,
-            EffectShader def = null);
     }
 
     public partial interface IEffectShaderInternal :
@@ -2825,6 +2358,54 @@ namespace Mutagen.Bethesda.Oblivion
             return ((EffectShaderCommon)((IEffectShaderInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this EffectShader lhs,
+            EffectShader rhs,
+            EffectShader_CopyMask copyMask,
+            EffectShader def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this EffectShader lhs,
+            EffectShader rhs,
+            out EffectShader_ErrorMask errorMask,
+            EffectShader_CopyMask copyMask = null,
+            EffectShader def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            EffectShaderSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = EffectShader_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this EffectShader lhs,
+            EffectShader rhs,
+            ErrorMaskBuilder errorMask,
+            EffectShader_CopyMask copyMask = null,
+            EffectShader def = null)
+        {
+            EffectShaderSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

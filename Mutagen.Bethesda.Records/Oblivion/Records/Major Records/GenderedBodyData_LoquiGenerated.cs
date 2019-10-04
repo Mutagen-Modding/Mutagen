@@ -490,130 +490,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static GenderedBodyData Copy_ToLoqui(
-            GenderedBodyData item,
-            GenderedBodyData_CopyMask copyMask = null,
-            GenderedBodyData def = null)
+        void IClearable.Clear()
         {
-            GenderedBodyData ret;
-            if (item.GetType().Equals(typeof(GenderedBodyData)))
-            {
-                ret = new GenderedBodyData() as GenderedBodyData;
-            }
-            else
-            {
-                ret = (GenderedBodyData)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((GenderedBodyDataSetterCommon)((IGenderedBodyDataInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public void CopyFieldsFrom(GenderedBodyData rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            GenderedBodyData rhs,
-            GenderedBodyData_CopyMask copyMask,
-            GenderedBodyData def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            GenderedBodyData rhs,
-            out GenderedBodyData_ErrorMask errorMask,
-            GenderedBodyData_CopyMask copyMask = null,
-            GenderedBodyData def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            GenderedBodyDataSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = GenderedBodyData_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            GenderedBodyData rhs,
-            ErrorMaskBuilder errorMask,
-            GenderedBodyData_CopyMask copyMask = null,
-            GenderedBodyData def = null)
-        {
-            GenderedBodyDataSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected void SetNthObject(ushort index, object obj)
-        {
-            GenderedBodyData_FieldIndex enu = (GenderedBodyData_FieldIndex)index;
-            switch (enu)
-            {
-                case GenderedBodyData_FieldIndex.Male:
-                    this.Male = (BodyData)obj;
-                    break;
-                case GenderedBodyData_FieldIndex.Female:
-                    this.Female = (BodyData)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void Clear()
-        {
-            GenderedBodyDataSetterCommon.Instance.Clear(this);
-        }
-
-        public static GenderedBodyData Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new GenderedBodyData();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_GenderedBodyData(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_GenderedBodyData(GenderedBodyData obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out GenderedBodyData_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case GenderedBodyData_FieldIndex.Male:
-                    obj.Male = (BodyData)pair.Value;
-                    break;
-                case GenderedBodyData_FieldIndex.Female:
-                    obj.Female = (BodyData)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -632,11 +513,6 @@ namespace Mutagen.Bethesda.Oblivion
         void Female_Set(BodyData value, bool hasBeenSet = true);
         void Female_Unset();
 
-        void CopyFieldsFrom(
-            GenderedBodyData rhs,
-            ErrorMaskBuilder errorMask = null,
-            GenderedBodyData_CopyMask copyMask = null,
-            GenderedBodyData def = null);
     }
 
     public partial interface IGenderedBodyDataInternal :
@@ -742,6 +618,67 @@ namespace Mutagen.Bethesda.Oblivion
             return ((GenderedBodyDataCommon)((IGenderedBodyDataInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this GenderedBodyData lhs,
+            GenderedBodyData rhs)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null);
+        }
+
+        public static void CopyFieldsFrom(
+            this GenderedBodyData lhs,
+            GenderedBodyData rhs,
+            GenderedBodyData_CopyMask copyMask,
+            GenderedBodyData def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this GenderedBodyData lhs,
+            GenderedBodyData rhs,
+            out GenderedBodyData_ErrorMask errorMask,
+            GenderedBodyData_CopyMask copyMask = null,
+            GenderedBodyData def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            GenderedBodyDataSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = GenderedBodyData_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this GenderedBodyData lhs,
+            GenderedBodyData rhs,
+            ErrorMaskBuilder errorMask,
+            GenderedBodyData_CopyMask copyMask = null,
+            GenderedBodyData def = null)
+        {
+            GenderedBodyDataSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

@@ -326,101 +326,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static SpellAbstract Copy_ToLoqui(
-            SpellAbstract item,
-            SpellAbstract_CopyMask copyMask = null,
-            SpellAbstract def = null)
+        void IClearable.Clear()
         {
-            SpellAbstract ret = (SpellAbstract)System.Activator.CreateInstance(item.GetType());
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((SpellAbstractSetterCommon)((ISpellAbstractInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            SpellAbstract rhs,
-            SpellAbstract_CopyMask copyMask,
-            SpellAbstract def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            SpellAbstract rhs,
-            out SpellAbstract_ErrorMask errorMask,
-            SpellAbstract_CopyMask copyMask = null,
-            SpellAbstract def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            SpellAbstractSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = SpellAbstract_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            SpellAbstract rhs,
-            ErrorMaskBuilder errorMask,
-            SpellAbstract_CopyMask copyMask = null,
-            SpellAbstract def = null)
-        {
-            SpellAbstractSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            SpellAbstract_FieldIndex enu = (SpellAbstract_FieldIndex)index;
-            switch (enu)
-            {
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            SpellAbstractSetterCommon.Instance.Clear(this);
-        }
-
-        protected new static void CopyInInternal_SpellAbstract(SpellAbstract obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out SpellAbstract_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -430,11 +340,6 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecord,
         ILoquiObjectSetter<ISpellAbstractInternal>
     {
-        void CopyFieldsFrom(
-            SpellAbstract rhs,
-            ErrorMaskBuilder errorMask = null,
-            SpellAbstract_CopyMask copyMask = null,
-            SpellAbstract def = null);
     }
 
     public partial interface ISpellAbstractInternal :
@@ -530,6 +435,54 @@ namespace Mutagen.Bethesda.Oblivion
             return ((SpellAbstractCommon)((ISpellAbstractInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this SpellAbstract lhs,
+            SpellAbstract rhs,
+            SpellAbstract_CopyMask copyMask,
+            SpellAbstract def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this SpellAbstract lhs,
+            SpellAbstract rhs,
+            out SpellAbstract_ErrorMask errorMask,
+            SpellAbstract_CopyMask copyMask = null,
+            SpellAbstract def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            SpellAbstractSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = SpellAbstract_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this SpellAbstract lhs,
+            SpellAbstract rhs,
+            ErrorMaskBuilder errorMask,
+            SpellAbstract_CopyMask copyMask = null,
+            SpellAbstract def = null)
+        {
+            SpellAbstractSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

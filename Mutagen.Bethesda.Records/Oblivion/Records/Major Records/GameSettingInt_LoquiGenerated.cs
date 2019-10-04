@@ -467,125 +467,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static GameSettingInt Copy_ToLoqui(
-            GameSettingInt item,
-            GameSettingInt_CopyMask copyMask = null,
-            GameSettingInt def = null)
+        void IClearable.Clear()
         {
-            GameSettingInt ret;
-            if (item.GetType().Equals(typeof(GameSettingInt)))
-            {
-                ret = new GameSettingInt() as GameSettingInt;
-            }
-            else
-            {
-                ret = (GameSettingInt)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((GameSettingIntSetterCommon)((IGameSettingIntInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            GameSettingInt rhs,
-            GameSettingInt_CopyMask copyMask,
-            GameSettingInt def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            GameSettingInt rhs,
-            out GameSettingInt_ErrorMask errorMask,
-            GameSettingInt_CopyMask copyMask = null,
-            GameSettingInt def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            GameSettingIntSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = GameSettingInt_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            GameSettingInt rhs,
-            ErrorMaskBuilder errorMask,
-            GameSettingInt_CopyMask copyMask = null,
-            GameSettingInt def = null)
-        {
-            GameSettingIntSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            GameSettingInt_FieldIndex enu = (GameSettingInt_FieldIndex)index;
-            switch (enu)
-            {
-                case GameSettingInt_FieldIndex.Data:
-                    this.Data = (Int32)obj;
-                    break;
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            GameSettingIntSetterCommon.Instance.Clear(this);
-        }
-
-        public new static GameSettingInt Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new GameSettingInt();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_GameSettingInt(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_GameSettingInt(GameSettingInt obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out GameSettingInt_FieldIndex enu))
-            {
-                CopyInInternal_GameSetting(obj, pair);
-            }
-            switch (enu)
-            {
-                case GameSettingInt_FieldIndex.Data:
-                    obj.Data = (Int32)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -600,11 +486,6 @@ namespace Mutagen.Bethesda.Oblivion
         void Data_Set(Int32 value, bool hasBeenSet = true);
         void Data_Unset();
 
-        void CopyFieldsFrom(
-            GameSettingInt rhs,
-            ErrorMaskBuilder errorMask = null,
-            GameSettingInt_CopyMask copyMask = null,
-            GameSettingInt def = null);
     }
 
     public partial interface IGameSettingIntInternal :
@@ -705,6 +586,54 @@ namespace Mutagen.Bethesda.Oblivion
             return ((GameSettingIntCommon)((IGameSettingIntInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this GameSettingInt lhs,
+            GameSettingInt rhs,
+            GameSettingInt_CopyMask copyMask,
+            GameSettingInt def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this GameSettingInt lhs,
+            GameSettingInt rhs,
+            out GameSettingInt_ErrorMask errorMask,
+            GameSettingInt_CopyMask copyMask = null,
+            GameSettingInt def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            GameSettingIntSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = GameSettingInt_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this GameSettingInt lhs,
+            GameSettingInt rhs,
+            ErrorMaskBuilder errorMask,
+            GameSettingInt_CopyMask copyMask = null,
+            GameSettingInt def = null)
+        {
+            GameSettingIntSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

@@ -540,154 +540,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static LocalVariable Copy_ToLoqui(
-            LocalVariable item,
-            LocalVariable_CopyMask copyMask = null,
-            LocalVariable def = null)
+        void IClearable.Clear()
         {
-            LocalVariable ret;
-            if (item.GetType().Equals(typeof(LocalVariable)))
-            {
-                ret = new LocalVariable() as LocalVariable;
-            }
-            else
-            {
-                ret = (LocalVariable)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((LocalVariableSetterCommon)((ILocalVariableInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public void CopyFieldsFrom(LocalVariable rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            LocalVariable rhs,
-            LocalVariable_CopyMask copyMask,
-            LocalVariable def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            LocalVariable rhs,
-            out LocalVariable_ErrorMask errorMask,
-            LocalVariable_CopyMask copyMask = null,
-            LocalVariable def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            LocalVariableSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = LocalVariable_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            LocalVariable rhs,
-            ErrorMaskBuilder errorMask,
-            LocalVariable_CopyMask copyMask = null,
-            LocalVariable def = null)
-        {
-            LocalVariableSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected void SetNthObject(ushort index, object obj)
-        {
-            LocalVariable_FieldIndex enu = (LocalVariable_FieldIndex)index;
-            switch (enu)
-            {
-                case LocalVariable_FieldIndex.Index:
-                    this.Index = (Int32)obj;
-                    break;
-                case LocalVariable_FieldIndex.Fluff:
-                    this.Fluff = (Byte[])obj;
-                    break;
-                case LocalVariable_FieldIndex.Flags:
-                    this.Flags = (Script.LocalVariableFlag)obj;
-                    break;
-                case LocalVariable_FieldIndex.Fluff2:
-                    this.Fluff2 = (Byte[])obj;
-                    break;
-                case LocalVariable_FieldIndex.Name:
-                    this.Name = (String)obj;
-                    break;
-                case LocalVariable_FieldIndex.SLSDDataTypeState:
-                    this.SLSDDataTypeState = (LocalVariable.SLSDDataType)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void Clear()
-        {
-            LocalVariableSetterCommon.Instance.Clear(this);
-        }
-
-        public static LocalVariable Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new LocalVariable();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_LocalVariable(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_LocalVariable(LocalVariable obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out LocalVariable_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case LocalVariable_FieldIndex.Index:
-                    obj.Index = (Int32)pair.Value;
-                    break;
-                case LocalVariable_FieldIndex.Fluff:
-                    obj.Fluff = (Byte[])pair.Value;
-                    break;
-                case LocalVariable_FieldIndex.Flags:
-                    obj.Flags = (Script.LocalVariableFlag)pair.Value;
-                    break;
-                case LocalVariable_FieldIndex.Fluff2:
-                    obj.Fluff2 = (Byte[])pair.Value;
-                    break;
-                case LocalVariable_FieldIndex.Name:
-                    obj.Name = (String)pair.Value;
-                    break;
-                case LocalVariable_FieldIndex.SLSDDataTypeState:
-                    obj.SLSDDataTypeState = (LocalVariable.SLSDDataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -709,11 +566,6 @@ namespace Mutagen.Bethesda.Oblivion
         void Name_Set(String value, bool hasBeenSet = true);
         void Name_Unset();
 
-        void CopyFieldsFrom(
-            LocalVariable rhs,
-            ErrorMaskBuilder errorMask = null,
-            LocalVariable_CopyMask copyMask = null,
-            LocalVariable def = null);
     }
 
     public partial interface ILocalVariableInternal :
@@ -836,6 +688,67 @@ namespace Mutagen.Bethesda.Oblivion
             return ((LocalVariableCommon)((ILocalVariableInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this LocalVariable lhs,
+            LocalVariable rhs)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null);
+        }
+
+        public static void CopyFieldsFrom(
+            this LocalVariable lhs,
+            LocalVariable rhs,
+            LocalVariable_CopyMask copyMask,
+            LocalVariable def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this LocalVariable lhs,
+            LocalVariable rhs,
+            out LocalVariable_ErrorMask errorMask,
+            LocalVariable_CopyMask copyMask = null,
+            LocalVariable def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            LocalVariableSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = LocalVariable_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this LocalVariable lhs,
+            LocalVariable rhs,
+            ErrorMaskBuilder errorMask,
+            LocalVariable_CopyMask copyMask = null,
+            LocalVariable def = null)
+        {
+            LocalVariableSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

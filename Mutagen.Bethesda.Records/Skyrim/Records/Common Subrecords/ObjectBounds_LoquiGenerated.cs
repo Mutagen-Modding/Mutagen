@@ -401,130 +401,11 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static ObjectBounds Copy_ToLoqui(
-            ObjectBounds item,
-            ObjectBounds_CopyMask copyMask = null,
-            ObjectBounds def = null)
+        void IClearable.Clear()
         {
-            ObjectBounds ret;
-            if (item.GetType().Equals(typeof(ObjectBounds)))
-            {
-                ret = new ObjectBounds() as ObjectBounds;
-            }
-            else
-            {
-                ret = (ObjectBounds)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((ObjectBoundsSetterCommon)((IObjectBoundsInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public void CopyFieldsFrom(ObjectBounds rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            ObjectBounds rhs,
-            ObjectBounds_CopyMask copyMask,
-            ObjectBounds def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            ObjectBounds rhs,
-            out ObjectBounds_ErrorMask errorMask,
-            ObjectBounds_CopyMask copyMask = null,
-            ObjectBounds def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            ObjectBoundsSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = ObjectBounds_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            ObjectBounds rhs,
-            ErrorMaskBuilder errorMask,
-            ObjectBounds_CopyMask copyMask = null,
-            ObjectBounds def = null)
-        {
-            ObjectBoundsSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected void SetNthObject(ushort index, object obj)
-        {
-            ObjectBounds_FieldIndex enu = (ObjectBounds_FieldIndex)index;
-            switch (enu)
-            {
-                case ObjectBounds_FieldIndex.First:
-                    this.First = (P3Int16)obj;
-                    break;
-                case ObjectBounds_FieldIndex.Second:
-                    this.Second = (P3Int16)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void Clear()
-        {
-            ObjectBoundsSetterCommon.Instance.Clear(this);
-        }
-
-        public static ObjectBounds Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new ObjectBounds();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_ObjectBounds(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_ObjectBounds(ObjectBounds obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out ObjectBounds_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case ObjectBounds_FieldIndex.First:
-                    obj.First = (P3Int16)pair.Value;
-                    break;
-                case ObjectBounds_FieldIndex.Second:
-                    obj.Second = (P3Int16)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -537,11 +418,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         new P3Int16 Second { get; set; }
 
-        void CopyFieldsFrom(
-            ObjectBounds rhs,
-            ErrorMaskBuilder errorMask = null,
-            ObjectBounds_CopyMask copyMask = null,
-            ObjectBounds def = null);
     }
 
     public partial interface IObjectBoundsInternal :
@@ -645,6 +521,67 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ObjectBoundsCommon)((IObjectBoundsInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this ObjectBounds lhs,
+            ObjectBounds rhs)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null);
+        }
+
+        public static void CopyFieldsFrom(
+            this ObjectBounds lhs,
+            ObjectBounds rhs,
+            ObjectBounds_CopyMask copyMask,
+            ObjectBounds def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this ObjectBounds lhs,
+            ObjectBounds rhs,
+            out ObjectBounds_ErrorMask errorMask,
+            ObjectBounds_CopyMask copyMask = null,
+            ObjectBounds def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            ObjectBoundsSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = ObjectBounds_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this ObjectBounds lhs,
+            ObjectBounds rhs,
+            ErrorMaskBuilder errorMask,
+            ObjectBounds_CopyMask copyMask = null,
+            ObjectBounds def = null)
+        {
+            ObjectBoundsSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

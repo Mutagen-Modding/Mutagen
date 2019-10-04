@@ -818,185 +818,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static DialogItem Copy_ToLoqui(
-            DialogItem item,
-            DialogItem_CopyMask copyMask = null,
-            DialogItem def = null)
+        void IClearable.Clear()
         {
-            DialogItem ret;
-            if (item.GetType().Equals(typeof(DialogItem)))
-            {
-                ret = new DialogItem() as DialogItem;
-            }
-            else
-            {
-                ret = (DialogItem)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((DialogItemSetterCommon)((IDialogItemInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            DialogItem rhs,
-            DialogItem_CopyMask copyMask,
-            DialogItem def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            DialogItem rhs,
-            out DialogItem_ErrorMask errorMask,
-            DialogItem_CopyMask copyMask = null,
-            DialogItem def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            DialogItemSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = DialogItem_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            DialogItem rhs,
-            ErrorMaskBuilder errorMask,
-            DialogItem_CopyMask copyMask = null,
-            DialogItem def = null)
-        {
-            DialogItemSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            DialogItem_FieldIndex enu = (DialogItem_FieldIndex)index;
-            switch (enu)
-            {
-                case DialogItem_FieldIndex.DialogType:
-                    this.DialogType = (DialogType)obj;
-                    break;
-                case DialogItem_FieldIndex.Flags:
-                    this.Flags = (DialogItem.Flag)obj;
-                    break;
-                case DialogItem_FieldIndex.Quest:
-                    this.Quest_Property.Set((IFormIDSetLink<Quest>)obj);
-                    break;
-                case DialogItem_FieldIndex.PreviousTopic:
-                    this.PreviousTopic_Property.Set((IFormIDSetLink<DialogItem>)obj);
-                    break;
-                case DialogItem_FieldIndex.Topics:
-                    this._Topics.SetTo((ISetList<IFormIDLink<DialogTopic>>)obj);
-                    break;
-                case DialogItem_FieldIndex.Responses:
-                    this._Responses.SetTo((ISetList<DialogResponse>)obj);
-                    break;
-                case DialogItem_FieldIndex.Conditions:
-                    this._Conditions.SetTo((ISetList<Condition>)obj);
-                    break;
-                case DialogItem_FieldIndex.Choices:
-                    this._Choices.SetTo((ISetList<IFormIDLink<DialogTopic>>)obj);
-                    break;
-                case DialogItem_FieldIndex.LinkFrom:
-                    this._LinkFrom.SetTo((ISetList<IFormIDLink<DialogTopic>>)obj);
-                    break;
-                case DialogItem_FieldIndex.Script:
-                    this.Script.CopyFieldsFrom(rhs: (ScriptFields)obj);
-                    break;
-                case DialogItem_FieldIndex.DATADataTypeState:
-                    this.DATADataTypeState = (DialogItem.DATADataType)obj;
-                    break;
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            DialogItemSetterCommon.Instance.Clear(this);
-        }
-
-        public new static DialogItem Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new DialogItem();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_DialogItem(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_DialogItem(DialogItem obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out DialogItem_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case DialogItem_FieldIndex.DialogType:
-                    obj.DialogType = (DialogType)pair.Value;
-                    break;
-                case DialogItem_FieldIndex.Flags:
-                    obj.Flags = (DialogItem.Flag)pair.Value;
-                    break;
-                case DialogItem_FieldIndex.Quest:
-                    obj.Quest_Property.Set((IFormIDSetLink<Quest>)pair.Value);
-                    break;
-                case DialogItem_FieldIndex.PreviousTopic:
-                    obj.PreviousTopic_Property.Set((IFormIDSetLink<DialogItem>)pair.Value);
-                    break;
-                case DialogItem_FieldIndex.Topics:
-                    obj._Topics.SetTo((ISetList<IFormIDLink<DialogTopic>>)pair.Value);
-                    break;
-                case DialogItem_FieldIndex.Responses:
-                    obj._Responses.SetTo((ISetList<DialogResponse>)pair.Value);
-                    break;
-                case DialogItem_FieldIndex.Conditions:
-                    obj._Conditions.SetTo((ISetList<Condition>)pair.Value);
-                    break;
-                case DialogItem_FieldIndex.Choices:
-                    obj._Choices.SetTo((ISetList<IFormIDLink<DialogTopic>>)pair.Value);
-                    break;
-                case DialogItem_FieldIndex.LinkFrom:
-                    obj._LinkFrom.SetTo((ISetList<IFormIDLink<DialogTopic>>)pair.Value);
-                    break;
-                case DialogItem_FieldIndex.Script:
-                    obj.Script.CopyFieldsFrom(rhs: (ScriptFields)pair.Value);
-                    break;
-                case DialogItem_FieldIndex.DATADataTypeState:
-                    obj.DATADataTypeState = (DialogItem.DATADataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -1020,11 +846,6 @@ namespace Mutagen.Bethesda.Oblivion
         new ISetList<IFormIDLink<DialogTopic>> Choices { get; }
         new ISetList<IFormIDLink<DialogTopic>> LinkFrom { get; }
         new ScriptFields Script { get; }
-        void CopyFieldsFrom(
-            DialogItem rhs,
-            ErrorMaskBuilder errorMask = null,
-            DialogItem_CopyMask copyMask = null,
-            DialogItem def = null);
     }
 
     public partial interface IDialogItemInternal :
@@ -1169,6 +990,54 @@ namespace Mutagen.Bethesda.Oblivion
             return ((DialogItemCommon)((IDialogItemInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this DialogItem lhs,
+            DialogItem rhs,
+            DialogItem_CopyMask copyMask,
+            DialogItem def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this DialogItem lhs,
+            DialogItem rhs,
+            out DialogItem_ErrorMask errorMask,
+            DialogItem_CopyMask copyMask = null,
+            DialogItem def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            DialogItemSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = DialogItem_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this DialogItem lhs,
+            DialogItem rhs,
+            ErrorMaskBuilder errorMask,
+            DialogItem_CopyMask copyMask = null,
+            DialogItem def = null)
+        {
+            DialogItemSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

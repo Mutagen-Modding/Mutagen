@@ -604,166 +604,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static Effect Copy_ToLoqui(
-            Effect item,
-            Effect_CopyMask copyMask = null,
-            Effect def = null)
+        void IClearable.Clear()
         {
-            Effect ret;
-            if (item.GetType().Equals(typeof(Effect)))
-            {
-                ret = new Effect() as Effect;
-            }
-            else
-            {
-                ret = (Effect)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((EffectSetterCommon)((IEffectInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public void CopyFieldsFrom(Effect rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            Effect rhs,
-            Effect_CopyMask copyMask,
-            Effect def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            Effect rhs,
-            out Effect_ErrorMask errorMask,
-            Effect_CopyMask copyMask = null,
-            Effect def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            EffectSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = Effect_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            Effect rhs,
-            ErrorMaskBuilder errorMask,
-            Effect_CopyMask copyMask = null,
-            Effect def = null)
-        {
-            EffectSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected void SetNthObject(ushort index, object obj)
-        {
-            Effect_FieldIndex enu = (Effect_FieldIndex)index;
-            switch (enu)
-            {
-                case Effect_FieldIndex.MagicEffect:
-                    this.MagicEffect_Property.Set((IEDIDLink<MagicEffect>)obj);
-                    break;
-                case Effect_FieldIndex.Magnitude:
-                    this.Magnitude = (UInt32)obj;
-                    break;
-                case Effect_FieldIndex.Area:
-                    this.Area = (UInt32)obj;
-                    break;
-                case Effect_FieldIndex.Duration:
-                    this.Duration = (UInt32)obj;
-                    break;
-                case Effect_FieldIndex.Type:
-                    this.Type = (Effect.EffectType)obj;
-                    break;
-                case Effect_FieldIndex.ActorValue:
-                    this.ActorValue = (ActorValueExtended)obj;
-                    break;
-                case Effect_FieldIndex.ScriptEffect:
-                    this.ScriptEffect = (ScriptEffect)obj;
-                    break;
-                case Effect_FieldIndex.EFITDataTypeState:
-                    this.EFITDataTypeState = (Effect.EFITDataType)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void Clear()
-        {
-            EffectSetterCommon.Instance.Clear(this);
-        }
-
-        public static Effect Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Effect();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Effect(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_Effect(Effect obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Effect_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case Effect_FieldIndex.MagicEffect:
-                    obj.MagicEffect_Property.Set((IEDIDLink<MagicEffect>)pair.Value);
-                    break;
-                case Effect_FieldIndex.Magnitude:
-                    obj.Magnitude = (UInt32)pair.Value;
-                    break;
-                case Effect_FieldIndex.Area:
-                    obj.Area = (UInt32)pair.Value;
-                    break;
-                case Effect_FieldIndex.Duration:
-                    obj.Duration = (UInt32)pair.Value;
-                    break;
-                case Effect_FieldIndex.Type:
-                    obj.Type = (Effect.EffectType)pair.Value;
-                    break;
-                case Effect_FieldIndex.ActorValue:
-                    obj.ActorValue = (ActorValueExtended)pair.Value;
-                    break;
-                case Effect_FieldIndex.ScriptEffect:
-                    obj.ScriptEffect = (ScriptEffect)pair.Value;
-                    break;
-                case Effect_FieldIndex.EFITDataTypeState:
-                    obj.EFITDataTypeState = (Effect.EFITDataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -789,11 +634,6 @@ namespace Mutagen.Bethesda.Oblivion
         void ScriptEffect_Set(ScriptEffect value, bool hasBeenSet = true);
         void ScriptEffect_Unset();
 
-        void CopyFieldsFrom(
-            Effect rhs,
-            ErrorMaskBuilder errorMask = null,
-            Effect_CopyMask copyMask = null,
-            Effect def = null);
     }
 
     public partial interface IEffectInternal :
@@ -927,6 +767,67 @@ namespace Mutagen.Bethesda.Oblivion
             return ((EffectCommon)((IEffectInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this Effect lhs,
+            Effect rhs)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null);
+        }
+
+        public static void CopyFieldsFrom(
+            this Effect lhs,
+            Effect rhs,
+            Effect_CopyMask copyMask,
+            Effect def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this Effect lhs,
+            Effect rhs,
+            out Effect_ErrorMask errorMask,
+            Effect_CopyMask copyMask = null,
+            Effect def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            EffectSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = Effect_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this Effect lhs,
+            Effect rhs,
+            ErrorMaskBuilder errorMask,
+            Effect_CopyMask copyMask = null,
+            Effect def = null)
+        {
+            EffectSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

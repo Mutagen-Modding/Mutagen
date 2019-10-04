@@ -714,155 +714,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static Landscape Copy_ToLoqui(
-            Landscape item,
-            Landscape_CopyMask copyMask = null,
-            Landscape def = null)
+        void IClearable.Clear()
         {
-            Landscape ret;
-            if (item.GetType().Equals(typeof(Landscape)))
-            {
-                ret = new Landscape() as Landscape;
-            }
-            else
-            {
-                ret = (Landscape)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((LandscapeSetterCommon)((ILandscapeInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            Landscape rhs,
-            Landscape_CopyMask copyMask,
-            Landscape def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            Landscape rhs,
-            out Landscape_ErrorMask errorMask,
-            Landscape_CopyMask copyMask = null,
-            Landscape def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            LandscapeSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = Landscape_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            Landscape rhs,
-            ErrorMaskBuilder errorMask,
-            Landscape_CopyMask copyMask = null,
-            Landscape def = null)
-        {
-            LandscapeSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            Landscape_FieldIndex enu = (Landscape_FieldIndex)index;
-            switch (enu)
-            {
-                case Landscape_FieldIndex.Unknown:
-                    this.Unknown = (Byte[])obj;
-                    break;
-                case Landscape_FieldIndex.VertexNormals:
-                    this.VertexNormals = (Byte[])obj;
-                    break;
-                case Landscape_FieldIndex.VertexHeightMap:
-                    this.VertexHeightMap = (Byte[])obj;
-                    break;
-                case Landscape_FieldIndex.VertexColors:
-                    this.VertexColors = (Byte[])obj;
-                    break;
-                case Landscape_FieldIndex.Layers:
-                    this._Layers.SetTo((ISetList<BaseLayer>)obj);
-                    break;
-                case Landscape_FieldIndex.Textures:
-                    this._Textures.SetTo((ISetList<IFormIDLink<LandTexture>>)obj);
-                    break;
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            LandscapeSetterCommon.Instance.Clear(this);
-        }
-
-        public new static Landscape Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Landscape();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Landscape(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_Landscape(Landscape obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Landscape_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case Landscape_FieldIndex.Unknown:
-                    obj.Unknown = (Byte[])pair.Value;
-                    break;
-                case Landscape_FieldIndex.VertexNormals:
-                    obj.VertexNormals = (Byte[])pair.Value;
-                    break;
-                case Landscape_FieldIndex.VertexHeightMap:
-                    obj.VertexHeightMap = (Byte[])pair.Value;
-                    break;
-                case Landscape_FieldIndex.VertexColors:
-                    obj.VertexColors = (Byte[])pair.Value;
-                    break;
-                case Landscape_FieldIndex.Layers:
-                    obj._Layers.SetTo((ISetList<BaseLayer>)pair.Value);
-                    break;
-                case Landscape_FieldIndex.Textures:
-                    obj._Textures.SetTo((ISetList<IFormIDLink<LandTexture>>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -895,11 +751,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         new ISetList<BaseLayer> Layers { get; }
         new ISetList<IFormIDLink<LandTexture>> Textures { get; }
-        void CopyFieldsFrom(
-            Landscape rhs,
-            ErrorMaskBuilder errorMask = null,
-            Landscape_CopyMask copyMask = null,
-            Landscape def = null);
     }
 
     public partial interface ILandscapeInternal :
@@ -1022,6 +873,54 @@ namespace Mutagen.Bethesda.Oblivion
             return ((LandscapeCommon)((ILandscapeInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this Landscape lhs,
+            Landscape rhs,
+            Landscape_CopyMask copyMask,
+            Landscape def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this Landscape lhs,
+            Landscape rhs,
+            out Landscape_ErrorMask errorMask,
+            Landscape_CopyMask copyMask = null,
+            Landscape def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            LandscapeSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = Landscape_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this Landscape lhs,
+            Landscape rhs,
+            ErrorMaskBuilder errorMask,
+            Landscape_CopyMask copyMask = null,
+            Landscape def = null)
+        {
+            LandscapeSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

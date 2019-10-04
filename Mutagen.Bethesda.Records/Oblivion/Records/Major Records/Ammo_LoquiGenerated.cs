@@ -773,185 +773,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static Ammo Copy_ToLoqui(
-            Ammo item,
-            Ammo_CopyMask copyMask = null,
-            Ammo def = null)
+        void IClearable.Clear()
         {
-            Ammo ret;
-            if (item.GetType().Equals(typeof(Ammo)))
-            {
-                ret = new Ammo() as Ammo;
-            }
-            else
-            {
-                ret = (Ammo)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((AmmoSetterCommon)((IAmmoInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            Ammo rhs,
-            Ammo_CopyMask copyMask,
-            Ammo def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            Ammo rhs,
-            out Ammo_ErrorMask errorMask,
-            Ammo_CopyMask copyMask = null,
-            Ammo def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            AmmoSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = Ammo_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            Ammo rhs,
-            ErrorMaskBuilder errorMask,
-            Ammo_CopyMask copyMask = null,
-            Ammo def = null)
-        {
-            AmmoSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            Ammo_FieldIndex enu = (Ammo_FieldIndex)index;
-            switch (enu)
-            {
-                case Ammo_FieldIndex.Name:
-                    this.Name = (String)obj;
-                    break;
-                case Ammo_FieldIndex.Model:
-                    this.Model = (Model)obj;
-                    break;
-                case Ammo_FieldIndex.Icon:
-                    this.Icon = (String)obj;
-                    break;
-                case Ammo_FieldIndex.Enchantment:
-                    this.Enchantment_Property.Set((IFormIDSetLink<Enchantment>)obj);
-                    break;
-                case Ammo_FieldIndex.EnchantmentPoints:
-                    this.EnchantmentPoints = (UInt16)obj;
-                    break;
-                case Ammo_FieldIndex.Speed:
-                    this.Speed = (Single)obj;
-                    break;
-                case Ammo_FieldIndex.Flags:
-                    this.Flags = (Ammo.AmmoFlag)obj;
-                    break;
-                case Ammo_FieldIndex.Value:
-                    this.Value = (UInt32)obj;
-                    break;
-                case Ammo_FieldIndex.Weight:
-                    this.Weight = (Single)obj;
-                    break;
-                case Ammo_FieldIndex.Damage:
-                    this.Damage = (UInt16)obj;
-                    break;
-                case Ammo_FieldIndex.DATADataTypeState:
-                    this.DATADataTypeState = (Ammo.DATADataType)obj;
-                    break;
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            AmmoSetterCommon.Instance.Clear(this);
-        }
-
-        public new static Ammo Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Ammo();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Ammo(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_Ammo(Ammo obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Ammo_FieldIndex enu))
-            {
-                CopyInInternal_ItemAbstract(obj, pair);
-            }
-            switch (enu)
-            {
-                case Ammo_FieldIndex.Name:
-                    obj.Name = (String)pair.Value;
-                    break;
-                case Ammo_FieldIndex.Model:
-                    obj.Model = (Model)pair.Value;
-                    break;
-                case Ammo_FieldIndex.Icon:
-                    obj.Icon = (String)pair.Value;
-                    break;
-                case Ammo_FieldIndex.Enchantment:
-                    obj.Enchantment_Property.Set((IFormIDSetLink<Enchantment>)pair.Value);
-                    break;
-                case Ammo_FieldIndex.EnchantmentPoints:
-                    obj.EnchantmentPoints = (UInt16)pair.Value;
-                    break;
-                case Ammo_FieldIndex.Speed:
-                    obj.Speed = (Single)pair.Value;
-                    break;
-                case Ammo_FieldIndex.Flags:
-                    obj.Flags = (Ammo.AmmoFlag)pair.Value;
-                    break;
-                case Ammo_FieldIndex.Value:
-                    obj.Value = (UInt32)pair.Value;
-                    break;
-                case Ammo_FieldIndex.Weight:
-                    obj.Weight = (Single)pair.Value;
-                    break;
-                case Ammo_FieldIndex.Damage:
-                    obj.Damage = (UInt16)pair.Value;
-                    break;
-                case Ammo_FieldIndex.DATADataTypeState:
-                    obj.DATADataTypeState = (Ammo.DATADataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -993,11 +819,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         new UInt16 Damage { get; set; }
 
-        void CopyFieldsFrom(
-            Ammo rhs,
-            ErrorMaskBuilder errorMask = null,
-            Ammo_CopyMask copyMask = null,
-            Ammo def = null);
     }
 
     public partial interface IAmmoInternal :
@@ -1146,6 +967,54 @@ namespace Mutagen.Bethesda.Oblivion
             return ((AmmoCommon)((IAmmoInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this Ammo lhs,
+            Ammo rhs,
+            Ammo_CopyMask copyMask,
+            Ammo def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this Ammo lhs,
+            Ammo rhs,
+            out Ammo_ErrorMask errorMask,
+            Ammo_CopyMask copyMask = null,
+            Ammo def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            AmmoSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = Ammo_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this Ammo lhs,
+            Ammo rhs,
+            ErrorMaskBuilder errorMask,
+            Ammo_CopyMask copyMask = null,
+            Ammo def = null)
+        {
+            AmmoSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

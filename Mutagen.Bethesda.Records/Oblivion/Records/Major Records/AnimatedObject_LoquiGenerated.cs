@@ -521,131 +521,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static AnimatedObject Copy_ToLoqui(
-            AnimatedObject item,
-            AnimatedObject_CopyMask copyMask = null,
-            AnimatedObject def = null)
+        void IClearable.Clear()
         {
-            AnimatedObject ret;
-            if (item.GetType().Equals(typeof(AnimatedObject)))
-            {
-                ret = new AnimatedObject() as AnimatedObject;
-            }
-            else
-            {
-                ret = (AnimatedObject)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((AnimatedObjectSetterCommon)((IAnimatedObjectInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            AnimatedObject rhs,
-            AnimatedObject_CopyMask copyMask,
-            AnimatedObject def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            AnimatedObject rhs,
-            out AnimatedObject_ErrorMask errorMask,
-            AnimatedObject_CopyMask copyMask = null,
-            AnimatedObject def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            AnimatedObjectSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = AnimatedObject_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            AnimatedObject rhs,
-            ErrorMaskBuilder errorMask,
-            AnimatedObject_CopyMask copyMask = null,
-            AnimatedObject def = null)
-        {
-            AnimatedObjectSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            AnimatedObject_FieldIndex enu = (AnimatedObject_FieldIndex)index;
-            switch (enu)
-            {
-                case AnimatedObject_FieldIndex.Model:
-                    this.Model = (Model)obj;
-                    break;
-                case AnimatedObject_FieldIndex.IdleAnimation:
-                    this.IdleAnimation_Property.Set((IFormIDSetLink<IdleAnimation>)obj);
-                    break;
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            AnimatedObjectSetterCommon.Instance.Clear(this);
-        }
-
-        public new static AnimatedObject Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new AnimatedObject();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_AnimatedObject(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_AnimatedObject(AnimatedObject obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out AnimatedObject_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case AnimatedObject_FieldIndex.Model:
-                    obj.Model = (Model)pair.Value;
-                    break;
-                case AnimatedObject_FieldIndex.IdleAnimation:
-                    obj.IdleAnimation_Property.Set((IFormIDSetLink<IdleAnimation>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -662,11 +542,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         new IdleAnimation IdleAnimation { get; set; }
         new IFormIDSetLink<IdleAnimation> IdleAnimation_Property { get; }
-        void CopyFieldsFrom(
-            AnimatedObject rhs,
-            ErrorMaskBuilder errorMask = null,
-            AnimatedObject_CopyMask copyMask = null,
-            AnimatedObject def = null);
     }
 
     public partial interface IAnimatedObjectInternal :
@@ -774,6 +649,54 @@ namespace Mutagen.Bethesda.Oblivion
             return ((AnimatedObjectCommon)((IAnimatedObjectInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this AnimatedObject lhs,
+            AnimatedObject rhs,
+            AnimatedObject_CopyMask copyMask,
+            AnimatedObject def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this AnimatedObject lhs,
+            AnimatedObject rhs,
+            out AnimatedObject_ErrorMask errorMask,
+            AnimatedObject_CopyMask copyMask = null,
+            AnimatedObject def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            AnimatedObjectSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = AnimatedObject_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this AnimatedObject lhs,
+            AnimatedObject rhs,
+            ErrorMaskBuilder errorMask,
+            AnimatedObject_CopyMask copyMask = null,
+            AnimatedObject def = null)
+        {
+            AnimatedObjectSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

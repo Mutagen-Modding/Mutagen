@@ -470,125 +470,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static GlobalShort Copy_ToLoqui(
-            GlobalShort item,
-            GlobalShort_CopyMask copyMask = null,
-            GlobalShort def = null)
+        void IClearable.Clear()
         {
-            GlobalShort ret;
-            if (item.GetType().Equals(typeof(GlobalShort)))
-            {
-                ret = new GlobalShort() as GlobalShort;
-            }
-            else
-            {
-                ret = (GlobalShort)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((GlobalShortSetterCommon)((IGlobalShortInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            GlobalShort rhs,
-            GlobalShort_CopyMask copyMask,
-            GlobalShort def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            GlobalShort rhs,
-            out GlobalShort_ErrorMask errorMask,
-            GlobalShort_CopyMask copyMask = null,
-            GlobalShort def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            GlobalShortSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = GlobalShort_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            GlobalShort rhs,
-            ErrorMaskBuilder errorMask,
-            GlobalShort_CopyMask copyMask = null,
-            GlobalShort def = null)
-        {
-            GlobalShortSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            GlobalShort_FieldIndex enu = (GlobalShort_FieldIndex)index;
-            switch (enu)
-            {
-                case GlobalShort_FieldIndex.Data:
-                    this.Data = (Int16)obj;
-                    break;
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            GlobalShortSetterCommon.Instance.Clear(this);
-        }
-
-        public new static GlobalShort Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new GlobalShort();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_GlobalShort(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_GlobalShort(GlobalShort obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out GlobalShort_FieldIndex enu))
-            {
-                CopyInInternal_Global(obj, pair);
-            }
-            switch (enu)
-            {
-                case GlobalShort_FieldIndex.Data:
-                    obj.Data = (Int16)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -603,11 +489,6 @@ namespace Mutagen.Bethesda.Oblivion
         void Data_Set(Int16 value, bool hasBeenSet = true);
         void Data_Unset();
 
-        void CopyFieldsFrom(
-            GlobalShort rhs,
-            ErrorMaskBuilder errorMask = null,
-            GlobalShort_CopyMask copyMask = null,
-            GlobalShort def = null);
     }
 
     public partial interface IGlobalShortInternal :
@@ -708,6 +589,54 @@ namespace Mutagen.Bethesda.Oblivion
             return ((GlobalShortCommon)((IGlobalShortInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this GlobalShort lhs,
+            GlobalShort rhs,
+            GlobalShort_CopyMask copyMask,
+            GlobalShort def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this GlobalShort lhs,
+            GlobalShort rhs,
+            out GlobalShort_ErrorMask errorMask,
+            GlobalShort_CopyMask copyMask = null,
+            GlobalShort def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            GlobalShortSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = GlobalShort_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this GlobalShort lhs,
+            GlobalShort rhs,
+            ErrorMaskBuilder errorMask,
+            GlobalShort_CopyMask copyMask = null,
+            GlobalShort def = null)
+        {
+            GlobalShortSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

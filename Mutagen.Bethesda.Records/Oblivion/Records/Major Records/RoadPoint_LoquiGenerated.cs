@@ -419,136 +419,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static RoadPoint Copy_ToLoqui(
-            RoadPoint item,
-            RoadPoint_CopyMask copyMask = null,
-            RoadPoint def = null)
+        void IClearable.Clear()
         {
-            RoadPoint ret;
-            if (item.GetType().Equals(typeof(RoadPoint)))
-            {
-                ret = new RoadPoint() as RoadPoint;
-            }
-            else
-            {
-                ret = (RoadPoint)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((RoadPointSetterCommon)((IRoadPointInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public void CopyFieldsFrom(RoadPoint rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            RoadPoint rhs,
-            RoadPoint_CopyMask copyMask,
-            RoadPoint def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            RoadPoint rhs,
-            out RoadPoint_ErrorMask errorMask,
-            RoadPoint_CopyMask copyMask = null,
-            RoadPoint def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            RoadPointSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = RoadPoint_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            RoadPoint rhs,
-            ErrorMaskBuilder errorMask,
-            RoadPoint_CopyMask copyMask = null,
-            RoadPoint def = null)
-        {
-            RoadPointSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected void SetNthObject(ushort index, object obj)
-        {
-            RoadPoint_FieldIndex enu = (RoadPoint_FieldIndex)index;
-            switch (enu)
-            {
-                case RoadPoint_FieldIndex.Point:
-                    this.Point = (P3Float)obj;
-                    break;
-                case RoadPoint_FieldIndex.NumConnectionsFluffBytes:
-                    this.NumConnectionsFluffBytes = (Byte[])obj;
-                    break;
-                case RoadPoint_FieldIndex.Connections:
-                    this._Connections.SetTo((IExtendedList<P3Float>)obj);
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void Clear()
-        {
-            RoadPointSetterCommon.Instance.Clear(this);
-        }
-
-        public static RoadPoint Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new RoadPoint();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_RoadPoint(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_RoadPoint(RoadPoint obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out RoadPoint_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case RoadPoint_FieldIndex.Point:
-                    obj.Point = (P3Float)pair.Value;
-                    break;
-                case RoadPoint_FieldIndex.NumConnectionsFluffBytes:
-                    obj.NumConnectionsFluffBytes = (Byte[])pair.Value;
-                    break;
-                case RoadPoint_FieldIndex.Connections:
-                    obj._Connections.SetTo((IExtendedList<P3Float>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -562,11 +437,6 @@ namespace Mutagen.Bethesda.Oblivion
         new Byte[] NumConnectionsFluffBytes { get; set; }
 
         new IExtendedList<P3Float> Connections { get; }
-        void CopyFieldsFrom(
-            RoadPoint rhs,
-            ErrorMaskBuilder errorMask = null,
-            RoadPoint_CopyMask copyMask = null,
-            RoadPoint def = null);
     }
 
     public partial interface IRoadPointInternal :
@@ -673,6 +543,67 @@ namespace Mutagen.Bethesda.Oblivion
             return ((RoadPointCommon)((IRoadPointInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this RoadPoint lhs,
+            RoadPoint rhs)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null);
+        }
+
+        public static void CopyFieldsFrom(
+            this RoadPoint lhs,
+            RoadPoint rhs,
+            RoadPoint_CopyMask copyMask,
+            RoadPoint def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this RoadPoint lhs,
+            RoadPoint rhs,
+            out RoadPoint_ErrorMask errorMask,
+            RoadPoint_CopyMask copyMask = null,
+            RoadPoint def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            RoadPointSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = RoadPoint_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this RoadPoint lhs,
+            RoadPoint rhs,
+            ErrorMaskBuilder errorMask,
+            RoadPoint_CopyMask copyMask = null,
+            RoadPoint def = null)
+        {
+            RoadPointSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

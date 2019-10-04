@@ -773,179 +773,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static PlacedCreature Copy_ToLoqui(
-            PlacedCreature item,
-            PlacedCreature_CopyMask copyMask = null,
-            PlacedCreature def = null)
+        void IClearable.Clear()
         {
-            PlacedCreature ret;
-            if (item.GetType().Equals(typeof(PlacedCreature)))
-            {
-                ret = new PlacedCreature() as PlacedCreature;
-            }
-            else
-            {
-                ret = (PlacedCreature)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((PlacedCreatureSetterCommon)((IPlacedCreatureInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            PlacedCreature rhs,
-            PlacedCreature_CopyMask copyMask,
-            PlacedCreature def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            PlacedCreature rhs,
-            out PlacedCreature_ErrorMask errorMask,
-            PlacedCreature_CopyMask copyMask = null,
-            PlacedCreature def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            PlacedCreatureSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = PlacedCreature_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            PlacedCreature rhs,
-            ErrorMaskBuilder errorMask,
-            PlacedCreature_CopyMask copyMask = null,
-            PlacedCreature def = null)
-        {
-            PlacedCreatureSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            PlacedCreature_FieldIndex enu = (PlacedCreature_FieldIndex)index;
-            switch (enu)
-            {
-                case PlacedCreature_FieldIndex.Base:
-                    this.Base_Property.Set((IFormIDSetLink<Creature>)obj);
-                    break;
-                case PlacedCreature_FieldIndex.Owner:
-                    this.Owner_Property.Set((IFormIDSetLink<Faction>)obj);
-                    break;
-                case PlacedCreature_FieldIndex.FactionRank:
-                    this.FactionRank = (Int32)obj;
-                    break;
-                case PlacedCreature_FieldIndex.GlobalVariable:
-                    this.GlobalVariable_Property.Set((IFormIDSetLink<Global>)obj);
-                    break;
-                case PlacedCreature_FieldIndex.EnableParent:
-                    this.EnableParent = (EnableParent)obj;
-                    break;
-                case PlacedCreature_FieldIndex.RagdollData:
-                    this.RagdollData = (Byte[])obj;
-                    break;
-                case PlacedCreature_FieldIndex.Scale:
-                    this.Scale = (Single)obj;
-                    break;
-                case PlacedCreature_FieldIndex.Position:
-                    this.Position = (P3Float)obj;
-                    break;
-                case PlacedCreature_FieldIndex.Rotation:
-                    this.Rotation = (P3Float)obj;
-                    break;
-                case PlacedCreature_FieldIndex.DATADataTypeState:
-                    this.DATADataTypeState = (PlacedCreature.DATADataType)obj;
-                    break;
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            PlacedCreatureSetterCommon.Instance.Clear(this);
-        }
-
-        public new static PlacedCreature Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new PlacedCreature();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_PlacedCreature(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_PlacedCreature(PlacedCreature obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out PlacedCreature_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case PlacedCreature_FieldIndex.Base:
-                    obj.Base_Property.Set((IFormIDSetLink<Creature>)pair.Value);
-                    break;
-                case PlacedCreature_FieldIndex.Owner:
-                    obj.Owner_Property.Set((IFormIDSetLink<Faction>)pair.Value);
-                    break;
-                case PlacedCreature_FieldIndex.FactionRank:
-                    obj.FactionRank = (Int32)pair.Value;
-                    break;
-                case PlacedCreature_FieldIndex.GlobalVariable:
-                    obj.GlobalVariable_Property.Set((IFormIDSetLink<Global>)pair.Value);
-                    break;
-                case PlacedCreature_FieldIndex.EnableParent:
-                    obj.EnableParent = (EnableParent)pair.Value;
-                    break;
-                case PlacedCreature_FieldIndex.RagdollData:
-                    obj.RagdollData = (Byte[])pair.Value;
-                    break;
-                case PlacedCreature_FieldIndex.Scale:
-                    obj.Scale = (Single)pair.Value;
-                    break;
-                case PlacedCreature_FieldIndex.Position:
-                    obj.Position = (P3Float)pair.Value;
-                    break;
-                case PlacedCreature_FieldIndex.Rotation:
-                    obj.Rotation = (P3Float)pair.Value;
-                    break;
-                case PlacedCreature_FieldIndex.DATADataTypeState:
-                    obj.DATADataTypeState = (PlacedCreature.DATADataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -986,11 +818,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         new P3Float Rotation { get; set; }
 
-        void CopyFieldsFrom(
-            PlacedCreature rhs,
-            ErrorMaskBuilder errorMask = null,
-            PlacedCreature_CopyMask copyMask = null,
-            PlacedCreature def = null);
     }
 
     public partial interface IPlacedCreatureInternal :
@@ -1142,6 +969,54 @@ namespace Mutagen.Bethesda.Oblivion
             return ((PlacedCreatureCommon)((IPlacedCreatureInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this PlacedCreature lhs,
+            PlacedCreature rhs,
+            PlacedCreature_CopyMask copyMask,
+            PlacedCreature def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this PlacedCreature lhs,
+            PlacedCreature rhs,
+            out PlacedCreature_ErrorMask errorMask,
+            PlacedCreature_CopyMask copyMask = null,
+            PlacedCreature def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            PlacedCreatureSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = PlacedCreature_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this PlacedCreature lhs,
+            PlacedCreature rhs,
+            ErrorMaskBuilder errorMask,
+            PlacedCreature_CopyMask copyMask = null,
+            PlacedCreature def = null)
+        {
+            PlacedCreatureSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

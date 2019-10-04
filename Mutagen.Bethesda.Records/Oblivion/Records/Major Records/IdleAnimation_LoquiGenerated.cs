@@ -611,143 +611,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static IdleAnimation Copy_ToLoqui(
-            IdleAnimation item,
-            IdleAnimation_CopyMask copyMask = null,
-            IdleAnimation def = null)
+        void IClearable.Clear()
         {
-            IdleAnimation ret;
-            if (item.GetType().Equals(typeof(IdleAnimation)))
-            {
-                ret = new IdleAnimation() as IdleAnimation;
-            }
-            else
-            {
-                ret = (IdleAnimation)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((IdleAnimationSetterCommon)((IIdleAnimationInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            IdleAnimation rhs,
-            IdleAnimation_CopyMask copyMask,
-            IdleAnimation def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            IdleAnimation rhs,
-            out IdleAnimation_ErrorMask errorMask,
-            IdleAnimation_CopyMask copyMask = null,
-            IdleAnimation def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            IdleAnimationSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = IdleAnimation_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            IdleAnimation rhs,
-            ErrorMaskBuilder errorMask,
-            IdleAnimation_CopyMask copyMask = null,
-            IdleAnimation def = null)
-        {
-            IdleAnimationSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            IdleAnimation_FieldIndex enu = (IdleAnimation_FieldIndex)index;
-            switch (enu)
-            {
-                case IdleAnimation_FieldIndex.Model:
-                    this.Model = (Model)obj;
-                    break;
-                case IdleAnimation_FieldIndex.Conditions:
-                    this._Conditions.SetTo((ISetList<Condition>)obj);
-                    break;
-                case IdleAnimation_FieldIndex.AnimationGroupSection:
-                    this.AnimationGroupSection = (IdleAnimation.AnimationGroupSectionEnum)obj;
-                    break;
-                case IdleAnimation_FieldIndex.RelatedIdleAnimations:
-                    this._RelatedIdleAnimations.SetTo((ISetList<IFormIDLink<IdleAnimation>>)obj);
-                    break;
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            IdleAnimationSetterCommon.Instance.Clear(this);
-        }
-
-        public new static IdleAnimation Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new IdleAnimation();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_IdleAnimation(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_IdleAnimation(IdleAnimation obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out IdleAnimation_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case IdleAnimation_FieldIndex.Model:
-                    obj.Model = (Model)pair.Value;
-                    break;
-                case IdleAnimation_FieldIndex.Conditions:
-                    obj._Conditions.SetTo((ISetList<Condition>)pair.Value);
-                    break;
-                case IdleAnimation_FieldIndex.AnimationGroupSection:
-                    obj.AnimationGroupSection = (IdleAnimation.AnimationGroupSectionEnum)pair.Value;
-                    break;
-                case IdleAnimation_FieldIndex.RelatedIdleAnimations:
-                    obj._RelatedIdleAnimations.SetTo((ISetList<IFormIDLink<IdleAnimation>>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -769,11 +637,6 @@ namespace Mutagen.Bethesda.Oblivion
         void AnimationGroupSection_Unset();
 
         new ISetList<IFormIDLink<IdleAnimation>> RelatedIdleAnimations { get; }
-        void CopyFieldsFrom(
-            IdleAnimation rhs,
-            ErrorMaskBuilder errorMask = null,
-            IdleAnimation_CopyMask copyMask = null,
-            IdleAnimation def = null);
     }
 
     public partial interface IIdleAnimationInternal :
@@ -885,6 +748,54 @@ namespace Mutagen.Bethesda.Oblivion
             return ((IdleAnimationCommon)((IIdleAnimationInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this IdleAnimation lhs,
+            IdleAnimation rhs,
+            IdleAnimation_CopyMask copyMask,
+            IdleAnimation def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this IdleAnimation lhs,
+            IdleAnimation rhs,
+            out IdleAnimation_ErrorMask errorMask,
+            IdleAnimation_CopyMask copyMask = null,
+            IdleAnimation def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            IdleAnimationSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = IdleAnimation_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this IdleAnimation lhs,
+            IdleAnimation rhs,
+            ErrorMaskBuilder errorMask,
+            IdleAnimation_CopyMask copyMask = null,
+            IdleAnimation def = null)
+        {
+            IdleAnimationSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

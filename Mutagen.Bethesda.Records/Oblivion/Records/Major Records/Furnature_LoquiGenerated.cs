@@ -610,143 +610,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static Furnature Copy_ToLoqui(
-            Furnature item,
-            Furnature_CopyMask copyMask = null,
-            Furnature def = null)
+        void IClearable.Clear()
         {
-            Furnature ret;
-            if (item.GetType().Equals(typeof(Furnature)))
-            {
-                ret = new Furnature() as Furnature;
-            }
-            else
-            {
-                ret = (Furnature)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((FurnatureSetterCommon)((IFurnatureInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            Furnature rhs,
-            Furnature_CopyMask copyMask,
-            Furnature def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            Furnature rhs,
-            out Furnature_ErrorMask errorMask,
-            Furnature_CopyMask copyMask = null,
-            Furnature def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            FurnatureSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = Furnature_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            Furnature rhs,
-            ErrorMaskBuilder errorMask,
-            Furnature_CopyMask copyMask = null,
-            Furnature def = null)
-        {
-            FurnatureSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            Furnature_FieldIndex enu = (Furnature_FieldIndex)index;
-            switch (enu)
-            {
-                case Furnature_FieldIndex.Name:
-                    this.Name = (String)obj;
-                    break;
-                case Furnature_FieldIndex.Model:
-                    this.Model = (Model)obj;
-                    break;
-                case Furnature_FieldIndex.Script:
-                    this.Script_Property.Set((IFormIDSetLink<Script>)obj);
-                    break;
-                case Furnature_FieldIndex.MarkerFlags:
-                    this.MarkerFlags = (Byte[])obj;
-                    break;
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            FurnatureSetterCommon.Instance.Clear(this);
-        }
-
-        public new static Furnature Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Furnature();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Furnature(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_Furnature(Furnature obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Furnature_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case Furnature_FieldIndex.Name:
-                    obj.Name = (String)pair.Value;
-                    break;
-                case Furnature_FieldIndex.Model:
-                    obj.Model = (Model)pair.Value;
-                    break;
-                case Furnature_FieldIndex.Script:
-                    obj.Script_Property.Set((IFormIDSetLink<Script>)pair.Value);
-                    break;
-                case Furnature_FieldIndex.MarkerFlags:
-                    obj.MarkerFlags = (Byte[])pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -773,11 +641,6 @@ namespace Mutagen.Bethesda.Oblivion
         void MarkerFlags_Set(Byte[] value, bool hasBeenSet = true);
         void MarkerFlags_Unset();
 
-        void CopyFieldsFrom(
-            Furnature rhs,
-            ErrorMaskBuilder errorMask = null,
-            Furnature_CopyMask copyMask = null,
-            Furnature def = null);
     }
 
     public partial interface IFurnatureInternal :
@@ -895,6 +758,54 @@ namespace Mutagen.Bethesda.Oblivion
             return ((FurnatureCommon)((IFurnatureInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this Furnature lhs,
+            Furnature rhs,
+            Furnature_CopyMask copyMask,
+            Furnature def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this Furnature lhs,
+            Furnature rhs,
+            out Furnature_ErrorMask errorMask,
+            Furnature_CopyMask copyMask = null,
+            Furnature def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            FurnatureSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = Furnature_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this Furnature lhs,
+            Furnature rhs,
+            ErrorMaskBuilder errorMask,
+            Furnature_CopyMask copyMask = null,
+            Furnature def = null)
+        {
+            FurnatureSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

@@ -836,209 +836,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static Tree Copy_ToLoqui(
-            Tree item,
-            Tree_CopyMask copyMask = null,
-            Tree def = null)
+        void IClearable.Clear()
         {
-            Tree ret;
-            if (item.GetType().Equals(typeof(Tree)))
-            {
-                ret = new Tree() as Tree;
-            }
-            else
-            {
-                ret = (Tree)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((TreeSetterCommon)((ITreeInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            Tree rhs,
-            Tree_CopyMask copyMask,
-            Tree def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            Tree rhs,
-            out Tree_ErrorMask errorMask,
-            Tree_CopyMask copyMask = null,
-            Tree def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            TreeSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = Tree_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            Tree rhs,
-            ErrorMaskBuilder errorMask,
-            Tree_CopyMask copyMask = null,
-            Tree def = null)
-        {
-            TreeSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            Tree_FieldIndex enu = (Tree_FieldIndex)index;
-            switch (enu)
-            {
-                case Tree_FieldIndex.Model:
-                    this.Model = (Model)obj;
-                    break;
-                case Tree_FieldIndex.Icon:
-                    this.Icon = (String)obj;
-                    break;
-                case Tree_FieldIndex.SpeedTreeSeeds:
-                    this._SpeedTreeSeeds.SetTo((ISetList<UInt32>)obj);
-                    break;
-                case Tree_FieldIndex.LeafCurvature:
-                    this.LeafCurvature = (Single)obj;
-                    break;
-                case Tree_FieldIndex.MinimumLeafAngle:
-                    this.MinimumLeafAngle = (Single)obj;
-                    break;
-                case Tree_FieldIndex.MaximumLeafAngle:
-                    this.MaximumLeafAngle = (Single)obj;
-                    break;
-                case Tree_FieldIndex.BranchDimmingValue:
-                    this.BranchDimmingValue = (Single)obj;
-                    break;
-                case Tree_FieldIndex.LeafDimmingValue:
-                    this.LeafDimmingValue = (Single)obj;
-                    break;
-                case Tree_FieldIndex.ShadowRadius:
-                    this.ShadowRadius = (Int32)obj;
-                    break;
-                case Tree_FieldIndex.RockingSpeed:
-                    this.RockingSpeed = (Single)obj;
-                    break;
-                case Tree_FieldIndex.RustleSpeed:
-                    this.RustleSpeed = (Single)obj;
-                    break;
-                case Tree_FieldIndex.BillboardWidth:
-                    this.BillboardWidth = (Single)obj;
-                    break;
-                case Tree_FieldIndex.BillboardHeight:
-                    this.BillboardHeight = (Single)obj;
-                    break;
-                case Tree_FieldIndex.CNAMDataTypeState:
-                    this.CNAMDataTypeState = (Tree.CNAMDataType)obj;
-                    break;
-                case Tree_FieldIndex.BNAMDataTypeState:
-                    this.BNAMDataTypeState = (Tree.BNAMDataType)obj;
-                    break;
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            TreeSetterCommon.Instance.Clear(this);
-        }
-
-        public new static Tree Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Tree();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Tree(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_Tree(Tree obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Tree_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case Tree_FieldIndex.Model:
-                    obj.Model = (Model)pair.Value;
-                    break;
-                case Tree_FieldIndex.Icon:
-                    obj.Icon = (String)pair.Value;
-                    break;
-                case Tree_FieldIndex.SpeedTreeSeeds:
-                    obj._SpeedTreeSeeds.SetTo((ISetList<UInt32>)pair.Value);
-                    break;
-                case Tree_FieldIndex.LeafCurvature:
-                    obj.LeafCurvature = (Single)pair.Value;
-                    break;
-                case Tree_FieldIndex.MinimumLeafAngle:
-                    obj.MinimumLeafAngle = (Single)pair.Value;
-                    break;
-                case Tree_FieldIndex.MaximumLeafAngle:
-                    obj.MaximumLeafAngle = (Single)pair.Value;
-                    break;
-                case Tree_FieldIndex.BranchDimmingValue:
-                    obj.BranchDimmingValue = (Single)pair.Value;
-                    break;
-                case Tree_FieldIndex.LeafDimmingValue:
-                    obj.LeafDimmingValue = (Single)pair.Value;
-                    break;
-                case Tree_FieldIndex.ShadowRadius:
-                    obj.ShadowRadius = (Int32)pair.Value;
-                    break;
-                case Tree_FieldIndex.RockingSpeed:
-                    obj.RockingSpeed = (Single)pair.Value;
-                    break;
-                case Tree_FieldIndex.RustleSpeed:
-                    obj.RustleSpeed = (Single)pair.Value;
-                    break;
-                case Tree_FieldIndex.BillboardWidth:
-                    obj.BillboardWidth = (Single)pair.Value;
-                    break;
-                case Tree_FieldIndex.BillboardHeight:
-                    obj.BillboardHeight = (Single)pair.Value;
-                    break;
-                case Tree_FieldIndex.CNAMDataTypeState:
-                    obj.CNAMDataTypeState = (Tree.CNAMDataType)pair.Value;
-                    break;
-                case Tree_FieldIndex.BNAMDataTypeState:
-                    obj.BNAMDataTypeState = (Tree.BNAMDataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -1079,11 +881,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Single BillboardHeight { get; set; }
 
-        void CopyFieldsFrom(
-            Tree rhs,
-            ErrorMaskBuilder errorMask = null,
-            Tree_CopyMask copyMask = null,
-            Tree def = null);
     }
 
     public partial interface ITreeInternal :
@@ -1244,6 +1041,54 @@ namespace Mutagen.Bethesda.Oblivion
             return ((TreeCommon)((ITreeInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this Tree lhs,
+            Tree rhs,
+            Tree_CopyMask copyMask,
+            Tree def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this Tree lhs,
+            Tree rhs,
+            out Tree_ErrorMask errorMask,
+            Tree_CopyMask copyMask = null,
+            Tree def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            TreeSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = Tree_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this Tree lhs,
+            Tree rhs,
+            ErrorMaskBuilder errorMask,
+            Tree_CopyMask copyMask = null,
+            Tree def = null)
+        {
+            TreeSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

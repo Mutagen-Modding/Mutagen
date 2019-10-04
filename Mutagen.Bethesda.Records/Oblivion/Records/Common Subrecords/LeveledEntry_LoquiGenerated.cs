@@ -506,161 +506,18 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 ret = (LeveledEntry<T>)System.Activator.CreateInstance(item.GetType());
             }
-            ret.CopyFieldsFrom<T_CopyMask>(
+            ret.CopyFieldsFrom<T, T_CopyMask>(
                 item,
                 copyMask: copyMask,
                 def: def);
             return ret;
         }
 
-        public static LeveledEntry<T> Copy_ToLoqui<T_CopyMask>(
-            LeveledEntry<T> item,
-            LeveledEntry_CopyMask<T_CopyMask> copyMask = null,
-            LeveledEntry<T> def = null)
-            where T_CopyMask : OblivionMajorRecord_CopyMask, new()
+        void IClearable.Clear()
         {
-            LeveledEntry<T> ret;
-            if (item.GetType().Equals(typeof(LeveledEntry<T>)))
-            {
-                ret = new LeveledEntry<T>() as LeveledEntry<T>;
-            }
-            else
-            {
-                ret = (LeveledEntry<T>)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom<T_CopyMask>(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((LeveledEntrySetterCommon<T>)((ILeveledEntryInternalGetter<T>)this).CommonSetterInstance()).Clear(this);
         }
 
-        public void CopyFieldsFrom<T_CopyMask>(LeveledEntry<T> rhs)
-            where T_CopyMask : OblivionMajorRecord_CopyMask, new()
-        {
-            this.CopyFieldsFrom<OblivionMajorRecord_ErrorMask, T_CopyMask>(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom<T_CopyMask>(
-            LeveledEntry<T> rhs,
-            LeveledEntry_CopyMask<T_CopyMask> copyMask,
-            LeveledEntry<T> def = null)
-            where T_CopyMask : OblivionMajorRecord_CopyMask, new()
-        {
-            this.CopyFieldsFrom<OblivionMajorRecord_ErrorMask, T_CopyMask>(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom<T_ErrMask, T_CopyMask>(
-            LeveledEntry<T> rhs,
-            out LeveledEntry_ErrorMask<T_ErrMask> errorMask,
-            LeveledEntry_CopyMask<T_CopyMask> copyMask = null,
-            LeveledEntry<T> def = null,
-            bool doMasks = true)
-            where T_ErrMask : OblivionMajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
-            where T_CopyMask : OblivionMajorRecord_CopyMask, new()
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            LeveledEntrySetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = LeveledEntry_ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom<T_CopyMask>(
-            LeveledEntry<T> rhs,
-            ErrorMaskBuilder errorMask,
-            LeveledEntry_CopyMask<T_CopyMask> copyMask = null,
-            LeveledEntry<T> def = null)
-            where T_CopyMask : OblivionMajorRecord_CopyMask, new()
-        {
-            LeveledEntrySetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected void SetNthObject(ushort index, object obj)
-        {
-            LeveledEntry_FieldIndex enu = (LeveledEntry_FieldIndex)index;
-            switch (enu)
-            {
-                case LeveledEntry_FieldIndex.Level:
-                    this.Level = (Int16)obj;
-                    break;
-                case LeveledEntry_FieldIndex.Fluff:
-                    this.Fluff = (Byte[])obj;
-                    break;
-                case LeveledEntry_FieldIndex.Reference:
-                    this.Reference_Property.Set((IFormIDLink<T>)obj);
-                    break;
-                case LeveledEntry_FieldIndex.Count:
-                    this.Count = (Int16)obj;
-                    break;
-                case LeveledEntry_FieldIndex.Fluff2:
-                    this.Fluff2 = (Byte[])obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void Clear()
-        {
-            LeveledEntrySetterCommon<T>.Instance.Clear(this);
-        }
-
-        public static LeveledEntry<T> Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new LeveledEntry<T>();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_LeveledEntry(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_LeveledEntry(LeveledEntry<T> obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out LeveledEntry_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case LeveledEntry_FieldIndex.Level:
-                    obj.Level = (Int16)pair.Value;
-                    break;
-                case LeveledEntry_FieldIndex.Fluff:
-                    obj.Fluff = (Byte[])pair.Value;
-                    break;
-                case LeveledEntry_FieldIndex.Reference:
-                    obj.Reference_Property.Set((IFormIDLink<T>)pair.Value);
-                    break;
-                case LeveledEntry_FieldIndex.Count:
-                    obj.Count = (Int16)pair.Value;
-                    break;
-                case LeveledEntry_FieldIndex.Fluff2:
-                    obj.Fluff2 = (Byte[])pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -686,12 +543,6 @@ namespace Mutagen.Bethesda.Oblivion
         void Fluff2_Set(Byte[] value, bool hasBeenSet = true);
         void Fluff2_Unset();
 
-        void CopyFieldsFrom<T_CopyMask>(
-            LeveledEntry<T> rhs,
-            ErrorMaskBuilder errorMask = null,
-            LeveledEntry_CopyMask<T_CopyMask> copyMask = null,
-            LeveledEntry<T> def = null)
-            where T_CopyMask : OblivionMajorRecord_CopyMask, new();
     }
 
     public partial interface ILeveledEntryInternal<T> :
@@ -823,6 +674,76 @@ namespace Mutagen.Bethesda.Oblivion
             return ((LeveledEntryCommon<T>)((ILeveledEntryInternalGetter<T>)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom<T, T_CopyMask>(
+            this LeveledEntry<T> lhs,
+            LeveledEntry<T> rhs)
+            where T : class, IOblivionMajorRecordInternal, IXmlItem, IBinaryItem
+            where T_CopyMask : OblivionMajorRecord_CopyMask, new()
+        {
+            CopyFieldsFrom<T, OblivionMajorRecord_ErrorMask, T_CopyMask>(
+                lhs: lhs,
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null);
+        }
+
+        public static void CopyFieldsFrom<T, T_CopyMask>(
+            this LeveledEntry<T> lhs,
+            LeveledEntry<T> rhs,
+            LeveledEntry_CopyMask<T_CopyMask> copyMask,
+            LeveledEntry<T> def = null)
+            where T : class, IOblivionMajorRecordInternal, IXmlItem, IBinaryItem
+            where T_CopyMask : OblivionMajorRecord_CopyMask, new()
+        {
+            CopyFieldsFrom<T, OblivionMajorRecord_ErrorMask, T_CopyMask>(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom<T, T_ErrMask, T_CopyMask>(
+            this LeveledEntry<T> lhs,
+            LeveledEntry<T> rhs,
+            out LeveledEntry_ErrorMask<T_ErrMask> errorMask,
+            LeveledEntry_CopyMask<T_CopyMask> copyMask = null,
+            LeveledEntry<T> def = null,
+            bool doMasks = true)
+            where T : class, IOblivionMajorRecordInternal, IXmlItem, IBinaryItem
+            where T_ErrMask : OblivionMajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
+            where T_CopyMask : OblivionMajorRecord_CopyMask, new()
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            LeveledEntrySetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = LeveledEntry_ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom<T, T_CopyMask>(
+            this LeveledEntry<T> lhs,
+            LeveledEntry<T> rhs,
+            ErrorMaskBuilder errorMask,
+            LeveledEntry_CopyMask<T_CopyMask> copyMask = null,
+            LeveledEntry<T> def = null)
+            where T : class, IOblivionMajorRecordInternal, IXmlItem, IBinaryItem
+            where T_CopyMask : OblivionMajorRecord_CopyMask, new()
+        {
+            LeveledEntrySetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

@@ -456,125 +456,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static AlphaLayer Copy_ToLoqui(
-            AlphaLayer item,
-            AlphaLayer_CopyMask copyMask = null,
-            AlphaLayer def = null)
+        void IClearable.Clear()
         {
-            AlphaLayer ret;
-            if (item.GetType().Equals(typeof(AlphaLayer)))
-            {
-                ret = new AlphaLayer() as AlphaLayer;
-            }
-            else
-            {
-                ret = (AlphaLayer)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((AlphaLayerSetterCommon)((IAlphaLayerInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(BaseLayer rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            AlphaLayer rhs,
-            AlphaLayer_CopyMask copyMask,
-            AlphaLayer def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            AlphaLayer rhs,
-            out AlphaLayer_ErrorMask errorMask,
-            AlphaLayer_CopyMask copyMask = null,
-            AlphaLayer def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            AlphaLayerSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = AlphaLayer_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            AlphaLayer rhs,
-            ErrorMaskBuilder errorMask,
-            AlphaLayer_CopyMask copyMask = null,
-            AlphaLayer def = null)
-        {
-            AlphaLayerSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            AlphaLayer_FieldIndex enu = (AlphaLayer_FieldIndex)index;
-            switch (enu)
-            {
-                case AlphaLayer_FieldIndex.AlphaLayerData:
-                    this.AlphaLayerData = (Byte[])obj;
-                    break;
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            AlphaLayerSetterCommon.Instance.Clear(this);
-        }
-
-        public new static AlphaLayer Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new AlphaLayer();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_AlphaLayer(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_AlphaLayer(AlphaLayer obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out AlphaLayer_FieldIndex enu))
-            {
-                CopyInInternal_BaseLayer(obj, pair);
-            }
-            switch (enu)
-            {
-                case AlphaLayer_FieldIndex.AlphaLayerData:
-                    obj.AlphaLayerData = (Byte[])pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -589,11 +475,6 @@ namespace Mutagen.Bethesda.Oblivion
         void AlphaLayerData_Set(Byte[] value, bool hasBeenSet = true);
         void AlphaLayerData_Unset();
 
-        void CopyFieldsFrom(
-            AlphaLayer rhs,
-            ErrorMaskBuilder errorMask = null,
-            AlphaLayer_CopyMask copyMask = null,
-            AlphaLayer def = null);
     }
 
     public partial interface IAlphaLayerInternal :
@@ -694,6 +575,54 @@ namespace Mutagen.Bethesda.Oblivion
             return ((AlphaLayerCommon)((IAlphaLayerInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this AlphaLayer lhs,
+            AlphaLayer rhs,
+            AlphaLayer_CopyMask copyMask,
+            AlphaLayer def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this AlphaLayer lhs,
+            AlphaLayer rhs,
+            out AlphaLayer_ErrorMask errorMask,
+            AlphaLayer_CopyMask copyMask = null,
+            AlphaLayer def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            AlphaLayerSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = AlphaLayer_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this AlphaLayer lhs,
+            AlphaLayer rhs,
+            ErrorMaskBuilder errorMask,
+            AlphaLayer_CopyMask copyMask = null,
+            AlphaLayer def = null)
+        {
+            AlphaLayerSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

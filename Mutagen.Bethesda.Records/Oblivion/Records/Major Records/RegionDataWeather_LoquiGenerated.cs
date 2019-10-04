@@ -471,125 +471,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static RegionDataWeather Copy_ToLoqui(
-            RegionDataWeather item,
-            RegionDataWeather_CopyMask copyMask = null,
-            RegionDataWeather def = null)
+        void IClearable.Clear()
         {
-            RegionDataWeather ret;
-            if (item.GetType().Equals(typeof(RegionDataWeather)))
-            {
-                ret = new RegionDataWeather() as RegionDataWeather;
-            }
-            else
-            {
-                ret = (RegionDataWeather)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((RegionDataWeatherSetterCommon)((IRegionDataWeatherInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(RegionData rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            RegionDataWeather rhs,
-            RegionDataWeather_CopyMask copyMask,
-            RegionDataWeather def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            RegionDataWeather rhs,
-            out RegionDataWeather_ErrorMask errorMask,
-            RegionDataWeather_CopyMask copyMask = null,
-            RegionDataWeather def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            RegionDataWeatherSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = RegionDataWeather_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            RegionDataWeather rhs,
-            ErrorMaskBuilder errorMask,
-            RegionDataWeather_CopyMask copyMask = null,
-            RegionDataWeather def = null)
-        {
-            RegionDataWeatherSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            RegionDataWeather_FieldIndex enu = (RegionDataWeather_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionDataWeather_FieldIndex.Weathers:
-                    this._Weathers.SetTo((ISetList<WeatherChance>)obj);
-                    break;
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            RegionDataWeatherSetterCommon.Instance.Clear(this);
-        }
-
-        public new static RegionDataWeather Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new RegionDataWeather();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_RegionDataWeather(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_RegionDataWeather(RegionDataWeather obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out RegionDataWeather_FieldIndex enu))
-            {
-                CopyInInternal_RegionData(obj, pair);
-            }
-            switch (enu)
-            {
-                case RegionDataWeather_FieldIndex.Weathers:
-                    obj._Weathers.SetTo((ISetList<WeatherChance>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -600,11 +486,6 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IRegionDataWeatherInternal>
     {
         new ISetList<WeatherChance> Weathers { get; }
-        void CopyFieldsFrom(
-            RegionDataWeather rhs,
-            ErrorMaskBuilder errorMask = null,
-            RegionDataWeather_CopyMask copyMask = null,
-            RegionDataWeather def = null);
     }
 
     public partial interface IRegionDataWeatherInternal :
@@ -703,6 +584,54 @@ namespace Mutagen.Bethesda.Oblivion
             return ((RegionDataWeatherCommon)((IRegionDataWeatherInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this RegionDataWeather lhs,
+            RegionDataWeather rhs,
+            RegionDataWeather_CopyMask copyMask,
+            RegionDataWeather def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this RegionDataWeather lhs,
+            RegionDataWeather rhs,
+            out RegionDataWeather_ErrorMask errorMask,
+            RegionDataWeather_CopyMask copyMask = null,
+            RegionDataWeather def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            RegionDataWeatherSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = RegionDataWeather_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this RegionDataWeather lhs,
+            RegionDataWeather rhs,
+            ErrorMaskBuilder errorMask,
+            RegionDataWeather_CopyMask copyMask = null,
+            RegionDataWeather def = null)
+        {
+            RegionDataWeatherSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

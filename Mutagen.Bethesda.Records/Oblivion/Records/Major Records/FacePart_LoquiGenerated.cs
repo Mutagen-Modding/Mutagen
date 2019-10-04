@@ -526,136 +526,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static FacePart Copy_ToLoqui(
-            FacePart item,
-            FacePart_CopyMask copyMask = null,
-            FacePart def = null)
+        void IClearable.Clear()
         {
-            FacePart ret;
-            if (item.GetType().Equals(typeof(FacePart)))
-            {
-                ret = new FacePart() as FacePart;
-            }
-            else
-            {
-                ret = (FacePart)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((FacePartSetterCommon)((IFacePartInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public void CopyFieldsFrom(FacePart rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            FacePart rhs,
-            FacePart_CopyMask copyMask,
-            FacePart def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            FacePart rhs,
-            out FacePart_ErrorMask errorMask,
-            FacePart_CopyMask copyMask = null,
-            FacePart def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            FacePartSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = FacePart_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            FacePart rhs,
-            ErrorMaskBuilder errorMask,
-            FacePart_CopyMask copyMask = null,
-            FacePart def = null)
-        {
-            FacePartSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected void SetNthObject(ushort index, object obj)
-        {
-            FacePart_FieldIndex enu = (FacePart_FieldIndex)index;
-            switch (enu)
-            {
-                case FacePart_FieldIndex.Index:
-                    this.Index = (Race.FaceIndex)obj;
-                    break;
-                case FacePart_FieldIndex.Model:
-                    this.Model = (Model)obj;
-                    break;
-                case FacePart_FieldIndex.Icon:
-                    this.Icon = (String)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void Clear()
-        {
-            FacePartSetterCommon.Instance.Clear(this);
-        }
-
-        public static FacePart Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new FacePart();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_FacePart(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_FacePart(FacePart obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out FacePart_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case FacePart_FieldIndex.Index:
-                    obj.Index = (Race.FaceIndex)pair.Value;
-                    break;
-                case FacePart_FieldIndex.Model:
-                    obj.Model = (Model)pair.Value;
-                    break;
-                case FacePart_FieldIndex.Icon:
-                    obj.Icon = (String)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -679,11 +554,6 @@ namespace Mutagen.Bethesda.Oblivion
         void Icon_Set(String value, bool hasBeenSet = true);
         void Icon_Unset();
 
-        void CopyFieldsFrom(
-            FacePart rhs,
-            ErrorMaskBuilder errorMask = null,
-            FacePart_CopyMask copyMask = null,
-            FacePart def = null);
     }
 
     public partial interface IFacePartInternal :
@@ -794,6 +664,67 @@ namespace Mutagen.Bethesda.Oblivion
             return ((FacePartCommon)((IFacePartInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this FacePart lhs,
+            FacePart rhs)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null);
+        }
+
+        public static void CopyFieldsFrom(
+            this FacePart lhs,
+            FacePart rhs,
+            FacePart_CopyMask copyMask,
+            FacePart def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this FacePart lhs,
+            FacePart rhs,
+            out FacePart_ErrorMask errorMask,
+            FacePart_CopyMask copyMask = null,
+            FacePart def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            FacePartSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = FacePart_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this FacePart lhs,
+            FacePart rhs,
+            ErrorMaskBuilder errorMask,
+            FacePart_CopyMask copyMask = null,
+            FacePart def = null)
+        {
+            FacePartSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

@@ -405,137 +405,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static SoundDataExtended Copy_ToLoqui(
-            SoundDataExtended item,
-            SoundDataExtended_CopyMask copyMask = null,
-            SoundDataExtended def = null)
+        void IClearable.Clear()
         {
-            SoundDataExtended ret;
-            if (item.GetType().Equals(typeof(SoundDataExtended)))
-            {
-                ret = new SoundDataExtended() as SoundDataExtended;
-            }
-            else
-            {
-                ret = (SoundDataExtended)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((SoundDataExtendedSetterCommon)((ISoundDataExtendedInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(SoundData rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            SoundDataExtended rhs,
-            SoundDataExtended_CopyMask copyMask,
-            SoundDataExtended def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            SoundDataExtended rhs,
-            out SoundDataExtended_ErrorMask errorMask,
-            SoundDataExtended_CopyMask copyMask = null,
-            SoundDataExtended def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            SoundDataExtendedSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = SoundDataExtended_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            SoundDataExtended rhs,
-            ErrorMaskBuilder errorMask,
-            SoundDataExtended_CopyMask copyMask = null,
-            SoundDataExtended def = null)
-        {
-            SoundDataExtendedSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            SoundDataExtended_FieldIndex enu = (SoundDataExtended_FieldIndex)index;
-            switch (enu)
-            {
-                case SoundDataExtended_FieldIndex.StaticAttenuation:
-                    this.StaticAttenuation = (Single)obj;
-                    break;
-                case SoundDataExtended_FieldIndex.StopTime:
-                    this.StopTime = (Single)obj;
-                    break;
-                case SoundDataExtended_FieldIndex.StartTime:
-                    this.StartTime = (Single)obj;
-                    break;
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            SoundDataExtendedSetterCommon.Instance.Clear(this);
-        }
-
-        public new static SoundDataExtended Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new SoundDataExtended();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_SoundDataExtended(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_SoundDataExtended(SoundDataExtended obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out SoundDataExtended_FieldIndex enu))
-            {
-                CopyInInternal_SoundData(obj, pair);
-            }
-            switch (enu)
-            {
-                case SoundDataExtended_FieldIndex.StaticAttenuation:
-                    obj.StaticAttenuation = (Single)pair.Value;
-                    break;
-                case SoundDataExtended_FieldIndex.StopTime:
-                    obj.StopTime = (Single)pair.Value;
-                    break;
-                case SoundDataExtended_FieldIndex.StartTime:
-                    obj.StartTime = (Single)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -551,11 +425,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Single StartTime { get; set; }
 
-        void CopyFieldsFrom(
-            SoundDataExtended rhs,
-            ErrorMaskBuilder errorMask = null,
-            SoundDataExtended_CopyMask copyMask = null,
-            SoundDataExtended def = null);
     }
 
     public partial interface ISoundDataExtendedInternal :
@@ -663,6 +532,54 @@ namespace Mutagen.Bethesda.Oblivion
             return ((SoundDataExtendedCommon)((ISoundDataExtendedInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this SoundDataExtended lhs,
+            SoundDataExtended rhs,
+            SoundDataExtended_CopyMask copyMask,
+            SoundDataExtended def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this SoundDataExtended lhs,
+            SoundDataExtended rhs,
+            out SoundDataExtended_ErrorMask errorMask,
+            SoundDataExtended_CopyMask copyMask = null,
+            SoundDataExtended def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            SoundDataExtendedSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = SoundDataExtended_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this SoundDataExtended lhs,
+            SoundDataExtended rhs,
+            ErrorMaskBuilder errorMask,
+            SoundDataExtended_CopyMask copyMask = null,
+            SoundDataExtended def = null)
+        {
+            SoundDataExtendedSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

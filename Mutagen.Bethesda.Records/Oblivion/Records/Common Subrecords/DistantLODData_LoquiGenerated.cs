@@ -415,136 +415,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static DistantLODData Copy_ToLoqui(
-            DistantLODData item,
-            DistantLODData_CopyMask copyMask = null,
-            DistantLODData def = null)
+        void IClearable.Clear()
         {
-            DistantLODData ret;
-            if (item.GetType().Equals(typeof(DistantLODData)))
-            {
-                ret = new DistantLODData() as DistantLODData;
-            }
-            else
-            {
-                ret = (DistantLODData)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((DistantLODDataSetterCommon)((IDistantLODDataInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public void CopyFieldsFrom(DistantLODData rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            DistantLODData rhs,
-            DistantLODData_CopyMask copyMask,
-            DistantLODData def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            DistantLODData rhs,
-            out DistantLODData_ErrorMask errorMask,
-            DistantLODData_CopyMask copyMask = null,
-            DistantLODData def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            DistantLODDataSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = DistantLODData_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            DistantLODData rhs,
-            ErrorMaskBuilder errorMask,
-            DistantLODData_CopyMask copyMask = null,
-            DistantLODData def = null)
-        {
-            DistantLODDataSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected void SetNthObject(ushort index, object obj)
-        {
-            DistantLODData_FieldIndex enu = (DistantLODData_FieldIndex)index;
-            switch (enu)
-            {
-                case DistantLODData_FieldIndex.Unknown0:
-                    this.Unknown0 = (Single)obj;
-                    break;
-                case DistantLODData_FieldIndex.Unknown1:
-                    this.Unknown1 = (Single)obj;
-                    break;
-                case DistantLODData_FieldIndex.Unknown2:
-                    this.Unknown2 = (Single)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void Clear()
-        {
-            DistantLODDataSetterCommon.Instance.Clear(this);
-        }
-
-        public static DistantLODData Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new DistantLODData();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_DistantLODData(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_DistantLODData(DistantLODData obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out DistantLODData_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case DistantLODData_FieldIndex.Unknown0:
-                    obj.Unknown0 = (Single)pair.Value;
-                    break;
-                case DistantLODData_FieldIndex.Unknown1:
-                    obj.Unknown1 = (Single)pair.Value;
-                    break;
-                case DistantLODData_FieldIndex.Unknown2:
-                    obj.Unknown2 = (Single)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -559,11 +434,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Single Unknown2 { get; set; }
 
-        void CopyFieldsFrom(
-            DistantLODData rhs,
-            ErrorMaskBuilder errorMask = null,
-            DistantLODData_CopyMask copyMask = null,
-            DistantLODData def = null);
     }
 
     public partial interface IDistantLODDataInternal :
@@ -671,6 +541,67 @@ namespace Mutagen.Bethesda.Oblivion
             return ((DistantLODDataCommon)((IDistantLODDataInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this DistantLODData lhs,
+            DistantLODData rhs)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null);
+        }
+
+        public static void CopyFieldsFrom(
+            this DistantLODData lhs,
+            DistantLODData rhs,
+            DistantLODData_CopyMask copyMask,
+            DistantLODData def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this DistantLODData lhs,
+            DistantLODData rhs,
+            out DistantLODData_ErrorMask errorMask,
+            DistantLODData_CopyMask copyMask = null,
+            DistantLODData def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            DistantLODDataSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = DistantLODData_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this DistantLODData lhs,
+            DistantLODData rhs,
+            ErrorMaskBuilder errorMask,
+            DistantLODData_CopyMask copyMask = null,
+            DistantLODData def = null)
+        {
+            DistantLODDataSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

@@ -1072,245 +1072,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static Cell Copy_ToLoqui(
-            Cell item,
-            Cell_CopyMask copyMask = null,
-            Cell def = null)
+        void IClearable.Clear()
         {
-            Cell ret;
-            if (item.GetType().Equals(typeof(Cell)))
-            {
-                ret = new Cell() as Cell;
-            }
-            else
-            {
-                ret = (Cell)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((CellSetterCommon)((ICellInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            Cell rhs,
-            Cell_CopyMask copyMask,
-            Cell def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            Cell rhs,
-            out Cell_ErrorMask errorMask,
-            Cell_CopyMask copyMask = null,
-            Cell def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            CellSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = Cell_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            Cell rhs,
-            ErrorMaskBuilder errorMask,
-            Cell_CopyMask copyMask = null,
-            Cell def = null)
-        {
-            CellSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            Cell_FieldIndex enu = (Cell_FieldIndex)index;
-            switch (enu)
-            {
-                case Cell_FieldIndex.Name:
-                    this.Name = (String)obj;
-                    break;
-                case Cell_FieldIndex.Flags:
-                    this.Flags = (Cell.Flag)obj;
-                    break;
-                case Cell_FieldIndex.Grid:
-                    this.Grid = (P2Int)obj;
-                    break;
-                case Cell_FieldIndex.Lighting:
-                    this.Lighting = (CellLighting)obj;
-                    break;
-                case Cell_FieldIndex.Regions:
-                    this._Regions.SetTo((ISetList<IFormIDLink<Region>>)obj);
-                    break;
-                case Cell_FieldIndex.MusicType:
-                    this.MusicType = (MusicType)obj;
-                    break;
-                case Cell_FieldIndex.WaterHeight:
-                    this.WaterHeight = (Single)obj;
-                    break;
-                case Cell_FieldIndex.Climate:
-                    this.Climate_Property.Set((IFormIDSetLink<Climate>)obj);
-                    break;
-                case Cell_FieldIndex.Water:
-                    this.Water_Property.Set((IFormIDSetLink<Water>)obj);
-                    break;
-                case Cell_FieldIndex.Owner:
-                    this.Owner_Property.Set((IFormIDSetLink<Faction>)obj);
-                    break;
-                case Cell_FieldIndex.FactionRank:
-                    this.FactionRank = (Int32)obj;
-                    break;
-                case Cell_FieldIndex.GlobalVariable:
-                    this.GlobalVariable_Property.Set((IFormIDSetLink<Global>)obj);
-                    break;
-                case Cell_FieldIndex.PathGrid:
-                    this.PathGrid = (PathGrid)obj;
-                    break;
-                case Cell_FieldIndex.Landscape:
-                    this.Landscape = (Landscape)obj;
-                    break;
-                case Cell_FieldIndex.Timestamp:
-                    this.Timestamp = (Byte[])obj;
-                    break;
-                case Cell_FieldIndex.PersistentTimestamp:
-                    this.PersistentTimestamp = (Byte[])obj;
-                    break;
-                case Cell_FieldIndex.Persistent:
-                    this._Persistent.SetTo((ISetList<IPlaced>)obj);
-                    break;
-                case Cell_FieldIndex.TemporaryTimestamp:
-                    this.TemporaryTimestamp = (Byte[])obj;
-                    break;
-                case Cell_FieldIndex.Temporary:
-                    this._Temporary.SetTo((ISetList<IPlaced>)obj);
-                    break;
-                case Cell_FieldIndex.VisibleWhenDistantTimestamp:
-                    this.VisibleWhenDistantTimestamp = (Byte[])obj;
-                    break;
-                case Cell_FieldIndex.VisibleWhenDistant:
-                    this._VisibleWhenDistant.SetTo((ISetList<IPlaced>)obj);
-                    break;
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            CellSetterCommon.Instance.Clear(this);
-        }
-
-        public new static Cell Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Cell();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Cell(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_Cell(Cell obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Cell_FieldIndex enu))
-            {
-                CopyInInternal_Place(obj, pair);
-            }
-            switch (enu)
-            {
-                case Cell_FieldIndex.Name:
-                    obj.Name = (String)pair.Value;
-                    break;
-                case Cell_FieldIndex.Flags:
-                    obj.Flags = (Cell.Flag)pair.Value;
-                    break;
-                case Cell_FieldIndex.Grid:
-                    obj.Grid = (P2Int)pair.Value;
-                    break;
-                case Cell_FieldIndex.Lighting:
-                    obj.Lighting = (CellLighting)pair.Value;
-                    break;
-                case Cell_FieldIndex.Regions:
-                    obj._Regions.SetTo((ISetList<IFormIDLink<Region>>)pair.Value);
-                    break;
-                case Cell_FieldIndex.MusicType:
-                    obj.MusicType = (MusicType)pair.Value;
-                    break;
-                case Cell_FieldIndex.WaterHeight:
-                    obj.WaterHeight = (Single)pair.Value;
-                    break;
-                case Cell_FieldIndex.Climate:
-                    obj.Climate_Property.Set((IFormIDSetLink<Climate>)pair.Value);
-                    break;
-                case Cell_FieldIndex.Water:
-                    obj.Water_Property.Set((IFormIDSetLink<Water>)pair.Value);
-                    break;
-                case Cell_FieldIndex.Owner:
-                    obj.Owner_Property.Set((IFormIDSetLink<Faction>)pair.Value);
-                    break;
-                case Cell_FieldIndex.FactionRank:
-                    obj.FactionRank = (Int32)pair.Value;
-                    break;
-                case Cell_FieldIndex.GlobalVariable:
-                    obj.GlobalVariable_Property.Set((IFormIDSetLink<Global>)pair.Value);
-                    break;
-                case Cell_FieldIndex.PathGrid:
-                    obj.PathGrid = (PathGrid)pair.Value;
-                    break;
-                case Cell_FieldIndex.Landscape:
-                    obj.Landscape = (Landscape)pair.Value;
-                    break;
-                case Cell_FieldIndex.Timestamp:
-                    obj.Timestamp = (Byte[])pair.Value;
-                    break;
-                case Cell_FieldIndex.PersistentTimestamp:
-                    obj.PersistentTimestamp = (Byte[])pair.Value;
-                    break;
-                case Cell_FieldIndex.Persistent:
-                    obj._Persistent.SetTo((ISetList<IPlaced>)pair.Value);
-                    break;
-                case Cell_FieldIndex.TemporaryTimestamp:
-                    obj.TemporaryTimestamp = (Byte[])pair.Value;
-                    break;
-                case Cell_FieldIndex.Temporary:
-                    obj._Temporary.SetTo((ISetList<IPlaced>)pair.Value);
-                    break;
-                case Cell_FieldIndex.VisibleWhenDistantTimestamp:
-                    obj.VisibleWhenDistantTimestamp = (Byte[])pair.Value;
-                    break;
-                case Cell_FieldIndex.VisibleWhenDistant:
-                    obj._VisibleWhenDistant.SetTo((ISetList<IPlaced>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -1386,11 +1152,6 @@ namespace Mutagen.Bethesda.Oblivion
         new Byte[] VisibleWhenDistantTimestamp { get; set; }
 
         new ISetList<IPlaced> VisibleWhenDistant { get; }
-        void CopyFieldsFrom(
-            Cell rhs,
-            ErrorMaskBuilder errorMask = null,
-            Cell_CopyMask copyMask = null,
-            Cell def = null);
     }
 
     public partial interface ICellInternal :
@@ -1588,6 +1349,54 @@ namespace Mutagen.Bethesda.Oblivion
             return ((CellCommon)((ICellInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this Cell lhs,
+            Cell rhs,
+            Cell_CopyMask copyMask,
+            Cell def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this Cell lhs,
+            Cell rhs,
+            out Cell_ErrorMask errorMask,
+            Cell_CopyMask copyMask = null,
+            Cell def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            CellSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = Cell_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this Cell lhs,
+            Cell rhs,
+            ErrorMaskBuilder errorMask,
+            Cell_CopyMask copyMask = null,
+            Cell def = null)
+        {
+            CellSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
         #region Mutagen

@@ -428,136 +428,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static AIPackageLocation Copy_ToLoqui(
-            AIPackageLocation item,
-            AIPackageLocation_CopyMask copyMask = null,
-            AIPackageLocation def = null)
+        void IClearable.Clear()
         {
-            AIPackageLocation ret;
-            if (item.GetType().Equals(typeof(AIPackageLocation)))
-            {
-                ret = new AIPackageLocation() as AIPackageLocation;
-            }
-            else
-            {
-                ret = (AIPackageLocation)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((AIPackageLocationSetterCommon)((IAIPackageLocationInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public void CopyFieldsFrom(AIPackageLocation rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            AIPackageLocation rhs,
-            AIPackageLocation_CopyMask copyMask,
-            AIPackageLocation def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            AIPackageLocation rhs,
-            out AIPackageLocation_ErrorMask errorMask,
-            AIPackageLocation_CopyMask copyMask = null,
-            AIPackageLocation def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            AIPackageLocationSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = AIPackageLocation_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            AIPackageLocation rhs,
-            ErrorMaskBuilder errorMask,
-            AIPackageLocation_CopyMask copyMask = null,
-            AIPackageLocation def = null)
-        {
-            AIPackageLocationSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected void SetNthObject(ushort index, object obj)
-        {
-            AIPackageLocation_FieldIndex enu = (AIPackageLocation_FieldIndex)index;
-            switch (enu)
-            {
-                case AIPackageLocation_FieldIndex.Type:
-                    this.Type = (AIPackageLocation.LocationType)obj;
-                    break;
-                case AIPackageLocation_FieldIndex.LocationReference:
-                    this.LocationReference_Property.Set((IFormIDLink<IPlaced>)obj);
-                    break;
-                case AIPackageLocation_FieldIndex.Radius:
-                    this.Radius = (Single)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void Clear()
-        {
-            AIPackageLocationSetterCommon.Instance.Clear(this);
-        }
-
-        public static AIPackageLocation Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new AIPackageLocation();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_AIPackageLocation(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_AIPackageLocation(AIPackageLocation obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out AIPackageLocation_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case AIPackageLocation_FieldIndex.Type:
-                    obj.Type = (AIPackageLocation.LocationType)pair.Value;
-                    break;
-                case AIPackageLocation_FieldIndex.LocationReference:
-                    obj.LocationReference_Property.Set((IFormIDLink<IPlaced>)pair.Value);
-                    break;
-                case AIPackageLocation_FieldIndex.Radius:
-                    obj.Radius = (Single)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -572,11 +447,6 @@ namespace Mutagen.Bethesda.Oblivion
         new IFormIDLink<IPlaced> LocationReference_Property { get; }
         new Single Radius { get; set; }
 
-        void CopyFieldsFrom(
-            AIPackageLocation rhs,
-            ErrorMaskBuilder errorMask = null,
-            AIPackageLocation_CopyMask copyMask = null,
-            AIPackageLocation def = null);
     }
 
     public partial interface IAIPackageLocationInternal :
@@ -687,6 +557,67 @@ namespace Mutagen.Bethesda.Oblivion
             return ((AIPackageLocationCommon)((IAIPackageLocationInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this AIPackageLocation lhs,
+            AIPackageLocation rhs)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null);
+        }
+
+        public static void CopyFieldsFrom(
+            this AIPackageLocation lhs,
+            AIPackageLocation rhs,
+            AIPackageLocation_CopyMask copyMask,
+            AIPackageLocation def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this AIPackageLocation lhs,
+            AIPackageLocation rhs,
+            out AIPackageLocation_ErrorMask errorMask,
+            AIPackageLocation_CopyMask copyMask = null,
+            AIPackageLocation def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            AIPackageLocationSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = AIPackageLocation_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this AIPackageLocation lhs,
+            AIPackageLocation rhs,
+            ErrorMaskBuilder errorMask,
+            AIPackageLocation_CopyMask copyMask = null,
+            AIPackageLocation def = null)
+        {
+            AIPackageLocationSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

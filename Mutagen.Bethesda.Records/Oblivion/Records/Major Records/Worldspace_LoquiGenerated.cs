@@ -992,215 +992,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static Worldspace Copy_ToLoqui(
-            Worldspace item,
-            Worldspace_CopyMask copyMask = null,
-            Worldspace def = null)
+        void IClearable.Clear()
         {
-            Worldspace ret;
-            if (item.GetType().Equals(typeof(Worldspace)))
-            {
-                ret = new Worldspace() as Worldspace;
-            }
-            else
-            {
-                ret = (Worldspace)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((WorldspaceSetterCommon)((IWorldspaceInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            Worldspace rhs,
-            Worldspace_CopyMask copyMask,
-            Worldspace def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            Worldspace rhs,
-            out Worldspace_ErrorMask errorMask,
-            Worldspace_CopyMask copyMask = null,
-            Worldspace def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            WorldspaceSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = Worldspace_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            Worldspace rhs,
-            ErrorMaskBuilder errorMask,
-            Worldspace_CopyMask copyMask = null,
-            Worldspace def = null)
-        {
-            WorldspaceSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            Worldspace_FieldIndex enu = (Worldspace_FieldIndex)index;
-            switch (enu)
-            {
-                case Worldspace_FieldIndex.Name:
-                    this.Name = (String)obj;
-                    break;
-                case Worldspace_FieldIndex.Parent:
-                    this.Parent_Property.Set((IFormIDSetLink<Worldspace>)obj);
-                    break;
-                case Worldspace_FieldIndex.Climate:
-                    this.Climate_Property.Set((IFormIDSetLink<Climate>)obj);
-                    break;
-                case Worldspace_FieldIndex.Water:
-                    this.Water_Property.Set((IFormIDSetLink<Water>)obj);
-                    break;
-                case Worldspace_FieldIndex.Icon:
-                    this.Icon = (String)obj;
-                    break;
-                case Worldspace_FieldIndex.MapData:
-                    this.MapData = (MapData)obj;
-                    break;
-                case Worldspace_FieldIndex.Flags:
-                    this.Flags = (Worldspace.Flag)obj;
-                    break;
-                case Worldspace_FieldIndex.ObjectBoundsMin:
-                    this.ObjectBoundsMin = (P2Float)obj;
-                    break;
-                case Worldspace_FieldIndex.ObjectBoundsMax:
-                    this.ObjectBoundsMax = (P2Float)obj;
-                    break;
-                case Worldspace_FieldIndex.Music:
-                    this.Music = (MusicType)obj;
-                    break;
-                case Worldspace_FieldIndex.OffsetData:
-                    this.OffsetData = (Byte[])obj;
-                    break;
-                case Worldspace_FieldIndex.Road:
-                    this.Road = (Road)obj;
-                    break;
-                case Worldspace_FieldIndex.TopCell:
-                    this.TopCell = (Cell)obj;
-                    break;
-                case Worldspace_FieldIndex.SubCellsTimestamp:
-                    this.SubCellsTimestamp = (Byte[])obj;
-                    break;
-                case Worldspace_FieldIndex.SubCells:
-                    this._SubCells.SetTo((ISetList<WorldspaceBlock>)obj);
-                    break;
-                case Worldspace_FieldIndex.UsingOffsetLength:
-                    this.UsingOffsetLength = (Boolean)obj;
-                    break;
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            WorldspaceSetterCommon.Instance.Clear(this);
-        }
-
-        public new static Worldspace Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Worldspace();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Worldspace(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_Worldspace(Worldspace obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Worldspace_FieldIndex enu))
-            {
-                CopyInInternal_Place(obj, pair);
-            }
-            switch (enu)
-            {
-                case Worldspace_FieldIndex.Name:
-                    obj.Name = (String)pair.Value;
-                    break;
-                case Worldspace_FieldIndex.Parent:
-                    obj.Parent_Property.Set((IFormIDSetLink<Worldspace>)pair.Value);
-                    break;
-                case Worldspace_FieldIndex.Climate:
-                    obj.Climate_Property.Set((IFormIDSetLink<Climate>)pair.Value);
-                    break;
-                case Worldspace_FieldIndex.Water:
-                    obj.Water_Property.Set((IFormIDSetLink<Water>)pair.Value);
-                    break;
-                case Worldspace_FieldIndex.Icon:
-                    obj.Icon = (String)pair.Value;
-                    break;
-                case Worldspace_FieldIndex.MapData:
-                    obj.MapData = (MapData)pair.Value;
-                    break;
-                case Worldspace_FieldIndex.Flags:
-                    obj.Flags = (Worldspace.Flag)pair.Value;
-                    break;
-                case Worldspace_FieldIndex.ObjectBoundsMin:
-                    obj.ObjectBoundsMin = (P2Float)pair.Value;
-                    break;
-                case Worldspace_FieldIndex.ObjectBoundsMax:
-                    obj.ObjectBoundsMax = (P2Float)pair.Value;
-                    break;
-                case Worldspace_FieldIndex.Music:
-                    obj.Music = (MusicType)pair.Value;
-                    break;
-                case Worldspace_FieldIndex.OffsetData:
-                    obj.OffsetData = (Byte[])pair.Value;
-                    break;
-                case Worldspace_FieldIndex.Road:
-                    obj.Road = (Road)pair.Value;
-                    break;
-                case Worldspace_FieldIndex.TopCell:
-                    obj.TopCell = (Cell)pair.Value;
-                    break;
-                case Worldspace_FieldIndex.SubCellsTimestamp:
-                    obj.SubCellsTimestamp = (Byte[])pair.Value;
-                    break;
-                case Worldspace_FieldIndex.SubCells:
-                    obj._SubCells.SetTo((ISetList<WorldspaceBlock>)pair.Value);
-                    break;
-                case Worldspace_FieldIndex.UsingOffsetLength:
-                    obj.UsingOffsetLength = (Boolean)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -1272,11 +1068,6 @@ namespace Mutagen.Bethesda.Oblivion
         new ISetList<WorldspaceBlock> SubCells { get; }
         new Boolean UsingOffsetLength { get; set; }
 
-        void CopyFieldsFrom(
-            Worldspace rhs,
-            ErrorMaskBuilder errorMask = null,
-            Worldspace_CopyMask copyMask = null,
-            Worldspace def = null);
     }
 
     public partial interface IWorldspaceInternal :
@@ -1455,6 +1246,54 @@ namespace Mutagen.Bethesda.Oblivion
             return ((WorldspaceCommon)((IWorldspaceInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this Worldspace lhs,
+            Worldspace rhs,
+            Worldspace_CopyMask copyMask,
+            Worldspace def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this Worldspace lhs,
+            Worldspace rhs,
+            out Worldspace_ErrorMask errorMask,
+            Worldspace_CopyMask copyMask = null,
+            Worldspace def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            WorldspaceSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = Worldspace_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this Worldspace lhs,
+            Worldspace rhs,
+            ErrorMaskBuilder errorMask,
+            Worldspace_CopyMask copyMask = null,
+            Worldspace def = null)
+        {
+            WorldspaceSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
         #region Mutagen

@@ -568,154 +568,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static ScriptEffect Copy_ToLoqui(
-            ScriptEffect item,
-            ScriptEffect_CopyMask copyMask = null,
-            ScriptEffect def = null)
+        void IClearable.Clear()
         {
-            ScriptEffect ret;
-            if (item.GetType().Equals(typeof(ScriptEffect)))
-            {
-                ret = new ScriptEffect() as ScriptEffect;
-            }
-            else
-            {
-                ret = (ScriptEffect)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((ScriptEffectSetterCommon)((IScriptEffectInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public void CopyFieldsFrom(ScriptEffect rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            ScriptEffect rhs,
-            ScriptEffect_CopyMask copyMask,
-            ScriptEffect def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            ScriptEffect rhs,
-            out ScriptEffect_ErrorMask errorMask,
-            ScriptEffect_CopyMask copyMask = null,
-            ScriptEffect def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            ScriptEffectSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = ScriptEffect_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            ScriptEffect rhs,
-            ErrorMaskBuilder errorMask,
-            ScriptEffect_CopyMask copyMask = null,
-            ScriptEffect def = null)
-        {
-            ScriptEffectSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected void SetNthObject(ushort index, object obj)
-        {
-            ScriptEffect_FieldIndex enu = (ScriptEffect_FieldIndex)index;
-            switch (enu)
-            {
-                case ScriptEffect_FieldIndex.Script:
-                    this.Script_Property.Set((IFormIDLink<Script>)obj);
-                    break;
-                case ScriptEffect_FieldIndex.MagicSchool:
-                    this.MagicSchool = (MagicSchool)obj;
-                    break;
-                case ScriptEffect_FieldIndex.VisualEffect:
-                    this.VisualEffect_Property.Set((IEDIDLink<MagicEffect>)obj);
-                    break;
-                case ScriptEffect_FieldIndex.Flags:
-                    this.Flags = (ScriptEffect.Flag)obj;
-                    break;
-                case ScriptEffect_FieldIndex.Name:
-                    this.Name = (String)obj;
-                    break;
-                case ScriptEffect_FieldIndex.SCITDataTypeState:
-                    this.SCITDataTypeState = (ScriptEffect.SCITDataType)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void Clear()
-        {
-            ScriptEffectSetterCommon.Instance.Clear(this);
-        }
-
-        public static ScriptEffect Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new ScriptEffect();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_ScriptEffect(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_ScriptEffect(ScriptEffect obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out ScriptEffect_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case ScriptEffect_FieldIndex.Script:
-                    obj.Script_Property.Set((IFormIDLink<Script>)pair.Value);
-                    break;
-                case ScriptEffect_FieldIndex.MagicSchool:
-                    obj.MagicSchool = (MagicSchool)pair.Value;
-                    break;
-                case ScriptEffect_FieldIndex.VisualEffect:
-                    obj.VisualEffect_Property.Set((IEDIDLink<MagicEffect>)pair.Value);
-                    break;
-                case ScriptEffect_FieldIndex.Flags:
-                    obj.Flags = (ScriptEffect.Flag)pair.Value;
-                    break;
-                case ScriptEffect_FieldIndex.Name:
-                    obj.Name = (String)pair.Value;
-                    break;
-                case ScriptEffect_FieldIndex.SCITDataTypeState:
-                    obj.SCITDataTypeState = (ScriptEffect.SCITDataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -737,11 +594,6 @@ namespace Mutagen.Bethesda.Oblivion
         void Name_Set(String value, bool hasBeenSet = true);
         void Name_Unset();
 
-        void CopyFieldsFrom(
-            ScriptEffect rhs,
-            ErrorMaskBuilder errorMask = null,
-            ScriptEffect_CopyMask copyMask = null,
-            ScriptEffect def = null);
     }
 
     public partial interface IScriptEffectInternal :
@@ -870,6 +722,67 @@ namespace Mutagen.Bethesda.Oblivion
             return ((ScriptEffectCommon)((IScriptEffectInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this ScriptEffect lhs,
+            ScriptEffect rhs)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null);
+        }
+
+        public static void CopyFieldsFrom(
+            this ScriptEffect lhs,
+            ScriptEffect rhs,
+            ScriptEffect_CopyMask copyMask,
+            ScriptEffect def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this ScriptEffect lhs,
+            ScriptEffect rhs,
+            out ScriptEffect_ErrorMask errorMask,
+            ScriptEffect_CopyMask copyMask = null,
+            ScriptEffect def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            ScriptEffectSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = ScriptEffect_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this ScriptEffect lhs,
+            ScriptEffect rhs,
+            ErrorMaskBuilder errorMask,
+            ScriptEffect_CopyMask copyMask = null,
+            ScriptEffect def = null)
+        {
+            ScriptEffectSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

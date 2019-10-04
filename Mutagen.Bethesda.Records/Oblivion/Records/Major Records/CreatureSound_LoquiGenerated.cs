@@ -489,130 +489,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CreatureSound Copy_ToLoqui(
-            CreatureSound item,
-            CreatureSound_CopyMask copyMask = null,
-            CreatureSound def = null)
+        void IClearable.Clear()
         {
-            CreatureSound ret;
-            if (item.GetType().Equals(typeof(CreatureSound)))
-            {
-                ret = new CreatureSound() as CreatureSound;
-            }
-            else
-            {
-                ret = (CreatureSound)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((CreatureSoundSetterCommon)((ICreatureSoundInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public void CopyFieldsFrom(CreatureSound rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            CreatureSound rhs,
-            CreatureSound_CopyMask copyMask,
-            CreatureSound def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            CreatureSound rhs,
-            out CreatureSound_ErrorMask errorMask,
-            CreatureSound_CopyMask copyMask = null,
-            CreatureSound def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            CreatureSoundSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = CreatureSound_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            CreatureSound rhs,
-            ErrorMaskBuilder errorMask,
-            CreatureSound_CopyMask copyMask = null,
-            CreatureSound def = null)
-        {
-            CreatureSoundSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected void SetNthObject(ushort index, object obj)
-        {
-            CreatureSound_FieldIndex enu = (CreatureSound_FieldIndex)index;
-            switch (enu)
-            {
-                case CreatureSound_FieldIndex.SoundType:
-                    this.SoundType = (CreatureSound.CreatureSoundType)obj;
-                    break;
-                case CreatureSound_FieldIndex.Sounds:
-                    this._Sounds.SetTo((ISetList<SoundItem>)obj);
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void Clear()
-        {
-            CreatureSoundSetterCommon.Instance.Clear(this);
-        }
-
-        public static CreatureSound Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new CreatureSound();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_CreatureSound(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_CreatureSound(CreatureSound obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out CreatureSound_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case CreatureSound_FieldIndex.SoundType:
-                    obj.SoundType = (CreatureSound.CreatureSoundType)pair.Value;
-                    break;
-                case CreatureSound_FieldIndex.Sounds:
-                    obj._Sounds.SetTo((ISetList<SoundItem>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -627,11 +508,6 @@ namespace Mutagen.Bethesda.Oblivion
         void SoundType_Unset();
 
         new ISetList<SoundItem> Sounds { get; }
-        void CopyFieldsFrom(
-            CreatureSound rhs,
-            ErrorMaskBuilder errorMask = null,
-            CreatureSound_CopyMask copyMask = null,
-            CreatureSound def = null);
     }
 
     public partial interface ICreatureSoundInternal :
@@ -735,6 +611,67 @@ namespace Mutagen.Bethesda.Oblivion
             return ((CreatureSoundCommon)((ICreatureSoundInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this CreatureSound lhs,
+            CreatureSound rhs)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null);
+        }
+
+        public static void CopyFieldsFrom(
+            this CreatureSound lhs,
+            CreatureSound rhs,
+            CreatureSound_CopyMask copyMask,
+            CreatureSound def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this CreatureSound lhs,
+            CreatureSound rhs,
+            out CreatureSound_ErrorMask errorMask,
+            CreatureSound_CopyMask copyMask = null,
+            CreatureSound def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            CreatureSoundSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = CreatureSound_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this CreatureSound lhs,
+            CreatureSound rhs,
+            ErrorMaskBuilder errorMask,
+            CreatureSound_CopyMask copyMask = null,
+            CreatureSound def = null)
+        {
+            CreatureSoundSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

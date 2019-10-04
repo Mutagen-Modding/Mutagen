@@ -512,184 +512,11 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static Decal Copy_ToLoqui(
-            Decal item,
-            Decal_CopyMask copyMask = null,
-            Decal def = null)
+        void IClearable.Clear()
         {
-            Decal ret;
-            if (item.GetType().Equals(typeof(Decal)))
-            {
-                ret = new Decal() as Decal;
-            }
-            else
-            {
-                ret = (Decal)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((DecalSetterCommon)((IDecalInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public void CopyFieldsFrom(Decal rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            Decal rhs,
-            Decal_CopyMask copyMask,
-            Decal def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            Decal rhs,
-            out Decal_ErrorMask errorMask,
-            Decal_CopyMask copyMask = null,
-            Decal def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            DecalSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = Decal_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            Decal rhs,
-            ErrorMaskBuilder errorMask,
-            Decal_CopyMask copyMask = null,
-            Decal def = null)
-        {
-            DecalSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected void SetNthObject(ushort index, object obj)
-        {
-            Decal_FieldIndex enu = (Decal_FieldIndex)index;
-            switch (enu)
-            {
-                case Decal_FieldIndex.MinWidth:
-                    this.MinWidth = (Single)obj;
-                    break;
-                case Decal_FieldIndex.MaxWidth:
-                    this.MaxWidth = (Single)obj;
-                    break;
-                case Decal_FieldIndex.MinHeight:
-                    this.MinHeight = (Single)obj;
-                    break;
-                case Decal_FieldIndex.MaxHeight:
-                    this.MaxHeight = (Single)obj;
-                    break;
-                case Decal_FieldIndex.Depth:
-                    this.Depth = (Single)obj;
-                    break;
-                case Decal_FieldIndex.Shininess:
-                    this.Shininess = (Single)obj;
-                    break;
-                case Decal_FieldIndex.ParallaxScale:
-                    this.ParallaxScale = (Single)obj;
-                    break;
-                case Decal_FieldIndex.ParallaxPasses:
-                    this.ParallaxPasses = (Byte)obj;
-                    break;
-                case Decal_FieldIndex.Flags:
-                    this.Flags = (Decal.Flag)obj;
-                    break;
-                case Decal_FieldIndex.Unknown:
-                    this.Unknown = (UInt16)obj;
-                    break;
-                case Decal_FieldIndex.Color:
-                    this.Color = (Color)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void Clear()
-        {
-            DecalSetterCommon.Instance.Clear(this);
-        }
-
-        public static Decal Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Decal();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Decal(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_Decal(Decal obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Decal_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case Decal_FieldIndex.MinWidth:
-                    obj.MinWidth = (Single)pair.Value;
-                    break;
-                case Decal_FieldIndex.MaxWidth:
-                    obj.MaxWidth = (Single)pair.Value;
-                    break;
-                case Decal_FieldIndex.MinHeight:
-                    obj.MinHeight = (Single)pair.Value;
-                    break;
-                case Decal_FieldIndex.MaxHeight:
-                    obj.MaxHeight = (Single)pair.Value;
-                    break;
-                case Decal_FieldIndex.Depth:
-                    obj.Depth = (Single)pair.Value;
-                    break;
-                case Decal_FieldIndex.Shininess:
-                    obj.Shininess = (Single)pair.Value;
-                    break;
-                case Decal_FieldIndex.ParallaxScale:
-                    obj.ParallaxScale = (Single)pair.Value;
-                    break;
-                case Decal_FieldIndex.ParallaxPasses:
-                    obj.ParallaxPasses = (Byte)pair.Value;
-                    break;
-                case Decal_FieldIndex.Flags:
-                    obj.Flags = (Decal.Flag)pair.Value;
-                    break;
-                case Decal_FieldIndex.Unknown:
-                    obj.Unknown = (UInt16)pair.Value;
-                    break;
-                case Decal_FieldIndex.Color:
-                    obj.Color = (Color)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -720,11 +547,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         new Color Color { get; set; }
 
-        void CopyFieldsFrom(
-            Decal rhs,
-            ErrorMaskBuilder errorMask = null,
-            Decal_CopyMask copyMask = null,
-            Decal def = null);
     }
 
     public partial interface IDecalInternal :
@@ -864,6 +686,67 @@ namespace Mutagen.Bethesda.Skyrim
             return ((DecalCommon)((IDecalInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this Decal lhs,
+            Decal rhs)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null);
+        }
+
+        public static void CopyFieldsFrom(
+            this Decal lhs,
+            Decal rhs,
+            Decal_CopyMask copyMask,
+            Decal def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this Decal lhs,
+            Decal rhs,
+            out Decal_ErrorMask errorMask,
+            Decal_CopyMask copyMask = null,
+            Decal def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            DecalSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = Decal_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this Decal lhs,
+            Decal rhs,
+            ErrorMaskBuilder errorMask,
+            Decal_CopyMask copyMask = null,
+            Decal def = null)
+        {
+            DecalSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

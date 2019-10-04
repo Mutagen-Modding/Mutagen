@@ -385,130 +385,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static SkillBoost Copy_ToLoqui(
-            SkillBoost item,
-            SkillBoost_CopyMask copyMask = null,
-            SkillBoost def = null)
+        void IClearable.Clear()
         {
-            SkillBoost ret;
-            if (item.GetType().Equals(typeof(SkillBoost)))
-            {
-                ret = new SkillBoost() as SkillBoost;
-            }
-            else
-            {
-                ret = (SkillBoost)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((SkillBoostSetterCommon)((ISkillBoostInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public void CopyFieldsFrom(SkillBoost rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            SkillBoost rhs,
-            SkillBoost_CopyMask copyMask,
-            SkillBoost def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            SkillBoost rhs,
-            out SkillBoost_ErrorMask errorMask,
-            SkillBoost_CopyMask copyMask = null,
-            SkillBoost def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            SkillBoostSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = SkillBoost_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            SkillBoost rhs,
-            ErrorMaskBuilder errorMask,
-            SkillBoost_CopyMask copyMask = null,
-            SkillBoost def = null)
-        {
-            SkillBoostSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected void SetNthObject(ushort index, object obj)
-        {
-            SkillBoost_FieldIndex enu = (SkillBoost_FieldIndex)index;
-            switch (enu)
-            {
-                case SkillBoost_FieldIndex.Skill:
-                    this.Skill = (ActorValue)obj;
-                    break;
-                case SkillBoost_FieldIndex.Boost:
-                    this.Boost = (SByte)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void Clear()
-        {
-            SkillBoostSetterCommon.Instance.Clear(this);
-        }
-
-        public static SkillBoost Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new SkillBoost();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_SkillBoost(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_SkillBoost(SkillBoost obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out SkillBoost_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case SkillBoost_FieldIndex.Skill:
-                    obj.Skill = (ActorValue)pair.Value;
-                    break;
-                case SkillBoost_FieldIndex.Boost:
-                    obj.Boost = (SByte)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -521,11 +402,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         new SByte Boost { get; set; }
 
-        void CopyFieldsFrom(
-            SkillBoost rhs,
-            ErrorMaskBuilder errorMask = null,
-            SkillBoost_CopyMask copyMask = null,
-            SkillBoost def = null);
     }
 
     public partial interface ISkillBoostInternal :
@@ -629,6 +505,67 @@ namespace Mutagen.Bethesda.Oblivion
             return ((SkillBoostCommon)((ISkillBoostInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this SkillBoost lhs,
+            SkillBoost rhs)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null);
+        }
+
+        public static void CopyFieldsFrom(
+            this SkillBoost lhs,
+            SkillBoost rhs,
+            SkillBoost_CopyMask copyMask,
+            SkillBoost def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this SkillBoost lhs,
+            SkillBoost rhs,
+            out SkillBoost_ErrorMask errorMask,
+            SkillBoost_CopyMask copyMask = null,
+            SkillBoost def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            SkillBoostSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = SkillBoost_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this SkillBoost lhs,
+            SkillBoost rhs,
+            ErrorMaskBuilder errorMask,
+            SkillBoost_CopyMask copyMask = null,
+            SkillBoost def = null)
+        {
+            SkillBoostSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

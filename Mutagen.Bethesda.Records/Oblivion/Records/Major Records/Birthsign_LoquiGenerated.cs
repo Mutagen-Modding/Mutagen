@@ -618,143 +618,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static Birthsign Copy_ToLoqui(
-            Birthsign item,
-            Birthsign_CopyMask copyMask = null,
-            Birthsign def = null)
+        void IClearable.Clear()
         {
-            Birthsign ret;
-            if (item.GetType().Equals(typeof(Birthsign)))
-            {
-                ret = new Birthsign() as Birthsign;
-            }
-            else
-            {
-                ret = (Birthsign)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((BirthsignSetterCommon)((IBirthsignInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            Birthsign rhs,
-            Birthsign_CopyMask copyMask,
-            Birthsign def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            Birthsign rhs,
-            out Birthsign_ErrorMask errorMask,
-            Birthsign_CopyMask copyMask = null,
-            Birthsign def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            BirthsignSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = Birthsign_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            Birthsign rhs,
-            ErrorMaskBuilder errorMask,
-            Birthsign_CopyMask copyMask = null,
-            Birthsign def = null)
-        {
-            BirthsignSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            Birthsign_FieldIndex enu = (Birthsign_FieldIndex)index;
-            switch (enu)
-            {
-                case Birthsign_FieldIndex.Name:
-                    this.Name = (String)obj;
-                    break;
-                case Birthsign_FieldIndex.Icon:
-                    this.Icon = (String)obj;
-                    break;
-                case Birthsign_FieldIndex.Description:
-                    this.Description = (String)obj;
-                    break;
-                case Birthsign_FieldIndex.Spells:
-                    this._Spells.SetTo((ISetList<IFormIDLink<Spell>>)obj);
-                    break;
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            BirthsignSetterCommon.Instance.Clear(this);
-        }
-
-        public new static Birthsign Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Birthsign();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Birthsign(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_Birthsign(Birthsign obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Birthsign_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case Birthsign_FieldIndex.Name:
-                    obj.Name = (String)pair.Value;
-                    break;
-                case Birthsign_FieldIndex.Icon:
-                    obj.Icon = (String)pair.Value;
-                    break;
-                case Birthsign_FieldIndex.Description:
-                    obj.Description = (String)pair.Value;
-                    break;
-                case Birthsign_FieldIndex.Spells:
-                    obj._Spells.SetTo((ISetList<IFormIDLink<Spell>>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -780,11 +648,6 @@ namespace Mutagen.Bethesda.Oblivion
         void Description_Unset();
 
         new ISetList<IFormIDLink<Spell>> Spells { get; }
-        void CopyFieldsFrom(
-            Birthsign rhs,
-            ErrorMaskBuilder errorMask = null,
-            Birthsign_CopyMask copyMask = null,
-            Birthsign def = null);
     }
 
     public partial interface IBirthsignInternal :
@@ -898,6 +761,54 @@ namespace Mutagen.Bethesda.Oblivion
             return ((BirthsignCommon)((IBirthsignInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this Birthsign lhs,
+            Birthsign rhs,
+            Birthsign_CopyMask copyMask,
+            Birthsign def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this Birthsign lhs,
+            Birthsign rhs,
+            out Birthsign_ErrorMask errorMask,
+            Birthsign_CopyMask copyMask = null,
+            Birthsign def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            BirthsignSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = Birthsign_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this Birthsign lhs,
+            Birthsign rhs,
+            ErrorMaskBuilder errorMask,
+            Birthsign_CopyMask copyMask = null,
+            Birthsign def = null)
+        {
+            BirthsignSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

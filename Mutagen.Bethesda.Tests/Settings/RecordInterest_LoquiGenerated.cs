@@ -398,130 +398,11 @@ namespace Mutagen.Bethesda.Tests
             return ret;
         }
 
-        public static RecordInterest Copy_ToLoqui(
-            RecordInterest item,
-            RecordInterest_CopyMask copyMask = null,
-            RecordInterest def = null)
+        void IClearable.Clear()
         {
-            RecordInterest ret;
-            if (item.GetType().Equals(typeof(RecordInterest)))
-            {
-                ret = new RecordInterest() as RecordInterest;
-            }
-            else
-            {
-                ret = (RecordInterest)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((RecordInterestSetterCommon)((IRecordInterestInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public void CopyFieldsFrom(RecordInterest rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            RecordInterest rhs,
-            RecordInterest_CopyMask copyMask,
-            RecordInterest def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            RecordInterest rhs,
-            out RecordInterest_ErrorMask errorMask,
-            RecordInterest_CopyMask copyMask = null,
-            RecordInterest def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            RecordInterestSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = RecordInterest_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            RecordInterest rhs,
-            ErrorMaskBuilder errorMask,
-            RecordInterest_CopyMask copyMask = null,
-            RecordInterest def = null)
-        {
-            RecordInterestSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected void SetNthObject(ushort index, object obj)
-        {
-            RecordInterest_FieldIndex enu = (RecordInterest_FieldIndex)index;
-            switch (enu)
-            {
-                case RecordInterest_FieldIndex.InterestingTypes:
-                    this._InterestingTypes.SetTo((IExtendedList<String>)obj);
-                    break;
-                case RecordInterest_FieldIndex.UninterestingTypes:
-                    this._UninterestingTypes.SetTo((IExtendedList<String>)obj);
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void Clear()
-        {
-            RecordInterestSetterCommon.Instance.Clear(this);
-        }
-
-        public static RecordInterest Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new RecordInterest();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_RecordInterest(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_RecordInterest(RecordInterest obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out RecordInterest_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case RecordInterest_FieldIndex.InterestingTypes:
-                    obj._InterestingTypes.SetTo((IExtendedList<String>)pair.Value);
-                    break;
-                case RecordInterest_FieldIndex.UninterestingTypes:
-                    obj._UninterestingTypes.SetTo((IExtendedList<String>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -532,11 +413,6 @@ namespace Mutagen.Bethesda.Tests
     {
         new IExtendedList<String> InterestingTypes { get; }
         new IExtendedList<String> UninterestingTypes { get; }
-        void CopyFieldsFrom(
-            RecordInterest rhs,
-            ErrorMaskBuilder errorMask = null,
-            RecordInterest_CopyMask copyMask = null,
-            RecordInterest def = null);
     }
 
     public partial interface IRecordInterestInternal :
@@ -637,6 +513,67 @@ namespace Mutagen.Bethesda.Tests
             return ((RecordInterestCommon)((IRecordInterestInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this RecordInterest lhs,
+            RecordInterest rhs)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null);
+        }
+
+        public static void CopyFieldsFrom(
+            this RecordInterest lhs,
+            RecordInterest rhs,
+            RecordInterest_CopyMask copyMask,
+            RecordInterest def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this RecordInterest lhs,
+            RecordInterest rhs,
+            out RecordInterest_ErrorMask errorMask,
+            RecordInterest_CopyMask copyMask = null,
+            RecordInterest def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            RecordInterestSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = RecordInterest_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this RecordInterest lhs,
+            RecordInterest rhs,
+            ErrorMaskBuilder errorMask,
+            RecordInterest_CopyMask copyMask = null,
+            RecordInterest def = null)
+        {
+            RecordInterestSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

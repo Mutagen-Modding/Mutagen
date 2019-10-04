@@ -607,155 +607,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static SpellUnleveled Copy_ToLoqui(
-            SpellUnleveled item,
-            SpellUnleveled_CopyMask copyMask = null,
-            SpellUnleveled def = null)
+        void IClearable.Clear()
         {
-            SpellUnleveled ret;
-            if (item.GetType().Equals(typeof(SpellUnleveled)))
-            {
-                ret = new SpellUnleveled() as SpellUnleveled;
-            }
-            else
-            {
-                ret = (SpellUnleveled)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((SpellUnleveledSetterCommon)((ISpellUnleveledInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            SpellUnleveled rhs,
-            SpellUnleveled_CopyMask copyMask,
-            SpellUnleveled def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            SpellUnleveled rhs,
-            out SpellUnleveled_ErrorMask errorMask,
-            SpellUnleveled_CopyMask copyMask = null,
-            SpellUnleveled def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            SpellUnleveledSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = SpellUnleveled_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            SpellUnleveled rhs,
-            ErrorMaskBuilder errorMask,
-            SpellUnleveled_CopyMask copyMask = null,
-            SpellUnleveled def = null)
-        {
-            SpellUnleveledSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            SpellUnleveled_FieldIndex enu = (SpellUnleveled_FieldIndex)index;
-            switch (enu)
-            {
-                case SpellUnleveled_FieldIndex.Type:
-                    this.Type = (Spell.SpellType)obj;
-                    break;
-                case SpellUnleveled_FieldIndex.Cost:
-                    this.Cost = (UInt32)obj;
-                    break;
-                case SpellUnleveled_FieldIndex.Level:
-                    this.Level = (Spell.SpellLevel)obj;
-                    break;
-                case SpellUnleveled_FieldIndex.Flag:
-                    this.Flag = (Spell.SpellFlag)obj;
-                    break;
-                case SpellUnleveled_FieldIndex.Effects:
-                    this._Effects.SetTo((ISetList<Effect>)obj);
-                    break;
-                case SpellUnleveled_FieldIndex.SPITDataTypeState:
-                    this.SPITDataTypeState = (SpellUnleveled.SPITDataType)obj;
-                    break;
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            SpellUnleveledSetterCommon.Instance.Clear(this);
-        }
-
-        public new static SpellUnleveled Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new SpellUnleveled();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_SpellUnleveled(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_SpellUnleveled(SpellUnleveled obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out SpellUnleveled_FieldIndex enu))
-            {
-                CopyInInternal_Spell(obj, pair);
-            }
-            switch (enu)
-            {
-                case SpellUnleveled_FieldIndex.Type:
-                    obj.Type = (Spell.SpellType)pair.Value;
-                    break;
-                case SpellUnleveled_FieldIndex.Cost:
-                    obj.Cost = (UInt32)pair.Value;
-                    break;
-                case SpellUnleveled_FieldIndex.Level:
-                    obj.Level = (Spell.SpellLevel)pair.Value;
-                    break;
-                case SpellUnleveled_FieldIndex.Flag:
-                    obj.Flag = (Spell.SpellFlag)pair.Value;
-                    break;
-                case SpellUnleveled_FieldIndex.Effects:
-                    obj._Effects.SetTo((ISetList<Effect>)pair.Value);
-                    break;
-                case SpellUnleveled_FieldIndex.SPITDataTypeState:
-                    obj.SPITDataTypeState = (SpellUnleveled.SPITDataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -774,11 +630,6 @@ namespace Mutagen.Bethesda.Oblivion
         new Spell.SpellFlag Flag { get; set; }
 
         new ISetList<Effect> Effects { get; }
-        void CopyFieldsFrom(
-            SpellUnleveled rhs,
-            ErrorMaskBuilder errorMask = null,
-            SpellUnleveled_CopyMask copyMask = null,
-            SpellUnleveled def = null);
     }
 
     public partial interface ISpellUnleveledInternal :
@@ -899,6 +750,54 @@ namespace Mutagen.Bethesda.Oblivion
             return ((SpellUnleveledCommon)((ISpellUnleveledInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this SpellUnleveled lhs,
+            SpellUnleveled rhs,
+            SpellUnleveled_CopyMask copyMask,
+            SpellUnleveled def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this SpellUnleveled lhs,
+            SpellUnleveled rhs,
+            out SpellUnleveled_ErrorMask errorMask,
+            SpellUnleveled_CopyMask copyMask = null,
+            SpellUnleveled def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            SpellUnleveledSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = SpellUnleveled_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this SpellUnleveled lhs,
+            SpellUnleveled rhs,
+            ErrorMaskBuilder errorMask,
+            SpellUnleveled_CopyMask copyMask = null,
+            SpellUnleveled def = null)
+        {
+            SpellUnleveledSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

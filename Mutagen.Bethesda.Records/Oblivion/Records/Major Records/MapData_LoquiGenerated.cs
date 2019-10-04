@@ -415,136 +415,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static MapData Copy_ToLoqui(
-            MapData item,
-            MapData_CopyMask copyMask = null,
-            MapData def = null)
+        void IClearable.Clear()
         {
-            MapData ret;
-            if (item.GetType().Equals(typeof(MapData)))
-            {
-                ret = new MapData() as MapData;
-            }
-            else
-            {
-                ret = (MapData)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((MapDataSetterCommon)((IMapDataInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public void CopyFieldsFrom(MapData rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            MapData rhs,
-            MapData_CopyMask copyMask,
-            MapData def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            MapData rhs,
-            out MapData_ErrorMask errorMask,
-            MapData_CopyMask copyMask = null,
-            MapData def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            MapDataSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = MapData_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            MapData rhs,
-            ErrorMaskBuilder errorMask,
-            MapData_CopyMask copyMask = null,
-            MapData def = null)
-        {
-            MapDataSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected void SetNthObject(ushort index, object obj)
-        {
-            MapData_FieldIndex enu = (MapData_FieldIndex)index;
-            switch (enu)
-            {
-                case MapData_FieldIndex.UsableDimensions:
-                    this.UsableDimensions = (P2Int)obj;
-                    break;
-                case MapData_FieldIndex.CellCoordinatesNWCell:
-                    this.CellCoordinatesNWCell = (P2Int16)obj;
-                    break;
-                case MapData_FieldIndex.CellCoordinatesSECell:
-                    this.CellCoordinatesSECell = (P2Int16)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void Clear()
-        {
-            MapDataSetterCommon.Instance.Clear(this);
-        }
-
-        public static MapData Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new MapData();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_MapData(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_MapData(MapData obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out MapData_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case MapData_FieldIndex.UsableDimensions:
-                    obj.UsableDimensions = (P2Int)pair.Value;
-                    break;
-                case MapData_FieldIndex.CellCoordinatesNWCell:
-                    obj.CellCoordinatesNWCell = (P2Int16)pair.Value;
-                    break;
-                case MapData_FieldIndex.CellCoordinatesSECell:
-                    obj.CellCoordinatesSECell = (P2Int16)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -559,11 +434,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         new P2Int16 CellCoordinatesSECell { get; set; }
 
-        void CopyFieldsFrom(
-            MapData rhs,
-            ErrorMaskBuilder errorMask = null,
-            MapData_CopyMask copyMask = null,
-            MapData def = null);
     }
 
     public partial interface IMapDataInternal :
@@ -671,6 +541,67 @@ namespace Mutagen.Bethesda.Oblivion
             return ((MapDataCommon)((IMapDataInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this MapData lhs,
+            MapData rhs)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null);
+        }
+
+        public static void CopyFieldsFrom(
+            this MapData lhs,
+            MapData rhs,
+            MapData_CopyMask copyMask,
+            MapData def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this MapData lhs,
+            MapData rhs,
+            out MapData_ErrorMask errorMask,
+            MapData_CopyMask copyMask = null,
+            MapData def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            MapDataSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = MapData_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this MapData lhs,
+            MapData rhs,
+            ErrorMaskBuilder errorMask,
+            MapData_CopyMask copyMask = null,
+            MapData def = null)
+        {
+            MapDataSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

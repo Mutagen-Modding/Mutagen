@@ -918,7 +918,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
                                 masterReferences: masterReferences);
-                            item.GameSettings.CopyFieldsFrom<GameSetting_CopyMask>(
+                            item.GameSettings.CopyFieldsFrom<GameSetting, GameSetting_CopyMask>(
                                 rhs: tmpGameSettings,
                                 def: null,
                                 copyMask: null,
@@ -952,7 +952,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
                                 masterReferences: masterReferences);
-                            item.Keywords.CopyFieldsFrom<Keyword_CopyMask>(
+                            item.Keywords.CopyFieldsFrom<Keyword, Keyword_CopyMask>(
                                 rhs: tmpKeywords,
                                 def: null,
                                 copyMask: null,
@@ -986,7 +986,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
                                 masterReferences: masterReferences);
-                            item.LocationReferenceTypes.CopyFieldsFrom<LocationReferenceType_CopyMask>(
+                            item.LocationReferenceTypes.CopyFieldsFrom<LocationReferenceType, LocationReferenceType_CopyMask>(
                                 rhs: tmpLocationReferenceTypes,
                                 def: null,
                                 copyMask: null,
@@ -1020,7 +1020,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
                                 masterReferences: masterReferences);
-                            item.Actions.CopyFieldsFrom<ActionRecord_CopyMask>(
+                            item.Actions.CopyFieldsFrom<ActionRecord, ActionRecord_CopyMask>(
                                 rhs: tmpActions,
                                 def: null,
                                 copyMask: null,
@@ -1054,7 +1054,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
                                 masterReferences: masterReferences);
-                            item.TextureSets.CopyFieldsFrom<TextureSet_CopyMask>(
+                            item.TextureSets.CopyFieldsFrom<TextureSet, TextureSet_CopyMask>(
                                 rhs: tmpTextureSets,
                                 def: null,
                                 copyMask: null,
@@ -1088,7 +1088,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
                                 masterReferences: masterReferences);
-                            item.Globals.CopyFieldsFrom<Global_CopyMask>(
+                            item.Globals.CopyFieldsFrom<Global, Global_CopyMask>(
                                 rhs: tmpGlobals,
                                 def: null,
                                 copyMask: null,
@@ -1122,7 +1122,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
                                 masterReferences: masterReferences);
-                            item.Classes.CopyFieldsFrom<Class_CopyMask>(
+                            item.Classes.CopyFieldsFrom<Class, Class_CopyMask>(
                                 rhs: tmpClasses,
                                 def: null,
                                 copyMask: null,
@@ -1214,166 +1214,11 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static SkyrimMod Copy_ToLoqui(
-            SkyrimMod item,
-            SkyrimMod_CopyMask copyMask = null,
-            SkyrimMod def = null)
+        void IClearable.Clear()
         {
-            SkyrimMod ret;
-            if (item.GetType().Equals(typeof(SkyrimMod)))
-            {
-                ret = new SkyrimMod() as SkyrimMod;
-            }
-            else
-            {
-                ret = (SkyrimMod)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((SkyrimModSetterCommon)((ISkyrimModInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public void CopyFieldsFrom(SkyrimMod rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            SkyrimMod rhs,
-            SkyrimMod_CopyMask copyMask,
-            SkyrimMod def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            SkyrimMod rhs,
-            out SkyrimMod_ErrorMask errorMask,
-            SkyrimMod_CopyMask copyMask = null,
-            SkyrimMod def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            SkyrimModSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = SkyrimMod_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            SkyrimMod rhs,
-            ErrorMaskBuilder errorMask,
-            SkyrimMod_CopyMask copyMask = null,
-            SkyrimMod def = null)
-        {
-            SkyrimModSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected void SetNthObject(ushort index, object obj)
-        {
-            SkyrimMod_FieldIndex enu = (SkyrimMod_FieldIndex)index;
-            switch (enu)
-            {
-                case SkyrimMod_FieldIndex.ModHeader:
-                    this.ModHeader.CopyFieldsFrom(rhs: (ModHeader)obj);
-                    break;
-                case SkyrimMod_FieldIndex.GameSettings:
-                    this._GameSettings_Object.CopyFieldsFrom<GameSetting_CopyMask>(rhs: (Group<GameSetting>)obj);
-                    break;
-                case SkyrimMod_FieldIndex.Keywords:
-                    this._Keywords_Object.CopyFieldsFrom<Keyword_CopyMask>(rhs: (Group<Keyword>)obj);
-                    break;
-                case SkyrimMod_FieldIndex.LocationReferenceTypes:
-                    this._LocationReferenceTypes_Object.CopyFieldsFrom<LocationReferenceType_CopyMask>(rhs: (Group<LocationReferenceType>)obj);
-                    break;
-                case SkyrimMod_FieldIndex.Actions:
-                    this._Actions_Object.CopyFieldsFrom<ActionRecord_CopyMask>(rhs: (Group<ActionRecord>)obj);
-                    break;
-                case SkyrimMod_FieldIndex.TextureSets:
-                    this._TextureSets_Object.CopyFieldsFrom<TextureSet_CopyMask>(rhs: (Group<TextureSet>)obj);
-                    break;
-                case SkyrimMod_FieldIndex.Globals:
-                    this._Globals_Object.CopyFieldsFrom<Global_CopyMask>(rhs: (Group<Global>)obj);
-                    break;
-                case SkyrimMod_FieldIndex.Classes:
-                    this._Classes_Object.CopyFieldsFrom<Class_CopyMask>(rhs: (Group<Class>)obj);
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void Clear()
-        {
-            SkyrimModSetterCommon.Instance.Clear(this);
-        }
-
-        public static SkyrimMod Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new SkyrimMod();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_SkyrimMod(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_SkyrimMod(SkyrimMod obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out SkyrimMod_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case SkyrimMod_FieldIndex.ModHeader:
-                    obj.ModHeader.CopyFieldsFrom(rhs: (ModHeader)pair.Value);
-                    break;
-                case SkyrimMod_FieldIndex.GameSettings:
-                    obj._GameSettings_Object.CopyFieldsFrom<GameSetting_CopyMask>(rhs: (Group<GameSetting>)pair.Value);
-                    break;
-                case SkyrimMod_FieldIndex.Keywords:
-                    obj._Keywords_Object.CopyFieldsFrom<Keyword_CopyMask>(rhs: (Group<Keyword>)pair.Value);
-                    break;
-                case SkyrimMod_FieldIndex.LocationReferenceTypes:
-                    obj._LocationReferenceTypes_Object.CopyFieldsFrom<LocationReferenceType_CopyMask>(rhs: (Group<LocationReferenceType>)pair.Value);
-                    break;
-                case SkyrimMod_FieldIndex.Actions:
-                    obj._Actions_Object.CopyFieldsFrom<ActionRecord_CopyMask>(rhs: (Group<ActionRecord>)pair.Value);
-                    break;
-                case SkyrimMod_FieldIndex.TextureSets:
-                    obj._TextureSets_Object.CopyFieldsFrom<TextureSet_CopyMask>(rhs: (Group<TextureSet>)pair.Value);
-                    break;
-                case SkyrimMod_FieldIndex.Globals:
-                    obj._Globals_Object.CopyFieldsFrom<Global_CopyMask>(rhs: (Group<Global>)pair.Value);
-                    break;
-                case SkyrimMod_FieldIndex.Classes:
-                    obj._Classes_Object.CopyFieldsFrom<Class_CopyMask>(rhs: (Group<Class>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -1391,11 +1236,6 @@ namespace Mutagen.Bethesda.Skyrim
         new Group<TextureSet> TextureSets { get; }
         new Group<Global> Globals { get; }
         new Group<Class> Classes { get; }
-        void CopyFieldsFrom(
-            SkyrimMod rhs,
-            ErrorMaskBuilder errorMask = null,
-            SkyrimMod_CopyMask copyMask = null,
-            SkyrimMod def = null);
     }
 
     public partial interface ISkyrimModInternal :
@@ -1525,6 +1365,67 @@ namespace Mutagen.Bethesda.Skyrim
             return ((SkyrimModCommon)((ISkyrimModInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this SkyrimMod lhs,
+            SkyrimMod rhs)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null);
+        }
+
+        public static void CopyFieldsFrom(
+            this SkyrimMod lhs,
+            SkyrimMod rhs,
+            SkyrimMod_CopyMask copyMask,
+            SkyrimMod def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this SkyrimMod lhs,
+            SkyrimMod rhs,
+            out SkyrimMod_ErrorMask errorMask,
+            SkyrimMod_CopyMask copyMask = null,
+            SkyrimMod def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            SkyrimModSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = SkyrimMod_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this SkyrimMod lhs,
+            SkyrimMod rhs,
+            ErrorMaskBuilder errorMask,
+            SkyrimMod_CopyMask copyMask = null,
+            SkyrimMod def = null)
+        {
+            SkyrimModSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
         #region Mutagen
@@ -2758,7 +2659,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)SkyrimMod_FieldIndex.GameSettings);
-                        item.GameSettings.CopyFieldsFrom<GameSetting_CopyMask>(
+                        item.GameSettings.CopyFieldsFrom<GameSetting, GameSetting_CopyMask>(
                             rhs: Group<GameSetting>.CreateFromXml(
                                 node: node,
                                 errorMask: errorMask,
@@ -2781,7 +2682,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Keywords);
-                        item.Keywords.CopyFieldsFrom<Keyword_CopyMask>(
+                        item.Keywords.CopyFieldsFrom<Keyword, Keyword_CopyMask>(
                             rhs: Group<Keyword>.CreateFromXml(
                                 node: node,
                                 errorMask: errorMask,
@@ -2804,7 +2705,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)SkyrimMod_FieldIndex.LocationReferenceTypes);
-                        item.LocationReferenceTypes.CopyFieldsFrom<LocationReferenceType_CopyMask>(
+                        item.LocationReferenceTypes.CopyFieldsFrom<LocationReferenceType, LocationReferenceType_CopyMask>(
                             rhs: Group<LocationReferenceType>.CreateFromXml(
                                 node: node,
                                 errorMask: errorMask,
@@ -2827,7 +2728,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Actions);
-                        item.Actions.CopyFieldsFrom<ActionRecord_CopyMask>(
+                        item.Actions.CopyFieldsFrom<ActionRecord, ActionRecord_CopyMask>(
                             rhs: Group<ActionRecord>.CreateFromXml(
                                 node: node,
                                 errorMask: errorMask,
@@ -2850,7 +2751,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)SkyrimMod_FieldIndex.TextureSets);
-                        item.TextureSets.CopyFieldsFrom<TextureSet_CopyMask>(
+                        item.TextureSets.CopyFieldsFrom<TextureSet, TextureSet_CopyMask>(
                             rhs: Group<TextureSet>.CreateFromXml(
                                 node: node,
                                 errorMask: errorMask,
@@ -2873,7 +2774,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Globals);
-                        item.Globals.CopyFieldsFrom<Global_CopyMask>(
+                        item.Globals.CopyFieldsFrom<Global, Global_CopyMask>(
                             rhs: Group<Global>.CreateFromXml(
                                 node: node,
                                 errorMask: errorMask,
@@ -2896,7 +2797,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Classes);
-                        item.Classes.CopyFieldsFrom<Class_CopyMask>(
+                        item.Classes.CopyFieldsFrom<Class, Class_CopyMask>(
                             rhs: Group<Class>.CreateFromXml(
                                 node: node,
                                 errorMask: errorMask,

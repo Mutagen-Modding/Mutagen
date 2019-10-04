@@ -833,191 +833,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static Book Copy_ToLoqui(
-            Book item,
-            Book_CopyMask copyMask = null,
-            Book def = null)
+        void IClearable.Clear()
         {
-            Book ret;
-            if (item.GetType().Equals(typeof(Book)))
-            {
-                ret = new Book() as Book;
-            }
-            else
-            {
-                ret = (Book)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((BookSetterCommon)((IBookInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            Book rhs,
-            Book_CopyMask copyMask,
-            Book def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            Book rhs,
-            out Book_ErrorMask errorMask,
-            Book_CopyMask copyMask = null,
-            Book def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            BookSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = Book_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            Book rhs,
-            ErrorMaskBuilder errorMask,
-            Book_CopyMask copyMask = null,
-            Book def = null)
-        {
-            BookSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            Book_FieldIndex enu = (Book_FieldIndex)index;
-            switch (enu)
-            {
-                case Book_FieldIndex.Name:
-                    this.Name = (String)obj;
-                    break;
-                case Book_FieldIndex.Model:
-                    this.Model = (Model)obj;
-                    break;
-                case Book_FieldIndex.Icon:
-                    this.Icon = (String)obj;
-                    break;
-                case Book_FieldIndex.Script:
-                    this.Script_Property.Set((IFormIDSetLink<Script>)obj);
-                    break;
-                case Book_FieldIndex.Enchantment:
-                    this.Enchantment_Property.Set((IFormIDSetLink<Enchantment>)obj);
-                    break;
-                case Book_FieldIndex.EnchantmentPoints:
-                    this.EnchantmentPoints = (UInt16)obj;
-                    break;
-                case Book_FieldIndex.Description:
-                    this.Description = (String)obj;
-                    break;
-                case Book_FieldIndex.Flags:
-                    this.Flags = (Book.BookFlag)obj;
-                    break;
-                case Book_FieldIndex.Teaches:
-                    this.Teaches = (Skill)obj;
-                    break;
-                case Book_FieldIndex.Value:
-                    this.Value = (Single)obj;
-                    break;
-                case Book_FieldIndex.Weight:
-                    this.Weight = (Single)obj;
-                    break;
-                case Book_FieldIndex.DATADataTypeState:
-                    this.DATADataTypeState = (Book.DATADataType)obj;
-                    break;
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            BookSetterCommon.Instance.Clear(this);
-        }
-
-        public new static Book Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Book();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Book(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_Book(Book obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Book_FieldIndex enu))
-            {
-                CopyInInternal_ItemAbstract(obj, pair);
-            }
-            switch (enu)
-            {
-                case Book_FieldIndex.Name:
-                    obj.Name = (String)pair.Value;
-                    break;
-                case Book_FieldIndex.Model:
-                    obj.Model = (Model)pair.Value;
-                    break;
-                case Book_FieldIndex.Icon:
-                    obj.Icon = (String)pair.Value;
-                    break;
-                case Book_FieldIndex.Script:
-                    obj.Script_Property.Set((IFormIDSetLink<Script>)pair.Value);
-                    break;
-                case Book_FieldIndex.Enchantment:
-                    obj.Enchantment_Property.Set((IFormIDSetLink<Enchantment>)pair.Value);
-                    break;
-                case Book_FieldIndex.EnchantmentPoints:
-                    obj.EnchantmentPoints = (UInt16)pair.Value;
-                    break;
-                case Book_FieldIndex.Description:
-                    obj.Description = (String)pair.Value;
-                    break;
-                case Book_FieldIndex.Flags:
-                    obj.Flags = (Book.BookFlag)pair.Value;
-                    break;
-                case Book_FieldIndex.Teaches:
-                    obj.Teaches = (Skill)pair.Value;
-                    break;
-                case Book_FieldIndex.Value:
-                    obj.Value = (Single)pair.Value;
-                    break;
-                case Book_FieldIndex.Weight:
-                    obj.Weight = (Single)pair.Value;
-                    break;
-                case Book_FieldIndex.DATADataTypeState:
-                    obj.DATADataTypeState = (Book.DATADataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -1064,11 +884,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Single Weight { get; set; }
 
-        void CopyFieldsFrom(
-            Book rhs,
-            ErrorMaskBuilder errorMask = null,
-            Book_CopyMask copyMask = null,
-            Book def = null);
     }
 
     public partial interface IBookInternal :
@@ -1225,6 +1040,54 @@ namespace Mutagen.Bethesda.Oblivion
             return ((BookCommon)((IBookInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this Book lhs,
+            Book rhs,
+            Book_CopyMask copyMask,
+            Book def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this Book lhs,
+            Book rhs,
+            out Book_ErrorMask errorMask,
+            Book_CopyMask copyMask = null,
+            Book def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            BookSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = Book_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this Book lhs,
+            Book rhs,
+            ErrorMaskBuilder errorMask,
+            Book_CopyMask copyMask = null,
+            Book def = null)
+        {
+            BookSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

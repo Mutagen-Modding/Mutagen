@@ -1905,527 +1905,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static NPC Copy_ToLoqui(
-            NPC item,
-            NPC_CopyMask copyMask = null,
-            NPC def = null)
+        void IClearable.Clear()
         {
-            NPC ret;
-            if (item.GetType().Equals(typeof(NPC)))
-            {
-                ret = new NPC() as NPC;
-            }
-            else
-            {
-                ret = (NPC)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((NPCSetterCommon)((INPCInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            NPC rhs,
-            NPC_CopyMask copyMask,
-            NPC def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            NPC rhs,
-            out NPC_ErrorMask errorMask,
-            NPC_CopyMask copyMask = null,
-            NPC def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            NPCSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = NPC_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            NPC rhs,
-            ErrorMaskBuilder errorMask,
-            NPC_CopyMask copyMask = null,
-            NPC def = null)
-        {
-            NPCSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            NPC_FieldIndex enu = (NPC_FieldIndex)index;
-            switch (enu)
-            {
-                case NPC_FieldIndex.Name:
-                    this.Name = (String)obj;
-                    break;
-                case NPC_FieldIndex.Model:
-                    this.Model = (Model)obj;
-                    break;
-                case NPC_FieldIndex.Flags:
-                    this.Flags = (NPC.NPCFlag)obj;
-                    break;
-                case NPC_FieldIndex.BaseSpellPoints:
-                    this.BaseSpellPoints = (UInt16)obj;
-                    break;
-                case NPC_FieldIndex.Fatigue:
-                    this.Fatigue = (UInt16)obj;
-                    break;
-                case NPC_FieldIndex.BarterGold:
-                    this.BarterGold = (UInt16)obj;
-                    break;
-                case NPC_FieldIndex.LevelOffset:
-                    this.LevelOffset = (Int16)obj;
-                    break;
-                case NPC_FieldIndex.CalcMin:
-                    this.CalcMin = (UInt16)obj;
-                    break;
-                case NPC_FieldIndex.CalcMax:
-                    this.CalcMax = (UInt16)obj;
-                    break;
-                case NPC_FieldIndex.Factions:
-                    this._Factions.SetTo((ISetList<RankPlacement>)obj);
-                    break;
-                case NPC_FieldIndex.DeathItem:
-                    this.DeathItem_Property.Set((IFormIDSetLink<ItemAbstract>)obj);
-                    break;
-                case NPC_FieldIndex.Race:
-                    this.Race_Property.Set((IFormIDSetLink<Race>)obj);
-                    break;
-                case NPC_FieldIndex.Spells:
-                    this._Spells.SetTo((ISetList<IFormIDLink<SpellAbstract>>)obj);
-                    break;
-                case NPC_FieldIndex.Script:
-                    this.Script_Property.Set((IFormIDSetLink<Script>)obj);
-                    break;
-                case NPC_FieldIndex.Items:
-                    this._Items.SetTo((ISetList<ItemEntry>)obj);
-                    break;
-                case NPC_FieldIndex.Aggression:
-                    this.Aggression = (Byte)obj;
-                    break;
-                case NPC_FieldIndex.Confidence:
-                    this.Confidence = (Byte)obj;
-                    break;
-                case NPC_FieldIndex.EnergyLevel:
-                    this.EnergyLevel = (Byte)obj;
-                    break;
-                case NPC_FieldIndex.Responsibility:
-                    this.Responsibility = (Byte)obj;
-                    break;
-                case NPC_FieldIndex.BuySellServices:
-                    this.BuySellServices = (NPC.BuySellServiceFlag)obj;
-                    break;
-                case NPC_FieldIndex.Teaches:
-                    this.Teaches = (Skill)obj;
-                    break;
-                case NPC_FieldIndex.MaximumTrainingLevel:
-                    this.MaximumTrainingLevel = (Byte)obj;
-                    break;
-                case NPC_FieldIndex.Fluff:
-                    this.Fluff = (Byte[])obj;
-                    break;
-                case NPC_FieldIndex.AIPackages:
-                    this._AIPackages.SetTo((ISetList<IFormIDLink<AIPackage>>)obj);
-                    break;
-                case NPC_FieldIndex.Animations:
-                    this._Animations.SetTo((ISetList<String>)obj);
-                    break;
-                case NPC_FieldIndex.Class:
-                    this.Class_Property.Set((IFormIDSetLink<Class>)obj);
-                    break;
-                case NPC_FieldIndex.Armorer:
-                    this.Armorer = (Byte)obj;
-                    break;
-                case NPC_FieldIndex.Athletics:
-                    this.Athletics = (Byte)obj;
-                    break;
-                case NPC_FieldIndex.Blade:
-                    this.Blade = (Byte)obj;
-                    break;
-                case NPC_FieldIndex.Block:
-                    this.Block = (Byte)obj;
-                    break;
-                case NPC_FieldIndex.Blunt:
-                    this.Blunt = (Byte)obj;
-                    break;
-                case NPC_FieldIndex.HandToHand:
-                    this.HandToHand = (Byte)obj;
-                    break;
-                case NPC_FieldIndex.HeavyArmor:
-                    this.HeavyArmor = (Byte)obj;
-                    break;
-                case NPC_FieldIndex.Alchemy:
-                    this.Alchemy = (Byte)obj;
-                    break;
-                case NPC_FieldIndex.Alteration:
-                    this.Alteration = (Byte)obj;
-                    break;
-                case NPC_FieldIndex.Conjuration:
-                    this.Conjuration = (Byte)obj;
-                    break;
-                case NPC_FieldIndex.Destruction:
-                    this.Destruction = (Byte)obj;
-                    break;
-                case NPC_FieldIndex.Illusion:
-                    this.Illusion = (Byte)obj;
-                    break;
-                case NPC_FieldIndex.Mysticism:
-                    this.Mysticism = (Byte)obj;
-                    break;
-                case NPC_FieldIndex.Restoration:
-                    this.Restoration = (Byte)obj;
-                    break;
-                case NPC_FieldIndex.Acrobatics:
-                    this.Acrobatics = (Byte)obj;
-                    break;
-                case NPC_FieldIndex.LightArmor:
-                    this.LightArmor = (Byte)obj;
-                    break;
-                case NPC_FieldIndex.Marksman:
-                    this.Marksman = (Byte)obj;
-                    break;
-                case NPC_FieldIndex.Mercantile:
-                    this.Mercantile = (Byte)obj;
-                    break;
-                case NPC_FieldIndex.Security:
-                    this.Security = (Byte)obj;
-                    break;
-                case NPC_FieldIndex.Sneak:
-                    this.Sneak = (Byte)obj;
-                    break;
-                case NPC_FieldIndex.Speechcraft:
-                    this.Speechcraft = (Byte)obj;
-                    break;
-                case NPC_FieldIndex.Health:
-                    this.Health = (UInt32)obj;
-                    break;
-                case NPC_FieldIndex.Strength:
-                    this.Strength = (Byte)obj;
-                    break;
-                case NPC_FieldIndex.Intelligence:
-                    this.Intelligence = (Byte)obj;
-                    break;
-                case NPC_FieldIndex.Willpower:
-                    this.Willpower = (Byte)obj;
-                    break;
-                case NPC_FieldIndex.Agility:
-                    this.Agility = (Byte)obj;
-                    break;
-                case NPC_FieldIndex.Speed:
-                    this.Speed = (Byte)obj;
-                    break;
-                case NPC_FieldIndex.Endurance:
-                    this.Endurance = (Byte)obj;
-                    break;
-                case NPC_FieldIndex.Personality:
-                    this.Personality = (Byte)obj;
-                    break;
-                case NPC_FieldIndex.Luck:
-                    this.Luck = (Byte)obj;
-                    break;
-                case NPC_FieldIndex.Hair:
-                    this.Hair_Property.Set((IFormIDSetLink<Hair>)obj);
-                    break;
-                case NPC_FieldIndex.HairLength:
-                    this.HairLength = (Single)obj;
-                    break;
-                case NPC_FieldIndex.Eyes:
-                    this._Eyes.SetTo((ISetList<IFormIDLink<Eye>>)obj);
-                    break;
-                case NPC_FieldIndex.HairColor:
-                    this.HairColor = (Color)obj;
-                    break;
-                case NPC_FieldIndex.CombatStyle:
-                    this.CombatStyle_Property.Set((IFormIDSetLink<CombatStyle>)obj);
-                    break;
-                case NPC_FieldIndex.FaceGenGeometrySymmetric:
-                    this.FaceGenGeometrySymmetric = (Byte[])obj;
-                    break;
-                case NPC_FieldIndex.FaceGenGeometryAsymmetric:
-                    this.FaceGenGeometryAsymmetric = (Byte[])obj;
-                    break;
-                case NPC_FieldIndex.FaceGenTextureSymmetric:
-                    this.FaceGenTextureSymmetric = (Byte[])obj;
-                    break;
-                case NPC_FieldIndex.Unknown:
-                    this.Unknown = (Byte[])obj;
-                    break;
-                case NPC_FieldIndex.ACBSDataTypeState:
-                    this.ACBSDataTypeState = (NPC.ACBSDataType)obj;
-                    break;
-                case NPC_FieldIndex.AIDTDataTypeState:
-                    this.AIDTDataTypeState = (NPC.AIDTDataType)obj;
-                    break;
-                case NPC_FieldIndex.DATADataTypeState:
-                    this.DATADataTypeState = (NPC.DATADataType)obj;
-                    break;
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            NPCSetterCommon.Instance.Clear(this);
-        }
-
-        public new static NPC Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new NPC();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_NPC(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_NPC(NPC obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out NPC_FieldIndex enu))
-            {
-                CopyInInternal_NPCAbstract(obj, pair);
-            }
-            switch (enu)
-            {
-                case NPC_FieldIndex.Name:
-                    obj.Name = (String)pair.Value;
-                    break;
-                case NPC_FieldIndex.Model:
-                    obj.Model = (Model)pair.Value;
-                    break;
-                case NPC_FieldIndex.Flags:
-                    obj.Flags = (NPC.NPCFlag)pair.Value;
-                    break;
-                case NPC_FieldIndex.BaseSpellPoints:
-                    obj.BaseSpellPoints = (UInt16)pair.Value;
-                    break;
-                case NPC_FieldIndex.Fatigue:
-                    obj.Fatigue = (UInt16)pair.Value;
-                    break;
-                case NPC_FieldIndex.BarterGold:
-                    obj.BarterGold = (UInt16)pair.Value;
-                    break;
-                case NPC_FieldIndex.LevelOffset:
-                    obj.LevelOffset = (Int16)pair.Value;
-                    break;
-                case NPC_FieldIndex.CalcMin:
-                    obj.CalcMin = (UInt16)pair.Value;
-                    break;
-                case NPC_FieldIndex.CalcMax:
-                    obj.CalcMax = (UInt16)pair.Value;
-                    break;
-                case NPC_FieldIndex.Factions:
-                    obj._Factions.SetTo((ISetList<RankPlacement>)pair.Value);
-                    break;
-                case NPC_FieldIndex.DeathItem:
-                    obj.DeathItem_Property.Set((IFormIDSetLink<ItemAbstract>)pair.Value);
-                    break;
-                case NPC_FieldIndex.Race:
-                    obj.Race_Property.Set((IFormIDSetLink<Race>)pair.Value);
-                    break;
-                case NPC_FieldIndex.Spells:
-                    obj._Spells.SetTo((ISetList<IFormIDLink<SpellAbstract>>)pair.Value);
-                    break;
-                case NPC_FieldIndex.Script:
-                    obj.Script_Property.Set((IFormIDSetLink<Script>)pair.Value);
-                    break;
-                case NPC_FieldIndex.Items:
-                    obj._Items.SetTo((ISetList<ItemEntry>)pair.Value);
-                    break;
-                case NPC_FieldIndex.Aggression:
-                    obj.Aggression = (Byte)pair.Value;
-                    break;
-                case NPC_FieldIndex.Confidence:
-                    obj.Confidence = (Byte)pair.Value;
-                    break;
-                case NPC_FieldIndex.EnergyLevel:
-                    obj.EnergyLevel = (Byte)pair.Value;
-                    break;
-                case NPC_FieldIndex.Responsibility:
-                    obj.Responsibility = (Byte)pair.Value;
-                    break;
-                case NPC_FieldIndex.BuySellServices:
-                    obj.BuySellServices = (NPC.BuySellServiceFlag)pair.Value;
-                    break;
-                case NPC_FieldIndex.Teaches:
-                    obj.Teaches = (Skill)pair.Value;
-                    break;
-                case NPC_FieldIndex.MaximumTrainingLevel:
-                    obj.MaximumTrainingLevel = (Byte)pair.Value;
-                    break;
-                case NPC_FieldIndex.Fluff:
-                    obj.Fluff = (Byte[])pair.Value;
-                    break;
-                case NPC_FieldIndex.AIPackages:
-                    obj._AIPackages.SetTo((ISetList<IFormIDLink<AIPackage>>)pair.Value);
-                    break;
-                case NPC_FieldIndex.Animations:
-                    obj._Animations.SetTo((ISetList<String>)pair.Value);
-                    break;
-                case NPC_FieldIndex.Class:
-                    obj.Class_Property.Set((IFormIDSetLink<Class>)pair.Value);
-                    break;
-                case NPC_FieldIndex.Armorer:
-                    obj.Armorer = (Byte)pair.Value;
-                    break;
-                case NPC_FieldIndex.Athletics:
-                    obj.Athletics = (Byte)pair.Value;
-                    break;
-                case NPC_FieldIndex.Blade:
-                    obj.Blade = (Byte)pair.Value;
-                    break;
-                case NPC_FieldIndex.Block:
-                    obj.Block = (Byte)pair.Value;
-                    break;
-                case NPC_FieldIndex.Blunt:
-                    obj.Blunt = (Byte)pair.Value;
-                    break;
-                case NPC_FieldIndex.HandToHand:
-                    obj.HandToHand = (Byte)pair.Value;
-                    break;
-                case NPC_FieldIndex.HeavyArmor:
-                    obj.HeavyArmor = (Byte)pair.Value;
-                    break;
-                case NPC_FieldIndex.Alchemy:
-                    obj.Alchemy = (Byte)pair.Value;
-                    break;
-                case NPC_FieldIndex.Alteration:
-                    obj.Alteration = (Byte)pair.Value;
-                    break;
-                case NPC_FieldIndex.Conjuration:
-                    obj.Conjuration = (Byte)pair.Value;
-                    break;
-                case NPC_FieldIndex.Destruction:
-                    obj.Destruction = (Byte)pair.Value;
-                    break;
-                case NPC_FieldIndex.Illusion:
-                    obj.Illusion = (Byte)pair.Value;
-                    break;
-                case NPC_FieldIndex.Mysticism:
-                    obj.Mysticism = (Byte)pair.Value;
-                    break;
-                case NPC_FieldIndex.Restoration:
-                    obj.Restoration = (Byte)pair.Value;
-                    break;
-                case NPC_FieldIndex.Acrobatics:
-                    obj.Acrobatics = (Byte)pair.Value;
-                    break;
-                case NPC_FieldIndex.LightArmor:
-                    obj.LightArmor = (Byte)pair.Value;
-                    break;
-                case NPC_FieldIndex.Marksman:
-                    obj.Marksman = (Byte)pair.Value;
-                    break;
-                case NPC_FieldIndex.Mercantile:
-                    obj.Mercantile = (Byte)pair.Value;
-                    break;
-                case NPC_FieldIndex.Security:
-                    obj.Security = (Byte)pair.Value;
-                    break;
-                case NPC_FieldIndex.Sneak:
-                    obj.Sneak = (Byte)pair.Value;
-                    break;
-                case NPC_FieldIndex.Speechcraft:
-                    obj.Speechcraft = (Byte)pair.Value;
-                    break;
-                case NPC_FieldIndex.Health:
-                    obj.Health = (UInt32)pair.Value;
-                    break;
-                case NPC_FieldIndex.Strength:
-                    obj.Strength = (Byte)pair.Value;
-                    break;
-                case NPC_FieldIndex.Intelligence:
-                    obj.Intelligence = (Byte)pair.Value;
-                    break;
-                case NPC_FieldIndex.Willpower:
-                    obj.Willpower = (Byte)pair.Value;
-                    break;
-                case NPC_FieldIndex.Agility:
-                    obj.Agility = (Byte)pair.Value;
-                    break;
-                case NPC_FieldIndex.Speed:
-                    obj.Speed = (Byte)pair.Value;
-                    break;
-                case NPC_FieldIndex.Endurance:
-                    obj.Endurance = (Byte)pair.Value;
-                    break;
-                case NPC_FieldIndex.Personality:
-                    obj.Personality = (Byte)pair.Value;
-                    break;
-                case NPC_FieldIndex.Luck:
-                    obj.Luck = (Byte)pair.Value;
-                    break;
-                case NPC_FieldIndex.Hair:
-                    obj.Hair_Property.Set((IFormIDSetLink<Hair>)pair.Value);
-                    break;
-                case NPC_FieldIndex.HairLength:
-                    obj.HairLength = (Single)pair.Value;
-                    break;
-                case NPC_FieldIndex.Eyes:
-                    obj._Eyes.SetTo((ISetList<IFormIDLink<Eye>>)pair.Value);
-                    break;
-                case NPC_FieldIndex.HairColor:
-                    obj.HairColor = (Color)pair.Value;
-                    break;
-                case NPC_FieldIndex.CombatStyle:
-                    obj.CombatStyle_Property.Set((IFormIDSetLink<CombatStyle>)pair.Value);
-                    break;
-                case NPC_FieldIndex.FaceGenGeometrySymmetric:
-                    obj.FaceGenGeometrySymmetric = (Byte[])pair.Value;
-                    break;
-                case NPC_FieldIndex.FaceGenGeometryAsymmetric:
-                    obj.FaceGenGeometryAsymmetric = (Byte[])pair.Value;
-                    break;
-                case NPC_FieldIndex.FaceGenTextureSymmetric:
-                    obj.FaceGenTextureSymmetric = (Byte[])pair.Value;
-                    break;
-                case NPC_FieldIndex.Unknown:
-                    obj.Unknown = (Byte[])pair.Value;
-                    break;
-                case NPC_FieldIndex.ACBSDataTypeState:
-                    obj.ACBSDataTypeState = (NPC.ACBSDataType)pair.Value;
-                    break;
-                case NPC_FieldIndex.AIDTDataTypeState:
-                    obj.AIDTDataTypeState = (NPC.AIDTDataType)pair.Value;
-                    break;
-                case NPC_FieldIndex.DATADataTypeState:
-                    obj.DATADataTypeState = (NPC.DATADataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -2583,11 +2067,6 @@ namespace Mutagen.Bethesda.Oblivion
         void Unknown_Set(Byte[] value, bool hasBeenSet = true);
         void Unknown_Unset();
 
-        void CopyFieldsFrom(
-            NPC rhs,
-            ErrorMaskBuilder errorMask = null,
-            NPC_CopyMask copyMask = null,
-            NPC def = null);
     }
 
     public partial interface INPCInternal :
@@ -2981,6 +2460,54 @@ namespace Mutagen.Bethesda.Oblivion
             return ((NPCCommon)((INPCInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this NPC lhs,
+            NPC rhs,
+            NPC_CopyMask copyMask,
+            NPC def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this NPC lhs,
+            NPC rhs,
+            out NPC_ErrorMask errorMask,
+            NPC_CopyMask copyMask = null,
+            NPC def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            NPCSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = NPC_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this NPC lhs,
+            NPC rhs,
+            ErrorMaskBuilder errorMask,
+            NPC_CopyMask copyMask = null,
+            NPC def = null)
+        {
+            NPCSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

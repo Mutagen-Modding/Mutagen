@@ -501,137 +501,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static Clothing Copy_ToLoqui(
-            Clothing item,
-            Clothing_CopyMask copyMask = null,
-            Clothing def = null)
+        void IClearable.Clear()
         {
-            Clothing ret;
-            if (item.GetType().Equals(typeof(Clothing)))
-            {
-                ret = new Clothing() as Clothing;
-            }
-            else
-            {
-                ret = (Clothing)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((ClothingSetterCommon)((IClothingInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            Clothing rhs,
-            Clothing_CopyMask copyMask,
-            Clothing def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            Clothing rhs,
-            out Clothing_ErrorMask errorMask,
-            Clothing_CopyMask copyMask = null,
-            Clothing def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            ClothingSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = Clothing_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            Clothing rhs,
-            ErrorMaskBuilder errorMask,
-            Clothing_CopyMask copyMask = null,
-            Clothing def = null)
-        {
-            ClothingSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            Clothing_FieldIndex enu = (Clothing_FieldIndex)index;
-            switch (enu)
-            {
-                case Clothing_FieldIndex.Value:
-                    this.Value = (UInt32)obj;
-                    break;
-                case Clothing_FieldIndex.Weight:
-                    this.Weight = (Single)obj;
-                    break;
-                case Clothing_FieldIndex.DATADataTypeState:
-                    this.DATADataTypeState = (Clothing.DATADataType)obj;
-                    break;
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            ClothingSetterCommon.Instance.Clear(this);
-        }
-
-        public new static Clothing Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Clothing();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Clothing(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_Clothing(Clothing obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Clothing_FieldIndex enu))
-            {
-                CopyInInternal_ClothingAbstract(obj, pair);
-            }
-            switch (enu)
-            {
-                case Clothing_FieldIndex.Value:
-                    obj.Value = (UInt32)pair.Value;
-                    break;
-                case Clothing_FieldIndex.Weight:
-                    obj.Weight = (Single)pair.Value;
-                    break;
-                case Clothing_FieldIndex.DATADataTypeState:
-                    obj.DATADataTypeState = (Clothing.DATADataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -645,11 +519,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Single Weight { get; set; }
 
-        void CopyFieldsFrom(
-            Clothing rhs,
-            ErrorMaskBuilder errorMask = null,
-            Clothing_CopyMask copyMask = null,
-            Clothing def = null);
     }
 
     public partial interface IClothingInternal :
@@ -759,6 +628,54 @@ namespace Mutagen.Bethesda.Oblivion
             return ((ClothingCommon)((IClothingInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this Clothing lhs,
+            Clothing rhs,
+            Clothing_CopyMask copyMask,
+            Clothing def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this Clothing lhs,
+            Clothing rhs,
+            out Clothing_ErrorMask errorMask,
+            Clothing_CopyMask copyMask = null,
+            Clothing def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            ClothingSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = Clothing_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this Clothing lhs,
+            Clothing rhs,
+            ErrorMaskBuilder errorMask,
+            Clothing_CopyMask copyMask = null,
+            Clothing def = null)
+        {
+            ClothingSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

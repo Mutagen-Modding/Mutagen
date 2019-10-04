@@ -504,142 +504,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static QuestTarget Copy_ToLoqui(
-            QuestTarget item,
-            QuestTarget_CopyMask copyMask = null,
-            QuestTarget def = null)
+        void IClearable.Clear()
         {
-            QuestTarget ret;
-            if (item.GetType().Equals(typeof(QuestTarget)))
-            {
-                ret = new QuestTarget() as QuestTarget;
-            }
-            else
-            {
-                ret = (QuestTarget)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((QuestTargetSetterCommon)((IQuestTargetInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public void CopyFieldsFrom(QuestTarget rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            QuestTarget rhs,
-            QuestTarget_CopyMask copyMask,
-            QuestTarget def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            QuestTarget rhs,
-            out QuestTarget_ErrorMask errorMask,
-            QuestTarget_CopyMask copyMask = null,
-            QuestTarget def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            QuestTargetSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = QuestTarget_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            QuestTarget rhs,
-            ErrorMaskBuilder errorMask,
-            QuestTarget_CopyMask copyMask = null,
-            QuestTarget def = null)
-        {
-            QuestTargetSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected void SetNthObject(ushort index, object obj)
-        {
-            QuestTarget_FieldIndex enu = (QuestTarget_FieldIndex)index;
-            switch (enu)
-            {
-                case QuestTarget_FieldIndex.Target:
-                    this.Target_Property.Set((IFormIDLink<IPlaced>)obj);
-                    break;
-                case QuestTarget_FieldIndex.Flags:
-                    this.Flags = (QuestTarget.Flag)obj;
-                    break;
-                case QuestTarget_FieldIndex.Conditions:
-                    this._Conditions.SetTo((ISetList<Condition>)obj);
-                    break;
-                case QuestTarget_FieldIndex.QSTADataTypeState:
-                    this.QSTADataTypeState = (QuestTarget.QSTADataType)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void Clear()
-        {
-            QuestTargetSetterCommon.Instance.Clear(this);
-        }
-
-        public static QuestTarget Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new QuestTarget();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_QuestTarget(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_QuestTarget(QuestTarget obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out QuestTarget_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case QuestTarget_FieldIndex.Target:
-                    obj.Target_Property.Set((IFormIDLink<IPlaced>)pair.Value);
-                    break;
-                case QuestTarget_FieldIndex.Flags:
-                    obj.Flags = (QuestTarget.Flag)pair.Value;
-                    break;
-                case QuestTarget_FieldIndex.Conditions:
-                    obj._Conditions.SetTo((ISetList<Condition>)pair.Value);
-                    break;
-                case QuestTarget_FieldIndex.QSTADataTypeState:
-                    obj.QSTADataTypeState = (QuestTarget.QSTADataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -653,11 +522,6 @@ namespace Mutagen.Bethesda.Oblivion
         new QuestTarget.Flag Flags { get; set; }
 
         new ISetList<Condition> Conditions { get; }
-        void CopyFieldsFrom(
-            QuestTarget rhs,
-            ErrorMaskBuilder errorMask = null,
-            QuestTarget_CopyMask copyMask = null,
-            QuestTarget def = null);
     }
 
     public partial interface IQuestTargetInternal :
@@ -773,6 +637,67 @@ namespace Mutagen.Bethesda.Oblivion
             return ((QuestTargetCommon)((IQuestTargetInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this QuestTarget lhs,
+            QuestTarget rhs)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null);
+        }
+
+        public static void CopyFieldsFrom(
+            this QuestTarget lhs,
+            QuestTarget rhs,
+            QuestTarget_CopyMask copyMask,
+            QuestTarget def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this QuestTarget lhs,
+            QuestTarget rhs,
+            out QuestTarget_ErrorMask errorMask,
+            QuestTarget_CopyMask copyMask = null,
+            QuestTarget def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            QuestTargetSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = QuestTarget_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this QuestTarget lhs,
+            QuestTarget rhs,
+            ErrorMaskBuilder errorMask,
+            QuestTarget_CopyMask copyMask = null,
+            QuestTarget def = null)
+        {
+            QuestTargetSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

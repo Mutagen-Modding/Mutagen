@@ -615,143 +615,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static Hair Copy_ToLoqui(
-            Hair item,
-            Hair_CopyMask copyMask = null,
-            Hair def = null)
+        void IClearable.Clear()
         {
-            Hair ret;
-            if (item.GetType().Equals(typeof(Hair)))
-            {
-                ret = new Hair() as Hair;
-            }
-            else
-            {
-                ret = (Hair)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((HairSetterCommon)((IHairInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            Hair rhs,
-            Hair_CopyMask copyMask,
-            Hair def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            Hair rhs,
-            out Hair_ErrorMask errorMask,
-            Hair_CopyMask copyMask = null,
-            Hair def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            HairSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = Hair_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            Hair rhs,
-            ErrorMaskBuilder errorMask,
-            Hair_CopyMask copyMask = null,
-            Hair def = null)
-        {
-            HairSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            Hair_FieldIndex enu = (Hair_FieldIndex)index;
-            switch (enu)
-            {
-                case Hair_FieldIndex.Name:
-                    this.Name = (String)obj;
-                    break;
-                case Hair_FieldIndex.Model:
-                    this.Model = (Model)obj;
-                    break;
-                case Hair_FieldIndex.Icon:
-                    this.Icon = (String)obj;
-                    break;
-                case Hair_FieldIndex.Flags:
-                    this.Flags = (Hair.HairFlag)obj;
-                    break;
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            HairSetterCommon.Instance.Clear(this);
-        }
-
-        public new static Hair Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Hair();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Hair(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_Hair(Hair obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Hair_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case Hair_FieldIndex.Name:
-                    obj.Name = (String)pair.Value;
-                    break;
-                case Hair_FieldIndex.Model:
-                    obj.Model = (Model)pair.Value;
-                    break;
-                case Hair_FieldIndex.Icon:
-                    obj.Icon = (String)pair.Value;
-                    break;
-                case Hair_FieldIndex.Flags:
-                    obj.Flags = (Hair.HairFlag)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -781,11 +649,6 @@ namespace Mutagen.Bethesda.Oblivion
         void Flags_Set(Hair.HairFlag value, bool hasBeenSet = true);
         void Flags_Unset();
 
-        void CopyFieldsFrom(
-            Hair rhs,
-            ErrorMaskBuilder errorMask = null,
-            Hair_CopyMask copyMask = null,
-            Hair def = null);
     }
 
     public partial interface IHairInternal :
@@ -901,6 +764,54 @@ namespace Mutagen.Bethesda.Oblivion
             return ((HairCommon)((IHairInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this Hair lhs,
+            Hair rhs,
+            Hair_CopyMask copyMask,
+            Hair def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this Hair lhs,
+            Hair rhs,
+            out Hair_ErrorMask errorMask,
+            Hair_CopyMask copyMask = null,
+            Hair def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            HairSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = Hair_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this Hair lhs,
+            Hair rhs,
+            ErrorMaskBuilder errorMask,
+            Hair_CopyMask copyMask = null,
+            Hair def = null)
+        {
+            HairSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

@@ -726,173 +726,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static AlchemicalApparatus Copy_ToLoqui(
-            AlchemicalApparatus item,
-            AlchemicalApparatus_CopyMask copyMask = null,
-            AlchemicalApparatus def = null)
+        void IClearable.Clear()
         {
-            AlchemicalApparatus ret;
-            if (item.GetType().Equals(typeof(AlchemicalApparatus)))
-            {
-                ret = new AlchemicalApparatus() as AlchemicalApparatus;
-            }
-            else
-            {
-                ret = (AlchemicalApparatus)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((AlchemicalApparatusSetterCommon)((IAlchemicalApparatusInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            AlchemicalApparatus rhs,
-            AlchemicalApparatus_CopyMask copyMask,
-            AlchemicalApparatus def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            AlchemicalApparatus rhs,
-            out AlchemicalApparatus_ErrorMask errorMask,
-            AlchemicalApparatus_CopyMask copyMask = null,
-            AlchemicalApparatus def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            AlchemicalApparatusSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = AlchemicalApparatus_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            AlchemicalApparatus rhs,
-            ErrorMaskBuilder errorMask,
-            AlchemicalApparatus_CopyMask copyMask = null,
-            AlchemicalApparatus def = null)
-        {
-            AlchemicalApparatusSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            AlchemicalApparatus_FieldIndex enu = (AlchemicalApparatus_FieldIndex)index;
-            switch (enu)
-            {
-                case AlchemicalApparatus_FieldIndex.Name:
-                    this.Name = (String)obj;
-                    break;
-                case AlchemicalApparatus_FieldIndex.Model:
-                    this.Model = (Model)obj;
-                    break;
-                case AlchemicalApparatus_FieldIndex.Icon:
-                    this.Icon = (String)obj;
-                    break;
-                case AlchemicalApparatus_FieldIndex.Script:
-                    this.Script_Property.Set((IFormIDSetLink<Script>)obj);
-                    break;
-                case AlchemicalApparatus_FieldIndex.Type:
-                    this.Type = (AlchemicalApparatus.ApparatusType)obj;
-                    break;
-                case AlchemicalApparatus_FieldIndex.Value:
-                    this.Value = (UInt32)obj;
-                    break;
-                case AlchemicalApparatus_FieldIndex.Weight:
-                    this.Weight = (Single)obj;
-                    break;
-                case AlchemicalApparatus_FieldIndex.Quality:
-                    this.Quality = (Single)obj;
-                    break;
-                case AlchemicalApparatus_FieldIndex.DATADataTypeState:
-                    this.DATADataTypeState = (AlchemicalApparatus.DATADataType)obj;
-                    break;
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            AlchemicalApparatusSetterCommon.Instance.Clear(this);
-        }
-
-        public new static AlchemicalApparatus Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new AlchemicalApparatus();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_AlchemicalApparatus(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_AlchemicalApparatus(AlchemicalApparatus obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out AlchemicalApparatus_FieldIndex enu))
-            {
-                CopyInInternal_ItemAbstract(obj, pair);
-            }
-            switch (enu)
-            {
-                case AlchemicalApparatus_FieldIndex.Name:
-                    obj.Name = (String)pair.Value;
-                    break;
-                case AlchemicalApparatus_FieldIndex.Model:
-                    obj.Model = (Model)pair.Value;
-                    break;
-                case AlchemicalApparatus_FieldIndex.Icon:
-                    obj.Icon = (String)pair.Value;
-                    break;
-                case AlchemicalApparatus_FieldIndex.Script:
-                    obj.Script_Property.Set((IFormIDSetLink<Script>)pair.Value);
-                    break;
-                case AlchemicalApparatus_FieldIndex.Type:
-                    obj.Type = (AlchemicalApparatus.ApparatusType)pair.Value;
-                    break;
-                case AlchemicalApparatus_FieldIndex.Value:
-                    obj.Value = (UInt32)pair.Value;
-                    break;
-                case AlchemicalApparatus_FieldIndex.Weight:
-                    obj.Weight = (Single)pair.Value;
-                    break;
-                case AlchemicalApparatus_FieldIndex.Quality:
-                    obj.Quality = (Single)pair.Value;
-                    break;
-                case AlchemicalApparatus_FieldIndex.DATADataTypeState:
-                    obj.DATADataTypeState = (AlchemicalApparatus.DATADataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -927,11 +765,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Single Quality { get; set; }
 
-        void CopyFieldsFrom(
-            AlchemicalApparatus rhs,
-            ErrorMaskBuilder errorMask = null,
-            AlchemicalApparatus_CopyMask copyMask = null,
-            AlchemicalApparatus def = null);
     }
 
     public partial interface IAlchemicalApparatusInternal :
@@ -1071,6 +904,54 @@ namespace Mutagen.Bethesda.Oblivion
             return ((AlchemicalApparatusCommon)((IAlchemicalApparatusInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this AlchemicalApparatus lhs,
+            AlchemicalApparatus rhs,
+            AlchemicalApparatus_CopyMask copyMask,
+            AlchemicalApparatus def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this AlchemicalApparatus lhs,
+            AlchemicalApparatus rhs,
+            out AlchemicalApparatus_ErrorMask errorMask,
+            AlchemicalApparatus_CopyMask copyMask = null,
+            AlchemicalApparatus def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            AlchemicalApparatusSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = AlchemicalApparatus_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this AlchemicalApparatus lhs,
+            AlchemicalApparatus rhs,
+            ErrorMaskBuilder errorMask,
+            AlchemicalApparatus_CopyMask copyMask = null,
+            AlchemicalApparatus def = null)
+        {
+            AlchemicalApparatusSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

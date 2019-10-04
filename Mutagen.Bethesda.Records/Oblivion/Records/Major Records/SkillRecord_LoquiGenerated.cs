@@ -887,197 +887,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static SkillRecord Copy_ToLoqui(
-            SkillRecord item,
-            SkillRecord_CopyMask copyMask = null,
-            SkillRecord def = null)
+        void IClearable.Clear()
         {
-            SkillRecord ret;
-            if (item.GetType().Equals(typeof(SkillRecord)))
-            {
-                ret = new SkillRecord() as SkillRecord;
-            }
-            else
-            {
-                ret = (SkillRecord)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((SkillRecordSetterCommon)((ISkillRecordInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            SkillRecord rhs,
-            SkillRecord_CopyMask copyMask,
-            SkillRecord def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            SkillRecord rhs,
-            out SkillRecord_ErrorMask errorMask,
-            SkillRecord_CopyMask copyMask = null,
-            SkillRecord def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            SkillRecordSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = SkillRecord_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            SkillRecord rhs,
-            ErrorMaskBuilder errorMask,
-            SkillRecord_CopyMask copyMask = null,
-            SkillRecord def = null)
-        {
-            SkillRecordSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            SkillRecord_FieldIndex enu = (SkillRecord_FieldIndex)index;
-            switch (enu)
-            {
-                case SkillRecord_FieldIndex.Skill:
-                    this.Skill = (ActorValue)obj;
-                    break;
-                case SkillRecord_FieldIndex.Description:
-                    this.Description = (String)obj;
-                    break;
-                case SkillRecord_FieldIndex.Icon:
-                    this.Icon = (String)obj;
-                    break;
-                case SkillRecord_FieldIndex.Action:
-                    this.Action = (ActorValue)obj;
-                    break;
-                case SkillRecord_FieldIndex.Attribute:
-                    this.Attribute = (ActorValue)obj;
-                    break;
-                case SkillRecord_FieldIndex.Specialization:
-                    this.Specialization = (Specialization)obj;
-                    break;
-                case SkillRecord_FieldIndex.UseValueFirst:
-                    this.UseValueFirst = (Single)obj;
-                    break;
-                case SkillRecord_FieldIndex.UseValueSecond:
-                    this.UseValueSecond = (Single)obj;
-                    break;
-                case SkillRecord_FieldIndex.ApprenticeText:
-                    this.ApprenticeText = (String)obj;
-                    break;
-                case SkillRecord_FieldIndex.JourneymanText:
-                    this.JourneymanText = (String)obj;
-                    break;
-                case SkillRecord_FieldIndex.ExpertText:
-                    this.ExpertText = (String)obj;
-                    break;
-                case SkillRecord_FieldIndex.MasterText:
-                    this.MasterText = (String)obj;
-                    break;
-                case SkillRecord_FieldIndex.DATADataTypeState:
-                    this.DATADataTypeState = (SkillRecord.DATADataType)obj;
-                    break;
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            SkillRecordSetterCommon.Instance.Clear(this);
-        }
-
-        public new static SkillRecord Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new SkillRecord();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_SkillRecord(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_SkillRecord(SkillRecord obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out SkillRecord_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case SkillRecord_FieldIndex.Skill:
-                    obj.Skill = (ActorValue)pair.Value;
-                    break;
-                case SkillRecord_FieldIndex.Description:
-                    obj.Description = (String)pair.Value;
-                    break;
-                case SkillRecord_FieldIndex.Icon:
-                    obj.Icon = (String)pair.Value;
-                    break;
-                case SkillRecord_FieldIndex.Action:
-                    obj.Action = (ActorValue)pair.Value;
-                    break;
-                case SkillRecord_FieldIndex.Attribute:
-                    obj.Attribute = (ActorValue)pair.Value;
-                    break;
-                case SkillRecord_FieldIndex.Specialization:
-                    obj.Specialization = (Specialization)pair.Value;
-                    break;
-                case SkillRecord_FieldIndex.UseValueFirst:
-                    obj.UseValueFirst = (Single)pair.Value;
-                    break;
-                case SkillRecord_FieldIndex.UseValueSecond:
-                    obj.UseValueSecond = (Single)pair.Value;
-                    break;
-                case SkillRecord_FieldIndex.ApprenticeText:
-                    obj.ApprenticeText = (String)pair.Value;
-                    break;
-                case SkillRecord_FieldIndex.JourneymanText:
-                    obj.JourneymanText = (String)pair.Value;
-                    break;
-                case SkillRecord_FieldIndex.ExpertText:
-                    obj.ExpertText = (String)pair.Value;
-                    break;
-                case SkillRecord_FieldIndex.MasterText:
-                    obj.MasterText = (String)pair.Value;
-                    break;
-                case SkillRecord_FieldIndex.DATADataTypeState:
-                    obj.DATADataTypeState = (SkillRecord.DATADataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -1132,11 +946,6 @@ namespace Mutagen.Bethesda.Oblivion
         void MasterText_Set(String value, bool hasBeenSet = true);
         void MasterText_Unset();
 
-        void CopyFieldsFrom(
-            SkillRecord rhs,
-            ErrorMaskBuilder errorMask = null,
-            SkillRecord_CopyMask copyMask = null,
-            SkillRecord def = null);
     }
 
     public partial interface ISkillRecordInternal :
@@ -1293,6 +1102,54 @@ namespace Mutagen.Bethesda.Oblivion
             return ((SkillRecordCommon)((ISkillRecordInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this SkillRecord lhs,
+            SkillRecord rhs,
+            SkillRecord_CopyMask copyMask,
+            SkillRecord def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this SkillRecord lhs,
+            SkillRecord rhs,
+            out SkillRecord_ErrorMask errorMask,
+            SkillRecord_CopyMask copyMask = null,
+            SkillRecord def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            SkillRecordSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = SkillRecord_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this SkillRecord lhs,
+            SkillRecord rhs,
+            ErrorMaskBuilder errorMask,
+            SkillRecord_CopyMask copyMask = null,
+            SkillRecord def = null)
+        {
+            SkillRecordSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

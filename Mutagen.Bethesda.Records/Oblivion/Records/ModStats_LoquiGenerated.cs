@@ -397,136 +397,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static ModStats Copy_ToLoqui(
-            ModStats item,
-            ModStats_CopyMask copyMask = null,
-            ModStats def = null)
+        void IClearable.Clear()
         {
-            ModStats ret;
-            if (item.GetType().Equals(typeof(ModStats)))
-            {
-                ret = new ModStats() as ModStats;
-            }
-            else
-            {
-                ret = (ModStats)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((ModStatsSetterCommon)((IModStatsInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public void CopyFieldsFrom(ModStats rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            ModStats rhs,
-            ModStats_CopyMask copyMask,
-            ModStats def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            ModStats rhs,
-            out ModStats_ErrorMask errorMask,
-            ModStats_CopyMask copyMask = null,
-            ModStats def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            ModStatsSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = ModStats_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            ModStats rhs,
-            ErrorMaskBuilder errorMask,
-            ModStats_CopyMask copyMask = null,
-            ModStats def = null)
-        {
-            ModStatsSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected void SetNthObject(ushort index, object obj)
-        {
-            ModStats_FieldIndex enu = (ModStats_FieldIndex)index;
-            switch (enu)
-            {
-                case ModStats_FieldIndex.Version:
-                    this.Version = (Single)obj;
-                    break;
-                case ModStats_FieldIndex.NumRecords:
-                    this.NumRecords = (Int32)obj;
-                    break;
-                case ModStats_FieldIndex.NextObjectID:
-                    this.NextObjectID = (UInt32)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void Clear()
-        {
-            ModStatsSetterCommon.Instance.Clear(this);
-        }
-
-        public static ModStats Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new ModStats();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_ModStats(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_ModStats(ModStats obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out ModStats_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case ModStats_FieldIndex.Version:
-                    obj.Version = (Single)pair.Value;
-                    break;
-                case ModStats_FieldIndex.NumRecords:
-                    obj.NumRecords = (Int32)pair.Value;
-                    break;
-                case ModStats_FieldIndex.NextObjectID:
-                    obj.NextObjectID = (UInt32)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -541,11 +416,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         new UInt32 NextObjectID { get; set; }
 
-        void CopyFieldsFrom(
-            ModStats rhs,
-            ErrorMaskBuilder errorMask = null,
-            ModStats_CopyMask copyMask = null,
-            ModStats def = null);
     }
 
     public partial interface IModStatsInternal :
@@ -653,6 +523,67 @@ namespace Mutagen.Bethesda.Oblivion
             return ((ModStatsCommon)((IModStatsInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this ModStats lhs,
+            ModStats rhs)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null);
+        }
+
+        public static void CopyFieldsFrom(
+            this ModStats lhs,
+            ModStats rhs,
+            ModStats_CopyMask copyMask,
+            ModStats def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this ModStats lhs,
+            ModStats rhs,
+            out ModStats_ErrorMask errorMask,
+            ModStats_CopyMask copyMask = null,
+            ModStats def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            ModStatsSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = ModStats_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this ModStats lhs,
+            ModStats rhs,
+            ErrorMaskBuilder errorMask,
+            ModStats_CopyMask copyMask = null,
+            ModStats def = null)
+        {
+            ModStatsSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

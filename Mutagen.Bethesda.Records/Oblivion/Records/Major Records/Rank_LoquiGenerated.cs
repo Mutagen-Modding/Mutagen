@@ -555,142 +555,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static Rank Copy_ToLoqui(
-            Rank item,
-            Rank_CopyMask copyMask = null,
-            Rank def = null)
+        void IClearable.Clear()
         {
-            Rank ret;
-            if (item.GetType().Equals(typeof(Rank)))
-            {
-                ret = new Rank() as Rank;
-            }
-            else
-            {
-                ret = (Rank)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((RankSetterCommon)((IRankInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public void CopyFieldsFrom(Rank rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            Rank rhs,
-            Rank_CopyMask copyMask,
-            Rank def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            Rank rhs,
-            out Rank_ErrorMask errorMask,
-            Rank_CopyMask copyMask = null,
-            Rank def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            RankSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = Rank_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            Rank rhs,
-            ErrorMaskBuilder errorMask,
-            Rank_CopyMask copyMask = null,
-            Rank def = null)
-        {
-            RankSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected void SetNthObject(ushort index, object obj)
-        {
-            Rank_FieldIndex enu = (Rank_FieldIndex)index;
-            switch (enu)
-            {
-                case Rank_FieldIndex.RankNumber:
-                    this.RankNumber = (Int32)obj;
-                    break;
-                case Rank_FieldIndex.MaleName:
-                    this.MaleName = (String)obj;
-                    break;
-                case Rank_FieldIndex.FemaleName:
-                    this.FemaleName = (String)obj;
-                    break;
-                case Rank_FieldIndex.Insignia:
-                    this.Insignia = (String)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void Clear()
-        {
-            RankSetterCommon.Instance.Clear(this);
-        }
-
-        public static Rank Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Rank();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Rank(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_Rank(Rank obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Rank_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case Rank_FieldIndex.RankNumber:
-                    obj.RankNumber = (Int32)pair.Value;
-                    break;
-                case Rank_FieldIndex.MaleName:
-                    obj.MaleName = (String)pair.Value;
-                    break;
-                case Rank_FieldIndex.FemaleName:
-                    obj.FemaleName = (String)pair.Value;
-                    break;
-                case Rank_FieldIndex.Insignia:
-                    obj.Insignia = (String)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -719,11 +588,6 @@ namespace Mutagen.Bethesda.Oblivion
         void Insignia_Set(String value, bool hasBeenSet = true);
         void Insignia_Unset();
 
-        void CopyFieldsFrom(
-            Rank rhs,
-            ErrorMaskBuilder errorMask = null,
-            Rank_CopyMask copyMask = null,
-            Rank def = null);
     }
 
     public partial interface IRankInternal :
@@ -839,6 +703,67 @@ namespace Mutagen.Bethesda.Oblivion
             return ((RankCommon)((IRankInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this Rank lhs,
+            Rank rhs)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null);
+        }
+
+        public static void CopyFieldsFrom(
+            this Rank lhs,
+            Rank rhs,
+            Rank_CopyMask copyMask,
+            Rank def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this Rank lhs,
+            Rank rhs,
+            out Rank_ErrorMask errorMask,
+            Rank_CopyMask copyMask = null,
+            Rank def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            RankSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = Rank_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this Rank lhs,
+            Rank rhs,
+            ErrorMaskBuilder errorMask,
+            Rank_CopyMask copyMask = null,
+            Rank def = null)
+        {
+            RankSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

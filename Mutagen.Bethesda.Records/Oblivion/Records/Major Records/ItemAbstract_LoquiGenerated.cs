@@ -326,101 +326,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static ItemAbstract Copy_ToLoqui(
-            ItemAbstract item,
-            ItemAbstract_CopyMask copyMask = null,
-            ItemAbstract def = null)
+        void IClearable.Clear()
         {
-            ItemAbstract ret = (ItemAbstract)System.Activator.CreateInstance(item.GetType());
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((ItemAbstractSetterCommon)((IItemAbstractInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            ItemAbstract rhs,
-            ItemAbstract_CopyMask copyMask,
-            ItemAbstract def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            ItemAbstract rhs,
-            out ItemAbstract_ErrorMask errorMask,
-            ItemAbstract_CopyMask copyMask = null,
-            ItemAbstract def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            ItemAbstractSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = ItemAbstract_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            ItemAbstract rhs,
-            ErrorMaskBuilder errorMask,
-            ItemAbstract_CopyMask copyMask = null,
-            ItemAbstract def = null)
-        {
-            ItemAbstractSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            ItemAbstract_FieldIndex enu = (ItemAbstract_FieldIndex)index;
-            switch (enu)
-            {
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            ItemAbstractSetterCommon.Instance.Clear(this);
-        }
-
-        protected new static void CopyInInternal_ItemAbstract(ItemAbstract obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out ItemAbstract_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -430,11 +340,6 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecord,
         ILoquiObjectSetter<IItemAbstractInternal>
     {
-        void CopyFieldsFrom(
-            ItemAbstract rhs,
-            ErrorMaskBuilder errorMask = null,
-            ItemAbstract_CopyMask copyMask = null,
-            ItemAbstract def = null);
     }
 
     public partial interface IItemAbstractInternal :
@@ -530,6 +435,54 @@ namespace Mutagen.Bethesda.Oblivion
             return ((ItemAbstractCommon)((IItemAbstractInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this ItemAbstract lhs,
+            ItemAbstract rhs,
+            ItemAbstract_CopyMask copyMask,
+            ItemAbstract def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this ItemAbstract lhs,
+            ItemAbstract rhs,
+            out ItemAbstract_ErrorMask errorMask,
+            ItemAbstract_CopyMask copyMask = null,
+            ItemAbstract def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            ItemAbstractSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = ItemAbstract_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this ItemAbstract lhs,
+            ItemAbstract rhs,
+            ErrorMaskBuilder errorMask,
+            ItemAbstract_CopyMask copyMask = null,
+            ItemAbstract def = null)
+        {
+            ItemAbstractSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

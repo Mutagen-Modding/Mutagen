@@ -596,137 +596,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static LeveledItem Copy_ToLoqui(
-            LeveledItem item,
-            LeveledItem_CopyMask copyMask = null,
-            LeveledItem def = null)
+        void IClearable.Clear()
         {
-            LeveledItem ret;
-            if (item.GetType().Equals(typeof(LeveledItem)))
-            {
-                ret = new LeveledItem() as LeveledItem;
-            }
-            else
-            {
-                ret = (LeveledItem)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((LeveledItemSetterCommon)((ILeveledItemInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            LeveledItem rhs,
-            LeveledItem_CopyMask copyMask,
-            LeveledItem def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            LeveledItem rhs,
-            out LeveledItem_ErrorMask errorMask,
-            LeveledItem_CopyMask copyMask = null,
-            LeveledItem def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            LeveledItemSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = LeveledItem_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            LeveledItem rhs,
-            ErrorMaskBuilder errorMask,
-            LeveledItem_CopyMask copyMask = null,
-            LeveledItem def = null)
-        {
-            LeveledItemSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            LeveledItem_FieldIndex enu = (LeveledItem_FieldIndex)index;
-            switch (enu)
-            {
-                case LeveledItem_FieldIndex.ChanceNone:
-                    this.ChanceNone = (Byte)obj;
-                    break;
-                case LeveledItem_FieldIndex.Flags:
-                    this.Flags = (LeveledFlag)obj;
-                    break;
-                case LeveledItem_FieldIndex.Entries:
-                    this._Entries.SetTo((ISetList<LeveledEntry<ItemAbstract>>)obj);
-                    break;
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            LeveledItemSetterCommon.Instance.Clear(this);
-        }
-
-        public new static LeveledItem Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new LeveledItem();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_LeveledItem(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_LeveledItem(LeveledItem obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out LeveledItem_FieldIndex enu))
-            {
-                CopyInInternal_ItemAbstract(obj, pair);
-            }
-            switch (enu)
-            {
-                case LeveledItem_FieldIndex.ChanceNone:
-                    obj.ChanceNone = (Byte)pair.Value;
-                    break;
-                case LeveledItem_FieldIndex.Flags:
-                    obj.Flags = (LeveledFlag)pair.Value;
-                    break;
-                case LeveledItem_FieldIndex.Entries:
-                    obj._Entries.SetTo((ISetList<LeveledEntry<ItemAbstract>>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -747,11 +621,6 @@ namespace Mutagen.Bethesda.Oblivion
         void Flags_Unset();
 
         new ISetList<LeveledEntry<ItemAbstract>> Entries { get; }
-        void CopyFieldsFrom(
-            LeveledItem rhs,
-            ErrorMaskBuilder errorMask = null,
-            LeveledItem_CopyMask copyMask = null,
-            LeveledItem def = null);
     }
 
     public partial interface ILeveledItemInternal :
@@ -860,6 +729,54 @@ namespace Mutagen.Bethesda.Oblivion
             return ((LeveledItemCommon)((ILeveledItemInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this LeveledItem lhs,
+            LeveledItem rhs,
+            LeveledItem_CopyMask copyMask,
+            LeveledItem def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this LeveledItem lhs,
+            LeveledItem rhs,
+            out LeveledItem_ErrorMask errorMask,
+            LeveledItem_CopyMask copyMask = null,
+            LeveledItem def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            LeveledItemSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = LeveledItem_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this LeveledItem lhs,
+            LeveledItem rhs,
+            ErrorMaskBuilder errorMask,
+            LeveledItem_CopyMask copyMask = null,
+            LeveledItem def = null)
+        {
+            LeveledItemSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

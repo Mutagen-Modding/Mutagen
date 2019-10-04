@@ -425,136 +425,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static RegionSound Copy_ToLoqui(
-            RegionSound item,
-            RegionSound_CopyMask copyMask = null,
-            RegionSound def = null)
+        void IClearable.Clear()
         {
-            RegionSound ret;
-            if (item.GetType().Equals(typeof(RegionSound)))
-            {
-                ret = new RegionSound() as RegionSound;
-            }
-            else
-            {
-                ret = (RegionSound)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((RegionSoundSetterCommon)((IRegionSoundInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public void CopyFieldsFrom(RegionSound rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            RegionSound rhs,
-            RegionSound_CopyMask copyMask,
-            RegionSound def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            RegionSound rhs,
-            out RegionSound_ErrorMask errorMask,
-            RegionSound_CopyMask copyMask = null,
-            RegionSound def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            RegionSoundSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = RegionSound_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            RegionSound rhs,
-            ErrorMaskBuilder errorMask,
-            RegionSound_CopyMask copyMask = null,
-            RegionSound def = null)
-        {
-            RegionSoundSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected void SetNthObject(ushort index, object obj)
-        {
-            RegionSound_FieldIndex enu = (RegionSound_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionSound_FieldIndex.Sound:
-                    this.Sound_Property.Set((IFormIDLink<Sound>)obj);
-                    break;
-                case RegionSound_FieldIndex.Flags:
-                    this.Flags = (RegionSound.Flag)obj;
-                    break;
-                case RegionSound_FieldIndex.Chance:
-                    this.Chance = (Single)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void Clear()
-        {
-            RegionSoundSetterCommon.Instance.Clear(this);
-        }
-
-        public static RegionSound Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new RegionSound();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_RegionSound(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_RegionSound(RegionSound obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out RegionSound_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case RegionSound_FieldIndex.Sound:
-                    obj.Sound_Property.Set((IFormIDLink<Sound>)pair.Value);
-                    break;
-                case RegionSound_FieldIndex.Flags:
-                    obj.Flags = (RegionSound.Flag)pair.Value;
-                    break;
-                case RegionSound_FieldIndex.Chance:
-                    obj.Chance = (Single)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -569,11 +444,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Single Chance { get; set; }
 
-        void CopyFieldsFrom(
-            RegionSound rhs,
-            ErrorMaskBuilder errorMask = null,
-            RegionSound_CopyMask copyMask = null,
-            RegionSound def = null);
     }
 
     public partial interface IRegionSoundInternal :
@@ -684,6 +554,67 @@ namespace Mutagen.Bethesda.Oblivion
             return ((RegionSoundCommon)((IRegionSoundInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this RegionSound lhs,
+            RegionSound rhs)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null);
+        }
+
+        public static void CopyFieldsFrom(
+            this RegionSound lhs,
+            RegionSound rhs,
+            RegionSound_CopyMask copyMask,
+            RegionSound def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this RegionSound lhs,
+            RegionSound rhs,
+            out RegionSound_ErrorMask errorMask,
+            RegionSound_CopyMask copyMask = null,
+            RegionSound def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            RegionSoundSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = RegionSound_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this RegionSound lhs,
+            RegionSound rhs,
+            ErrorMaskBuilder errorMask,
+            RegionSound_CopyMask copyMask = null,
+            RegionSound def = null)
+        {
+            RegionSoundSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

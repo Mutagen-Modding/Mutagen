@@ -413,160 +413,11 @@ namespace Mutagen.Bethesda.Tests
             return ret;
         }
 
-        public static PassthroughSettings Copy_ToLoqui(
-            PassthroughSettings item,
-            PassthroughSettings_CopyMask copyMask = null,
-            PassthroughSettings def = null)
+        void IClearable.Clear()
         {
-            PassthroughSettings ret;
-            if (item.GetType().Equals(typeof(PassthroughSettings)))
-            {
-                ret = new PassthroughSettings() as PassthroughSettings;
-            }
-            else
-            {
-                ret = (PassthroughSettings)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((PassthroughSettingsSetterCommon)((IPassthroughSettingsInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public void CopyFieldsFrom(PassthroughSettings rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            PassthroughSettings rhs,
-            PassthroughSettings_CopyMask copyMask,
-            PassthroughSettings def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            PassthroughSettings rhs,
-            out PassthroughSettings_ErrorMask errorMask,
-            PassthroughSettings_CopyMask copyMask = null,
-            PassthroughSettings def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            PassthroughSettingsSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = PassthroughSettings_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            PassthroughSettings rhs,
-            ErrorMaskBuilder errorMask,
-            PassthroughSettings_CopyMask copyMask = null,
-            PassthroughSettings def = null)
-        {
-            PassthroughSettingsSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected void SetNthObject(ushort index, object obj)
-        {
-            PassthroughSettings_FieldIndex enu = (PassthroughSettings_FieldIndex)index;
-            switch (enu)
-            {
-                case PassthroughSettings_FieldIndex.ReuseCaches:
-                    this.ReuseCaches = (Boolean)obj;
-                    break;
-                case PassthroughSettings_FieldIndex.ReorderRecords:
-                    this.ReorderRecords = (Boolean)obj;
-                    break;
-                case PassthroughSettings_FieldIndex.DeleteCachesAfter:
-                    this.DeleteCachesAfter = (Boolean)obj;
-                    break;
-                case PassthroughSettings_FieldIndex.TestNormal:
-                    this.TestNormal = (Boolean)obj;
-                    break;
-                case PassthroughSettings_FieldIndex.TestBinaryWrapper:
-                    this.TestBinaryWrapper = (Boolean)obj;
-                    break;
-                case PassthroughSettings_FieldIndex.TestImport:
-                    this.TestImport = (Boolean)obj;
-                    break;
-                case PassthroughSettings_FieldIndex.TestFolder:
-                    this.TestFolder = (Boolean)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void Clear()
-        {
-            PassthroughSettingsSetterCommon.Instance.Clear(this);
-        }
-
-        public static PassthroughSettings Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new PassthroughSettings();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_PassthroughSettings(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_PassthroughSettings(PassthroughSettings obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out PassthroughSettings_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case PassthroughSettings_FieldIndex.ReuseCaches:
-                    obj.ReuseCaches = (Boolean)pair.Value;
-                    break;
-                case PassthroughSettings_FieldIndex.ReorderRecords:
-                    obj.ReorderRecords = (Boolean)pair.Value;
-                    break;
-                case PassthroughSettings_FieldIndex.DeleteCachesAfter:
-                    obj.DeleteCachesAfter = (Boolean)pair.Value;
-                    break;
-                case PassthroughSettings_FieldIndex.TestNormal:
-                    obj.TestNormal = (Boolean)pair.Value;
-                    break;
-                case PassthroughSettings_FieldIndex.TestBinaryWrapper:
-                    obj.TestBinaryWrapper = (Boolean)pair.Value;
-                    break;
-                case PassthroughSettings_FieldIndex.TestImport:
-                    obj.TestImport = (Boolean)pair.Value;
-                    break;
-                case PassthroughSettings_FieldIndex.TestFolder:
-                    obj.TestFolder = (Boolean)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -589,11 +440,6 @@ namespace Mutagen.Bethesda.Tests
 
         new Boolean TestFolder { get; set; }
 
-        void CopyFieldsFrom(
-            PassthroughSettings rhs,
-            ErrorMaskBuilder errorMask = null,
-            PassthroughSettings_CopyMask copyMask = null,
-            PassthroughSettings def = null);
     }
 
     public partial interface IPassthroughSettingsInternal :
@@ -716,6 +562,67 @@ namespace Mutagen.Bethesda.Tests
             return ((PassthroughSettingsCommon)((IPassthroughSettingsInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this PassthroughSettings lhs,
+            PassthroughSettings rhs)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null);
+        }
+
+        public static void CopyFieldsFrom(
+            this PassthroughSettings lhs,
+            PassthroughSettings rhs,
+            PassthroughSettings_CopyMask copyMask,
+            PassthroughSettings def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this PassthroughSettings lhs,
+            PassthroughSettings rhs,
+            out PassthroughSettings_ErrorMask errorMask,
+            PassthroughSettings_CopyMask copyMask = null,
+            PassthroughSettings def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            PassthroughSettingsSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = PassthroughSettings_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this PassthroughSettings lhs,
+            PassthroughSettings rhs,
+            ErrorMaskBuilder errorMask,
+            PassthroughSettings_CopyMask copyMask = null,
+            PassthroughSettings def = null)
+        {
+            PassthroughSettingsSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

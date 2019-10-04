@@ -392,130 +392,11 @@ namespace Mutagen.Bethesda.Tests
             return ret;
         }
 
-        public static DataFolderLocations Copy_ToLoqui(
-            DataFolderLocations item,
-            DataFolderLocations_CopyMask copyMask = null,
-            DataFolderLocations def = null)
+        void IClearable.Clear()
         {
-            DataFolderLocations ret;
-            if (item.GetType().Equals(typeof(DataFolderLocations)))
-            {
-                ret = new DataFolderLocations() as DataFolderLocations;
-            }
-            else
-            {
-                ret = (DataFolderLocations)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((DataFolderLocationsSetterCommon)((IDataFolderLocationsInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public void CopyFieldsFrom(DataFolderLocations rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            DataFolderLocations rhs,
-            DataFolderLocations_CopyMask copyMask,
-            DataFolderLocations def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            DataFolderLocations rhs,
-            out DataFolderLocations_ErrorMask errorMask,
-            DataFolderLocations_CopyMask copyMask = null,
-            DataFolderLocations def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            DataFolderLocationsSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = DataFolderLocations_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            DataFolderLocations rhs,
-            ErrorMaskBuilder errorMask,
-            DataFolderLocations_CopyMask copyMask = null,
-            DataFolderLocations def = null)
-        {
-            DataFolderLocationsSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected void SetNthObject(ushort index, object obj)
-        {
-            DataFolderLocations_FieldIndex enu = (DataFolderLocations_FieldIndex)index;
-            switch (enu)
-            {
-                case DataFolderLocations_FieldIndex.Oblivion:
-                    this.Oblivion = (String)obj;
-                    break;
-                case DataFolderLocations_FieldIndex.Skyrim:
-                    this.Skyrim = (String)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void Clear()
-        {
-            DataFolderLocationsSetterCommon.Instance.Clear(this);
-        }
-
-        public static DataFolderLocations Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new DataFolderLocations();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_DataFolderLocations(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_DataFolderLocations(DataFolderLocations obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out DataFolderLocations_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case DataFolderLocations_FieldIndex.Oblivion:
-                    obj.Oblivion = (String)pair.Value;
-                    break;
-                case DataFolderLocations_FieldIndex.Skyrim:
-                    obj.Skyrim = (String)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -528,11 +409,6 @@ namespace Mutagen.Bethesda.Tests
 
         new String Skyrim { get; set; }
 
-        void CopyFieldsFrom(
-            DataFolderLocations rhs,
-            ErrorMaskBuilder errorMask = null,
-            DataFolderLocations_CopyMask copyMask = null,
-            DataFolderLocations def = null);
     }
 
     public partial interface IDataFolderLocationsInternal :
@@ -635,6 +511,67 @@ namespace Mutagen.Bethesda.Tests
             return ((DataFolderLocationsCommon)((IDataFolderLocationsInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this DataFolderLocations lhs,
+            DataFolderLocations rhs)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null);
+        }
+
+        public static void CopyFieldsFrom(
+            this DataFolderLocations lhs,
+            DataFolderLocations rhs,
+            DataFolderLocations_CopyMask copyMask,
+            DataFolderLocations def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this DataFolderLocations lhs,
+            DataFolderLocations rhs,
+            out DataFolderLocations_ErrorMask errorMask,
+            DataFolderLocations_CopyMask copyMask = null,
+            DataFolderLocations def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            DataFolderLocationsSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = DataFolderLocations_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this DataFolderLocations lhs,
+            DataFolderLocations rhs,
+            ErrorMaskBuilder errorMask,
+            DataFolderLocations_CopyMask copyMask = null,
+            DataFolderLocations def = null)
+        {
+            DataFolderLocationsSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

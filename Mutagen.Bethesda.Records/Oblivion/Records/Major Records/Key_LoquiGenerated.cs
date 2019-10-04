@@ -679,161 +679,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static Key Copy_ToLoqui(
-            Key item,
-            Key_CopyMask copyMask = null,
-            Key def = null)
+        void IClearable.Clear()
         {
-            Key ret;
-            if (item.GetType().Equals(typeof(Key)))
-            {
-                ret = new Key() as Key;
-            }
-            else
-            {
-                ret = (Key)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((KeySetterCommon)((IKeyInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            Key rhs,
-            Key_CopyMask copyMask,
-            Key def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            Key rhs,
-            out Key_ErrorMask errorMask,
-            Key_CopyMask copyMask = null,
-            Key def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            KeySetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = Key_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            Key rhs,
-            ErrorMaskBuilder errorMask,
-            Key_CopyMask copyMask = null,
-            Key def = null)
-        {
-            KeySetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            Key_FieldIndex enu = (Key_FieldIndex)index;
-            switch (enu)
-            {
-                case Key_FieldIndex.Name:
-                    this.Name = (String)obj;
-                    break;
-                case Key_FieldIndex.Model:
-                    this.Model = (Model)obj;
-                    break;
-                case Key_FieldIndex.Icon:
-                    this.Icon = (String)obj;
-                    break;
-                case Key_FieldIndex.Script:
-                    this.Script_Property.Set((IFormIDSetLink<Script>)obj);
-                    break;
-                case Key_FieldIndex.Value:
-                    this.Value = (UInt32)obj;
-                    break;
-                case Key_FieldIndex.Weight:
-                    this.Weight = (Single)obj;
-                    break;
-                case Key_FieldIndex.DATADataTypeState:
-                    this.DATADataTypeState = (Key.DATADataType)obj;
-                    break;
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            KeySetterCommon.Instance.Clear(this);
-        }
-
-        public new static Key Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Key();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Key(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_Key(Key obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Key_FieldIndex enu))
-            {
-                CopyInInternal_ItemAbstract(obj, pair);
-            }
-            switch (enu)
-            {
-                case Key_FieldIndex.Name:
-                    obj.Name = (String)pair.Value;
-                    break;
-                case Key_FieldIndex.Model:
-                    obj.Model = (Model)pair.Value;
-                    break;
-                case Key_FieldIndex.Icon:
-                    obj.Icon = (String)pair.Value;
-                    break;
-                case Key_FieldIndex.Script:
-                    obj.Script_Property.Set((IFormIDSetLink<Script>)pair.Value);
-                    break;
-                case Key_FieldIndex.Value:
-                    obj.Value = (UInt32)pair.Value;
-                    break;
-                case Key_FieldIndex.Weight:
-                    obj.Weight = (Single)pair.Value;
-                    break;
-                case Key_FieldIndex.DATADataTypeState:
-                    obj.DATADataTypeState = (Key.DATADataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -864,11 +714,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Single Weight { get; set; }
 
-        void CopyFieldsFrom(
-            Key rhs,
-            ErrorMaskBuilder errorMask = null,
-            Key_CopyMask copyMask = null,
-            Key def = null);
     }
 
     public partial interface IKeyInternal :
@@ -1000,6 +845,54 @@ namespace Mutagen.Bethesda.Oblivion
             return ((KeyCommon)((IKeyInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this Key lhs,
+            Key rhs,
+            Key_CopyMask copyMask,
+            Key def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this Key lhs,
+            Key rhs,
+            out Key_ErrorMask errorMask,
+            Key_CopyMask copyMask = null,
+            Key def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            KeySetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = Key_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this Key lhs,
+            Key rhs,
+            ErrorMaskBuilder errorMask,
+            Key_CopyMask copyMask = null,
+            Key def = null)
+        {
+            KeySetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

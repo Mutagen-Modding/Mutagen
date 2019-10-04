@@ -474,136 +474,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static Model Copy_ToLoqui(
-            Model item,
-            Model_CopyMask copyMask = null,
-            Model def = null)
+        void IClearable.Clear()
         {
-            Model ret;
-            if (item.GetType().Equals(typeof(Model)))
-            {
-                ret = new Model() as Model;
-            }
-            else
-            {
-                ret = (Model)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((ModelSetterCommon)((IModelInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public void CopyFieldsFrom(Model rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            Model rhs,
-            Model_CopyMask copyMask,
-            Model def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            Model rhs,
-            out Model_ErrorMask errorMask,
-            Model_CopyMask copyMask = null,
-            Model def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            ModelSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = Model_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            Model rhs,
-            ErrorMaskBuilder errorMask,
-            Model_CopyMask copyMask = null,
-            Model def = null)
-        {
-            ModelSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected void SetNthObject(ushort index, object obj)
-        {
-            Model_FieldIndex enu = (Model_FieldIndex)index;
-            switch (enu)
-            {
-                case Model_FieldIndex.File:
-                    this.File = (String)obj;
-                    break;
-                case Model_FieldIndex.BoundRadius:
-                    this.BoundRadius = (Single)obj;
-                    break;
-                case Model_FieldIndex.Hashes:
-                    this.Hashes = (Byte[])obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void Clear()
-        {
-            ModelSetterCommon.Instance.Clear(this);
-        }
-
-        public static Model Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Model();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Model(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_Model(Model obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Model_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case Model_FieldIndex.File:
-                    obj.File = (String)pair.Value;
-                    break;
-                case Model_FieldIndex.BoundRadius:
-                    obj.BoundRadius = (Single)pair.Value;
-                    break;
-                case Model_FieldIndex.Hashes:
-                    obj.Hashes = (Byte[])pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -621,11 +496,6 @@ namespace Mutagen.Bethesda.Oblivion
         void Hashes_Set(Byte[] value, bool hasBeenSet = true);
         void Hashes_Unset();
 
-        void CopyFieldsFrom(
-            Model rhs,
-            ErrorMaskBuilder errorMask = null,
-            Model_CopyMask copyMask = null,
-            Model def = null);
     }
 
     public partial interface IModelInternal :
@@ -734,6 +604,67 @@ namespace Mutagen.Bethesda.Oblivion
             return ((ModelCommon)((IModelInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this Model lhs,
+            Model rhs)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null);
+        }
+
+        public static void CopyFieldsFrom(
+            this Model lhs,
+            Model rhs,
+            Model_CopyMask copyMask,
+            Model def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this Model lhs,
+            Model rhs,
+            out Model_ErrorMask errorMask,
+            Model_CopyMask copyMask = null,
+            Model def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            ModelSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = Model_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this Model lhs,
+            Model rhs,
+            ErrorMaskBuilder errorMask,
+            Model_CopyMask copyMask = null,
+            Model def = null)
+        {
+            ModelSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

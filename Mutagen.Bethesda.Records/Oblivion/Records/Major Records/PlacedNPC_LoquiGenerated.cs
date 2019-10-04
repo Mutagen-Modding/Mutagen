@@ -877,191 +877,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static PlacedNPC Copy_ToLoqui(
-            PlacedNPC item,
-            PlacedNPC_CopyMask copyMask = null,
-            PlacedNPC def = null)
+        void IClearable.Clear()
         {
-            PlacedNPC ret;
-            if (item.GetType().Equals(typeof(PlacedNPC)))
-            {
-                ret = new PlacedNPC() as PlacedNPC;
-            }
-            else
-            {
-                ret = (PlacedNPC)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((PlacedNPCSetterCommon)((IPlacedNPCInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            PlacedNPC rhs,
-            PlacedNPC_CopyMask copyMask,
-            PlacedNPC def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            PlacedNPC rhs,
-            out PlacedNPC_ErrorMask errorMask,
-            PlacedNPC_CopyMask copyMask = null,
-            PlacedNPC def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            PlacedNPCSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = PlacedNPC_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            PlacedNPC rhs,
-            ErrorMaskBuilder errorMask,
-            PlacedNPC_CopyMask copyMask = null,
-            PlacedNPC def = null)
-        {
-            PlacedNPCSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            PlacedNPC_FieldIndex enu = (PlacedNPC_FieldIndex)index;
-            switch (enu)
-            {
-                case PlacedNPC_FieldIndex.Base:
-                    this.Base_Property.Set((IFormIDSetLink<NPC>)obj);
-                    break;
-                case PlacedNPC_FieldIndex.XPCIFluff:
-                    this.XPCIFluff = (Byte[])obj;
-                    break;
-                case PlacedNPC_FieldIndex.FULLFluff:
-                    this.FULLFluff = (Byte[])obj;
-                    break;
-                case PlacedNPC_FieldIndex.DistantLODData:
-                    this.DistantLODData = (DistantLODData)obj;
-                    break;
-                case PlacedNPC_FieldIndex.EnableParent:
-                    this.EnableParent = (EnableParent)obj;
-                    break;
-                case PlacedNPC_FieldIndex.MerchantContainer:
-                    this.MerchantContainer_Property.Set((IFormIDSetLink<PlacedObject>)obj);
-                    break;
-                case PlacedNPC_FieldIndex.Horse:
-                    this.Horse_Property.Set((IFormIDSetLink<PlacedCreature>)obj);
-                    break;
-                case PlacedNPC_FieldIndex.RagdollData:
-                    this.RagdollData = (Byte[])obj;
-                    break;
-                case PlacedNPC_FieldIndex.Scale:
-                    this.Scale = (Single)obj;
-                    break;
-                case PlacedNPC_FieldIndex.Position:
-                    this.Position = (P3Float)obj;
-                    break;
-                case PlacedNPC_FieldIndex.Rotation:
-                    this.Rotation = (P3Float)obj;
-                    break;
-                case PlacedNPC_FieldIndex.DATADataTypeState:
-                    this.DATADataTypeState = (PlacedNPC.DATADataType)obj;
-                    break;
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            PlacedNPCSetterCommon.Instance.Clear(this);
-        }
-
-        public new static PlacedNPC Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new PlacedNPC();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_PlacedNPC(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_PlacedNPC(PlacedNPC obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out PlacedNPC_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case PlacedNPC_FieldIndex.Base:
-                    obj.Base_Property.Set((IFormIDSetLink<NPC>)pair.Value);
-                    break;
-                case PlacedNPC_FieldIndex.XPCIFluff:
-                    obj.XPCIFluff = (Byte[])pair.Value;
-                    break;
-                case PlacedNPC_FieldIndex.FULLFluff:
-                    obj.FULLFluff = (Byte[])pair.Value;
-                    break;
-                case PlacedNPC_FieldIndex.DistantLODData:
-                    obj.DistantLODData = (DistantLODData)pair.Value;
-                    break;
-                case PlacedNPC_FieldIndex.EnableParent:
-                    obj.EnableParent = (EnableParent)pair.Value;
-                    break;
-                case PlacedNPC_FieldIndex.MerchantContainer:
-                    obj.MerchantContainer_Property.Set((IFormIDSetLink<PlacedObject>)pair.Value);
-                    break;
-                case PlacedNPC_FieldIndex.Horse:
-                    obj.Horse_Property.Set((IFormIDSetLink<PlacedCreature>)pair.Value);
-                    break;
-                case PlacedNPC_FieldIndex.RagdollData:
-                    obj.RagdollData = (Byte[])pair.Value;
-                    break;
-                case PlacedNPC_FieldIndex.Scale:
-                    obj.Scale = (Single)pair.Value;
-                    break;
-                case PlacedNPC_FieldIndex.Position:
-                    obj.Position = (P3Float)pair.Value;
-                    break;
-                case PlacedNPC_FieldIndex.Rotation:
-                    obj.Rotation = (P3Float)pair.Value;
-                    break;
-                case PlacedNPC_FieldIndex.DATADataTypeState:
-                    obj.DATADataTypeState = (PlacedNPC.DATADataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -1112,11 +932,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         new P3Float Rotation { get; set; }
 
-        void CopyFieldsFrom(
-            PlacedNPC rhs,
-            ErrorMaskBuilder errorMask = null,
-            PlacedNPC_CopyMask copyMask = null,
-            PlacedNPC def = null);
     }
 
     public partial interface IPlacedNPCInternal :
@@ -1278,6 +1093,54 @@ namespace Mutagen.Bethesda.Oblivion
             return ((PlacedNPCCommon)((IPlacedNPCInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this PlacedNPC lhs,
+            PlacedNPC rhs,
+            PlacedNPC_CopyMask copyMask,
+            PlacedNPC def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this PlacedNPC lhs,
+            PlacedNPC rhs,
+            out PlacedNPC_ErrorMask errorMask,
+            PlacedNPC_CopyMask copyMask = null,
+            PlacedNPC def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            PlacedNPCSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = PlacedNPC_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this PlacedNPC lhs,
+            PlacedNPC rhs,
+            ErrorMaskBuilder errorMask,
+            PlacedNPC_CopyMask copyMask = null,
+            PlacedNPC def = null)
+        {
+            PlacedNPCSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

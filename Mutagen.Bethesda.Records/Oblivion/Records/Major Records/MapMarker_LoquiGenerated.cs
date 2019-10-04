@@ -506,136 +506,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static MapMarker Copy_ToLoqui(
-            MapMarker item,
-            MapMarker_CopyMask copyMask = null,
-            MapMarker def = null)
+        void IClearable.Clear()
         {
-            MapMarker ret;
-            if (item.GetType().Equals(typeof(MapMarker)))
-            {
-                ret = new MapMarker() as MapMarker;
-            }
-            else
-            {
-                ret = (MapMarker)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((MapMarkerSetterCommon)((IMapMarkerInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public void CopyFieldsFrom(MapMarker rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            MapMarker rhs,
-            MapMarker_CopyMask copyMask,
-            MapMarker def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            MapMarker rhs,
-            out MapMarker_ErrorMask errorMask,
-            MapMarker_CopyMask copyMask = null,
-            MapMarker def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            MapMarkerSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = MapMarker_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            MapMarker rhs,
-            ErrorMaskBuilder errorMask,
-            MapMarker_CopyMask copyMask = null,
-            MapMarker def = null)
-        {
-            MapMarkerSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected void SetNthObject(ushort index, object obj)
-        {
-            MapMarker_FieldIndex enu = (MapMarker_FieldIndex)index;
-            switch (enu)
-            {
-                case MapMarker_FieldIndex.Flags:
-                    this.Flags = (MapMarker.Flag)obj;
-                    break;
-                case MapMarker_FieldIndex.Name:
-                    this.Name = (String)obj;
-                    break;
-                case MapMarker_FieldIndex.Types:
-                    this._Types.SetTo((ISetList<MapMarker.Type>)obj);
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void Clear()
-        {
-            MapMarkerSetterCommon.Instance.Clear(this);
-        }
-
-        public static MapMarker Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new MapMarker();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_MapMarker(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_MapMarker(MapMarker obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out MapMarker_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case MapMarker_FieldIndex.Flags:
-                    obj.Flags = (MapMarker.Flag)pair.Value;
-                    break;
-                case MapMarker_FieldIndex.Name:
-                    obj.Name = (String)pair.Value;
-                    break;
-                case MapMarker_FieldIndex.Types:
-                    obj._Types.SetTo((ISetList<MapMarker.Type>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -655,11 +530,6 @@ namespace Mutagen.Bethesda.Oblivion
         void Name_Unset();
 
         new ISetList<MapMarker.Type> Types { get; }
-        void CopyFieldsFrom(
-            MapMarker rhs,
-            ErrorMaskBuilder errorMask = null,
-            MapMarker_CopyMask copyMask = null,
-            MapMarker def = null);
     }
 
     public partial interface IMapMarkerInternal :
@@ -768,6 +638,67 @@ namespace Mutagen.Bethesda.Oblivion
             return ((MapMarkerCommon)((IMapMarkerInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this MapMarker lhs,
+            MapMarker rhs)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null);
+        }
+
+        public static void CopyFieldsFrom(
+            this MapMarker lhs,
+            MapMarker rhs,
+            MapMarker_CopyMask copyMask,
+            MapMarker def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this MapMarker lhs,
+            MapMarker rhs,
+            out MapMarker_ErrorMask errorMask,
+            MapMarker_CopyMask copyMask = null,
+            MapMarker def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            MapMarkerSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = MapMarker_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this MapMarker lhs,
+            MapMarker rhs,
+            ErrorMaskBuilder errorMask,
+            MapMarker_CopyMask copyMask = null,
+            MapMarker def = null)
+        {
+            MapMarkerSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

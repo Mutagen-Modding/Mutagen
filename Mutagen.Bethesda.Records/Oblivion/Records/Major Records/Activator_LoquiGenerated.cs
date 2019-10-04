@@ -587,143 +587,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static Activator Copy_ToLoqui(
-            Activator item,
-            Activator_CopyMask copyMask = null,
-            Activator def = null)
+        void IClearable.Clear()
         {
-            Activator ret;
-            if (item.GetType().Equals(typeof(Activator)))
-            {
-                ret = new Activator() as Activator;
-            }
-            else
-            {
-                ret = (Activator)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((ActivatorSetterCommon)((IActivatorInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            Activator rhs,
-            Activator_CopyMask copyMask,
-            Activator def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            Activator rhs,
-            out Activator_ErrorMask errorMask,
-            Activator_CopyMask copyMask = null,
-            Activator def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            ActivatorSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = Activator_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            Activator rhs,
-            ErrorMaskBuilder errorMask,
-            Activator_CopyMask copyMask = null,
-            Activator def = null)
-        {
-            ActivatorSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            Activator_FieldIndex enu = (Activator_FieldIndex)index;
-            switch (enu)
-            {
-                case Activator_FieldIndex.Name:
-                    this.Name = (String)obj;
-                    break;
-                case Activator_FieldIndex.Model:
-                    this.Model = (Model)obj;
-                    break;
-                case Activator_FieldIndex.Script:
-                    this.Script_Property.Set((IFormIDSetLink<Script>)obj);
-                    break;
-                case Activator_FieldIndex.Sound:
-                    this.Sound_Property.Set((IFormIDSetLink<Sound>)obj);
-                    break;
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            ActivatorSetterCommon.Instance.Clear(this);
-        }
-
-        public new static Activator Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Activator();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Activator(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_Activator(Activator obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Activator_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case Activator_FieldIndex.Name:
-                    obj.Name = (String)pair.Value;
-                    break;
-                case Activator_FieldIndex.Model:
-                    obj.Model = (Model)pair.Value;
-                    break;
-                case Activator_FieldIndex.Script:
-                    obj.Script_Property.Set((IFormIDSetLink<Script>)pair.Value);
-                    break;
-                case Activator_FieldIndex.Sound:
-                    obj.Sound_Property.Set((IFormIDSetLink<Sound>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -747,11 +615,6 @@ namespace Mutagen.Bethesda.Oblivion
         new IFormIDSetLink<Script> Script_Property { get; }
         new Sound Sound { get; set; }
         new IFormIDSetLink<Sound> Sound_Property { get; }
-        void CopyFieldsFrom(
-            Activator rhs,
-            ErrorMaskBuilder errorMask = null,
-            Activator_CopyMask copyMask = null,
-            Activator def = null);
     }
 
     public partial interface IActivatorInternal :
@@ -871,6 +734,54 @@ namespace Mutagen.Bethesda.Oblivion
             return ((ActivatorCommon)((IActivatorInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this Activator lhs,
+            Activator rhs,
+            Activator_CopyMask copyMask,
+            Activator def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this Activator lhs,
+            Activator rhs,
+            out Activator_ErrorMask errorMask,
+            Activator_CopyMask copyMask = null,
+            Activator def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            ActivatorSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = Activator_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this Activator lhs,
+            Activator rhs,
+            ErrorMaskBuilder errorMask,
+            Activator_CopyMask copyMask = null,
+            Activator def = null)
+        {
+            ActivatorSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

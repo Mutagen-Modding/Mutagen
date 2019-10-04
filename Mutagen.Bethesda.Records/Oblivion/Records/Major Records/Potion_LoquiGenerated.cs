@@ -765,173 +765,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static Potion Copy_ToLoqui(
-            Potion item,
-            Potion_CopyMask copyMask = null,
-            Potion def = null)
+        void IClearable.Clear()
         {
-            Potion ret;
-            if (item.GetType().Equals(typeof(Potion)))
-            {
-                ret = new Potion() as Potion;
-            }
-            else
-            {
-                ret = (Potion)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((PotionSetterCommon)((IPotionInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            Potion rhs,
-            Potion_CopyMask copyMask,
-            Potion def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            Potion rhs,
-            out Potion_ErrorMask errorMask,
-            Potion_CopyMask copyMask = null,
-            Potion def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            PotionSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = Potion_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            Potion rhs,
-            ErrorMaskBuilder errorMask,
-            Potion_CopyMask copyMask = null,
-            Potion def = null)
-        {
-            PotionSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            Potion_FieldIndex enu = (Potion_FieldIndex)index;
-            switch (enu)
-            {
-                case Potion_FieldIndex.Name:
-                    this.Name = (String)obj;
-                    break;
-                case Potion_FieldIndex.Model:
-                    this.Model = (Model)obj;
-                    break;
-                case Potion_FieldIndex.Icon:
-                    this.Icon = (String)obj;
-                    break;
-                case Potion_FieldIndex.Script:
-                    this.Script_Property.Set((IFormIDSetLink<Script>)obj);
-                    break;
-                case Potion_FieldIndex.Weight:
-                    this.Weight = (Single)obj;
-                    break;
-                case Potion_FieldIndex.Value:
-                    this.Value = (UInt32)obj;
-                    break;
-                case Potion_FieldIndex.Flags:
-                    this.Flags = (IngredientFlag)obj;
-                    break;
-                case Potion_FieldIndex.Effects:
-                    this._Effects.SetTo((ISetList<Effect>)obj);
-                    break;
-                case Potion_FieldIndex.ENITDataTypeState:
-                    this.ENITDataTypeState = (Potion.ENITDataType)obj;
-                    break;
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            PotionSetterCommon.Instance.Clear(this);
-        }
-
-        public new static Potion Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Potion();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Potion(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_Potion(Potion obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Potion_FieldIndex enu))
-            {
-                CopyInInternal_ItemAbstract(obj, pair);
-            }
-            switch (enu)
-            {
-                case Potion_FieldIndex.Name:
-                    obj.Name = (String)pair.Value;
-                    break;
-                case Potion_FieldIndex.Model:
-                    obj.Model = (Model)pair.Value;
-                    break;
-                case Potion_FieldIndex.Icon:
-                    obj.Icon = (String)pair.Value;
-                    break;
-                case Potion_FieldIndex.Script:
-                    obj.Script_Property.Set((IFormIDSetLink<Script>)pair.Value);
-                    break;
-                case Potion_FieldIndex.Weight:
-                    obj.Weight = (Single)pair.Value;
-                    break;
-                case Potion_FieldIndex.Value:
-                    obj.Value = (UInt32)pair.Value;
-                    break;
-                case Potion_FieldIndex.Flags:
-                    obj.Flags = (IngredientFlag)pair.Value;
-                    break;
-                case Potion_FieldIndex.Effects:
-                    obj._Effects.SetTo((ISetList<Effect>)pair.Value);
-                    break;
-                case Potion_FieldIndex.ENITDataTypeState:
-                    obj.ENITDataTypeState = (Potion.ENITDataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -968,11 +806,6 @@ namespace Mutagen.Bethesda.Oblivion
         new IngredientFlag Flags { get; set; }
 
         new ISetList<Effect> Effects { get; }
-        void CopyFieldsFrom(
-            Potion rhs,
-            ErrorMaskBuilder errorMask = null,
-            Potion_CopyMask copyMask = null,
-            Potion def = null);
     }
 
     public partial interface IPotionInternal :
@@ -1112,6 +945,54 @@ namespace Mutagen.Bethesda.Oblivion
             return ((PotionCommon)((IPotionInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this Potion lhs,
+            Potion rhs,
+            Potion_CopyMask copyMask,
+            Potion def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this Potion lhs,
+            Potion rhs,
+            out Potion_ErrorMask errorMask,
+            Potion_CopyMask copyMask = null,
+            Potion def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            PotionSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = Potion_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this Potion lhs,
+            Potion rhs,
+            ErrorMaskBuilder errorMask,
+            Potion_CopyMask copyMask = null,
+            Potion def = null)
+        {
+            PotionSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

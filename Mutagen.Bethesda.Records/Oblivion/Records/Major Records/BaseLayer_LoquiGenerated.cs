@@ -530,142 +530,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static BaseLayer Copy_ToLoqui(
-            BaseLayer item,
-            BaseLayer_CopyMask copyMask = null,
-            BaseLayer def = null)
+        void IClearable.Clear()
         {
-            BaseLayer ret;
-            if (item.GetType().Equals(typeof(BaseLayer)))
-            {
-                ret = new BaseLayer() as BaseLayer;
-            }
-            else
-            {
-                ret = (BaseLayer)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((BaseLayerSetterCommon)((IBaseLayerInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public virtual void CopyFieldsFrom(BaseLayer rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            BaseLayer rhs,
-            BaseLayer_CopyMask copyMask,
-            BaseLayer def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            BaseLayer rhs,
-            out BaseLayer_ErrorMask errorMask,
-            BaseLayer_CopyMask copyMask = null,
-            BaseLayer def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            BaseLayerSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = BaseLayer_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            BaseLayer rhs,
-            ErrorMaskBuilder errorMask,
-            BaseLayer_CopyMask copyMask = null,
-            BaseLayer def = null)
-        {
-            BaseLayerSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected virtual void SetNthObject(ushort index, object obj)
-        {
-            BaseLayer_FieldIndex enu = (BaseLayer_FieldIndex)index;
-            switch (enu)
-            {
-                case BaseLayer_FieldIndex.Texture:
-                    this.Texture_Property.Set((IFormIDLink<LandTexture>)obj);
-                    break;
-                case BaseLayer_FieldIndex.Quadrant:
-                    this.Quadrant = (AlphaLayer.QuadrantEnum)obj;
-                    break;
-                case BaseLayer_FieldIndex.LayerNumber:
-                    this.LayerNumber = (UInt16)obj;
-                    break;
-                case BaseLayer_FieldIndex.BTXTDataTypeState:
-                    this.BTXTDataTypeState = (BaseLayer.BTXTDataType)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public virtual void Clear()
-        {
-            BaseLayerSetterCommon.Instance.Clear(this);
-        }
-
-        public static BaseLayer Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new BaseLayer();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_BaseLayer(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_BaseLayer(BaseLayer obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out BaseLayer_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case BaseLayer_FieldIndex.Texture:
-                    obj.Texture_Property.Set((IFormIDLink<LandTexture>)pair.Value);
-                    break;
-                case BaseLayer_FieldIndex.Quadrant:
-                    obj.Quadrant = (AlphaLayer.QuadrantEnum)pair.Value;
-                    break;
-                case BaseLayer_FieldIndex.LayerNumber:
-                    obj.LayerNumber = (UInt16)pair.Value;
-                    break;
-                case BaseLayer_FieldIndex.BTXTDataTypeState:
-                    obj.BTXTDataTypeState = (BaseLayer.BTXTDataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -678,11 +547,6 @@ namespace Mutagen.Bethesda.Oblivion
         new IFormIDLink<LandTexture> Texture_Property { get; }
         new AlphaLayer.QuadrantEnum Quadrant { get; set; }
 
-        void CopyFieldsFrom(
-            BaseLayer rhs,
-            ErrorMaskBuilder errorMask = null,
-            BaseLayer_CopyMask copyMask = null,
-            BaseLayer def = null);
     }
 
     public partial interface IBaseLayerInternal :
@@ -799,6 +663,67 @@ namespace Mutagen.Bethesda.Oblivion
             return ((BaseLayerCommon)((IBaseLayerInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this BaseLayer lhs,
+            BaseLayer rhs)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null);
+        }
+
+        public static void CopyFieldsFrom(
+            this BaseLayer lhs,
+            BaseLayer rhs,
+            BaseLayer_CopyMask copyMask,
+            BaseLayer def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this BaseLayer lhs,
+            BaseLayer rhs,
+            out BaseLayer_ErrorMask errorMask,
+            BaseLayer_CopyMask copyMask = null,
+            BaseLayer def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            BaseLayerSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = BaseLayer_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this BaseLayer lhs,
+            BaseLayer rhs,
+            ErrorMaskBuilder errorMask,
+            BaseLayer_CopyMask copyMask = null,
+            BaseLayer def = null)
+        {
+            BaseLayerSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

@@ -765,173 +765,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static SoulGem Copy_ToLoqui(
-            SoulGem item,
-            SoulGem_CopyMask copyMask = null,
-            SoulGem def = null)
+        void IClearable.Clear()
         {
-            SoulGem ret;
-            if (item.GetType().Equals(typeof(SoulGem)))
-            {
-                ret = new SoulGem() as SoulGem;
-            }
-            else
-            {
-                ret = (SoulGem)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((SoulGemSetterCommon)((ISoulGemInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            SoulGem rhs,
-            SoulGem_CopyMask copyMask,
-            SoulGem def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            SoulGem rhs,
-            out SoulGem_ErrorMask errorMask,
-            SoulGem_CopyMask copyMask = null,
-            SoulGem def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            SoulGemSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = SoulGem_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            SoulGem rhs,
-            ErrorMaskBuilder errorMask,
-            SoulGem_CopyMask copyMask = null,
-            SoulGem def = null)
-        {
-            SoulGemSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            SoulGem_FieldIndex enu = (SoulGem_FieldIndex)index;
-            switch (enu)
-            {
-                case SoulGem_FieldIndex.Name:
-                    this.Name = (String)obj;
-                    break;
-                case SoulGem_FieldIndex.Model:
-                    this.Model = (Model)obj;
-                    break;
-                case SoulGem_FieldIndex.Icon:
-                    this.Icon = (String)obj;
-                    break;
-                case SoulGem_FieldIndex.Script:
-                    this.Script_Property.Set((IFormIDSetLink<Script>)obj);
-                    break;
-                case SoulGem_FieldIndex.Value:
-                    this.Value = (UInt32)obj;
-                    break;
-                case SoulGem_FieldIndex.Weight:
-                    this.Weight = (Single)obj;
-                    break;
-                case SoulGem_FieldIndex.ContainedSoul:
-                    this.ContainedSoul = (SoulLevel)obj;
-                    break;
-                case SoulGem_FieldIndex.MaximumCapacity:
-                    this.MaximumCapacity = (SoulLevel)obj;
-                    break;
-                case SoulGem_FieldIndex.DATADataTypeState:
-                    this.DATADataTypeState = (SoulGem.DATADataType)obj;
-                    break;
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            SoulGemSetterCommon.Instance.Clear(this);
-        }
-
-        public new static SoulGem Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new SoulGem();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_SoulGem(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_SoulGem(SoulGem obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out SoulGem_FieldIndex enu))
-            {
-                CopyInInternal_ItemAbstract(obj, pair);
-            }
-            switch (enu)
-            {
-                case SoulGem_FieldIndex.Name:
-                    obj.Name = (String)pair.Value;
-                    break;
-                case SoulGem_FieldIndex.Model:
-                    obj.Model = (Model)pair.Value;
-                    break;
-                case SoulGem_FieldIndex.Icon:
-                    obj.Icon = (String)pair.Value;
-                    break;
-                case SoulGem_FieldIndex.Script:
-                    obj.Script_Property.Set((IFormIDSetLink<Script>)pair.Value);
-                    break;
-                case SoulGem_FieldIndex.Value:
-                    obj.Value = (UInt32)pair.Value;
-                    break;
-                case SoulGem_FieldIndex.Weight:
-                    obj.Weight = (Single)pair.Value;
-                    break;
-                case SoulGem_FieldIndex.ContainedSoul:
-                    obj.ContainedSoul = (SoulLevel)pair.Value;
-                    break;
-                case SoulGem_FieldIndex.MaximumCapacity:
-                    obj.MaximumCapacity = (SoulLevel)pair.Value;
-                    break;
-                case SoulGem_FieldIndex.DATADataTypeState:
-                    obj.DATADataTypeState = (SoulGem.DATADataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -972,11 +810,6 @@ namespace Mutagen.Bethesda.Oblivion
         void MaximumCapacity_Set(SoulLevel value, bool hasBeenSet = true);
         void MaximumCapacity_Unset();
 
-        void CopyFieldsFrom(
-            SoulGem rhs,
-            ErrorMaskBuilder errorMask = null,
-            SoulGem_CopyMask copyMask = null,
-            SoulGem def = null);
     }
 
     public partial interface ISoulGemInternal :
@@ -1118,6 +951,54 @@ namespace Mutagen.Bethesda.Oblivion
             return ((SoulGemCommon)((ISoulGemInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this SoulGem lhs,
+            SoulGem rhs,
+            SoulGem_CopyMask copyMask,
+            SoulGem def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this SoulGem lhs,
+            SoulGem rhs,
+            out SoulGem_ErrorMask errorMask,
+            SoulGem_CopyMask copyMask = null,
+            SoulGem def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            SoulGemSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = SoulGem_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this SoulGem lhs,
+            SoulGem rhs,
+            ErrorMaskBuilder errorMask,
+            SoulGem_CopyMask copyMask = null,
+            SoulGem def = null)
+        {
+            SoulGemSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

@@ -326,101 +326,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static NPCAbstract Copy_ToLoqui(
-            NPCAbstract item,
-            NPCAbstract_CopyMask copyMask = null,
-            NPCAbstract def = null)
+        void IClearable.Clear()
         {
-            NPCAbstract ret = (NPCAbstract)System.Activator.CreateInstance(item.GetType());
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((NPCAbstractSetterCommon)((INPCAbstractInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            NPCAbstract rhs,
-            NPCAbstract_CopyMask copyMask,
-            NPCAbstract def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            NPCAbstract rhs,
-            out NPCAbstract_ErrorMask errorMask,
-            NPCAbstract_CopyMask copyMask = null,
-            NPCAbstract def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            NPCAbstractSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = NPCAbstract_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            NPCAbstract rhs,
-            ErrorMaskBuilder errorMask,
-            NPCAbstract_CopyMask copyMask = null,
-            NPCAbstract def = null)
-        {
-            NPCAbstractSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            NPCAbstract_FieldIndex enu = (NPCAbstract_FieldIndex)index;
-            switch (enu)
-            {
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            NPCAbstractSetterCommon.Instance.Clear(this);
-        }
-
-        protected new static void CopyInInternal_NPCAbstract(NPCAbstract obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out NPCAbstract_FieldIndex enu))
-            {
-                CopyInInternal_NPCSpawn(obj, pair);
-            }
-            switch (enu)
-            {
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -430,11 +340,6 @@ namespace Mutagen.Bethesda.Oblivion
         INPCSpawn,
         ILoquiObjectSetter<INPCAbstractInternal>
     {
-        void CopyFieldsFrom(
-            NPCAbstract rhs,
-            ErrorMaskBuilder errorMask = null,
-            NPCAbstract_CopyMask copyMask = null,
-            NPCAbstract def = null);
     }
 
     public partial interface INPCAbstractInternal :
@@ -530,6 +435,54 @@ namespace Mutagen.Bethesda.Oblivion
             return ((NPCAbstractCommon)((INPCAbstractInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this NPCAbstract lhs,
+            NPCAbstract rhs,
+            NPCAbstract_CopyMask copyMask,
+            NPCAbstract def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this NPCAbstract lhs,
+            NPCAbstract rhs,
+            out NPCAbstract_ErrorMask errorMask,
+            NPCAbstract_CopyMask copyMask = null,
+            NPCAbstract def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            NPCAbstractSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = NPCAbstract_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this NPCAbstract lhs,
+            NPCAbstract rhs,
+            ErrorMaskBuilder errorMask,
+            NPCAbstract_CopyMask copyMask = null,
+            NPCAbstract def = null)
+        {
+            NPCAbstractSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

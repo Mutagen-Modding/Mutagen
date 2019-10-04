@@ -522,125 +522,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static Script Copy_ToLoqui(
-            Script item,
-            Script_CopyMask copyMask = null,
-            Script def = null)
+        void IClearable.Clear()
         {
-            Script ret;
-            if (item.GetType().Equals(typeof(Script)))
-            {
-                ret = new Script() as Script;
-            }
-            else
-            {
-                ret = (Script)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((ScriptSetterCommon)((IScriptInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            Script rhs,
-            Script_CopyMask copyMask,
-            Script def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            Script rhs,
-            out Script_ErrorMask errorMask,
-            Script_CopyMask copyMask = null,
-            Script def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            ScriptSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = Script_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            Script rhs,
-            ErrorMaskBuilder errorMask,
-            Script_CopyMask copyMask = null,
-            Script def = null)
-        {
-            ScriptSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            Script_FieldIndex enu = (Script_FieldIndex)index;
-            switch (enu)
-            {
-                case Script_FieldIndex.Fields:
-                    this.Fields.CopyFieldsFrom(rhs: (ScriptFields)obj);
-                    break;
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            ScriptSetterCommon.Instance.Clear(this);
-        }
-
-        public new static Script Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Script();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Script(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_Script(Script obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Script_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case Script_FieldIndex.Fields:
-                    obj.Fields.CopyFieldsFrom(rhs: (ScriptFields)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -651,11 +537,6 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IScriptInternal>
     {
         new ScriptFields Fields { get; }
-        void CopyFieldsFrom(
-            Script rhs,
-            ErrorMaskBuilder errorMask = null,
-            Script_CopyMask copyMask = null,
-            Script def = null);
     }
 
     public partial interface IScriptInternal :
@@ -757,6 +638,54 @@ namespace Mutagen.Bethesda.Oblivion
             return ((ScriptCommon)((IScriptInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this Script lhs,
+            Script rhs,
+            Script_CopyMask copyMask,
+            Script def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this Script lhs,
+            Script rhs,
+            out Script_ErrorMask errorMask,
+            Script_CopyMask copyMask = null,
+            Script def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            ScriptSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = Script_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this Script lhs,
+            Script rhs,
+            ErrorMaskBuilder errorMask,
+            Script_CopyMask copyMask = null,
+            Script def = null)
+        {
+            ScriptSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

@@ -401,130 +401,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static WeatherChance Copy_ToLoqui(
-            WeatherChance item,
-            WeatherChance_CopyMask copyMask = null,
-            WeatherChance def = null)
+        void IClearable.Clear()
         {
-            WeatherChance ret;
-            if (item.GetType().Equals(typeof(WeatherChance)))
-            {
-                ret = new WeatherChance() as WeatherChance;
-            }
-            else
-            {
-                ret = (WeatherChance)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((WeatherChanceSetterCommon)((IWeatherChanceInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public void CopyFieldsFrom(WeatherChance rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            WeatherChance rhs,
-            WeatherChance_CopyMask copyMask,
-            WeatherChance def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            WeatherChance rhs,
-            out WeatherChance_ErrorMask errorMask,
-            WeatherChance_CopyMask copyMask = null,
-            WeatherChance def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            WeatherChanceSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = WeatherChance_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            WeatherChance rhs,
-            ErrorMaskBuilder errorMask,
-            WeatherChance_CopyMask copyMask = null,
-            WeatherChance def = null)
-        {
-            WeatherChanceSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected void SetNthObject(ushort index, object obj)
-        {
-            WeatherChance_FieldIndex enu = (WeatherChance_FieldIndex)index;
-            switch (enu)
-            {
-                case WeatherChance_FieldIndex.Weather:
-                    this.Weather_Property.Set((IFormIDLink<Weather>)obj);
-                    break;
-                case WeatherChance_FieldIndex.Chance:
-                    this.Chance = (Int32)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void Clear()
-        {
-            WeatherChanceSetterCommon.Instance.Clear(this);
-        }
-
-        public static WeatherChance Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new WeatherChance();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_WeatherChance(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_WeatherChance(WeatherChance obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out WeatherChance_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case WeatherChance_FieldIndex.Weather:
-                    obj.Weather_Property.Set((IFormIDLink<Weather>)pair.Value);
-                    break;
-                case WeatherChance_FieldIndex.Chance:
-                    obj.Chance = (Int32)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -537,11 +418,6 @@ namespace Mutagen.Bethesda.Oblivion
         new IFormIDLink<Weather> Weather_Property { get; }
         new Int32 Chance { get; set; }
 
-        void CopyFieldsFrom(
-            WeatherChance rhs,
-            ErrorMaskBuilder errorMask = null,
-            WeatherChance_CopyMask copyMask = null,
-            WeatherChance def = null);
     }
 
     public partial interface IWeatherChanceInternal :
@@ -648,6 +524,67 @@ namespace Mutagen.Bethesda.Oblivion
             return ((WeatherChanceCommon)((IWeatherChanceInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this WeatherChance lhs,
+            WeatherChance rhs)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null);
+        }
+
+        public static void CopyFieldsFrom(
+            this WeatherChance lhs,
+            WeatherChance rhs,
+            WeatherChance_CopyMask copyMask,
+            WeatherChance def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this WeatherChance lhs,
+            WeatherChance rhs,
+            out WeatherChance_ErrorMask errorMask,
+            WeatherChance_CopyMask copyMask = null,
+            WeatherChance def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            WeatherChanceSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = WeatherChance_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this WeatherChance lhs,
+            WeatherChance rhs,
+            ErrorMaskBuilder errorMask,
+            WeatherChance_CopyMask copyMask = null,
+            WeatherChance def = null)
+        {
+            WeatherChanceSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

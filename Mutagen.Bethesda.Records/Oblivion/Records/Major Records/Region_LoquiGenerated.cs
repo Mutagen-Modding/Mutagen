@@ -790,173 +790,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static Region Copy_ToLoqui(
-            Region item,
-            Region_CopyMask copyMask = null,
-            Region def = null)
+        void IClearable.Clear()
         {
-            Region ret;
-            if (item.GetType().Equals(typeof(Region)))
-            {
-                ret = new Region() as Region;
-            }
-            else
-            {
-                ret = (Region)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((RegionSetterCommon)((IRegionInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            Region rhs,
-            Region_CopyMask copyMask,
-            Region def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            Region rhs,
-            out Region_ErrorMask errorMask,
-            Region_CopyMask copyMask = null,
-            Region def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            RegionSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = Region_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            Region rhs,
-            ErrorMaskBuilder errorMask,
-            Region_CopyMask copyMask = null,
-            Region def = null)
-        {
-            RegionSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            Region_FieldIndex enu = (Region_FieldIndex)index;
-            switch (enu)
-            {
-                case Region_FieldIndex.Icon:
-                    this.Icon = (String)obj;
-                    break;
-                case Region_FieldIndex.MapColor:
-                    this.MapColor = (Color)obj;
-                    break;
-                case Region_FieldIndex.Worldspace:
-                    this.Worldspace_Property.Set((IFormIDSetLink<Worldspace>)obj);
-                    break;
-                case Region_FieldIndex.Areas:
-                    this._Areas.SetTo((ISetList<RegionArea>)obj);
-                    break;
-                case Region_FieldIndex.Objects:
-                    this.Objects = (RegionDataObjects)obj;
-                    break;
-                case Region_FieldIndex.Weather:
-                    this.Weather = (RegionDataWeather)obj;
-                    break;
-                case Region_FieldIndex.MapName:
-                    this.MapName = (RegionDataMapName)obj;
-                    break;
-                case Region_FieldIndex.Grasses:
-                    this.Grasses = (RegionDataGrasses)obj;
-                    break;
-                case Region_FieldIndex.Sounds:
-                    this.Sounds = (RegionDataSounds)obj;
-                    break;
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            RegionSetterCommon.Instance.Clear(this);
-        }
-
-        public new static Region Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Region();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Region(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_Region(Region obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Region_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case Region_FieldIndex.Icon:
-                    obj.Icon = (String)pair.Value;
-                    break;
-                case Region_FieldIndex.MapColor:
-                    obj.MapColor = (Color)pair.Value;
-                    break;
-                case Region_FieldIndex.Worldspace:
-                    obj.Worldspace_Property.Set((IFormIDSetLink<Worldspace>)pair.Value);
-                    break;
-                case Region_FieldIndex.Areas:
-                    obj._Areas.SetTo((ISetList<RegionArea>)pair.Value);
-                    break;
-                case Region_FieldIndex.Objects:
-                    obj.Objects = (RegionDataObjects)pair.Value;
-                    break;
-                case Region_FieldIndex.Weather:
-                    obj.Weather = (RegionDataWeather)pair.Value;
-                    break;
-                case Region_FieldIndex.MapName:
-                    obj.MapName = (RegionDataMapName)pair.Value;
-                    break;
-                case Region_FieldIndex.Grasses:
-                    obj.Grasses = (RegionDataGrasses)pair.Value;
-                    break;
-                case Region_FieldIndex.Sounds:
-                    obj.Sounds = (RegionDataSounds)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -1004,11 +842,6 @@ namespace Mutagen.Bethesda.Oblivion
         void Sounds_Set(RegionDataSounds value, bool hasBeenSet = true);
         void Sounds_Unset();
 
-        void CopyFieldsFrom(
-            Region rhs,
-            ErrorMaskBuilder errorMask = null,
-            Region_CopyMask copyMask = null,
-            Region def = null);
     }
 
     public partial interface IRegionInternal :
@@ -1149,6 +982,54 @@ namespace Mutagen.Bethesda.Oblivion
             return ((RegionCommon)((IRegionInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this Region lhs,
+            Region rhs,
+            Region_CopyMask copyMask,
+            Region def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this Region lhs,
+            Region rhs,
+            out Region_ErrorMask errorMask,
+            Region_CopyMask copyMask = null,
+            Region def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            RegionSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = Region_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this Region lhs,
+            Region rhs,
+            ErrorMaskBuilder errorMask,
+            Region_CopyMask copyMask = null,
+            Region def = null)
+        {
+            RegionSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

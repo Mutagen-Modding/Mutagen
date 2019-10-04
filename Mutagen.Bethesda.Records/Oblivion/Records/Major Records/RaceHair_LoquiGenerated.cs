@@ -401,130 +401,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static RaceHair Copy_ToLoqui(
-            RaceHair item,
-            RaceHair_CopyMask copyMask = null,
-            RaceHair def = null)
+        void IClearable.Clear()
         {
-            RaceHair ret;
-            if (item.GetType().Equals(typeof(RaceHair)))
-            {
-                ret = new RaceHair() as RaceHair;
-            }
-            else
-            {
-                ret = (RaceHair)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((RaceHairSetterCommon)((IRaceHairInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public void CopyFieldsFrom(RaceHair rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            RaceHair rhs,
-            RaceHair_CopyMask copyMask,
-            RaceHair def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            RaceHair rhs,
-            out RaceHair_ErrorMask errorMask,
-            RaceHair_CopyMask copyMask = null,
-            RaceHair def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            RaceHairSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = RaceHair_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            RaceHair rhs,
-            ErrorMaskBuilder errorMask,
-            RaceHair_CopyMask copyMask = null,
-            RaceHair def = null)
-        {
-            RaceHairSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected void SetNthObject(ushort index, object obj)
-        {
-            RaceHair_FieldIndex enu = (RaceHair_FieldIndex)index;
-            switch (enu)
-            {
-                case RaceHair_FieldIndex.Male:
-                    this.Male_Property.Set((IFormIDLink<Hair>)obj);
-                    break;
-                case RaceHair_FieldIndex.Female:
-                    this.Female_Property.Set((IFormIDLink<Hair>)obj);
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void Clear()
-        {
-            RaceHairSetterCommon.Instance.Clear(this);
-        }
-
-        public static RaceHair Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new RaceHair();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_RaceHair(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_RaceHair(RaceHair obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out RaceHair_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case RaceHair_FieldIndex.Male:
-                    obj.Male_Property.Set((IFormIDLink<Hair>)pair.Value);
-                    break;
-                case RaceHair_FieldIndex.Female:
-                    obj.Female_Property.Set((IFormIDLink<Hair>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -537,11 +418,6 @@ namespace Mutagen.Bethesda.Oblivion
         new IFormIDLink<Hair> Male_Property { get; }
         new Hair Female { get; set; }
         new IFormIDLink<Hair> Female_Property { get; }
-        void CopyFieldsFrom(
-            RaceHair rhs,
-            ErrorMaskBuilder errorMask = null,
-            RaceHair_CopyMask copyMask = null,
-            RaceHair def = null);
     }
 
     public partial interface IRaceHairInternal :
@@ -651,6 +527,67 @@ namespace Mutagen.Bethesda.Oblivion
             return ((RaceHairCommon)((IRaceHairInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this RaceHair lhs,
+            RaceHair rhs)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null);
+        }
+
+        public static void CopyFieldsFrom(
+            this RaceHair lhs,
+            RaceHair rhs,
+            RaceHair_CopyMask copyMask,
+            RaceHair def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this RaceHair lhs,
+            RaceHair rhs,
+            out RaceHair_ErrorMask errorMask,
+            RaceHair_CopyMask copyMask = null,
+            RaceHair def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            RaceHairSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = RaceHair_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this RaceHair lhs,
+            RaceHair rhs,
+            ErrorMaskBuilder errorMask,
+            RaceHair_CopyMask copyMask = null,
+            RaceHair def = null)
+        {
+            RaceHairSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

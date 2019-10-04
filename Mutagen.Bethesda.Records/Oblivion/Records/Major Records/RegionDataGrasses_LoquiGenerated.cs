@@ -463,125 +463,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static RegionDataGrasses Copy_ToLoqui(
-            RegionDataGrasses item,
-            RegionDataGrasses_CopyMask copyMask = null,
-            RegionDataGrasses def = null)
+        void IClearable.Clear()
         {
-            RegionDataGrasses ret;
-            if (item.GetType().Equals(typeof(RegionDataGrasses)))
-            {
-                ret = new RegionDataGrasses() as RegionDataGrasses;
-            }
-            else
-            {
-                ret = (RegionDataGrasses)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((RegionDataGrassesSetterCommon)((IRegionDataGrassesInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(RegionData rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            RegionDataGrasses rhs,
-            RegionDataGrasses_CopyMask copyMask,
-            RegionDataGrasses def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            RegionDataGrasses rhs,
-            out RegionDataGrasses_ErrorMask errorMask,
-            RegionDataGrasses_CopyMask copyMask = null,
-            RegionDataGrasses def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            RegionDataGrassesSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = RegionDataGrasses_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            RegionDataGrasses rhs,
-            ErrorMaskBuilder errorMask,
-            RegionDataGrasses_CopyMask copyMask = null,
-            RegionDataGrasses def = null)
-        {
-            RegionDataGrassesSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            RegionDataGrasses_FieldIndex enu = (RegionDataGrasses_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionDataGrasses_FieldIndex.Grasses:
-                    this._Grasses.SetTo((ISetList<IFormIDLink<Grass>>)obj);
-                    break;
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            RegionDataGrassesSetterCommon.Instance.Clear(this);
-        }
-
-        public new static RegionDataGrasses Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new RegionDataGrasses();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_RegionDataGrasses(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_RegionDataGrasses(RegionDataGrasses obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out RegionDataGrasses_FieldIndex enu))
-            {
-                CopyInInternal_RegionData(obj, pair);
-            }
-            switch (enu)
-            {
-                case RegionDataGrasses_FieldIndex.Grasses:
-                    obj._Grasses.SetTo((ISetList<IFormIDLink<Grass>>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -592,11 +478,6 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IRegionDataGrassesInternal>
     {
         new ISetList<IFormIDLink<Grass>> Grasses { get; }
-        void CopyFieldsFrom(
-            RegionDataGrasses rhs,
-            ErrorMaskBuilder errorMask = null,
-            RegionDataGrasses_CopyMask copyMask = null,
-            RegionDataGrasses def = null);
     }
 
     public partial interface IRegionDataGrassesInternal :
@@ -695,6 +576,54 @@ namespace Mutagen.Bethesda.Oblivion
             return ((RegionDataGrassesCommon)((IRegionDataGrassesInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this RegionDataGrasses lhs,
+            RegionDataGrasses rhs,
+            RegionDataGrasses_CopyMask copyMask,
+            RegionDataGrasses def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this RegionDataGrasses lhs,
+            RegionDataGrasses rhs,
+            out RegionDataGrasses_ErrorMask errorMask,
+            RegionDataGrasses_CopyMask copyMask = null,
+            RegionDataGrasses def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            RegionDataGrassesSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = RegionDataGrasses_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this RegionDataGrasses lhs,
+            RegionDataGrasses rhs,
+            ErrorMaskBuilder errorMask,
+            RegionDataGrasses_CopyMask copyMask = null,
+            RegionDataGrasses def = null)
+        {
+            RegionDataGrassesSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

@@ -1315,347 +1315,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CombatStyle Copy_ToLoqui(
-            CombatStyle item,
-            CombatStyle_CopyMask copyMask = null,
-            CombatStyle def = null)
+        void IClearable.Clear()
         {
-            CombatStyle ret;
-            if (item.GetType().Equals(typeof(CombatStyle)))
-            {
-                ret = new CombatStyle() as CombatStyle;
-            }
-            else
-            {
-                ret = (CombatStyle)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((CombatStyleSetterCommon)((ICombatStyleInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            CombatStyle rhs,
-            CombatStyle_CopyMask copyMask,
-            CombatStyle def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            CombatStyle rhs,
-            out CombatStyle_ErrorMask errorMask,
-            CombatStyle_CopyMask copyMask = null,
-            CombatStyle def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            CombatStyleSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = CombatStyle_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            CombatStyle rhs,
-            ErrorMaskBuilder errorMask,
-            CombatStyle_CopyMask copyMask = null,
-            CombatStyle def = null)
-        {
-            CombatStyleSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            CombatStyle_FieldIndex enu = (CombatStyle_FieldIndex)index;
-            switch (enu)
-            {
-                case CombatStyle_FieldIndex.DodgePercentChance:
-                    this.DodgePercentChance = (Byte)obj;
-                    break;
-                case CombatStyle_FieldIndex.LeftRightPercentChance:
-                    this.LeftRightPercentChance = (Byte)obj;
-                    break;
-                case CombatStyle_FieldIndex.DodgeLeftRightTimerMin:
-                    this.DodgeLeftRightTimerMin = (Single)obj;
-                    break;
-                case CombatStyle_FieldIndex.DodgeLeftRightTimerMax:
-                    this.DodgeLeftRightTimerMax = (Single)obj;
-                    break;
-                case CombatStyle_FieldIndex.DodgeForwardTimerMin:
-                    this.DodgeForwardTimerMin = (Single)obj;
-                    break;
-                case CombatStyle_FieldIndex.DodgeForwardTimerMax:
-                    this.DodgeForwardTimerMax = (Single)obj;
-                    break;
-                case CombatStyle_FieldIndex.DodgeBackTimerMin:
-                    this.DodgeBackTimerMin = (Single)obj;
-                    break;
-                case CombatStyle_FieldIndex.DodgeBackTimerMax:
-                    this.DodgeBackTimerMax = (Single)obj;
-                    break;
-                case CombatStyle_FieldIndex.IdleTimerMin:
-                    this.IdleTimerMin = (Single)obj;
-                    break;
-                case CombatStyle_FieldIndex.IdleTimerMax:
-                    this.IdleTimerMax = (Single)obj;
-                    break;
-                case CombatStyle_FieldIndex.BlockPercentChance:
-                    this.BlockPercentChance = (Byte)obj;
-                    break;
-                case CombatStyle_FieldIndex.AttackPercentChance:
-                    this.AttackPercentChance = (Byte)obj;
-                    break;
-                case CombatStyle_FieldIndex.RecoilStaggerBonusToAttack:
-                    this.RecoilStaggerBonusToAttack = (Single)obj;
-                    break;
-                case CombatStyle_FieldIndex.UnconsciousBonusToAttack:
-                    this.UnconsciousBonusToAttack = (Single)obj;
-                    break;
-                case CombatStyle_FieldIndex.HandToHandBonusToAttack:
-                    this.HandToHandBonusToAttack = (Single)obj;
-                    break;
-                case CombatStyle_FieldIndex.PowerAttackPercentChance:
-                    this.PowerAttackPercentChance = (Byte)obj;
-                    break;
-                case CombatStyle_FieldIndex.RecoilStaggerBonusToPowerAttack:
-                    this.RecoilStaggerBonusToPowerAttack = (Single)obj;
-                    break;
-                case CombatStyle_FieldIndex.UnconsciousBonusToPowerAttack:
-                    this.UnconsciousBonusToPowerAttack = (Single)obj;
-                    break;
-                case CombatStyle_FieldIndex.PowerAttackNormal:
-                    this.PowerAttackNormal = (Byte)obj;
-                    break;
-                case CombatStyle_FieldIndex.PowerAttackForward:
-                    this.PowerAttackForward = (Byte)obj;
-                    break;
-                case CombatStyle_FieldIndex.PowerAttackBack:
-                    this.PowerAttackBack = (Byte)obj;
-                    break;
-                case CombatStyle_FieldIndex.PowerAttackLeft:
-                    this.PowerAttackLeft = (Byte)obj;
-                    break;
-                case CombatStyle_FieldIndex.PowerAttackRight:
-                    this.PowerAttackRight = (Byte)obj;
-                    break;
-                case CombatStyle_FieldIndex.HoldTimerMin:
-                    this.HoldTimerMin = (Single)obj;
-                    break;
-                case CombatStyle_FieldIndex.HoldTimerMax:
-                    this.HoldTimerMax = (Single)obj;
-                    break;
-                case CombatStyle_FieldIndex.Flags:
-                    this.Flags = (CombatStyle.Flag)obj;
-                    break;
-                case CombatStyle_FieldIndex.AcrobaticDodgePercentChance:
-                    this.AcrobaticDodgePercentChance = (Byte)obj;
-                    break;
-                case CombatStyle_FieldIndex.RangeMultOptimal:
-                    this.RangeMultOptimal = (Single)obj;
-                    break;
-                case CombatStyle_FieldIndex.RangeMultMax:
-                    this.RangeMultMax = (Single)obj;
-                    break;
-                case CombatStyle_FieldIndex.SwitchDistanceMelee:
-                    this.SwitchDistanceMelee = (Single)obj;
-                    break;
-                case CombatStyle_FieldIndex.SwitchDistanceRanged:
-                    this.SwitchDistanceRanged = (Single)obj;
-                    break;
-                case CombatStyle_FieldIndex.BuffStandoffDistance:
-                    this.BuffStandoffDistance = (Single)obj;
-                    break;
-                case CombatStyle_FieldIndex.RangedStandoffDistance:
-                    this.RangedStandoffDistance = (Single)obj;
-                    break;
-                case CombatStyle_FieldIndex.GroupStandoffDistance:
-                    this.GroupStandoffDistance = (Single)obj;
-                    break;
-                case CombatStyle_FieldIndex.RushingAttackPercentChance:
-                    this.RushingAttackPercentChance = (Byte)obj;
-                    break;
-                case CombatStyle_FieldIndex.RushingAttackDistanceMult:
-                    this.RushingAttackDistanceMult = (Single)obj;
-                    break;
-                case CombatStyle_FieldIndex.Advanced:
-                    this.Advanced = (CombatStyleAdvanced)obj;
-                    break;
-                case CombatStyle_FieldIndex.CSTDDataTypeState:
-                    this.CSTDDataTypeState = (CombatStyle.CSTDDataType)obj;
-                    break;
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            CombatStyleSetterCommon.Instance.Clear(this);
-        }
-
-        public new static CombatStyle Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new CombatStyle();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_CombatStyle(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_CombatStyle(CombatStyle obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out CombatStyle_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case CombatStyle_FieldIndex.DodgePercentChance:
-                    obj.DodgePercentChance = (Byte)pair.Value;
-                    break;
-                case CombatStyle_FieldIndex.LeftRightPercentChance:
-                    obj.LeftRightPercentChance = (Byte)pair.Value;
-                    break;
-                case CombatStyle_FieldIndex.DodgeLeftRightTimerMin:
-                    obj.DodgeLeftRightTimerMin = (Single)pair.Value;
-                    break;
-                case CombatStyle_FieldIndex.DodgeLeftRightTimerMax:
-                    obj.DodgeLeftRightTimerMax = (Single)pair.Value;
-                    break;
-                case CombatStyle_FieldIndex.DodgeForwardTimerMin:
-                    obj.DodgeForwardTimerMin = (Single)pair.Value;
-                    break;
-                case CombatStyle_FieldIndex.DodgeForwardTimerMax:
-                    obj.DodgeForwardTimerMax = (Single)pair.Value;
-                    break;
-                case CombatStyle_FieldIndex.DodgeBackTimerMin:
-                    obj.DodgeBackTimerMin = (Single)pair.Value;
-                    break;
-                case CombatStyle_FieldIndex.DodgeBackTimerMax:
-                    obj.DodgeBackTimerMax = (Single)pair.Value;
-                    break;
-                case CombatStyle_FieldIndex.IdleTimerMin:
-                    obj.IdleTimerMin = (Single)pair.Value;
-                    break;
-                case CombatStyle_FieldIndex.IdleTimerMax:
-                    obj.IdleTimerMax = (Single)pair.Value;
-                    break;
-                case CombatStyle_FieldIndex.BlockPercentChance:
-                    obj.BlockPercentChance = (Byte)pair.Value;
-                    break;
-                case CombatStyle_FieldIndex.AttackPercentChance:
-                    obj.AttackPercentChance = (Byte)pair.Value;
-                    break;
-                case CombatStyle_FieldIndex.RecoilStaggerBonusToAttack:
-                    obj.RecoilStaggerBonusToAttack = (Single)pair.Value;
-                    break;
-                case CombatStyle_FieldIndex.UnconsciousBonusToAttack:
-                    obj.UnconsciousBonusToAttack = (Single)pair.Value;
-                    break;
-                case CombatStyle_FieldIndex.HandToHandBonusToAttack:
-                    obj.HandToHandBonusToAttack = (Single)pair.Value;
-                    break;
-                case CombatStyle_FieldIndex.PowerAttackPercentChance:
-                    obj.PowerAttackPercentChance = (Byte)pair.Value;
-                    break;
-                case CombatStyle_FieldIndex.RecoilStaggerBonusToPowerAttack:
-                    obj.RecoilStaggerBonusToPowerAttack = (Single)pair.Value;
-                    break;
-                case CombatStyle_FieldIndex.UnconsciousBonusToPowerAttack:
-                    obj.UnconsciousBonusToPowerAttack = (Single)pair.Value;
-                    break;
-                case CombatStyle_FieldIndex.PowerAttackNormal:
-                    obj.PowerAttackNormal = (Byte)pair.Value;
-                    break;
-                case CombatStyle_FieldIndex.PowerAttackForward:
-                    obj.PowerAttackForward = (Byte)pair.Value;
-                    break;
-                case CombatStyle_FieldIndex.PowerAttackBack:
-                    obj.PowerAttackBack = (Byte)pair.Value;
-                    break;
-                case CombatStyle_FieldIndex.PowerAttackLeft:
-                    obj.PowerAttackLeft = (Byte)pair.Value;
-                    break;
-                case CombatStyle_FieldIndex.PowerAttackRight:
-                    obj.PowerAttackRight = (Byte)pair.Value;
-                    break;
-                case CombatStyle_FieldIndex.HoldTimerMin:
-                    obj.HoldTimerMin = (Single)pair.Value;
-                    break;
-                case CombatStyle_FieldIndex.HoldTimerMax:
-                    obj.HoldTimerMax = (Single)pair.Value;
-                    break;
-                case CombatStyle_FieldIndex.Flags:
-                    obj.Flags = (CombatStyle.Flag)pair.Value;
-                    break;
-                case CombatStyle_FieldIndex.AcrobaticDodgePercentChance:
-                    obj.AcrobaticDodgePercentChance = (Byte)pair.Value;
-                    break;
-                case CombatStyle_FieldIndex.RangeMultOptimal:
-                    obj.RangeMultOptimal = (Single)pair.Value;
-                    break;
-                case CombatStyle_FieldIndex.RangeMultMax:
-                    obj.RangeMultMax = (Single)pair.Value;
-                    break;
-                case CombatStyle_FieldIndex.SwitchDistanceMelee:
-                    obj.SwitchDistanceMelee = (Single)pair.Value;
-                    break;
-                case CombatStyle_FieldIndex.SwitchDistanceRanged:
-                    obj.SwitchDistanceRanged = (Single)pair.Value;
-                    break;
-                case CombatStyle_FieldIndex.BuffStandoffDistance:
-                    obj.BuffStandoffDistance = (Single)pair.Value;
-                    break;
-                case CombatStyle_FieldIndex.RangedStandoffDistance:
-                    obj.RangedStandoffDistance = (Single)pair.Value;
-                    break;
-                case CombatStyle_FieldIndex.GroupStandoffDistance:
-                    obj.GroupStandoffDistance = (Single)pair.Value;
-                    break;
-                case CombatStyle_FieldIndex.RushingAttackPercentChance:
-                    obj.RushingAttackPercentChance = (Byte)pair.Value;
-                    break;
-                case CombatStyle_FieldIndex.RushingAttackDistanceMult:
-                    obj.RushingAttackDistanceMult = (Single)pair.Value;
-                    break;
-                case CombatStyle_FieldIndex.Advanced:
-                    obj.Advanced = (CombatStyleAdvanced)pair.Value;
-                    break;
-                case CombatStyle_FieldIndex.CSTDDataTypeState:
-                    obj.CSTDDataTypeState = (CombatStyle.CSTDDataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -1742,11 +1406,6 @@ namespace Mutagen.Bethesda.Oblivion
         void Advanced_Set(CombatStyleAdvanced value, bool hasBeenSet = true);
         void Advanced_Unset();
 
-        void CopyFieldsFrom(
-            CombatStyle rhs,
-            ErrorMaskBuilder errorMask = null,
-            CombatStyle_CopyMask copyMask = null,
-            CombatStyle def = null);
     }
 
     public partial interface ICombatStyleInternal :
@@ -1997,6 +1656,54 @@ namespace Mutagen.Bethesda.Oblivion
             return ((CombatStyleCommon)((ICombatStyleInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this CombatStyle lhs,
+            CombatStyle rhs,
+            CombatStyle_CopyMask copyMask,
+            CombatStyle def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this CombatStyle lhs,
+            CombatStyle rhs,
+            out CombatStyle_ErrorMask errorMask,
+            CombatStyle_CopyMask copyMask = null,
+            CombatStyle def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            CombatStyleSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = CombatStyle_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this CombatStyle lhs,
+            CombatStyle rhs,
+            ErrorMaskBuilder errorMask,
+            CombatStyle_CopyMask copyMask = null,
+            CombatStyle def = null)
+        {
+            CombatStyleSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

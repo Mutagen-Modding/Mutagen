@@ -1328,263 +1328,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static Race Copy_ToLoqui(
-            Race item,
-            Race_CopyMask copyMask = null,
-            Race def = null)
+        void IClearable.Clear()
         {
-            Race ret;
-            if (item.GetType().Equals(typeof(Race)))
-            {
-                ret = new Race() as Race;
-            }
-            else
-            {
-                ret = (Race)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((RaceSetterCommon)((IRaceInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            Race rhs,
-            Race_CopyMask copyMask,
-            Race def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            Race rhs,
-            out Race_ErrorMask errorMask,
-            Race_CopyMask copyMask = null,
-            Race def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            RaceSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = Race_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            Race rhs,
-            ErrorMaskBuilder errorMask,
-            Race_CopyMask copyMask = null,
-            Race def = null)
-        {
-            RaceSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            Race_FieldIndex enu = (Race_FieldIndex)index;
-            switch (enu)
-            {
-                case Race_FieldIndex.Name:
-                    this.Name = (String)obj;
-                    break;
-                case Race_FieldIndex.Description:
-                    this.Description = (String)obj;
-                    break;
-                case Race_FieldIndex.Spells:
-                    this._Spells.SetTo((ISetList<IFormIDLink<Spell>>)obj);
-                    break;
-                case Race_FieldIndex.Relations:
-                    this._Relations.SetTo((ISetList<RaceRelation>)obj);
-                    break;
-                case Race_FieldIndex.SkillBoosts:
-                    this._SkillBoosts.SetTo((SkillBoost[])obj);
-                    break;
-                case Race_FieldIndex.Fluff:
-                    this.Fluff = (Byte[])obj;
-                    break;
-                case Race_FieldIndex.MaleHeight:
-                    this.MaleHeight = (Single)obj;
-                    break;
-                case Race_FieldIndex.FemaleHeight:
-                    this.FemaleHeight = (Single)obj;
-                    break;
-                case Race_FieldIndex.MaleWeight:
-                    this.MaleWeight = (Single)obj;
-                    break;
-                case Race_FieldIndex.FemaleWeight:
-                    this.FemaleWeight = (Single)obj;
-                    break;
-                case Race_FieldIndex.Flags:
-                    this.Flags = (Race.Flag)obj;
-                    break;
-                case Race_FieldIndex.Voices:
-                    this.Voices = (RaceVoices)obj;
-                    break;
-                case Race_FieldIndex.DefaultHair:
-                    this.DefaultHair = (RaceHair)obj;
-                    break;
-                case Race_FieldIndex.DefaultHairColor:
-                    this.DefaultHairColor = (Byte)obj;
-                    break;
-                case Race_FieldIndex.FaceGenMainClamp:
-                    this.FaceGenMainClamp = (Int32)obj;
-                    break;
-                case Race_FieldIndex.FaceGenFaceClamp:
-                    this.FaceGenFaceClamp = (Int32)obj;
-                    break;
-                case Race_FieldIndex.RaceStats:
-                    this.RaceStats = (RaceStatsGendered)obj;
-                    break;
-                case Race_FieldIndex.FaceData:
-                    this._FaceData.SetTo((ISetList<FacePart>)obj);
-                    break;
-                case Race_FieldIndex.BodyData:
-                    this.BodyData = (GenderedBodyData)obj;
-                    break;
-                case Race_FieldIndex.Hairs:
-                    this._Hairs.SetTo((ISetList<IFormIDLink<Hair>>)obj);
-                    break;
-                case Race_FieldIndex.Eyes:
-                    this._Eyes.SetTo((ISetList<IFormIDLink<Eye>>)obj);
-                    break;
-                case Race_FieldIndex.FaceGenData:
-                    this.FaceGenData = (FaceGenData)obj;
-                    break;
-                case Race_FieldIndex.Unknown:
-                    this.Unknown = (Byte[])obj;
-                    break;
-                case Race_FieldIndex.DATADataTypeState:
-                    this.DATADataTypeState = (Race.DATADataType)obj;
-                    break;
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            RaceSetterCommon.Instance.Clear(this);
-        }
-
-        public new static Race Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Race();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Race(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_Race(Race obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Race_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case Race_FieldIndex.Name:
-                    obj.Name = (String)pair.Value;
-                    break;
-                case Race_FieldIndex.Description:
-                    obj.Description = (String)pair.Value;
-                    break;
-                case Race_FieldIndex.Spells:
-                    obj._Spells.SetTo((ISetList<IFormIDLink<Spell>>)pair.Value);
-                    break;
-                case Race_FieldIndex.Relations:
-                    obj._Relations.SetTo((ISetList<RaceRelation>)pair.Value);
-                    break;
-                case Race_FieldIndex.SkillBoosts:
-                    obj._SkillBoosts.SetTo((SkillBoost[])pair.Value);
-                    break;
-                case Race_FieldIndex.Fluff:
-                    obj.Fluff = (Byte[])pair.Value;
-                    break;
-                case Race_FieldIndex.MaleHeight:
-                    obj.MaleHeight = (Single)pair.Value;
-                    break;
-                case Race_FieldIndex.FemaleHeight:
-                    obj.FemaleHeight = (Single)pair.Value;
-                    break;
-                case Race_FieldIndex.MaleWeight:
-                    obj.MaleWeight = (Single)pair.Value;
-                    break;
-                case Race_FieldIndex.FemaleWeight:
-                    obj.FemaleWeight = (Single)pair.Value;
-                    break;
-                case Race_FieldIndex.Flags:
-                    obj.Flags = (Race.Flag)pair.Value;
-                    break;
-                case Race_FieldIndex.Voices:
-                    obj.Voices = (RaceVoices)pair.Value;
-                    break;
-                case Race_FieldIndex.DefaultHair:
-                    obj.DefaultHair = (RaceHair)pair.Value;
-                    break;
-                case Race_FieldIndex.DefaultHairColor:
-                    obj.DefaultHairColor = (Byte)pair.Value;
-                    break;
-                case Race_FieldIndex.FaceGenMainClamp:
-                    obj.FaceGenMainClamp = (Int32)pair.Value;
-                    break;
-                case Race_FieldIndex.FaceGenFaceClamp:
-                    obj.FaceGenFaceClamp = (Int32)pair.Value;
-                    break;
-                case Race_FieldIndex.RaceStats:
-                    obj.RaceStats = (RaceStatsGendered)pair.Value;
-                    break;
-                case Race_FieldIndex.FaceData:
-                    obj._FaceData.SetTo((ISetList<FacePart>)pair.Value);
-                    break;
-                case Race_FieldIndex.BodyData:
-                    obj.BodyData = (GenderedBodyData)pair.Value;
-                    break;
-                case Race_FieldIndex.Hairs:
-                    obj._Hairs.SetTo((ISetList<IFormIDLink<Hair>>)pair.Value);
-                    break;
-                case Race_FieldIndex.Eyes:
-                    obj._Eyes.SetTo((ISetList<IFormIDLink<Eye>>)pair.Value);
-                    break;
-                case Race_FieldIndex.FaceGenData:
-                    obj.FaceGenData = (FaceGenData)pair.Value;
-                    break;
-                case Race_FieldIndex.Unknown:
-                    obj.Unknown = (Byte[])pair.Value;
-                    break;
-                case Race_FieldIndex.DATADataTypeState:
-                    obj.DATADataTypeState = (Race.DATADataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -1667,11 +1415,6 @@ namespace Mutagen.Bethesda.Oblivion
         void Unknown_Set(Byte[] value, bool hasBeenSet = true);
         void Unknown_Unset();
 
-        void CopyFieldsFrom(
-            Race rhs,
-            ErrorMaskBuilder errorMask = null,
-            Race_CopyMask copyMask = null,
-            Race def = null);
     }
 
     public partial interface IRaceInternal :
@@ -1870,6 +1613,54 @@ namespace Mutagen.Bethesda.Oblivion
             return ((RaceCommon)((IRaceInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this Race lhs,
+            Race rhs,
+            Race_CopyMask copyMask,
+            Race def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this Race lhs,
+            Race rhs,
+            out Race_ErrorMask errorMask,
+            Race_CopyMask copyMask = null,
+            Race def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            RaceSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = Race_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this Race lhs,
+            Race rhs,
+            ErrorMaskBuilder errorMask,
+            Race_CopyMask copyMask = null,
+            Race def = null)
+        {
+            RaceSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

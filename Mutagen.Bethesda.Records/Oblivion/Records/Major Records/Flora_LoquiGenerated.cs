@@ -675,173 +675,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static Flora Copy_ToLoqui(
-            Flora item,
-            Flora_CopyMask copyMask = null,
-            Flora def = null)
+        void IClearable.Clear()
         {
-            Flora ret;
-            if (item.GetType().Equals(typeof(Flora)))
-            {
-                ret = new Flora() as Flora;
-            }
-            else
-            {
-                ret = (Flora)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((FloraSetterCommon)((IFloraInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            Flora rhs,
-            Flora_CopyMask copyMask,
-            Flora def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            Flora rhs,
-            out Flora_ErrorMask errorMask,
-            Flora_CopyMask copyMask = null,
-            Flora def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            FloraSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = Flora_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            Flora rhs,
-            ErrorMaskBuilder errorMask,
-            Flora_CopyMask copyMask = null,
-            Flora def = null)
-        {
-            FloraSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            Flora_FieldIndex enu = (Flora_FieldIndex)index;
-            switch (enu)
-            {
-                case Flora_FieldIndex.Name:
-                    this.Name = (String)obj;
-                    break;
-                case Flora_FieldIndex.Model:
-                    this.Model = (Model)obj;
-                    break;
-                case Flora_FieldIndex.Script:
-                    this.Script_Property.Set((IFormIDSetLink<Script>)obj);
-                    break;
-                case Flora_FieldIndex.Ingredient:
-                    this.Ingredient_Property.Set((IFormIDSetLink<Ingredient>)obj);
-                    break;
-                case Flora_FieldIndex.Spring:
-                    this.Spring = (Byte)obj;
-                    break;
-                case Flora_FieldIndex.Summer:
-                    this.Summer = (Byte)obj;
-                    break;
-                case Flora_FieldIndex.Fall:
-                    this.Fall = (Byte)obj;
-                    break;
-                case Flora_FieldIndex.Winter:
-                    this.Winter = (Byte)obj;
-                    break;
-                case Flora_FieldIndex.PFPCDataTypeState:
-                    this.PFPCDataTypeState = (Flora.PFPCDataType)obj;
-                    break;
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            FloraSetterCommon.Instance.Clear(this);
-        }
-
-        public new static Flora Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Flora();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Flora(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_Flora(Flora obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Flora_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case Flora_FieldIndex.Name:
-                    obj.Name = (String)pair.Value;
-                    break;
-                case Flora_FieldIndex.Model:
-                    obj.Model = (Model)pair.Value;
-                    break;
-                case Flora_FieldIndex.Script:
-                    obj.Script_Property.Set((IFormIDSetLink<Script>)pair.Value);
-                    break;
-                case Flora_FieldIndex.Ingredient:
-                    obj.Ingredient_Property.Set((IFormIDSetLink<Ingredient>)pair.Value);
-                    break;
-                case Flora_FieldIndex.Spring:
-                    obj.Spring = (Byte)pair.Value;
-                    break;
-                case Flora_FieldIndex.Summer:
-                    obj.Summer = (Byte)pair.Value;
-                    break;
-                case Flora_FieldIndex.Fall:
-                    obj.Fall = (Byte)pair.Value;
-                    break;
-                case Flora_FieldIndex.Winter:
-                    obj.Winter = (Byte)pair.Value;
-                    break;
-                case Flora_FieldIndex.PFPCDataTypeState:
-                    obj.PFPCDataTypeState = (Flora.PFPCDataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -873,11 +711,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Byte Winter { get; set; }
 
-        void CopyFieldsFrom(
-            Flora rhs,
-            ErrorMaskBuilder errorMask = null,
-            Flora_CopyMask copyMask = null,
-            Flora def = null);
     }
 
     public partial interface IFloraInternal :
@@ -1019,6 +852,54 @@ namespace Mutagen.Bethesda.Oblivion
             return ((FloraCommon)((IFloraInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this Flora lhs,
+            Flora rhs,
+            Flora_CopyMask copyMask,
+            Flora def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this Flora lhs,
+            Flora rhs,
+            out Flora_ErrorMask errorMask,
+            Flora_CopyMask copyMask = null,
+            Flora def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            FloraSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = Flora_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this Flora lhs,
+            Flora rhs,
+            ErrorMaskBuilder errorMask,
+            Flora_CopyMask copyMask = null,
+            Flora def = null)
+        {
+            FloraSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

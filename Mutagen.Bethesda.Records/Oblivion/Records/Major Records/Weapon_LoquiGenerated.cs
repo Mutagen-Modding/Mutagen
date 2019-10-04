@@ -854,209 +854,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static Weapon Copy_ToLoqui(
-            Weapon item,
-            Weapon_CopyMask copyMask = null,
-            Weapon def = null)
+        void IClearable.Clear()
         {
-            Weapon ret;
-            if (item.GetType().Equals(typeof(Weapon)))
-            {
-                ret = new Weapon() as Weapon;
-            }
-            else
-            {
-                ret = (Weapon)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((WeaponSetterCommon)((IWeaponInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            Weapon rhs,
-            Weapon_CopyMask copyMask,
-            Weapon def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            Weapon rhs,
-            out Weapon_ErrorMask errorMask,
-            Weapon_CopyMask copyMask = null,
-            Weapon def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            WeaponSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = Weapon_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            Weapon rhs,
-            ErrorMaskBuilder errorMask,
-            Weapon_CopyMask copyMask = null,
-            Weapon def = null)
-        {
-            WeaponSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            Weapon_FieldIndex enu = (Weapon_FieldIndex)index;
-            switch (enu)
-            {
-                case Weapon_FieldIndex.Name:
-                    this.Name = (String)obj;
-                    break;
-                case Weapon_FieldIndex.Model:
-                    this.Model = (Model)obj;
-                    break;
-                case Weapon_FieldIndex.Icon:
-                    this.Icon = (String)obj;
-                    break;
-                case Weapon_FieldIndex.Script:
-                    this.Script_Property.Set((IFormIDSetLink<Script>)obj);
-                    break;
-                case Weapon_FieldIndex.Enchantment:
-                    this.Enchantment_Property.Set((IFormIDSetLink<Enchantment>)obj);
-                    break;
-                case Weapon_FieldIndex.EnchantmentPoints:
-                    this.EnchantmentPoints = (UInt16)obj;
-                    break;
-                case Weapon_FieldIndex.Type:
-                    this.Type = (Weapon.WeaponType)obj;
-                    break;
-                case Weapon_FieldIndex.Speed:
-                    this.Speed = (Single)obj;
-                    break;
-                case Weapon_FieldIndex.Reach:
-                    this.Reach = (Single)obj;
-                    break;
-                case Weapon_FieldIndex.Flags:
-                    this.Flags = (Weapon.WeaponFlag)obj;
-                    break;
-                case Weapon_FieldIndex.Value:
-                    this.Value = (UInt32)obj;
-                    break;
-                case Weapon_FieldIndex.Health:
-                    this.Health = (UInt32)obj;
-                    break;
-                case Weapon_FieldIndex.Weight:
-                    this.Weight = (Single)obj;
-                    break;
-                case Weapon_FieldIndex.Damage:
-                    this.Damage = (UInt16)obj;
-                    break;
-                case Weapon_FieldIndex.DATADataTypeState:
-                    this.DATADataTypeState = (Weapon.DATADataType)obj;
-                    break;
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            WeaponSetterCommon.Instance.Clear(this);
-        }
-
-        public new static Weapon Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Weapon();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Weapon(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_Weapon(Weapon obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Weapon_FieldIndex enu))
-            {
-                CopyInInternal_ItemAbstract(obj, pair);
-            }
-            switch (enu)
-            {
-                case Weapon_FieldIndex.Name:
-                    obj.Name = (String)pair.Value;
-                    break;
-                case Weapon_FieldIndex.Model:
-                    obj.Model = (Model)pair.Value;
-                    break;
-                case Weapon_FieldIndex.Icon:
-                    obj.Icon = (String)pair.Value;
-                    break;
-                case Weapon_FieldIndex.Script:
-                    obj.Script_Property.Set((IFormIDSetLink<Script>)pair.Value);
-                    break;
-                case Weapon_FieldIndex.Enchantment:
-                    obj.Enchantment_Property.Set((IFormIDSetLink<Enchantment>)pair.Value);
-                    break;
-                case Weapon_FieldIndex.EnchantmentPoints:
-                    obj.EnchantmentPoints = (UInt16)pair.Value;
-                    break;
-                case Weapon_FieldIndex.Type:
-                    obj.Type = (Weapon.WeaponType)pair.Value;
-                    break;
-                case Weapon_FieldIndex.Speed:
-                    obj.Speed = (Single)pair.Value;
-                    break;
-                case Weapon_FieldIndex.Reach:
-                    obj.Reach = (Single)pair.Value;
-                    break;
-                case Weapon_FieldIndex.Flags:
-                    obj.Flags = (Weapon.WeaponFlag)pair.Value;
-                    break;
-                case Weapon_FieldIndex.Value:
-                    obj.Value = (UInt32)pair.Value;
-                    break;
-                case Weapon_FieldIndex.Health:
-                    obj.Health = (UInt32)pair.Value;
-                    break;
-                case Weapon_FieldIndex.Weight:
-                    obj.Weight = (Single)pair.Value;
-                    break;
-                case Weapon_FieldIndex.Damage:
-                    obj.Damage = (UInt16)pair.Value;
-                    break;
-                case Weapon_FieldIndex.DATADataTypeState:
-                    obj.DATADataTypeState = (Weapon.DATADataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -1106,11 +908,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         new UInt16 Damage { get; set; }
 
-        void CopyFieldsFrom(
-            Weapon rhs,
-            ErrorMaskBuilder errorMask = null,
-            Weapon_CopyMask copyMask = null,
-            Weapon def = null);
     }
 
     public partial interface IWeaponInternal :
@@ -1278,6 +1075,54 @@ namespace Mutagen.Bethesda.Oblivion
             return ((WeaponCommon)((IWeaponInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this Weapon lhs,
+            Weapon rhs,
+            Weapon_CopyMask copyMask,
+            Weapon def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this Weapon lhs,
+            Weapon rhs,
+            out Weapon_ErrorMask errorMask,
+            Weapon_CopyMask copyMask = null,
+            Weapon def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            WeaponSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = Weapon_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this Weapon lhs,
+            Weapon rhs,
+            ErrorMaskBuilder errorMask,
+            Weapon_CopyMask copyMask = null,
+            Weapon def = null)
+        {
+            WeaponSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

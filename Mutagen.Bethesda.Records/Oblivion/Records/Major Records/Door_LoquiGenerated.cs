@@ -707,167 +707,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static Door Copy_ToLoqui(
-            Door item,
-            Door_CopyMask copyMask = null,
-            Door def = null)
+        void IClearable.Clear()
         {
-            Door ret;
-            if (item.GetType().Equals(typeof(Door)))
-            {
-                ret = new Door() as Door;
-            }
-            else
-            {
-                ret = (Door)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((DoorSetterCommon)((IDoorInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            Door rhs,
-            Door_CopyMask copyMask,
-            Door def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            Door rhs,
-            out Door_ErrorMask errorMask,
-            Door_CopyMask copyMask = null,
-            Door def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            DoorSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = Door_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            Door rhs,
-            ErrorMaskBuilder errorMask,
-            Door_CopyMask copyMask = null,
-            Door def = null)
-        {
-            DoorSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            Door_FieldIndex enu = (Door_FieldIndex)index;
-            switch (enu)
-            {
-                case Door_FieldIndex.Name:
-                    this.Name = (String)obj;
-                    break;
-                case Door_FieldIndex.Model:
-                    this.Model = (Model)obj;
-                    break;
-                case Door_FieldIndex.Script:
-                    this.Script_Property.Set((IFormIDSetLink<Script>)obj);
-                    break;
-                case Door_FieldIndex.OpenSound:
-                    this.OpenSound_Property.Set((IFormIDSetLink<Sound>)obj);
-                    break;
-                case Door_FieldIndex.CloseSound:
-                    this.CloseSound_Property.Set((IFormIDSetLink<Sound>)obj);
-                    break;
-                case Door_FieldIndex.LoopSound:
-                    this.LoopSound_Property.Set((IFormIDSetLink<Sound>)obj);
-                    break;
-                case Door_FieldIndex.Flags:
-                    this.Flags = (Door.DoorFlag)obj;
-                    break;
-                case Door_FieldIndex.RandomTeleportDestinations:
-                    this._RandomTeleportDestinations.SetTo((ISetList<IFormIDLink<Place>>)obj);
-                    break;
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            DoorSetterCommon.Instance.Clear(this);
-        }
-
-        public new static Door Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Door();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Door(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_Door(Door obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Door_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case Door_FieldIndex.Name:
-                    obj.Name = (String)pair.Value;
-                    break;
-                case Door_FieldIndex.Model:
-                    obj.Model = (Model)pair.Value;
-                    break;
-                case Door_FieldIndex.Script:
-                    obj.Script_Property.Set((IFormIDSetLink<Script>)pair.Value);
-                    break;
-                case Door_FieldIndex.OpenSound:
-                    obj.OpenSound_Property.Set((IFormIDSetLink<Sound>)pair.Value);
-                    break;
-                case Door_FieldIndex.CloseSound:
-                    obj.CloseSound_Property.Set((IFormIDSetLink<Sound>)pair.Value);
-                    break;
-                case Door_FieldIndex.LoopSound:
-                    obj.LoopSound_Property.Set((IFormIDSetLink<Sound>)pair.Value);
-                    break;
-                case Door_FieldIndex.Flags:
-                    obj.Flags = (Door.DoorFlag)pair.Value;
-                    break;
-                case Door_FieldIndex.RandomTeleportDestinations:
-                    obj._RandomTeleportDestinations.SetTo((ISetList<IFormIDLink<Place>>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -901,11 +745,6 @@ namespace Mutagen.Bethesda.Oblivion
         void Flags_Unset();
 
         new ISetList<IFormIDLink<Place>> RandomTeleportDestinations { get; }
-        void CopyFieldsFrom(
-            Door rhs,
-            ErrorMaskBuilder errorMask = null,
-            Door_CopyMask copyMask = null,
-            Door def = null);
     }
 
     public partial interface IDoorInternal :
@@ -1047,6 +886,54 @@ namespace Mutagen.Bethesda.Oblivion
             return ((DoorCommon)((IDoorInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this Door lhs,
+            Door rhs,
+            Door_CopyMask copyMask,
+            Door def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this Door lhs,
+            Door rhs,
+            out Door_ErrorMask errorMask,
+            Door_CopyMask copyMask = null,
+            Door def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            DoorSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = Door_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this Door lhs,
+            Door rhs,
+            ErrorMaskBuilder errorMask,
+            Door_CopyMask copyMask = null,
+            Door def = null)
+        {
+            DoorSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

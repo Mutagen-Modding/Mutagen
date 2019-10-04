@@ -612,149 +612,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static LeveledCreature Copy_ToLoqui(
-            LeveledCreature item,
-            LeveledCreature_CopyMask copyMask = null,
-            LeveledCreature def = null)
+        void IClearable.Clear()
         {
-            LeveledCreature ret;
-            if (item.GetType().Equals(typeof(LeveledCreature)))
-            {
-                ret = new LeveledCreature() as LeveledCreature;
-            }
-            else
-            {
-                ret = (LeveledCreature)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((LeveledCreatureSetterCommon)((ILeveledCreatureInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            LeveledCreature rhs,
-            LeveledCreature_CopyMask copyMask,
-            LeveledCreature def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            LeveledCreature rhs,
-            out LeveledCreature_ErrorMask errorMask,
-            LeveledCreature_CopyMask copyMask = null,
-            LeveledCreature def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            LeveledCreatureSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = LeveledCreature_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            LeveledCreature rhs,
-            ErrorMaskBuilder errorMask,
-            LeveledCreature_CopyMask copyMask = null,
-            LeveledCreature def = null)
-        {
-            LeveledCreatureSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            LeveledCreature_FieldIndex enu = (LeveledCreature_FieldIndex)index;
-            switch (enu)
-            {
-                case LeveledCreature_FieldIndex.ChanceNone:
-                    this.ChanceNone = (Byte)obj;
-                    break;
-                case LeveledCreature_FieldIndex.Flags:
-                    this.Flags = (LeveledFlag)obj;
-                    break;
-                case LeveledCreature_FieldIndex.Entries:
-                    this._Entries.SetTo((ISetList<LeveledEntry<NPCSpawn>>)obj);
-                    break;
-                case LeveledCreature_FieldIndex.Script:
-                    this.Script_Property.Set((IFormIDSetLink<Script>)obj);
-                    break;
-                case LeveledCreature_FieldIndex.Template:
-                    this.Template_Property.Set((IFormIDSetLink<NPCAbstract>)obj);
-                    break;
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            LeveledCreatureSetterCommon.Instance.Clear(this);
-        }
-
-        public new static LeveledCreature Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new LeveledCreature();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_LeveledCreature(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_LeveledCreature(LeveledCreature obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out LeveledCreature_FieldIndex enu))
-            {
-                CopyInInternal_NPCSpawn(obj, pair);
-            }
-            switch (enu)
-            {
-                case LeveledCreature_FieldIndex.ChanceNone:
-                    obj.ChanceNone = (Byte)pair.Value;
-                    break;
-                case LeveledCreature_FieldIndex.Flags:
-                    obj.Flags = (LeveledFlag)pair.Value;
-                    break;
-                case LeveledCreature_FieldIndex.Entries:
-                    obj._Entries.SetTo((ISetList<LeveledEntry<NPCSpawn>>)pair.Value);
-                    break;
-                case LeveledCreature_FieldIndex.Script:
-                    obj.Script_Property.Set((IFormIDSetLink<Script>)pair.Value);
-                    break;
-                case LeveledCreature_FieldIndex.Template:
-                    obj.Template_Property.Set((IFormIDSetLink<NPCAbstract>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -779,11 +641,6 @@ namespace Mutagen.Bethesda.Oblivion
         new IFormIDSetLink<Script> Script_Property { get; }
         new NPCAbstract Template { get; set; }
         new IFormIDSetLink<NPCAbstract> Template_Property { get; }
-        void CopyFieldsFrom(
-            LeveledCreature rhs,
-            ErrorMaskBuilder errorMask = null,
-            LeveledCreature_CopyMask copyMask = null,
-            LeveledCreature def = null);
     }
 
     public partial interface ILeveledCreatureInternal :
@@ -906,6 +763,54 @@ namespace Mutagen.Bethesda.Oblivion
             return ((LeveledCreatureCommon)((ILeveledCreatureInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this LeveledCreature lhs,
+            LeveledCreature rhs,
+            LeveledCreature_CopyMask copyMask,
+            LeveledCreature def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this LeveledCreature lhs,
+            LeveledCreature rhs,
+            out LeveledCreature_ErrorMask errorMask,
+            LeveledCreature_CopyMask copyMask = null,
+            LeveledCreature def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            LeveledCreatureSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = LeveledCreature_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this LeveledCreature lhs,
+            LeveledCreature rhs,
+            ErrorMaskBuilder errorMask,
+            LeveledCreature_CopyMask copyMask = null,
+            LeveledCreature def = null)
+        {
+            LeveledCreatureSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

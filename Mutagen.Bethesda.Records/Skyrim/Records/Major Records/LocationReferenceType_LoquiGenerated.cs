@@ -479,125 +479,11 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static LocationReferenceType Copy_ToLoqui(
-            LocationReferenceType item,
-            LocationReferenceType_CopyMask copyMask = null,
-            LocationReferenceType def = null)
+        void IClearable.Clear()
         {
-            LocationReferenceType ret;
-            if (item.GetType().Equals(typeof(LocationReferenceType)))
-            {
-                ret = new LocationReferenceType() as LocationReferenceType;
-            }
-            else
-            {
-                ret = (LocationReferenceType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((LocationReferenceTypeSetterCommon)((ILocationReferenceTypeInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            LocationReferenceType rhs,
-            LocationReferenceType_CopyMask copyMask,
-            LocationReferenceType def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            LocationReferenceType rhs,
-            out LocationReferenceType_ErrorMask errorMask,
-            LocationReferenceType_CopyMask copyMask = null,
-            LocationReferenceType def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            LocationReferenceTypeSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = LocationReferenceType_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            LocationReferenceType rhs,
-            ErrorMaskBuilder errorMask,
-            LocationReferenceType_CopyMask copyMask = null,
-            LocationReferenceType def = null)
-        {
-            LocationReferenceTypeSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            LocationReferenceType_FieldIndex enu = (LocationReferenceType_FieldIndex)index;
-            switch (enu)
-            {
-                case LocationReferenceType_FieldIndex.Color:
-                    this.Color = (Color)obj;
-                    break;
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            LocationReferenceTypeSetterCommon.Instance.Clear(this);
-        }
-
-        public new static LocationReferenceType Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new LocationReferenceType();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_LocationReferenceType(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_LocationReferenceType(LocationReferenceType obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out LocationReferenceType_FieldIndex enu))
-            {
-                CopyInInternal_SkyrimMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case LocationReferenceType_FieldIndex.Color:
-                    obj.Color = (Color)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -612,11 +498,6 @@ namespace Mutagen.Bethesda.Skyrim
         void Color_Set(Color value, bool hasBeenSet = true);
         void Color_Unset();
 
-        void CopyFieldsFrom(
-            LocationReferenceType rhs,
-            ErrorMaskBuilder errorMask = null,
-            LocationReferenceType_CopyMask copyMask = null,
-            LocationReferenceType def = null);
     }
 
     public partial interface ILocationReferenceTypeInternal :
@@ -717,6 +598,54 @@ namespace Mutagen.Bethesda.Skyrim
             return ((LocationReferenceTypeCommon)((ILocationReferenceTypeInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this LocationReferenceType lhs,
+            LocationReferenceType rhs,
+            LocationReferenceType_CopyMask copyMask,
+            LocationReferenceType def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this LocationReferenceType lhs,
+            LocationReferenceType rhs,
+            out LocationReferenceType_ErrorMask errorMask,
+            LocationReferenceType_CopyMask copyMask = null,
+            LocationReferenceType def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            LocationReferenceTypeSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = LocationReferenceType_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this LocationReferenceType lhs,
+            LocationReferenceType rhs,
+            ErrorMaskBuilder errorMask,
+            LocationReferenceType_CopyMask copyMask = null,
+            LocationReferenceType def = null)
+        {
+            LocationReferenceTypeSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

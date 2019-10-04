@@ -405,130 +405,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static RaceRelation Copy_ToLoqui(
-            RaceRelation item,
-            RaceRelation_CopyMask copyMask = null,
-            RaceRelation def = null)
+        void IClearable.Clear()
         {
-            RaceRelation ret;
-            if (item.GetType().Equals(typeof(RaceRelation)))
-            {
-                ret = new RaceRelation() as RaceRelation;
-            }
-            else
-            {
-                ret = (RaceRelation)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((RaceRelationSetterCommon)((IRaceRelationInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public void CopyFieldsFrom(RaceRelation rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            RaceRelation rhs,
-            RaceRelation_CopyMask copyMask,
-            RaceRelation def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            RaceRelation rhs,
-            out RaceRelation_ErrorMask errorMask,
-            RaceRelation_CopyMask copyMask = null,
-            RaceRelation def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            RaceRelationSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = RaceRelation_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            RaceRelation rhs,
-            ErrorMaskBuilder errorMask,
-            RaceRelation_CopyMask copyMask = null,
-            RaceRelation def = null)
-        {
-            RaceRelationSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected void SetNthObject(ushort index, object obj)
-        {
-            RaceRelation_FieldIndex enu = (RaceRelation_FieldIndex)index;
-            switch (enu)
-            {
-                case RaceRelation_FieldIndex.Race:
-                    this.Race_Property.Set((IFormIDLink<Race>)obj);
-                    break;
-                case RaceRelation_FieldIndex.Modifier:
-                    this.Modifier = (Int32)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void Clear()
-        {
-            RaceRelationSetterCommon.Instance.Clear(this);
-        }
-
-        public static RaceRelation Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new RaceRelation();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_RaceRelation(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_RaceRelation(RaceRelation obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out RaceRelation_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case RaceRelation_FieldIndex.Race:
-                    obj.Race_Property.Set((IFormIDLink<Race>)pair.Value);
-                    break;
-                case RaceRelation_FieldIndex.Modifier:
-                    obj.Modifier = (Int32)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -541,11 +422,6 @@ namespace Mutagen.Bethesda.Oblivion
         new IFormIDLink<Race> Race_Property { get; }
         new Int32 Modifier { get; set; }
 
-        void CopyFieldsFrom(
-            RaceRelation rhs,
-            ErrorMaskBuilder errorMask = null,
-            RaceRelation_CopyMask copyMask = null,
-            RaceRelation def = null);
     }
 
     public partial interface IRaceRelationInternal :
@@ -652,6 +528,67 @@ namespace Mutagen.Bethesda.Oblivion
             return ((RaceRelationCommon)((IRaceRelationInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this RaceRelation lhs,
+            RaceRelation rhs)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null);
+        }
+
+        public static void CopyFieldsFrom(
+            this RaceRelation lhs,
+            RaceRelation rhs,
+            RaceRelation_CopyMask copyMask,
+            RaceRelation def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this RaceRelation lhs,
+            RaceRelation rhs,
+            out RaceRelation_ErrorMask errorMask,
+            RaceRelation_CopyMask copyMask = null,
+            RaceRelation def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            RaceRelationSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = RaceRelation_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this RaceRelation lhs,
+            RaceRelation rhs,
+            ErrorMaskBuilder errorMask,
+            RaceRelation_CopyMask copyMask = null,
+            RaceRelation def = null)
+        {
+            RaceRelationSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

@@ -443,130 +443,11 @@ namespace Mutagen.Bethesda
             return ret;
         }
 
-        public static MasterReference Copy_ToLoqui(
-            MasterReference item,
-            MasterReference_CopyMask copyMask = null,
-            MasterReference def = null)
+        void IClearable.Clear()
         {
-            MasterReference ret;
-            if (item.GetType().Equals(typeof(MasterReference)))
-            {
-                ret = new MasterReference() as MasterReference;
-            }
-            else
-            {
-                ret = (MasterReference)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((MasterReferenceSetterCommon)((IMasterReferenceInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public void CopyFieldsFrom(MasterReference rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            MasterReference rhs,
-            MasterReference_CopyMask copyMask,
-            MasterReference def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            MasterReference rhs,
-            out MasterReference_ErrorMask errorMask,
-            MasterReference_CopyMask copyMask = null,
-            MasterReference def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            MasterReferenceSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = MasterReference_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            MasterReference rhs,
-            ErrorMaskBuilder errorMask,
-            MasterReference_CopyMask copyMask = null,
-            MasterReference def = null)
-        {
-            MasterReferenceSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected void SetNthObject(ushort index, object obj)
-        {
-            MasterReference_FieldIndex enu = (MasterReference_FieldIndex)index;
-            switch (enu)
-            {
-                case MasterReference_FieldIndex.Master:
-                    this.Master = (ModKey)obj;
-                    break;
-                case MasterReference_FieldIndex.FileSize:
-                    this.FileSize = (UInt64)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void Clear()
-        {
-            MasterReferenceSetterCommon.Instance.Clear(this);
-        }
-
-        public static MasterReference Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new MasterReference();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_MasterReference(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_MasterReference(MasterReference obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out MasterReference_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case MasterReference_FieldIndex.Master:
-                    obj.Master = (ModKey)pair.Value;
-                    break;
-                case MasterReference_FieldIndex.FileSize:
-                    obj.FileSize = (UInt64)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -582,11 +463,6 @@ namespace Mutagen.Bethesda
         void FileSize_Set(UInt64 value, bool hasBeenSet = true);
         void FileSize_Unset();
 
-        void CopyFieldsFrom(
-            MasterReference rhs,
-            ErrorMaskBuilder errorMask = null,
-            MasterReference_CopyMask copyMask = null,
-            MasterReference def = null);
     }
 
     public partial interface IMasterReferenceInternal :
@@ -691,6 +567,67 @@ namespace Mutagen.Bethesda
             return ((MasterReferenceCommon)((IMasterReferenceInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this MasterReference lhs,
+            MasterReference rhs)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null);
+        }
+
+        public static void CopyFieldsFrom(
+            this MasterReference lhs,
+            MasterReference rhs,
+            MasterReference_CopyMask copyMask,
+            MasterReference def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this MasterReference lhs,
+            MasterReference rhs,
+            out MasterReference_ErrorMask errorMask,
+            MasterReference_CopyMask copyMask = null,
+            MasterReference def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            MasterReferenceSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = MasterReference_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this MasterReference lhs,
+            MasterReference rhs,
+            ErrorMaskBuilder errorMask,
+            MasterReference_CopyMask copyMask = null,
+            MasterReference def = null)
+        {
+            MasterReferenceSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

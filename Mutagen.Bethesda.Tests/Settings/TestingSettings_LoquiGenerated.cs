@@ -430,166 +430,11 @@ namespace Mutagen.Bethesda.Tests
             return ret;
         }
 
-        public static TestingSettings Copy_ToLoqui(
-            TestingSettings item,
-            TestingSettings_CopyMask copyMask = null,
-            TestingSettings def = null)
+        void IClearable.Clear()
         {
-            TestingSettings ret;
-            if (item.GetType().Equals(typeof(TestingSettings)))
-            {
-                ret = new TestingSettings() as TestingSettings;
-            }
-            else
-            {
-                ret = (TestingSettings)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((TestingSettingsSetterCommon)((ITestingSettingsInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public void CopyFieldsFrom(TestingSettings rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            TestingSettings rhs,
-            TestingSettings_CopyMask copyMask,
-            TestingSettings def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            TestingSettings rhs,
-            out TestingSettings_ErrorMask errorMask,
-            TestingSettings_CopyMask copyMask = null,
-            TestingSettings def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            TestingSettingsSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = TestingSettings_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            TestingSettings rhs,
-            ErrorMaskBuilder errorMask,
-            TestingSettings_CopyMask copyMask = null,
-            TestingSettings def = null)
-        {
-            TestingSettingsSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected void SetNthObject(ushort index, object obj)
-        {
-            TestingSettings_FieldIndex enu = (TestingSettings_FieldIndex)index;
-            switch (enu)
-            {
-                case TestingSettings_FieldIndex.TestGroupMasks:
-                    this.TestGroupMasks = (Boolean)obj;
-                    break;
-                case TestingSettings_FieldIndex.TestModList:
-                    this.TestModList = (Boolean)obj;
-                    break;
-                case TestingSettings_FieldIndex.TestFlattenedMod:
-                    this.TestFlattenedMod = (Boolean)obj;
-                    break;
-                case TestingSettings_FieldIndex.TestBenchmarks:
-                    this.TestBenchmarks = (Boolean)obj;
-                    break;
-                case TestingSettings_FieldIndex.TestLocators:
-                    this.TestLocators = (Boolean)obj;
-                    break;
-                case TestingSettings_FieldIndex.DataFolderLocations:
-                    this.DataFolderLocations = (DataFolderLocations)obj;
-                    break;
-                case TestingSettings_FieldIndex.PassthroughSettings:
-                    this.PassthroughSettings = (PassthroughSettings)obj;
-                    break;
-                case TestingSettings_FieldIndex.TargetGroups:
-                    this._TargetGroups.SetTo((IExtendedList<TargetGroup>)obj);
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void Clear()
-        {
-            TestingSettingsSetterCommon.Instance.Clear(this);
-        }
-
-        public static TestingSettings Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new TestingSettings();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_TestingSettings(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_TestingSettings(TestingSettings obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out TestingSettings_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case TestingSettings_FieldIndex.TestGroupMasks:
-                    obj.TestGroupMasks = (Boolean)pair.Value;
-                    break;
-                case TestingSettings_FieldIndex.TestModList:
-                    obj.TestModList = (Boolean)pair.Value;
-                    break;
-                case TestingSettings_FieldIndex.TestFlattenedMod:
-                    obj.TestFlattenedMod = (Boolean)pair.Value;
-                    break;
-                case TestingSettings_FieldIndex.TestBenchmarks:
-                    obj.TestBenchmarks = (Boolean)pair.Value;
-                    break;
-                case TestingSettings_FieldIndex.TestLocators:
-                    obj.TestLocators = (Boolean)pair.Value;
-                    break;
-                case TestingSettings_FieldIndex.DataFolderLocations:
-                    obj.DataFolderLocations = (DataFolderLocations)pair.Value;
-                    break;
-                case TestingSettings_FieldIndex.PassthroughSettings:
-                    obj.PassthroughSettings = (PassthroughSettings)pair.Value;
-                    break;
-                case TestingSettings_FieldIndex.TargetGroups:
-                    obj._TargetGroups.SetTo((IExtendedList<TargetGroup>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -613,11 +458,6 @@ namespace Mutagen.Bethesda.Tests
         new PassthroughSettings PassthroughSettings { get; set; }
 
         new IExtendedList<TargetGroup> TargetGroups { get; }
-        void CopyFieldsFrom(
-            TestingSettings rhs,
-            ErrorMaskBuilder errorMask = null,
-            TestingSettings_CopyMask copyMask = null,
-            TestingSettings def = null);
     }
 
     public partial interface ITestingSettingsInternal :
@@ -741,6 +581,67 @@ namespace Mutagen.Bethesda.Tests
             return ((TestingSettingsCommon)((ITestingSettingsInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this TestingSettings lhs,
+            TestingSettings rhs)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null);
+        }
+
+        public static void CopyFieldsFrom(
+            this TestingSettings lhs,
+            TestingSettings rhs,
+            TestingSettings_CopyMask copyMask,
+            TestingSettings def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this TestingSettings lhs,
+            TestingSettings rhs,
+            out TestingSettings_ErrorMask errorMask,
+            TestingSettings_CopyMask copyMask = null,
+            TestingSettings def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            TestingSettingsSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = TestingSettings_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this TestingSettings lhs,
+            TestingSettings rhs,
+            ErrorMaskBuilder errorMask,
+            TestingSettings_CopyMask copyMask = null,
+            TestingSettings def = null)
+        {
+            TestingSettingsSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

@@ -878,209 +878,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static Light Copy_ToLoqui(
-            Light item,
-            Light_CopyMask copyMask = null,
-            Light def = null)
+        void IClearable.Clear()
         {
-            Light ret;
-            if (item.GetType().Equals(typeof(Light)))
-            {
-                ret = new Light() as Light;
-            }
-            else
-            {
-                ret = (Light)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((LightSetterCommon)((ILightInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            Light rhs,
-            Light_CopyMask copyMask,
-            Light def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            Light rhs,
-            out Light_ErrorMask errorMask,
-            Light_CopyMask copyMask = null,
-            Light def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            LightSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = Light_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            Light rhs,
-            ErrorMaskBuilder errorMask,
-            Light_CopyMask copyMask = null,
-            Light def = null)
-        {
-            LightSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            Light_FieldIndex enu = (Light_FieldIndex)index;
-            switch (enu)
-            {
-                case Light_FieldIndex.Model:
-                    this.Model = (Model)obj;
-                    break;
-                case Light_FieldIndex.Script:
-                    this.Script_Property.Set((IFormIDSetLink<Script>)obj);
-                    break;
-                case Light_FieldIndex.Name:
-                    this.Name = (String)obj;
-                    break;
-                case Light_FieldIndex.Icon:
-                    this.Icon = (String)obj;
-                    break;
-                case Light_FieldIndex.Time:
-                    this.Time = (Int32)obj;
-                    break;
-                case Light_FieldIndex.Radius:
-                    this.Radius = (UInt32)obj;
-                    break;
-                case Light_FieldIndex.Color:
-                    this.Color = (Color)obj;
-                    break;
-                case Light_FieldIndex.Flags:
-                    this.Flags = (Light.LightFlag)obj;
-                    break;
-                case Light_FieldIndex.FalloffExponent:
-                    this.FalloffExponent = (Single)obj;
-                    break;
-                case Light_FieldIndex.FOV:
-                    this.FOV = (Single)obj;
-                    break;
-                case Light_FieldIndex.Value:
-                    this.Value = (UInt32)obj;
-                    break;
-                case Light_FieldIndex.Weight:
-                    this.Weight = (Single)obj;
-                    break;
-                case Light_FieldIndex.Fade:
-                    this.Fade = (Single)obj;
-                    break;
-                case Light_FieldIndex.Sound:
-                    this.Sound_Property.Set((IFormIDSetLink<Sound>)obj);
-                    break;
-                case Light_FieldIndex.DATADataTypeState:
-                    this.DATADataTypeState = (Light.DATADataType)obj;
-                    break;
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            LightSetterCommon.Instance.Clear(this);
-        }
-
-        public new static Light Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Light();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Light(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_Light(Light obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Light_FieldIndex enu))
-            {
-                CopyInInternal_ItemAbstract(obj, pair);
-            }
-            switch (enu)
-            {
-                case Light_FieldIndex.Model:
-                    obj.Model = (Model)pair.Value;
-                    break;
-                case Light_FieldIndex.Script:
-                    obj.Script_Property.Set((IFormIDSetLink<Script>)pair.Value);
-                    break;
-                case Light_FieldIndex.Name:
-                    obj.Name = (String)pair.Value;
-                    break;
-                case Light_FieldIndex.Icon:
-                    obj.Icon = (String)pair.Value;
-                    break;
-                case Light_FieldIndex.Time:
-                    obj.Time = (Int32)pair.Value;
-                    break;
-                case Light_FieldIndex.Radius:
-                    obj.Radius = (UInt32)pair.Value;
-                    break;
-                case Light_FieldIndex.Color:
-                    obj.Color = (Color)pair.Value;
-                    break;
-                case Light_FieldIndex.Flags:
-                    obj.Flags = (Light.LightFlag)pair.Value;
-                    break;
-                case Light_FieldIndex.FalloffExponent:
-                    obj.FalloffExponent = (Single)pair.Value;
-                    break;
-                case Light_FieldIndex.FOV:
-                    obj.FOV = (Single)pair.Value;
-                    break;
-                case Light_FieldIndex.Value:
-                    obj.Value = (UInt32)pair.Value;
-                    break;
-                case Light_FieldIndex.Weight:
-                    obj.Weight = (Single)pair.Value;
-                    break;
-                case Light_FieldIndex.Fade:
-                    obj.Fade = (Single)pair.Value;
-                    break;
-                case Light_FieldIndex.Sound:
-                    obj.Sound_Property.Set((IFormIDSetLink<Sound>)pair.Value);
-                    break;
-                case Light_FieldIndex.DATADataTypeState:
-                    obj.DATADataTypeState = (Light.DATADataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -1130,11 +932,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Sound Sound { get; set; }
         new IFormIDSetLink<Sound> Sound_Property { get; }
-        void CopyFieldsFrom(
-            Light rhs,
-            ErrorMaskBuilder errorMask = null,
-            Light_CopyMask copyMask = null,
-            Light def = null);
     }
 
     public partial interface ILightInternal :
@@ -1302,6 +1099,54 @@ namespace Mutagen.Bethesda.Oblivion
             return ((LightCommon)((ILightInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this Light lhs,
+            Light rhs,
+            Light_CopyMask copyMask,
+            Light def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this Light lhs,
+            Light rhs,
+            out Light_ErrorMask errorMask,
+            Light_CopyMask copyMask = null,
+            Light def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            LightSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = Light_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this Light lhs,
+            Light rhs,
+            ErrorMaskBuilder errorMask,
+            Light_CopyMask copyMask = null,
+            Light def = null)
+        {
+            LightSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

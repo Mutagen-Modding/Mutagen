@@ -431,149 +431,18 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 ret = (ListGroup<T>)System.Activator.CreateInstance(item.GetType());
             }
-            ret.CopyFieldsFrom<T_CopyMask>(
+            ret.CopyFieldsFrom<T, T_CopyMask>(
                 item,
                 copyMask: copyMask,
                 def: def);
             return ret;
         }
 
-        public static ListGroup<T> Copy_ToLoqui<T_CopyMask>(
-            ListGroup<T> item,
-            ListGroup_CopyMask<T_CopyMask> copyMask = null,
-            ListGroup<T> def = null)
-            where T_CopyMask : class, new()
+        void IClearable.Clear()
         {
-            ListGroup<T> ret;
-            if (item.GetType().Equals(typeof(ListGroup<T>)))
-            {
-                ret = new ListGroup<T>() as ListGroup<T>;
-            }
-            else
-            {
-                ret = (ListGroup<T>)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom<T_CopyMask>(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((ListGroupSetterCommon<T>)((IListGroupInternalGetter<T>)this).CommonSetterInstance()).Clear(this);
         }
 
-        public void CopyFieldsFrom<T_CopyMask>(ListGroup<T> rhs)
-            where T_CopyMask : class, new()
-        {
-            this.CopyFieldsFrom<ErrorMaskPlaceholder, T_CopyMask>(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom<T_CopyMask>(
-            ListGroup<T> rhs,
-            ListGroup_CopyMask<T_CopyMask> copyMask,
-            ListGroup<T> def = null)
-            where T_CopyMask : class, new()
-        {
-            this.CopyFieldsFrom<ErrorMaskPlaceholder, T_CopyMask>(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom<T_ErrMask, T_CopyMask>(
-            ListGroup<T> rhs,
-            out ListGroup_ErrorMask<T_ErrMask> errorMask,
-            ListGroup_CopyMask<T_CopyMask> copyMask = null,
-            ListGroup<T> def = null,
-            bool doMasks = true)
-            where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
-            where T_CopyMask : class, new()
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            ListGroupSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = ListGroup_ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom<T_CopyMask>(
-            ListGroup<T> rhs,
-            ErrorMaskBuilder errorMask,
-            ListGroup_CopyMask<T_CopyMask> copyMask = null,
-            ListGroup<T> def = null)
-            where T_CopyMask : class, new()
-        {
-            ListGroupSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected void SetNthObject(ushort index, object obj)
-        {
-            ListGroup_FieldIndex enu = (ListGroup_FieldIndex)index;
-            switch (enu)
-            {
-                case ListGroup_FieldIndex.GroupType:
-                    this.GroupType = (GroupTypeEnum)obj;
-                    break;
-                case ListGroup_FieldIndex.LastModified:
-                    this.LastModified = (Int32)obj;
-                    break;
-                case ListGroup_FieldIndex.Items:
-                    this._Items.SetTo((IExtendedList<T>)obj);
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void Clear()
-        {
-            ListGroupSetterCommon<T>.Instance.Clear(this);
-        }
-
-        public static ListGroup<T> Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new ListGroup<T>();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_ListGroup(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_ListGroup(ListGroup<T> obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out ListGroup_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case ListGroup_FieldIndex.GroupType:
-                    obj.GroupType = (GroupTypeEnum)pair.Value;
-                    break;
-                case ListGroup_FieldIndex.LastModified:
-                    obj.LastModified = (Int32)pair.Value;
-                    break;
-                case ListGroup_FieldIndex.Items:
-                    obj._Items.SetTo((IExtendedList<T>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -589,12 +458,6 @@ namespace Mutagen.Bethesda.Oblivion
         new Int32 LastModified { get; set; }
 
         new IExtendedList<T> Items { get; }
-        void CopyFieldsFrom<T_CopyMask>(
-            ListGroup<T> rhs,
-            ErrorMaskBuilder errorMask = null,
-            ListGroup_CopyMask<T_CopyMask> copyMask = null,
-            ListGroup<T> def = null)
-            where T_CopyMask : class, new();
     }
 
     public partial interface IListGroupInternal<T> :
@@ -713,6 +576,76 @@ namespace Mutagen.Bethesda.Oblivion
             return ((ListGroupCommon<T>)((IListGroupInternalGetter<T>)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom<T, T_CopyMask>(
+            this ListGroup<T> lhs,
+            ListGroup<T> rhs)
+            where T : IXmlItem, IBinaryItem, ILoquiObjectSetter<T>
+            where T_CopyMask : class, new()
+        {
+            CopyFieldsFrom<T, ErrorMaskPlaceholder, T_CopyMask>(
+                lhs: lhs,
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null);
+        }
+
+        public static void CopyFieldsFrom<T, T_CopyMask>(
+            this ListGroup<T> lhs,
+            ListGroup<T> rhs,
+            ListGroup_CopyMask<T_CopyMask> copyMask,
+            ListGroup<T> def = null)
+            where T : IXmlItem, IBinaryItem, ILoquiObjectSetter<T>
+            where T_CopyMask : class, new()
+        {
+            CopyFieldsFrom<T, ErrorMaskPlaceholder, T_CopyMask>(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom<T, T_ErrMask, T_CopyMask>(
+            this ListGroup<T> lhs,
+            ListGroup<T> rhs,
+            out ListGroup_ErrorMask<T_ErrMask> errorMask,
+            ListGroup_CopyMask<T_CopyMask> copyMask = null,
+            ListGroup<T> def = null,
+            bool doMasks = true)
+            where T : IXmlItem, IBinaryItem, ILoquiObjectSetter<T>
+            where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
+            where T_CopyMask : class, new()
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            ListGroupSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = ListGroup_ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom<T, T_CopyMask>(
+            this ListGroup<T> lhs,
+            ListGroup<T> rhs,
+            ErrorMaskBuilder errorMask,
+            ListGroup_CopyMask<T_CopyMask> copyMask = null,
+            ListGroup<T> def = null)
+            where T : IXmlItem, IBinaryItem, ILoquiObjectSetter<T>
+            where T_CopyMask : class, new()
+        {
+            ListGroupSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
         #region Mutagen

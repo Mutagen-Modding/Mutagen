@@ -661,149 +661,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static Faction Copy_ToLoqui(
-            Faction item,
-            Faction_CopyMask copyMask = null,
-            Faction def = null)
+        void IClearable.Clear()
         {
-            Faction ret;
-            if (item.GetType().Equals(typeof(Faction)))
-            {
-                ret = new Faction() as Faction;
-            }
-            else
-            {
-                ret = (Faction)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((FactionSetterCommon)((IFactionInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            Faction rhs,
-            Faction_CopyMask copyMask,
-            Faction def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            Faction rhs,
-            out Faction_ErrorMask errorMask,
-            Faction_CopyMask copyMask = null,
-            Faction def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            FactionSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = Faction_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            Faction rhs,
-            ErrorMaskBuilder errorMask,
-            Faction_CopyMask copyMask = null,
-            Faction def = null)
-        {
-            FactionSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            Faction_FieldIndex enu = (Faction_FieldIndex)index;
-            switch (enu)
-            {
-                case Faction_FieldIndex.Name:
-                    this.Name = (String)obj;
-                    break;
-                case Faction_FieldIndex.Relations:
-                    this._Relations.SetTo((ISetList<Relation>)obj);
-                    break;
-                case Faction_FieldIndex.Flags:
-                    this.Flags = (Faction.FactionFlag)obj;
-                    break;
-                case Faction_FieldIndex.CrimeGoldMultiplier:
-                    this.CrimeGoldMultiplier = (Single)obj;
-                    break;
-                case Faction_FieldIndex.Ranks:
-                    this._Ranks.SetTo((ISetList<Rank>)obj);
-                    break;
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            FactionSetterCommon.Instance.Clear(this);
-        }
-
-        public new static Faction Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Faction();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Faction(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_Faction(Faction obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Faction_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case Faction_FieldIndex.Name:
-                    obj.Name = (String)pair.Value;
-                    break;
-                case Faction_FieldIndex.Relations:
-                    obj._Relations.SetTo((ISetList<Relation>)pair.Value);
-                    break;
-                case Faction_FieldIndex.Flags:
-                    obj.Flags = (Faction.FactionFlag)pair.Value;
-                    break;
-                case Faction_FieldIndex.CrimeGoldMultiplier:
-                    obj.CrimeGoldMultiplier = (Single)pair.Value;
-                    break;
-                case Faction_FieldIndex.Ranks:
-                    obj._Ranks.SetTo((ISetList<Rank>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -830,11 +692,6 @@ namespace Mutagen.Bethesda.Oblivion
         void CrimeGoldMultiplier_Unset();
 
         new ISetList<Rank> Ranks { get; }
-        void CopyFieldsFrom(
-            Faction rhs,
-            ErrorMaskBuilder errorMask = null,
-            Faction_CopyMask copyMask = null,
-            Faction def = null);
     }
 
     public partial interface IFactionInternal :
@@ -951,6 +808,54 @@ namespace Mutagen.Bethesda.Oblivion
             return ((FactionCommon)((IFactionInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this Faction lhs,
+            Faction rhs,
+            Faction_CopyMask copyMask,
+            Faction def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this Faction lhs,
+            Faction rhs,
+            out Faction_ErrorMask errorMask,
+            Faction_CopyMask copyMask = null,
+            Faction def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            FactionSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = Faction_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this Faction lhs,
+            Faction rhs,
+            ErrorMaskBuilder errorMask,
+            Faction_CopyMask copyMask = null,
+            Faction def = null)
+        {
+            FactionSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

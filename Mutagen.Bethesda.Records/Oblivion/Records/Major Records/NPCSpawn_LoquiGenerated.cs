@@ -326,101 +326,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static NPCSpawn Copy_ToLoqui(
-            NPCSpawn item,
-            NPCSpawn_CopyMask copyMask = null,
-            NPCSpawn def = null)
+        void IClearable.Clear()
         {
-            NPCSpawn ret = (NPCSpawn)System.Activator.CreateInstance(item.GetType());
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((NPCSpawnSetterCommon)((INPCSpawnInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            NPCSpawn rhs,
-            NPCSpawn_CopyMask copyMask,
-            NPCSpawn def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            NPCSpawn rhs,
-            out NPCSpawn_ErrorMask errorMask,
-            NPCSpawn_CopyMask copyMask = null,
-            NPCSpawn def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            NPCSpawnSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = NPCSpawn_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            NPCSpawn rhs,
-            ErrorMaskBuilder errorMask,
-            NPCSpawn_CopyMask copyMask = null,
-            NPCSpawn def = null)
-        {
-            NPCSpawnSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            NPCSpawn_FieldIndex enu = (NPCSpawn_FieldIndex)index;
-            switch (enu)
-            {
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            NPCSpawnSetterCommon.Instance.Clear(this);
-        }
-
-        protected new static void CopyInInternal_NPCSpawn(NPCSpawn obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out NPCSpawn_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -430,11 +340,6 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecord,
         ILoquiObjectSetter<INPCSpawnInternal>
     {
-        void CopyFieldsFrom(
-            NPCSpawn rhs,
-            ErrorMaskBuilder errorMask = null,
-            NPCSpawn_CopyMask copyMask = null,
-            NPCSpawn def = null);
     }
 
     public partial interface INPCSpawnInternal :
@@ -530,6 +435,54 @@ namespace Mutagen.Bethesda.Oblivion
             return ((NPCSpawnCommon)((INPCSpawnInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this NPCSpawn lhs,
+            NPCSpawn rhs,
+            NPCSpawn_CopyMask copyMask,
+            NPCSpawn def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this NPCSpawn lhs,
+            NPCSpawn rhs,
+            out NPCSpawn_ErrorMask errorMask,
+            NPCSpawn_CopyMask copyMask = null,
+            NPCSpawn def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            NPCSpawnSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = NPCSpawn_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this NPCSpawn lhs,
+            NPCSpawn rhs,
+            ErrorMaskBuilder errorMask,
+            NPCSpawn_CopyMask copyMask = null,
+            NPCSpawn def = null)
+        {
+            NPCSpawnSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

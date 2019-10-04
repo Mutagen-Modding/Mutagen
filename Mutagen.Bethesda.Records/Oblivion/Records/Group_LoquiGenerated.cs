@@ -478,149 +478,18 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 ret = (Group<T>)System.Activator.CreateInstance(item.GetType());
             }
-            ret.CopyFieldsFrom<T_CopyMask>(
+            ret.CopyFieldsFrom<T, T_CopyMask>(
                 item,
                 copyMask: copyMask,
                 def: def);
             return ret;
         }
 
-        public static Group<T> Copy_ToLoqui<T_CopyMask>(
-            Group<T> item,
-            Group_CopyMask<T_CopyMask> copyMask = null,
-            Group<T> def = null)
-            where T_CopyMask : OblivionMajorRecord_CopyMask, new()
+        void IClearable.Clear()
         {
-            Group<T> ret;
-            if (item.GetType().Equals(typeof(Group<T>)))
-            {
-                ret = new Group<T>() as Group<T>;
-            }
-            else
-            {
-                ret = (Group<T>)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom<T_CopyMask>(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((GroupSetterCommon<T>)((IGroupInternalGetter<T>)this).CommonSetterInstance()).Clear(this);
         }
 
-        public void CopyFieldsFrom<T_CopyMask>(Group<T> rhs)
-            where T_CopyMask : OblivionMajorRecord_CopyMask, new()
-        {
-            this.CopyFieldsFrom<OblivionMajorRecord_ErrorMask, T_CopyMask>(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom<T_CopyMask>(
-            Group<T> rhs,
-            Group_CopyMask<T_CopyMask> copyMask,
-            Group<T> def = null)
-            where T_CopyMask : OblivionMajorRecord_CopyMask, new()
-        {
-            this.CopyFieldsFrom<OblivionMajorRecord_ErrorMask, T_CopyMask>(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom<T_ErrMask, T_CopyMask>(
-            Group<T> rhs,
-            out Group_ErrorMask<T_ErrMask> errorMask,
-            Group_CopyMask<T_CopyMask> copyMask = null,
-            Group<T> def = null,
-            bool doMasks = true)
-            where T_ErrMask : OblivionMajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
-            where T_CopyMask : OblivionMajorRecord_CopyMask, new()
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            GroupSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = Group_ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom<T_CopyMask>(
-            Group<T> rhs,
-            ErrorMaskBuilder errorMask,
-            Group_CopyMask<T_CopyMask> copyMask = null,
-            Group<T> def = null)
-            where T_CopyMask : OblivionMajorRecord_CopyMask, new()
-        {
-            GroupSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected void SetNthObject(ushort index, object obj)
-        {
-            Group_FieldIndex enu = (Group_FieldIndex)index;
-            switch (enu)
-            {
-                case Group_FieldIndex.GroupType:
-                    this.GroupType = (GroupTypeEnum)obj;
-                    break;
-                case Group_FieldIndex.LastModified:
-                    this.LastModified = (Int32)obj;
-                    break;
-                case Group_FieldIndex.Items:
-                    this.Items.SetTo((IEnumerable<T>)(SourceSetCache<T, FormKey>)obj);
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void Clear()
-        {
-            GroupSetterCommon<T>.Instance.Clear(this);
-        }
-
-        public static Group<T> Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Group<T>();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Group(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_Group(Group<T> obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Group_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case Group_FieldIndex.GroupType:
-                    obj.GroupType = (GroupTypeEnum)pair.Value;
-                    break;
-                case Group_FieldIndex.LastModified:
-                    obj.LastModified = (Int32)pair.Value;
-                    break;
-                case Group_FieldIndex.Items:
-                    obj.Items.SetTo((IEnumerable<T>)(SourceSetCache<T, FormKey>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -636,12 +505,6 @@ namespace Mutagen.Bethesda.Oblivion
         new Int32 LastModified { get; set; }
 
         new ICache<T, FormKey> Items { get; }
-        void CopyFieldsFrom<T_CopyMask>(
-            Group<T> rhs,
-            ErrorMaskBuilder errorMask = null,
-            Group_CopyMask<T_CopyMask> copyMask = null,
-            Group<T> def = null)
-            where T_CopyMask : OblivionMajorRecord_CopyMask, new();
     }
 
     public partial interface IGroupInternal<T> :
@@ -760,6 +623,76 @@ namespace Mutagen.Bethesda.Oblivion
             return ((GroupCommon<T>)((IGroupInternalGetter<T>)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom<T, T_CopyMask>(
+            this Group<T> lhs,
+            Group<T> rhs)
+            where T : IOblivionMajorRecordInternal, IXmlItem, IBinaryItem
+            where T_CopyMask : OblivionMajorRecord_CopyMask, new()
+        {
+            CopyFieldsFrom<T, OblivionMajorRecord_ErrorMask, T_CopyMask>(
+                lhs: lhs,
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null);
+        }
+
+        public static void CopyFieldsFrom<T, T_CopyMask>(
+            this Group<T> lhs,
+            Group<T> rhs,
+            Group_CopyMask<T_CopyMask> copyMask,
+            Group<T> def = null)
+            where T : IOblivionMajorRecordInternal, IXmlItem, IBinaryItem
+            where T_CopyMask : OblivionMajorRecord_CopyMask, new()
+        {
+            CopyFieldsFrom<T, OblivionMajorRecord_ErrorMask, T_CopyMask>(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom<T, T_ErrMask, T_CopyMask>(
+            this Group<T> lhs,
+            Group<T> rhs,
+            out Group_ErrorMask<T_ErrMask> errorMask,
+            Group_CopyMask<T_CopyMask> copyMask = null,
+            Group<T> def = null,
+            bool doMasks = true)
+            where T : IOblivionMajorRecordInternal, IXmlItem, IBinaryItem
+            where T_ErrMask : OblivionMajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
+            where T_CopyMask : OblivionMajorRecord_CopyMask, new()
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            GroupSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = Group_ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom<T, T_CopyMask>(
+            this Group<T> lhs,
+            Group<T> rhs,
+            ErrorMaskBuilder errorMask,
+            Group_CopyMask<T_CopyMask> copyMask = null,
+            Group<T> def = null)
+            where T : IOblivionMajorRecordInternal, IXmlItem, IBinaryItem
+            where T_CopyMask : OblivionMajorRecord_CopyMask, new()
+        {
+            GroupSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
         #region Mutagen

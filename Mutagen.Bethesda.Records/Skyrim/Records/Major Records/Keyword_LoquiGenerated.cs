@@ -479,125 +479,11 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static Keyword Copy_ToLoqui(
-            Keyword item,
-            Keyword_CopyMask copyMask = null,
-            Keyword def = null)
+        void IClearable.Clear()
         {
-            Keyword ret;
-            if (item.GetType().Equals(typeof(Keyword)))
-            {
-                ret = new Keyword() as Keyword;
-            }
-            else
-            {
-                ret = (Keyword)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((KeywordSetterCommon)((IKeywordInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            Keyword rhs,
-            Keyword_CopyMask copyMask,
-            Keyword def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            Keyword rhs,
-            out Keyword_ErrorMask errorMask,
-            Keyword_CopyMask copyMask = null,
-            Keyword def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            KeywordSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = Keyword_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            Keyword rhs,
-            ErrorMaskBuilder errorMask,
-            Keyword_CopyMask copyMask = null,
-            Keyword def = null)
-        {
-            KeywordSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            Keyword_FieldIndex enu = (Keyword_FieldIndex)index;
-            switch (enu)
-            {
-                case Keyword_FieldIndex.Color:
-                    this.Color = (Color)obj;
-                    break;
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            KeywordSetterCommon.Instance.Clear(this);
-        }
-
-        public new static Keyword Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Keyword();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Keyword(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_Keyword(Keyword obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Keyword_FieldIndex enu))
-            {
-                CopyInInternal_SkyrimMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case Keyword_FieldIndex.Color:
-                    obj.Color = (Color)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -612,11 +498,6 @@ namespace Mutagen.Bethesda.Skyrim
         void Color_Set(Color value, bool hasBeenSet = true);
         void Color_Unset();
 
-        void CopyFieldsFrom(
-            Keyword rhs,
-            ErrorMaskBuilder errorMask = null,
-            Keyword_CopyMask copyMask = null,
-            Keyword def = null);
     }
 
     public partial interface IKeywordInternal :
@@ -717,6 +598,54 @@ namespace Mutagen.Bethesda.Skyrim
             return ((KeywordCommon)((IKeywordInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this Keyword lhs,
+            Keyword rhs,
+            Keyword_CopyMask copyMask,
+            Keyword def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this Keyword lhs,
+            Keyword rhs,
+            out Keyword_ErrorMask errorMask,
+            Keyword_CopyMask copyMask = null,
+            Keyword def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            KeywordSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = Keyword_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this Keyword lhs,
+            Keyword rhs,
+            ErrorMaskBuilder errorMask,
+            Keyword_CopyMask copyMask = null,
+            Keyword def = null)
+        {
+            KeywordSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

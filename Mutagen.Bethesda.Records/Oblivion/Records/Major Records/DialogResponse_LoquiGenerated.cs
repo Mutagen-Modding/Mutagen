@@ -598,166 +598,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static DialogResponse Copy_ToLoqui(
-            DialogResponse item,
-            DialogResponse_CopyMask copyMask = null,
-            DialogResponse def = null)
+        void IClearable.Clear()
         {
-            DialogResponse ret;
-            if (item.GetType().Equals(typeof(DialogResponse)))
-            {
-                ret = new DialogResponse() as DialogResponse;
-            }
-            else
-            {
-                ret = (DialogResponse)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((DialogResponseSetterCommon)((IDialogResponseInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public void CopyFieldsFrom(DialogResponse rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            DialogResponse rhs,
-            DialogResponse_CopyMask copyMask,
-            DialogResponse def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            DialogResponse rhs,
-            out DialogResponse_ErrorMask errorMask,
-            DialogResponse_CopyMask copyMask = null,
-            DialogResponse def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            DialogResponseSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = DialogResponse_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            DialogResponse rhs,
-            ErrorMaskBuilder errorMask,
-            DialogResponse_CopyMask copyMask = null,
-            DialogResponse def = null)
-        {
-            DialogResponseSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected void SetNthObject(ushort index, object obj)
-        {
-            DialogResponse_FieldIndex enu = (DialogResponse_FieldIndex)index;
-            switch (enu)
-            {
-                case DialogResponse_FieldIndex.Emotion:
-                    this.Emotion = (EmotionType)obj;
-                    break;
-                case DialogResponse_FieldIndex.EmotionValue:
-                    this.EmotionValue = (Int32)obj;
-                    break;
-                case DialogResponse_FieldIndex.Fluff1:
-                    this.Fluff1 = (Byte[])obj;
-                    break;
-                case DialogResponse_FieldIndex.ResponseNumber:
-                    this.ResponseNumber = (Byte)obj;
-                    break;
-                case DialogResponse_FieldIndex.Fluff2:
-                    this.Fluff2 = (Byte[])obj;
-                    break;
-                case DialogResponse_FieldIndex.ResponseText:
-                    this.ResponseText = (String)obj;
-                    break;
-                case DialogResponse_FieldIndex.ActorNotes:
-                    this.ActorNotes = (String)obj;
-                    break;
-                case DialogResponse_FieldIndex.TRDTDataTypeState:
-                    this.TRDTDataTypeState = (DialogResponse.TRDTDataType)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void Clear()
-        {
-            DialogResponseSetterCommon.Instance.Clear(this);
-        }
-
-        public static DialogResponse Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new DialogResponse();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_DialogResponse(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_DialogResponse(DialogResponse obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out DialogResponse_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case DialogResponse_FieldIndex.Emotion:
-                    obj.Emotion = (EmotionType)pair.Value;
-                    break;
-                case DialogResponse_FieldIndex.EmotionValue:
-                    obj.EmotionValue = (Int32)pair.Value;
-                    break;
-                case DialogResponse_FieldIndex.Fluff1:
-                    obj.Fluff1 = (Byte[])pair.Value;
-                    break;
-                case DialogResponse_FieldIndex.ResponseNumber:
-                    obj.ResponseNumber = (Byte)pair.Value;
-                    break;
-                case DialogResponse_FieldIndex.Fluff2:
-                    obj.Fluff2 = (Byte[])pair.Value;
-                    break;
-                case DialogResponse_FieldIndex.ResponseText:
-                    obj.ResponseText = (String)pair.Value;
-                    break;
-                case DialogResponse_FieldIndex.ActorNotes:
-                    obj.ActorNotes = (String)pair.Value;
-                    break;
-                case DialogResponse_FieldIndex.TRDTDataTypeState:
-                    obj.TRDTDataTypeState = (DialogResponse.TRDTDataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -786,11 +631,6 @@ namespace Mutagen.Bethesda.Oblivion
         void ActorNotes_Set(String value, bool hasBeenSet = true);
         void ActorNotes_Unset();
 
-        void CopyFieldsFrom(
-            DialogResponse rhs,
-            ErrorMaskBuilder errorMask = null,
-            DialogResponse_CopyMask copyMask = null,
-            DialogResponse def = null);
     }
 
     public partial interface IDialogResponseInternal :
@@ -922,6 +762,67 @@ namespace Mutagen.Bethesda.Oblivion
             return ((DialogResponseCommon)((IDialogResponseInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this DialogResponse lhs,
+            DialogResponse rhs)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null);
+        }
+
+        public static void CopyFieldsFrom(
+            this DialogResponse lhs,
+            DialogResponse rhs,
+            DialogResponse_CopyMask copyMask,
+            DialogResponse def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this DialogResponse lhs,
+            DialogResponse rhs,
+            out DialogResponse_ErrorMask errorMask,
+            DialogResponse_CopyMask copyMask = null,
+            DialogResponse def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            DialogResponseSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = DialogResponse_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this DialogResponse lhs,
+            DialogResponse rhs,
+            ErrorMaskBuilder errorMask,
+            DialogResponse_CopyMask copyMask = null,
+            DialogResponse def = null)
+        {
+            DialogResponseSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

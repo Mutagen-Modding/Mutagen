@@ -428,136 +428,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static TeleportDestination Copy_ToLoqui(
-            TeleportDestination item,
-            TeleportDestination_CopyMask copyMask = null,
-            TeleportDestination def = null)
+        void IClearable.Clear()
         {
-            TeleportDestination ret;
-            if (item.GetType().Equals(typeof(TeleportDestination)))
-            {
-                ret = new TeleportDestination() as TeleportDestination;
-            }
-            else
-            {
-                ret = (TeleportDestination)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((TeleportDestinationSetterCommon)((ITeleportDestinationInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public void CopyFieldsFrom(TeleportDestination rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            TeleportDestination rhs,
-            TeleportDestination_CopyMask copyMask,
-            TeleportDestination def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            TeleportDestination rhs,
-            out TeleportDestination_ErrorMask errorMask,
-            TeleportDestination_CopyMask copyMask = null,
-            TeleportDestination def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            TeleportDestinationSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = TeleportDestination_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            TeleportDestination rhs,
-            ErrorMaskBuilder errorMask,
-            TeleportDestination_CopyMask copyMask = null,
-            TeleportDestination def = null)
-        {
-            TeleportDestinationSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected void SetNthObject(ushort index, object obj)
-        {
-            TeleportDestination_FieldIndex enu = (TeleportDestination_FieldIndex)index;
-            switch (enu)
-            {
-                case TeleportDestination_FieldIndex.Destination:
-                    this.Destination_Property.Set((IFormIDLink<IPlaced>)obj);
-                    break;
-                case TeleportDestination_FieldIndex.Position:
-                    this.Position = (P3Float)obj;
-                    break;
-                case TeleportDestination_FieldIndex.Rotation:
-                    this.Rotation = (P3Float)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void Clear()
-        {
-            TeleportDestinationSetterCommon.Instance.Clear(this);
-        }
-
-        public static TeleportDestination Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new TeleportDestination();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_TeleportDestination(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_TeleportDestination(TeleportDestination obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out TeleportDestination_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case TeleportDestination_FieldIndex.Destination:
-                    obj.Destination_Property.Set((IFormIDLink<IPlaced>)pair.Value);
-                    break;
-                case TeleportDestination_FieldIndex.Position:
-                    obj.Position = (P3Float)pair.Value;
-                    break;
-                case TeleportDestination_FieldIndex.Rotation:
-                    obj.Rotation = (P3Float)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -572,11 +447,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         new P3Float Rotation { get; set; }
 
-        void CopyFieldsFrom(
-            TeleportDestination rhs,
-            ErrorMaskBuilder errorMask = null,
-            TeleportDestination_CopyMask copyMask = null,
-            TeleportDestination def = null);
     }
 
     public partial interface ITeleportDestinationInternal :
@@ -687,6 +557,67 @@ namespace Mutagen.Bethesda.Oblivion
             return ((TeleportDestinationCommon)((ITeleportDestinationInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this TeleportDestination lhs,
+            TeleportDestination rhs)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null);
+        }
+
+        public static void CopyFieldsFrom(
+            this TeleportDestination lhs,
+            TeleportDestination rhs,
+            TeleportDestination_CopyMask copyMask,
+            TeleportDestination def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this TeleportDestination lhs,
+            TeleportDestination rhs,
+            out TeleportDestination_ErrorMask errorMask,
+            TeleportDestination_CopyMask copyMask = null,
+            TeleportDestination def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            TeleportDestinationSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = TeleportDestination_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this TeleportDestination lhs,
+            TeleportDestination rhs,
+            ErrorMaskBuilder errorMask,
+            TeleportDestination_CopyMask copyMask = null,
+            TeleportDestination def = null)
+        {
+            TeleportDestinationSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

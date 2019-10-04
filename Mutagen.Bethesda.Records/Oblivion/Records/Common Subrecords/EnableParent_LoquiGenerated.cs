@@ -414,130 +414,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static EnableParent Copy_ToLoqui(
-            EnableParent item,
-            EnableParent_CopyMask copyMask = null,
-            EnableParent def = null)
+        void IClearable.Clear()
         {
-            EnableParent ret;
-            if (item.GetType().Equals(typeof(EnableParent)))
-            {
-                ret = new EnableParent() as EnableParent;
-            }
-            else
-            {
-                ret = (EnableParent)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((EnableParentSetterCommon)((IEnableParentInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public void CopyFieldsFrom(EnableParent rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            EnableParent rhs,
-            EnableParent_CopyMask copyMask,
-            EnableParent def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            EnableParent rhs,
-            out EnableParent_ErrorMask errorMask,
-            EnableParent_CopyMask copyMask = null,
-            EnableParent def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            EnableParentSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = EnableParent_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            EnableParent rhs,
-            ErrorMaskBuilder errorMask,
-            EnableParent_CopyMask copyMask = null,
-            EnableParent def = null)
-        {
-            EnableParentSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected void SetNthObject(ushort index, object obj)
-        {
-            EnableParent_FieldIndex enu = (EnableParent_FieldIndex)index;
-            switch (enu)
-            {
-                case EnableParent_FieldIndex.Reference:
-                    this.Reference_Property.Set((IFormIDLink<IPlaced>)obj);
-                    break;
-                case EnableParent_FieldIndex.Flags:
-                    this.Flags = (EnableParent.Flag)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void Clear()
-        {
-            EnableParentSetterCommon.Instance.Clear(this);
-        }
-
-        public static EnableParent Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new EnableParent();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_EnableParent(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_EnableParent(EnableParent obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out EnableParent_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case EnableParent_FieldIndex.Reference:
-                    obj.Reference_Property.Set((IFormIDLink<IPlaced>)pair.Value);
-                    break;
-                case EnableParent_FieldIndex.Flags:
-                    obj.Flags = (EnableParent.Flag)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -550,11 +431,6 @@ namespace Mutagen.Bethesda.Oblivion
         new IFormIDLink<IPlaced> Reference_Property { get; }
         new EnableParent.Flag Flags { get; set; }
 
-        void CopyFieldsFrom(
-            EnableParent rhs,
-            ErrorMaskBuilder errorMask = null,
-            EnableParent_CopyMask copyMask = null,
-            EnableParent def = null);
     }
 
     public partial interface IEnableParentInternal :
@@ -661,6 +537,67 @@ namespace Mutagen.Bethesda.Oblivion
             return ((EnableParentCommon)((IEnableParentInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this EnableParent lhs,
+            EnableParent rhs)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null);
+        }
+
+        public static void CopyFieldsFrom(
+            this EnableParent lhs,
+            EnableParent rhs,
+            EnableParent_CopyMask copyMask,
+            EnableParent def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this EnableParent lhs,
+            EnableParent rhs,
+            out EnableParent_ErrorMask errorMask,
+            EnableParent_CopyMask copyMask = null,
+            EnableParent def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            EnableParentSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = EnableParent_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this EnableParent lhs,
+            EnableParent rhs,
+            ErrorMaskBuilder errorMask,
+            EnableParent_CopyMask copyMask = null,
+            EnableParent def = null)
+        {
+            EnableParentSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

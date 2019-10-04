@@ -1373,353 +1373,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static Weather Copy_ToLoqui(
-            Weather item,
-            Weather_CopyMask copyMask = null,
-            Weather def = null)
+        void IClearable.Clear()
         {
-            Weather ret;
-            if (item.GetType().Equals(typeof(Weather)))
-            {
-                ret = new Weather() as Weather;
-            }
-            else
-            {
-                ret = (Weather)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((WeatherSetterCommon)((IWeatherInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            Weather rhs,
-            Weather_CopyMask copyMask,
-            Weather def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            Weather rhs,
-            out Weather_ErrorMask errorMask,
-            Weather_CopyMask copyMask = null,
-            Weather def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            WeatherSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = Weather_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            Weather rhs,
-            ErrorMaskBuilder errorMask,
-            Weather_CopyMask copyMask = null,
-            Weather def = null)
-        {
-            WeatherSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            Weather_FieldIndex enu = (Weather_FieldIndex)index;
-            switch (enu)
-            {
-                case Weather_FieldIndex.TextureLowerLayer:
-                    this.TextureLowerLayer = (String)obj;
-                    break;
-                case Weather_FieldIndex.TextureUpperLayer:
-                    this.TextureUpperLayer = (String)obj;
-                    break;
-                case Weather_FieldIndex.Model:
-                    this.Model = (Model)obj;
-                    break;
-                case Weather_FieldIndex.WeatherTypes:
-                    this._WeatherTypes.SetTo((ISetList<WeatherType>)obj);
-                    break;
-                case Weather_FieldIndex.FogDayNear:
-                    this.FogDayNear = (Single)obj;
-                    break;
-                case Weather_FieldIndex.FogDayFar:
-                    this.FogDayFar = (Single)obj;
-                    break;
-                case Weather_FieldIndex.FogNightNear:
-                    this.FogNightNear = (Single)obj;
-                    break;
-                case Weather_FieldIndex.FogNightFar:
-                    this.FogNightFar = (Single)obj;
-                    break;
-                case Weather_FieldIndex.HdrEyeAdaptSpeed:
-                    this.HdrEyeAdaptSpeed = (Single)obj;
-                    break;
-                case Weather_FieldIndex.HdrBlurRadius:
-                    this.HdrBlurRadius = (Single)obj;
-                    break;
-                case Weather_FieldIndex.HdrBlurPasses:
-                    this.HdrBlurPasses = (Single)obj;
-                    break;
-                case Weather_FieldIndex.HdrEmissiveMult:
-                    this.HdrEmissiveMult = (Single)obj;
-                    break;
-                case Weather_FieldIndex.HdrTargetLum:
-                    this.HdrTargetLum = (Single)obj;
-                    break;
-                case Weather_FieldIndex.HdrUpperLumClamp:
-                    this.HdrUpperLumClamp = (Single)obj;
-                    break;
-                case Weather_FieldIndex.HdrBrightScale:
-                    this.HdrBrightScale = (Single)obj;
-                    break;
-                case Weather_FieldIndex.HdrBrightClamp:
-                    this.HdrBrightClamp = (Single)obj;
-                    break;
-                case Weather_FieldIndex.HdrLumRampNoTex:
-                    this.HdrLumRampNoTex = (Single)obj;
-                    break;
-                case Weather_FieldIndex.HdrLumRampMin:
-                    this.HdrLumRampMin = (Single)obj;
-                    break;
-                case Weather_FieldIndex.HdrLumRampMax:
-                    this.HdrLumRampMax = (Single)obj;
-                    break;
-                case Weather_FieldIndex.HdrSunlightDimmer:
-                    this.HdrSunlightDimmer = (Single)obj;
-                    break;
-                case Weather_FieldIndex.HdrGrassDimmer:
-                    this.HdrGrassDimmer = (Single)obj;
-                    break;
-                case Weather_FieldIndex.HdrTreeDimmer:
-                    this.HdrTreeDimmer = (Single)obj;
-                    break;
-                case Weather_FieldIndex.WindSpeed:
-                    this.WindSpeed = (Byte)obj;
-                    break;
-                case Weather_FieldIndex.CloudSpeedLower:
-                    this.CloudSpeedLower = (Byte)obj;
-                    break;
-                case Weather_FieldIndex.CloudSpeedUpper:
-                    this.CloudSpeedUpper = (Byte)obj;
-                    break;
-                case Weather_FieldIndex.TransDelta:
-                    this.TransDelta = (Byte)obj;
-                    break;
-                case Weather_FieldIndex.SunGlare:
-                    this.SunGlare = (Byte)obj;
-                    break;
-                case Weather_FieldIndex.SunDamage:
-                    this.SunDamage = (Byte)obj;
-                    break;
-                case Weather_FieldIndex.PrecipitationBeginFadeIn:
-                    this.PrecipitationBeginFadeIn = (Byte)obj;
-                    break;
-                case Weather_FieldIndex.PrecipitationEndFadeOut:
-                    this.PrecipitationEndFadeOut = (Byte)obj;
-                    break;
-                case Weather_FieldIndex.ThunderLightningBeginFadeIn:
-                    this.ThunderLightningBeginFadeIn = (Byte)obj;
-                    break;
-                case Weather_FieldIndex.ThunderLightningEndFadeOut:
-                    this.ThunderLightningEndFadeOut = (Byte)obj;
-                    break;
-                case Weather_FieldIndex.ThunderLightningFrequency:
-                    this.ThunderLightningFrequency = (Byte)obj;
-                    break;
-                case Weather_FieldIndex.Classification:
-                    this.Classification = (Weather.WeatherClassification)obj;
-                    break;
-                case Weather_FieldIndex.LightningColor:
-                    this.LightningColor = (Color)obj;
-                    break;
-                case Weather_FieldIndex.Sounds:
-                    this._Sounds.SetTo((ISetList<WeatherSound>)obj);
-                    break;
-                case Weather_FieldIndex.FNAMDataTypeState:
-                    this.FNAMDataTypeState = (Weather.FNAMDataType)obj;
-                    break;
-                case Weather_FieldIndex.HNAMDataTypeState:
-                    this.HNAMDataTypeState = (Weather.HNAMDataType)obj;
-                    break;
-                case Weather_FieldIndex.DATADataTypeState:
-                    this.DATADataTypeState = (Weather.DATADataType)obj;
-                    break;
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            WeatherSetterCommon.Instance.Clear(this);
-        }
-
-        public new static Weather Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Weather();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Weather(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_Weather(Weather obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Weather_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case Weather_FieldIndex.TextureLowerLayer:
-                    obj.TextureLowerLayer = (String)pair.Value;
-                    break;
-                case Weather_FieldIndex.TextureUpperLayer:
-                    obj.TextureUpperLayer = (String)pair.Value;
-                    break;
-                case Weather_FieldIndex.Model:
-                    obj.Model = (Model)pair.Value;
-                    break;
-                case Weather_FieldIndex.WeatherTypes:
-                    obj._WeatherTypes.SetTo((ISetList<WeatherType>)pair.Value);
-                    break;
-                case Weather_FieldIndex.FogDayNear:
-                    obj.FogDayNear = (Single)pair.Value;
-                    break;
-                case Weather_FieldIndex.FogDayFar:
-                    obj.FogDayFar = (Single)pair.Value;
-                    break;
-                case Weather_FieldIndex.FogNightNear:
-                    obj.FogNightNear = (Single)pair.Value;
-                    break;
-                case Weather_FieldIndex.FogNightFar:
-                    obj.FogNightFar = (Single)pair.Value;
-                    break;
-                case Weather_FieldIndex.HdrEyeAdaptSpeed:
-                    obj.HdrEyeAdaptSpeed = (Single)pair.Value;
-                    break;
-                case Weather_FieldIndex.HdrBlurRadius:
-                    obj.HdrBlurRadius = (Single)pair.Value;
-                    break;
-                case Weather_FieldIndex.HdrBlurPasses:
-                    obj.HdrBlurPasses = (Single)pair.Value;
-                    break;
-                case Weather_FieldIndex.HdrEmissiveMult:
-                    obj.HdrEmissiveMult = (Single)pair.Value;
-                    break;
-                case Weather_FieldIndex.HdrTargetLum:
-                    obj.HdrTargetLum = (Single)pair.Value;
-                    break;
-                case Weather_FieldIndex.HdrUpperLumClamp:
-                    obj.HdrUpperLumClamp = (Single)pair.Value;
-                    break;
-                case Weather_FieldIndex.HdrBrightScale:
-                    obj.HdrBrightScale = (Single)pair.Value;
-                    break;
-                case Weather_FieldIndex.HdrBrightClamp:
-                    obj.HdrBrightClamp = (Single)pair.Value;
-                    break;
-                case Weather_FieldIndex.HdrLumRampNoTex:
-                    obj.HdrLumRampNoTex = (Single)pair.Value;
-                    break;
-                case Weather_FieldIndex.HdrLumRampMin:
-                    obj.HdrLumRampMin = (Single)pair.Value;
-                    break;
-                case Weather_FieldIndex.HdrLumRampMax:
-                    obj.HdrLumRampMax = (Single)pair.Value;
-                    break;
-                case Weather_FieldIndex.HdrSunlightDimmer:
-                    obj.HdrSunlightDimmer = (Single)pair.Value;
-                    break;
-                case Weather_FieldIndex.HdrGrassDimmer:
-                    obj.HdrGrassDimmer = (Single)pair.Value;
-                    break;
-                case Weather_FieldIndex.HdrTreeDimmer:
-                    obj.HdrTreeDimmer = (Single)pair.Value;
-                    break;
-                case Weather_FieldIndex.WindSpeed:
-                    obj.WindSpeed = (Byte)pair.Value;
-                    break;
-                case Weather_FieldIndex.CloudSpeedLower:
-                    obj.CloudSpeedLower = (Byte)pair.Value;
-                    break;
-                case Weather_FieldIndex.CloudSpeedUpper:
-                    obj.CloudSpeedUpper = (Byte)pair.Value;
-                    break;
-                case Weather_FieldIndex.TransDelta:
-                    obj.TransDelta = (Byte)pair.Value;
-                    break;
-                case Weather_FieldIndex.SunGlare:
-                    obj.SunGlare = (Byte)pair.Value;
-                    break;
-                case Weather_FieldIndex.SunDamage:
-                    obj.SunDamage = (Byte)pair.Value;
-                    break;
-                case Weather_FieldIndex.PrecipitationBeginFadeIn:
-                    obj.PrecipitationBeginFadeIn = (Byte)pair.Value;
-                    break;
-                case Weather_FieldIndex.PrecipitationEndFadeOut:
-                    obj.PrecipitationEndFadeOut = (Byte)pair.Value;
-                    break;
-                case Weather_FieldIndex.ThunderLightningBeginFadeIn:
-                    obj.ThunderLightningBeginFadeIn = (Byte)pair.Value;
-                    break;
-                case Weather_FieldIndex.ThunderLightningEndFadeOut:
-                    obj.ThunderLightningEndFadeOut = (Byte)pair.Value;
-                    break;
-                case Weather_FieldIndex.ThunderLightningFrequency:
-                    obj.ThunderLightningFrequency = (Byte)pair.Value;
-                    break;
-                case Weather_FieldIndex.Classification:
-                    obj.Classification = (Weather.WeatherClassification)pair.Value;
-                    break;
-                case Weather_FieldIndex.LightningColor:
-                    obj.LightningColor = (Color)pair.Value;
-                    break;
-                case Weather_FieldIndex.Sounds:
-                    obj._Sounds.SetTo((ISetList<WeatherSound>)pair.Value);
-                    break;
-                case Weather_FieldIndex.FNAMDataTypeState:
-                    obj.FNAMDataTypeState = (Weather.FNAMDataType)pair.Value;
-                    break;
-                case Weather_FieldIndex.HNAMDataTypeState:
-                    obj.HNAMDataTypeState = (Weather.HNAMDataType)pair.Value;
-                    break;
-                case Weather_FieldIndex.DATADataTypeState:
-                    obj.DATADataTypeState = (Weather.DATADataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -1808,11 +1466,6 @@ namespace Mutagen.Bethesda.Oblivion
         new Color LightningColor { get; set; }
 
         new ISetList<WeatherSound> Sounds { get; }
-        void CopyFieldsFrom(
-            Weather rhs,
-            ErrorMaskBuilder errorMask = null,
-            Weather_CopyMask copyMask = null,
-            Weather def = null);
     }
 
     public partial interface IWeatherInternal :
@@ -2071,6 +1724,54 @@ namespace Mutagen.Bethesda.Oblivion
             return ((WeatherCommon)((IWeatherInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this Weather lhs,
+            Weather rhs,
+            Weather_CopyMask copyMask,
+            Weather def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this Weather lhs,
+            Weather rhs,
+            out Weather_ErrorMask errorMask,
+            Weather_CopyMask copyMask = null,
+            Weather def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            WeatherSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = Weather_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this Weather lhs,
+            Weather rhs,
+            ErrorMaskBuilder errorMask,
+            Weather_CopyMask copyMask = null,
+            Weather def = null)
+        {
+            WeatherSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

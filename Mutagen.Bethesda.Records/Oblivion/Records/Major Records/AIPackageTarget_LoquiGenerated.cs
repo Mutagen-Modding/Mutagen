@@ -397,136 +397,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static AIPackageTarget Copy_ToLoqui(
-            AIPackageTarget item,
-            AIPackageTarget_CopyMask copyMask = null,
-            AIPackageTarget def = null)
+        void IClearable.Clear()
         {
-            AIPackageTarget ret;
-            if (item.GetType().Equals(typeof(AIPackageTarget)))
-            {
-                ret = new AIPackageTarget() as AIPackageTarget;
-            }
-            else
-            {
-                ret = (AIPackageTarget)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((AIPackageTargetSetterCommon)((IAIPackageTargetInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public void CopyFieldsFrom(AIPackageTarget rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            AIPackageTarget rhs,
-            AIPackageTarget_CopyMask copyMask,
-            AIPackageTarget def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            AIPackageTarget rhs,
-            out AIPackageTarget_ErrorMask errorMask,
-            AIPackageTarget_CopyMask copyMask = null,
-            AIPackageTarget def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            AIPackageTargetSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = AIPackageTarget_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            AIPackageTarget rhs,
-            ErrorMaskBuilder errorMask,
-            AIPackageTarget_CopyMask copyMask = null,
-            AIPackageTarget def = null)
-        {
-            AIPackageTargetSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected void SetNthObject(ushort index, object obj)
-        {
-            AIPackageTarget_FieldIndex enu = (AIPackageTarget_FieldIndex)index;
-            switch (enu)
-            {
-                case AIPackageTarget_FieldIndex.ObjectType:
-                    this.ObjectType = (AIPackageTarget.ObjectTypeEnum)obj;
-                    break;
-                case AIPackageTarget_FieldIndex.Object:
-                    this.Object = (Int32)obj;
-                    break;
-                case AIPackageTarget_FieldIndex.Count:
-                    this.Count = (Int32)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void Clear()
-        {
-            AIPackageTargetSetterCommon.Instance.Clear(this);
-        }
-
-        public static AIPackageTarget Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new AIPackageTarget();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_AIPackageTarget(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_AIPackageTarget(AIPackageTarget obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out AIPackageTarget_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case AIPackageTarget_FieldIndex.ObjectType:
-                    obj.ObjectType = (AIPackageTarget.ObjectTypeEnum)pair.Value;
-                    break;
-                case AIPackageTarget_FieldIndex.Object:
-                    obj.Object = (Int32)pair.Value;
-                    break;
-                case AIPackageTarget_FieldIndex.Count:
-                    obj.Count = (Int32)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -541,11 +416,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Int32 Count { get; set; }
 
-        void CopyFieldsFrom(
-            AIPackageTarget rhs,
-            ErrorMaskBuilder errorMask = null,
-            AIPackageTarget_CopyMask copyMask = null,
-            AIPackageTarget def = null);
     }
 
     public partial interface IAIPackageTargetInternal :
@@ -653,6 +523,67 @@ namespace Mutagen.Bethesda.Oblivion
             return ((AIPackageTargetCommon)((IAIPackageTargetInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this AIPackageTarget lhs,
+            AIPackageTarget rhs)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null);
+        }
+
+        public static void CopyFieldsFrom(
+            this AIPackageTarget lhs,
+            AIPackageTarget rhs,
+            AIPackageTarget_CopyMask copyMask,
+            AIPackageTarget def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this AIPackageTarget lhs,
+            AIPackageTarget rhs,
+            out AIPackageTarget_ErrorMask errorMask,
+            AIPackageTarget_CopyMask copyMask = null,
+            AIPackageTarget def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            AIPackageTargetSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = AIPackageTarget_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this AIPackageTarget lhs,
+            AIPackageTarget rhs,
+            ErrorMaskBuilder errorMask,
+            AIPackageTarget_CopyMask copyMask = null,
+            AIPackageTarget def = null)
+        {
+            AIPackageTargetSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

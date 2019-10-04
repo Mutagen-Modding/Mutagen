@@ -565,137 +565,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static Eye Copy_ToLoqui(
-            Eye item,
-            Eye_CopyMask copyMask = null,
-            Eye def = null)
+        void IClearable.Clear()
         {
-            Eye ret;
-            if (item.GetType().Equals(typeof(Eye)))
-            {
-                ret = new Eye() as Eye;
-            }
-            else
-            {
-                ret = (Eye)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((EyeSetterCommon)((IEyeInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            Eye rhs,
-            Eye_CopyMask copyMask,
-            Eye def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            Eye rhs,
-            out Eye_ErrorMask errorMask,
-            Eye_CopyMask copyMask = null,
-            Eye def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            EyeSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = Eye_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            Eye rhs,
-            ErrorMaskBuilder errorMask,
-            Eye_CopyMask copyMask = null,
-            Eye def = null)
-        {
-            EyeSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            Eye_FieldIndex enu = (Eye_FieldIndex)index;
-            switch (enu)
-            {
-                case Eye_FieldIndex.Name:
-                    this.Name = (String)obj;
-                    break;
-                case Eye_FieldIndex.Icon:
-                    this.Icon = (String)obj;
-                    break;
-                case Eye_FieldIndex.Flags:
-                    this.Flags = (Eye.Flag)obj;
-                    break;
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            EyeSetterCommon.Instance.Clear(this);
-        }
-
-        public new static Eye Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Eye();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Eye(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_Eye(Eye obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Eye_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case Eye_FieldIndex.Name:
-                    obj.Name = (String)pair.Value;
-                    break;
-                case Eye_FieldIndex.Icon:
-                    obj.Icon = (String)pair.Value;
-                    break;
-                case Eye_FieldIndex.Flags:
-                    obj.Flags = (Eye.Flag)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -720,11 +594,6 @@ namespace Mutagen.Bethesda.Oblivion
         void Flags_Set(Eye.Flag value, bool hasBeenSet = true);
         void Flags_Unset();
 
-        void CopyFieldsFrom(
-            Eye rhs,
-            ErrorMaskBuilder errorMask = null,
-            Eye_CopyMask copyMask = null,
-            Eye def = null);
     }
 
     public partial interface IEyeInternal :
@@ -835,6 +704,54 @@ namespace Mutagen.Bethesda.Oblivion
             return ((EyeCommon)((IEyeInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this Eye lhs,
+            Eye rhs,
+            Eye_CopyMask copyMask,
+            Eye def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this Eye lhs,
+            Eye rhs,
+            out Eye_ErrorMask errorMask,
+            Eye_CopyMask copyMask = null,
+            Eye def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            EyeSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = Eye_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this Eye lhs,
+            Eye rhs,
+            ErrorMaskBuilder errorMask,
+            Eye_CopyMask copyMask = null,
+            Eye def = null)
+        {
+            EyeSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

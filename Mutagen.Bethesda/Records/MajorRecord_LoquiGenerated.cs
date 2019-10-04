@@ -468,124 +468,11 @@ namespace Mutagen.Bethesda
             return ret;
         }
 
-        public static MajorRecord Copy_ToLoqui(
-            MajorRecord item,
-            MajorRecord_CopyMask copyMask = null,
-            MajorRecord def = null)
+        void IClearable.Clear()
         {
-            MajorRecord ret = (MajorRecord)System.Activator.CreateInstance(item.GetType());
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((MajorRecordSetterCommon)((IMajorRecordInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public virtual void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            MajorRecord rhs,
-            MajorRecord_CopyMask copyMask,
-            MajorRecord def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            MajorRecord rhs,
-            out MajorRecord_ErrorMask errorMask,
-            MajorRecord_CopyMask copyMask = null,
-            MajorRecord def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            MajorRecordSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = MajorRecord_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            MajorRecord rhs,
-            ErrorMaskBuilder errorMask,
-            MajorRecord_CopyMask copyMask = null,
-            MajorRecord def = null)
-        {
-            MajorRecordSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected virtual void SetNthObject(ushort index, object obj)
-        {
-            MajorRecord_FieldIndex enu = (MajorRecord_FieldIndex)index;
-            switch (enu)
-            {
-                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    this.MajorRecordFlagsRaw = (Int32)obj;
-                    break;
-                case MajorRecord_FieldIndex.FormKey:
-                    this.FormKey = (FormKey)obj;
-                    break;
-                case MajorRecord_FieldIndex.Version:
-                    this.Version = (UInt32)obj;
-                    break;
-                case MajorRecord_FieldIndex.EditorID:
-                    this.EditorID = (String)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public virtual void Clear()
-        {
-            MajorRecordSetterCommon.Instance.Clear(this);
-        }
-
-        protected static void CopyInInternal_MajorRecord(MajorRecord obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out MajorRecord_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    obj.MajorRecordFlagsRaw = (Int32)pair.Value;
-                    break;
-                case MajorRecord_FieldIndex.FormKey:
-                    obj.FormKey = (FormKey)pair.Value;
-                    break;
-                case MajorRecord_FieldIndex.Version:
-                    obj.Version = (UInt32)pair.Value;
-                    break;
-                case MajorRecord_FieldIndex.EditorID:
-                    obj.EditorID = (String)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -604,11 +491,6 @@ namespace Mutagen.Bethesda
         void EditorID_Set(String value, bool hasBeenSet = true);
         void EditorID_Unset();
 
-        void CopyFieldsFrom(
-            MajorRecord rhs,
-            ErrorMaskBuilder errorMask = null,
-            MajorRecord_CopyMask copyMask = null,
-            MajorRecord def = null);
     }
 
     public partial interface IMajorRecordInternal :
@@ -724,6 +606,67 @@ namespace Mutagen.Bethesda
             return ((MajorRecordCommon)((IMajorRecordInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this MajorRecord lhs,
+            MajorRecord rhs)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null);
+        }
+
+        public static void CopyFieldsFrom(
+            this MajorRecord lhs,
+            MajorRecord rhs,
+            MajorRecord_CopyMask copyMask,
+            MajorRecord def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this MajorRecord lhs,
+            MajorRecord rhs,
+            out MajorRecord_ErrorMask errorMask,
+            MajorRecord_CopyMask copyMask = null,
+            MajorRecord def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            MajorRecordSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = MajorRecord_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this MajorRecord lhs,
+            MajorRecord rhs,
+            ErrorMaskBuilder errorMask,
+            MajorRecord_CopyMask copyMask = null,
+            MajorRecord def = null)
+        {
+            MajorRecordSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
         #region Mutagen

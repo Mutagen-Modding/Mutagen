@@ -420,142 +420,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static PathGridPoint Copy_ToLoqui(
-            PathGridPoint item,
-            PathGridPoint_CopyMask copyMask = null,
-            PathGridPoint def = null)
+        void IClearable.Clear()
         {
-            PathGridPoint ret;
-            if (item.GetType().Equals(typeof(PathGridPoint)))
-            {
-                ret = new PathGridPoint() as PathGridPoint;
-            }
-            else
-            {
-                ret = (PathGridPoint)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((PathGridPointSetterCommon)((IPathGridPointInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public void CopyFieldsFrom(PathGridPoint rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            PathGridPoint rhs,
-            PathGridPoint_CopyMask copyMask,
-            PathGridPoint def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            PathGridPoint rhs,
-            out PathGridPoint_ErrorMask errorMask,
-            PathGridPoint_CopyMask copyMask = null,
-            PathGridPoint def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            PathGridPointSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = PathGridPoint_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            PathGridPoint rhs,
-            ErrorMaskBuilder errorMask,
-            PathGridPoint_CopyMask copyMask = null,
-            PathGridPoint def = null)
-        {
-            PathGridPointSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected void SetNthObject(ushort index, object obj)
-        {
-            PathGridPoint_FieldIndex enu = (PathGridPoint_FieldIndex)index;
-            switch (enu)
-            {
-                case PathGridPoint_FieldIndex.Point:
-                    this.Point = (P3Float)obj;
-                    break;
-                case PathGridPoint_FieldIndex.NumConnections:
-                    this.NumConnections = (Byte)obj;
-                    break;
-                case PathGridPoint_FieldIndex.FluffBytes:
-                    this.FluffBytes = (Byte[])obj;
-                    break;
-                case PathGridPoint_FieldIndex.Connections:
-                    this._Connections.SetTo((IExtendedList<Int16>)obj);
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void Clear()
-        {
-            PathGridPointSetterCommon.Instance.Clear(this);
-        }
-
-        public static PathGridPoint Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new PathGridPoint();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_PathGridPoint(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_PathGridPoint(PathGridPoint obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out PathGridPoint_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case PathGridPoint_FieldIndex.Point:
-                    obj.Point = (P3Float)pair.Value;
-                    break;
-                case PathGridPoint_FieldIndex.NumConnections:
-                    obj.NumConnections = (Byte)pair.Value;
-                    break;
-                case PathGridPoint_FieldIndex.FluffBytes:
-                    obj.FluffBytes = (Byte[])pair.Value;
-                    break;
-                case PathGridPoint_FieldIndex.Connections:
-                    obj._Connections.SetTo((IExtendedList<Int16>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -571,11 +440,6 @@ namespace Mutagen.Bethesda.Oblivion
         new Byte[] FluffBytes { get; set; }
 
         new IExtendedList<Int16> Connections { get; }
-        void CopyFieldsFrom(
-            PathGridPoint rhs,
-            ErrorMaskBuilder errorMask = null,
-            PathGridPoint_CopyMask copyMask = null,
-            PathGridPoint def = null);
     }
 
     public partial interface IPathGridPointInternal :
@@ -686,6 +550,67 @@ namespace Mutagen.Bethesda.Oblivion
             return ((PathGridPointCommon)((IPathGridPointInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this PathGridPoint lhs,
+            PathGridPoint rhs)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null);
+        }
+
+        public static void CopyFieldsFrom(
+            this PathGridPoint lhs,
+            PathGridPoint rhs,
+            PathGridPoint_CopyMask copyMask,
+            PathGridPoint def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this PathGridPoint lhs,
+            PathGridPoint rhs,
+            out PathGridPoint_ErrorMask errorMask,
+            PathGridPoint_CopyMask copyMask = null,
+            PathGridPoint def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            PathGridPointSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = PathGridPoint_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this PathGridPoint lhs,
+            PathGridPoint rhs,
+            ErrorMaskBuilder errorMask,
+            PathGridPoint_CopyMask copyMask = null,
+            PathGridPoint def = null)
+        {
+            PathGridPointSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

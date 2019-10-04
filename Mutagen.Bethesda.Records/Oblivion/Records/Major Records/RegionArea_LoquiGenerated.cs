@@ -446,130 +446,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static RegionArea Copy_ToLoqui(
-            RegionArea item,
-            RegionArea_CopyMask copyMask = null,
-            RegionArea def = null)
+        void IClearable.Clear()
         {
-            RegionArea ret;
-            if (item.GetType().Equals(typeof(RegionArea)))
-            {
-                ret = new RegionArea() as RegionArea;
-            }
-            else
-            {
-                ret = (RegionArea)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((RegionAreaSetterCommon)((IRegionAreaInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public void CopyFieldsFrom(RegionArea rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            RegionArea rhs,
-            RegionArea_CopyMask copyMask,
-            RegionArea def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            RegionArea rhs,
-            out RegionArea_ErrorMask errorMask,
-            RegionArea_CopyMask copyMask = null,
-            RegionArea def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            RegionAreaSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = RegionArea_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            RegionArea rhs,
-            ErrorMaskBuilder errorMask,
-            RegionArea_CopyMask copyMask = null,
-            RegionArea def = null)
-        {
-            RegionAreaSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected void SetNthObject(ushort index, object obj)
-        {
-            RegionArea_FieldIndex enu = (RegionArea_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionArea_FieldIndex.EdgeFallOff:
-                    this.EdgeFallOff = (UInt32)obj;
-                    break;
-                case RegionArea_FieldIndex.RegionPoints:
-                    this._RegionPoints.SetTo((ISetList<P2Float>)obj);
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void Clear()
-        {
-            RegionAreaSetterCommon.Instance.Clear(this);
-        }
-
-        public static RegionArea Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new RegionArea();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_RegionArea(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_RegionArea(RegionArea obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out RegionArea_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case RegionArea_FieldIndex.EdgeFallOff:
-                    obj.EdgeFallOff = (UInt32)pair.Value;
-                    break;
-                case RegionArea_FieldIndex.RegionPoints:
-                    obj._RegionPoints.SetTo((ISetList<P2Float>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -584,11 +465,6 @@ namespace Mutagen.Bethesda.Oblivion
         void EdgeFallOff_Unset();
 
         new ISetList<P2Float> RegionPoints { get; }
-        void CopyFieldsFrom(
-            RegionArea rhs,
-            ErrorMaskBuilder errorMask = null,
-            RegionArea_CopyMask copyMask = null,
-            RegionArea def = null);
     }
 
     public partial interface IRegionAreaInternal :
@@ -692,6 +568,67 @@ namespace Mutagen.Bethesda.Oblivion
             return ((RegionAreaCommon)((IRegionAreaInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this RegionArea lhs,
+            RegionArea rhs)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null);
+        }
+
+        public static void CopyFieldsFrom(
+            this RegionArea lhs,
+            RegionArea rhs,
+            RegionArea_CopyMask copyMask,
+            RegionArea def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this RegionArea lhs,
+            RegionArea rhs,
+            out RegionArea_ErrorMask errorMask,
+            RegionArea_CopyMask copyMask = null,
+            RegionArea def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            RegionAreaSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = RegionArea_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this RegionArea lhs,
+            RegionArea rhs,
+            ErrorMaskBuilder errorMask,
+            RegionArea_CopyMask copyMask = null,
+            RegionArea def = null)
+        {
+            RegionAreaSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

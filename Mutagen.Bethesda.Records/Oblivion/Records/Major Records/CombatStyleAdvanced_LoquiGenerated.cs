@@ -667,244 +667,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CombatStyleAdvanced Copy_ToLoqui(
-            CombatStyleAdvanced item,
-            CombatStyleAdvanced_CopyMask copyMask = null,
-            CombatStyleAdvanced def = null)
+        void IClearable.Clear()
         {
-            CombatStyleAdvanced ret;
-            if (item.GetType().Equals(typeof(CombatStyleAdvanced)))
-            {
-                ret = new CombatStyleAdvanced() as CombatStyleAdvanced;
-            }
-            else
-            {
-                ret = (CombatStyleAdvanced)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((CombatStyleAdvancedSetterCommon)((ICombatStyleAdvancedInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public void CopyFieldsFrom(CombatStyleAdvanced rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            CombatStyleAdvanced rhs,
-            CombatStyleAdvanced_CopyMask copyMask,
-            CombatStyleAdvanced def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            CombatStyleAdvanced rhs,
-            out CombatStyleAdvanced_ErrorMask errorMask,
-            CombatStyleAdvanced_CopyMask copyMask = null,
-            CombatStyleAdvanced def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            CombatStyleAdvancedSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = CombatStyleAdvanced_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            CombatStyleAdvanced rhs,
-            ErrorMaskBuilder errorMask,
-            CombatStyleAdvanced_CopyMask copyMask = null,
-            CombatStyleAdvanced def = null)
-        {
-            CombatStyleAdvancedSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected void SetNthObject(ushort index, object obj)
-        {
-            CombatStyleAdvanced_FieldIndex enu = (CombatStyleAdvanced_FieldIndex)index;
-            switch (enu)
-            {
-                case CombatStyleAdvanced_FieldIndex.DodgeFatigueModMult:
-                    this.DodgeFatigueModMult = (Single)obj;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.DodgeFatigueModBase:
-                    this.DodgeFatigueModBase = (Single)obj;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.EncumbSpeedModBase:
-                    this.EncumbSpeedModBase = (Single)obj;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.EncumbSpeedModMult:
-                    this.EncumbSpeedModMult = (Single)obj;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.DodgeWhileUnderAttackMult:
-                    this.DodgeWhileUnderAttackMult = (Single)obj;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.DodgeNotUnderAttackMult:
-                    this.DodgeNotUnderAttackMult = (Single)obj;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.DodgeBackWhileUnderAttackMult:
-                    this.DodgeBackWhileUnderAttackMult = (Single)obj;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.DodgeBackNotUnderAttackMult:
-                    this.DodgeBackNotUnderAttackMult = (Single)obj;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.DodgeForwardWhileUnderAttackMult:
-                    this.DodgeForwardWhileUnderAttackMult = (Single)obj;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.DodgeForwardNotUnderAttackMult:
-                    this.DodgeForwardNotUnderAttackMult = (Single)obj;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.BlockSkillModifierMult:
-                    this.BlockSkillModifierMult = (Single)obj;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.BlockSkillModifierBase:
-                    this.BlockSkillModifierBase = (Single)obj;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.BlockWhileUnderAttackMult:
-                    this.BlockWhileUnderAttackMult = (Single)obj;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.BlockNotUnderAttackMult:
-                    this.BlockNotUnderAttackMult = (Single)obj;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.AttackSkillModifierMult:
-                    this.AttackSkillModifierMult = (Single)obj;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.AttackSkillModifierBase:
-                    this.AttackSkillModifierBase = (Single)obj;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.AttackWhileUnderAttackMult:
-                    this.AttackWhileUnderAttackMult = (Single)obj;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.AttackNotUnderAttackMult:
-                    this.AttackNotUnderAttackMult = (Single)obj;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.AttackDuringBlockMult:
-                    this.AttackDuringBlockMult = (Single)obj;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModBase:
-                    this.PowerAttackFatigueModBase = (Single)obj;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModMult:
-                    this.PowerAttackFatigueModMult = (Single)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void Clear()
-        {
-            CombatStyleAdvancedSetterCommon.Instance.Clear(this);
-        }
-
-        public static CombatStyleAdvanced Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new CombatStyleAdvanced();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_CombatStyleAdvanced(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_CombatStyleAdvanced(CombatStyleAdvanced obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out CombatStyleAdvanced_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case CombatStyleAdvanced_FieldIndex.DodgeFatigueModMult:
-                    obj.DodgeFatigueModMult = (Single)pair.Value;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.DodgeFatigueModBase:
-                    obj.DodgeFatigueModBase = (Single)pair.Value;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.EncumbSpeedModBase:
-                    obj.EncumbSpeedModBase = (Single)pair.Value;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.EncumbSpeedModMult:
-                    obj.EncumbSpeedModMult = (Single)pair.Value;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.DodgeWhileUnderAttackMult:
-                    obj.DodgeWhileUnderAttackMult = (Single)pair.Value;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.DodgeNotUnderAttackMult:
-                    obj.DodgeNotUnderAttackMult = (Single)pair.Value;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.DodgeBackWhileUnderAttackMult:
-                    obj.DodgeBackWhileUnderAttackMult = (Single)pair.Value;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.DodgeBackNotUnderAttackMult:
-                    obj.DodgeBackNotUnderAttackMult = (Single)pair.Value;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.DodgeForwardWhileUnderAttackMult:
-                    obj.DodgeForwardWhileUnderAttackMult = (Single)pair.Value;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.DodgeForwardNotUnderAttackMult:
-                    obj.DodgeForwardNotUnderAttackMult = (Single)pair.Value;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.BlockSkillModifierMult:
-                    obj.BlockSkillModifierMult = (Single)pair.Value;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.BlockSkillModifierBase:
-                    obj.BlockSkillModifierBase = (Single)pair.Value;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.BlockWhileUnderAttackMult:
-                    obj.BlockWhileUnderAttackMult = (Single)pair.Value;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.BlockNotUnderAttackMult:
-                    obj.BlockNotUnderAttackMult = (Single)pair.Value;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.AttackSkillModifierMult:
-                    obj.AttackSkillModifierMult = (Single)pair.Value;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.AttackSkillModifierBase:
-                    obj.AttackSkillModifierBase = (Single)pair.Value;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.AttackWhileUnderAttackMult:
-                    obj.AttackWhileUnderAttackMult = (Single)pair.Value;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.AttackNotUnderAttackMult:
-                    obj.AttackNotUnderAttackMult = (Single)pair.Value;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.AttackDuringBlockMult:
-                    obj.AttackDuringBlockMult = (Single)pair.Value;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModBase:
-                    obj.PowerAttackFatigueModBase = (Single)pair.Value;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModMult:
-                    obj.PowerAttackFatigueModMult = (Single)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -955,11 +722,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Single PowerAttackFatigueModMult { get; set; }
 
-        void CopyFieldsFrom(
-            CombatStyleAdvanced rhs,
-            ErrorMaskBuilder errorMask = null,
-            CombatStyleAdvanced_CopyMask copyMask = null,
-            CombatStyleAdvanced def = null);
     }
 
     public partial interface ICombatStyleAdvancedInternal :
@@ -1139,6 +901,67 @@ namespace Mutagen.Bethesda.Oblivion
             return ((CombatStyleAdvancedCommon)((ICombatStyleAdvancedInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this CombatStyleAdvanced lhs,
+            CombatStyleAdvanced rhs)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null);
+        }
+
+        public static void CopyFieldsFrom(
+            this CombatStyleAdvanced lhs,
+            CombatStyleAdvanced rhs,
+            CombatStyleAdvanced_CopyMask copyMask,
+            CombatStyleAdvanced def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this CombatStyleAdvanced lhs,
+            CombatStyleAdvanced rhs,
+            out CombatStyleAdvanced_ErrorMask errorMask,
+            CombatStyleAdvanced_CopyMask copyMask = null,
+            CombatStyleAdvanced def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            CombatStyleAdvancedSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = CombatStyleAdvanced_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this CombatStyleAdvanced lhs,
+            CombatStyleAdvanced rhs,
+            ErrorMaskBuilder errorMask,
+            CombatStyleAdvanced_CopyMask copyMask = null,
+            CombatStyleAdvanced def = null)
+        {
+            CombatStyleAdvancedSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

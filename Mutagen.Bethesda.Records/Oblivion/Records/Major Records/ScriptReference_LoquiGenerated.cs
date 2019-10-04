@@ -290,100 +290,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static ScriptReference Copy_ToLoqui(
-            ScriptReference item,
-            ScriptReference_CopyMask copyMask = null,
-            ScriptReference def = null)
+        void IClearable.Clear()
         {
-            ScriptReference ret = (ScriptReference)System.Activator.CreateInstance(item.GetType());
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((ScriptReferenceSetterCommon)((IScriptReferenceInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public virtual void CopyFieldsFrom(ScriptReference rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            ScriptReference rhs,
-            ScriptReference_CopyMask copyMask,
-            ScriptReference def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            ScriptReference rhs,
-            out ScriptReference_ErrorMask errorMask,
-            ScriptReference_CopyMask copyMask = null,
-            ScriptReference def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            ScriptReferenceSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = ScriptReference_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            ScriptReference rhs,
-            ErrorMaskBuilder errorMask,
-            ScriptReference_CopyMask copyMask = null,
-            ScriptReference def = null)
-        {
-            ScriptReferenceSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected virtual void SetNthObject(ushort index, object obj)
-        {
-            ScriptReference_FieldIndex enu = (ScriptReference_FieldIndex)index;
-            switch (enu)
-            {
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public virtual void Clear()
-        {
-            ScriptReferenceSetterCommon.Instance.Clear(this);
-        }
-
-        protected static void CopyInInternal_ScriptReference(ScriptReference obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out ScriptReference_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -392,11 +303,6 @@ namespace Mutagen.Bethesda.Oblivion
         IScriptReferenceInternalGetter,
         ILoquiObjectSetter<IScriptReferenceInternal>
     {
-        void CopyFieldsFrom(
-            ScriptReference rhs,
-            ErrorMaskBuilder errorMask = null,
-            ScriptReference_CopyMask copyMask = null,
-            ScriptReference def = null);
     }
 
     public partial interface IScriptReferenceInternal :
@@ -492,6 +398,67 @@ namespace Mutagen.Bethesda.Oblivion
             return ((ScriptReferenceCommon)((IScriptReferenceInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this ScriptReference lhs,
+            ScriptReference rhs)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null);
+        }
+
+        public static void CopyFieldsFrom(
+            this ScriptReference lhs,
+            ScriptReference rhs,
+            ScriptReference_CopyMask copyMask,
+            ScriptReference def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this ScriptReference lhs,
+            ScriptReference rhs,
+            out ScriptReference_ErrorMask errorMask,
+            ScriptReference_CopyMask copyMask = null,
+            ScriptReference def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            ScriptReferenceSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = ScriptReference_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this ScriptReference lhs,
+            ScriptReference rhs,
+            ErrorMaskBuilder errorMask,
+            ScriptReference_CopyMask copyMask = null,
+            ScriptReference def = null)
+        {
+            ScriptReferenceSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

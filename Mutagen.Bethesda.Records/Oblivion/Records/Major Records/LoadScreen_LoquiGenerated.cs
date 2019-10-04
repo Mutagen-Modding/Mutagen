@@ -581,137 +581,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static LoadScreen Copy_ToLoqui(
-            LoadScreen item,
-            LoadScreen_CopyMask copyMask = null,
-            LoadScreen def = null)
+        void IClearable.Clear()
         {
-            LoadScreen ret;
-            if (item.GetType().Equals(typeof(LoadScreen)))
-            {
-                ret = new LoadScreen() as LoadScreen;
-            }
-            else
-            {
-                ret = (LoadScreen)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((LoadScreenSetterCommon)((ILoadScreenInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            LoadScreen rhs,
-            LoadScreen_CopyMask copyMask,
-            LoadScreen def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            LoadScreen rhs,
-            out LoadScreen_ErrorMask errorMask,
-            LoadScreen_CopyMask copyMask = null,
-            LoadScreen def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            LoadScreenSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = LoadScreen_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            LoadScreen rhs,
-            ErrorMaskBuilder errorMask,
-            LoadScreen_CopyMask copyMask = null,
-            LoadScreen def = null)
-        {
-            LoadScreenSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            LoadScreen_FieldIndex enu = (LoadScreen_FieldIndex)index;
-            switch (enu)
-            {
-                case LoadScreen_FieldIndex.Icon:
-                    this.Icon = (String)obj;
-                    break;
-                case LoadScreen_FieldIndex.Description:
-                    this.Description = (String)obj;
-                    break;
-                case LoadScreen_FieldIndex.Locations:
-                    this._Locations.SetTo((ISetList<LoadScreenLocation>)obj);
-                    break;
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            LoadScreenSetterCommon.Instance.Clear(this);
-        }
-
-        public new static LoadScreen Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new LoadScreen();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_LoadScreen(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_LoadScreen(LoadScreen obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out LoadScreen_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case LoadScreen_FieldIndex.Icon:
-                    obj.Icon = (String)pair.Value;
-                    break;
-                case LoadScreen_FieldIndex.Description:
-                    obj.Description = (String)pair.Value;
-                    break;
-                case LoadScreen_FieldIndex.Locations:
-                    obj._Locations.SetTo((ISetList<LoadScreenLocation>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -732,11 +606,6 @@ namespace Mutagen.Bethesda.Oblivion
         void Description_Unset();
 
         new ISetList<LoadScreenLocation> Locations { get; }
-        void CopyFieldsFrom(
-            LoadScreen rhs,
-            ErrorMaskBuilder errorMask = null,
-            LoadScreen_CopyMask copyMask = null,
-            LoadScreen def = null);
     }
 
     public partial interface ILoadScreenInternal :
@@ -845,6 +714,54 @@ namespace Mutagen.Bethesda.Oblivion
             return ((LoadScreenCommon)((ILoadScreenInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this LoadScreen lhs,
+            LoadScreen rhs,
+            LoadScreen_CopyMask copyMask,
+            LoadScreen def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this LoadScreen lhs,
+            LoadScreen rhs,
+            out LoadScreen_ErrorMask errorMask,
+            LoadScreen_CopyMask copyMask = null,
+            LoadScreen def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            LoadScreenSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = LoadScreen_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this LoadScreen lhs,
+            LoadScreen rhs,
+            ErrorMaskBuilder errorMask,
+            LoadScreen_CopyMask copyMask = null,
+            LoadScreen def = null)
+        {
+            LoadScreenSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

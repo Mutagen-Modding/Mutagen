@@ -328,101 +328,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static Place Copy_ToLoqui(
-            Place item,
-            Place_CopyMask copyMask = null,
-            Place def = null)
+        void IClearable.Clear()
         {
-            Place ret = (Place)System.Activator.CreateInstance(item.GetType());
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((PlaceSetterCommon)((IPlaceInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            Place rhs,
-            Place_CopyMask copyMask,
-            Place def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            Place rhs,
-            out Place_ErrorMask errorMask,
-            Place_CopyMask copyMask = null,
-            Place def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            PlaceSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = Place_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            Place rhs,
-            ErrorMaskBuilder errorMask,
-            Place_CopyMask copyMask = null,
-            Place def = null)
-        {
-            PlaceSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            Place_FieldIndex enu = (Place_FieldIndex)index;
-            switch (enu)
-            {
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            PlaceSetterCommon.Instance.Clear(this);
-        }
-
-        protected new static void CopyInInternal_Place(Place obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Place_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -433,11 +343,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMajorRecordEnumerable,
         ILoquiObjectSetter<IPlaceInternal>
     {
-        void CopyFieldsFrom(
-            Place rhs,
-            ErrorMaskBuilder errorMask = null,
-            Place_CopyMask copyMask = null,
-            Place def = null);
     }
 
     public partial interface IPlaceInternal :
@@ -534,6 +439,54 @@ namespace Mutagen.Bethesda.Oblivion
             return ((PlaceCommon)((IPlaceInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this Place lhs,
+            Place rhs,
+            Place_CopyMask copyMask,
+            Place def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this Place lhs,
+            Place rhs,
+            out Place_ErrorMask errorMask,
+            Place_CopyMask copyMask = null,
+            Place def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            PlaceSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = Place_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this Place lhs,
+            Place rhs,
+            ErrorMaskBuilder errorMask,
+            Place_CopyMask copyMask = null,
+            Place def = null)
+        {
+            PlaceSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
         #region Mutagen

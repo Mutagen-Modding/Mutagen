@@ -1721,431 +1721,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static Creature Copy_ToLoqui(
-            Creature item,
-            Creature_CopyMask copyMask = null,
-            Creature def = null)
+        void IClearable.Clear()
         {
-            Creature ret;
-            if (item.GetType().Equals(typeof(Creature)))
-            {
-                ret = new Creature() as Creature;
-            }
-            else
-            {
-                ret = (Creature)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((CreatureSetterCommon)((ICreatureInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            Creature rhs,
-            Creature_CopyMask copyMask,
-            Creature def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            Creature rhs,
-            out Creature_ErrorMask errorMask,
-            Creature_CopyMask copyMask = null,
-            Creature def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            CreatureSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = Creature_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            Creature rhs,
-            ErrorMaskBuilder errorMask,
-            Creature_CopyMask copyMask = null,
-            Creature def = null)
-        {
-            CreatureSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            Creature_FieldIndex enu = (Creature_FieldIndex)index;
-            switch (enu)
-            {
-                case Creature_FieldIndex.Name:
-                    this.Name = (String)obj;
-                    break;
-                case Creature_FieldIndex.Model:
-                    this.Model = (Model)obj;
-                    break;
-                case Creature_FieldIndex.Items:
-                    this._Items.SetTo((ISetList<ItemEntry>)obj);
-                    break;
-                case Creature_FieldIndex.Spells:
-                    this._Spells.SetTo((ISetList<IFormIDLink<SpellAbstract>>)obj);
-                    break;
-                case Creature_FieldIndex.Models:
-                    this._Models.SetTo((ISetList<String>)obj);
-                    break;
-                case Creature_FieldIndex.NIFT:
-                    this.NIFT = (Byte[])obj;
-                    break;
-                case Creature_FieldIndex.Flags:
-                    this.Flags = (Creature.CreatureFlag)obj;
-                    break;
-                case Creature_FieldIndex.BaseSpellPoints:
-                    this.BaseSpellPoints = (UInt16)obj;
-                    break;
-                case Creature_FieldIndex.Fatigue:
-                    this.Fatigue = (UInt16)obj;
-                    break;
-                case Creature_FieldIndex.BarterGold:
-                    this.BarterGold = (UInt16)obj;
-                    break;
-                case Creature_FieldIndex.LevelOffset:
-                    this.LevelOffset = (Int16)obj;
-                    break;
-                case Creature_FieldIndex.CalcMin:
-                    this.CalcMin = (UInt16)obj;
-                    break;
-                case Creature_FieldIndex.CalcMax:
-                    this.CalcMax = (UInt16)obj;
-                    break;
-                case Creature_FieldIndex.Factions:
-                    this._Factions.SetTo((ISetList<RankPlacement>)obj);
-                    break;
-                case Creature_FieldIndex.DeathItem:
-                    this.DeathItem_Property.Set((IFormIDSetLink<ItemAbstract>)obj);
-                    break;
-                case Creature_FieldIndex.Script:
-                    this.Script_Property.Set((IFormIDSetLink<Script>)obj);
-                    break;
-                case Creature_FieldIndex.Aggression:
-                    this.Aggression = (Byte)obj;
-                    break;
-                case Creature_FieldIndex.Confidence:
-                    this.Confidence = (Byte)obj;
-                    break;
-                case Creature_FieldIndex.EnergyLevel:
-                    this.EnergyLevel = (Byte)obj;
-                    break;
-                case Creature_FieldIndex.Responsibility:
-                    this.Responsibility = (Byte)obj;
-                    break;
-                case Creature_FieldIndex.BuySellServices:
-                    this.BuySellServices = (NPC.BuySellServiceFlag)obj;
-                    break;
-                case Creature_FieldIndex.Teaches:
-                    this.Teaches = (Skill)obj;
-                    break;
-                case Creature_FieldIndex.MaximumTrainingLevel:
-                    this.MaximumTrainingLevel = (Byte)obj;
-                    break;
-                case Creature_FieldIndex.AIPackages:
-                    this._AIPackages.SetTo((ISetList<IFormIDLink<AIPackage>>)obj);
-                    break;
-                case Creature_FieldIndex.Animations:
-                    this._Animations.SetTo((ISetList<String>)obj);
-                    break;
-                case Creature_FieldIndex.CreatureType:
-                    this.CreatureType = (Creature.CreatureTypeEnum)obj;
-                    break;
-                case Creature_FieldIndex.CombatSkill:
-                    this.CombatSkill = (Byte)obj;
-                    break;
-                case Creature_FieldIndex.MagicSkill:
-                    this.MagicSkill = (Byte)obj;
-                    break;
-                case Creature_FieldIndex.StealthSkill:
-                    this.StealthSkill = (Byte)obj;
-                    break;
-                case Creature_FieldIndex.SoulLevel:
-                    this.SoulLevel = (SoulLevel)obj;
-                    break;
-                case Creature_FieldIndex.Health:
-                    this.Health = (UInt32)obj;
-                    break;
-                case Creature_FieldIndex.AttackDamage:
-                    this.AttackDamage = (UInt16)obj;
-                    break;
-                case Creature_FieldIndex.Strength:
-                    this.Strength = (Byte)obj;
-                    break;
-                case Creature_FieldIndex.Intelligence:
-                    this.Intelligence = (Byte)obj;
-                    break;
-                case Creature_FieldIndex.Willpower:
-                    this.Willpower = (Byte)obj;
-                    break;
-                case Creature_FieldIndex.Agility:
-                    this.Agility = (Byte)obj;
-                    break;
-                case Creature_FieldIndex.Speed:
-                    this.Speed = (Byte)obj;
-                    break;
-                case Creature_FieldIndex.Endurance:
-                    this.Endurance = (Byte)obj;
-                    break;
-                case Creature_FieldIndex.Personality:
-                    this.Personality = (Byte)obj;
-                    break;
-                case Creature_FieldIndex.Luck:
-                    this.Luck = (Byte)obj;
-                    break;
-                case Creature_FieldIndex.AttackReach:
-                    this.AttackReach = (Byte)obj;
-                    break;
-                case Creature_FieldIndex.CombatStyle:
-                    this.CombatStyle_Property.Set((IFormIDSetLink<CombatStyle>)obj);
-                    break;
-                case Creature_FieldIndex.TurningSpeed:
-                    this.TurningSpeed = (Single)obj;
-                    break;
-                case Creature_FieldIndex.BaseScale:
-                    this.BaseScale = (Single)obj;
-                    break;
-                case Creature_FieldIndex.FootWeight:
-                    this.FootWeight = (Single)obj;
-                    break;
-                case Creature_FieldIndex.BloodSpray:
-                    this.BloodSpray = (String)obj;
-                    break;
-                case Creature_FieldIndex.BloodDecal:
-                    this.BloodDecal = (String)obj;
-                    break;
-                case Creature_FieldIndex.InheritsSoundFrom:
-                    this.InheritsSoundFrom_Property.Set((IFormIDSetLink<Creature>)obj);
-                    break;
-                case Creature_FieldIndex.Sounds:
-                    this._Sounds.SetTo((ISetList<CreatureSound>)obj);
-                    break;
-                case Creature_FieldIndex.ACBSDataTypeState:
-                    this.ACBSDataTypeState = (Creature.ACBSDataType)obj;
-                    break;
-                case Creature_FieldIndex.AIDTDataTypeState:
-                    this.AIDTDataTypeState = (Creature.AIDTDataType)obj;
-                    break;
-                case Creature_FieldIndex.DATADataTypeState:
-                    this.DATADataTypeState = (Creature.DATADataType)obj;
-                    break;
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            CreatureSetterCommon.Instance.Clear(this);
-        }
-
-        public new static Creature Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Creature();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Creature(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_Creature(Creature obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Creature_FieldIndex enu))
-            {
-                CopyInInternal_NPCAbstract(obj, pair);
-            }
-            switch (enu)
-            {
-                case Creature_FieldIndex.Name:
-                    obj.Name = (String)pair.Value;
-                    break;
-                case Creature_FieldIndex.Model:
-                    obj.Model = (Model)pair.Value;
-                    break;
-                case Creature_FieldIndex.Items:
-                    obj._Items.SetTo((ISetList<ItemEntry>)pair.Value);
-                    break;
-                case Creature_FieldIndex.Spells:
-                    obj._Spells.SetTo((ISetList<IFormIDLink<SpellAbstract>>)pair.Value);
-                    break;
-                case Creature_FieldIndex.Models:
-                    obj._Models.SetTo((ISetList<String>)pair.Value);
-                    break;
-                case Creature_FieldIndex.NIFT:
-                    obj.NIFT = (Byte[])pair.Value;
-                    break;
-                case Creature_FieldIndex.Flags:
-                    obj.Flags = (Creature.CreatureFlag)pair.Value;
-                    break;
-                case Creature_FieldIndex.BaseSpellPoints:
-                    obj.BaseSpellPoints = (UInt16)pair.Value;
-                    break;
-                case Creature_FieldIndex.Fatigue:
-                    obj.Fatigue = (UInt16)pair.Value;
-                    break;
-                case Creature_FieldIndex.BarterGold:
-                    obj.BarterGold = (UInt16)pair.Value;
-                    break;
-                case Creature_FieldIndex.LevelOffset:
-                    obj.LevelOffset = (Int16)pair.Value;
-                    break;
-                case Creature_FieldIndex.CalcMin:
-                    obj.CalcMin = (UInt16)pair.Value;
-                    break;
-                case Creature_FieldIndex.CalcMax:
-                    obj.CalcMax = (UInt16)pair.Value;
-                    break;
-                case Creature_FieldIndex.Factions:
-                    obj._Factions.SetTo((ISetList<RankPlacement>)pair.Value);
-                    break;
-                case Creature_FieldIndex.DeathItem:
-                    obj.DeathItem_Property.Set((IFormIDSetLink<ItemAbstract>)pair.Value);
-                    break;
-                case Creature_FieldIndex.Script:
-                    obj.Script_Property.Set((IFormIDSetLink<Script>)pair.Value);
-                    break;
-                case Creature_FieldIndex.Aggression:
-                    obj.Aggression = (Byte)pair.Value;
-                    break;
-                case Creature_FieldIndex.Confidence:
-                    obj.Confidence = (Byte)pair.Value;
-                    break;
-                case Creature_FieldIndex.EnergyLevel:
-                    obj.EnergyLevel = (Byte)pair.Value;
-                    break;
-                case Creature_FieldIndex.Responsibility:
-                    obj.Responsibility = (Byte)pair.Value;
-                    break;
-                case Creature_FieldIndex.BuySellServices:
-                    obj.BuySellServices = (NPC.BuySellServiceFlag)pair.Value;
-                    break;
-                case Creature_FieldIndex.Teaches:
-                    obj.Teaches = (Skill)pair.Value;
-                    break;
-                case Creature_FieldIndex.MaximumTrainingLevel:
-                    obj.MaximumTrainingLevel = (Byte)pair.Value;
-                    break;
-                case Creature_FieldIndex.AIPackages:
-                    obj._AIPackages.SetTo((ISetList<IFormIDLink<AIPackage>>)pair.Value);
-                    break;
-                case Creature_FieldIndex.Animations:
-                    obj._Animations.SetTo((ISetList<String>)pair.Value);
-                    break;
-                case Creature_FieldIndex.CreatureType:
-                    obj.CreatureType = (Creature.CreatureTypeEnum)pair.Value;
-                    break;
-                case Creature_FieldIndex.CombatSkill:
-                    obj.CombatSkill = (Byte)pair.Value;
-                    break;
-                case Creature_FieldIndex.MagicSkill:
-                    obj.MagicSkill = (Byte)pair.Value;
-                    break;
-                case Creature_FieldIndex.StealthSkill:
-                    obj.StealthSkill = (Byte)pair.Value;
-                    break;
-                case Creature_FieldIndex.SoulLevel:
-                    obj.SoulLevel = (SoulLevel)pair.Value;
-                    break;
-                case Creature_FieldIndex.Health:
-                    obj.Health = (UInt32)pair.Value;
-                    break;
-                case Creature_FieldIndex.AttackDamage:
-                    obj.AttackDamage = (UInt16)pair.Value;
-                    break;
-                case Creature_FieldIndex.Strength:
-                    obj.Strength = (Byte)pair.Value;
-                    break;
-                case Creature_FieldIndex.Intelligence:
-                    obj.Intelligence = (Byte)pair.Value;
-                    break;
-                case Creature_FieldIndex.Willpower:
-                    obj.Willpower = (Byte)pair.Value;
-                    break;
-                case Creature_FieldIndex.Agility:
-                    obj.Agility = (Byte)pair.Value;
-                    break;
-                case Creature_FieldIndex.Speed:
-                    obj.Speed = (Byte)pair.Value;
-                    break;
-                case Creature_FieldIndex.Endurance:
-                    obj.Endurance = (Byte)pair.Value;
-                    break;
-                case Creature_FieldIndex.Personality:
-                    obj.Personality = (Byte)pair.Value;
-                    break;
-                case Creature_FieldIndex.Luck:
-                    obj.Luck = (Byte)pair.Value;
-                    break;
-                case Creature_FieldIndex.AttackReach:
-                    obj.AttackReach = (Byte)pair.Value;
-                    break;
-                case Creature_FieldIndex.CombatStyle:
-                    obj.CombatStyle_Property.Set((IFormIDSetLink<CombatStyle>)pair.Value);
-                    break;
-                case Creature_FieldIndex.TurningSpeed:
-                    obj.TurningSpeed = (Single)pair.Value;
-                    break;
-                case Creature_FieldIndex.BaseScale:
-                    obj.BaseScale = (Single)pair.Value;
-                    break;
-                case Creature_FieldIndex.FootWeight:
-                    obj.FootWeight = (Single)pair.Value;
-                    break;
-                case Creature_FieldIndex.BloodSpray:
-                    obj.BloodSpray = (String)pair.Value;
-                    break;
-                case Creature_FieldIndex.BloodDecal:
-                    obj.BloodDecal = (String)pair.Value;
-                    break;
-                case Creature_FieldIndex.InheritsSoundFrom:
-                    obj.InheritsSoundFrom_Property.Set((IFormIDSetLink<Creature>)pair.Value);
-                    break;
-                case Creature_FieldIndex.Sounds:
-                    obj._Sounds.SetTo((ISetList<CreatureSound>)pair.Value);
-                    break;
-                case Creature_FieldIndex.ACBSDataTypeState:
-                    obj.ACBSDataTypeState = (Creature.ACBSDataType)pair.Value;
-                    break;
-                case Creature_FieldIndex.AIDTDataTypeState:
-                    obj.AIDTDataTypeState = (Creature.AIDTDataType)pair.Value;
-                    break;
-                case Creature_FieldIndex.DATADataTypeState:
-                    obj.DATADataTypeState = (Creature.DATADataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -2273,11 +1853,6 @@ namespace Mutagen.Bethesda.Oblivion
         new Creature InheritsSoundFrom { get; set; }
         new IFormIDSetLink<Creature> InheritsSoundFrom_Property { get; }
         new ISetList<CreatureSound> Sounds { get; }
-        void CopyFieldsFrom(
-            Creature rhs,
-            ErrorMaskBuilder errorMask = null,
-            Creature_CopyMask copyMask = null,
-            Creature def = null);
     }
 
     public partial interface ICreatureInternal :
@@ -2601,6 +2176,54 @@ namespace Mutagen.Bethesda.Oblivion
             return ((CreatureCommon)((ICreatureInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this Creature lhs,
+            Creature rhs,
+            Creature_CopyMask copyMask,
+            Creature def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this Creature lhs,
+            Creature rhs,
+            out Creature_ErrorMask errorMask,
+            Creature_CopyMask copyMask = null,
+            Creature def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            CreatureSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = Creature_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this Creature lhs,
+            Creature rhs,
+            ErrorMaskBuilder errorMask,
+            Creature_CopyMask copyMask = null,
+            Creature def = null)
+        {
+            CreatureSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

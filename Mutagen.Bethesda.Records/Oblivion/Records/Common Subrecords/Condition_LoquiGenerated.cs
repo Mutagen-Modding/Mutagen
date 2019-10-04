@@ -461,166 +461,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static Condition Copy_ToLoqui(
-            Condition item,
-            Condition_CopyMask copyMask = null,
-            Condition def = null)
+        void IClearable.Clear()
         {
-            Condition ret;
-            if (item.GetType().Equals(typeof(Condition)))
-            {
-                ret = new Condition() as Condition;
-            }
-            else
-            {
-                ret = (Condition)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((ConditionSetterCommon)((IConditionInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public void CopyFieldsFrom(Condition rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            Condition rhs,
-            Condition_CopyMask copyMask,
-            Condition def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            Condition rhs,
-            out Condition_ErrorMask errorMask,
-            Condition_CopyMask copyMask = null,
-            Condition def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            ConditionSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = Condition_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            Condition rhs,
-            ErrorMaskBuilder errorMask,
-            Condition_CopyMask copyMask = null,
-            Condition def = null)
-        {
-            ConditionSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected void SetNthObject(ushort index, object obj)
-        {
-            Condition_FieldIndex enu = (Condition_FieldIndex)index;
-            switch (enu)
-            {
-                case Condition_FieldIndex.CompareOperator:
-                    this.CompareOperator = (CompareOperator)obj;
-                    break;
-                case Condition_FieldIndex.Flags:
-                    this.Flags = (Condition.Flag)obj;
-                    break;
-                case Condition_FieldIndex.Fluff:
-                    this.Fluff = (Byte[])obj;
-                    break;
-                case Condition_FieldIndex.ComparisonValue:
-                    this.ComparisonValue = (Single)obj;
-                    break;
-                case Condition_FieldIndex.Function:
-                    this.Function = (Function)obj;
-                    break;
-                case Condition_FieldIndex.FirstParameter:
-                    this.FirstParameter = (Int32)obj;
-                    break;
-                case Condition_FieldIndex.SecondParameter:
-                    this.SecondParameter = (Int32)obj;
-                    break;
-                case Condition_FieldIndex.ThirdParameter:
-                    this.ThirdParameter = (Int32)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void Clear()
-        {
-            ConditionSetterCommon.Instance.Clear(this);
-        }
-
-        public static Condition Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Condition();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Condition(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_Condition(Condition obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Condition_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case Condition_FieldIndex.CompareOperator:
-                    obj.CompareOperator = (CompareOperator)pair.Value;
-                    break;
-                case Condition_FieldIndex.Flags:
-                    obj.Flags = (Condition.Flag)pair.Value;
-                    break;
-                case Condition_FieldIndex.Fluff:
-                    obj.Fluff = (Byte[])pair.Value;
-                    break;
-                case Condition_FieldIndex.ComparisonValue:
-                    obj.ComparisonValue = (Single)pair.Value;
-                    break;
-                case Condition_FieldIndex.Function:
-                    obj.Function = (Function)pair.Value;
-                    break;
-                case Condition_FieldIndex.FirstParameter:
-                    obj.FirstParameter = (Int32)pair.Value;
-                    break;
-                case Condition_FieldIndex.SecondParameter:
-                    obj.SecondParameter = (Int32)pair.Value;
-                    break;
-                case Condition_FieldIndex.ThirdParameter:
-                    obj.ThirdParameter = (Int32)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -645,11 +490,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Int32 ThirdParameter { get; set; }
 
-        void CopyFieldsFrom(
-            Condition rhs,
-            ErrorMaskBuilder errorMask = null,
-            Condition_CopyMask copyMask = null,
-            Condition def = null);
     }
 
     public partial interface IConditionInternal :
@@ -777,6 +617,67 @@ namespace Mutagen.Bethesda.Oblivion
             return ((ConditionCommon)((IConditionInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this Condition lhs,
+            Condition rhs)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null);
+        }
+
+        public static void CopyFieldsFrom(
+            this Condition lhs,
+            Condition rhs,
+            Condition_CopyMask copyMask,
+            Condition def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this Condition lhs,
+            Condition rhs,
+            out Condition_ErrorMask errorMask,
+            Condition_CopyMask copyMask = null,
+            Condition def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            ConditionSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = Condition_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this Condition lhs,
+            Condition rhs,
+            ErrorMaskBuilder errorMask,
+            Condition_CopyMask copyMask = null,
+            Condition def = null)
+        {
+            ConditionSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

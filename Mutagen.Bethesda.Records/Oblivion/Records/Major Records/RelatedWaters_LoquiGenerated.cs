@@ -415,136 +415,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static RelatedWaters Copy_ToLoqui(
-            RelatedWaters item,
-            RelatedWaters_CopyMask copyMask = null,
-            RelatedWaters def = null)
+        void IClearable.Clear()
         {
-            RelatedWaters ret;
-            if (item.GetType().Equals(typeof(RelatedWaters)))
-            {
-                ret = new RelatedWaters() as RelatedWaters;
-            }
-            else
-            {
-                ret = (RelatedWaters)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((RelatedWatersSetterCommon)((IRelatedWatersInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public void CopyFieldsFrom(RelatedWaters rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            RelatedWaters rhs,
-            RelatedWaters_CopyMask copyMask,
-            RelatedWaters def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            RelatedWaters rhs,
-            out RelatedWaters_ErrorMask errorMask,
-            RelatedWaters_CopyMask copyMask = null,
-            RelatedWaters def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            RelatedWatersSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = RelatedWaters_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            RelatedWaters rhs,
-            ErrorMaskBuilder errorMask,
-            RelatedWaters_CopyMask copyMask = null,
-            RelatedWaters def = null)
-        {
-            RelatedWatersSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected void SetNthObject(ushort index, object obj)
-        {
-            RelatedWaters_FieldIndex enu = (RelatedWaters_FieldIndex)index;
-            switch (enu)
-            {
-                case RelatedWaters_FieldIndex.RelatedWaterDaytime:
-                    this.RelatedWaterDaytime_Property.Set((IFormIDLink<Water>)obj);
-                    break;
-                case RelatedWaters_FieldIndex.RelatedWaterNighttime:
-                    this.RelatedWaterNighttime_Property.Set((IFormIDLink<Water>)obj);
-                    break;
-                case RelatedWaters_FieldIndex.RelatedWaterUnderwater:
-                    this.RelatedWaterUnderwater_Property.Set((IFormIDLink<Water>)obj);
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void Clear()
-        {
-            RelatedWatersSetterCommon.Instance.Clear(this);
-        }
-
-        public static RelatedWaters Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new RelatedWaters();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_RelatedWaters(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_RelatedWaters(RelatedWaters obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out RelatedWaters_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case RelatedWaters_FieldIndex.RelatedWaterDaytime:
-                    obj.RelatedWaterDaytime_Property.Set((IFormIDLink<Water>)pair.Value);
-                    break;
-                case RelatedWaters_FieldIndex.RelatedWaterNighttime:
-                    obj.RelatedWaterNighttime_Property.Set((IFormIDLink<Water>)pair.Value);
-                    break;
-                case RelatedWaters_FieldIndex.RelatedWaterUnderwater:
-                    obj.RelatedWaterUnderwater_Property.Set((IFormIDLink<Water>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -559,11 +434,6 @@ namespace Mutagen.Bethesda.Oblivion
         new IFormIDLink<Water> RelatedWaterNighttime_Property { get; }
         new Water RelatedWaterUnderwater { get; set; }
         new IFormIDLink<Water> RelatedWaterUnderwater_Property { get; }
-        void CopyFieldsFrom(
-            RelatedWaters rhs,
-            ErrorMaskBuilder errorMask = null,
-            RelatedWaters_CopyMask copyMask = null,
-            RelatedWaters def = null);
     }
 
     public partial interface IRelatedWatersInternal :
@@ -680,6 +550,67 @@ namespace Mutagen.Bethesda.Oblivion
             return ((RelatedWatersCommon)((IRelatedWatersInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this RelatedWaters lhs,
+            RelatedWaters rhs)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null);
+        }
+
+        public static void CopyFieldsFrom(
+            this RelatedWaters lhs,
+            RelatedWaters rhs,
+            RelatedWaters_CopyMask copyMask,
+            RelatedWaters def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this RelatedWaters lhs,
+            RelatedWaters rhs,
+            out RelatedWaters_ErrorMask errorMask,
+            RelatedWaters_CopyMask copyMask = null,
+            RelatedWaters def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            RelatedWatersSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = RelatedWaters_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this RelatedWaters lhs,
+            RelatedWaters rhs,
+            ErrorMaskBuilder errorMask,
+            RelatedWaters_CopyMask copyMask = null,
+            RelatedWaters def = null)
+        {
+            RelatedWatersSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

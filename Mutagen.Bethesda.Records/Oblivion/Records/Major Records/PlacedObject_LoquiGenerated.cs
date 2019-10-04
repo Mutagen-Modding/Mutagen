@@ -1382,275 +1382,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static PlacedObject Copy_ToLoqui(
-            PlacedObject item,
-            PlacedObject_CopyMask copyMask = null,
-            PlacedObject def = null)
+        void IClearable.Clear()
         {
-            PlacedObject ret;
-            if (item.GetType().Equals(typeof(PlacedObject)))
-            {
-                ret = new PlacedObject() as PlacedObject;
-            }
-            else
-            {
-                ret = (PlacedObject)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((PlacedObjectSetterCommon)((IPlacedObjectInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            PlacedObject rhs,
-            PlacedObject_CopyMask copyMask,
-            PlacedObject def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            PlacedObject rhs,
-            out PlacedObject_ErrorMask errorMask,
-            PlacedObject_CopyMask copyMask = null,
-            PlacedObject def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            PlacedObjectSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = PlacedObject_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            PlacedObject rhs,
-            ErrorMaskBuilder errorMask,
-            PlacedObject_CopyMask copyMask = null,
-            PlacedObject def = null)
-        {
-            PlacedObjectSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            PlacedObject_FieldIndex enu = (PlacedObject_FieldIndex)index;
-            switch (enu)
-            {
-                case PlacedObject_FieldIndex.Base:
-                    this.Base_Property.Set((IFormIDSetLink<OblivionMajorRecord>)obj);
-                    break;
-                case PlacedObject_FieldIndex.XPCIFluff:
-                    this.XPCIFluff = (Byte[])obj;
-                    break;
-                case PlacedObject_FieldIndex.FULLFluff:
-                    this.FULLFluff = (Byte[])obj;
-                    break;
-                case PlacedObject_FieldIndex.TeleportDestination:
-                    this.TeleportDestination = (TeleportDestination)obj;
-                    break;
-                case PlacedObject_FieldIndex.Lock:
-                    this.Lock = (LockInformation)obj;
-                    break;
-                case PlacedObject_FieldIndex.Owner:
-                    this.Owner_Property.Set((IFormIDSetLink<IOwner>)obj);
-                    break;
-                case PlacedObject_FieldIndex.FactionRank:
-                    this.FactionRank = (Int32)obj;
-                    break;
-                case PlacedObject_FieldIndex.GlobalVariable:
-                    this.GlobalVariable_Property.Set((IFormIDSetLink<Global>)obj);
-                    break;
-                case PlacedObject_FieldIndex.EnableParent:
-                    this.EnableParent = (EnableParent)obj;
-                    break;
-                case PlacedObject_FieldIndex.Target:
-                    this.Target_Property.Set((IFormIDSetLink<IPlaced>)obj);
-                    break;
-                case PlacedObject_FieldIndex.SpeedTreeSeed:
-                    this.SpeedTreeSeed = (Byte)obj;
-                    break;
-                case PlacedObject_FieldIndex.DistantLODData:
-                    this.DistantLODData = (DistantLODData)obj;
-                    break;
-                case PlacedObject_FieldIndex.Charge:
-                    this.Charge = (Single)obj;
-                    break;
-                case PlacedObject_FieldIndex.Health:
-                    this.Health = (Int32)obj;
-                    break;
-                case PlacedObject_FieldIndex.LevelModifier:
-                    this.LevelModifier = (Int32)obj;
-                    break;
-                case PlacedObject_FieldIndex.Unknown:
-                    this.Unknown_Property.Set((IFormIDSetLink<OblivionMajorRecord>)obj);
-                    break;
-                case PlacedObject_FieldIndex.ActionFlags:
-                    this.ActionFlags = (PlacedObject.ActionFlag)obj;
-                    break;
-                case PlacedObject_FieldIndex.Count:
-                    this.Count = (Int32)obj;
-                    break;
-                case PlacedObject_FieldIndex.MapMarker:
-                    this.MapMarker = (MapMarker)obj;
-                    break;
-                case PlacedObject_FieldIndex.OpenByDefault:
-                    this.OpenByDefault = (Boolean)obj;
-                    break;
-                case PlacedObject_FieldIndex.RagdollData:
-                    this.RagdollData = (Byte[])obj;
-                    break;
-                case PlacedObject_FieldIndex.Scale:
-                    this.Scale = (Single)obj;
-                    break;
-                case PlacedObject_FieldIndex.ContainedSoul:
-                    this.ContainedSoul_Property.Set((IFormIDSetLink<SoulGem>)obj);
-                    break;
-                case PlacedObject_FieldIndex.Position:
-                    this.Position = (P3Float)obj;
-                    break;
-                case PlacedObject_FieldIndex.Rotation:
-                    this.Rotation = (P3Float)obj;
-                    break;
-                case PlacedObject_FieldIndex.DATADataTypeState:
-                    this.DATADataTypeState = (PlacedObject.DATADataType)obj;
-                    break;
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            PlacedObjectSetterCommon.Instance.Clear(this);
-        }
-
-        public new static PlacedObject Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new PlacedObject();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_PlacedObject(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_PlacedObject(PlacedObject obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out PlacedObject_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case PlacedObject_FieldIndex.Base:
-                    obj.Base_Property.Set((IFormIDSetLink<OblivionMajorRecord>)pair.Value);
-                    break;
-                case PlacedObject_FieldIndex.XPCIFluff:
-                    obj.XPCIFluff = (Byte[])pair.Value;
-                    break;
-                case PlacedObject_FieldIndex.FULLFluff:
-                    obj.FULLFluff = (Byte[])pair.Value;
-                    break;
-                case PlacedObject_FieldIndex.TeleportDestination:
-                    obj.TeleportDestination = (TeleportDestination)pair.Value;
-                    break;
-                case PlacedObject_FieldIndex.Lock:
-                    obj.Lock = (LockInformation)pair.Value;
-                    break;
-                case PlacedObject_FieldIndex.Owner:
-                    obj.Owner_Property.Set((IFormIDSetLink<IOwner>)pair.Value);
-                    break;
-                case PlacedObject_FieldIndex.FactionRank:
-                    obj.FactionRank = (Int32)pair.Value;
-                    break;
-                case PlacedObject_FieldIndex.GlobalVariable:
-                    obj.GlobalVariable_Property.Set((IFormIDSetLink<Global>)pair.Value);
-                    break;
-                case PlacedObject_FieldIndex.EnableParent:
-                    obj.EnableParent = (EnableParent)pair.Value;
-                    break;
-                case PlacedObject_FieldIndex.Target:
-                    obj.Target_Property.Set((IFormIDSetLink<IPlaced>)pair.Value);
-                    break;
-                case PlacedObject_FieldIndex.SpeedTreeSeed:
-                    obj.SpeedTreeSeed = (Byte)pair.Value;
-                    break;
-                case PlacedObject_FieldIndex.DistantLODData:
-                    obj.DistantLODData = (DistantLODData)pair.Value;
-                    break;
-                case PlacedObject_FieldIndex.Charge:
-                    obj.Charge = (Single)pair.Value;
-                    break;
-                case PlacedObject_FieldIndex.Health:
-                    obj.Health = (Int32)pair.Value;
-                    break;
-                case PlacedObject_FieldIndex.LevelModifier:
-                    obj.LevelModifier = (Int32)pair.Value;
-                    break;
-                case PlacedObject_FieldIndex.Unknown:
-                    obj.Unknown_Property.Set((IFormIDSetLink<OblivionMajorRecord>)pair.Value);
-                    break;
-                case PlacedObject_FieldIndex.ActionFlags:
-                    obj.ActionFlags = (PlacedObject.ActionFlag)pair.Value;
-                    break;
-                case PlacedObject_FieldIndex.Count:
-                    obj.Count = (Int32)pair.Value;
-                    break;
-                case PlacedObject_FieldIndex.MapMarker:
-                    obj.MapMarker = (MapMarker)pair.Value;
-                    break;
-                case PlacedObject_FieldIndex.OpenByDefault:
-                    obj.OpenByDefault = (Boolean)pair.Value;
-                    break;
-                case PlacedObject_FieldIndex.RagdollData:
-                    obj.RagdollData = (Byte[])pair.Value;
-                    break;
-                case PlacedObject_FieldIndex.Scale:
-                    obj.Scale = (Single)pair.Value;
-                    break;
-                case PlacedObject_FieldIndex.ContainedSoul:
-                    obj.ContainedSoul_Property.Set((IFormIDSetLink<SoulGem>)pair.Value);
-                    break;
-                case PlacedObject_FieldIndex.Position:
-                    obj.Position = (P3Float)pair.Value;
-                    break;
-                case PlacedObject_FieldIndex.Rotation:
-                    obj.Rotation = (P3Float)pair.Value;
-                    break;
-                case PlacedObject_FieldIndex.DATADataTypeState:
-                    obj.DATADataTypeState = (PlacedObject.DATADataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -1759,11 +1495,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         new P3Float Rotation { get; set; }
 
-        void CopyFieldsFrom(
-            PlacedObject rhs,
-            ErrorMaskBuilder errorMask = null,
-            PlacedObject_CopyMask copyMask = null,
-            PlacedObject def = null);
     }
 
     public partial interface IPlacedObjectInternal :
@@ -2000,6 +1731,54 @@ namespace Mutagen.Bethesda.Oblivion
             return ((PlacedObjectCommon)((IPlacedObjectInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this PlacedObject lhs,
+            PlacedObject rhs,
+            PlacedObject_CopyMask copyMask,
+            PlacedObject def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this PlacedObject lhs,
+            PlacedObject rhs,
+            out PlacedObject_ErrorMask errorMask,
+            PlacedObject_CopyMask copyMask = null,
+            PlacedObject def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            PlacedObjectSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = PlacedObject_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this PlacedObject lhs,
+            PlacedObject rhs,
+            ErrorMaskBuilder errorMask,
+            PlacedObject_CopyMask copyMask = null,
+            PlacedObject def = null)
+        {
+            PlacedObjectSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

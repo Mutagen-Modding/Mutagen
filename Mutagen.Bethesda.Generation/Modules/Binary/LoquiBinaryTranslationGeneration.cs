@@ -152,7 +152,7 @@ namespace Mutagen.Bethesda.Generation
                                 args.Add($"masterReferences: masterReferences");
                             }
                             using (var args = new ArgsWrapper(fg,
-                                $"{itemAccessor.DirectAccess}.CopyFieldsFrom{loquiGen.GetGenericTypes(getter: true, additionalMasks: MaskType.Copy)}"))
+                                $"{itemAccessor.DirectAccess}.CopyFieldsFrom{loquiGen.GetGenericTypes(getter: true, typeOverride: LoquiInterfaceType.Direct, additionalMasks: new MaskType[] { MaskType.Normal, MaskType.Copy })}"))
                             {
                                 args.Add($"rhs: tmp{typeGen.Name}");
                                 args.Add("def: null");

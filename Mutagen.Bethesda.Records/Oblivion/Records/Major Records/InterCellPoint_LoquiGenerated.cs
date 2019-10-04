@@ -385,130 +385,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static InterCellPoint Copy_ToLoqui(
-            InterCellPoint item,
-            InterCellPoint_CopyMask copyMask = null,
-            InterCellPoint def = null)
+        void IClearable.Clear()
         {
-            InterCellPoint ret;
-            if (item.GetType().Equals(typeof(InterCellPoint)))
-            {
-                ret = new InterCellPoint() as InterCellPoint;
-            }
-            else
-            {
-                ret = (InterCellPoint)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((InterCellPointSetterCommon)((IInterCellPointInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public void CopyFieldsFrom(InterCellPoint rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            InterCellPoint rhs,
-            InterCellPoint_CopyMask copyMask,
-            InterCellPoint def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            InterCellPoint rhs,
-            out InterCellPoint_ErrorMask errorMask,
-            InterCellPoint_CopyMask copyMask = null,
-            InterCellPoint def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            InterCellPointSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = InterCellPoint_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            InterCellPoint rhs,
-            ErrorMaskBuilder errorMask,
-            InterCellPoint_CopyMask copyMask = null,
-            InterCellPoint def = null)
-        {
-            InterCellPointSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected void SetNthObject(ushort index, object obj)
-        {
-            InterCellPoint_FieldIndex enu = (InterCellPoint_FieldIndex)index;
-            switch (enu)
-            {
-                case InterCellPoint_FieldIndex.PointID:
-                    this.PointID = (Int32)obj;
-                    break;
-                case InterCellPoint_FieldIndex.Point:
-                    this.Point = (P3Float)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void Clear()
-        {
-            InterCellPointSetterCommon.Instance.Clear(this);
-        }
-
-        public static InterCellPoint Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new InterCellPoint();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_InterCellPoint(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_InterCellPoint(InterCellPoint obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out InterCellPoint_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case InterCellPoint_FieldIndex.PointID:
-                    obj.PointID = (Int32)pair.Value;
-                    break;
-                case InterCellPoint_FieldIndex.Point:
-                    obj.Point = (P3Float)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -521,11 +402,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         new P3Float Point { get; set; }
 
-        void CopyFieldsFrom(
-            InterCellPoint rhs,
-            ErrorMaskBuilder errorMask = null,
-            InterCellPoint_CopyMask copyMask = null,
-            InterCellPoint def = null);
     }
 
     public partial interface IInterCellPointInternal :
@@ -629,6 +505,67 @@ namespace Mutagen.Bethesda.Oblivion
             return ((InterCellPointCommon)((IInterCellPointInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this InterCellPoint lhs,
+            InterCellPoint rhs)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null);
+        }
+
+        public static void CopyFieldsFrom(
+            this InterCellPoint lhs,
+            InterCellPoint rhs,
+            InterCellPoint_CopyMask copyMask,
+            InterCellPoint def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this InterCellPoint lhs,
+            InterCellPoint rhs,
+            out InterCellPoint_ErrorMask errorMask,
+            InterCellPoint_CopyMask copyMask = null,
+            InterCellPoint def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            InterCellPointSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = InterCellPoint_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this InterCellPoint lhs,
+            InterCellPoint rhs,
+            ErrorMaskBuilder errorMask,
+            InterCellPoint_CopyMask copyMask = null,
+            InterCellPoint def = null)
+        {
+            InterCellPointSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

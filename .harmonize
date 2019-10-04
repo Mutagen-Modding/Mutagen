@@ -11,10 +11,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>60a48234ddb1af340f4e77160de63b564afbef22</Sha>
+         <Sha>850f8a5afe5a24eb0796a47877fc0f7250a8510d</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>10-03-2019 20:27:47</CommitDate>
-         <Description>Non-notifying cache work</Description>
+         <CommitDate>10-04-2019 16:26:20</CommitDate>
+         <Description>Class generation of Clear made private</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/Loqui.git</OriginHint>
       </RepoListing>

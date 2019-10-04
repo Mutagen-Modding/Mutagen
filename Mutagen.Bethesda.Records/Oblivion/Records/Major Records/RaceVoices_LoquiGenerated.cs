@@ -401,130 +401,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static RaceVoices Copy_ToLoqui(
-            RaceVoices item,
-            RaceVoices_CopyMask copyMask = null,
-            RaceVoices def = null)
+        void IClearable.Clear()
         {
-            RaceVoices ret;
-            if (item.GetType().Equals(typeof(RaceVoices)))
-            {
-                ret = new RaceVoices() as RaceVoices;
-            }
-            else
-            {
-                ret = (RaceVoices)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((RaceVoicesSetterCommon)((IRaceVoicesInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public void CopyFieldsFrom(RaceVoices rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            RaceVoices rhs,
-            RaceVoices_CopyMask copyMask,
-            RaceVoices def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            RaceVoices rhs,
-            out RaceVoices_ErrorMask errorMask,
-            RaceVoices_CopyMask copyMask = null,
-            RaceVoices def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            RaceVoicesSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = RaceVoices_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            RaceVoices rhs,
-            ErrorMaskBuilder errorMask,
-            RaceVoices_CopyMask copyMask = null,
-            RaceVoices def = null)
-        {
-            RaceVoicesSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected void SetNthObject(ushort index, object obj)
-        {
-            RaceVoices_FieldIndex enu = (RaceVoices_FieldIndex)index;
-            switch (enu)
-            {
-                case RaceVoices_FieldIndex.Male:
-                    this.Male_Property.Set((IFormIDLink<Race>)obj);
-                    break;
-                case RaceVoices_FieldIndex.Female:
-                    this.Female_Property.Set((IFormIDLink<Race>)obj);
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void Clear()
-        {
-            RaceVoicesSetterCommon.Instance.Clear(this);
-        }
-
-        public static RaceVoices Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new RaceVoices();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_RaceVoices(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_RaceVoices(RaceVoices obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out RaceVoices_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case RaceVoices_FieldIndex.Male:
-                    obj.Male_Property.Set((IFormIDLink<Race>)pair.Value);
-                    break;
-                case RaceVoices_FieldIndex.Female:
-                    obj.Female_Property.Set((IFormIDLink<Race>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -537,11 +418,6 @@ namespace Mutagen.Bethesda.Oblivion
         new IFormIDLink<Race> Male_Property { get; }
         new Race Female { get; set; }
         new IFormIDLink<Race> Female_Property { get; }
-        void CopyFieldsFrom(
-            RaceVoices rhs,
-            ErrorMaskBuilder errorMask = null,
-            RaceVoices_CopyMask copyMask = null,
-            RaceVoices def = null);
     }
 
     public partial interface IRaceVoicesInternal :
@@ -651,6 +527,67 @@ namespace Mutagen.Bethesda.Oblivion
             return ((RaceVoicesCommon)((IRaceVoicesInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this RaceVoices lhs,
+            RaceVoices rhs)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null);
+        }
+
+        public static void CopyFieldsFrom(
+            this RaceVoices lhs,
+            RaceVoices rhs,
+            RaceVoices_CopyMask copyMask,
+            RaceVoices def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this RaceVoices lhs,
+            RaceVoices rhs,
+            out RaceVoices_ErrorMask errorMask,
+            RaceVoices_CopyMask copyMask = null,
+            RaceVoices def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            RaceVoicesSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = RaceVoices_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this RaceVoices lhs,
+            RaceVoices rhs,
+            ErrorMaskBuilder errorMask,
+            RaceVoices_CopyMask copyMask = null,
+            RaceVoices def = null)
+        {
+            RaceVoicesSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

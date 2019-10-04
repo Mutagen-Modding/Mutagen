@@ -520,136 +520,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static FaceGenData Copy_ToLoqui(
-            FaceGenData item,
-            FaceGenData_CopyMask copyMask = null,
-            FaceGenData def = null)
+        void IClearable.Clear()
         {
-            FaceGenData ret;
-            if (item.GetType().Equals(typeof(FaceGenData)))
-            {
-                ret = new FaceGenData() as FaceGenData;
-            }
-            else
-            {
-                ret = (FaceGenData)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((FaceGenDataSetterCommon)((IFaceGenDataInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public void CopyFieldsFrom(FaceGenData rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            FaceGenData rhs,
-            FaceGenData_CopyMask copyMask,
-            FaceGenData def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            FaceGenData rhs,
-            out FaceGenData_ErrorMask errorMask,
-            FaceGenData_CopyMask copyMask = null,
-            FaceGenData def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            FaceGenDataSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = FaceGenData_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            FaceGenData rhs,
-            ErrorMaskBuilder errorMask,
-            FaceGenData_CopyMask copyMask = null,
-            FaceGenData def = null)
-        {
-            FaceGenDataSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected void SetNthObject(ushort index, object obj)
-        {
-            FaceGenData_FieldIndex enu = (FaceGenData_FieldIndex)index;
-            switch (enu)
-            {
-                case FaceGenData_FieldIndex.SymmetricGeometry:
-                    this.SymmetricGeometry = (Byte[])obj;
-                    break;
-                case FaceGenData_FieldIndex.AsymmetricGeometry:
-                    this.AsymmetricGeometry = (Byte[])obj;
-                    break;
-                case FaceGenData_FieldIndex.SymmetricTexture:
-                    this.SymmetricTexture = (Byte[])obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void Clear()
-        {
-            FaceGenDataSetterCommon.Instance.Clear(this);
-        }
-
-        public static FaceGenData Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new FaceGenData();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_FaceGenData(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_FaceGenData(FaceGenData obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out FaceGenData_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case FaceGenData_FieldIndex.SymmetricGeometry:
-                    obj.SymmetricGeometry = (Byte[])pair.Value;
-                    break;
-                case FaceGenData_FieldIndex.AsymmetricGeometry:
-                    obj.AsymmetricGeometry = (Byte[])pair.Value;
-                    break;
-                case FaceGenData_FieldIndex.SymmetricTexture:
-                    obj.SymmetricTexture = (Byte[])pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -673,11 +548,6 @@ namespace Mutagen.Bethesda.Oblivion
         void SymmetricTexture_Set(Byte[] value, bool hasBeenSet = true);
         void SymmetricTexture_Unset();
 
-        void CopyFieldsFrom(
-            FaceGenData rhs,
-            ErrorMaskBuilder errorMask = null,
-            FaceGenData_CopyMask copyMask = null,
-            FaceGenData def = null);
     }
 
     public partial interface IFaceGenDataInternal :
@@ -788,6 +658,67 @@ namespace Mutagen.Bethesda.Oblivion
             return ((FaceGenDataCommon)((IFaceGenDataInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this FaceGenData lhs,
+            FaceGenData rhs)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null);
+        }
+
+        public static void CopyFieldsFrom(
+            this FaceGenData lhs,
+            FaceGenData rhs,
+            FaceGenData_CopyMask copyMask,
+            FaceGenData def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this FaceGenData lhs,
+            FaceGenData rhs,
+            out FaceGenData_ErrorMask errorMask,
+            FaceGenData_CopyMask copyMask = null,
+            FaceGenData def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            FaceGenDataSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = FaceGenData_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this FaceGenData lhs,
+            FaceGenData rhs,
+            ErrorMaskBuilder errorMask,
+            FaceGenData_CopyMask copyMask = null,
+            FaceGenData def = null)
+        {
+            FaceGenDataSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

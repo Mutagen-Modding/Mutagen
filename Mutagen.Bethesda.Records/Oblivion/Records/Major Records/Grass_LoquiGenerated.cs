@@ -737,203 +737,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static Grass Copy_ToLoqui(
-            Grass item,
-            Grass_CopyMask copyMask = null,
-            Grass def = null)
+        void IClearable.Clear()
         {
-            Grass ret;
-            if (item.GetType().Equals(typeof(Grass)))
-            {
-                ret = new Grass() as Grass;
-            }
-            else
-            {
-                ret = (Grass)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((GrassSetterCommon)((IGrassInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            Grass rhs,
-            Grass_CopyMask copyMask,
-            Grass def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            Grass rhs,
-            out Grass_ErrorMask errorMask,
-            Grass_CopyMask copyMask = null,
-            Grass def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            GrassSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = Grass_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            Grass rhs,
-            ErrorMaskBuilder errorMask,
-            Grass_CopyMask copyMask = null,
-            Grass def = null)
-        {
-            GrassSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            Grass_FieldIndex enu = (Grass_FieldIndex)index;
-            switch (enu)
-            {
-                case Grass_FieldIndex.Model:
-                    this.Model = (Model)obj;
-                    break;
-                case Grass_FieldIndex.Density:
-                    this.Density = (Byte)obj;
-                    break;
-                case Grass_FieldIndex.MinSlope:
-                    this.MinSlope = (Byte)obj;
-                    break;
-                case Grass_FieldIndex.MaxSlope:
-                    this.MaxSlope = (Byte)obj;
-                    break;
-                case Grass_FieldIndex.Fluff1:
-                    this.Fluff1 = (Byte)obj;
-                    break;
-                case Grass_FieldIndex.UnitFromWaterAmount:
-                    this.UnitFromWaterAmount = (UInt16)obj;
-                    break;
-                case Grass_FieldIndex.Fluff2:
-                    this.Fluff2 = (UInt16)obj;
-                    break;
-                case Grass_FieldIndex.UnitFromWaterMode:
-                    this.UnitFromWaterMode = (Grass.UnitFromWaterType)obj;
-                    break;
-                case Grass_FieldIndex.PositionRange:
-                    this.PositionRange = (Single)obj;
-                    break;
-                case Grass_FieldIndex.HeightRange:
-                    this.HeightRange = (Single)obj;
-                    break;
-                case Grass_FieldIndex.ColorRange:
-                    this.ColorRange = (Single)obj;
-                    break;
-                case Grass_FieldIndex.WavePeriod:
-                    this.WavePeriod = (Single)obj;
-                    break;
-                case Grass_FieldIndex.Flags:
-                    this.Flags = (Grass.GrassFlag)obj;
-                    break;
-                case Grass_FieldIndex.DATADataTypeState:
-                    this.DATADataTypeState = (Grass.DATADataType)obj;
-                    break;
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            GrassSetterCommon.Instance.Clear(this);
-        }
-
-        public new static Grass Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Grass();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Grass(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_Grass(Grass obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Grass_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case Grass_FieldIndex.Model:
-                    obj.Model = (Model)pair.Value;
-                    break;
-                case Grass_FieldIndex.Density:
-                    obj.Density = (Byte)pair.Value;
-                    break;
-                case Grass_FieldIndex.MinSlope:
-                    obj.MinSlope = (Byte)pair.Value;
-                    break;
-                case Grass_FieldIndex.MaxSlope:
-                    obj.MaxSlope = (Byte)pair.Value;
-                    break;
-                case Grass_FieldIndex.Fluff1:
-                    obj.Fluff1 = (Byte)pair.Value;
-                    break;
-                case Grass_FieldIndex.UnitFromWaterAmount:
-                    obj.UnitFromWaterAmount = (UInt16)pair.Value;
-                    break;
-                case Grass_FieldIndex.Fluff2:
-                    obj.Fluff2 = (UInt16)pair.Value;
-                    break;
-                case Grass_FieldIndex.UnitFromWaterMode:
-                    obj.UnitFromWaterMode = (Grass.UnitFromWaterType)pair.Value;
-                    break;
-                case Grass_FieldIndex.PositionRange:
-                    obj.PositionRange = (Single)pair.Value;
-                    break;
-                case Grass_FieldIndex.HeightRange:
-                    obj.HeightRange = (Single)pair.Value;
-                    break;
-                case Grass_FieldIndex.ColorRange:
-                    obj.ColorRange = (Single)pair.Value;
-                    break;
-                case Grass_FieldIndex.WavePeriod:
-                    obj.WavePeriod = (Single)pair.Value;
-                    break;
-                case Grass_FieldIndex.Flags:
-                    obj.Flags = (Grass.GrassFlag)pair.Value;
-                    break;
-                case Grass_FieldIndex.DATADataTypeState:
-                    obj.DATADataTypeState = (Grass.DATADataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -972,11 +780,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Grass.GrassFlag Flags { get; set; }
 
-        void CopyFieldsFrom(
-            Grass rhs,
-            ErrorMaskBuilder errorMask = null,
-            Grass_CopyMask copyMask = null,
-            Grass def = null);
     }
 
     public partial interface IGrassInternal :
@@ -1131,6 +934,54 @@ namespace Mutagen.Bethesda.Oblivion
             return ((GrassCommon)((IGrassInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this Grass lhs,
+            Grass rhs,
+            Grass_CopyMask copyMask,
+            Grass def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this Grass lhs,
+            Grass rhs,
+            out Grass_ErrorMask errorMask,
+            Grass_CopyMask copyMask = null,
+            Grass def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            GrassSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = Grass_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this Grass lhs,
+            Grass rhs,
+            ErrorMaskBuilder errorMask,
+            Grass_CopyMask copyMask = null,
+            Grass def = null)
+        {
+            GrassSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

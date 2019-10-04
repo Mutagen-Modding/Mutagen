@@ -342,119 +342,11 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static SkyrimMajorRecord Copy_ToLoqui(
-            SkyrimMajorRecord item,
-            SkyrimMajorRecord_CopyMask copyMask = null,
-            SkyrimMajorRecord def = null)
+        void IClearable.Clear()
         {
-            SkyrimMajorRecord ret = (SkyrimMajorRecord)System.Activator.CreateInstance(item.GetType());
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((SkyrimMajorRecordSetterCommon)((ISkyrimMajorRecordInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            SkyrimMajorRecord rhs,
-            SkyrimMajorRecord_CopyMask copyMask,
-            SkyrimMajorRecord def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            SkyrimMajorRecord rhs,
-            out SkyrimMajorRecord_ErrorMask errorMask,
-            SkyrimMajorRecord_CopyMask copyMask = null,
-            SkyrimMajorRecord def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            SkyrimMajorRecordSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = SkyrimMajorRecord_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            SkyrimMajorRecord rhs,
-            ErrorMaskBuilder errorMask,
-            SkyrimMajorRecord_CopyMask copyMask = null,
-            SkyrimMajorRecord def = null)
-        {
-            SkyrimMajorRecordSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            SkyrimMajorRecord_FieldIndex enu = (SkyrimMajorRecord_FieldIndex)index;
-            switch (enu)
-            {
-                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
-                    this.SkyrimMajorRecordFlags = (SkyrimMajorRecord.SkyrimMajorRecordFlag)obj;
-                    break;
-                case SkyrimMajorRecord_FieldIndex.FormVersion:
-                    this.FormVersion = (UInt16)obj;
-                    break;
-                case SkyrimMajorRecord_FieldIndex.Version2:
-                    this.Version2 = (UInt16)obj;
-                    break;
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            SkyrimMajorRecordSetterCommon.Instance.Clear(this);
-        }
-
-        protected new static void CopyInInternal_SkyrimMajorRecord(SkyrimMajorRecord obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out SkyrimMajorRecord_FieldIndex enu))
-            {
-                CopyInInternal_MajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
-                    obj.SkyrimMajorRecordFlags = (SkyrimMajorRecord.SkyrimMajorRecordFlag)pair.Value;
-                    break;
-                case SkyrimMajorRecord_FieldIndex.FormVersion:
-                    obj.FormVersion = (UInt16)pair.Value;
-                    break;
-                case SkyrimMajorRecord_FieldIndex.Version2:
-                    obj.Version2 = (UInt16)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -470,11 +362,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         new UInt16 Version2 { get; set; }
 
-        void CopyFieldsFrom(
-            SkyrimMajorRecord rhs,
-            ErrorMaskBuilder errorMask = null,
-            SkyrimMajorRecord_CopyMask copyMask = null,
-            SkyrimMajorRecord def = null);
     }
 
     public partial interface ISkyrimMajorRecordInternal :
@@ -582,6 +469,54 @@ namespace Mutagen.Bethesda.Skyrim
             return ((SkyrimMajorRecordCommon)((ISkyrimMajorRecordInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this SkyrimMajorRecord lhs,
+            SkyrimMajorRecord rhs,
+            SkyrimMajorRecord_CopyMask copyMask,
+            SkyrimMajorRecord def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this SkyrimMajorRecord lhs,
+            SkyrimMajorRecord rhs,
+            out SkyrimMajorRecord_ErrorMask errorMask,
+            SkyrimMajorRecord_CopyMask copyMask = null,
+            SkyrimMajorRecord def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            SkyrimMajorRecordSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = SkyrimMajorRecord_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this SkyrimMajorRecord lhs,
+            SkyrimMajorRecord rhs,
+            ErrorMaskBuilder errorMask,
+            SkyrimMajorRecord_CopyMask copyMask = null,
+            SkyrimMajorRecord def = null)
+        {
+            SkyrimMajorRecordSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

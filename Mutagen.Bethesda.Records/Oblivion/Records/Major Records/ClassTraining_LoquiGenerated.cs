@@ -406,136 +406,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static ClassTraining Copy_ToLoqui(
-            ClassTraining item,
-            ClassTraining_CopyMask copyMask = null,
-            ClassTraining def = null)
+        void IClearable.Clear()
         {
-            ClassTraining ret;
-            if (item.GetType().Equals(typeof(ClassTraining)))
-            {
-                ret = new ClassTraining() as ClassTraining;
-            }
-            else
-            {
-                ret = (ClassTraining)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((ClassTrainingSetterCommon)((IClassTrainingInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public void CopyFieldsFrom(ClassTraining rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            ClassTraining rhs,
-            ClassTraining_CopyMask copyMask,
-            ClassTraining def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            ClassTraining rhs,
-            out ClassTraining_ErrorMask errorMask,
-            ClassTraining_CopyMask copyMask = null,
-            ClassTraining def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            ClassTrainingSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = ClassTraining_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            ClassTraining rhs,
-            ErrorMaskBuilder errorMask,
-            ClassTraining_CopyMask copyMask = null,
-            ClassTraining def = null)
-        {
-            ClassTrainingSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected void SetNthObject(ushort index, object obj)
-        {
-            ClassTraining_FieldIndex enu = (ClassTraining_FieldIndex)index;
-            switch (enu)
-            {
-                case ClassTraining_FieldIndex.TrainedSkill:
-                    this.TrainedSkill = (Skill)obj;
-                    break;
-                case ClassTraining_FieldIndex.MaximumTrainingLevel:
-                    this.MaximumTrainingLevel = (Byte)obj;
-                    break;
-                case ClassTraining_FieldIndex.Fluff:
-                    this.Fluff = (Byte[])obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void Clear()
-        {
-            ClassTrainingSetterCommon.Instance.Clear(this);
-        }
-
-        public static ClassTraining Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new ClassTraining();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_ClassTraining(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_ClassTraining(ClassTraining obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out ClassTraining_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case ClassTraining_FieldIndex.TrainedSkill:
-                    obj.TrainedSkill = (Skill)pair.Value;
-                    break;
-                case ClassTraining_FieldIndex.MaximumTrainingLevel:
-                    obj.MaximumTrainingLevel = (Byte)pair.Value;
-                    break;
-                case ClassTraining_FieldIndex.Fluff:
-                    obj.Fluff = (Byte[])pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -550,11 +425,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Byte[] Fluff { get; set; }
 
-        void CopyFieldsFrom(
-            ClassTraining rhs,
-            ErrorMaskBuilder errorMask = null,
-            ClassTraining_CopyMask copyMask = null,
-            ClassTraining def = null);
     }
 
     public partial interface IClassTrainingInternal :
@@ -662,6 +532,67 @@ namespace Mutagen.Bethesda.Oblivion
             return ((ClassTrainingCommon)((IClassTrainingInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this ClassTraining lhs,
+            ClassTraining rhs)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null);
+        }
+
+        public static void CopyFieldsFrom(
+            this ClassTraining lhs,
+            ClassTraining rhs,
+            ClassTraining_CopyMask copyMask,
+            ClassTraining def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this ClassTraining lhs,
+            ClassTraining rhs,
+            out ClassTraining_ErrorMask errorMask,
+            ClassTraining_CopyMask copyMask = null,
+            ClassTraining def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            ClassTrainingSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = ClassTraining_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this ClassTraining lhs,
+            ClassTraining rhs,
+            ErrorMaskBuilder errorMask,
+            ClassTraining_CopyMask copyMask = null,
+            ClassTraining def = null)
+        {
+            ClassTrainingSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

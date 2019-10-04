@@ -471,125 +471,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static RegionDataObjects Copy_ToLoqui(
-            RegionDataObjects item,
-            RegionDataObjects_CopyMask copyMask = null,
-            RegionDataObjects def = null)
+        void IClearable.Clear()
         {
-            RegionDataObjects ret;
-            if (item.GetType().Equals(typeof(RegionDataObjects)))
-            {
-                ret = new RegionDataObjects() as RegionDataObjects;
-            }
-            else
-            {
-                ret = (RegionDataObjects)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((RegionDataObjectsSetterCommon)((IRegionDataObjectsInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(RegionData rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            RegionDataObjects rhs,
-            RegionDataObjects_CopyMask copyMask,
-            RegionDataObjects def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            RegionDataObjects rhs,
-            out RegionDataObjects_ErrorMask errorMask,
-            RegionDataObjects_CopyMask copyMask = null,
-            RegionDataObjects def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            RegionDataObjectsSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = RegionDataObjects_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            RegionDataObjects rhs,
-            ErrorMaskBuilder errorMask,
-            RegionDataObjects_CopyMask copyMask = null,
-            RegionDataObjects def = null)
-        {
-            RegionDataObjectsSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            RegionDataObjects_FieldIndex enu = (RegionDataObjects_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionDataObjects_FieldIndex.Objects:
-                    this._Objects.SetTo((ISetList<RegionDataObject>)obj);
-                    break;
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            RegionDataObjectsSetterCommon.Instance.Clear(this);
-        }
-
-        public new static RegionDataObjects Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new RegionDataObjects();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_RegionDataObjects(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_RegionDataObjects(RegionDataObjects obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out RegionDataObjects_FieldIndex enu))
-            {
-                CopyInInternal_RegionData(obj, pair);
-            }
-            switch (enu)
-            {
-                case RegionDataObjects_FieldIndex.Objects:
-                    obj._Objects.SetTo((ISetList<RegionDataObject>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -600,11 +486,6 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IRegionDataObjectsInternal>
     {
         new ISetList<RegionDataObject> Objects { get; }
-        void CopyFieldsFrom(
-            RegionDataObjects rhs,
-            ErrorMaskBuilder errorMask = null,
-            RegionDataObjects_CopyMask copyMask = null,
-            RegionDataObjects def = null);
     }
 
     public partial interface IRegionDataObjectsInternal :
@@ -703,6 +584,54 @@ namespace Mutagen.Bethesda.Oblivion
             return ((RegionDataObjectsCommon)((IRegionDataObjectsInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this RegionDataObjects lhs,
+            RegionDataObjects rhs,
+            RegionDataObjects_CopyMask copyMask,
+            RegionDataObjects def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this RegionDataObjects lhs,
+            RegionDataObjects rhs,
+            out RegionDataObjects_ErrorMask errorMask,
+            RegionDataObjects_CopyMask copyMask = null,
+            RegionDataObjects def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            RegionDataObjectsSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = RegionDataObjects_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this RegionDataObjects lhs,
+            RegionDataObjects rhs,
+            ErrorMaskBuilder errorMask,
+            RegionDataObjects_CopyMask copyMask = null,
+            RegionDataObjects def = null)
+        {
+            RegionDataObjectsSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

@@ -343,101 +343,11 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static Global Copy_ToLoqui(
-            Global item,
-            Global_CopyMask copyMask = null,
-            Global def = null)
+        void IClearable.Clear()
         {
-            Global ret = (Global)System.Activator.CreateInstance(item.GetType());
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((GlobalSetterCommon)((IGlobalInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            Global rhs,
-            Global_CopyMask copyMask,
-            Global def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            Global rhs,
-            out Global_ErrorMask errorMask,
-            Global_CopyMask copyMask = null,
-            Global def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            GlobalSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = Global_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            Global rhs,
-            ErrorMaskBuilder errorMask,
-            Global_CopyMask copyMask = null,
-            Global def = null)
-        {
-            GlobalSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            Global_FieldIndex enu = (Global_FieldIndex)index;
-            switch (enu)
-            {
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            GlobalSetterCommon.Instance.Clear(this);
-        }
-
-        protected new static void CopyInInternal_Global(Global obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Global_FieldIndex enu))
-            {
-                CopyInInternal_SkyrimMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -447,11 +357,6 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         ILoquiObjectSetter<IGlobalInternal>
     {
-        void CopyFieldsFrom(
-            Global rhs,
-            ErrorMaskBuilder errorMask = null,
-            Global_CopyMask copyMask = null,
-            Global def = null);
     }
 
     public partial interface IGlobalInternal :
@@ -547,6 +452,54 @@ namespace Mutagen.Bethesda.Skyrim
             return ((GlobalCommon)((IGlobalInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this Global lhs,
+            Global rhs,
+            Global_CopyMask copyMask,
+            Global def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this Global lhs,
+            Global rhs,
+            out Global_ErrorMask errorMask,
+            Global_CopyMask copyMask = null,
+            Global def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            GlobalSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = Global_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this Global lhs,
+            Global rhs,
+            ErrorMaskBuilder errorMask,
+            Global_CopyMask copyMask = null,
+            Global def = null)
+        {
+            GlobalSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

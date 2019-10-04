@@ -581,143 +581,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static PathGrid Copy_ToLoqui(
-            PathGrid item,
-            PathGrid_CopyMask copyMask = null,
-            PathGrid def = null)
+        void IClearable.Clear()
         {
-            PathGrid ret;
-            if (item.GetType().Equals(typeof(PathGrid)))
-            {
-                ret = new PathGrid() as PathGrid;
-            }
-            else
-            {
-                ret = (PathGrid)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((PathGridSetterCommon)((IPathGridInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            PathGrid rhs,
-            PathGrid_CopyMask copyMask,
-            PathGrid def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            PathGrid rhs,
-            out PathGrid_ErrorMask errorMask,
-            PathGrid_CopyMask copyMask = null,
-            PathGrid def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            PathGridSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = PathGrid_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            PathGrid rhs,
-            ErrorMaskBuilder errorMask,
-            PathGrid_CopyMask copyMask = null,
-            PathGrid def = null)
-        {
-            PathGridSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            PathGrid_FieldIndex enu = (PathGrid_FieldIndex)index;
-            switch (enu)
-            {
-                case PathGrid_FieldIndex.PointToPointConnections:
-                    this._PointToPointConnections.SetTo((ISetList<PathGridPoint>)obj);
-                    break;
-                case PathGrid_FieldIndex.Unknown:
-                    this.Unknown = (Byte[])obj;
-                    break;
-                case PathGrid_FieldIndex.InterCellConnections:
-                    this._InterCellConnections.SetTo((ISetList<InterCellPoint>)obj);
-                    break;
-                case PathGrid_FieldIndex.PointToReferenceMappings:
-                    this._PointToReferenceMappings.SetTo((ISetList<PointToReferenceMapping>)obj);
-                    break;
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            PathGridSetterCommon.Instance.Clear(this);
-        }
-
-        public new static PathGrid Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new PathGrid();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_PathGrid(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_PathGrid(PathGrid obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out PathGrid_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case PathGrid_FieldIndex.PointToPointConnections:
-                    obj._PointToPointConnections.SetTo((ISetList<PathGridPoint>)pair.Value);
-                    break;
-                case PathGrid_FieldIndex.Unknown:
-                    obj.Unknown = (Byte[])pair.Value;
-                    break;
-                case PathGrid_FieldIndex.InterCellConnections:
-                    obj._InterCellConnections.SetTo((ISetList<InterCellPoint>)pair.Value);
-                    break;
-                case PathGrid_FieldIndex.PointToReferenceMappings:
-                    obj._PointToReferenceMappings.SetTo((ISetList<PointToReferenceMapping>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -735,11 +603,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         new ISetList<InterCellPoint> InterCellConnections { get; }
         new ISetList<PointToReferenceMapping> PointToReferenceMappings { get; }
-        void CopyFieldsFrom(
-            PathGrid rhs,
-            ErrorMaskBuilder errorMask = null,
-            PathGrid_CopyMask copyMask = null,
-            PathGrid def = null);
     }
 
     public partial interface IPathGridInternal :
@@ -849,6 +712,54 @@ namespace Mutagen.Bethesda.Oblivion
             return ((PathGridCommon)((IPathGridInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this PathGrid lhs,
+            PathGrid rhs,
+            PathGrid_CopyMask copyMask,
+            PathGrid def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this PathGrid lhs,
+            PathGrid rhs,
+            out PathGrid_ErrorMask errorMask,
+            PathGrid_CopyMask copyMask = null,
+            PathGrid def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            PathGridSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = PathGrid_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this PathGrid lhs,
+            PathGrid rhs,
+            ErrorMaskBuilder errorMask,
+            PathGrid_CopyMask copyMask = null,
+            PathGrid def = null)
+        {
+            PathGridSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

@@ -394,124 +394,11 @@ namespace Mutagen.Bethesda.Examples
             return ret;
         }
 
-        public static MainVM Copy_ToLoqui(
-            MainVM item,
-            MainVM_CopyMask copyMask = null,
-            MainVM def = null)
+        void IClearable.Clear()
         {
-            MainVM ret;
-            if (item.GetType().Equals(typeof(MainVM)))
-            {
-                ret = new MainVM() as MainVM;
-            }
-            else
-            {
-                ret = (MainVM)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((MainVMSetterCommon)((IMainVMInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public void CopyFieldsFrom(MainVM rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            MainVM rhs,
-            MainVM_CopyMask copyMask,
-            MainVM def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            MainVM rhs,
-            out MainVM_ErrorMask errorMask,
-            MainVM_CopyMask copyMask = null,
-            MainVM def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            MainVMSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = MainVM_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            MainVM rhs,
-            ErrorMaskBuilder errorMask,
-            MainVM_CopyMask copyMask = null,
-            MainVM def = null)
-        {
-            MainVMSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected void SetNthObject(ushort index, object obj)
-        {
-            MainVM_FieldIndex enu = (MainVM_FieldIndex)index;
-            switch (enu)
-            {
-                case MainVM_FieldIndex.ModFilePath:
-                    this.ModFilePath = (String)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void Clear()
-        {
-            MainVMSetterCommon.Instance.Clear(this);
-        }
-
-        public static MainVM Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new MainVM();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_MainVM(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_MainVM(MainVM obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out MainVM_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case MainVM_FieldIndex.ModFilePath:
-                    obj.ModFilePath = (String)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -522,11 +409,6 @@ namespace Mutagen.Bethesda.Examples
     {
         new String ModFilePath { get; set; }
 
-        void CopyFieldsFrom(
-            MainVM rhs,
-            ErrorMaskBuilder errorMask = null,
-            MainVM_CopyMask copyMask = null,
-            MainVM def = null);
     }
 
     public partial interface IMainVMInternal :
@@ -625,6 +507,67 @@ namespace Mutagen.Bethesda.Examples
             return ((MainVMCommon)((IMainVMInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this MainVM lhs,
+            MainVM rhs)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null);
+        }
+
+        public static void CopyFieldsFrom(
+            this MainVM lhs,
+            MainVM rhs,
+            MainVM_CopyMask copyMask,
+            MainVM def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this MainVM lhs,
+            MainVM rhs,
+            out MainVM_ErrorMask errorMask,
+            MainVM_CopyMask copyMask = null,
+            MainVM def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            MainVMSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = MainVM_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this MainVM lhs,
+            MainVM rhs,
+            ErrorMaskBuilder errorMask,
+            MainVM_CopyMask copyMask = null,
+            MainVM def = null)
+        {
+            MainVMSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

@@ -435,154 +435,11 @@ namespace Mutagen.Bethesda.Tests
             return ret;
         }
 
-        public static Target Copy_ToLoqui(
-            Target item,
-            Target_CopyMask copyMask = null,
-            Target def = null)
+        void IClearable.Clear()
         {
-            Target ret;
-            if (item.GetType().Equals(typeof(Target)))
-            {
-                ret = new Target() as Target;
-            }
-            else
-            {
-                ret = (Target)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((TargetSetterCommon)((ITargetInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public void CopyFieldsFrom(Target rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            Target rhs,
-            Target_CopyMask copyMask,
-            Target def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            Target rhs,
-            out Target_ErrorMask errorMask,
-            Target_CopyMask copyMask = null,
-            Target def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            TargetSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = Target_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            Target rhs,
-            ErrorMaskBuilder errorMask,
-            Target_CopyMask copyMask = null,
-            Target def = null)
-        {
-            TargetSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected void SetNthObject(ushort index, object obj)
-        {
-            Target_FieldIndex enu = (Target_FieldIndex)index;
-            switch (enu)
-            {
-                case Target_FieldIndex.Do:
-                    this.Do = (Boolean)obj;
-                    break;
-                case Target_FieldIndex.Path:
-                    this.Path = (String)obj;
-                    break;
-                case Target_FieldIndex.NumMasters:
-                    this.NumMasters = (Byte)obj;
-                    break;
-                case Target_FieldIndex.GameMode:
-                    this.GameMode = (Mutagen.Bethesda.GameMode)obj;
-                    break;
-                case Target_FieldIndex.ExpectedBaseGroupCount:
-                    this.ExpectedBaseGroupCount = (Byte)obj;
-                    break;
-                case Target_FieldIndex.Interest:
-                    this.Interest = (RecordInterest)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void Clear()
-        {
-            TargetSetterCommon.Instance.Clear(this);
-        }
-
-        public static Target Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Target();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Target(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_Target(Target obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Target_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case Target_FieldIndex.Do:
-                    obj.Do = (Boolean)pair.Value;
-                    break;
-                case Target_FieldIndex.Path:
-                    obj.Path = (String)pair.Value;
-                    break;
-                case Target_FieldIndex.NumMasters:
-                    obj.NumMasters = (Byte)pair.Value;
-                    break;
-                case Target_FieldIndex.GameMode:
-                    obj.GameMode = (Mutagen.Bethesda.GameMode)pair.Value;
-                    break;
-                case Target_FieldIndex.ExpectedBaseGroupCount:
-                    obj.ExpectedBaseGroupCount = (Byte)pair.Value;
-                    break;
-                case Target_FieldIndex.Interest:
-                    obj.Interest = (RecordInterest)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -606,11 +463,6 @@ namespace Mutagen.Bethesda.Tests
 
         new RecordInterest Interest { get; set; }
 
-        void CopyFieldsFrom(
-            Target rhs,
-            ErrorMaskBuilder errorMask = null,
-            Target_CopyMask copyMask = null,
-            Target def = null);
     }
 
     public partial interface ITargetInternal :
@@ -729,6 +581,67 @@ namespace Mutagen.Bethesda.Tests
             return ((TargetCommon)((ITargetInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this Target lhs,
+            Target rhs)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null);
+        }
+
+        public static void CopyFieldsFrom(
+            this Target lhs,
+            Target rhs,
+            Target_CopyMask copyMask,
+            Target def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this Target lhs,
+            Target rhs,
+            out Target_ErrorMask errorMask,
+            Target_CopyMask copyMask = null,
+            Target def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            TargetSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = Target_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this Target lhs,
+            Target rhs,
+            ErrorMaskBuilder errorMask,
+            Target_CopyMask copyMask = null,
+            Target def = null)
+        {
+            TargetSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

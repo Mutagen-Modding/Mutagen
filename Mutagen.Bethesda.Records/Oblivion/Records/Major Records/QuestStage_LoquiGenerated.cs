@@ -461,130 +461,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static QuestStage Copy_ToLoqui(
-            QuestStage item,
-            QuestStage_CopyMask copyMask = null,
-            QuestStage def = null)
+        void IClearable.Clear()
         {
-            QuestStage ret;
-            if (item.GetType().Equals(typeof(QuestStage)))
-            {
-                ret = new QuestStage() as QuestStage;
-            }
-            else
-            {
-                ret = (QuestStage)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((QuestStageSetterCommon)((IQuestStageInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public void CopyFieldsFrom(QuestStage rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            QuestStage rhs,
-            QuestStage_CopyMask copyMask,
-            QuestStage def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            QuestStage rhs,
-            out QuestStage_ErrorMask errorMask,
-            QuestStage_CopyMask copyMask = null,
-            QuestStage def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            QuestStageSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = QuestStage_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            QuestStage rhs,
-            ErrorMaskBuilder errorMask,
-            QuestStage_CopyMask copyMask = null,
-            QuestStage def = null)
-        {
-            QuestStageSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected void SetNthObject(ushort index, object obj)
-        {
-            QuestStage_FieldIndex enu = (QuestStage_FieldIndex)index;
-            switch (enu)
-            {
-                case QuestStage_FieldIndex.Stage:
-                    this.Stage = (UInt16)obj;
-                    break;
-                case QuestStage_FieldIndex.LogEntries:
-                    this._LogEntries.SetTo((ISetList<LogEntry>)obj);
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void Clear()
-        {
-            QuestStageSetterCommon.Instance.Clear(this);
-        }
-
-        public static QuestStage Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new QuestStage();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_QuestStage(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_QuestStage(QuestStage obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out QuestStage_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case QuestStage_FieldIndex.Stage:
-                    obj.Stage = (UInt16)pair.Value;
-                    break;
-                case QuestStage_FieldIndex.LogEntries:
-                    obj._LogEntries.SetTo((ISetList<LogEntry>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -596,11 +477,6 @@ namespace Mutagen.Bethesda.Oblivion
         new UInt16 Stage { get; set; }
 
         new ISetList<LogEntry> LogEntries { get; }
-        void CopyFieldsFrom(
-            QuestStage rhs,
-            ErrorMaskBuilder errorMask = null,
-            QuestStage_CopyMask copyMask = null,
-            QuestStage def = null);
     }
 
     public partial interface IQuestStageInternal :
@@ -703,6 +579,67 @@ namespace Mutagen.Bethesda.Oblivion
             return ((QuestStageCommon)((IQuestStageInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this QuestStage lhs,
+            QuestStage rhs)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null);
+        }
+
+        public static void CopyFieldsFrom(
+            this QuestStage lhs,
+            QuestStage rhs,
+            QuestStage_CopyMask copyMask,
+            QuestStage def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this QuestStage lhs,
+            QuestStage rhs,
+            out QuestStage_ErrorMask errorMask,
+            QuestStage_CopyMask copyMask = null,
+            QuestStage def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            QuestStageSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = QuestStage_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this QuestStage lhs,
+            QuestStage rhs,
+            ErrorMaskBuilder errorMask,
+            QuestStage_CopyMask copyMask = null,
+            QuestStage def = null)
+        {
+            QuestStageSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

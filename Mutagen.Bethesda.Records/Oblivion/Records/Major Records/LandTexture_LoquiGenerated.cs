@@ -613,143 +613,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static LandTexture Copy_ToLoqui(
-            LandTexture item,
-            LandTexture_CopyMask copyMask = null,
-            LandTexture def = null)
+        void IClearable.Clear()
         {
-            LandTexture ret;
-            if (item.GetType().Equals(typeof(LandTexture)))
-            {
-                ret = new LandTexture() as LandTexture;
-            }
-            else
-            {
-                ret = (LandTexture)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((LandTextureSetterCommon)((ILandTextureInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            LandTexture rhs,
-            LandTexture_CopyMask copyMask,
-            LandTexture def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            LandTexture rhs,
-            out LandTexture_ErrorMask errorMask,
-            LandTexture_CopyMask copyMask = null,
-            LandTexture def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            LandTextureSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = LandTexture_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            LandTexture rhs,
-            ErrorMaskBuilder errorMask,
-            LandTexture_CopyMask copyMask = null,
-            LandTexture def = null)
-        {
-            LandTextureSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            LandTexture_FieldIndex enu = (LandTexture_FieldIndex)index;
-            switch (enu)
-            {
-                case LandTexture_FieldIndex.Icon:
-                    this.Icon = (String)obj;
-                    break;
-                case LandTexture_FieldIndex.Havok:
-                    this.Havok = (HavokData)obj;
-                    break;
-                case LandTexture_FieldIndex.TextureSpecularExponent:
-                    this.TextureSpecularExponent = (Byte)obj;
-                    break;
-                case LandTexture_FieldIndex.PotentialGrass:
-                    this._PotentialGrass.SetTo((ISetList<IFormIDLink<Grass>>)obj);
-                    break;
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            LandTextureSetterCommon.Instance.Clear(this);
-        }
-
-        public new static LandTexture Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new LandTexture();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_LandTexture(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_LandTexture(LandTexture obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out LandTexture_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case LandTexture_FieldIndex.Icon:
-                    obj.Icon = (String)pair.Value;
-                    break;
-                case LandTexture_FieldIndex.Havok:
-                    obj.Havok = (HavokData)pair.Value;
-                    break;
-                case LandTexture_FieldIndex.TextureSpecularExponent:
-                    obj.TextureSpecularExponent = (Byte)pair.Value;
-                    break;
-                case LandTexture_FieldIndex.PotentialGrass:
-                    obj._PotentialGrass.SetTo((ISetList<IFormIDLink<Grass>>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -775,11 +643,6 @@ namespace Mutagen.Bethesda.Oblivion
         void TextureSpecularExponent_Unset();
 
         new ISetList<IFormIDLink<Grass>> PotentialGrass { get; }
-        void CopyFieldsFrom(
-            LandTexture rhs,
-            ErrorMaskBuilder errorMask = null,
-            LandTexture_CopyMask copyMask = null,
-            LandTexture def = null);
     }
 
     public partial interface ILandTextureInternal :
@@ -893,6 +756,54 @@ namespace Mutagen.Bethesda.Oblivion
             return ((LandTextureCommon)((ILandTextureInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this LandTexture lhs,
+            LandTexture rhs,
+            LandTexture_CopyMask copyMask,
+            LandTexture def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this LandTexture lhs,
+            LandTexture rhs,
+            out LandTexture_ErrorMask errorMask,
+            LandTexture_CopyMask copyMask = null,
+            LandTexture def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            LandTextureSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = LandTexture_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this LandTexture lhs,
+            LandTexture rhs,
+            ErrorMaskBuilder errorMask,
+            LandTexture_CopyMask copyMask = null,
+            LandTexture def = null)
+        {
+            LandTextureSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

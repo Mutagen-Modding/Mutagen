@@ -446,125 +446,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static Road Copy_ToLoqui(
-            Road item,
-            Road_CopyMask copyMask = null,
-            Road def = null)
+        void IClearable.Clear()
         {
-            Road ret;
-            if (item.GetType().Equals(typeof(Road)))
-            {
-                ret = new Road() as Road;
-            }
-            else
-            {
-                ret = (Road)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((RoadSetterCommon)((IRoadInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            Road rhs,
-            Road_CopyMask copyMask,
-            Road def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            Road rhs,
-            out Road_ErrorMask errorMask,
-            Road_CopyMask copyMask = null,
-            Road def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            RoadSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = Road_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            Road rhs,
-            ErrorMaskBuilder errorMask,
-            Road_CopyMask copyMask = null,
-            Road def = null)
-        {
-            RoadSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            Road_FieldIndex enu = (Road_FieldIndex)index;
-            switch (enu)
-            {
-                case Road_FieldIndex.Points:
-                    this._Points.SetTo((ISetList<RoadPoint>)obj);
-                    break;
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            RoadSetterCommon.Instance.Clear(this);
-        }
-
-        public new static Road Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Road();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Road(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_Road(Road obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Road_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case Road_FieldIndex.Points:
-                    obj._Points.SetTo((ISetList<RoadPoint>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -575,11 +461,6 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IRoadInternal>
     {
         new ISetList<RoadPoint> Points { get; }
-        void CopyFieldsFrom(
-            Road rhs,
-            ErrorMaskBuilder errorMask = null,
-            Road_CopyMask copyMask = null,
-            Road def = null);
     }
 
     public partial interface IRoadInternal :
@@ -678,6 +559,54 @@ namespace Mutagen.Bethesda.Oblivion
             return ((RoadCommon)((IRoadInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this Road lhs,
+            Road rhs,
+            Road_CopyMask copyMask,
+            Road def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this Road lhs,
+            Road rhs,
+            out Road_ErrorMask errorMask,
+            Road_CopyMask copyMask = null,
+            Road def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            RoadSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = Road_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this Road lhs,
+            Road rhs,
+            ErrorMaskBuilder errorMask,
+            Road_CopyMask copyMask = null,
+            Road def = null)
+        {
+            RoadSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

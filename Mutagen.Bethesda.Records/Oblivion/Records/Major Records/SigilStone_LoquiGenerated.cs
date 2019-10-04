@@ -736,173 +736,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static SigilStone Copy_ToLoqui(
-            SigilStone item,
-            SigilStone_CopyMask copyMask = null,
-            SigilStone def = null)
+        void IClearable.Clear()
         {
-            SigilStone ret;
-            if (item.GetType().Equals(typeof(SigilStone)))
-            {
-                ret = new SigilStone() as SigilStone;
-            }
-            else
-            {
-                ret = (SigilStone)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((SigilStoneSetterCommon)((ISigilStoneInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            SigilStone rhs,
-            SigilStone_CopyMask copyMask,
-            SigilStone def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            SigilStone rhs,
-            out SigilStone_ErrorMask errorMask,
-            SigilStone_CopyMask copyMask = null,
-            SigilStone def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            SigilStoneSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = SigilStone_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            SigilStone rhs,
-            ErrorMaskBuilder errorMask,
-            SigilStone_CopyMask copyMask = null,
-            SigilStone def = null)
-        {
-            SigilStoneSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            SigilStone_FieldIndex enu = (SigilStone_FieldIndex)index;
-            switch (enu)
-            {
-                case SigilStone_FieldIndex.Name:
-                    this.Name = (String)obj;
-                    break;
-                case SigilStone_FieldIndex.Model:
-                    this.Model = (Model)obj;
-                    break;
-                case SigilStone_FieldIndex.Icon:
-                    this.Icon = (String)obj;
-                    break;
-                case SigilStone_FieldIndex.Script:
-                    this.Script_Property.Set((IFormIDSetLink<Script>)obj);
-                    break;
-                case SigilStone_FieldIndex.Effects:
-                    this._Effects.SetTo((ISetList<Effect>)obj);
-                    break;
-                case SigilStone_FieldIndex.Uses:
-                    this.Uses = (Byte)obj;
-                    break;
-                case SigilStone_FieldIndex.Value:
-                    this.Value = (UInt32)obj;
-                    break;
-                case SigilStone_FieldIndex.Weight:
-                    this.Weight = (Single)obj;
-                    break;
-                case SigilStone_FieldIndex.DATADataTypeState:
-                    this.DATADataTypeState = (SigilStone.DATADataType)obj;
-                    break;
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            SigilStoneSetterCommon.Instance.Clear(this);
-        }
-
-        public new static SigilStone Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new SigilStone();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_SigilStone(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_SigilStone(SigilStone obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out SigilStone_FieldIndex enu))
-            {
-                CopyInInternal_ItemAbstract(obj, pair);
-            }
-            switch (enu)
-            {
-                case SigilStone_FieldIndex.Name:
-                    obj.Name = (String)pair.Value;
-                    break;
-                case SigilStone_FieldIndex.Model:
-                    obj.Model = (Model)pair.Value;
-                    break;
-                case SigilStone_FieldIndex.Icon:
-                    obj.Icon = (String)pair.Value;
-                    break;
-                case SigilStone_FieldIndex.Script:
-                    obj.Script_Property.Set((IFormIDSetLink<Script>)pair.Value);
-                    break;
-                case SigilStone_FieldIndex.Effects:
-                    obj._Effects.SetTo((ISetList<Effect>)pair.Value);
-                    break;
-                case SigilStone_FieldIndex.Uses:
-                    obj.Uses = (Byte)pair.Value;
-                    break;
-                case SigilStone_FieldIndex.Value:
-                    obj.Value = (UInt32)pair.Value;
-                    break;
-                case SigilStone_FieldIndex.Weight:
-                    obj.Weight = (Single)pair.Value;
-                    break;
-                case SigilStone_FieldIndex.DATADataTypeState:
-                    obj.DATADataTypeState = (SigilStone.DATADataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -936,11 +774,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Single Weight { get; set; }
 
-        void CopyFieldsFrom(
-            SigilStone rhs,
-            ErrorMaskBuilder errorMask = null,
-            SigilStone_CopyMask copyMask = null,
-            SigilStone def = null);
     }
 
     public partial interface ISigilStoneInternal :
@@ -1079,6 +912,54 @@ namespace Mutagen.Bethesda.Oblivion
             return ((SigilStoneCommon)((ISigilStoneInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this SigilStone lhs,
+            SigilStone rhs,
+            SigilStone_CopyMask copyMask,
+            SigilStone def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this SigilStone lhs,
+            SigilStone rhs,
+            out SigilStone_ErrorMask errorMask,
+            SigilStone_CopyMask copyMask = null,
+            SigilStone def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            SigilStoneSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = SigilStone_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this SigilStone lhs,
+            SigilStone rhs,
+            ErrorMaskBuilder errorMask,
+            SigilStone_CopyMask copyMask = null,
+            SigilStone def = null)
+        {
+            SigilStoneSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

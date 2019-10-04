@@ -416,148 +416,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static AIPackageSchedule Copy_ToLoqui(
-            AIPackageSchedule item,
-            AIPackageSchedule_CopyMask copyMask = null,
-            AIPackageSchedule def = null)
+        void IClearable.Clear()
         {
-            AIPackageSchedule ret;
-            if (item.GetType().Equals(typeof(AIPackageSchedule)))
-            {
-                ret = new AIPackageSchedule() as AIPackageSchedule;
-            }
-            else
-            {
-                ret = (AIPackageSchedule)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((AIPackageScheduleSetterCommon)((IAIPackageScheduleInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public void CopyFieldsFrom(AIPackageSchedule rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            AIPackageSchedule rhs,
-            AIPackageSchedule_CopyMask copyMask,
-            AIPackageSchedule def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            AIPackageSchedule rhs,
-            out AIPackageSchedule_ErrorMask errorMask,
-            AIPackageSchedule_CopyMask copyMask = null,
-            AIPackageSchedule def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            AIPackageScheduleSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = AIPackageSchedule_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            AIPackageSchedule rhs,
-            ErrorMaskBuilder errorMask,
-            AIPackageSchedule_CopyMask copyMask = null,
-            AIPackageSchedule def = null)
-        {
-            AIPackageScheduleSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected void SetNthObject(ushort index, object obj)
-        {
-            AIPackageSchedule_FieldIndex enu = (AIPackageSchedule_FieldIndex)index;
-            switch (enu)
-            {
-                case AIPackageSchedule_FieldIndex.Month:
-                    this.Month = (Month)obj;
-                    break;
-                case AIPackageSchedule_FieldIndex.DayOfWeek:
-                    this.DayOfWeek = (Weekday)obj;
-                    break;
-                case AIPackageSchedule_FieldIndex.Day:
-                    this.Day = (Byte)obj;
-                    break;
-                case AIPackageSchedule_FieldIndex.Time:
-                    this.Time = (Byte)obj;
-                    break;
-                case AIPackageSchedule_FieldIndex.Duration:
-                    this.Duration = (Int32)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void Clear()
-        {
-            AIPackageScheduleSetterCommon.Instance.Clear(this);
-        }
-
-        public static AIPackageSchedule Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new AIPackageSchedule();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_AIPackageSchedule(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_AIPackageSchedule(AIPackageSchedule obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out AIPackageSchedule_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case AIPackageSchedule_FieldIndex.Month:
-                    obj.Month = (Month)pair.Value;
-                    break;
-                case AIPackageSchedule_FieldIndex.DayOfWeek:
-                    obj.DayOfWeek = (Weekday)pair.Value;
-                    break;
-                case AIPackageSchedule_FieldIndex.Day:
-                    obj.Day = (Byte)pair.Value;
-                    break;
-                case AIPackageSchedule_FieldIndex.Time:
-                    obj.Time = (Byte)pair.Value;
-                    break;
-                case AIPackageSchedule_FieldIndex.Duration:
-                    obj.Duration = (Int32)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -576,11 +439,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Int32 Duration { get; set; }
 
-        void CopyFieldsFrom(
-            AIPackageSchedule rhs,
-            ErrorMaskBuilder errorMask = null,
-            AIPackageSchedule_CopyMask copyMask = null,
-            AIPackageSchedule def = null);
     }
 
     public partial interface IAIPackageScheduleInternal :
@@ -696,6 +554,67 @@ namespace Mutagen.Bethesda.Oblivion
             return ((AIPackageScheduleCommon)((IAIPackageScheduleInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this AIPackageSchedule lhs,
+            AIPackageSchedule rhs)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null);
+        }
+
+        public static void CopyFieldsFrom(
+            this AIPackageSchedule lhs,
+            AIPackageSchedule rhs,
+            AIPackageSchedule_CopyMask copyMask,
+            AIPackageSchedule def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this AIPackageSchedule lhs,
+            AIPackageSchedule rhs,
+            out AIPackageSchedule_ErrorMask errorMask,
+            AIPackageSchedule_CopyMask copyMask = null,
+            AIPackageSchedule def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            AIPackageScheduleSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = AIPackageSchedule_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this AIPackageSchedule lhs,
+            AIPackageSchedule rhs,
+            ErrorMaskBuilder errorMask,
+            AIPackageSchedule_CopyMask copyMask = null,
+            AIPackageSchedule def = null)
+        {
+            AIPackageScheduleSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

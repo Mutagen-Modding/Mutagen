@@ -533,149 +533,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static Armor Copy_ToLoqui(
-            Armor item,
-            Armor_CopyMask copyMask = null,
-            Armor def = null)
+        void IClearable.Clear()
         {
-            Armor ret;
-            if (item.GetType().Equals(typeof(Armor)))
-            {
-                ret = new Armor() as Armor;
-            }
-            else
-            {
-                ret = (Armor)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((ArmorSetterCommon)((IArmorInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            Armor rhs,
-            Armor_CopyMask copyMask,
-            Armor def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            Armor rhs,
-            out Armor_ErrorMask errorMask,
-            Armor_CopyMask copyMask = null,
-            Armor def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            ArmorSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = Armor_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            Armor rhs,
-            ErrorMaskBuilder errorMask,
-            Armor_CopyMask copyMask = null,
-            Armor def = null)
-        {
-            ArmorSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            Armor_FieldIndex enu = (Armor_FieldIndex)index;
-            switch (enu)
-            {
-                case Armor_FieldIndex.ArmorValue:
-                    this.ArmorValue = (Single)obj;
-                    break;
-                case Armor_FieldIndex.Value:
-                    this.Value = (UInt32)obj;
-                    break;
-                case Armor_FieldIndex.Health:
-                    this.Health = (UInt32)obj;
-                    break;
-                case Armor_FieldIndex.Weight:
-                    this.Weight = (Single)obj;
-                    break;
-                case Armor_FieldIndex.DATADataTypeState:
-                    this.DATADataTypeState = (Armor.DATADataType)obj;
-                    break;
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            ArmorSetterCommon.Instance.Clear(this);
-        }
-
-        public new static Armor Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Armor();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Armor(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_Armor(Armor obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Armor_FieldIndex enu))
-            {
-                CopyInInternal_ClothingAbstract(obj, pair);
-            }
-            switch (enu)
-            {
-                case Armor_FieldIndex.ArmorValue:
-                    obj.ArmorValue = (Single)pair.Value;
-                    break;
-                case Armor_FieldIndex.Value:
-                    obj.Value = (UInt32)pair.Value;
-                    break;
-                case Armor_FieldIndex.Health:
-                    obj.Health = (UInt32)pair.Value;
-                    break;
-                case Armor_FieldIndex.Weight:
-                    obj.Weight = (Single)pair.Value;
-                    break;
-                case Armor_FieldIndex.DATADataTypeState:
-                    obj.DATADataTypeState = (Armor.DATADataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -693,11 +555,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Single Weight { get; set; }
 
-        void CopyFieldsFrom(
-            Armor rhs,
-            ErrorMaskBuilder errorMask = null,
-            Armor_CopyMask copyMask = null,
-            Armor def = null);
     }
 
     public partial interface IArmorInternal :
@@ -815,6 +672,54 @@ namespace Mutagen.Bethesda.Oblivion
             return ((ArmorCommon)((IArmorInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this Armor lhs,
+            Armor rhs,
+            Armor_CopyMask copyMask,
+            Armor def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this Armor lhs,
+            Armor rhs,
+            out Armor_ErrorMask errorMask,
+            Armor_CopyMask copyMask = null,
+            Armor def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            ArmorSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = Armor_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this Armor lhs,
+            Armor rhs,
+            ErrorMaskBuilder errorMask,
+            Armor_CopyMask copyMask = null,
+            Armor def = null)
+        {
+            ArmorSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

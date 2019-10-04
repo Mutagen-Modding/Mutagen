@@ -476,125 +476,11 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static GameSettingFloat Copy_ToLoqui(
-            GameSettingFloat item,
-            GameSettingFloat_CopyMask copyMask = null,
-            GameSettingFloat def = null)
+        void IClearable.Clear()
         {
-            GameSettingFloat ret;
-            if (item.GetType().Equals(typeof(GameSettingFloat)))
-            {
-                ret = new GameSettingFloat() as GameSettingFloat;
-            }
-            else
-            {
-                ret = (GameSettingFloat)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((GameSettingFloatSetterCommon)((IGameSettingFloatInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            GameSettingFloat rhs,
-            GameSettingFloat_CopyMask copyMask,
-            GameSettingFloat def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            GameSettingFloat rhs,
-            out GameSettingFloat_ErrorMask errorMask,
-            GameSettingFloat_CopyMask copyMask = null,
-            GameSettingFloat def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            GameSettingFloatSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = GameSettingFloat_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            GameSettingFloat rhs,
-            ErrorMaskBuilder errorMask,
-            GameSettingFloat_CopyMask copyMask = null,
-            GameSettingFloat def = null)
-        {
-            GameSettingFloatSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            GameSettingFloat_FieldIndex enu = (GameSettingFloat_FieldIndex)index;
-            switch (enu)
-            {
-                case GameSettingFloat_FieldIndex.Data:
-                    this.Data = (Single)obj;
-                    break;
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            GameSettingFloatSetterCommon.Instance.Clear(this);
-        }
-
-        public new static GameSettingFloat Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new GameSettingFloat();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_GameSettingFloat(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_GameSettingFloat(GameSettingFloat obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out GameSettingFloat_FieldIndex enu))
-            {
-                CopyInInternal_GameSetting(obj, pair);
-            }
-            switch (enu)
-            {
-                case GameSettingFloat_FieldIndex.Data:
-                    obj.Data = (Single)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -609,11 +495,6 @@ namespace Mutagen.Bethesda.Skyrim
         void Data_Set(Single value, bool hasBeenSet = true);
         void Data_Unset();
 
-        void CopyFieldsFrom(
-            GameSettingFloat rhs,
-            ErrorMaskBuilder errorMask = null,
-            GameSettingFloat_CopyMask copyMask = null,
-            GameSettingFloat def = null);
     }
 
     public partial interface IGameSettingFloatInternal :
@@ -714,6 +595,54 @@ namespace Mutagen.Bethesda.Skyrim
             return ((GameSettingFloatCommon)((IGameSettingFloatInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this GameSettingFloat lhs,
+            GameSettingFloat rhs,
+            GameSettingFloat_CopyMask copyMask,
+            GameSettingFloat def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this GameSettingFloat lhs,
+            GameSettingFloat rhs,
+            out GameSettingFloat_ErrorMask errorMask,
+            GameSettingFloat_CopyMask copyMask = null,
+            GameSettingFloat def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            GameSettingFloatSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = GameSettingFloat_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this GameSettingFloat lhs,
+            GameSettingFloat rhs,
+            ErrorMaskBuilder errorMask,
+            GameSettingFloat_CopyMask copyMask = null,
+            GameSettingFloat def = null)
+        {
+            GameSettingFloatSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

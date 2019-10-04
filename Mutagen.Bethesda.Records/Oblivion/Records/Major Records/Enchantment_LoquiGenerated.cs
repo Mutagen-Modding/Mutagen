@@ -644,161 +644,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static Enchantment Copy_ToLoqui(
-            Enchantment item,
-            Enchantment_CopyMask copyMask = null,
-            Enchantment def = null)
+        void IClearable.Clear()
         {
-            Enchantment ret;
-            if (item.GetType().Equals(typeof(Enchantment)))
-            {
-                ret = new Enchantment() as Enchantment;
-            }
-            else
-            {
-                ret = (Enchantment)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((EnchantmentSetterCommon)((IEnchantmentInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            Enchantment rhs,
-            Enchantment_CopyMask copyMask,
-            Enchantment def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            Enchantment rhs,
-            out Enchantment_ErrorMask errorMask,
-            Enchantment_CopyMask copyMask = null,
-            Enchantment def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            EnchantmentSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = Enchantment_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            Enchantment rhs,
-            ErrorMaskBuilder errorMask,
-            Enchantment_CopyMask copyMask = null,
-            Enchantment def = null)
-        {
-            EnchantmentSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            Enchantment_FieldIndex enu = (Enchantment_FieldIndex)index;
-            switch (enu)
-            {
-                case Enchantment_FieldIndex.Name:
-                    this.Name = (String)obj;
-                    break;
-                case Enchantment_FieldIndex.Type:
-                    this.Type = (Enchantment.EnchantmentType)obj;
-                    break;
-                case Enchantment_FieldIndex.ChargeAmount:
-                    this.ChargeAmount = (UInt32)obj;
-                    break;
-                case Enchantment_FieldIndex.EnchantCost:
-                    this.EnchantCost = (UInt32)obj;
-                    break;
-                case Enchantment_FieldIndex.Flags:
-                    this.Flags = (Enchantment.Flag)obj;
-                    break;
-                case Enchantment_FieldIndex.Effects:
-                    this._Effects.SetTo((ISetList<Effect>)obj);
-                    break;
-                case Enchantment_FieldIndex.ENITDataTypeState:
-                    this.ENITDataTypeState = (Enchantment.ENITDataType)obj;
-                    break;
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            EnchantmentSetterCommon.Instance.Clear(this);
-        }
-
-        public new static Enchantment Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Enchantment();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Enchantment(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_Enchantment(Enchantment obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Enchantment_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case Enchantment_FieldIndex.Name:
-                    obj.Name = (String)pair.Value;
-                    break;
-                case Enchantment_FieldIndex.Type:
-                    obj.Type = (Enchantment.EnchantmentType)pair.Value;
-                    break;
-                case Enchantment_FieldIndex.ChargeAmount:
-                    obj.ChargeAmount = (UInt32)pair.Value;
-                    break;
-                case Enchantment_FieldIndex.EnchantCost:
-                    obj.EnchantCost = (UInt32)pair.Value;
-                    break;
-                case Enchantment_FieldIndex.Flags:
-                    obj.Flags = (Enchantment.Flag)pair.Value;
-                    break;
-                case Enchantment_FieldIndex.Effects:
-                    obj._Effects.SetTo((ISetList<Effect>)pair.Value);
-                    break;
-                case Enchantment_FieldIndex.ENITDataTypeState:
-                    obj.ENITDataTypeState = (Enchantment.ENITDataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -822,11 +672,6 @@ namespace Mutagen.Bethesda.Oblivion
         new Enchantment.Flag Flags { get; set; }
 
         new ISetList<Effect> Effects { get; }
-        void CopyFieldsFrom(
-            Enchantment rhs,
-            ErrorMaskBuilder errorMask = null,
-            Enchantment_CopyMask copyMask = null,
-            Enchantment def = null);
     }
 
     public partial interface IEnchantmentInternal :
@@ -952,6 +797,54 @@ namespace Mutagen.Bethesda.Oblivion
             return ((EnchantmentCommon)((IEnchantmentInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this Enchantment lhs,
+            Enchantment rhs,
+            Enchantment_CopyMask copyMask,
+            Enchantment def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this Enchantment lhs,
+            Enchantment rhs,
+            out Enchantment_ErrorMask errorMask,
+            Enchantment_CopyMask copyMask = null,
+            Enchantment def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            EnchantmentSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = Enchantment_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this Enchantment lhs,
+            Enchantment rhs,
+            ErrorMaskBuilder errorMask,
+            Enchantment_CopyMask copyMask = null,
+            Enchantment def = null)
+        {
+            EnchantmentSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

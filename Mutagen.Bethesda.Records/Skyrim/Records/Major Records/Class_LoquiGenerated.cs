@@ -994,305 +994,11 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static Class Copy_ToLoqui(
-            Class item,
-            Class_CopyMask copyMask = null,
-            Class def = null)
+        void IClearable.Clear()
         {
-            Class ret;
-            if (item.GetType().Equals(typeof(Class)))
-            {
-                ret = new Class() as Class;
-            }
-            else
-            {
-                ret = (Class)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((ClassSetterCommon)((IClassInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            Class rhs,
-            Class_CopyMask copyMask,
-            Class def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            Class rhs,
-            out Class_ErrorMask errorMask,
-            Class_CopyMask copyMask = null,
-            Class def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            ClassSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = Class_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            Class rhs,
-            ErrorMaskBuilder errorMask,
-            Class_CopyMask copyMask = null,
-            Class def = null)
-        {
-            ClassSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            Class_FieldIndex enu = (Class_FieldIndex)index;
-            switch (enu)
-            {
-                case Class_FieldIndex.Name:
-                    this.Name = (String)obj;
-                    break;
-                case Class_FieldIndex.Description:
-                    this.Description = (String)obj;
-                    break;
-                case Class_FieldIndex.Icon:
-                    this.Icon = (String)obj;
-                    break;
-                case Class_FieldIndex.Unknown:
-                    this.Unknown = (Int32)obj;
-                    break;
-                case Class_FieldIndex.Teaches:
-                    this.Teaches = (Skill)obj;
-                    break;
-                case Class_FieldIndex.MaxTrainingLevel:
-                    this.MaxTrainingLevel = (Byte)obj;
-                    break;
-                case Class_FieldIndex.OneHandedWeight:
-                    this.OneHandedWeight = (Byte)obj;
-                    break;
-                case Class_FieldIndex.TwoHandedWeight:
-                    this.TwoHandedWeight = (Byte)obj;
-                    break;
-                case Class_FieldIndex.MarksmanWeight:
-                    this.MarksmanWeight = (Byte)obj;
-                    break;
-                case Class_FieldIndex.BlockWeight:
-                    this.BlockWeight = (Byte)obj;
-                    break;
-                case Class_FieldIndex.SmithingWeight:
-                    this.SmithingWeight = (Byte)obj;
-                    break;
-                case Class_FieldIndex.HeavyArmorWeight:
-                    this.HeavyArmorWeight = (Byte)obj;
-                    break;
-                case Class_FieldIndex.LightArmorWeight:
-                    this.LightArmorWeight = (Byte)obj;
-                    break;
-                case Class_FieldIndex.PickpocketWeight:
-                    this.PickpocketWeight = (Byte)obj;
-                    break;
-                case Class_FieldIndex.LockpickingWeight:
-                    this.LockpickingWeight = (Byte)obj;
-                    break;
-                case Class_FieldIndex.SneakWeight:
-                    this.SneakWeight = (Byte)obj;
-                    break;
-                case Class_FieldIndex.AlchemyWeight:
-                    this.AlchemyWeight = (Byte)obj;
-                    break;
-                case Class_FieldIndex.SpeechcraftWeight:
-                    this.SpeechcraftWeight = (Byte)obj;
-                    break;
-                case Class_FieldIndex.AlterationWeight:
-                    this.AlterationWeight = (Byte)obj;
-                    break;
-                case Class_FieldIndex.ConjurationWeight:
-                    this.ConjurationWeight = (Byte)obj;
-                    break;
-                case Class_FieldIndex.DestructionWeight:
-                    this.DestructionWeight = (Byte)obj;
-                    break;
-                case Class_FieldIndex.IllusionWeight:
-                    this.IllusionWeight = (Byte)obj;
-                    break;
-                case Class_FieldIndex.RestorationWeight:
-                    this.RestorationWeight = (Byte)obj;
-                    break;
-                case Class_FieldIndex.EnchantingWeight:
-                    this.EnchantingWeight = (Byte)obj;
-                    break;
-                case Class_FieldIndex.BleedoutDefault:
-                    this.BleedoutDefault = (Single)obj;
-                    break;
-                case Class_FieldIndex.VoicePoints:
-                    this.VoicePoints = (UInt32)obj;
-                    break;
-                case Class_FieldIndex.HealthWeight:
-                    this.HealthWeight = (Byte)obj;
-                    break;
-                case Class_FieldIndex.MagickaWeight:
-                    this.MagickaWeight = (Byte)obj;
-                    break;
-                case Class_FieldIndex.StaminaWeight:
-                    this.StaminaWeight = (Byte)obj;
-                    break;
-                case Class_FieldIndex.Unknown2:
-                    this.Unknown2 = (Byte)obj;
-                    break;
-                case Class_FieldIndex.DATADataTypeState:
-                    this.DATADataTypeState = (Class.DATADataType)obj;
-                    break;
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            ClassSetterCommon.Instance.Clear(this);
-        }
-
-        public new static Class Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Class();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Class(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_Class(Class obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Class_FieldIndex enu))
-            {
-                CopyInInternal_SkyrimMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case Class_FieldIndex.Name:
-                    obj.Name = (String)pair.Value;
-                    break;
-                case Class_FieldIndex.Description:
-                    obj.Description = (String)pair.Value;
-                    break;
-                case Class_FieldIndex.Icon:
-                    obj.Icon = (String)pair.Value;
-                    break;
-                case Class_FieldIndex.Unknown:
-                    obj.Unknown = (Int32)pair.Value;
-                    break;
-                case Class_FieldIndex.Teaches:
-                    obj.Teaches = (Skill)pair.Value;
-                    break;
-                case Class_FieldIndex.MaxTrainingLevel:
-                    obj.MaxTrainingLevel = (Byte)pair.Value;
-                    break;
-                case Class_FieldIndex.OneHandedWeight:
-                    obj.OneHandedWeight = (Byte)pair.Value;
-                    break;
-                case Class_FieldIndex.TwoHandedWeight:
-                    obj.TwoHandedWeight = (Byte)pair.Value;
-                    break;
-                case Class_FieldIndex.MarksmanWeight:
-                    obj.MarksmanWeight = (Byte)pair.Value;
-                    break;
-                case Class_FieldIndex.BlockWeight:
-                    obj.BlockWeight = (Byte)pair.Value;
-                    break;
-                case Class_FieldIndex.SmithingWeight:
-                    obj.SmithingWeight = (Byte)pair.Value;
-                    break;
-                case Class_FieldIndex.HeavyArmorWeight:
-                    obj.HeavyArmorWeight = (Byte)pair.Value;
-                    break;
-                case Class_FieldIndex.LightArmorWeight:
-                    obj.LightArmorWeight = (Byte)pair.Value;
-                    break;
-                case Class_FieldIndex.PickpocketWeight:
-                    obj.PickpocketWeight = (Byte)pair.Value;
-                    break;
-                case Class_FieldIndex.LockpickingWeight:
-                    obj.LockpickingWeight = (Byte)pair.Value;
-                    break;
-                case Class_FieldIndex.SneakWeight:
-                    obj.SneakWeight = (Byte)pair.Value;
-                    break;
-                case Class_FieldIndex.AlchemyWeight:
-                    obj.AlchemyWeight = (Byte)pair.Value;
-                    break;
-                case Class_FieldIndex.SpeechcraftWeight:
-                    obj.SpeechcraftWeight = (Byte)pair.Value;
-                    break;
-                case Class_FieldIndex.AlterationWeight:
-                    obj.AlterationWeight = (Byte)pair.Value;
-                    break;
-                case Class_FieldIndex.ConjurationWeight:
-                    obj.ConjurationWeight = (Byte)pair.Value;
-                    break;
-                case Class_FieldIndex.DestructionWeight:
-                    obj.DestructionWeight = (Byte)pair.Value;
-                    break;
-                case Class_FieldIndex.IllusionWeight:
-                    obj.IllusionWeight = (Byte)pair.Value;
-                    break;
-                case Class_FieldIndex.RestorationWeight:
-                    obj.RestorationWeight = (Byte)pair.Value;
-                    break;
-                case Class_FieldIndex.EnchantingWeight:
-                    obj.EnchantingWeight = (Byte)pair.Value;
-                    break;
-                case Class_FieldIndex.BleedoutDefault:
-                    obj.BleedoutDefault = (Single)pair.Value;
-                    break;
-                case Class_FieldIndex.VoicePoints:
-                    obj.VoicePoints = (UInt32)pair.Value;
-                    break;
-                case Class_FieldIndex.HealthWeight:
-                    obj.HealthWeight = (Byte)pair.Value;
-                    break;
-                case Class_FieldIndex.MagickaWeight:
-                    obj.MagickaWeight = (Byte)pair.Value;
-                    break;
-                case Class_FieldIndex.StaminaWeight:
-                    obj.StaminaWeight = (Byte)pair.Value;
-                    break;
-                case Class_FieldIndex.Unknown2:
-                    obj.Unknown2 = (Byte)pair.Value;
-                    break;
-                case Class_FieldIndex.DATADataTypeState:
-                    obj.DATADataTypeState = (Class.DATADataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -1371,11 +1077,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         new Byte Unknown2 { get; set; }
 
-        void CopyFieldsFrom(
-            Class rhs,
-            ErrorMaskBuilder errorMask = null,
-            Class_CopyMask copyMask = null,
-            Class def = null);
     }
 
     public partial interface IClassInternal :
@@ -1600,6 +1301,54 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ClassCommon)((IClassInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this Class lhs,
+            Class rhs,
+            Class_CopyMask copyMask,
+            Class def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this Class lhs,
+            Class rhs,
+            out Class_ErrorMask errorMask,
+            Class_CopyMask copyMask = null,
+            Class def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            ClassSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = Class_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this Class lhs,
+            Class rhs,
+            ErrorMaskBuilder errorMask,
+            Class_CopyMask copyMask = null,
+            Class def = null)
+        {
+            ClassSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

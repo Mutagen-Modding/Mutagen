@@ -1421,317 +1421,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static Water Copy_ToLoqui(
-            Water item,
-            Water_CopyMask copyMask = null,
-            Water def = null)
+        void IClearable.Clear()
         {
-            Water ret;
-            if (item.GetType().Equals(typeof(Water)))
-            {
-                ret = new Water() as Water;
-            }
-            else
-            {
-                ret = (Water)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((WaterSetterCommon)((IWaterInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            Water rhs,
-            Water_CopyMask copyMask,
-            Water def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            Water rhs,
-            out Water_ErrorMask errorMask,
-            Water_CopyMask copyMask = null,
-            Water def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            WaterSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = Water_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            Water rhs,
-            ErrorMaskBuilder errorMask,
-            Water_CopyMask copyMask = null,
-            Water def = null)
-        {
-            WaterSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            Water_FieldIndex enu = (Water_FieldIndex)index;
-            switch (enu)
-            {
-                case Water_FieldIndex.Texture:
-                    this.Texture = (String)obj;
-                    break;
-                case Water_FieldIndex.Opacity:
-                    this.Opacity = (Byte)obj;
-                    break;
-                case Water_FieldIndex.Flags:
-                    this.Flags = (Water.Flag)obj;
-                    break;
-                case Water_FieldIndex.MaterialID:
-                    this.MaterialID = (String)obj;
-                    break;
-                case Water_FieldIndex.Sound:
-                    this.Sound_Property.Set((IFormIDSetLink<Sound>)obj);
-                    break;
-                case Water_FieldIndex.WindVelocity:
-                    this.WindVelocity = (Single)obj;
-                    break;
-                case Water_FieldIndex.WindDirection:
-                    this.WindDirection = (Single)obj;
-                    break;
-                case Water_FieldIndex.WaveAmplitude:
-                    this.WaveAmplitude = (Single)obj;
-                    break;
-                case Water_FieldIndex.WaveFrequency:
-                    this.WaveFrequency = (Single)obj;
-                    break;
-                case Water_FieldIndex.SunPower:
-                    this.SunPower = (Single)obj;
-                    break;
-                case Water_FieldIndex.ReflectivityAmount:
-                    this.ReflectivityAmount = (Single)obj;
-                    break;
-                case Water_FieldIndex.FresnelAmount:
-                    this.FresnelAmount = (Single)obj;
-                    break;
-                case Water_FieldIndex.ScrollXSpeed:
-                    this.ScrollXSpeed = (Single)obj;
-                    break;
-                case Water_FieldIndex.ScrollYSpeed:
-                    this.ScrollYSpeed = (Single)obj;
-                    break;
-                case Water_FieldIndex.FogDistanceNearPlane:
-                    this.FogDistanceNearPlane = (Single)obj;
-                    break;
-                case Water_FieldIndex.FogDistanceFarPlane:
-                    this.FogDistanceFarPlane = (Single)obj;
-                    break;
-                case Water_FieldIndex.ShallowColor:
-                    this.ShallowColor = (Color)obj;
-                    break;
-                case Water_FieldIndex.DeepColor:
-                    this.DeepColor = (Color)obj;
-                    break;
-                case Water_FieldIndex.ReflectionColor:
-                    this.ReflectionColor = (Color)obj;
-                    break;
-                case Water_FieldIndex.TextureBlend:
-                    this.TextureBlend = (Byte)obj;
-                    break;
-                case Water_FieldIndex.RainSimulatorForce:
-                    this.RainSimulatorForce = (Single)obj;
-                    break;
-                case Water_FieldIndex.RainSimulatorVelocity:
-                    this.RainSimulatorVelocity = (Single)obj;
-                    break;
-                case Water_FieldIndex.RainSimulatorFalloff:
-                    this.RainSimulatorFalloff = (Single)obj;
-                    break;
-                case Water_FieldIndex.RainSimulatorDampner:
-                    this.RainSimulatorDampner = (Single)obj;
-                    break;
-                case Water_FieldIndex.RainSimulatorStartingSize:
-                    this.RainSimulatorStartingSize = (Single)obj;
-                    break;
-                case Water_FieldIndex.DisplacementSimulatorForce:
-                    this.DisplacementSimulatorForce = (Single)obj;
-                    break;
-                case Water_FieldIndex.DisplacementSimulatorVelocity:
-                    this.DisplacementSimulatorVelocity = (Single)obj;
-                    break;
-                case Water_FieldIndex.DisplacementSimulatorFalloff:
-                    this.DisplacementSimulatorFalloff = (Single)obj;
-                    break;
-                case Water_FieldIndex.DisplacementSimulatorDampner:
-                    this.DisplacementSimulatorDampner = (Single)obj;
-                    break;
-                case Water_FieldIndex.DisplacementSimulatorStartingSize:
-                    this.DisplacementSimulatorStartingSize = (Single)obj;
-                    break;
-                case Water_FieldIndex.Damage:
-                    this.Damage = (UInt16)obj;
-                    break;
-                case Water_FieldIndex.RelatedWaters:
-                    this.RelatedWaters = (RelatedWaters)obj;
-                    break;
-                case Water_FieldIndex.DATADataTypeState:
-                    this.DATADataTypeState = (Water.DATADataType)obj;
-                    break;
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            WaterSetterCommon.Instance.Clear(this);
-        }
-
-        public new static Water Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Water();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Water(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_Water(Water obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Water_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case Water_FieldIndex.Texture:
-                    obj.Texture = (String)pair.Value;
-                    break;
-                case Water_FieldIndex.Opacity:
-                    obj.Opacity = (Byte)pair.Value;
-                    break;
-                case Water_FieldIndex.Flags:
-                    obj.Flags = (Water.Flag)pair.Value;
-                    break;
-                case Water_FieldIndex.MaterialID:
-                    obj.MaterialID = (String)pair.Value;
-                    break;
-                case Water_FieldIndex.Sound:
-                    obj.Sound_Property.Set((IFormIDSetLink<Sound>)pair.Value);
-                    break;
-                case Water_FieldIndex.WindVelocity:
-                    obj.WindVelocity = (Single)pair.Value;
-                    break;
-                case Water_FieldIndex.WindDirection:
-                    obj.WindDirection = (Single)pair.Value;
-                    break;
-                case Water_FieldIndex.WaveAmplitude:
-                    obj.WaveAmplitude = (Single)pair.Value;
-                    break;
-                case Water_FieldIndex.WaveFrequency:
-                    obj.WaveFrequency = (Single)pair.Value;
-                    break;
-                case Water_FieldIndex.SunPower:
-                    obj.SunPower = (Single)pair.Value;
-                    break;
-                case Water_FieldIndex.ReflectivityAmount:
-                    obj.ReflectivityAmount = (Single)pair.Value;
-                    break;
-                case Water_FieldIndex.FresnelAmount:
-                    obj.FresnelAmount = (Single)pair.Value;
-                    break;
-                case Water_FieldIndex.ScrollXSpeed:
-                    obj.ScrollXSpeed = (Single)pair.Value;
-                    break;
-                case Water_FieldIndex.ScrollYSpeed:
-                    obj.ScrollYSpeed = (Single)pair.Value;
-                    break;
-                case Water_FieldIndex.FogDistanceNearPlane:
-                    obj.FogDistanceNearPlane = (Single)pair.Value;
-                    break;
-                case Water_FieldIndex.FogDistanceFarPlane:
-                    obj.FogDistanceFarPlane = (Single)pair.Value;
-                    break;
-                case Water_FieldIndex.ShallowColor:
-                    obj.ShallowColor = (Color)pair.Value;
-                    break;
-                case Water_FieldIndex.DeepColor:
-                    obj.DeepColor = (Color)pair.Value;
-                    break;
-                case Water_FieldIndex.ReflectionColor:
-                    obj.ReflectionColor = (Color)pair.Value;
-                    break;
-                case Water_FieldIndex.TextureBlend:
-                    obj.TextureBlend = (Byte)pair.Value;
-                    break;
-                case Water_FieldIndex.RainSimulatorForce:
-                    obj.RainSimulatorForce = (Single)pair.Value;
-                    break;
-                case Water_FieldIndex.RainSimulatorVelocity:
-                    obj.RainSimulatorVelocity = (Single)pair.Value;
-                    break;
-                case Water_FieldIndex.RainSimulatorFalloff:
-                    obj.RainSimulatorFalloff = (Single)pair.Value;
-                    break;
-                case Water_FieldIndex.RainSimulatorDampner:
-                    obj.RainSimulatorDampner = (Single)pair.Value;
-                    break;
-                case Water_FieldIndex.RainSimulatorStartingSize:
-                    obj.RainSimulatorStartingSize = (Single)pair.Value;
-                    break;
-                case Water_FieldIndex.DisplacementSimulatorForce:
-                    obj.DisplacementSimulatorForce = (Single)pair.Value;
-                    break;
-                case Water_FieldIndex.DisplacementSimulatorVelocity:
-                    obj.DisplacementSimulatorVelocity = (Single)pair.Value;
-                    break;
-                case Water_FieldIndex.DisplacementSimulatorFalloff:
-                    obj.DisplacementSimulatorFalloff = (Single)pair.Value;
-                    break;
-                case Water_FieldIndex.DisplacementSimulatorDampner:
-                    obj.DisplacementSimulatorDampner = (Single)pair.Value;
-                    break;
-                case Water_FieldIndex.DisplacementSimulatorStartingSize:
-                    obj.DisplacementSimulatorStartingSize = (Single)pair.Value;
-                    break;
-                case Water_FieldIndex.Damage:
-                    obj.Damage = (UInt16)pair.Value;
-                    break;
-                case Water_FieldIndex.RelatedWaters:
-                    obj.RelatedWaters = (RelatedWaters)pair.Value;
-                    break;
-                case Water_FieldIndex.DATADataTypeState:
-                    obj.DATADataTypeState = (Water.DATADataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -1820,11 +1514,6 @@ namespace Mutagen.Bethesda.Oblivion
         void RelatedWaters_Set(RelatedWaters value, bool hasBeenSet = true);
         void RelatedWaters_Unset();
 
-        void CopyFieldsFrom(
-            Water rhs,
-            ErrorMaskBuilder errorMask = null,
-            Water_CopyMask copyMask = null,
-            Water def = null);
     }
 
     public partial interface IWaterInternal :
@@ -2062,6 +1751,54 @@ namespace Mutagen.Bethesda.Oblivion
             return ((WaterCommon)((IWaterInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this Water lhs,
+            Water rhs,
+            Water_CopyMask copyMask,
+            Water def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this Water lhs,
+            Water rhs,
+            out Water_ErrorMask errorMask,
+            Water_CopyMask copyMask = null,
+            Water def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            WaterSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = Water_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this Water lhs,
+            Water rhs,
+            ErrorMaskBuilder errorMask,
+            Water_CopyMask copyMask = null,
+            Water def = null)
+        {
+            WaterSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda.Generation
     {
         static void AttachDebugInspector()
         {
-            string testString = "MaskItemIndexed<FormKey, bool, OblivionMajorRecord_Mask<bool>>>>(true, item.Items.Values.Select((i) => new MaskItemInde";
+            string testString = "lic static Ammo Copy_ToLoqui(";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>

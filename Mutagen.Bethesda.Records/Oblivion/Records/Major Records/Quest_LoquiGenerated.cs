@@ -748,173 +748,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static Quest Copy_ToLoqui(
-            Quest item,
-            Quest_CopyMask copyMask = null,
-            Quest def = null)
+        void IClearable.Clear()
         {
-            Quest ret;
-            if (item.GetType().Equals(typeof(Quest)))
-            {
-                ret = new Quest() as Quest;
-            }
-            else
-            {
-                ret = (Quest)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((QuestSetterCommon)((IQuestInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            Quest rhs,
-            Quest_CopyMask copyMask,
-            Quest def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            Quest rhs,
-            out Quest_ErrorMask errorMask,
-            Quest_CopyMask copyMask = null,
-            Quest def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            QuestSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = Quest_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            Quest rhs,
-            ErrorMaskBuilder errorMask,
-            Quest_CopyMask copyMask = null,
-            Quest def = null)
-        {
-            QuestSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            Quest_FieldIndex enu = (Quest_FieldIndex)index;
-            switch (enu)
-            {
-                case Quest_FieldIndex.Script:
-                    this.Script_Property.Set((IFormIDSetLink<Script>)obj);
-                    break;
-                case Quest_FieldIndex.Name:
-                    this.Name = (String)obj;
-                    break;
-                case Quest_FieldIndex.Icon:
-                    this.Icon = (String)obj;
-                    break;
-                case Quest_FieldIndex.Flags:
-                    this.Flags = (Quest.Flag)obj;
-                    break;
-                case Quest_FieldIndex.Priority:
-                    this.Priority = (Byte)obj;
-                    break;
-                case Quest_FieldIndex.Conditions:
-                    this._Conditions.SetTo((ISetList<Condition>)obj);
-                    break;
-                case Quest_FieldIndex.Stages:
-                    this._Stages.SetTo((ISetList<QuestStage>)obj);
-                    break;
-                case Quest_FieldIndex.Targets:
-                    this._Targets.SetTo((ISetList<QuestTarget>)obj);
-                    break;
-                case Quest_FieldIndex.DATADataTypeState:
-                    this.DATADataTypeState = (Quest.DATADataType)obj;
-                    break;
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            QuestSetterCommon.Instance.Clear(this);
-        }
-
-        public new static Quest Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Quest();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Quest(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_Quest(Quest obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Quest_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case Quest_FieldIndex.Script:
-                    obj.Script_Property.Set((IFormIDSetLink<Script>)pair.Value);
-                    break;
-                case Quest_FieldIndex.Name:
-                    obj.Name = (String)pair.Value;
-                    break;
-                case Quest_FieldIndex.Icon:
-                    obj.Icon = (String)pair.Value;
-                    break;
-                case Quest_FieldIndex.Flags:
-                    obj.Flags = (Quest.Flag)pair.Value;
-                    break;
-                case Quest_FieldIndex.Priority:
-                    obj.Priority = (Byte)pair.Value;
-                    break;
-                case Quest_FieldIndex.Conditions:
-                    obj._Conditions.SetTo((ISetList<Condition>)pair.Value);
-                    break;
-                case Quest_FieldIndex.Stages:
-                    obj._Stages.SetTo((ISetList<QuestStage>)pair.Value);
-                    break;
-                case Quest_FieldIndex.Targets:
-                    obj._Targets.SetTo((ISetList<QuestTarget>)pair.Value);
-                    break;
-                case Quest_FieldIndex.DATADataTypeState:
-                    obj.DATADataTypeState = (Quest.DATADataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -943,11 +781,6 @@ namespace Mutagen.Bethesda.Oblivion
         new ISetList<Condition> Conditions { get; }
         new ISetList<QuestStage> Stages { get; }
         new ISetList<QuestTarget> Targets { get; }
-        void CopyFieldsFrom(
-            Quest rhs,
-            ErrorMaskBuilder errorMask = null,
-            Quest_CopyMask copyMask = null,
-            Quest def = null);
     }
 
     public partial interface IQuestInternal :
@@ -1083,6 +916,54 @@ namespace Mutagen.Bethesda.Oblivion
             return ((QuestCommon)((IQuestInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this Quest lhs,
+            Quest rhs,
+            Quest_CopyMask copyMask,
+            Quest def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this Quest lhs,
+            Quest rhs,
+            out Quest_ErrorMask errorMask,
+            Quest_CopyMask copyMask = null,
+            Quest def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            QuestSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = Quest_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this Quest lhs,
+            Quest rhs,
+            ErrorMaskBuilder errorMask,
+            Quest_CopyMask copyMask = null,
+            Quest def = null)
+        {
+            QuestSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

@@ -405,130 +405,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static PointToReferenceMapping Copy_ToLoqui(
-            PointToReferenceMapping item,
-            PointToReferenceMapping_CopyMask copyMask = null,
-            PointToReferenceMapping def = null)
+        void IClearable.Clear()
         {
-            PointToReferenceMapping ret;
-            if (item.GetType().Equals(typeof(PointToReferenceMapping)))
-            {
-                ret = new PointToReferenceMapping() as PointToReferenceMapping;
-            }
-            else
-            {
-                ret = (PointToReferenceMapping)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((PointToReferenceMappingSetterCommon)((IPointToReferenceMappingInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public void CopyFieldsFrom(PointToReferenceMapping rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            PointToReferenceMapping rhs,
-            PointToReferenceMapping_CopyMask copyMask,
-            PointToReferenceMapping def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            PointToReferenceMapping rhs,
-            out PointToReferenceMapping_ErrorMask errorMask,
-            PointToReferenceMapping_CopyMask copyMask = null,
-            PointToReferenceMapping def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            PointToReferenceMappingSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = PointToReferenceMapping_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            PointToReferenceMapping rhs,
-            ErrorMaskBuilder errorMask,
-            PointToReferenceMapping_CopyMask copyMask = null,
-            PointToReferenceMapping def = null)
-        {
-            PointToReferenceMappingSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected void SetNthObject(ushort index, object obj)
-        {
-            PointToReferenceMapping_FieldIndex enu = (PointToReferenceMapping_FieldIndex)index;
-            switch (enu)
-            {
-                case PointToReferenceMapping_FieldIndex.Reference:
-                    this.Reference_Property.Set((IFormIDLink<IPlaced>)obj);
-                    break;
-                case PointToReferenceMapping_FieldIndex.Points:
-                    this._Points.SetTo((IExtendedList<Int16>)obj);
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void Clear()
-        {
-            PointToReferenceMappingSetterCommon.Instance.Clear(this);
-        }
-
-        public static PointToReferenceMapping Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new PointToReferenceMapping();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_PointToReferenceMapping(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_PointToReferenceMapping(PointToReferenceMapping obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out PointToReferenceMapping_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case PointToReferenceMapping_FieldIndex.Reference:
-                    obj.Reference_Property.Set((IFormIDLink<IPlaced>)pair.Value);
-                    break;
-                case PointToReferenceMapping_FieldIndex.Points:
-                    obj._Points.SetTo((IExtendedList<Int16>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -540,11 +421,6 @@ namespace Mutagen.Bethesda.Oblivion
         new IPlaced Reference { get; set; }
         new IFormIDLink<IPlaced> Reference_Property { get; }
         new IExtendedList<Int16> Points { get; }
-        void CopyFieldsFrom(
-            PointToReferenceMapping rhs,
-            ErrorMaskBuilder errorMask = null,
-            PointToReferenceMapping_CopyMask copyMask = null,
-            PointToReferenceMapping def = null);
     }
 
     public partial interface IPointToReferenceMappingInternal :
@@ -650,6 +526,67 @@ namespace Mutagen.Bethesda.Oblivion
             return ((PointToReferenceMappingCommon)((IPointToReferenceMappingInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this PointToReferenceMapping lhs,
+            PointToReferenceMapping rhs)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null);
+        }
+
+        public static void CopyFieldsFrom(
+            this PointToReferenceMapping lhs,
+            PointToReferenceMapping rhs,
+            PointToReferenceMapping_CopyMask copyMask,
+            PointToReferenceMapping def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this PointToReferenceMapping lhs,
+            PointToReferenceMapping rhs,
+            out PointToReferenceMapping_ErrorMask errorMask,
+            PointToReferenceMapping_CopyMask copyMask = null,
+            PointToReferenceMapping def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            PointToReferenceMappingSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = PointToReferenceMapping_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this PointToReferenceMapping lhs,
+            PointToReferenceMapping rhs,
+            ErrorMaskBuilder errorMask,
+            PointToReferenceMapping_CopyMask copyMask = null,
+            PointToReferenceMapping def = null)
+        {
+            PointToReferenceMappingSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

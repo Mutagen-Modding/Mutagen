@@ -479,125 +479,11 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static ActionRecord Copy_ToLoqui(
-            ActionRecord item,
-            ActionRecord_CopyMask copyMask = null,
-            ActionRecord def = null)
+        void IClearable.Clear()
         {
-            ActionRecord ret;
-            if (item.GetType().Equals(typeof(ActionRecord)))
-            {
-                ret = new ActionRecord() as ActionRecord;
-            }
-            else
-            {
-                ret = (ActionRecord)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((ActionRecordSetterCommon)((IActionRecordInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            ActionRecord rhs,
-            ActionRecord_CopyMask copyMask,
-            ActionRecord def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            ActionRecord rhs,
-            out ActionRecord_ErrorMask errorMask,
-            ActionRecord_CopyMask copyMask = null,
-            ActionRecord def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            ActionRecordSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = ActionRecord_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            ActionRecord rhs,
-            ErrorMaskBuilder errorMask,
-            ActionRecord_CopyMask copyMask = null,
-            ActionRecord def = null)
-        {
-            ActionRecordSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            ActionRecord_FieldIndex enu = (ActionRecord_FieldIndex)index;
-            switch (enu)
-            {
-                case ActionRecord_FieldIndex.Color:
-                    this.Color = (Color)obj;
-                    break;
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            ActionRecordSetterCommon.Instance.Clear(this);
-        }
-
-        public new static ActionRecord Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new ActionRecord();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_ActionRecord(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_ActionRecord(ActionRecord obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out ActionRecord_FieldIndex enu))
-            {
-                CopyInInternal_SkyrimMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case ActionRecord_FieldIndex.Color:
-                    obj.Color = (Color)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -612,11 +498,6 @@ namespace Mutagen.Bethesda.Skyrim
         void Color_Set(Color value, bool hasBeenSet = true);
         void Color_Unset();
 
-        void CopyFieldsFrom(
-            ActionRecord rhs,
-            ErrorMaskBuilder errorMask = null,
-            ActionRecord_CopyMask copyMask = null,
-            ActionRecord def = null);
     }
 
     public partial interface IActionRecordInternal :
@@ -717,6 +598,54 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ActionRecordCommon)((IActionRecordInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this ActionRecord lhs,
+            ActionRecord rhs,
+            ActionRecord_CopyMask copyMask,
+            ActionRecord def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this ActionRecord lhs,
+            ActionRecord rhs,
+            out ActionRecord_ErrorMask errorMask,
+            ActionRecord_CopyMask copyMask = null,
+            ActionRecord def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            ActionRecordSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = ActionRecord_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this ActionRecord lhs,
+            ActionRecord rhs,
+            ErrorMaskBuilder errorMask,
+            ActionRecord_CopyMask copyMask = null,
+            ActionRecord def = null)
+        {
+            ActionRecordSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

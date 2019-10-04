@@ -785,191 +785,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static Climate Copy_ToLoqui(
-            Climate item,
-            Climate_CopyMask copyMask = null,
-            Climate def = null)
+        void IClearable.Clear()
         {
-            Climate ret;
-            if (item.GetType().Equals(typeof(Climate)))
-            {
-                ret = new Climate() as Climate;
-            }
-            else
-            {
-                ret = (Climate)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((ClimateSetterCommon)((IClimateInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            Climate rhs,
-            Climate_CopyMask copyMask,
-            Climate def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            Climate rhs,
-            out Climate_ErrorMask errorMask,
-            Climate_CopyMask copyMask = null,
-            Climate def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            ClimateSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = Climate_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            Climate rhs,
-            ErrorMaskBuilder errorMask,
-            Climate_CopyMask copyMask = null,
-            Climate def = null)
-        {
-            ClimateSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            Climate_FieldIndex enu = (Climate_FieldIndex)index;
-            switch (enu)
-            {
-                case Climate_FieldIndex.Weathers:
-                    this._Weathers.SetTo((ISetList<WeatherChance>)obj);
-                    break;
-                case Climate_FieldIndex.SunTexture:
-                    this.SunTexture = (String)obj;
-                    break;
-                case Climate_FieldIndex.SunGlareTexture:
-                    this.SunGlareTexture = (String)obj;
-                    break;
-                case Climate_FieldIndex.Model:
-                    this.Model = (Model)obj;
-                    break;
-                case Climate_FieldIndex.SunriseBegin:
-                    this.SunriseBegin = (DateTime)obj;
-                    break;
-                case Climate_FieldIndex.SunriseEnd:
-                    this.SunriseEnd = (DateTime)obj;
-                    break;
-                case Climate_FieldIndex.SunsetBegin:
-                    this.SunsetBegin = (DateTime)obj;
-                    break;
-                case Climate_FieldIndex.SunsetEnd:
-                    this.SunsetEnd = (DateTime)obj;
-                    break;
-                case Climate_FieldIndex.Volatility:
-                    this.Volatility = (Byte)obj;
-                    break;
-                case Climate_FieldIndex.Phase:
-                    this.Phase = (Climate.MoonPhase)obj;
-                    break;
-                case Climate_FieldIndex.PhaseLength:
-                    this.PhaseLength = (Byte)obj;
-                    break;
-                case Climate_FieldIndex.TNAMDataTypeState:
-                    this.TNAMDataTypeState = (Climate.TNAMDataType)obj;
-                    break;
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            ClimateSetterCommon.Instance.Clear(this);
-        }
-
-        public new static Climate Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Climate();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Climate(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_Climate(Climate obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Climate_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case Climate_FieldIndex.Weathers:
-                    obj._Weathers.SetTo((ISetList<WeatherChance>)pair.Value);
-                    break;
-                case Climate_FieldIndex.SunTexture:
-                    obj.SunTexture = (String)pair.Value;
-                    break;
-                case Climate_FieldIndex.SunGlareTexture:
-                    obj.SunGlareTexture = (String)pair.Value;
-                    break;
-                case Climate_FieldIndex.Model:
-                    obj.Model = (Model)pair.Value;
-                    break;
-                case Climate_FieldIndex.SunriseBegin:
-                    obj.SunriseBegin = (DateTime)pair.Value;
-                    break;
-                case Climate_FieldIndex.SunriseEnd:
-                    obj.SunriseEnd = (DateTime)pair.Value;
-                    break;
-                case Climate_FieldIndex.SunsetBegin:
-                    obj.SunsetBegin = (DateTime)pair.Value;
-                    break;
-                case Climate_FieldIndex.SunsetEnd:
-                    obj.SunsetEnd = (DateTime)pair.Value;
-                    break;
-                case Climate_FieldIndex.Volatility:
-                    obj.Volatility = (Byte)pair.Value;
-                    break;
-                case Climate_FieldIndex.Phase:
-                    obj.Phase = (Climate.MoonPhase)pair.Value;
-                    break;
-                case Climate_FieldIndex.PhaseLength:
-                    obj.PhaseLength = (Byte)pair.Value;
-                    break;
-                case Climate_FieldIndex.TNAMDataTypeState:
-                    obj.TNAMDataTypeState = (Climate.TNAMDataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -1009,11 +829,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Byte PhaseLength { get; set; }
 
-        void CopyFieldsFrom(
-            Climate rhs,
-            ErrorMaskBuilder errorMask = null,
-            Climate_CopyMask copyMask = null,
-            Climate def = null);
     }
 
     public partial interface IClimateInternal :
@@ -1161,6 +976,54 @@ namespace Mutagen.Bethesda.Oblivion
             return ((ClimateCommon)((IClimateInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this Climate lhs,
+            Climate rhs,
+            Climate_CopyMask copyMask,
+            Climate def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this Climate lhs,
+            Climate rhs,
+            out Climate_ErrorMask errorMask,
+            Climate_CopyMask copyMask = null,
+            Climate def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            ClimateSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = Climate_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this Climate lhs,
+            Climate rhs,
+            ErrorMaskBuilder errorMask,
+            Climate_CopyMask copyMask = null,
+            Climate def = null)
+        {
+            ClimateSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

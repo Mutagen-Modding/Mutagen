@@ -745,166 +745,11 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static Textures Copy_ToLoqui(
-            Textures item,
-            Textures_CopyMask copyMask = null,
-            Textures def = null)
+        void IClearable.Clear()
         {
-            Textures ret;
-            if (item.GetType().Equals(typeof(Textures)))
-            {
-                ret = new Textures() as Textures;
-            }
-            else
-            {
-                ret = (Textures)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((TexturesSetterCommon)((ITexturesInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public void CopyFieldsFrom(Textures rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            Textures rhs,
-            Textures_CopyMask copyMask,
-            Textures def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            Textures rhs,
-            out Textures_ErrorMask errorMask,
-            Textures_CopyMask copyMask = null,
-            Textures def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            TexturesSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = Textures_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            Textures rhs,
-            ErrorMaskBuilder errorMask,
-            Textures_CopyMask copyMask = null,
-            Textures def = null)
-        {
-            TexturesSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected void SetNthObject(ushort index, object obj)
-        {
-            Textures_FieldIndex enu = (Textures_FieldIndex)index;
-            switch (enu)
-            {
-                case Textures_FieldIndex.Diffuse:
-                    this.Diffuse = (String)obj;
-                    break;
-                case Textures_FieldIndex.NormalOrGloss:
-                    this.NormalOrGloss = (String)obj;
-                    break;
-                case Textures_FieldIndex.EnvironmentMaskOrSubsurfaceTint:
-                    this.EnvironmentMaskOrSubsurfaceTint = (String)obj;
-                    break;
-                case Textures_FieldIndex.GlowOrDetailMap:
-                    this.GlowOrDetailMap = (String)obj;
-                    break;
-                case Textures_FieldIndex.Height:
-                    this.Height = (String)obj;
-                    break;
-                case Textures_FieldIndex.Environment:
-                    this.Environment = (String)obj;
-                    break;
-                case Textures_FieldIndex.Multilayer:
-                    this.Multilayer = (String)obj;
-                    break;
-                case Textures_FieldIndex.BacklightMaskOrSpecular:
-                    this.BacklightMaskOrSpecular = (String)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void Clear()
-        {
-            TexturesSetterCommon.Instance.Clear(this);
-        }
-
-        public static Textures Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Textures();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Textures(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_Textures(Textures obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Textures_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case Textures_FieldIndex.Diffuse:
-                    obj.Diffuse = (String)pair.Value;
-                    break;
-                case Textures_FieldIndex.NormalOrGloss:
-                    obj.NormalOrGloss = (String)pair.Value;
-                    break;
-                case Textures_FieldIndex.EnvironmentMaskOrSubsurfaceTint:
-                    obj.EnvironmentMaskOrSubsurfaceTint = (String)pair.Value;
-                    break;
-                case Textures_FieldIndex.GlowOrDetailMap:
-                    obj.GlowOrDetailMap = (String)pair.Value;
-                    break;
-                case Textures_FieldIndex.Height:
-                    obj.Height = (String)pair.Value;
-                    break;
-                case Textures_FieldIndex.Environment:
-                    obj.Environment = (String)pair.Value;
-                    break;
-                case Textures_FieldIndex.Multilayer:
-                    obj.Multilayer = (String)pair.Value;
-                    break;
-                case Textures_FieldIndex.BacklightMaskOrSpecular:
-                    obj.BacklightMaskOrSpecular = (String)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -953,11 +798,6 @@ namespace Mutagen.Bethesda.Skyrim
         void BacklightMaskOrSpecular_Set(String value, bool hasBeenSet = true);
         void BacklightMaskOrSpecular_Unset();
 
-        void CopyFieldsFrom(
-            Textures rhs,
-            ErrorMaskBuilder errorMask = null,
-            Textures_CopyMask copyMask = null,
-            Textures def = null);
     }
 
     public partial interface ITexturesInternal :
@@ -1093,6 +933,67 @@ namespace Mutagen.Bethesda.Skyrim
             return ((TexturesCommon)((ITexturesInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this Textures lhs,
+            Textures rhs)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null);
+        }
+
+        public static void CopyFieldsFrom(
+            this Textures lhs,
+            Textures rhs,
+            Textures_CopyMask copyMask,
+            Textures def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this Textures lhs,
+            Textures rhs,
+            out Textures_ErrorMask errorMask,
+            Textures_CopyMask copyMask = null,
+            Textures def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            TexturesSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = Textures_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this Textures lhs,
+            Textures rhs,
+            ErrorMaskBuilder errorMask,
+            Textures_CopyMask copyMask = null,
+            Textures def = null)
+        {
+            TexturesSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

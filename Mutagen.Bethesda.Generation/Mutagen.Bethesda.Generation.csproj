@@ -25,7 +25,7 @@
     <WarningLevel>4</WarningLevel>
     <NoWarn>CS1998</NoWarn>
     <WarningsAsErrors>CS4014</WarningsAsErrors>
-    <LangVersion>7.1</LangVersion>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -37,7 +37,7 @@
     <WarningLevel>4</WarningLevel>
     <NoWarn>CS1998</NoWarn>
     <WarningsAsErrors>CS4014</WarningsAsErrors>
-    <LangVersion>7.1</LangVersion>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="PresentationCore" />

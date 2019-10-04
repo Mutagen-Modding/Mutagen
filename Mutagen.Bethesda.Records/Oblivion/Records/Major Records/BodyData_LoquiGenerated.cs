@@ -474,130 +474,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static BodyData Copy_ToLoqui(
-            BodyData item,
-            BodyData_CopyMask copyMask = null,
-            BodyData def = null)
+        void IClearable.Clear()
         {
-            BodyData ret;
-            if (item.GetType().Equals(typeof(BodyData)))
-            {
-                ret = new BodyData() as BodyData;
-            }
-            else
-            {
-                ret = (BodyData)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((BodyDataSetterCommon)((IBodyDataInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public void CopyFieldsFrom(BodyData rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            BodyData rhs,
-            BodyData_CopyMask copyMask,
-            BodyData def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            BodyData rhs,
-            out BodyData_ErrorMask errorMask,
-            BodyData_CopyMask copyMask = null,
-            BodyData def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            BodyDataSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = BodyData_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            BodyData rhs,
-            ErrorMaskBuilder errorMask,
-            BodyData_CopyMask copyMask = null,
-            BodyData def = null)
-        {
-            BodyDataSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected void SetNthObject(ushort index, object obj)
-        {
-            BodyData_FieldIndex enu = (BodyData_FieldIndex)index;
-            switch (enu)
-            {
-                case BodyData_FieldIndex.Model:
-                    this.Model = (Model)obj;
-                    break;
-                case BodyData_FieldIndex.BodyParts:
-                    this._BodyParts.SetTo((ISetList<BodyPart>)obj);
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void Clear()
-        {
-            BodyDataSetterCommon.Instance.Clear(this);
-        }
-
-        public static BodyData Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new BodyData();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_BodyData(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_BodyData(BodyData obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out BodyData_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case BodyData_FieldIndex.Model:
-                    obj.Model = (Model)pair.Value;
-                    break;
-                case BodyData_FieldIndex.BodyParts:
-                    obj._BodyParts.SetTo((ISetList<BodyPart>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -612,11 +493,6 @@ namespace Mutagen.Bethesda.Oblivion
         void Model_Unset();
 
         new ISetList<BodyPart> BodyParts { get; }
-        void CopyFieldsFrom(
-            BodyData rhs,
-            ErrorMaskBuilder errorMask = null,
-            BodyData_CopyMask copyMask = null,
-            BodyData def = null);
     }
 
     public partial interface IBodyDataInternal :
@@ -720,6 +596,67 @@ namespace Mutagen.Bethesda.Oblivion
             return ((BodyDataCommon)((IBodyDataInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this BodyData lhs,
+            BodyData rhs)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null);
+        }
+
+        public static void CopyFieldsFrom(
+            this BodyData lhs,
+            BodyData rhs,
+            BodyData_CopyMask copyMask,
+            BodyData def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this BodyData lhs,
+            BodyData rhs,
+            out BodyData_ErrorMask errorMask,
+            BodyData_CopyMask copyMask = null,
+            BodyData def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            BodyDataSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = BodyData_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this BodyData lhs,
+            BodyData rhs,
+            ErrorMaskBuilder errorMask,
+            BodyData_CopyMask copyMask = null,
+            BodyData def = null)
+        {
+            BodyDataSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

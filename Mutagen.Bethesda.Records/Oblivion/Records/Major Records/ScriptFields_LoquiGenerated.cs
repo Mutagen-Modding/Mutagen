@@ -642,148 +642,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static ScriptFields Copy_ToLoqui(
-            ScriptFields item,
-            ScriptFields_CopyMask copyMask = null,
-            ScriptFields def = null)
+        void IClearable.Clear()
         {
-            ScriptFields ret;
-            if (item.GetType().Equals(typeof(ScriptFields)))
-            {
-                ret = new ScriptFields() as ScriptFields;
-            }
-            else
-            {
-                ret = (ScriptFields)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((ScriptFieldsSetterCommon)((IScriptFieldsInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public void CopyFieldsFrom(ScriptFields rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            ScriptFields rhs,
-            ScriptFields_CopyMask copyMask,
-            ScriptFields def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            ScriptFields rhs,
-            out ScriptFields_ErrorMask errorMask,
-            ScriptFields_CopyMask copyMask = null,
-            ScriptFields def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            ScriptFieldsSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = ScriptFields_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            ScriptFields rhs,
-            ErrorMaskBuilder errorMask,
-            ScriptFields_CopyMask copyMask = null,
-            ScriptFields def = null)
-        {
-            ScriptFieldsSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected void SetNthObject(ushort index, object obj)
-        {
-            ScriptFields_FieldIndex enu = (ScriptFields_FieldIndex)index;
-            switch (enu)
-            {
-                case ScriptFields_FieldIndex.MetadataSummary:
-                    this.MetadataSummary.CopyFieldsFrom(rhs: (ScriptMetaSummary)obj);
-                    break;
-                case ScriptFields_FieldIndex.CompiledScript:
-                    this.CompiledScript = (Byte[])obj;
-                    break;
-                case ScriptFields_FieldIndex.SourceCode:
-                    this.SourceCode = (String)obj;
-                    break;
-                case ScriptFields_FieldIndex.LocalVariables:
-                    this._LocalVariables.SetTo((ISetList<LocalVariable>)obj);
-                    break;
-                case ScriptFields_FieldIndex.References:
-                    this._References.SetTo((ISetList<ScriptReference>)obj);
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void Clear()
-        {
-            ScriptFieldsSetterCommon.Instance.Clear(this);
-        }
-
-        public static ScriptFields Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new ScriptFields();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_ScriptFields(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_ScriptFields(ScriptFields obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out ScriptFields_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case ScriptFields_FieldIndex.MetadataSummary:
-                    obj.MetadataSummary.CopyFieldsFrom(rhs: (ScriptMetaSummary)pair.Value);
-                    break;
-                case ScriptFields_FieldIndex.CompiledScript:
-                    obj.CompiledScript = (Byte[])pair.Value;
-                    break;
-                case ScriptFields_FieldIndex.SourceCode:
-                    obj.SourceCode = (String)pair.Value;
-                    break;
-                case ScriptFields_FieldIndex.LocalVariables:
-                    obj._LocalVariables.SetTo((ISetList<LocalVariable>)pair.Value);
-                    break;
-                case ScriptFields_FieldIndex.References:
-                    obj._References.SetTo((ISetList<ScriptReference>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -805,11 +668,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         new ISetList<LocalVariable> LocalVariables { get; }
         new ISetList<ScriptReference> References { get; }
-        void CopyFieldsFrom(
-            ScriptFields rhs,
-            ErrorMaskBuilder errorMask = null,
-            ScriptFields_CopyMask copyMask = null,
-            ScriptFields def = null);
     }
 
     public partial interface IScriptFieldsInternal :
@@ -927,6 +785,67 @@ namespace Mutagen.Bethesda.Oblivion
             return ((ScriptFieldsCommon)((IScriptFieldsInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this ScriptFields lhs,
+            ScriptFields rhs)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null);
+        }
+
+        public static void CopyFieldsFrom(
+            this ScriptFields lhs,
+            ScriptFields rhs,
+            ScriptFields_CopyMask copyMask,
+            ScriptFields def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this ScriptFields lhs,
+            ScriptFields rhs,
+            out ScriptFields_ErrorMask errorMask,
+            ScriptFields_CopyMask copyMask = null,
+            ScriptFields def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            ScriptFieldsSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = ScriptFields_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this ScriptFields lhs,
+            ScriptFields rhs,
+            ErrorMaskBuilder errorMask,
+            ScriptFields_CopyMask copyMask = null,
+            ScriptFields def = null)
+        {
+            ScriptFieldsSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

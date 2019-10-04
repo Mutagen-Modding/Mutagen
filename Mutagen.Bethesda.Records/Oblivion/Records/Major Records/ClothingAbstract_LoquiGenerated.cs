@@ -860,179 +860,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static ClothingAbstract Copy_ToLoqui(
-            ClothingAbstract item,
-            ClothingAbstract_CopyMask copyMask = null,
-            ClothingAbstract def = null)
+        void IClearable.Clear()
         {
-            ClothingAbstract ret = (ClothingAbstract)System.Activator.CreateInstance(item.GetType());
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((ClothingAbstractSetterCommon)((IClothingAbstractInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            ClothingAbstract rhs,
-            ClothingAbstract_CopyMask copyMask,
-            ClothingAbstract def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            ClothingAbstract rhs,
-            out ClothingAbstract_ErrorMask errorMask,
-            ClothingAbstract_CopyMask copyMask = null,
-            ClothingAbstract def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            ClothingAbstractSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = ClothingAbstract_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            ClothingAbstract rhs,
-            ErrorMaskBuilder errorMask,
-            ClothingAbstract_CopyMask copyMask = null,
-            ClothingAbstract def = null)
-        {
-            ClothingAbstractSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            ClothingAbstract_FieldIndex enu = (ClothingAbstract_FieldIndex)index;
-            switch (enu)
-            {
-                case ClothingAbstract_FieldIndex.Name:
-                    this.Name = (String)obj;
-                    break;
-                case ClothingAbstract_FieldIndex.Script:
-                    this.Script_Property.Set((IFormIDSetLink<Script>)obj);
-                    break;
-                case ClothingAbstract_FieldIndex.Enchantment:
-                    this.Enchantment_Property.Set((IFormIDSetLink<Enchantment>)obj);
-                    break;
-                case ClothingAbstract_FieldIndex.EnchantmentPoints:
-                    this.EnchantmentPoints = (UInt16)obj;
-                    break;
-                case ClothingAbstract_FieldIndex.BipedFlags:
-                    this.BipedFlags = (BipedFlag)obj;
-                    break;
-                case ClothingAbstract_FieldIndex.Flags:
-                    this.Flags = (EquipmentFlag)obj;
-                    break;
-                case ClothingAbstract_FieldIndex.MaleBipedModel:
-                    this.MaleBipedModel = (Model)obj;
-                    break;
-                case ClothingAbstract_FieldIndex.MaleWorldModel:
-                    this.MaleWorldModel = (Model)obj;
-                    break;
-                case ClothingAbstract_FieldIndex.MaleIcon:
-                    this.MaleIcon = (String)obj;
-                    break;
-                case ClothingAbstract_FieldIndex.FemaleBipedModel:
-                    this.FemaleBipedModel = (Model)obj;
-                    break;
-                case ClothingAbstract_FieldIndex.FemaleWorldModel:
-                    this.FemaleWorldModel = (Model)obj;
-                    break;
-                case ClothingAbstract_FieldIndex.FemaleIcon:
-                    this.FemaleIcon = (String)obj;
-                    break;
-                case ClothingAbstract_FieldIndex.BMDTDataTypeState:
-                    this.BMDTDataTypeState = (ClothingAbstract.BMDTDataType)obj;
-                    break;
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            ClothingAbstractSetterCommon.Instance.Clear(this);
-        }
-
-        protected new static void CopyInInternal_ClothingAbstract(ClothingAbstract obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out ClothingAbstract_FieldIndex enu))
-            {
-                CopyInInternal_ItemAbstract(obj, pair);
-            }
-            switch (enu)
-            {
-                case ClothingAbstract_FieldIndex.Name:
-                    obj.Name = (String)pair.Value;
-                    break;
-                case ClothingAbstract_FieldIndex.Script:
-                    obj.Script_Property.Set((IFormIDSetLink<Script>)pair.Value);
-                    break;
-                case ClothingAbstract_FieldIndex.Enchantment:
-                    obj.Enchantment_Property.Set((IFormIDSetLink<Enchantment>)pair.Value);
-                    break;
-                case ClothingAbstract_FieldIndex.EnchantmentPoints:
-                    obj.EnchantmentPoints = (UInt16)pair.Value;
-                    break;
-                case ClothingAbstract_FieldIndex.BipedFlags:
-                    obj.BipedFlags = (BipedFlag)pair.Value;
-                    break;
-                case ClothingAbstract_FieldIndex.Flags:
-                    obj.Flags = (EquipmentFlag)pair.Value;
-                    break;
-                case ClothingAbstract_FieldIndex.MaleBipedModel:
-                    obj.MaleBipedModel = (Model)pair.Value;
-                    break;
-                case ClothingAbstract_FieldIndex.MaleWorldModel:
-                    obj.MaleWorldModel = (Model)pair.Value;
-                    break;
-                case ClothingAbstract_FieldIndex.MaleIcon:
-                    obj.MaleIcon = (String)pair.Value;
-                    break;
-                case ClothingAbstract_FieldIndex.FemaleBipedModel:
-                    obj.FemaleBipedModel = (Model)pair.Value;
-                    break;
-                case ClothingAbstract_FieldIndex.FemaleWorldModel:
-                    obj.FemaleWorldModel = (Model)pair.Value;
-                    break;
-                case ClothingAbstract_FieldIndex.FemaleIcon:
-                    obj.FemaleIcon = (String)pair.Value;
-                    break;
-                case ClothingAbstract_FieldIndex.BMDTDataTypeState:
-                    obj.BMDTDataTypeState = (ClothingAbstract.BMDTDataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -1090,11 +922,6 @@ namespace Mutagen.Bethesda.Oblivion
         void FemaleIcon_Set(String value, bool hasBeenSet = true);
         void FemaleIcon_Unset();
 
-        void CopyFieldsFrom(
-            ClothingAbstract rhs,
-            ErrorMaskBuilder errorMask = null,
-            ClothingAbstract_CopyMask copyMask = null,
-            ClothingAbstract def = null);
     }
 
     public partial interface IClothingAbstractInternal :
@@ -1258,6 +1085,54 @@ namespace Mutagen.Bethesda.Oblivion
             return ((ClothingAbstractCommon)((IClothingAbstractInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this ClothingAbstract lhs,
+            ClothingAbstract rhs,
+            ClothingAbstract_CopyMask copyMask,
+            ClothingAbstract def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this ClothingAbstract lhs,
+            ClothingAbstract rhs,
+            out ClothingAbstract_ErrorMask errorMask,
+            ClothingAbstract_CopyMask copyMask = null,
+            ClothingAbstract def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            ClothingAbstractSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = ClothingAbstract_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this ClothingAbstract lhs,
+            ClothingAbstract rhs,
+            ErrorMaskBuilder errorMask,
+            ClothingAbstract_CopyMask copyMask = null,
+            ClothingAbstract def = null)
+        {
+            ClothingAbstractSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

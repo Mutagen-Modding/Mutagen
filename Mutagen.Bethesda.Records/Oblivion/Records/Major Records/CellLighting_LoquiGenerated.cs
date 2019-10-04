@@ -486,172 +486,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CellLighting Copy_ToLoqui(
-            CellLighting item,
-            CellLighting_CopyMask copyMask = null,
-            CellLighting def = null)
+        void IClearable.Clear()
         {
-            CellLighting ret;
-            if (item.GetType().Equals(typeof(CellLighting)))
-            {
-                ret = new CellLighting() as CellLighting;
-            }
-            else
-            {
-                ret = (CellLighting)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((CellLightingSetterCommon)((ICellLightingInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public void CopyFieldsFrom(CellLighting rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            CellLighting rhs,
-            CellLighting_CopyMask copyMask,
-            CellLighting def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            CellLighting rhs,
-            out CellLighting_ErrorMask errorMask,
-            CellLighting_CopyMask copyMask = null,
-            CellLighting def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            CellLightingSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = CellLighting_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            CellLighting rhs,
-            ErrorMaskBuilder errorMask,
-            CellLighting_CopyMask copyMask = null,
-            CellLighting def = null)
-        {
-            CellLightingSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected void SetNthObject(ushort index, object obj)
-        {
-            CellLighting_FieldIndex enu = (CellLighting_FieldIndex)index;
-            switch (enu)
-            {
-                case CellLighting_FieldIndex.AmbientColor:
-                    this.AmbientColor = (Color)obj;
-                    break;
-                case CellLighting_FieldIndex.DirectionalColor:
-                    this.DirectionalColor = (Color)obj;
-                    break;
-                case CellLighting_FieldIndex.FogColor:
-                    this.FogColor = (Color)obj;
-                    break;
-                case CellLighting_FieldIndex.FogNear:
-                    this.FogNear = (Single)obj;
-                    break;
-                case CellLighting_FieldIndex.FogFar:
-                    this.FogFar = (Single)obj;
-                    break;
-                case CellLighting_FieldIndex.DirectionalRotationXY:
-                    this.DirectionalRotationXY = (Int32)obj;
-                    break;
-                case CellLighting_FieldIndex.DirectionalRotationZ:
-                    this.DirectionalRotationZ = (Int32)obj;
-                    break;
-                case CellLighting_FieldIndex.DirectionalFade:
-                    this.DirectionalFade = (Single)obj;
-                    break;
-                case CellLighting_FieldIndex.FogClipDistance:
-                    this.FogClipDistance = (Single)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void Clear()
-        {
-            CellLightingSetterCommon.Instance.Clear(this);
-        }
-
-        public static CellLighting Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new CellLighting();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_CellLighting(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_CellLighting(CellLighting obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out CellLighting_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case CellLighting_FieldIndex.AmbientColor:
-                    obj.AmbientColor = (Color)pair.Value;
-                    break;
-                case CellLighting_FieldIndex.DirectionalColor:
-                    obj.DirectionalColor = (Color)pair.Value;
-                    break;
-                case CellLighting_FieldIndex.FogColor:
-                    obj.FogColor = (Color)pair.Value;
-                    break;
-                case CellLighting_FieldIndex.FogNear:
-                    obj.FogNear = (Single)pair.Value;
-                    break;
-                case CellLighting_FieldIndex.FogFar:
-                    obj.FogFar = (Single)pair.Value;
-                    break;
-                case CellLighting_FieldIndex.DirectionalRotationXY:
-                    obj.DirectionalRotationXY = (Int32)pair.Value;
-                    break;
-                case CellLighting_FieldIndex.DirectionalRotationZ:
-                    obj.DirectionalRotationZ = (Int32)pair.Value;
-                    break;
-                case CellLighting_FieldIndex.DirectionalFade:
-                    obj.DirectionalFade = (Single)pair.Value;
-                    break;
-                case CellLighting_FieldIndex.FogClipDistance:
-                    obj.FogClipDistance = (Single)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -678,11 +517,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Single FogClipDistance { get; set; }
 
-        void CopyFieldsFrom(
-            CellLighting rhs,
-            ErrorMaskBuilder errorMask = null,
-            CellLighting_CopyMask copyMask = null,
-            CellLighting def = null);
     }
 
     public partial interface ICellLightingInternal :
@@ -814,6 +648,67 @@ namespace Mutagen.Bethesda.Oblivion
             return ((CellLightingCommon)((ICellLightingInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this CellLighting lhs,
+            CellLighting rhs)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null);
+        }
+
+        public static void CopyFieldsFrom(
+            this CellLighting lhs,
+            CellLighting rhs,
+            CellLighting_CopyMask copyMask,
+            CellLighting def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this CellLighting lhs,
+            CellLighting rhs,
+            out CellLighting_ErrorMask errorMask,
+            CellLighting_CopyMask copyMask = null,
+            CellLighting def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            CellLightingSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = CellLighting_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this CellLighting lhs,
+            CellLighting rhs,
+            ErrorMaskBuilder errorMask,
+            CellLighting_CopyMask copyMask = null,
+            CellLighting def = null)
+        {
+            CellLightingSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

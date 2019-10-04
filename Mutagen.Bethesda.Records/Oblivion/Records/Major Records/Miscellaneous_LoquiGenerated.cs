@@ -679,161 +679,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static Miscellaneous Copy_ToLoqui(
-            Miscellaneous item,
-            Miscellaneous_CopyMask copyMask = null,
-            Miscellaneous def = null)
+        void IClearable.Clear()
         {
-            Miscellaneous ret;
-            if (item.GetType().Equals(typeof(Miscellaneous)))
-            {
-                ret = new Miscellaneous() as Miscellaneous;
-            }
-            else
-            {
-                ret = (Miscellaneous)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((MiscellaneousSetterCommon)((IMiscellaneousInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            Miscellaneous rhs,
-            Miscellaneous_CopyMask copyMask,
-            Miscellaneous def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            Miscellaneous rhs,
-            out Miscellaneous_ErrorMask errorMask,
-            Miscellaneous_CopyMask copyMask = null,
-            Miscellaneous def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            MiscellaneousSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = Miscellaneous_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            Miscellaneous rhs,
-            ErrorMaskBuilder errorMask,
-            Miscellaneous_CopyMask copyMask = null,
-            Miscellaneous def = null)
-        {
-            MiscellaneousSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            Miscellaneous_FieldIndex enu = (Miscellaneous_FieldIndex)index;
-            switch (enu)
-            {
-                case Miscellaneous_FieldIndex.Name:
-                    this.Name = (String)obj;
-                    break;
-                case Miscellaneous_FieldIndex.Model:
-                    this.Model = (Model)obj;
-                    break;
-                case Miscellaneous_FieldIndex.Icon:
-                    this.Icon = (String)obj;
-                    break;
-                case Miscellaneous_FieldIndex.Script:
-                    this.Script_Property.Set((IFormIDSetLink<Script>)obj);
-                    break;
-                case Miscellaneous_FieldIndex.Value:
-                    this.Value = (Int32)obj;
-                    break;
-                case Miscellaneous_FieldIndex.Weight:
-                    this.Weight = (Single)obj;
-                    break;
-                case Miscellaneous_FieldIndex.DATADataTypeState:
-                    this.DATADataTypeState = (Miscellaneous.DATADataType)obj;
-                    break;
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            MiscellaneousSetterCommon.Instance.Clear(this);
-        }
-
-        public new static Miscellaneous Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Miscellaneous();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Miscellaneous(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_Miscellaneous(Miscellaneous obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Miscellaneous_FieldIndex enu))
-            {
-                CopyInInternal_ItemAbstract(obj, pair);
-            }
-            switch (enu)
-            {
-                case Miscellaneous_FieldIndex.Name:
-                    obj.Name = (String)pair.Value;
-                    break;
-                case Miscellaneous_FieldIndex.Model:
-                    obj.Model = (Model)pair.Value;
-                    break;
-                case Miscellaneous_FieldIndex.Icon:
-                    obj.Icon = (String)pair.Value;
-                    break;
-                case Miscellaneous_FieldIndex.Script:
-                    obj.Script_Property.Set((IFormIDSetLink<Script>)pair.Value);
-                    break;
-                case Miscellaneous_FieldIndex.Value:
-                    obj.Value = (Int32)pair.Value;
-                    break;
-                case Miscellaneous_FieldIndex.Weight:
-                    obj.Weight = (Single)pair.Value;
-                    break;
-                case Miscellaneous_FieldIndex.DATADataTypeState:
-                    obj.DATADataTypeState = (Miscellaneous.DATADataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -864,11 +714,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Single Weight { get; set; }
 
-        void CopyFieldsFrom(
-            Miscellaneous rhs,
-            ErrorMaskBuilder errorMask = null,
-            Miscellaneous_CopyMask copyMask = null,
-            Miscellaneous def = null);
     }
 
     public partial interface IMiscellaneousInternal :
@@ -1000,6 +845,54 @@ namespace Mutagen.Bethesda.Oblivion
             return ((MiscellaneousCommon)((IMiscellaneousInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this Miscellaneous lhs,
+            Miscellaneous rhs,
+            Miscellaneous_CopyMask copyMask,
+            Miscellaneous def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this Miscellaneous lhs,
+            Miscellaneous rhs,
+            out Miscellaneous_ErrorMask errorMask,
+            Miscellaneous_CopyMask copyMask = null,
+            Miscellaneous def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            MiscellaneousSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = Miscellaneous_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this Miscellaneous lhs,
+            Miscellaneous rhs,
+            ErrorMaskBuilder errorMask,
+            Miscellaneous_CopyMask copyMask = null,
+            Miscellaneous def = null)
+        {
+            MiscellaneousSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

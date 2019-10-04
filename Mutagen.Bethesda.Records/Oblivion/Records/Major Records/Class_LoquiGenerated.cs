@@ -751,179 +751,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static Class Copy_ToLoqui(
-            Class item,
-            Class_CopyMask copyMask = null,
-            Class def = null)
+        void IClearable.Clear()
         {
-            Class ret;
-            if (item.GetType().Equals(typeof(Class)))
-            {
-                ret = new Class() as Class;
-            }
-            else
-            {
-                ret = (Class)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((ClassSetterCommon)((IClassInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            Class rhs,
-            Class_CopyMask copyMask,
-            Class def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            Class rhs,
-            out Class_ErrorMask errorMask,
-            Class_CopyMask copyMask = null,
-            Class def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            ClassSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = Class_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            Class rhs,
-            ErrorMaskBuilder errorMask,
-            Class_CopyMask copyMask = null,
-            Class def = null)
-        {
-            ClassSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            Class_FieldIndex enu = (Class_FieldIndex)index;
-            switch (enu)
-            {
-                case Class_FieldIndex.Name:
-                    this.Name = (String)obj;
-                    break;
-                case Class_FieldIndex.Description:
-                    this.Description = (String)obj;
-                    break;
-                case Class_FieldIndex.Icon:
-                    this.Icon = (String)obj;
-                    break;
-                case Class_FieldIndex.PrimaryAttributes:
-                    this._PrimaryAttributes.SetTo((ActorValue[])obj);
-                    break;
-                case Class_FieldIndex.Specialization:
-                    this.Specialization = (Class.SpecializationFlag)obj;
-                    break;
-                case Class_FieldIndex.SecondaryAttributes:
-                    this._SecondaryAttributes.SetTo((ActorValue[])obj);
-                    break;
-                case Class_FieldIndex.Flags:
-                    this.Flags = (ClassFlag)obj;
-                    break;
-                case Class_FieldIndex.ClassServices:
-                    this.ClassServices = (ClassService)obj;
-                    break;
-                case Class_FieldIndex.Training:
-                    this.Training = (ClassTraining)obj;
-                    break;
-                case Class_FieldIndex.DATADataTypeState:
-                    this.DATADataTypeState = (Class.DATADataType)obj;
-                    break;
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            ClassSetterCommon.Instance.Clear(this);
-        }
-
-        public new static Class Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Class();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Class(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_Class(Class obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Class_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case Class_FieldIndex.Name:
-                    obj.Name = (String)pair.Value;
-                    break;
-                case Class_FieldIndex.Description:
-                    obj.Description = (String)pair.Value;
-                    break;
-                case Class_FieldIndex.Icon:
-                    obj.Icon = (String)pair.Value;
-                    break;
-                case Class_FieldIndex.PrimaryAttributes:
-                    obj._PrimaryAttributes.SetTo((ActorValue[])pair.Value);
-                    break;
-                case Class_FieldIndex.Specialization:
-                    obj.Specialization = (Class.SpecializationFlag)pair.Value;
-                    break;
-                case Class_FieldIndex.SecondaryAttributes:
-                    obj._SecondaryAttributes.SetTo((ActorValue[])pair.Value);
-                    break;
-                case Class_FieldIndex.Flags:
-                    obj.Flags = (ClassFlag)pair.Value;
-                    break;
-                case Class_FieldIndex.ClassServices:
-                    obj.ClassServices = (ClassService)pair.Value;
-                    break;
-                case Class_FieldIndex.Training:
-                    obj.Training = (ClassTraining)pair.Value;
-                    break;
-                case Class_FieldIndex.DATADataTypeState:
-                    obj.DATADataTypeState = (Class.DATADataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -958,11 +790,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         new ClassTraining Training { get; set; }
 
-        void CopyFieldsFrom(
-            Class rhs,
-            ErrorMaskBuilder errorMask = null,
-            Class_CopyMask copyMask = null,
-            Class def = null);
     }
 
     public partial interface IClassInternal :
@@ -1100,6 +927,54 @@ namespace Mutagen.Bethesda.Oblivion
             return ((ClassCommon)((IClassInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this Class lhs,
+            Class rhs,
+            Class_CopyMask copyMask,
+            Class def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this Class lhs,
+            Class rhs,
+            out Class_ErrorMask errorMask,
+            Class_CopyMask copyMask = null,
+            Class def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            ClassSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = Class_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this Class lhs,
+            Class rhs,
+            ErrorMaskBuilder errorMask,
+            Class_CopyMask copyMask = null,
+            Class def = null)
+        {
+            ClassSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

@@ -533,143 +533,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static Subspace Copy_ToLoqui(
-            Subspace item,
-            Subspace_CopyMask copyMask = null,
-            Subspace def = null)
+        void IClearable.Clear()
         {
-            Subspace ret;
-            if (item.GetType().Equals(typeof(Subspace)))
-            {
-                ret = new Subspace() as Subspace;
-            }
-            else
-            {
-                ret = (Subspace)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((SubspaceSetterCommon)((ISubspaceInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            Subspace rhs,
-            Subspace_CopyMask copyMask,
-            Subspace def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            Subspace rhs,
-            out Subspace_ErrorMask errorMask,
-            Subspace_CopyMask copyMask = null,
-            Subspace def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            SubspaceSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = Subspace_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            Subspace rhs,
-            ErrorMaskBuilder errorMask,
-            Subspace_CopyMask copyMask = null,
-            Subspace def = null)
-        {
-            SubspaceSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            Subspace_FieldIndex enu = (Subspace_FieldIndex)index;
-            switch (enu)
-            {
-                case Subspace_FieldIndex.X:
-                    this.X = (Single)obj;
-                    break;
-                case Subspace_FieldIndex.Y:
-                    this.Y = (Single)obj;
-                    break;
-                case Subspace_FieldIndex.Z:
-                    this.Z = (Single)obj;
-                    break;
-                case Subspace_FieldIndex.DNAMDataTypeState:
-                    this.DNAMDataTypeState = (Subspace.DNAMDataType)obj;
-                    break;
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            SubspaceSetterCommon.Instance.Clear(this);
-        }
-
-        public new static Subspace Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Subspace();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Subspace(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_Subspace(Subspace obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Subspace_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case Subspace_FieldIndex.X:
-                    obj.X = (Single)pair.Value;
-                    break;
-                case Subspace_FieldIndex.Y:
-                    obj.Y = (Single)pair.Value;
-                    break;
-                case Subspace_FieldIndex.Z:
-                    obj.Z = (Single)pair.Value;
-                    break;
-                case Subspace_FieldIndex.DNAMDataTypeState:
-                    obj.DNAMDataTypeState = (Subspace.DNAMDataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -685,11 +553,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Single Z { get; set; }
 
-        void CopyFieldsFrom(
-            Subspace rhs,
-            ErrorMaskBuilder errorMask = null,
-            Subspace_CopyMask copyMask = null,
-            Subspace def = null);
     }
 
     public partial interface ISubspaceInternal :
@@ -803,6 +666,54 @@ namespace Mutagen.Bethesda.Oblivion
             return ((SubspaceCommon)((ISubspaceInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this Subspace lhs,
+            Subspace rhs,
+            Subspace_CopyMask copyMask,
+            Subspace def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this Subspace lhs,
+            Subspace rhs,
+            out Subspace_ErrorMask errorMask,
+            Subspace_CopyMask copyMask = null,
+            Subspace def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            SubspaceSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = Subspace_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this Subspace lhs,
+            Subspace rhs,
+            ErrorMaskBuilder errorMask,
+            Subspace_CopyMask copyMask = null,
+            Subspace def = null)
+        {
+            SubspaceSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

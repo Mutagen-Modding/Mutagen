@@ -483,142 +483,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CellBlock Copy_ToLoqui(
-            CellBlock item,
-            CellBlock_CopyMask copyMask = null,
-            CellBlock def = null)
+        void IClearable.Clear()
         {
-            CellBlock ret;
-            if (item.GetType().Equals(typeof(CellBlock)))
-            {
-                ret = new CellBlock() as CellBlock;
-            }
-            else
-            {
-                ret = (CellBlock)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((CellBlockSetterCommon)((ICellBlockInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public void CopyFieldsFrom(CellBlock rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            CellBlock rhs,
-            CellBlock_CopyMask copyMask,
-            CellBlock def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            CellBlock rhs,
-            out CellBlock_ErrorMask errorMask,
-            CellBlock_CopyMask copyMask = null,
-            CellBlock def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            CellBlockSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = CellBlock_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            CellBlock rhs,
-            ErrorMaskBuilder errorMask,
-            CellBlock_CopyMask copyMask = null,
-            CellBlock def = null)
-        {
-            CellBlockSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected void SetNthObject(ushort index, object obj)
-        {
-            CellBlock_FieldIndex enu = (CellBlock_FieldIndex)index;
-            switch (enu)
-            {
-                case CellBlock_FieldIndex.BlockNumber:
-                    this.BlockNumber = (Int32)obj;
-                    break;
-                case CellBlock_FieldIndex.GroupType:
-                    this.GroupType = (GroupTypeEnum)obj;
-                    break;
-                case CellBlock_FieldIndex.LastModified:
-                    this.LastModified = (Byte[])obj;
-                    break;
-                case CellBlock_FieldIndex.Items:
-                    this._Items.SetTo((ISetList<CellSubBlock>)obj);
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void Clear()
-        {
-            CellBlockSetterCommon.Instance.Clear(this);
-        }
-
-        public static CellBlock Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new CellBlock();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_CellBlock(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_CellBlock(CellBlock obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out CellBlock_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case CellBlock_FieldIndex.BlockNumber:
-                    obj.BlockNumber = (Int32)pair.Value;
-                    break;
-                case CellBlock_FieldIndex.GroupType:
-                    obj.GroupType = (GroupTypeEnum)pair.Value;
-                    break;
-                case CellBlock_FieldIndex.LastModified:
-                    obj.LastModified = (Byte[])pair.Value;
-                    break;
-                case CellBlock_FieldIndex.Items:
-                    obj._Items.SetTo((ISetList<CellSubBlock>)pair.Value);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -635,11 +504,6 @@ namespace Mutagen.Bethesda.Oblivion
         new Byte[] LastModified { get; set; }
 
         new ISetList<CellSubBlock> Items { get; }
-        void CopyFieldsFrom(
-            CellBlock rhs,
-            ErrorMaskBuilder errorMask = null,
-            CellBlock_CopyMask copyMask = null,
-            CellBlock def = null);
     }
 
     public partial interface ICellBlockInternal :
@@ -751,6 +615,67 @@ namespace Mutagen.Bethesda.Oblivion
             return ((CellBlockCommon)((ICellBlockInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this CellBlock lhs,
+            CellBlock rhs)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null);
+        }
+
+        public static void CopyFieldsFrom(
+            this CellBlock lhs,
+            CellBlock rhs,
+            CellBlock_CopyMask copyMask,
+            CellBlock def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this CellBlock lhs,
+            CellBlock rhs,
+            out CellBlock_ErrorMask errorMask,
+            CellBlock_CopyMask copyMask = null,
+            CellBlock def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            CellBlockSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = CellBlock_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this CellBlock lhs,
+            CellBlock rhs,
+            ErrorMaskBuilder errorMask,
+            CellBlock_CopyMask copyMask = null,
+            CellBlock def = null)
+        {
+            CellBlockSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
         #region Mutagen

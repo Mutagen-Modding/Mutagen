@@ -590,142 +590,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static LogEntry Copy_ToLoqui(
-            LogEntry item,
-            LogEntry_CopyMask copyMask = null,
-            LogEntry def = null)
+        void IClearable.Clear()
         {
-            LogEntry ret;
-            if (item.GetType().Equals(typeof(LogEntry)))
-            {
-                ret = new LogEntry() as LogEntry;
-            }
-            else
-            {
-                ret = (LogEntry)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((LogEntrySetterCommon)((ILogEntryInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public void CopyFieldsFrom(LogEntry rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            LogEntry rhs,
-            LogEntry_CopyMask copyMask,
-            LogEntry def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            LogEntry rhs,
-            out LogEntry_ErrorMask errorMask,
-            LogEntry_CopyMask copyMask = null,
-            LogEntry def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            LogEntrySetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = LogEntry_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            LogEntry rhs,
-            ErrorMaskBuilder errorMask,
-            LogEntry_CopyMask copyMask = null,
-            LogEntry def = null)
-        {
-            LogEntrySetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected void SetNthObject(ushort index, object obj)
-        {
-            LogEntry_FieldIndex enu = (LogEntry_FieldIndex)index;
-            switch (enu)
-            {
-                case LogEntry_FieldIndex.Flags:
-                    this.Flags = (LogEntry.Flag)obj;
-                    break;
-                case LogEntry_FieldIndex.Conditions:
-                    this._Conditions.SetTo((ISetList<Condition>)obj);
-                    break;
-                case LogEntry_FieldIndex.Entry:
-                    this.Entry = (String)obj;
-                    break;
-                case LogEntry_FieldIndex.ResultScript:
-                    this.ResultScript = (ScriptFields)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void Clear()
-        {
-            LogEntrySetterCommon.Instance.Clear(this);
-        }
-
-        public static LogEntry Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new LogEntry();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_LogEntry(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_LogEntry(LogEntry obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out LogEntry_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case LogEntry_FieldIndex.Flags:
-                    obj.Flags = (LogEntry.Flag)pair.Value;
-                    break;
-                case LogEntry_FieldIndex.Conditions:
-                    obj._Conditions.SetTo((ISetList<Condition>)pair.Value);
-                    break;
-                case LogEntry_FieldIndex.Entry:
-                    obj.Entry = (String)pair.Value;
-                    break;
-                case LogEntry_FieldIndex.ResultScript:
-                    obj.ResultScript = (ScriptFields)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -750,11 +619,6 @@ namespace Mutagen.Bethesda.Oblivion
         void ResultScript_Set(ScriptFields value, bool hasBeenSet = true);
         void ResultScript_Unset();
 
-        void CopyFieldsFrom(
-            LogEntry rhs,
-            ErrorMaskBuilder errorMask = null,
-            LogEntry_CopyMask copyMask = null,
-            LogEntry def = null);
     }
 
     public partial interface ILogEntryInternal :
@@ -868,6 +732,67 @@ namespace Mutagen.Bethesda.Oblivion
             return ((LogEntryCommon)((ILogEntryInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this LogEntry lhs,
+            LogEntry rhs)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null);
+        }
+
+        public static void CopyFieldsFrom(
+            this LogEntry lhs,
+            LogEntry rhs,
+            LogEntry_CopyMask copyMask,
+            LogEntry def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this LogEntry lhs,
+            LogEntry rhs,
+            out LogEntry_ErrorMask errorMask,
+            LogEntry_CopyMask copyMask = null,
+            LogEntry def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            LogEntrySetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = LogEntry_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this LogEntry lhs,
+            LogEntry rhs,
+            ErrorMaskBuilder errorMask,
+            LogEntry_CopyMask copyMask = null,
+            LogEntry def = null)
+        {
+            LogEntrySetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

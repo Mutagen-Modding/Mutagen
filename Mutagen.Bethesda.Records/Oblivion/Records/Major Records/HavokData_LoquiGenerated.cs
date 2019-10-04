@@ -397,136 +397,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static HavokData Copy_ToLoqui(
-            HavokData item,
-            HavokData_CopyMask copyMask = null,
-            HavokData def = null)
+        void IClearable.Clear()
         {
-            HavokData ret;
-            if (item.GetType().Equals(typeof(HavokData)))
-            {
-                ret = new HavokData() as HavokData;
-            }
-            else
-            {
-                ret = (HavokData)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((HavokDataSetterCommon)((IHavokDataInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public void CopyFieldsFrom(HavokData rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            HavokData rhs,
-            HavokData_CopyMask copyMask,
-            HavokData def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            HavokData rhs,
-            out HavokData_ErrorMask errorMask,
-            HavokData_CopyMask copyMask = null,
-            HavokData def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            HavokDataSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = HavokData_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            HavokData rhs,
-            ErrorMaskBuilder errorMask,
-            HavokData_CopyMask copyMask = null,
-            HavokData def = null)
-        {
-            HavokDataSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected void SetNthObject(ushort index, object obj)
-        {
-            HavokData_FieldIndex enu = (HavokData_FieldIndex)index;
-            switch (enu)
-            {
-                case HavokData_FieldIndex.Material:
-                    this.Material = (HavokData.MaterialType)obj;
-                    break;
-                case HavokData_FieldIndex.Friction:
-                    this.Friction = (Byte)obj;
-                    break;
-                case HavokData_FieldIndex.Restitution:
-                    this.Restitution = (Byte)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void Clear()
-        {
-            HavokDataSetterCommon.Instance.Clear(this);
-        }
-
-        public static HavokData Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new HavokData();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_HavokData(ret, pair);
-            }
-            return ret;
-        }
-
-        protected static void CopyInInternal_HavokData(HavokData obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out HavokData_FieldIndex enu))
-            {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
-            }
-            switch (enu)
-            {
-                case HavokData_FieldIndex.Material:
-                    obj.Material = (HavokData.MaterialType)pair.Value;
-                    break;
-                case HavokData_FieldIndex.Friction:
-                    obj.Friction = (Byte)pair.Value;
-                    break;
-                case HavokData_FieldIndex.Restitution:
-                    obj.Restitution = (Byte)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -541,11 +416,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Byte Restitution { get; set; }
 
-        void CopyFieldsFrom(
-            HavokData rhs,
-            ErrorMaskBuilder errorMask = null,
-            HavokData_CopyMask copyMask = null,
-            HavokData def = null);
     }
 
     public partial interface IHavokDataInternal :
@@ -653,6 +523,67 @@ namespace Mutagen.Bethesda.Oblivion
             return ((HavokDataCommon)((IHavokDataInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this HavokData lhs,
+            HavokData rhs)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null);
+        }
+
+        public static void CopyFieldsFrom(
+            this HavokData lhs,
+            HavokData rhs,
+            HavokData_CopyMask copyMask,
+            HavokData def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this HavokData lhs,
+            HavokData rhs,
+            out HavokData_ErrorMask errorMask,
+            HavokData_CopyMask copyMask = null,
+            HavokData def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            HavokDataSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = HavokData_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this HavokData lhs,
+            HavokData rhs,
+            ErrorMaskBuilder errorMask,
+            HavokData_CopyMask copyMask = null,
+            HavokData def = null)
+        {
+            HavokDataSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }

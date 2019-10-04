@@ -729,173 +729,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static Container Copy_ToLoqui(
-            Container item,
-            Container_CopyMask copyMask = null,
-            Container def = null)
+        void IClearable.Clear()
         {
-            Container ret;
-            if (item.GetType().Equals(typeof(Container)))
-            {
-                ret = new Container() as Container;
-            }
-            else
-            {
-                ret = (Container)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
+            ((ContainerSetterCommon)((IContainerInternalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        public override void CopyFieldsFrom(MajorRecord rhs)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: null,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
-        }
-
-        public void CopyFieldsFrom(
-            Container rhs,
-            Container_CopyMask copyMask,
-            Container def = null)
-        {
-            this.CopyFieldsFrom(
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
-        }
-
-        public void CopyFieldsFrom(
-            Container rhs,
-            out Container_ErrorMask errorMask,
-            Container_CopyMask copyMask = null,
-            Container def = null,
-            bool doMasks = true)
-        {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            ContainerSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMaskBuilder,
-                copyMask: copyMask);
-            errorMask = Container_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public void CopyFieldsFrom(
-            Container rhs,
-            ErrorMaskBuilder errorMask,
-            Container_CopyMask copyMask = null,
-            Container def = null)
-        {
-            ContainerSetterCopyCommon.CopyFieldsFrom(
-                item: this,
-                rhs: rhs,
-                def: def,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-
-        protected override void SetNthObject(ushort index, object obj)
-        {
-            Container_FieldIndex enu = (Container_FieldIndex)index;
-            switch (enu)
-            {
-                case Container_FieldIndex.Name:
-                    this.Name = (String)obj;
-                    break;
-                case Container_FieldIndex.Model:
-                    this.Model = (Model)obj;
-                    break;
-                case Container_FieldIndex.Script:
-                    this.Script_Property.Set((IFormIDSetLink<Script>)obj);
-                    break;
-                case Container_FieldIndex.Items:
-                    this._Items.SetTo((ISetList<ContainerItem>)obj);
-                    break;
-                case Container_FieldIndex.Flags:
-                    this.Flags = (Container.ContainerFlag)obj;
-                    break;
-                case Container_FieldIndex.Weight:
-                    this.Weight = (Single)obj;
-                    break;
-                case Container_FieldIndex.OpenSound:
-                    this.OpenSound_Property.Set((IFormIDSetLink<Sound>)obj);
-                    break;
-                case Container_FieldIndex.CloseSound:
-                    this.CloseSound_Property.Set((IFormIDSetLink<Sound>)obj);
-                    break;
-                case Container_FieldIndex.DATADataTypeState:
-                    this.DATADataTypeState = (Container.DATADataType)obj;
-                    break;
-                default:
-                    base.SetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public override void Clear()
-        {
-            ContainerSetterCommon.Instance.Clear(this);
-        }
-
-        public new static Container Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new Container();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_Container(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_Container(Container obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out Container_FieldIndex enu))
-            {
-                CopyInInternal_OblivionMajorRecord(obj, pair);
-            }
-            switch (enu)
-            {
-                case Container_FieldIndex.Name:
-                    obj.Name = (String)pair.Value;
-                    break;
-                case Container_FieldIndex.Model:
-                    obj.Model = (Model)pair.Value;
-                    break;
-                case Container_FieldIndex.Script:
-                    obj.Script_Property.Set((IFormIDSetLink<Script>)pair.Value);
-                    break;
-                case Container_FieldIndex.Items:
-                    obj._Items.SetTo((ISetList<ContainerItem>)pair.Value);
-                    break;
-                case Container_FieldIndex.Flags:
-                    obj.Flags = (Container.ContainerFlag)pair.Value;
-                    break;
-                case Container_FieldIndex.Weight:
-                    obj.Weight = (Single)pair.Value;
-                    break;
-                case Container_FieldIndex.OpenSound:
-                    obj.OpenSound_Property.Set((IFormIDSetLink<Sound>)pair.Value);
-                    break;
-                case Container_FieldIndex.CloseSound:
-                    obj.CloseSound_Property.Set((IFormIDSetLink<Sound>)pair.Value);
-                    break;
-                case Container_FieldIndex.DATADataTypeState:
-                    obj.DATADataTypeState = (Container.DATADataType)pair.Value;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown enum type: {enu}");
-            }
-        }
     }
     #endregion
 
@@ -926,11 +764,6 @@ namespace Mutagen.Bethesda.Oblivion
         new IFormIDSetLink<Sound> OpenSound_Property { get; }
         new Sound CloseSound { get; set; }
         new IFormIDSetLink<Sound> CloseSound_Property { get; }
-        void CopyFieldsFrom(
-            Container rhs,
-            ErrorMaskBuilder errorMask = null,
-            Container_CopyMask copyMask = null,
-            Container def = null);
     }
 
     public partial interface IContainerInternal :
@@ -1074,6 +907,54 @@ namespace Mutagen.Bethesda.Oblivion
             return ((ContainerCommon)((IContainerInternalGetter)item).CommonInstance()).Equals(
                 lhs: item,
                 rhs: rhs);
+        }
+
+        public static void CopyFieldsFrom(
+            this Container lhs,
+            Container rhs,
+            Container_CopyMask copyMask,
+            Container def = null)
+        {
+            CopyFieldsFrom(
+                lhs: lhs,
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask);
+        }
+
+        public static void CopyFieldsFrom(
+            this Container lhs,
+            Container rhs,
+            out Container_ErrorMask errorMask,
+            Container_CopyMask copyMask = null,
+            Container def = null,
+            bool doMasks = true)
+        {
+            var errorMaskBuilder = new ErrorMaskBuilder();
+            ContainerSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask);
+            errorMask = Container_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyFieldsFrom(
+            this Container lhs,
+            Container rhs,
+            ErrorMaskBuilder errorMask,
+            Container_CopyMask copyMask = null,
+            Container def = null)
+        {
+            ContainerSetterCopyCommon.CopyFieldsFrom(
+                item: lhs,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
 
     }
