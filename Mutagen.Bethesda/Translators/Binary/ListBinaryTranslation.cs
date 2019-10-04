@@ -920,7 +920,7 @@ namespace Mutagen.Bethesda.Binary
         public async Task ParseRepeatedItem<K>(
             MutagenFrame frame,
             int fieldIndex,
-            ISourceCache<T, K> item,
+            ICache<T, K> item,
             RecordType triggeringRecord,
             int lengthLength,
             ErrorMaskBuilder errorMask,

@@ -2,19 +2,19 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>749a8db19cb814a4fd030d8fbe8b9d249bda6646</Sha>
+         <Sha>d770a207139f3e476a773f0fe5f38044084bd4ba</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>09-28-2019 22:40:38</CommitDate>
-         <Description>SourceSetCache updates for library</Description>
+         <CommitDate>09-28-2019 23:32:07</CommitDate>
+         <Description>CacheExt work</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/CSharpExt.git</OriginHint>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>2bdeb2886d86bcea5d5f1f23355d0e1b824a3b0d</Sha>
+         <Sha>60a48234ddb1af340f4e77160de63b564afbef22</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>10-03-2019 20:11:32</CommitDate>
-         <Description>PostLoad phase readded after Resolution</Description>
+         <CommitDate>10-03-2019 20:27:47</CommitDate>
+         <Description>Non-notifying cache work</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/Loqui.git</OriginHint>
       </RepoListing>

@@ -65,10 +65,10 @@ namespace Mutagen.Bethesda.Skyrim
         public Int32 Unknown { get; set; }
         #endregion
         #region Items
-        private readonly SourceSetCache<T, FormKey> _Items = new SourceSetCache<T, FormKey>((item) => item.FormKey);
-        public ISourceSetCache<T, FormKey> Items => _Items;
+        private readonly ICache<T, FormKey> _Items = new Cache<T, FormKey>((item) => item.FormKey);
+        public ICache<T, FormKey> Items => _Items;
         #region Interface Members
-        ISourceCache<T, FormKey> IGroup<T>.Items => _Items;
+        ICache<T, FormKey> IGroup<T>.Items => _Items;
         IReadOnlyCache<T, FormKey> IGroupGetter<T>.Items => _Items;
         #endregion
 
@@ -624,7 +624,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         new Int32 Unknown { get; set; }
 
-        new ISourceCache<T, FormKey> Items { get; }
+        new ICache<T, FormKey> Items { get; }
         void CopyFieldsFrom<T_CopyMask>(
             Group<T> rhs,
             ErrorMaskBuilder errorMask = null,
