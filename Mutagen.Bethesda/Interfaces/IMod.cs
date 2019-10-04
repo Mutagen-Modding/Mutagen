@@ -1,5 +1,6 @@
 using CSharpExt.Rx;
 using DynamicData;
+using Mutagen.Bethesda.Internals;
 using Noggog.Notifying;
 using System;
 using System.Collections.Generic;
@@ -9,11 +10,10 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda
 {
-    public interface IModGetter
+    public interface IModGetter : IMajorRecordGetterEnumerable
     {
         GameMode GameMode { get; }
         IReadOnlyList<IMasterReferenceGetter> MasterReferences { get; }
-        IReadOnlyCache<IMajorRecordCommonGetter, FormKey> MajorRecords { get; }
         IReadOnlyCache<T, FormKey> GetGroupGetter<T>() where T : IMajorRecordCommonGetter;
         void WriteToBinary(string path, ModKey modKeyOverride = null);
         Task WriteToBinaryAsync(string path, ModKey modKeyOverride = null);
@@ -21,10 +21,9 @@ namespace Mutagen.Bethesda
         ModKey ModKey { get; }
     }
 
-    public interface IMod : IModGetter, ILinkContainer
+    public interface IMod : IModGetter, ILinkContainer, IMajorRecordEnumerable
     {
         new IList<MasterReference> MasterReferences { get; }
-        new IReadOnlyCache<IMajorRecordCommon, FormKey> MajorRecords { get; }
         ICache<T, FormKey> GetGroup<T>() where T : IMajorRecordCommon;
         FormKey GetNextFormKey();
         void SyncRecordCount();

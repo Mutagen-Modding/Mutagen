@@ -1910,6 +1910,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (obj.Road != null)
             {
                 yield return obj.Road;
+                foreach (var item in obj.Road.EnumerateMajorRecords())
+                {
+                    yield return item;
+                }
             }
             if (obj.TopCell != null)
             {
@@ -2439,6 +2443,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (obj.Road != null)
             {
                 yield return obj.Road;
+                foreach (var item in obj.Road.EnumerateMajorRecords())
+                {
+                    yield return item;
+                }
             }
             if (obj.TopCell != null)
             {

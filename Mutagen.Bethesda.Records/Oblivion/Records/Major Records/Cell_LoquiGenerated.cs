@@ -2110,10 +2110,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (obj.PathGrid != null)
             {
                 yield return obj.PathGrid;
+                foreach (var item in obj.PathGrid.EnumerateMajorRecords())
+                {
+                    yield return item;
+                }
             }
             if (obj.Landscape != null)
             {
                 yield return obj.Landscape;
+                foreach (var item in obj.Landscape.EnumerateMajorRecords())
+                {
+                    yield return item;
+                }
             }
             foreach (var subItem in obj.Persistent)
             {
@@ -2755,10 +2763,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (obj.PathGrid != null)
             {
                 yield return obj.PathGrid;
+                foreach (var item in obj.PathGrid.EnumerateMajorRecords())
+                {
+                    yield return item;
+                }
             }
             if (obj.Landscape != null)
             {
                 yield return obj.Landscape;
+                foreach (var item in obj.Landscape.EnumerateMajorRecords())
+                {
+                    yield return item;
+                }
             }
             foreach (var subItem in obj.Persistent)
             {

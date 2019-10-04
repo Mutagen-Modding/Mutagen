@@ -428,6 +428,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
         }
 
+        IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         #endregion
 
         #region Binary Translation
@@ -770,6 +772,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IDialogTopic :
         IDialogTopicInternalGetter,
         IOblivionMajorRecord,
+        IMajorRecordEnumerable,
         ILoquiObjectSetter<IDialogTopicInternal>
     {
         new ISetList<IFormIDLink<Quest>> Quests { get; }
@@ -802,6 +805,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IDialogTopicGetter :
         IOblivionMajorRecordGetter,
+        IMajorRecordGetterEnumerable,
         ILoquiObject<IDialogTopicInternalGetter>,
         IXmlItem,
         IBinaryItem
@@ -907,6 +911,19 @@ namespace Mutagen.Bethesda.Oblivion
                 lhs: item,
                 rhs: rhs);
         }
+
+        #region Mutagen
+        public static IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(this IDialogTopicInternalGetter obj)
+        {
+            return ((DialogTopicCommon)((IDialogTopicInternalGetter)obj).CommonInstance()).EnumerateMajorRecords(obj: obj);
+        }
+
+        public static IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(this IDialogTopicInternal obj)
+        {
+            return ((DialogTopicSetterCommon)((IDialogTopicInternalGetter)obj).CommonSetterInstance()).EnumerateMajorRecords(obj: obj);
+        }
+
+        #endregion
 
     }
     #endregion
@@ -1182,6 +1199,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Clear(item: (IDialogTopicInternal)item);
         }
+        
+        #region Mutagen
+        public IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(IDialogTopicInternal obj)
+        {
+            foreach (var subItem in obj.Items)
+            {
+                yield return subItem;
+                foreach (var item in subItem.EnumerateMajorRecords())
+                {
+                    yield return item;
+                }
+            }
+        }
+        #endregion
         
     }
     public partial class DialogTopicCommon : OblivionMajorRecordCommon
@@ -1483,6 +1514,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
         
+        public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(IDialogTopicInternalGetter obj)
+        {
+            foreach (var subItem in obj.Items)
+            {
+                yield return subItem;
+                foreach (var item in subItem.EnumerateMajorRecords())
+                {
+                    yield return item;
+                }
+            }
+        }
         #endregion
         
     }
@@ -2825,6 +2867,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDialogTopicInternalGetter)rhs, include);
 
+        IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         protected override object XmlWriteTranslator => DialogTopicXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,

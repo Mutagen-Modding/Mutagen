@@ -384,13 +384,6 @@ namespace Mutagen.Bethesda.Skyrim
         public GameMode GameMode => GameMode.Skyrim;
         IReadOnlyCache<T, FormKey> IModGetter.GetGroupGetter<T>() => this.GetGroupGetter<T>();
         ICache<T, FormKey> IMod.GetGroup<T>() => this.GetGroup<T>();
-        private ISourceCache<IMajorRecord, FormKey> _majorRecords = new SourceCache<IMajorRecord, FormKey>(m => m.FormKey);
-        public IObservableCache<IMajorRecord, FormKey> MajorRecords => _majorRecords;
-        public IMajorRecord this[FormKey id]
-        {
-            get => MajorRecords.Lookup(id).Value;
-            set => SetMajorRecord(id, value);
-        }
         void IModGetter.WriteToBinary(string path, ModKey modKeyOverride) => this.WriteToBinary(path, modKeyOverride, importMask: null);
         Task IModGetter.WriteToBinaryAsync(string path, ModKey modKeyOverride) => this.WriteToBinaryAsync(path, modKeyOverride);
         void IModGetter.WriteToBinaryParallel(string path, ModKey modKeyOverride) => this.WriteToBinaryParallel(path, modKeyOverride);
@@ -545,7 +538,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public int GetRecordCount()
         {
-            int count = this.MajorRecords.Count;
+            int count = this.EnumerateMajorRecords().Count();
             count += GameSettings.Items.Count > 0 ? 1 : 0;
             count += Keywords.Items.Count > 0 ? 1 : 0;
             count += LocationReferenceTypes.Items.Count > 0 ? 1 : 0;
@@ -700,6 +693,8 @@ namespace Mutagen.Bethesda.Skyrim
             }
             return null;
         }
+        IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         #endregion
 
         #region Binary Translation
@@ -1385,6 +1380,7 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface ISkyrimMod :
         ISkyrimModInternalGetter,
+        IMajorRecordEnumerable,
         ILoquiObjectSetter<ISkyrimModInternal>
     {
         new ModHeader ModHeader { get; }
@@ -1418,6 +1414,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ISkyrimModGetter :
         ILoquiObject,
+        IMajorRecordGetterEnumerable,
         ILoquiObject<ISkyrimModInternalGetter>,
         IXmlItem
     {
@@ -1591,6 +1588,16 @@ namespace Mutagen.Bethesda.Skyrim
                     modKey: modKey);
             }
         }
+        public static IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(this ISkyrimModInternalGetter obj)
+        {
+            return ((SkyrimModCommon)((ISkyrimModInternalGetter)obj).CommonInstance()).EnumerateMajorRecords(obj: obj);
+        }
+
+        public static IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(this ISkyrimModInternal obj)
+        {
+            return ((SkyrimModSetterCommon)((ISkyrimModInternalGetter)obj).CommonSetterInstance()).EnumerateMajorRecords(obj: obj);
+        }
+
         #endregion
 
     }
@@ -1895,6 +1902,40 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
         }
+        
+        #region Mutagen
+        public IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(ISkyrimModInternal obj)
+        {
+            foreach (var item in obj.GameSettings.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Keywords.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.LocationReferenceTypes.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Actions.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.TextureSets.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Globals.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Classes.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+        }
+        #endregion
         
     }
     public partial class SkyrimModCommon
@@ -2236,6 +2277,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return await UtilityTranslation.CompileSetGroupLength(streams, groupBytes);
         }
         
+        public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(ISkyrimModInternalGetter obj)
+        {
+            foreach (var item in obj.GameSettings.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Keywords.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.LocationReferenceTypes.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Actions.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.TextureSets.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Globals.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Classes.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+        }
         #endregion
         
     }
@@ -4009,7 +4081,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Task IModGetter.WriteToBinaryAsync(string path, ModKey modKey) => this.WriteToBinaryAsync(path, modKey);
         void IModGetter.WriteToBinaryParallel(string path, ModKey modKey) => this.WriteToBinaryParallel(path, modKey);
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;
-        IReadOnlyCache<IMajorRecordCommonGetter, FormKey> IModGetter.MajorRecords => throw new NotImplementedException();
+        IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         protected object XmlWriteTranslator => SkyrimModXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(

@@ -33,14 +33,6 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine($"public {nameof(GameMode)} GameMode => {nameof(GameMode)}.{gameMode};");
             fg.AppendLine($"IReadOnlyCache<T, {nameof(FormKey)}> {nameof(IModGetter)}.{nameof(IModGetter.GetGroupGetter)}<T>() => this.GetGroupGetter<T>();");
             fg.AppendLine($"ICache<T, {nameof(FormKey)}> {nameof(IMod)}.{nameof(IMod.GetGroup)}<T>() => this.GetGroup<T>();");
-            fg.AppendLine($"private ISourceCache<IMajorRecord, FormKey> _majorRecords = new SourceCache<IMajorRecord, FormKey>(m => m.FormKey);");
-            fg.AppendLine($"public IObservableCache<IMajorRecord, FormKey> MajorRecords => _majorRecords;");
-            fg.AppendLine($"public IMajorRecord this[FormKey id]");
-            using (new BraceWrapper(fg))
-            {
-                fg.AppendLine("get => MajorRecords.Lookup(id).Value;");
-                fg.AppendLine("set => SetMajorRecord(id, value);");
-            }
             fg.AppendLine($"void IModGetter.WriteToBinary(string path, ModKey modKeyOverride) => this.WriteToBinary(path, modKeyOverride, importMask: null);");
             fg.AppendLine($"Task IModGetter.WriteToBinaryAsync(string path, ModKey modKeyOverride) => this.WriteToBinaryAsync(path, modKeyOverride);");
             fg.AppendLine($"void IModGetter.WriteToBinaryParallel(string path, ModKey modKeyOverride) => this.WriteToBinaryParallel(path, modKeyOverride);");
@@ -191,7 +183,7 @@ namespace Mutagen.Bethesda.Generation
             }
             using (new BraceWrapper(fg))
             {
-                fg.AppendLine("int count = this.MajorRecords.Count;");
+                fg.AppendLine("int count = this.EnumerateMajorRecords().Count();");
                 foreach (var field in obj.IterateFields())
                 {
                     if (!(field is LoquiType loqui)) continue;

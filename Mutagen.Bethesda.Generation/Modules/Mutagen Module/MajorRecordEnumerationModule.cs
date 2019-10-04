@@ -40,6 +40,7 @@ namespace Mutagen.Bethesda.Generation
         {
             if (loqui.TargetObjectGeneration != null)
             {
+                if (await loqui.TargetObjectGeneration.IsMajorRecord()) return Case.Yes;
                 return await HasMajorRecordsInTree(loqui.TargetObjectGeneration, includeBaseClass, loqui.GenericSpecification);
             }
             else if (specifications != null)

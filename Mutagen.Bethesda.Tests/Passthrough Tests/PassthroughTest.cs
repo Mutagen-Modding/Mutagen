@@ -164,7 +164,7 @@ namespace Mutagen.Bethesda.Tests
                 {
                     var mod = await ImportBinary(this.FilePath.Path);
 
-                    foreach (var record in mod.MajorRecords.Items)
+                    foreach (var record in mod.EnumerateMajorRecords())
                     {
                         record.IsCompressed = false;
                     }

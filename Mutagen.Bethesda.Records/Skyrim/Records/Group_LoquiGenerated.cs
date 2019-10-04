@@ -303,6 +303,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType T_RecordType;
+        IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         #endregion
 
         #region Binary Translation
@@ -615,6 +617,7 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IGroup<T> :
         IGroupInternalGetter<T>,
+        IMajorRecordEnumerable,
         ILoquiObjectSetter<IGroupInternal<T>>
         where T : ISkyrimMajorRecordInternal, IXmlItem, IBinaryItem
     {
@@ -642,6 +645,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IGroupGetter<out T> :
         ILoquiObject,
+        IMajorRecordGetterEnumerable,
         ILoquiObject<IGroupInternalGetter<T>>,
         IXmlItem,
         IBinaryItem
@@ -753,6 +757,21 @@ namespace Mutagen.Bethesda.Skyrim
                 lhs: item,
                 rhs: rhs);
         }
+
+        #region Mutagen
+        public static IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords<T>(this IGroupInternalGetter<T> obj)
+            where T : ISkyrimMajorRecordInternalGetter, IXmlItem, IBinaryItem
+        {
+            return ((GroupCommon<T>)((IGroupInternalGetter<T>)obj).CommonInstance()).EnumerateMajorRecords(obj: obj);
+        }
+
+        public static IEnumerable<IMajorRecordCommon> EnumerateMajorRecords<T>(this IGroupInternal<T> obj)
+            where T : ISkyrimMajorRecordInternal, IXmlItem, IBinaryItem
+        {
+            return ((GroupSetterCommon<T>)((IGroupInternalGetter<T>)obj).CommonSetterInstance()).EnumerateMajorRecords(obj: obj);
+        }
+
+        #endregion
 
     }
     #endregion
@@ -1004,6 +1023,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Items.Clear();
         }
         
+        #region Mutagen
+        public IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(IGroupInternal<T> obj)
+        {
+            foreach (var subItem in obj.Items.Items)
+            {
+                yield return subItem;
+                foreach (var item in subItem.EnumerateMajorRecords())
+                {
+                    yield return item;
+                }
+            }
+        }
+        #endregion
+        
     }
     public partial class GroupCommon<T>
         where T : ISkyrimMajorRecordInternalGetter, IXmlItem, IBinaryItem
@@ -1160,6 +1193,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #endregion
         
+        
+        #region Mutagen
+        public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(IGroupInternalGetter<T> obj)
+        {
+            foreach (var subItem in obj.Items.Items)
+            {
+                yield return subItem;
+                foreach (var item in subItem.EnumerateMajorRecords())
+                {
+                    yield return item;
+                }
+            }
+        }
+        #endregion
         
     }
     public partial class GroupSetterCopyCommon
@@ -2390,6 +2437,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IGroupInternalGetter<T>)rhs, include);
 
+        IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         protected object XmlWriteTranslator => GroupXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(

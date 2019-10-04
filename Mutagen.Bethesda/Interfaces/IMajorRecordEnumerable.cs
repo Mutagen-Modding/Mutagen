@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Mutagen.Bethesda.Internals
+namespace Mutagen.Bethesda
 {
     public interface IMajorRecordEnumerable : IMajorRecordGetterEnumerable
     {

@@ -32,9 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class SkyrimMod
     {
         IList<MasterReference> IMod.MasterReferences => this.ModHeader.MasterReferences;
-        IReadOnlyCache<IMajorRecordCommon, FormKey> IMod.MajorRecords => this.MajorRecords;
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;
-        IReadOnlyCache<IMajorRecordCommonGetter, FormKey> IModGetter.MajorRecords => this.MajorRecords;
 
         public ModKey ModKey { get; }
 

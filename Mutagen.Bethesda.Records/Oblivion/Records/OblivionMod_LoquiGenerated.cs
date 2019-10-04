@@ -798,13 +798,6 @@ namespace Mutagen.Bethesda.Oblivion
         public GameMode GameMode => GameMode.Oblivion;
         IReadOnlyCache<T, FormKey> IModGetter.GetGroupGetter<T>() => this.GetGroupGetter<T>();
         ICache<T, FormKey> IMod.GetGroup<T>() => this.GetGroup<T>();
-        private ISourceCache<IMajorRecord, FormKey> _majorRecords = new SourceCache<IMajorRecord, FormKey>(m => m.FormKey);
-        public IObservableCache<IMajorRecord, FormKey> MajorRecords => _majorRecords;
-        public IMajorRecord this[FormKey id]
-        {
-            get => MajorRecords.Lookup(id).Value;
-            set => SetMajorRecord(id, value);
-        }
         void IModGetter.WriteToBinary(string path, ModKey modKeyOverride) => this.WriteToBinary(path, modKeyOverride, importMask: null);
         Task IModGetter.WriteToBinaryAsync(string path, ModKey modKeyOverride) => this.WriteToBinaryAsync(path, modKeyOverride);
         void IModGetter.WriteToBinaryParallel(string path, ModKey modKeyOverride) => this.WriteToBinaryParallel(path, modKeyOverride);
@@ -1645,7 +1638,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public int GetRecordCount()
         {
-            int count = this.MajorRecords.Count;
+            int count = this.EnumerateMajorRecords().Count();
             count += GameSettings.Items.Count > 0 ? 1 : 0;
             count += Globals.Items.Count > 0 ? 1 : 0;
             count += Classes.Items.Count > 0 ? 1 : 0;
@@ -15399,7 +15392,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Task IModGetter.WriteToBinaryAsync(string path, ModKey modKey) => this.WriteToBinaryAsync(path, modKey);
         void IModGetter.WriteToBinaryParallel(string path, ModKey modKey) => this.WriteToBinaryParallel(path, modKey);
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;
-        IReadOnlyCache<IMajorRecordCommonGetter, FormKey> IModGetter.MajorRecords => throw new NotImplementedException();
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         protected object XmlWriteTranslator => OblivionModXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
