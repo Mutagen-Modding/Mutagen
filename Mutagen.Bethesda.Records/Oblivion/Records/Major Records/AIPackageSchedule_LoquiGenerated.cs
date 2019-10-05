@@ -870,6 +870,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Duration = default(Int32);
         }
         
+        public static AIPackageSchedule GetNew()
+        {
+            return new AIPackageSchedule();
+        }
     }
     public partial class AIPackageScheduleCommon
     {

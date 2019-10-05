@@ -3140,6 +3140,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ICreatureInternal)item);
         }
         
+        public static Creature GetNew()
+        {
+            return (Creature)System.Activator.CreateInstance(typeof(Creature));
+        }
     }
     public partial class CreatureCommon : NPCAbstractCommon
     {

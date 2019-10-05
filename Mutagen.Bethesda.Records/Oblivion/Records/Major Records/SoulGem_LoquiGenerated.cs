@@ -1334,6 +1334,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ISoulGemInternal)item);
         }
         
+        public static SoulGem GetNew()
+        {
+            return (SoulGem)System.Activator.CreateInstance(typeof(SoulGem));
+        }
     }
     public partial class SoulGemCommon : ItemAbstractCommon
     {

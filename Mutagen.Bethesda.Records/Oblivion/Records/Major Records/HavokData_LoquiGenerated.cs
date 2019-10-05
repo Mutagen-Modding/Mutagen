@@ -813,6 +813,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Restitution = default(Byte);
         }
         
+        public static HavokData GetNew()
+        {
+            return new HavokData();
+        }
     }
     public partial class HavokDataCommon
     {

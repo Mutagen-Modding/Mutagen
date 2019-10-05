@@ -868,6 +868,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IKeywordInternal)item);
         }
         
+        public static Keyword GetNew()
+        {
+            return (Keyword)System.Activator.CreateInstance(typeof(Keyword));
+        }
     }
     public partial class KeywordCommon : SkyrimMajorRecordCommon
     {

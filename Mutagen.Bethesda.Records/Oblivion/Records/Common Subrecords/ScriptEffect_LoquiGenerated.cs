@@ -1051,6 +1051,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Name_Unset();
         }
         
+        public static ScriptEffect GetNew()
+        {
+            return new ScriptEffect();
+        }
     }
     public partial class ScriptEffectCommon
     {

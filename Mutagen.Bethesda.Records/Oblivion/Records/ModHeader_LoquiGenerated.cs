@@ -1283,6 +1283,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.VestigialData_Unset();
         }
         
+        public static ModHeader GetNew()
+        {
+            return new ModHeader();
+        }
     }
     public partial class ModHeaderCommon
     {

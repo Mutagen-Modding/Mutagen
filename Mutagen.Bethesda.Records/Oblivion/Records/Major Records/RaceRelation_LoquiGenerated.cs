@@ -805,6 +805,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Modifier = default(Int32);
         }
         
+        public static RaceRelation GetNew()
+        {
+            return new RaceRelation();
+        }
     }
     public partial class RaceRelationCommon
     {

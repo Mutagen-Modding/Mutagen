@@ -933,6 +933,10 @@ namespace Mutagen.Bethesda.Tests.Internals
             item.TargetGroups.Clear();
         }
         
+        public static TestingSettings GetNew()
+        {
+            return new TestingSettings();
+        }
     }
     public partial class TestingSettingsCommon
     {

@@ -1045,6 +1045,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IActivatorInternal)item);
         }
         
+        public static Activator GetNew()
+        {
+            return (Activator)System.Activator.CreateInstance(typeof(Activator));
+        }
     }
     public partial class ActivatorCommon : OblivionMajorRecordCommon
     {

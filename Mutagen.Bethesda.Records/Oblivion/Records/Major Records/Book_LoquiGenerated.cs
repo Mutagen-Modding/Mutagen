@@ -1463,6 +1463,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IBookInternal)item);
         }
         
+        public static Book GetNew()
+        {
+            return (Book)System.Activator.CreateInstance(typeof(Book));
+        }
     }
     public partial class BookCommon : ItemAbstractCommon
     {

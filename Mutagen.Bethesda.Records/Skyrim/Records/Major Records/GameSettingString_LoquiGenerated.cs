@@ -871,6 +871,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IGameSettingStringInternal)item);
         }
         
+        public static GameSettingString GetNew()
+        {
+            return (GameSettingString)System.Activator.CreateInstance(typeof(GameSettingString));
+        }
     }
     public partial class GameSettingStringCommon : GameSettingCommon
     {

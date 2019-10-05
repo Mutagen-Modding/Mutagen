@@ -1743,6 +1743,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IWorldspaceInternal)item);
         }
         
+        public static Worldspace GetNew()
+        {
+            return (Worldspace)System.Activator.CreateInstance(typeof(Worldspace));
+        }
         #region Mutagen
         public IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(IWorldspaceInternal obj)
         {

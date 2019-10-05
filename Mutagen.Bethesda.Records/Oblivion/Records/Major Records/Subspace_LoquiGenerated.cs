@@ -972,6 +972,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ISubspaceInternal)item);
         }
         
+        public static Subspace GetNew()
+        {
+            return (Subspace)System.Activator.CreateInstance(typeof(Subspace));
+        }
     }
     public partial class SubspaceCommon : OblivionMajorRecordCommon
     {

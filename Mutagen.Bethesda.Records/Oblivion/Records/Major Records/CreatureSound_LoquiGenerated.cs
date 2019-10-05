@@ -904,6 +904,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Sounds.Unset();
         }
         
+        public static CreatureSound GetNew()
+        {
+            return new CreatureSound();
+        }
     }
     public partial class CreatureSoundCommon
     {

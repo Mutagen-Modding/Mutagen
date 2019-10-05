@@ -814,6 +814,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Type = default(WeatherSound.SoundType);
         }
         
+        public static WeatherSound GetNew()
+        {
+            return new WeatherSound();
+        }
     }
     public partial class WeatherSoundCommon
     {

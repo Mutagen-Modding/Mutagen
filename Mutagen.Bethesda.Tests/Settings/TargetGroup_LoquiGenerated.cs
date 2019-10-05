@@ -794,6 +794,10 @@ namespace Mutagen.Bethesda.Tests.Internals
             item.Targets.Clear();
         }
         
+        public static TargetGroup GetNew()
+        {
+            return new TargetGroup();
+        }
     }
     public partial class TargetGroupCommon
     {

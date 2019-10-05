@@ -1200,6 +1200,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IKeyInternal)item);
         }
         
+        public static Key GetNew()
+        {
+            return (Key)System.Activator.CreateInstance(typeof(Key));
+        }
     }
     public partial class KeyCommon : ItemAbstractCommon
     {

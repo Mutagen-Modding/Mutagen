@@ -805,6 +805,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Count = default(UInt32);
         }
         
+        public static ContainerItem GetNew()
+        {
+            return new ContainerItem();
+        }
     }
     public partial class ContainerItemCommon
     {

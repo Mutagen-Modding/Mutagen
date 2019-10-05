@@ -1102,6 +1102,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (ITextureSetInternal)item);
         }
         
+        public static TextureSet GetNew()
+        {
+            return (TextureSet)System.Activator.CreateInstance(typeof(TextureSet));
+        }
     }
     public partial class TextureSetCommon : SkyrimMajorRecordCommon
     {

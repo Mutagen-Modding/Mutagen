@@ -1068,6 +1068,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ILandTextureInternal)item);
         }
         
+        public static LandTexture GetNew()
+        {
+            return (LandTexture)System.Activator.CreateInstance(typeof(LandTexture));
+        }
     }
     public partial class LandTextureCommon : OblivionMajorRecordCommon
     {

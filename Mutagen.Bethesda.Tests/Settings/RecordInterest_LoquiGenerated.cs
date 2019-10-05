@@ -785,6 +785,10 @@ namespace Mutagen.Bethesda.Tests.Internals
             item.UninterestingTypes.Clear();
         }
         
+        public static RecordInterest GetNew()
+        {
+            return new RecordInterest();
+        }
     }
     public partial class RecordInterestCommon
     {

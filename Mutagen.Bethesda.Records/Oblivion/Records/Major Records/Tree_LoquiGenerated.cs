@@ -1495,6 +1495,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ITreeInternal)item);
         }
         
+        public static Tree GetNew()
+        {
+            return (Tree)System.Activator.CreateInstance(typeof(Tree));
+        }
     }
     public partial class TreeCommon : OblivionMajorRecordCommon
     {

@@ -841,6 +841,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IAlphaLayerInternal)item);
         }
         
+        public static AlphaLayer GetNew()
+        {
+            return new AlphaLayer();
+        }
     }
     public partial class AlphaLayerCommon : BaseLayerCommon
     {

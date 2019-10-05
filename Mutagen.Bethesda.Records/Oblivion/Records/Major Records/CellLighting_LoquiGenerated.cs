@@ -1016,6 +1016,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.FogClipDistance = default(Single);
         }
         
+        public static CellLighting GetNew()
+        {
+            return new CellLighting();
+        }
     }
     public partial class CellLightingCommon
     {

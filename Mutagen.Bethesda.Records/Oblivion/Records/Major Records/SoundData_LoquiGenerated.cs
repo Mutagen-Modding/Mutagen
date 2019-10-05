@@ -854,6 +854,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Flags = default(SoundData.Flag);
         }
         
+        public static SoundData GetNew()
+        {
+            return new SoundData();
+        }
     }
     public partial class SoundDataCommon
     {

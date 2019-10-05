@@ -805,6 +805,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Modifier = default(Int32);
         }
         
+        public static Relation GetNew()
+        {
+            return new Relation();
+        }
     }
     public partial class RelationCommon
     {

@@ -814,6 +814,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Flags = default(EnableParent.Flag);
         }
         
+        public static EnableParent GetNew()
+        {
+            return new EnableParent();
+        }
     }
     public partial class EnableParentCommon
     {

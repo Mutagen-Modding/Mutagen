@@ -1392,6 +1392,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IClimateInternal)item);
         }
         
+        public static Climate GetNew()
+        {
+            return (Climate)System.Activator.CreateInstance(typeof(Climate));
+        }
     }
     public partial class ClimateCommon : OblivionMajorRecordCommon
     {

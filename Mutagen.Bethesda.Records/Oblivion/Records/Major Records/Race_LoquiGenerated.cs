@@ -2202,6 +2202,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IRaceInternal)item);
         }
         
+        public static Race GetNew()
+        {
+            return (Race)System.Activator.CreateInstance(typeof(Race));
+        }
     }
     public partial class RaceCommon : OblivionMajorRecordCommon
     {

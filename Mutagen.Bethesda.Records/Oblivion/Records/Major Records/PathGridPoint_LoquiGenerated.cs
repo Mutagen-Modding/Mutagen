@@ -852,6 +852,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Connections.Clear();
         }
         
+        public static PathGridPoint GetNew()
+        {
+            return new PathGridPoint();
+        }
     }
     public partial class PathGridPointCommon
     {

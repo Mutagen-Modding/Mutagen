@@ -1105,6 +1105,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IDialogTopicInternal)item);
         }
         
+        public static DialogTopic GetNew()
+        {
+            return (DialogTopic)System.Activator.CreateInstance(typeof(DialogTopic));
+        }
         #region Mutagen
         public IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(IDialogTopicInternal obj)
         {

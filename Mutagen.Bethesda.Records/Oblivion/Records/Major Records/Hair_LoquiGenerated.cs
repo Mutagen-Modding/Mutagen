@@ -1075,6 +1075,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IHairInternal)item);
         }
         
+        public static Hair GetNew()
+        {
+            return (Hair)System.Activator.CreateInstance(typeof(Hair));
+        }
     }
     public partial class HairCommon : OblivionMajorRecordCommon
     {

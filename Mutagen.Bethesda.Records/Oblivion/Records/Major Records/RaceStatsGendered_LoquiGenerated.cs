@@ -815,6 +815,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Female = default(RaceStats);
         }
         
+        public static RaceStatsGendered GetNew()
+        {
+            return new RaceStatsGendered();
+        }
     }
     public partial class RaceStatsGenderedCommon
     {

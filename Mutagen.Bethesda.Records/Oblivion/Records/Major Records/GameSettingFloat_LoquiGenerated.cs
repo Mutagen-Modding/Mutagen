@@ -868,6 +868,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IGameSettingFloatInternal)item);
         }
         
+        public static GameSettingFloat GetNew()
+        {
+            return (GameSettingFloat)System.Activator.CreateInstance(typeof(GameSettingFloat));
+        }
     }
     public partial class GameSettingFloatCommon : GameSettingCommon
     {

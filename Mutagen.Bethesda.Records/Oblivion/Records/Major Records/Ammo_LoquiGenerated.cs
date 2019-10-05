@@ -1375,6 +1375,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IAmmoInternal)item);
         }
         
+        public static Ammo GetNew()
+        {
+            return (Ammo)System.Activator.CreateInstance(typeof(Ammo));
+        }
     }
     public partial class AmmoCommon : ItemAbstractCommon
     {

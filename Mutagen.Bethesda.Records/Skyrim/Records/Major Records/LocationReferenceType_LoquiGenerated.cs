@@ -868,6 +868,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (ILocationReferenceTypeInternal)item);
         }
         
+        public static LocationReferenceType GetNew()
+        {
+            return (LocationReferenceType)System.Activator.CreateInstance(typeof(LocationReferenceType));
+        }
     }
     public partial class LocationReferenceTypeCommon : SkyrimMajorRecordCommon
     {

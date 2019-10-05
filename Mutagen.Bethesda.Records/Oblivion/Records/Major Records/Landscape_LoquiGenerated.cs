@@ -1214,6 +1214,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ILandscapeInternal)item);
         }
         
+        public static Landscape GetNew()
+        {
+            return (Landscape)System.Activator.CreateInstance(typeof(Landscape));
+        }
     }
     public partial class LandscapeCommon : OblivionMajorRecordCommon
     {

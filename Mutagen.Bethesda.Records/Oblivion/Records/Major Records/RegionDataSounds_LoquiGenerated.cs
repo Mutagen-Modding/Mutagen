@@ -927,6 +927,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IRegionDataSoundsInternal)item);
         }
         
+        public static RegionDataSounds GetNew()
+        {
+            return new RegionDataSounds();
+        }
     }
     public partial class RegionDataSoundsCommon : RegionDataCommon
     {

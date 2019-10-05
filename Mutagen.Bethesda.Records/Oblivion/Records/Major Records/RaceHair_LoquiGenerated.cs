@@ -804,6 +804,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Female = default(Hair);
         }
         
+        public static RaceHair GetNew()
+        {
+            return new RaceHair();
+        }
     }
     public partial class RaceHairCommon
     {

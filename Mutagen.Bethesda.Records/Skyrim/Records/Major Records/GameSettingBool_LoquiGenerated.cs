@@ -864,6 +864,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IGameSettingBoolInternal)item);
         }
         
+        public static GameSettingBool GetNew()
+        {
+            return (GameSettingBool)System.Activator.CreateInstance(typeof(GameSettingBool));
+        }
     }
     public partial class GameSettingBoolCommon : GameSettingCommon
     {

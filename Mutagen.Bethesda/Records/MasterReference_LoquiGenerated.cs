@@ -845,6 +845,10 @@ namespace Mutagen.Bethesda.Internals
             item.FileSize_Unset();
         }
         
+        public static MasterReference GetNew()
+        {
+            return new MasterReference();
+        }
     }
     public partial class MasterReferenceCommon
     {

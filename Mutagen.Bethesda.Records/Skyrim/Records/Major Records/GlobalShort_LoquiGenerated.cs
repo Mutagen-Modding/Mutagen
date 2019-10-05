@@ -864,6 +864,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IGlobalShortInternal)item);
         }
         
+        public static GlobalShort GetNew()
+        {
+            return (GlobalShort)System.Activator.CreateInstance(typeof(GlobalShort));
+        }
     }
     public partial class GlobalShortCommon : GlobalCommon
     {

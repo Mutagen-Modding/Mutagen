@@ -813,6 +813,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Count = default(Int32);
         }
         
+        public static AIPackageTarget GetNew()
+        {
+            return new AIPackageTarget();
+        }
     }
     public partial class AIPackageTargetCommon
     {

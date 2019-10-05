@@ -827,6 +827,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IRoadInternal)item);
         }
         
+        public static Road GetNew()
+        {
+            return (Road)System.Activator.CreateInstance(typeof(Road));
+        }
     }
     public partial class RoadCommon : OblivionMajorRecordCommon
     {

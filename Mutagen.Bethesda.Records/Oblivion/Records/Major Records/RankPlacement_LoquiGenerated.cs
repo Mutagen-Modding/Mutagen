@@ -844,6 +844,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Fluff = default(Byte[]);
         }
         
+        public static RankPlacement GetNew()
+        {
+            return new RankPlacement();
+        }
     }
     public partial class RankPlacementCommon
     {

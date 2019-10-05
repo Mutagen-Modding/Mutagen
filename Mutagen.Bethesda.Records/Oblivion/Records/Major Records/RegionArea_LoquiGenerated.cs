@@ -858,6 +858,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.RegionPoints.Unset();
         }
         
+        public static RegionArea GetNew()
+        {
+            return new RegionArea();
+        }
     }
     public partial class RegionAreaCommon
     {

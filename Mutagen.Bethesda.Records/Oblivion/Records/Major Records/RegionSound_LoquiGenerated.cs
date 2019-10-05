@@ -842,6 +842,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Chance = default(Single);
         }
         
+        public static RegionSound GetNew()
+        {
+            return new RegionSound();
+        }
     }
     public partial class RegionSoundCommon
     {

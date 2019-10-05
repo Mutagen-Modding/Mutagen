@@ -3630,6 +3630,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (INPCInternal)item);
         }
         
+        public static NPC GetNew()
+        {
+            return (NPC)System.Activator.CreateInstance(typeof(NPC));
+        }
     }
     public partial class NPCCommon : NPCAbstractCommon
     {

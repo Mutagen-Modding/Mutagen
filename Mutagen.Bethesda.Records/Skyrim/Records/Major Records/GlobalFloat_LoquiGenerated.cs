@@ -870,6 +870,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IGlobalFloatInternal)item);
         }
         
+        public static GlobalFloat GetNew()
+        {
+            return (GlobalFloat)System.Activator.CreateInstance(typeof(GlobalFloat));
+        }
     }
     public partial class GlobalFloatCommon : GlobalCommon
     {

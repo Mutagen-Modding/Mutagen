@@ -977,6 +977,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Quadrant = default(AlphaLayer.QuadrantEnum);
         }
         
+        public static BaseLayer GetNew()
+        {
+            return new BaseLayer();
+        }
     }
     public partial class BaseLayerCommon
     {

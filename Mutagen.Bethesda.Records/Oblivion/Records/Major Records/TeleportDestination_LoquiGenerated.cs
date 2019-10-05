@@ -847,6 +847,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Rotation = default(P3Float);
         }
         
+        public static TeleportDestination GetNew()
+        {
+            return new TeleportDestination();
+        }
     }
     public partial class TeleportDestinationCommon
     {

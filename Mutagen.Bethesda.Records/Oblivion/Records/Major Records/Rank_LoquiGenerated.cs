@@ -1022,6 +1022,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Insignia_Unset();
         }
         
+        public static Rank GetNew()
+        {
+            return new Rank();
+        }
     }
     public partial class RankCommon
     {

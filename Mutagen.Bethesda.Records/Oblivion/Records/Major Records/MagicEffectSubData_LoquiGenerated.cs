@@ -989,6 +989,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.ConstantEffectBarterFactor = default(Single);
         }
         
+        public static MagicEffectSubData GetNew()
+        {
+            return new MagicEffectSubData();
+        }
     }
     public partial class MagicEffectSubDataCommon
     {

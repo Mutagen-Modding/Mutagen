@@ -1536,6 +1536,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IWeaponInternal)item);
         }
         
+        public static Weapon GetNew()
+        {
+            return (Weapon)System.Activator.CreateInstance(typeof(Weapon));
+        }
     }
     public partial class WeaponCommon : ItemAbstractCommon
     {

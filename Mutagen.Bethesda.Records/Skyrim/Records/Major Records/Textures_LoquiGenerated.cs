@@ -1312,6 +1312,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.BacklightMaskOrSpecular_Unset();
         }
         
+        public static Textures GetNew()
+        {
+            return new Textures();
+        }
     }
     public partial class TexturesCommon
     {

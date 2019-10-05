@@ -862,6 +862,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IGlobalIntInternal)item);
         }
         
+        public static GlobalInt GetNew()
+        {
+            return (GlobalInt)System.Activator.CreateInstance(typeof(GlobalInt));
+        }
     }
     public partial class GlobalIntCommon : GlobalCommon
     {

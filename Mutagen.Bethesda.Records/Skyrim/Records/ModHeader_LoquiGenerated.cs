@@ -1451,6 +1451,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.INCC_Unset();
         }
         
+        public static ModHeader GetNew()
+        {
+            return new ModHeader();
+        }
     }
     public partial class ModHeaderCommon
     {

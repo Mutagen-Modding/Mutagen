@@ -1057,6 +1057,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.ResultScript_Unset();
         }
         
+        public static LogEntry GetNew()
+        {
+            return new LogEntry();
+        }
     }
     public partial class LogEntryCommon
     {

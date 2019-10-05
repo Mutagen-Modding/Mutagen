@@ -847,6 +847,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Radius = default(Single);
         }
         
+        public static AIPackageLocation GetNew()
+        {
+            return new AIPackageLocation();
+        }
     }
     public partial class AIPackageLocationCommon
     {

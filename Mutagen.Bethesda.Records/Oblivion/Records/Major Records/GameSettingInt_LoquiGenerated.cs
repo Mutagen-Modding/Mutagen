@@ -859,6 +859,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IGameSettingIntInternal)item);
         }
         
+        public static GameSettingInt GetNew()
+        {
+            return (GameSettingInt)System.Activator.CreateInstance(typeof(GameSettingInt));
+        }
     }
     public partial class GameSettingIntCommon : GameSettingCommon
     {

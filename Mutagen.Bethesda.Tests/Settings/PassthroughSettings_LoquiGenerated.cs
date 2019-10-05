@@ -899,6 +899,10 @@ namespace Mutagen.Bethesda.Tests.Internals
             item.TestFolder = default(Boolean);
         }
         
+        public static PassthroughSettings GetNew()
+        {
+            return new PassthroughSettings();
+        }
     }
     public partial class PassthroughSettingsCommon
     {

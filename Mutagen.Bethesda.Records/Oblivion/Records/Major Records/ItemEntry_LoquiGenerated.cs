@@ -835,6 +835,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Count_Unset();
         }
         
+        public static ItemEntry GetNew()
+        {
+            return new ItemEntry();
+        }
     }
     public partial class ItemEntryCommon
     {

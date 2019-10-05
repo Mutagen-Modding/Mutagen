@@ -2406,6 +2406,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ICombatStyleInternal)item);
         }
         
+        public static CombatStyle GetNew()
+        {
+            return (CombatStyle)System.Activator.CreateInstance(typeof(CombatStyle));
+        }
     }
     public partial class CombatStyleCommon : OblivionMajorRecordCommon
     {

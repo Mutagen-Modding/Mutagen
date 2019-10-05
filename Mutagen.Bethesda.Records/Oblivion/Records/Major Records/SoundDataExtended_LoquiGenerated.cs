@@ -819,6 +819,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ISoundDataExtendedInternal)item);
         }
         
+        public static SoundDataExtended GetNew()
+        {
+            return new SoundDataExtended();
+        }
     }
     public partial class SoundDataExtendedCommon : SoundDataCommon
     {

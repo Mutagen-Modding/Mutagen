@@ -1000,6 +1000,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IEyeInternal)item);
         }
         
+        public static Eye GetNew()
+        {
+            return (Eye)System.Activator.CreateInstance(typeof(Eye));
+        }
     }
     public partial class EyeCommon : OblivionMajorRecordCommon
     {

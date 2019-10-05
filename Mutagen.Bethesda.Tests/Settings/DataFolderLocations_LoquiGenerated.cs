@@ -783,6 +783,10 @@ namespace Mutagen.Bethesda.Tests.Internals
             item.Skyrim = default(String);
         }
         
+        public static DataFolderLocations GetNew()
+        {
+            return new DataFolderLocations();
+        }
     }
     public partial class DataFolderLocationsCommon
     {

@@ -798,6 +798,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Second = default(P3Int16);
         }
         
+        public static ObjectBounds GetNew()
+        {
+            return new ObjectBounds();
+        }
     }
     public partial class ObjectBoundsCommon
     {

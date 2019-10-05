@@ -933,6 +933,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Items.Unset();
         }
         
+        public static CellBlock GetNew()
+        {
+            return new CellBlock();
+        }
         #region Mutagen
         public IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(ICellBlockInternal obj)
         {

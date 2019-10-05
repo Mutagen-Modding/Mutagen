@@ -820,6 +820,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Fluff = default(Byte[]);
         }
         
+        public static ClassTraining GetNew()
+        {
+            return new ClassTraining();
+        }
     }
     public partial class ClassTrainingCommon
     {

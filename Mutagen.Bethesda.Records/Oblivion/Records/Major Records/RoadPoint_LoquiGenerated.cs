@@ -832,6 +832,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Connections.Clear();
         }
         
+        public static RoadPoint GetNew()
+        {
+            return new RoadPoint();
+        }
     }
     public partial class RoadPointCommon
     {

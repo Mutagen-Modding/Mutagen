@@ -1061,6 +1061,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IIdleAnimationInternal)item);
         }
         
+        public static IdleAnimation GetNew()
+        {
+            return (IdleAnimation)System.Activator.CreateInstance(typeof(IdleAnimation));
+        }
     }
     public partial class IdleAnimationCommon : OblivionMajorRecordCommon
     {

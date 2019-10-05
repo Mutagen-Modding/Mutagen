@@ -906,6 +906,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IScriptInternal)item);
         }
         
+        public static Script GetNew()
+        {
+            return (Script)System.Activator.CreateInstance(typeof(Script));
+        }
     }
     public partial class ScriptCommon : OblivionMajorRecordCommon
     {

@@ -766,6 +766,10 @@ namespace Mutagen.Bethesda.Examples.Internals
             item.ModFilePath = default(String);
         }
         
+        public static MainVM GetNew()
+        {
+            return new MainVM();
+        }
     }
     public partial class MainVMCommon
     {

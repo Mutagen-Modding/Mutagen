@@ -1285,6 +1285,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IAlchemicalApparatusInternal)item);
         }
         
+        public static AlchemicalApparatus GetNew()
+        {
+            return (AlchemicalApparatus)System.Activator.CreateInstance(typeof(AlchemicalApparatus));
+        }
     }
     public partial class AlchemicalApparatusCommon : ItemAbstractCommon
     {

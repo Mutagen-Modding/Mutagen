@@ -1072,6 +1072,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IBirthsignInternal)item);
         }
         
+        public static Birthsign GetNew()
+        {
+            return (Birthsign)System.Activator.CreateInstance(typeof(Birthsign));
+        }
     }
     public partial class BirthsignCommon : OblivionMajorRecordCommon
     {

@@ -6376,6 +6376,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ClearPartial();
         }
         
+        public static OblivionMod GetNew()
+        {
+            return (OblivionMod)System.Activator.CreateInstance(typeof(OblivionMod));
+        }
         #region Mutagen
         public IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(IOblivionModInternal obj)
         {

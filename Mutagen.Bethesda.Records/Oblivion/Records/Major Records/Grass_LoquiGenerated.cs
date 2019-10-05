@@ -1372,6 +1372,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IGrassInternal)item);
         }
         
+        public static Grass GetNew()
+        {
+            return (Grass)System.Activator.CreateInstance(typeof(Grass));
+        }
     }
     public partial class GrassCommon : OblivionMajorRecordCommon
     {

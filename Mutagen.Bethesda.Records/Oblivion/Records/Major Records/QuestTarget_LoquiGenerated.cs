@@ -943,6 +943,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Conditions.Unset();
         }
         
+        public static QuestTarget GetNew()
+        {
+            return new QuestTarget();
+        }
     }
     public partial class QuestTargetCommon
     {

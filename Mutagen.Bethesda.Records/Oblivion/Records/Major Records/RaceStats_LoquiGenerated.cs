@@ -915,6 +915,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Luck = default(Byte);
         }
         
+        public static RaceStats GetNew()
+        {
+            return new RaceStats();
+        }
     }
     public partial class RaceStatsCommon
     {

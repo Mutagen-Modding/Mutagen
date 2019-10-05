@@ -813,6 +813,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.NextObjectID = default(UInt32);
         }
         
+        public static ModStats GetNew()
+        {
+            return new ModStats();
+        }
     }
     public partial class ModStatsCommon
     {

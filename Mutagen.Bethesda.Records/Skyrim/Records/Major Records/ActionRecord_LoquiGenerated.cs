@@ -868,6 +868,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IActionRecordInternal)item);
         }
         
+        public static ActionRecord GetNew()
+        {
+            return (ActionRecord)System.Activator.CreateInstance(typeof(ActionRecord));
+        }
     }
     public partial class ActionRecordCommon : SkyrimMajorRecordCommon
     {

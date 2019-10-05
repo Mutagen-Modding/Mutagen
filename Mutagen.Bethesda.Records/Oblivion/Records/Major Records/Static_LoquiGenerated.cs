@@ -870,6 +870,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IStaticInternal)item);
         }
         
+        public static Static GetNew()
+        {
+            return (Static)System.Activator.CreateInstance(typeof(Static));
+        }
     }
     public partial class StaticCommon : OblivionMajorRecordCommon
     {

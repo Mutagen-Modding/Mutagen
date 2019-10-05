@@ -1228,6 +1228,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IFloraInternal)item);
         }
         
+        public static Flora GetNew()
+        {
+            return (Flora)System.Activator.CreateInstance(typeof(Flora));
+        }
     }
     public partial class FloraCommon : OblivionMajorRecordCommon
     {

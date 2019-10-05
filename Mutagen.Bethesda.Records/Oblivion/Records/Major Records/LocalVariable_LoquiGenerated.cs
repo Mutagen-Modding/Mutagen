@@ -1017,6 +1017,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Name_Unset();
         }
         
+        public static LocalVariable GetNew()
+        {
+            return new LocalVariable();
+        }
     }
     public partial class LocalVariableCommon
     {

@@ -831,6 +831,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Unknown2 = default(Single);
         }
         
+        public static DistantLODData GetNew()
+        {
+            return new DistantLODData();
+        }
     }
     public partial class DistantLODDataCommon
     {

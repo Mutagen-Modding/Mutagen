@@ -1612,6 +1612,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IMagicEffectInternal)item);
         }
         
+        public static MagicEffect GetNew()
+        {
+            return (MagicEffect)System.Activator.CreateInstance(typeof(MagicEffect));
+        }
     }
     public partial class MagicEffectCommon : OblivionMajorRecordCommon
     {

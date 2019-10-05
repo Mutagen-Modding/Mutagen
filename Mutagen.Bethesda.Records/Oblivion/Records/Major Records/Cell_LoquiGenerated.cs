@@ -1913,6 +1913,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ICellInternal)item);
         }
         
+        public static Cell GetNew()
+        {
+            return (Cell)System.Activator.CreateInstance(typeof(Cell));
+        }
         #region Mutagen
         public IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(ICellInternal obj)
         {

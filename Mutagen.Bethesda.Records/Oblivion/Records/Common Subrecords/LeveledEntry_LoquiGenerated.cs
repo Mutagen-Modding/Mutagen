@@ -1009,6 +1009,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Fluff2_Unset();
         }
         
+        public static LeveledEntry<T> GetNew()
+        {
+            return new LeveledEntry<T>();
+        }
     }
     public partial class LeveledEntryCommon<T>
         where T : class, IOblivionMajorRecordInternalGetter, IXmlItem, IBinaryItem

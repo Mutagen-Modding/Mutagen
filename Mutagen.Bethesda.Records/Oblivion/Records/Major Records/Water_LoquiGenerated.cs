@@ -2441,6 +2441,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IWaterInternal)item);
         }
         
+        public static Water GetNew()
+        {
+            return (Water)System.Activator.CreateInstance(typeof(Water));
+        }
     }
     public partial class WaterCommon : OblivionMajorRecordCommon
     {

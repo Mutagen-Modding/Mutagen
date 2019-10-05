@@ -1146,6 +1146,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IEnchantmentInternal)item);
         }
         
+        public static Enchantment GetNew()
+        {
+            return (Enchantment)System.Activator.CreateInstance(typeof(Enchantment));
+        }
     }
     public partial class EnchantmentCommon : OblivionMajorRecordCommon
     {

@@ -1560,6 +1560,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ILightInternal)item);
         }
         
+        public static Light GetNew()
+        {
+            return (Light)System.Activator.CreateInstance(typeof(Light));
+        }
     }
     public partial class LightCommon : ItemAbstractCommon
     {

@@ -1069,6 +1069,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IFurnatureInternal)item);
         }
         
+        public static Furnature GetNew()
+        {
+            return (Furnature)System.Activator.CreateInstance(typeof(Furnature));
+        }
     }
     public partial class FurnatureCommon : OblivionMajorRecordCommon
     {

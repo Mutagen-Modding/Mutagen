@@ -840,6 +840,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.RelatedWaterUnderwater = default(Water);
         }
         
+        public static RelatedWaters GetNew()
+        {
+            return new RelatedWaters();
+        }
     }
     public partial class RelatedWatersCommon
     {

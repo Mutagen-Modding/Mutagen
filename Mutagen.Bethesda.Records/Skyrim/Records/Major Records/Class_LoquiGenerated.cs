@@ -1963,6 +1963,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IClassInternal)item);
         }
         
+        public static Class GetNew()
+        {
+            return (Class)System.Activator.CreateInstance(typeof(Class));
+        }
     }
     public partial class ClassCommon : SkyrimMajorRecordCommon
     {

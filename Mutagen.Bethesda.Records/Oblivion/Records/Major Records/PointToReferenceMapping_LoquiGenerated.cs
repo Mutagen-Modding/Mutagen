@@ -804,6 +804,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Points.Clear();
         }
         
+        public static PointToReferenceMapping GetNew()
+        {
+            return new PointToReferenceMapping();
+        }
     }
     public partial class PointToReferenceMappingCommon
     {

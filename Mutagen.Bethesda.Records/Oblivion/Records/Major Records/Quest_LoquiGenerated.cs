@@ -1296,6 +1296,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IQuestInternal)item);
         }
         
+        public static Quest GetNew()
+        {
+            return (Quest)System.Activator.CreateInstance(typeof(Quest));
+        }
     }
     public partial class QuestCommon : OblivionMajorRecordCommon
     {

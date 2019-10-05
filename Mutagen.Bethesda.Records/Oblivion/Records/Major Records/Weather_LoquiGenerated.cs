@@ -2492,6 +2492,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IWeatherInternal)item);
         }
         
+        public static Weather GetNew()
+        {
+            return (Weather)System.Activator.CreateInstance(typeof(Weather));
+        }
     }
     public partial class WeatherCommon : OblivionMajorRecordCommon
     {

@@ -1804,6 +1804,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ClearPartial();
         }
         
+        public static SkyrimMod GetNew()
+        {
+            return (SkyrimMod)System.Activator.CreateInstance(typeof(SkyrimMod));
+        }
         #region Mutagen
         public IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(ISkyrimModInternal obj)
         {

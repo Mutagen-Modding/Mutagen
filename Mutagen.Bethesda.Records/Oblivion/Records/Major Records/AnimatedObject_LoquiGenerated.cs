@@ -932,6 +932,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IAnimatedObjectInternal)item);
         }
         
+        public static AnimatedObject GetNew()
+        {
+            return (AnimatedObject)System.Activator.CreateInstance(typeof(AnimatedObject));
+        }
     }
     public partial class AnimatedObjectCommon : OblivionMajorRecordCommon
     {

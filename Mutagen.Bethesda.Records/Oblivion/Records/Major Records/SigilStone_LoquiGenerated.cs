@@ -1295,6 +1295,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ISigilStoneInternal)item);
         }
         
+        public static SigilStone GetNew()
+        {
+            return (SigilStone)System.Activator.CreateInstance(typeof(SigilStone));
+        }
     }
     public partial class SigilStoneCommon : ItemAbstractCommon
     {

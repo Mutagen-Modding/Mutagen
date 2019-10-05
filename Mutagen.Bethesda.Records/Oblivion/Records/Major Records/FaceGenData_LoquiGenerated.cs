@@ -962,6 +962,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.SymmetricTexture_Unset();
         }
         
+        public static FaceGenData GetNew()
+        {
+            return new FaceGenData();
+        }
     }
     public partial class FaceGenDataCommon
     {

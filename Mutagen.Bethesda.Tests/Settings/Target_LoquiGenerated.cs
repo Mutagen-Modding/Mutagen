@@ -906,6 +906,10 @@ namespace Mutagen.Bethesda.Tests.Internals
             item.Interest = default(RecordInterest);
         }
         
+        public static Target GetNew()
+        {
+            return new Target();
+        }
     }
     public partial class TargetCommon
     {

@@ -846,6 +846,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IRegionDataObjectsInternal)item);
         }
         
+        public static RegionDataObjects GetNew()
+        {
+            return new RegionDataObjects();
+        }
     }
     public partial class RegionDataObjectsCommon : RegionDataCommon
     {

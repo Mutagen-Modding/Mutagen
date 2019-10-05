@@ -804,6 +804,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Female = default(Race);
         }
         
+        public static RaceVoices GetNew()
+        {
+            return new RaceVoices();
+        }
     }
     public partial class RaceVoicesCommon
     {

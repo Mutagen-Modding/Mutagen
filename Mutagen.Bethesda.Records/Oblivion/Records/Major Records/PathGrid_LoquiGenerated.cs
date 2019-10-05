@@ -1024,6 +1024,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IPathGridInternal)item);
         }
         
+        public static PathGrid GetNew()
+        {
+            return (PathGrid)System.Activator.CreateInstance(typeof(PathGrid));
+        }
     }
     public partial class PathGridCommon : OblivionMajorRecordCommon
     {

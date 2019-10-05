@@ -877,6 +877,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Flags = default(LockInformation.Flag);
         }
         
+        public static LockInformation GetNew()
+        {
+            return new LockInformation();
+        }
     }
     public partial class LockInformationCommon
     {

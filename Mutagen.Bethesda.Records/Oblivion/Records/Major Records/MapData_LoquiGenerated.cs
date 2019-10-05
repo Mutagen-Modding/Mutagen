@@ -831,6 +831,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.CellCoordinatesSECell = default(P2Int16);
         }
         
+        public static MapData GetNew()
+        {
+            return new MapData();
+        }
     }
     public partial class MapDataCommon
     {

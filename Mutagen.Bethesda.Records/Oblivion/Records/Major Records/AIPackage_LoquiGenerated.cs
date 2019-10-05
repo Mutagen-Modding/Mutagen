@@ -1228,6 +1228,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IAIPackageInternal)item);
         }
         
+        public static AIPackage GetNew()
+        {
+            return (AIPackage)System.Activator.CreateInstance(typeof(AIPackage));
+        }
     }
     public partial class AIPackageCommon : OblivionMajorRecordCommon
     {

@@ -1137,6 +1137,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IFactionInternal)item);
         }
         
+        public static Faction GetNew()
+        {
+            return (Faction)System.Activator.CreateInstance(typeof(Faction));
+        }
     }
     public partial class FactionCommon : OblivionMajorRecordCommon
     {

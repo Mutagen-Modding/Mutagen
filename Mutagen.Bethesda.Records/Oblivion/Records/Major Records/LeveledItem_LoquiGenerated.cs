@@ -1033,6 +1033,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ILeveledItemInternal)item);
         }
         
+        public static LeveledItem GetNew()
+        {
+            return (LeveledItem)System.Activator.CreateInstance(typeof(LeveledItem));
+        }
     }
     public partial class LeveledItemCommon : ItemAbstractCommon
     {

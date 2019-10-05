@@ -899,6 +899,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Type = default(ScriptFields.ScriptType);
         }
         
+        public static ScriptMetaSummary GetNew()
+        {
+            return new ScriptMetaSummary();
+        }
     }
     public partial class ScriptMetaSummaryCommon
     {

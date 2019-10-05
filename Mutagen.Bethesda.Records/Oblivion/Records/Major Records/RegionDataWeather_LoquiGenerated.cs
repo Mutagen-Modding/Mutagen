@@ -846,6 +846,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IRegionDataWeatherInternal)item);
         }
         
+        public static RegionDataWeather GetNew()
+        {
+            return new RegionDataWeather();
+        }
     }
     public partial class RegionDataWeatherCommon : RegionDataCommon
     {

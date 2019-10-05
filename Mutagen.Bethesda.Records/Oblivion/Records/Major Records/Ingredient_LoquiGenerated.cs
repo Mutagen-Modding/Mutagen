@@ -1329,6 +1329,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IIngredientInternal)item);
         }
         
+        public static Ingredient GetNew()
+        {
+            return (Ingredient)System.Activator.CreateInstance(typeof(Ingredient));
+        }
     }
     public partial class IngredientCommon : ItemAbstractCommon
     {

@@ -1261,6 +1261,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Unknown2 = default(Byte[]);
         }
         
+        public static RegionDataObject GetNew()
+        {
+            return new RegionDataObject();
+        }
     }
     public partial class RegionDataObjectCommon
     {

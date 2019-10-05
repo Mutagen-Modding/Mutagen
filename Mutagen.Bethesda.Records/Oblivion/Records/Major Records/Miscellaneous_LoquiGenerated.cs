@@ -1200,6 +1200,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IMiscellaneousInternal)item);
         }
         
+        public static Miscellaneous GetNew()
+        {
+            return (Miscellaneous)System.Activator.CreateInstance(typeof(Miscellaneous));
+        }
     }
     public partial class MiscellaneousCommon : ItemAbstractCommon
     {

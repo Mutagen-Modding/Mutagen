@@ -1014,6 +1014,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IArmorInternal)item);
         }
         
+        public static Armor GetNew()
+        {
+            return (Armor)System.Activator.CreateInstance(typeof(Armor));
+        }
     }
     public partial class ArmorCommon : ClothingAbstractCommon
     {

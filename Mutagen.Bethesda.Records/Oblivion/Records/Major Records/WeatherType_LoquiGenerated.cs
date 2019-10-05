@@ -861,6 +861,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Night = default(Color);
         }
         
+        public static WeatherType GetNew()
+        {
+            return new WeatherType();
+        }
     }
     public partial class WeatherTypeCommon
     {

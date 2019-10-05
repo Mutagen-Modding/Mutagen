@@ -1361,6 +1361,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IPlacedCreatureInternal)item);
         }
         
+        public static PlacedCreature GetNew()
+        {
+            return (PlacedCreature)System.Activator.CreateInstance(typeof(PlacedCreature));
+        }
     }
     public partial class PlacedCreatureCommon : OblivionMajorRecordCommon
     {

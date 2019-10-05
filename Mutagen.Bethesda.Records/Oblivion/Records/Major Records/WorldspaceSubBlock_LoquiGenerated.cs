@@ -957,6 +957,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Items.Unset();
         }
         
+        public static WorldspaceSubBlock GetNew()
+        {
+            return new WorldspaceSubBlock();
+        }
         #region Mutagen
         public IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(IWorldspaceSubBlockInternal obj)
         {

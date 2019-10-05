@@ -1425,6 +1425,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.PowerAttackFatigueModMult = default(Single);
         }
         
+        public static CombatStyleAdvanced GetNew()
+        {
+            return new CombatStyleAdvanced();
+        }
     }
     public partial class CombatStyleAdvancedCommon
     {

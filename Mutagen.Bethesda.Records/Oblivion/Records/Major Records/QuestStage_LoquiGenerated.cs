@@ -864,6 +864,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.LogEntries.Unset();
         }
         
+        public static QuestStage GetNew()
+        {
+            return new QuestStage();
+        }
     }
     public partial class QuestStageCommon
     {

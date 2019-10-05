@@ -873,6 +873,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Chance_Unset();
         }
         
+        public static SoundItem GetNew()
+        {
+            return new SoundItem();
+        }
     }
     public partial class SoundItemCommon
     {

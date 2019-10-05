@@ -962,6 +962,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ISoundInternal)item);
         }
         
+        public static Sound GetNew()
+        {
+            return (Sound)System.Activator.CreateInstance(typeof(Sound));
+        }
     }
     public partial class SoundCommon : OblivionMajorRecordCommon
     {

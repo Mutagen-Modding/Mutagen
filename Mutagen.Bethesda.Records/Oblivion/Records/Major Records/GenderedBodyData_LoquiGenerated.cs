@@ -907,6 +907,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Female_Unset();
         }
         
+        public static GenderedBodyData GetNew()
+        {
+            return new GenderedBodyData();
+        }
     }
     public partial class GenderedBodyDataCommon
     {

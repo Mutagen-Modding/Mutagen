@@ -1080,6 +1080,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Color = default(Color);
         }
         
+        public static Decal GetNew()
+        {
+            return new Decal();
+        }
     }
     public partial class DecalCommon
     {

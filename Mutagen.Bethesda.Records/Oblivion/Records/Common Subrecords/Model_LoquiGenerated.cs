@@ -896,6 +896,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Hashes_Unset();
         }
         
+        public static Model GetNew()
+        {
+            return new Model();
+        }
     }
     public partial class ModelCommon
     {

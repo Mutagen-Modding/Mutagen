@@ -950,6 +950,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Items.Clear();
         }
         
+        public static Group<T> GetNew()
+        {
+            return (Group<T>)System.Activator.CreateInstance(typeof(Group<T>));
+        }
         #region Mutagen
         public IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(IGroupInternal<T> obj)
         {

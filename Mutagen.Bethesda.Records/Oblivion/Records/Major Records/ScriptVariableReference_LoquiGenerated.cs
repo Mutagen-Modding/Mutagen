@@ -771,6 +771,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IScriptVariableReferenceInternal)item);
         }
         
+        public static ScriptVariableReference GetNew()
+        {
+            return new ScriptVariableReference();
+        }
     }
     public partial class ScriptVariableReferenceCommon : ScriptReferenceCommon
     {

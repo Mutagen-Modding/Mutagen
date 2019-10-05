@@ -943,6 +943,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Types.Unset();
         }
         
+        public static MapMarker GetNew()
+        {
+            return new MapMarker();
+        }
     }
     public partial class MapMarkerCommon
     {

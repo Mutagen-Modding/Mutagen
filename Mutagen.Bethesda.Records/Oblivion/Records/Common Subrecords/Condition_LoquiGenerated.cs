@@ -984,6 +984,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.ThirdParameter = default(Int32);
         }
         
+        public static Condition GetNew()
+        {
+            return new Condition();
+        }
     }
     public partial class ConditionCommon
     {

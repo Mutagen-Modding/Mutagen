@@ -1121,6 +1121,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.References.Unset();
         }
         
+        public static ScriptFields GetNew()
+        {
+            return new ScriptFields();
+        }
     }
     public partial class ScriptFieldsCommon
     {

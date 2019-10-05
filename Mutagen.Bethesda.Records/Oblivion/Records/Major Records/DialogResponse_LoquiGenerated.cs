@@ -1118,6 +1118,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.ActorNotes_Unset();
         }
         
+        public static DialogResponse GetNew()
+        {
+            return new DialogResponse();
+        }
     }
     public partial class DialogResponseCommon
     {

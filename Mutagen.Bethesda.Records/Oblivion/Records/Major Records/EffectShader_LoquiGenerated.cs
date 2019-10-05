@@ -3381,6 +3381,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IEffectShaderInternal)item);
         }
         
+        public static EffectShader GetNew()
+        {
+            return (EffectShader)System.Activator.CreateInstance(typeof(EffectShader));
+        }
     }
     public partial class EffectShaderCommon : OblivionMajorRecordCommon
     {

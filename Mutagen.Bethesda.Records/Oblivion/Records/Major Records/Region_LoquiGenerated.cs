@@ -1361,6 +1361,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IRegionInternal)item);
         }
         
+        public static Region GetNew()
+        {
+            return (Region)System.Activator.CreateInstance(typeof(Region));
+        }
     }
     public partial class RegionCommon : OblivionMajorRecordCommon
     {

@@ -1329,6 +1329,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IPotionInternal)item);
         }
         
+        public static Potion GetNew()
+        {
+            return (Potion)System.Activator.CreateInstance(typeof(Potion));
+        }
     }
     public partial class PotionCommon : ItemAbstractCommon
     {

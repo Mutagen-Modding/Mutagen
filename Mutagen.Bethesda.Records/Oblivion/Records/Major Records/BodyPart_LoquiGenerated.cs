@@ -891,6 +891,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Icon_Unset();
         }
         
+        public static BodyPart GetNew()
+        {
+            return new BodyPart();
+        }
     }
     public partial class BodyPartCommon
     {

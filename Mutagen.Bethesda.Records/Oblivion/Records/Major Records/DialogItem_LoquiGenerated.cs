@@ -1400,6 +1400,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IDialogItemInternal)item);
         }
         
+        public static DialogItem GetNew()
+        {
+            return (DialogItem)System.Activator.CreateInstance(typeof(DialogItem));
+        }
     }
     public partial class DialogItemCommon : OblivionMajorRecordCommon
     {

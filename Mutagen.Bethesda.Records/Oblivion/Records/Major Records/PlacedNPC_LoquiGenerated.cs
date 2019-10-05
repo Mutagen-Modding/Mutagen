@@ -1513,6 +1513,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IPlacedNPCInternal)item);
         }
         
+        public static PlacedNPC GetNew()
+        {
+            return (PlacedNPC)System.Activator.CreateInstance(typeof(PlacedNPC));
+        }
     }
     public partial class PlacedNPCCommon : OblivionMajorRecordCommon
     {

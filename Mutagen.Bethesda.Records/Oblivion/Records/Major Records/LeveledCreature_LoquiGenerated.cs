@@ -1094,6 +1094,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ILeveledCreatureInternal)item);
         }
         
+        public static LeveledCreature GetNew()
+        {
+            return (LeveledCreature)System.Activator.CreateInstance(typeof(LeveledCreature));
+        }
     }
     public partial class LeveledCreatureCommon : NPCSpawnCommon
     {

@@ -780,6 +780,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Point = default(P3Float);
         }
         
+        public static InterCellPoint GetNew()
+        {
+            return new InterCellPoint();
+        }
     }
     public partial class InterCellPointCommon
     {

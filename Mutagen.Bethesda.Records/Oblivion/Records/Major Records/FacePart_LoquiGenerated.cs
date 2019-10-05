@@ -969,6 +969,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Icon_Unset();
         }
         
+        public static FacePart GetNew()
+        {
+            return new FacePart();
+        }
     }
     public partial class FacePartCommon
     {

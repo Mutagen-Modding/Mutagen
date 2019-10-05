@@ -1012,6 +1012,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ILoadScreenInternal)item);
         }
         
+        public static LoadScreen GetNew()
+        {
+            return (LoadScreen)System.Activator.CreateInstance(typeof(LoadScreen));
+        }
     }
     public partial class LoadScreenCommon : OblivionMajorRecordCommon
     {

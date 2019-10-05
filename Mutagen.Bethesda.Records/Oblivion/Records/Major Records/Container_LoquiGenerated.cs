@@ -1286,6 +1286,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IContainerInternal)item);
         }
         
+        public static Container GetNew()
+        {
+            return (Container)System.Activator.CreateInstance(typeof(Container));
+        }
     }
     public partial class ContainerCommon : OblivionMajorRecordCommon
     {

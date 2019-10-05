@@ -888,6 +888,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.BodyParts.Unset();
         }
         
+        public static BodyData GetNew()
+        {
+            return new BodyData();
+        }
     }
     public partial class BodyDataCommon
     {

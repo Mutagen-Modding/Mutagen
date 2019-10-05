@@ -1096,6 +1096,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ISpellUnleveledInternal)item);
         }
         
+        public static SpellUnleveled GetNew()
+        {
+            return (SpellUnleveled)System.Activator.CreateInstance(typeof(SpellUnleveled));
+        }
     }
     public partial class SpellUnleveledCommon : SpellCommon
     {

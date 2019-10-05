@@ -1254,6 +1254,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IDoorInternal)item);
         }
         
+        public static Door GetNew()
+        {
+            return (Door)System.Activator.CreateInstance(typeof(Door));
+        }
     }
     public partial class DoorCommon : OblivionMajorRecordCommon
     {

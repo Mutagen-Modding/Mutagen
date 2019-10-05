@@ -1532,6 +1532,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ISkillRecordInternal)item);
         }
         
+        public static SkillRecord GetNew()
+        {
+            return (SkillRecord)System.Activator.CreateInstance(typeof(SkillRecord));
+        }
     }
     public partial class SkillRecordCommon : OblivionMajorRecordCommon
     {

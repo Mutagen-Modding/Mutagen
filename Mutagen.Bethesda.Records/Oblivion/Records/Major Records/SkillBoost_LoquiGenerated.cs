@@ -780,6 +780,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Boost = default(SByte);
         }
         
+        public static SkillBoost GetNew()
+        {
+            return new SkillBoost();
+        }
     }
     public partial class SkillBoostCommon
     {

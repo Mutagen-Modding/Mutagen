@@ -902,6 +902,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Items.Clear();
         }
         
+        public static ListGroup<T> GetNew()
+        {
+            return new ListGroup<T>();
+        }
         #region Mutagen
         public IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(IListGroupInternal<T> obj)
         {

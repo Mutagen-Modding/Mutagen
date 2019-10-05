@@ -799,6 +799,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Chance = default(Int32);
         }
         
+        public static WeatherChance GetNew()
+        {
+            return new WeatherChance();
+        }
     }
     public partial class WeatherChanceCommon
     {
