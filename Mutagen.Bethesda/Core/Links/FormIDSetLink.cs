@@ -75,7 +75,7 @@ namespace Mutagen.Bethesda
             this.RaiseAndSetIfChanged(ref this._Item, value, ref this._HasBeenSet, hasBeenSet, nameof(Item), nameof(HasBeenSet));
         }
 
-        public void SetLink(ILink<T> value)
+        public void SetLink(ILinkGetter<T> value)
         {
             this.Set(value.Item);
         }
@@ -116,7 +116,7 @@ namespace Mutagen.Bethesda
             this.HasBeenSet = true;
         }
 
-        public void SetLink(ISetLink<T> rhs, ISetLink<T> def)
+        public void SetLink(ISetLinkGetter<T> rhs, ISetLinkGetter<T> def)
         {
             if (rhs.HasBeenSet)
             {
@@ -134,7 +134,7 @@ namespace Mutagen.Bethesda
             }
         }
 
-        public void Set(ILink<T> link)
+        public void Set(ILinkGetter<T> link)
         {
             if (link.Linked)
             {
@@ -146,7 +146,7 @@ namespace Mutagen.Bethesda
             }
         }
 
-        public void Set<R>(ILink<R> link)
+        public void Set<R>(ILinkGetter<R> link)
             where R : T
         {
             if (link.Linked)

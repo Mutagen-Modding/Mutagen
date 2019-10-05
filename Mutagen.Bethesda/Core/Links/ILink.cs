@@ -37,9 +37,9 @@ namespace Mutagen.Bethesda
     {
         new T Item { get; set; }
         void Set(FormKey form);
-        void Set(ILink<T> link);
-        void Set<R>(ILink<R> link) where R : T;
-        void SetLink(ILink<T> value);
+        void Set(ILinkGetter<T> link);
+        void Set<R>(ILinkGetter<R> link) where R : T;
+        void SetLink(ILinkGetter<T> value);
         void Unset();
     }
 
@@ -53,6 +53,6 @@ namespace Mutagen.Bethesda
         where T : IMajorRecordCommonGetter
     {
         new bool HasBeenSet { get; set; }
-        void SetLink(ISetLink<T> rhs, ISetLink<T> def);
+        void SetLink(ISetLinkGetter<T> rhs, ISetLinkGetter<T> def);
     }
 }

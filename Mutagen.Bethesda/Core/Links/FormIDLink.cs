@@ -74,7 +74,7 @@ namespace Mutagen.Bethesda
             this.Set(formKey.Value);
         }
 
-        public void SetLink(ILink<T> value)
+        public void SetLink(ILinkGetter<T> value)
         {
             this.Set(value.Item);
         }
@@ -95,7 +95,7 @@ namespace Mutagen.Bethesda
             }
         }
 
-        public void Set(ILink<T> link)
+        public void Set(ILinkGetter<T> link)
         {
             if (link.Linked)
             {
@@ -107,7 +107,7 @@ namespace Mutagen.Bethesda
             }
         }
 
-        public void Set<R>(ILink<R> link)
+        public void Set<R>(ILinkGetter<R> link)
             where R : T
         {
             if (link.Linked)
