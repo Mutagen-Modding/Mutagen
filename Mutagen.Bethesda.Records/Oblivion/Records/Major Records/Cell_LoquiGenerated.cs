@@ -1041,37 +1041,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public Cell Copy(
-            Cell_CopyMask copyMask = null,
-            Cell def = null)
-        {
-            return Cell.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static Cell Copy(
-            Cell item,
-            Cell_CopyMask copyMask = null,
-            Cell def = null)
-        {
-            Cell ret;
-            if (item.GetType().Equals(typeof(Cell)))
-            {
-                ret = new Cell();
-            }
-            else
-            {
-                ret = (Cell)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((CellSetterCommon)((ICellInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -1913,10 +1882,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ICellInternal)item);
         }
         
-        public static Cell GetNew()
-        {
-            return (Cell)System.Activator.CreateInstance(typeof(Cell));
-        }
         #region Mutagen
         public IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(ICellInternal obj)
         {
@@ -2739,8 +2704,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     copyMask: copyMask?.Lighting.Specific);
                                 break;
                             case CopyOption.MakeCopy:
-                                item.Lighting = CellLighting.Copy(
-                                    rhsLightingItem,
+                                item.Lighting = rhsLightingItem.Copy(
                                     copyMask?.Lighting?.Specific,
                                     def: defLightingItem);
                                 break;
@@ -2976,10 +2940,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     copyMask: copyMask?.PathGrid.Specific);
                                 break;
                             case CopyOption.MakeCopy:
-                                item.PathGrid = PathGrid.Copy(
-                                    rhsPathGridItem,
-                                    copyMask?.PathGrid?.Specific,
+                                var copyRet = new PathGrid(rhsPathGridItem.FormKey);
+                                copyRet.CopyFieldsFrom(
+                                    rhs: rhsPathGridItem,
+                                    copyMask: copyMask?.PathGrid?.Specific,
                                     def: defPathGridItem);
+                                item.PathGrid = copyRet;
                                 break;
                             default:
                                 throw new NotImplementedException($"Unknown CopyOption {copyMask?.PathGrid?.Overall}. Cannot execute copy.");
@@ -3028,10 +2994,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     copyMask: copyMask?.Landscape.Specific);
                                 break;
                             case CopyOption.MakeCopy:
-                                item.Landscape = Landscape.Copy(
-                                    rhsLandscapeItem,
-                                    copyMask?.Landscape?.Specific,
+                                var copyRet = new Landscape(rhsLandscapeItem.FormKey);
+                                copyRet.CopyFieldsFrom(
+                                    rhs: rhsLandscapeItem,
+                                    copyMask: copyMask?.Landscape?.Specific,
                                     def: defLandscapeItem);
+                                item.Landscape = copyRet;
                                 break;
                             default:
                                 throw new NotImplementedException($"Unknown CopyOption {copyMask?.Landscape?.Overall}. Cannot execute copy.");

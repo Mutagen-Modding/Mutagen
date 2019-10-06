@@ -518,37 +518,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public Sound Copy(
-            Sound_CopyMask copyMask = null,
-            Sound def = null)
-        {
-            return Sound.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static Sound Copy(
-            Sound item,
-            Sound_CopyMask copyMask = null,
-            Sound def = null)
-        {
-            Sound ret;
-            if (item.GetType().Equals(typeof(Sound)))
-            {
-                ret = new Sound();
-            }
-            else
-            {
-                ret = (Sound)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((SoundSetterCommon)((ISoundInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -962,10 +931,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ISoundInternal)item);
         }
         
-        public static Sound GetNew()
-        {
-            return (Sound)System.Activator.CreateInstance(typeof(Sound));
-        }
     }
     public partial class SoundCommon : OblivionMajorRecordCommon
     {
@@ -1276,8 +1241,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     copyMask: copyMask?.Data.Specific);
                                 break;
                             case CopyOption.MakeCopy:
-                                item.Data = SoundData.Copy(
-                                    rhsDataItem,
+                                item.Data = rhsDataItem.Copy(
                                     copyMask?.Data?.Specific,
                                     def: defDataItem);
                                 break;

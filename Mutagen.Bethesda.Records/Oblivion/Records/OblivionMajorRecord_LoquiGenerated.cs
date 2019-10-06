@@ -328,29 +328,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public OblivionMajorRecord Copy(
-            OblivionMajorRecord_CopyMask copyMask = null,
-            OblivionMajorRecord def = null)
-        {
-            return OblivionMajorRecord.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static OblivionMajorRecord Copy(
-            OblivionMajorRecord item,
-            OblivionMajorRecord_CopyMask copyMask = null,
-            OblivionMajorRecord def = null)
-        {
-            OblivionMajorRecord ret = (OblivionMajorRecord)System.Activator.CreateInstance(item.GetType());
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((OblivionMajorRecordSetterCommon)((IOblivionMajorRecordInternalGetter)this).CommonSetterInstance()).Clear(this);

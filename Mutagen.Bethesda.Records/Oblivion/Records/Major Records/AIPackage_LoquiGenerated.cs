@@ -684,37 +684,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public AIPackage Copy(
-            AIPackage_CopyMask copyMask = null,
-            AIPackage def = null)
-        {
-            return AIPackage.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static AIPackage Copy(
-            AIPackage item,
-            AIPackage_CopyMask copyMask = null,
-            AIPackage def = null)
-        {
-            AIPackage ret;
-            if (item.GetType().Equals(typeof(AIPackage)))
-            {
-                ret = new AIPackage();
-            }
-            else
-            {
-                ret = (AIPackage)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((AIPackageSetterCommon)((IAIPackageInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -1228,10 +1197,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IAIPackageInternal)item);
         }
         
-        public static AIPackage GetNew()
-        {
-            return (AIPackage)System.Activator.CreateInstance(typeof(AIPackage));
-        }
     }
     public partial class AIPackageCommon : OblivionMajorRecordCommon
     {
@@ -1609,8 +1574,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     copyMask: copyMask?.Location.Specific);
                                 break;
                             case CopyOption.MakeCopy:
-                                item.Location = AIPackageLocation.Copy(
-                                    rhsLocationItem,
+                                item.Location = rhsLocationItem.Copy(
                                     copyMask?.Location?.Specific,
                                     def: defLocationItem);
                                 break;
@@ -1661,8 +1625,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     copyMask: copyMask?.Schedule.Specific);
                                 break;
                             case CopyOption.MakeCopy:
-                                item.Schedule = AIPackageSchedule.Copy(
-                                    rhsScheduleItem,
+                                item.Schedule = rhsScheduleItem.Copy(
                                     copyMask?.Schedule?.Specific,
                                     def: defScheduleItem);
                                 break;
@@ -1713,8 +1676,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     copyMask: copyMask?.Target.Specific);
                                 break;
                             case CopyOption.MakeCopy:
-                                item.Target = AIPackageTarget.Copy(
-                                    rhsTargetItem,
+                                item.Target = rhsTargetItem.Copy(
                                     copyMask?.Target?.Specific,
                                     def: defTargetItem);
                                 break;
@@ -1754,8 +1716,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return (Condition)r;
                                 case CopyOption.MakeCopy:
-                                    return Condition.Copy(
-                                        r,
+                                    return r.Copy(
                                         copyMask?.Conditions?.Specific,
                                         def: d);
                                 default:

@@ -705,37 +705,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public SigilStone Copy(
-            SigilStone_CopyMask copyMask = null,
-            SigilStone def = null)
-        {
-            return SigilStone.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static SigilStone Copy(
-            SigilStone item,
-            SigilStone_CopyMask copyMask = null,
-            SigilStone def = null)
-        {
-            SigilStone ret;
-            if (item.GetType().Equals(typeof(SigilStone)))
-            {
-                ret = new SigilStone();
-            }
-            else
-            {
-                ret = (SigilStone)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((SigilStoneSetterCommon)((ISigilStoneInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -1295,10 +1264,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ISigilStoneInternal)item);
         }
         
-        public static SigilStone GetNew()
-        {
-            return (SigilStone)System.Activator.CreateInstance(typeof(SigilStone));
-        }
     }
     public partial class SigilStoneCommon : ItemAbstractCommon
     {
@@ -1737,8 +1702,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     copyMask: copyMask?.Model.Specific);
                                 break;
                             case CopyOption.MakeCopy:
-                                item.Model = Model.Copy(
-                                    rhsModelItem,
+                                item.Model = rhsModelItem.Copy(
                                     copyMask?.Model?.Specific,
                                     def: defModelItem);
                                 break;
@@ -1827,8 +1791,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return (Effect)r;
                                 case CopyOption.MakeCopy:
-                                    return Effect.Copy(
-                                        r,
+                                    return r.Copy(
                                         copyMask?.Effects?.Specific,
                                         def: d);
                                 default:

@@ -695,37 +695,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public AlchemicalApparatus Copy(
-            AlchemicalApparatus_CopyMask copyMask = null,
-            AlchemicalApparatus def = null)
-        {
-            return AlchemicalApparatus.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static AlchemicalApparatus Copy(
-            AlchemicalApparatus item,
-            AlchemicalApparatus_CopyMask copyMask = null,
-            AlchemicalApparatus def = null)
-        {
-            AlchemicalApparatus ret;
-            if (item.GetType().Equals(typeof(AlchemicalApparatus)))
-            {
-                ret = new AlchemicalApparatus();
-            }
-            else
-            {
-                ret = (AlchemicalApparatus)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((AlchemicalApparatusSetterCommon)((IAlchemicalApparatusInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -1285,10 +1254,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IAlchemicalApparatusInternal)item);
         }
         
-        public static AlchemicalApparatus GetNew()
-        {
-            return (AlchemicalApparatus)System.Activator.CreateInstance(typeof(AlchemicalApparatus));
-        }
     }
     public partial class AlchemicalApparatusCommon : ItemAbstractCommon
     {
@@ -1702,8 +1667,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     copyMask: copyMask?.Model.Specific);
                                 break;
                             case CopyOption.MakeCopy:
-                                item.Model = Model.Copy(
-                                    rhsModelItem,
+                                item.Model = rhsModelItem.Copy(
                                     copyMask?.Model?.Specific,
                                     def: defModelItem);
                                 break;

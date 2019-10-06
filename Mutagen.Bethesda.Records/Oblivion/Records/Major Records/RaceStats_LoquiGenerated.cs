@@ -375,37 +375,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public RaceStats Copy(
-            RaceStats_CopyMask copyMask = null,
-            RaceStats def = null)
-        {
-            return RaceStats.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static RaceStats Copy(
-            RaceStats item,
-            RaceStats_CopyMask copyMask = null,
-            RaceStats def = null)
-        {
-            RaceStats ret;
-            if (item.GetType().Equals(typeof(RaceStats)))
-            {
-                ret = new RaceStats();
-            }
-            else
-            {
-                ret = (RaceStats)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((RaceStatsSetterCommon)((IRaceStatsInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -623,6 +592,17 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static RaceStats Copy(
+            this RaceStats item,
+            RaceStats_CopyMask copyMask = null,
+            RaceStats def = null)
+        {
+            return ((RaceStatsSetterCommon)((IRaceStatsInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -915,10 +895,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Luck = default(Byte);
         }
         
-        public static RaceStats GetNew()
+        public RaceStats GetNew()
         {
             return new RaceStats();
         }
+        
+        public RaceStats Copy(
+            RaceStats item,
+            RaceStats_CopyMask copyMask = null,
+            RaceStats def = null)
+        {
+            RaceStats ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class RaceStatsCommon
     {

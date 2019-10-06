@@ -399,37 +399,6 @@ namespace Mutagen.Bethesda.Tests
             }
         }
 
-        public TestingSettings Copy(
-            TestingSettings_CopyMask copyMask = null,
-            TestingSettings def = null)
-        {
-            return TestingSettings.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static TestingSettings Copy(
-            TestingSettings item,
-            TestingSettings_CopyMask copyMask = null,
-            TestingSettings def = null)
-        {
-            TestingSettings ret;
-            if (item.GetType().Equals(typeof(TestingSettings)))
-            {
-                ret = new TestingSettings();
-            }
-            else
-            {
-                ret = (TestingSettings)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((TestingSettingsSetterCommon)((ITestingSettingsInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -642,6 +611,17 @@ namespace Mutagen.Bethesda.Tests
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static TestingSettings Copy(
+            this TestingSettings item,
+            TestingSettings_CopyMask copyMask = null,
+            TestingSettings def = null)
+        {
+            return ((TestingSettingsSetterCommon)((ITestingSettingsInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -933,10 +913,24 @@ namespace Mutagen.Bethesda.Tests.Internals
             item.TargetGroups.Clear();
         }
         
-        public static TestingSettings GetNew()
+        public TestingSettings GetNew()
         {
             return new TestingSettings();
         }
+        
+        public TestingSettings Copy(
+            TestingSettings item,
+            TestingSettings_CopyMask copyMask = null,
+            TestingSettings def = null)
+        {
+            TestingSettings ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class TestingSettingsCommon
     {
@@ -1192,8 +1186,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                             }
                             else
                             {
-                                item.DataFolderLocations = DataFolderLocations.Copy(
-                                    rhs.DataFolderLocations,
+                                item.DataFolderLocations = rhs.DataFolderLocations.Copy(
                                     copyMask?.DataFolderLocations?.Specific,
                                     def?.DataFolderLocations);
                             }
@@ -1237,8 +1230,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                             }
                             else
                             {
-                                item.PassthroughSettings = PassthroughSettings.Copy(
-                                    rhs.PassthroughSettings,
+                                item.PassthroughSettings = rhs.PassthroughSettings.Copy(
                                     copyMask?.PassthroughSettings?.Specific,
                                     def?.PassthroughSettings);
                             }
@@ -1272,8 +1264,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                                 case CopyOption.Reference:
                                     return (TargetGroup)r;
                                 case CopyOption.MakeCopy:
-                                    return TargetGroup.Copy(
-                                        r,
+                                    return r.Copy(
                                         copyMask?.TargetGroups?.Specific,
                                         def: d);
                                 default:

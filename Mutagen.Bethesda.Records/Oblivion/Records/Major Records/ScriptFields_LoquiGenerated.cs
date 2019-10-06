@@ -611,37 +611,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public ScriptFields Copy(
-            ScriptFields_CopyMask copyMask = null,
-            ScriptFields def = null)
-        {
-            return ScriptFields.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static ScriptFields Copy(
-            ScriptFields item,
-            ScriptFields_CopyMask copyMask = null,
-            ScriptFields def = null)
-        {
-            ScriptFields ret;
-            if (item.GetType().Equals(typeof(ScriptFields)))
-            {
-                ret = new ScriptFields();
-            }
-            else
-            {
-                ret = (ScriptFields)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((ScriptFieldsSetterCommon)((IScriptFieldsInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -846,6 +815,17 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static ScriptFields Copy(
+            this ScriptFields item,
+            ScriptFields_CopyMask copyMask = null,
+            ScriptFields def = null)
+        {
+            return ((ScriptFieldsSetterCommon)((IScriptFieldsInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -1121,10 +1101,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.References.Unset();
         }
         
-        public static ScriptFields GetNew()
+        public ScriptFields GetNew()
         {
             return new ScriptFields();
         }
+        
+        public ScriptFields Copy(
+            ScriptFields item,
+            ScriptFields_CopyMask copyMask = null,
+            ScriptFields def = null)
+        {
+            ScriptFields ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class ScriptFieldsCommon
     {
@@ -1462,8 +1456,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return (LocalVariable)r;
                                 case CopyOption.MakeCopy:
-                                    return LocalVariable.Copy(
-                                        r,
+                                    return r.Copy(
                                         copyMask?.LocalVariables?.Specific,
                                         def: d);
                                 default:
@@ -1496,8 +1489,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return (ScriptReference)r;
                                 case CopyOption.MakeCopy:
-                                    return ScriptReference.Copy(
-                                        r,
+                                    return r.Copy(
                                         copyMask?.References?.Specific,
                                         def: d);
                                 default:

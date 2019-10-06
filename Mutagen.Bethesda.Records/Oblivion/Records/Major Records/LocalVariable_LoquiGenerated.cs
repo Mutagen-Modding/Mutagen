@@ -509,37 +509,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public LocalVariable Copy(
-            LocalVariable_CopyMask copyMask = null,
-            LocalVariable def = null)
-        {
-            return LocalVariable.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static LocalVariable Copy(
-            LocalVariable item,
-            LocalVariable_CopyMask copyMask = null,
-            LocalVariable def = null)
-        {
-            LocalVariable ret;
-            if (item.GetType().Equals(typeof(LocalVariable)))
-            {
-                ret = new LocalVariable();
-            }
-            else
-            {
-                ret = (LocalVariable)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((LocalVariableSetterCommon)((ILocalVariableInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -749,6 +718,17 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static LocalVariable Copy(
+            this LocalVariable item,
+            LocalVariable_CopyMask copyMask = null,
+            LocalVariable def = null)
+        {
+            return ((LocalVariableSetterCommon)((ILocalVariableInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -1017,10 +997,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Name_Unset();
         }
         
-        public static LocalVariable GetNew()
+        public LocalVariable GetNew()
         {
             return new LocalVariable();
         }
+        
+        public LocalVariable Copy(
+            LocalVariable item,
+            LocalVariable_CopyMask copyMask = null,
+            LocalVariable def = null)
+        {
+            LocalVariable ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class LocalVariableCommon
     {

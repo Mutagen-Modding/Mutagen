@@ -823,37 +823,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public Weapon Copy(
-            Weapon_CopyMask copyMask = null,
-            Weapon def = null)
-        {
-            return Weapon.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static Weapon Copy(
-            Weapon item,
-            Weapon_CopyMask copyMask = null,
-            Weapon def = null)
-        {
-            Weapon ret;
-            if (item.GetType().Equals(typeof(Weapon)))
-            {
-                ret = new Weapon();
-            }
-            else
-            {
-                ret = (Weapon)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((WeaponSetterCommon)((IWeaponInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -1536,10 +1505,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IWeaponInternal)item);
         }
         
-        public static Weapon GetNew()
-        {
-            return (Weapon)System.Activator.CreateInstance(typeof(Weapon));
-        }
     }
     public partial class WeaponCommon : ItemAbstractCommon
     {
@@ -2017,8 +1982,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     copyMask: copyMask?.Model.Specific);
                                 break;
                             case CopyOption.MakeCopy:
-                                item.Model = Model.Copy(
-                                    rhsModelItem,
+                                item.Model = rhsModelItem.Copy(
                                     copyMask?.Model?.Specific,
                                     def: defModelItem);
                                 break;

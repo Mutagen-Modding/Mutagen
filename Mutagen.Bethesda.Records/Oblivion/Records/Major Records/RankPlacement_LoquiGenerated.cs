@@ -394,37 +394,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public RankPlacement Copy(
-            RankPlacement_CopyMask copyMask = null,
-            RankPlacement def = null)
-        {
-            return RankPlacement.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static RankPlacement Copy(
-            RankPlacement item,
-            RankPlacement_CopyMask copyMask = null,
-            RankPlacement def = null)
-        {
-            RankPlacement ret;
-            if (item.GetType().Equals(typeof(RankPlacement)))
-            {
-                ret = new RankPlacement();
-            }
-            else
-            {
-                ret = (RankPlacement)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((RankPlacementSetterCommon)((IRankPlacementInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -615,6 +584,17 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static RankPlacement Copy(
+            this RankPlacement item,
+            RankPlacement_CopyMask copyMask = null,
+            RankPlacement def = null)
+        {
+            return ((RankPlacementSetterCommon)((IRankPlacementInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -844,10 +824,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Fluff = default(Byte[]);
         }
         
-        public static RankPlacement GetNew()
+        public RankPlacement GetNew()
         {
             return new RankPlacement();
         }
+        
+        public RankPlacement Copy(
+            RankPlacement item,
+            RankPlacement_CopyMask copyMask = null,
+            RankPlacement def = null)
+        {
+            RankPlacement ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class RankPlacementCommon
     {

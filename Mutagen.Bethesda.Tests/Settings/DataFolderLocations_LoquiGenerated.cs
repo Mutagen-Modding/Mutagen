@@ -361,37 +361,6 @@ namespace Mutagen.Bethesda.Tests
             }
         }
 
-        public DataFolderLocations Copy(
-            DataFolderLocations_CopyMask copyMask = null,
-            DataFolderLocations def = null)
-        {
-            return DataFolderLocations.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static DataFolderLocations Copy(
-            DataFolderLocations item,
-            DataFolderLocations_CopyMask copyMask = null,
-            DataFolderLocations def = null)
-        {
-            DataFolderLocations ret;
-            if (item.GetType().Equals(typeof(DataFolderLocations)))
-            {
-                ret = new DataFolderLocations();
-            }
-            else
-            {
-                ret = (DataFolderLocations)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((DataFolderLocationsSetterCommon)((IDataFolderLocationsInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -572,6 +541,17 @@ namespace Mutagen.Bethesda.Tests
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static DataFolderLocations Copy(
+            this DataFolderLocations item,
+            DataFolderLocations_CopyMask copyMask = null,
+            DataFolderLocations def = null)
+        {
+            return ((DataFolderLocationsSetterCommon)((IDataFolderLocationsInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -783,10 +763,24 @@ namespace Mutagen.Bethesda.Tests.Internals
             item.Skyrim = default(String);
         }
         
-        public static DataFolderLocations GetNew()
+        public DataFolderLocations GetNew()
         {
             return new DataFolderLocations();
         }
+        
+        public DataFolderLocations Copy(
+            DataFolderLocations item,
+            DataFolderLocations_CopyMask copyMask = null,
+            DataFolderLocations def = null)
+        {
+            DataFolderLocations ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class DataFolderLocationsCommon
     {

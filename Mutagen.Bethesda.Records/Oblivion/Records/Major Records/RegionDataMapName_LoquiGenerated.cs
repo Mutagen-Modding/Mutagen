@@ -437,37 +437,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public RegionDataMapName Copy(
-            RegionDataMapName_CopyMask copyMask = null,
-            RegionDataMapName def = null)
-        {
-            return RegionDataMapName.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static RegionDataMapName Copy(
-            RegionDataMapName item,
-            RegionDataMapName_CopyMask copyMask = null,
-            RegionDataMapName def = null)
-        {
-            RegionDataMapName ret;
-            if (item.GetType().Equals(typeof(RegionDataMapName)))
-            {
-                ret = new RegionDataMapName();
-            }
-            else
-            {
-                ret = (RegionDataMapName)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((RegionDataMapNameSetterCommon)((IRegionDataMapNameInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -635,6 +604,17 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static RegionDataMapName Copy(
+            this RegionDataMapName item,
+            RegionDataMapName_CopyMask copyMask = null,
+            RegionDataMapName def = null)
+        {
+            return ((RegionDataMapNameSetterCommon)((IRegionDataMapNameInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -849,10 +829,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IRegionDataMapNameInternal)item);
         }
         
-        public static RegionDataMapName GetNew()
+        public RegionDataMapName GetNew()
         {
             return new RegionDataMapName();
         }
+        
+        public new RegionDataMapName Copy(
+            RegionDataMapName item,
+            RegionDataMapName_CopyMask copyMask = null,
+            RegionDataMapName def = null)
+        {
+            RegionDataMapName ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class RegionDataMapNameCommon : RegionDataCommon
     {

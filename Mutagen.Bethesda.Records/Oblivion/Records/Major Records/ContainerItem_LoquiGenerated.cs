@@ -374,37 +374,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public ContainerItem Copy(
-            ContainerItem_CopyMask copyMask = null,
-            ContainerItem def = null)
-        {
-            return ContainerItem.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static ContainerItem Copy(
-            ContainerItem item,
-            ContainerItem_CopyMask copyMask = null,
-            ContainerItem def = null)
-        {
-            ContainerItem ret;
-            if (item.GetType().Equals(typeof(ContainerItem)))
-            {
-                ret = new ContainerItem();
-            }
-            else
-            {
-                ret = (ContainerItem)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((ContainerItemSetterCommon)((IContainerItemInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -589,6 +558,17 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static ContainerItem Copy(
+            this ContainerItem item,
+            ContainerItem_CopyMask copyMask = null,
+            ContainerItem def = null)
+        {
+            return ((ContainerItemSetterCommon)((IContainerItemInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -805,10 +785,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Count = default(UInt32);
         }
         
-        public static ContainerItem GetNew()
+        public ContainerItem GetNew()
         {
             return new ContainerItem();
         }
+        
+        public ContainerItem Copy(
+            ContainerItem item,
+            ContainerItem_CopyMask copyMask = null,
+            ContainerItem def = null)
+        {
+            ContainerItem ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class ContainerItemCommon
     {

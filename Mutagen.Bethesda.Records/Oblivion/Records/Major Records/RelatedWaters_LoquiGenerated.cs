@@ -384,37 +384,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public RelatedWaters Copy(
-            RelatedWaters_CopyMask copyMask = null,
-            RelatedWaters def = null)
-        {
-            return RelatedWaters.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static RelatedWaters Copy(
-            RelatedWaters item,
-            RelatedWaters_CopyMask copyMask = null,
-            RelatedWaters def = null)
-        {
-            RelatedWaters ret;
-            if (item.GetType().Equals(typeof(RelatedWaters)))
-            {
-                ret = new RelatedWaters();
-            }
-            else
-            {
-                ret = (RelatedWaters)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((RelatedWatersSetterCommon)((IRelatedWatersInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -611,6 +580,17 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static RelatedWaters Copy(
+            this RelatedWaters item,
+            RelatedWaters_CopyMask copyMask = null,
+            RelatedWaters def = null)
+        {
+            return ((RelatedWatersSetterCommon)((IRelatedWatersInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -840,10 +820,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.RelatedWaterUnderwater = default(Water);
         }
         
-        public static RelatedWaters GetNew()
+        public RelatedWaters GetNew()
         {
             return new RelatedWaters();
         }
+        
+        public RelatedWaters Copy(
+            RelatedWaters item,
+            RelatedWaters_CopyMask copyMask = null,
+            RelatedWaters def = null)
+        {
+            RelatedWaters ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class RelatedWatersCommon
     {

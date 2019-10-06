@@ -584,37 +584,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public Hair Copy(
-            Hair_CopyMask copyMask = null,
-            Hair def = null)
-        {
-            return Hair.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static Hair Copy(
-            Hair item,
-            Hair_CopyMask copyMask = null,
-            Hair def = null)
-        {
-            Hair ret;
-            if (item.GetType().Equals(typeof(Hair)))
-            {
-                ret = new Hair();
-            }
-            else
-            {
-                ret = (Hair)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((HairSetterCommon)((IHairInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -1075,10 +1044,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IHairInternal)item);
         }
         
-        public static Hair GetNew()
-        {
-            return (Hair)System.Activator.CreateInstance(typeof(Hair));
-        }
     }
     public partial class HairCommon : OblivionMajorRecordCommon
     {
@@ -1421,8 +1386,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     copyMask: copyMask?.Model.Specific);
                                 break;
                             case CopyOption.MakeCopy:
-                                item.Model = Model.Copy(
-                                    rhsModelItem,
+                                item.Model = rhsModelItem.Copy(
                                     copyMask?.Model?.Specific,
                                     def: defModelItem);
                                 break;

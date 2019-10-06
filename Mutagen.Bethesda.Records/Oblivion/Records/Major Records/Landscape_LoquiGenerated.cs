@@ -683,37 +683,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public Landscape Copy(
-            Landscape_CopyMask copyMask = null,
-            Landscape def = null)
-        {
-            return Landscape.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static Landscape Copy(
-            Landscape item,
-            Landscape_CopyMask copyMask = null,
-            Landscape def = null)
-        {
-            Landscape ret;
-            if (item.GetType().Equals(typeof(Landscape)))
-            {
-                ret = new Landscape();
-            }
-            else
-            {
-                ret = (Landscape)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((LandscapeSetterCommon)((ILandscapeInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -1214,10 +1183,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ILandscapeInternal)item);
         }
         
-        public static Landscape GetNew()
-        {
-            return (Landscape)System.Activator.CreateInstance(typeof(Landscape));
-        }
     }
     public partial class LandscapeCommon : OblivionMajorRecordCommon
     {
@@ -1698,8 +1663,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return (BaseLayer)r;
                                 case CopyOption.MakeCopy:
-                                    return BaseLayer.Copy(
-                                        r,
+                                    return r.Copy(
                                         copyMask?.Layers?.Specific,
                                         def: d);
                                 default:

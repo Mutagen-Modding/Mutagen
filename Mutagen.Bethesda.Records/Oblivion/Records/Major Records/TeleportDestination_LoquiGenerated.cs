@@ -397,37 +397,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public TeleportDestination Copy(
-            TeleportDestination_CopyMask copyMask = null,
-            TeleportDestination def = null)
-        {
-            return TeleportDestination.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static TeleportDestination Copy(
-            TeleportDestination item,
-            TeleportDestination_CopyMask copyMask = null,
-            TeleportDestination def = null)
-        {
-            TeleportDestination ret;
-            if (item.GetType().Equals(typeof(TeleportDestination)))
-            {
-                ret = new TeleportDestination();
-            }
-            else
-            {
-                ret = (TeleportDestination)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((TeleportDestinationSetterCommon)((ITeleportDestinationInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -618,6 +587,17 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static TeleportDestination Copy(
+            this TeleportDestination item,
+            TeleportDestination_CopyMask copyMask = null,
+            TeleportDestination def = null)
+        {
+            return ((TeleportDestinationSetterCommon)((ITeleportDestinationInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -847,10 +827,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Rotation = default(P3Float);
         }
         
-        public static TeleportDestination GetNew()
+        public TeleportDestination GetNew()
         {
             return new TeleportDestination();
         }
+        
+        public TeleportDestination Copy(
+            TeleportDestination item,
+            TeleportDestination_CopyMask copyMask = null,
+            TeleportDestination def = null)
+        {
+            TeleportDestination ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class TeleportDestinationCommon
     {

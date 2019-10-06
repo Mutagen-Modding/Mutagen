@@ -452,37 +452,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public Static Copy(
-            Static_CopyMask copyMask = null,
-            Static def = null)
-        {
-            return Static.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static Static Copy(
-            Static item,
-            Static_CopyMask copyMask = null,
-            Static def = null)
-        {
-            Static ret;
-            if (item.GetType().Equals(typeof(Static)))
-            {
-                ret = new Static();
-            }
-            else
-            {
-                ret = (Static)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((StaticSetterCommon)((IStaticInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -870,10 +839,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IStaticInternal)item);
         }
         
-        public static Static GetNew()
-        {
-            return (Static)System.Activator.CreateInstance(typeof(Static));
-        }
     }
     public partial class StaticCommon : OblivionMajorRecordCommon
     {
@@ -1138,8 +1103,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     copyMask: copyMask?.Model.Specific);
                                 break;
                             case CopyOption.MakeCopy:
-                                item.Model = Model.Copy(
-                                    rhsModelItem,
+                                item.Model = rhsModelItem.Copy(
                                     copyMask?.Model?.Specific,
                                     def: defModelItem);
                                 break;

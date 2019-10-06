@@ -534,37 +534,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public Eye Copy(
-            Eye_CopyMask copyMask = null,
-            Eye def = null)
-        {
-            return Eye.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static Eye Copy(
-            Eye item,
-            Eye_CopyMask copyMask = null,
-            Eye def = null)
-        {
-            Eye ret;
-            if (item.GetType().Equals(typeof(Eye)))
-            {
-                ret = new Eye();
-            }
-            else
-            {
-                ret = (Eye)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((EyeSetterCommon)((IEyeInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -1000,10 +969,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IEyeInternal)item);
         }
         
-        public static Eye GetNew()
-        {
-            return (Eye)System.Activator.CreateInstance(typeof(Eye));
-        }
     }
     public partial class EyeCommon : OblivionMajorRecordCommon
     {

@@ -366,37 +366,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public HavokData Copy(
-            HavokData_CopyMask copyMask = null,
-            HavokData def = null)
-        {
-            return HavokData.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static HavokData Copy(
-            HavokData item,
-            HavokData_CopyMask copyMask = null,
-            HavokData def = null)
-        {
-            HavokData ret;
-            if (item.GetType().Equals(typeof(HavokData)))
-            {
-                ret = new HavokData();
-            }
-            else
-            {
-                ret = (HavokData)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((HavokDataSetterCommon)((IHavokDataInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -584,6 +553,17 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static HavokData Copy(
+            this HavokData item,
+            HavokData_CopyMask copyMask = null,
+            HavokData def = null)
+        {
+            return ((HavokDataSetterCommon)((IHavokDataInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -813,10 +793,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Restitution = default(Byte);
         }
         
-        public static HavokData GetNew()
+        public HavokData GetNew()
         {
             return new HavokData();
         }
+        
+        public HavokData Copy(
+            HavokData item,
+            HavokData_CopyMask copyMask = null,
+            HavokData def = null)
+        {
+            HavokData ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class HavokDataCommon
     {

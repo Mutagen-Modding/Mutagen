@@ -473,37 +473,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public QuestTarget Copy(
-            QuestTarget_CopyMask copyMask = null,
-            QuestTarget def = null)
-        {
-            return QuestTarget.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static QuestTarget Copy(
-            QuestTarget item,
-            QuestTarget_CopyMask copyMask = null,
-            QuestTarget def = null)
-        {
-            QuestTarget ret;
-            if (item.GetType().Equals(typeof(QuestTarget)))
-            {
-                ret = new QuestTarget();
-            }
-            else
-            {
-                ret = (QuestTarget)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((QuestTargetSetterCommon)((IQuestTargetInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -698,6 +667,17 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static QuestTarget Copy(
+            this QuestTarget item,
+            QuestTarget_CopyMask copyMask = null,
+            QuestTarget def = null)
+        {
+            return ((QuestTargetSetterCommon)((IQuestTargetInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -943,10 +923,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Conditions.Unset();
         }
         
-        public static QuestTarget GetNew()
+        public QuestTarget GetNew()
         {
             return new QuestTarget();
         }
+        
+        public QuestTarget Copy(
+            QuestTarget item,
+            QuestTarget_CopyMask copyMask = null,
+            QuestTarget def = null)
+        {
+            QuestTarget ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class QuestTargetCommon
     {
@@ -1159,8 +1153,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return (Condition)r;
                                 case CopyOption.MakeCopy:
-                                    return Condition.Copy(
-                                        r,
+                                    return r.Copy(
                                         copyMask?.Conditions?.Specific,
                                         def: d);
                                 default:

@@ -567,37 +567,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public DialogResponse Copy(
-            DialogResponse_CopyMask copyMask = null,
-            DialogResponse def = null)
-        {
-            return DialogResponse.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static DialogResponse Copy(
-            DialogResponse item,
-            DialogResponse_CopyMask copyMask = null,
-            DialogResponse def = null)
-        {
-            DialogResponse ret;
-            if (item.GetType().Equals(typeof(DialogResponse)))
-            {
-                ret = new DialogResponse();
-            }
-            else
-            {
-                ret = (DialogResponse)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((DialogResponseSetterCommon)((IDialogResponseInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -823,6 +792,17 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static DialogResponse Copy(
+            this DialogResponse item,
+            DialogResponse_CopyMask copyMask = null,
+            DialogResponse def = null)
+        {
+            return ((DialogResponseSetterCommon)((IDialogResponseInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -1118,10 +1098,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.ActorNotes_Unset();
         }
         
-        public static DialogResponse GetNew()
+        public DialogResponse GetNew()
         {
             return new DialogResponse();
         }
+        
+        public DialogResponse Copy(
+            DialogResponse item,
+            DialogResponse_CopyMask copyMask = null,
+            DialogResponse def = null)
+        {
+            DialogResponse ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class DialogResponseCommon
     {

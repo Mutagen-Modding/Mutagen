@@ -439,37 +439,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        public GameSettingBool Copy(
-            GameSettingBool_CopyMask copyMask = null,
-            GameSettingBool def = null)
-        {
-            return GameSettingBool.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static GameSettingBool Copy(
-            GameSettingBool item,
-            GameSettingBool_CopyMask copyMask = null,
-            GameSettingBool def = null)
-        {
-            GameSettingBool ret;
-            if (item.GetType().Equals(typeof(GameSettingBool)))
-            {
-                ret = new GameSettingBool();
-            }
-            else
-            {
-                ret = (GameSettingBool)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((GameSettingBoolSetterCommon)((IGameSettingBoolInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -864,10 +833,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IGameSettingBoolInternal)item);
         }
         
-        public static GameSettingBool GetNew()
-        {
-            return (GameSettingBool)System.Activator.CreateInstance(typeof(GameSettingBool));
-        }
     }
     public partial class GameSettingBoolCommon : GameSettingCommon
     {

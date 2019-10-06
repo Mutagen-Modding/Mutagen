@@ -644,37 +644,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public Flora Copy(
-            Flora_CopyMask copyMask = null,
-            Flora def = null)
-        {
-            return Flora.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static Flora Copy(
-            Flora item,
-            Flora_CopyMask copyMask = null,
-            Flora def = null)
-        {
-            Flora ret;
-            if (item.GetType().Equals(typeof(Flora)))
-            {
-                ret = new Flora();
-            }
-            else
-            {
-                ret = (Flora)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((FloraSetterCommon)((IFloraInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -1228,10 +1197,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IFloraInternal)item);
         }
         
-        public static Flora GetNew()
-        {
-            return (Flora)System.Activator.CreateInstance(typeof(Flora));
-        }
     }
     public partial class FloraCommon : OblivionMajorRecordCommon
     {
@@ -1612,8 +1577,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     copyMask: copyMask?.Model.Specific);
                                 break;
                             case CopyOption.MakeCopy:
-                                item.Model = Model.Copy(
-                                    rhsModelItem,
+                                item.Model = rhsModelItem.Copy(
                                     copyMask?.Model?.Specific,
                                     def: defModelItem);
                                 break;

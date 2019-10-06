@@ -382,29 +382,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public Spell Copy(
-            Spell_CopyMask copyMask = null,
-            Spell def = null)
-        {
-            return Spell.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static Spell Copy(
-            Spell item,
-            Spell_CopyMask copyMask = null,
-            Spell def = null)
-        {
-            Spell ret = (Spell)System.Activator.CreateInstance(item.GetType());
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((SpellSetterCommon)((ISpellInternalGetter)this).CommonSetterInstance()).Clear(this);

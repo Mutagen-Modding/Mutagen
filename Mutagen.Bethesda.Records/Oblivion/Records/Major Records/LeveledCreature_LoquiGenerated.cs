@@ -581,37 +581,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public LeveledCreature Copy(
-            LeveledCreature_CopyMask copyMask = null,
-            LeveledCreature def = null)
-        {
-            return LeveledCreature.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static LeveledCreature Copy(
-            LeveledCreature item,
-            LeveledCreature_CopyMask copyMask = null,
-            LeveledCreature def = null)
-        {
-            LeveledCreature ret;
-            if (item.GetType().Equals(typeof(LeveledCreature)))
-            {
-                ret = new LeveledCreature();
-            }
-            else
-            {
-                ret = (LeveledCreature)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((LeveledCreatureSetterCommon)((ILeveledCreatureInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -1094,10 +1063,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ILeveledCreatureInternal)item);
         }
         
-        public static LeveledCreature GetNew()
-        {
-            return (LeveledCreature)System.Activator.CreateInstance(typeof(LeveledCreature));
-        }
     }
     public partial class LeveledCreatureCommon : NPCSpawnCommon
     {
@@ -1518,8 +1483,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return (LeveledEntry<NPCSpawn>)r;
                                 case CopyOption.MakeCopy:
-                                    return LeveledEntry<NPCSpawn>.Copy(
-                                        r,
+                                    return r.Copy(
                                         copyMask?.Entries?.Specific,
                                         def: d);
                                 default:

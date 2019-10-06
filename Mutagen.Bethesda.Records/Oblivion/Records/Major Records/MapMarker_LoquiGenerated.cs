@@ -475,37 +475,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public MapMarker Copy(
-            MapMarker_CopyMask copyMask = null,
-            MapMarker def = null)
-        {
-            return MapMarker.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static MapMarker Copy(
-            MapMarker item,
-            MapMarker_CopyMask copyMask = null,
-            MapMarker def = null)
-        {
-            MapMarker ret;
-            if (item.GetType().Equals(typeof(MapMarker)))
-            {
-                ret = new MapMarker();
-            }
-            else
-            {
-                ret = (MapMarker)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((MapMarkerSetterCommon)((IMapMarkerInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -699,6 +668,17 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static MapMarker Copy(
+            this MapMarker item,
+            MapMarker_CopyMask copyMask = null,
+            MapMarker def = null)
+        {
+            return ((MapMarkerSetterCommon)((IMapMarkerInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -943,10 +923,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Types.Unset();
         }
         
-        public static MapMarker GetNew()
+        public MapMarker GetNew()
         {
             return new MapMarker();
         }
+        
+        public MapMarker Copy(
+            MapMarker item,
+            MapMarker_CopyMask copyMask = null,
+            MapMarker def = null)
+        {
+            MapMarker ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class MapMarkerCommon
     {

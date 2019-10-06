@@ -582,37 +582,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public LandTexture Copy(
-            LandTexture_CopyMask copyMask = null,
-            LandTexture def = null)
-        {
-            return LandTexture.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static LandTexture Copy(
-            LandTexture item,
-            LandTexture_CopyMask copyMask = null,
-            LandTexture def = null)
-        {
-            LandTexture ret;
-            if (item.GetType().Equals(typeof(LandTexture)))
-            {
-                ret = new LandTexture();
-            }
-            else
-            {
-                ret = (LandTexture)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((LandTextureSetterCommon)((ILandTextureInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -1068,10 +1037,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ILandTextureInternal)item);
         }
         
-        public static LandTexture GetNew()
-        {
-            return (LandTexture)System.Activator.CreateInstance(typeof(LandTexture));
-        }
     }
     public partial class LandTextureCommon : OblivionMajorRecordCommon
     {
@@ -1431,8 +1396,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     copyMask: copyMask?.Havok.Specific);
                                 break;
                             case CopyOption.MakeCopy:
-                                item.Havok = HavokData.Copy(
-                                    rhsHavokItem,
+                                item.Havok = rhsHavokItem.Copy(
                                     copyMask?.Havok?.Specific,
                                     def: defHavokItem);
                                 break;

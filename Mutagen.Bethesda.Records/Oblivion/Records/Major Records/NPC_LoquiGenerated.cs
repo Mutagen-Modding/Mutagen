@@ -1874,37 +1874,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public NPC Copy(
-            NPC_CopyMask copyMask = null,
-            NPC def = null)
-        {
-            return NPC.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static NPC Copy(
-            NPC item,
-            NPC_CopyMask copyMask = null,
-            NPC def = null)
-        {
-            NPC ret;
-            if (item.GetType().Equals(typeof(NPC)))
-            {
-                ret = new NPC();
-            }
-            else
-            {
-                ret = (NPC)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((NPCSetterCommon)((INPCInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -3630,10 +3599,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (INPCInternal)item);
         }
         
-        public static NPC GetNew()
-        {
-            return (NPC)System.Activator.CreateInstance(typeof(NPC));
-        }
     }
     public partial class NPCCommon : NPCAbstractCommon
     {
@@ -4778,8 +4743,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     copyMask: copyMask?.Model.Specific);
                                 break;
                             case CopyOption.MakeCopy:
-                                item.Model = Model.Copy(
-                                    rhsModelItem,
+                                item.Model = rhsModelItem.Copy(
                                     copyMask?.Model?.Specific,
                                     def: defModelItem);
                                 break;
@@ -4861,8 +4825,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return (RankPlacement)r;
                                 case CopyOption.MakeCopy:
-                                    return RankPlacement.Copy(
-                                        r,
+                                    return r.Copy(
                                         copyMask?.Factions?.Specific,
                                         def: d);
                                 default:
@@ -4971,8 +4934,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return (ItemEntry)r;
                                 case CopyOption.MakeCopy:
-                                    return ItemEntry.Copy(
-                                        r,
+                                    return r.Copy(
                                         copyMask?.Items?.Specific,
                                         def: d);
                                 default:

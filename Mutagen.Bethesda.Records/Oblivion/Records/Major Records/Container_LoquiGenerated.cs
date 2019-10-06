@@ -698,37 +698,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public Container Copy(
-            Container_CopyMask copyMask = null,
-            Container def = null)
-        {
-            return Container.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static Container Copy(
-            Container item,
-            Container_CopyMask copyMask = null,
-            Container def = null)
-        {
-            Container ret;
-            if (item.GetType().Equals(typeof(Container)))
-            {
-                ret = new Container();
-            }
-            else
-            {
-                ret = (Container)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((ContainerSetterCommon)((IContainerInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -1286,10 +1255,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IContainerInternal)item);
         }
         
-        public static Container GetNew()
-        {
-            return (Container)System.Activator.CreateInstance(typeof(Container));
-        }
     }
     public partial class ContainerCommon : OblivionMajorRecordCommon
     {
@@ -1703,8 +1668,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     copyMask: copyMask?.Model.Specific);
                                 break;
                             case CopyOption.MakeCopy:
-                                item.Model = Model.Copy(
-                                    rhsModelItem,
+                                item.Model = rhsModelItem.Copy(
                                     copyMask?.Model?.Specific,
                                     def: defModelItem);
                                 break;
@@ -1763,8 +1727,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return (ContainerItem)r;
                                 case CopyOption.MakeCopy:
-                                    return ContainerItem.Copy(
-                                        r,
+                                    return r.Copy(
                                         copyMask?.Items?.Specific,
                                         def: d);
                                 default:

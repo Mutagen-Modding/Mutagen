@@ -370,37 +370,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public RaceVoices Copy(
-            RaceVoices_CopyMask copyMask = null,
-            RaceVoices def = null)
-        {
-            return RaceVoices.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static RaceVoices Copy(
-            RaceVoices item,
-            RaceVoices_CopyMask copyMask = null,
-            RaceVoices def = null)
-        {
-            RaceVoices ret;
-            if (item.GetType().Equals(typeof(RaceVoices)))
-            {
-                ret = new RaceVoices();
-            }
-            else
-            {
-                ret = (RaceVoices)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((RaceVoicesSetterCommon)((IRaceVoicesInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -588,6 +557,17 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static RaceVoices Copy(
+            this RaceVoices item,
+            RaceVoices_CopyMask copyMask = null,
+            RaceVoices def = null)
+        {
+            return ((RaceVoicesSetterCommon)((IRaceVoicesInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -804,10 +784,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Female = default(Race);
         }
         
-        public static RaceVoices GetNew()
+        public RaceVoices GetNew()
         {
             return new RaceVoices();
         }
+        
+        public RaceVoices Copy(
+            RaceVoices item,
+            RaceVoices_CopyMask copyMask = null,
+            RaceVoices def = null)
+        {
+            RaceVoices ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class RaceVoicesCommon
     {

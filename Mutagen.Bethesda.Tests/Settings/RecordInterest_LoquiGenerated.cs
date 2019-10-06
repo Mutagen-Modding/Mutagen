@@ -367,37 +367,6 @@ namespace Mutagen.Bethesda.Tests
 
         #endregion
 
-        public RecordInterest Copy(
-            RecordInterest_CopyMask copyMask = null,
-            RecordInterest def = null)
-        {
-            return RecordInterest.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static RecordInterest Copy(
-            RecordInterest item,
-            RecordInterest_CopyMask copyMask = null,
-            RecordInterest def = null)
-        {
-            RecordInterest ret;
-            if (item.GetType().Equals(typeof(RecordInterest)))
-            {
-                ret = new RecordInterest();
-            }
-            else
-            {
-                ret = (RecordInterest)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((RecordInterestSetterCommon)((IRecordInterestInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -574,6 +543,17 @@ namespace Mutagen.Bethesda.Tests
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static RecordInterest Copy(
+            this RecordInterest item,
+            RecordInterest_CopyMask copyMask = null,
+            RecordInterest def = null)
+        {
+            return ((RecordInterestSetterCommon)((IRecordInterestInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -785,10 +765,24 @@ namespace Mutagen.Bethesda.Tests.Internals
             item.UninterestingTypes.Clear();
         }
         
-        public static RecordInterest GetNew()
+        public RecordInterest GetNew()
         {
             return new RecordInterest();
         }
+        
+        public RecordInterest Copy(
+            RecordInterest item,
+            RecordInterest_CopyMask copyMask = null,
+            RecordInterest def = null)
+        {
+            RecordInterest ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class RecordInterestCommon
     {

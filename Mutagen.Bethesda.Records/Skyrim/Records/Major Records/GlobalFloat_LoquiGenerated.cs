@@ -445,37 +445,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        public GlobalFloat Copy(
-            GlobalFloat_CopyMask copyMask = null,
-            GlobalFloat def = null)
-        {
-            return GlobalFloat.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static GlobalFloat Copy(
-            GlobalFloat item,
-            GlobalFloat_CopyMask copyMask = null,
-            GlobalFloat def = null)
-        {
-            GlobalFloat ret;
-            if (item.GetType().Equals(typeof(GlobalFloat)))
-            {
-                ret = new GlobalFloat();
-            }
-            else
-            {
-                ret = (GlobalFloat)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((GlobalFloatSetterCommon)((IGlobalFloatInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -870,10 +839,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IGlobalFloatInternal)item);
         }
         
-        public static GlobalFloat GetNew()
-        {
-            return (GlobalFloat)System.Activator.CreateInstance(typeof(GlobalFloat));
-        }
     }
     public partial class GlobalFloatCommon : GlobalCommon
     {

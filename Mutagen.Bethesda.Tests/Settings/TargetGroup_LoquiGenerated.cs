@@ -372,37 +372,6 @@ namespace Mutagen.Bethesda.Tests
             }
         }
 
-        public TargetGroup Copy(
-            TargetGroup_CopyMask copyMask = null,
-            TargetGroup def = null)
-        {
-            return TargetGroup.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static TargetGroup Copy(
-            TargetGroup item,
-            TargetGroup_CopyMask copyMask = null,
-            TargetGroup def = null)
-        {
-            TargetGroup ret;
-            if (item.GetType().Equals(typeof(TargetGroup)))
-            {
-                ret = new TargetGroup();
-            }
-            else
-            {
-                ret = (TargetGroup)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((TargetGroupSetterCommon)((ITargetGroupInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -581,6 +550,17 @@ namespace Mutagen.Bethesda.Tests
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static TargetGroup Copy(
+            this TargetGroup item,
+            TargetGroup_CopyMask copyMask = null,
+            TargetGroup def = null)
+        {
+            return ((TargetGroupSetterCommon)((ITargetGroupInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -794,10 +774,24 @@ namespace Mutagen.Bethesda.Tests.Internals
             item.Targets.Clear();
         }
         
-        public static TargetGroup GetNew()
+        public TargetGroup GetNew()
         {
             return new TargetGroup();
         }
+        
+        public TargetGroup Copy(
+            TargetGroup item,
+            TargetGroup_CopyMask copyMask = null,
+            TargetGroup def = null)
+        {
+            TargetGroup ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class TargetGroupCommon
     {
@@ -971,8 +965,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                                 case CopyOption.Reference:
                                     return (Target)r;
                                 case CopyOption.MakeCopy:
-                                    return Target.Copy(
-                                        r,
+                                    return r.Copy(
                                         copyMask?.Targets?.Specific,
                                         def: d);
                                 default:

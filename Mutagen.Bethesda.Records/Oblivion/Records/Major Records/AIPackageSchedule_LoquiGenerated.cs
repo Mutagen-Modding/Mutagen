@@ -385,37 +385,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public AIPackageSchedule Copy(
-            AIPackageSchedule_CopyMask copyMask = null,
-            AIPackageSchedule def = null)
-        {
-            return AIPackageSchedule.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static AIPackageSchedule Copy(
-            AIPackageSchedule item,
-            AIPackageSchedule_CopyMask copyMask = null,
-            AIPackageSchedule def = null)
-        {
-            AIPackageSchedule ret;
-            if (item.GetType().Equals(typeof(AIPackageSchedule)))
-            {
-                ret = new AIPackageSchedule();
-            }
-            else
-            {
-                ret = (AIPackageSchedule)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((AIPackageScheduleSetterCommon)((IAIPackageScheduleInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -615,6 +584,17 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static AIPackageSchedule Copy(
+            this AIPackageSchedule item,
+            AIPackageSchedule_CopyMask copyMask = null,
+            AIPackageSchedule def = null)
+        {
+            return ((AIPackageScheduleSetterCommon)((IAIPackageScheduleInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -870,10 +850,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Duration = default(Int32);
         }
         
-        public static AIPackageSchedule GetNew()
+        public AIPackageSchedule GetNew()
         {
             return new AIPackageSchedule();
         }
+        
+        public AIPackageSchedule Copy(
+            AIPackageSchedule item,
+            AIPackageSchedule_CopyMask copyMask = null,
+            AIPackageSchedule def = null)
+        {
+            AIPackageSchedule ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class AIPackageScheduleCommon
     {

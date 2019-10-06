@@ -742,37 +742,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public PlacedCreature Copy(
-            PlacedCreature_CopyMask copyMask = null,
-            PlacedCreature def = null)
-        {
-            return PlacedCreature.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static PlacedCreature Copy(
-            PlacedCreature item,
-            PlacedCreature_CopyMask copyMask = null,
-            PlacedCreature def = null)
-        {
-            PlacedCreature ret;
-            if (item.GetType().Equals(typeof(PlacedCreature)))
-            {
-                ret = new PlacedCreature();
-            }
-            else
-            {
-                ret = (PlacedCreature)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((PlacedCreatureSetterCommon)((IPlacedCreatureInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -1361,10 +1330,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IPlacedCreatureInternal)item);
         }
         
-        public static PlacedCreature GetNew()
-        {
-            return (PlacedCreature)System.Activator.CreateInstance(typeof(PlacedCreature));
-        }
     }
     public partial class PlacedCreatureCommon : OblivionMajorRecordCommon
     {
@@ -1834,8 +1799,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     copyMask: copyMask?.EnableParent.Specific);
                                 break;
                             case CopyOption.MakeCopy:
-                                item.EnableParent = EnableParent.Copy(
-                                    rhsEnableParentItem,
+                                item.EnableParent = rhsEnableParentItem.Copy(
                                     copyMask?.EnableParent?.Specific,
                                     def: defEnableParentItem);
                                 break;

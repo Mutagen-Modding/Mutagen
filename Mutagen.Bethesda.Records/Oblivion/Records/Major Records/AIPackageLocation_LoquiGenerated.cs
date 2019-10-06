@@ -397,37 +397,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public AIPackageLocation Copy(
-            AIPackageLocation_CopyMask copyMask = null,
-            AIPackageLocation def = null)
-        {
-            return AIPackageLocation.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static AIPackageLocation Copy(
-            AIPackageLocation item,
-            AIPackageLocation_CopyMask copyMask = null,
-            AIPackageLocation def = null)
-        {
-            AIPackageLocation ret;
-            if (item.GetType().Equals(typeof(AIPackageLocation)))
-            {
-                ret = new AIPackageLocation();
-            }
-            else
-            {
-                ret = (AIPackageLocation)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((AIPackageLocationSetterCommon)((IAIPackageLocationInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -618,6 +587,17 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static AIPackageLocation Copy(
+            this AIPackageLocation item,
+            AIPackageLocation_CopyMask copyMask = null,
+            AIPackageLocation def = null)
+        {
+            return ((AIPackageLocationSetterCommon)((IAIPackageLocationInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -847,10 +827,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Radius = default(Single);
         }
         
-        public static AIPackageLocation GetNew()
+        public AIPackageLocation GetNew()
         {
             return new AIPackageLocation();
         }
+        
+        public AIPackageLocation Copy(
+            AIPackageLocation item,
+            AIPackageLocation_CopyMask copyMask = null,
+            AIPackageLocation def = null)
+        {
+            AIPackageLocation ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class AIPackageLocationCommon
     {

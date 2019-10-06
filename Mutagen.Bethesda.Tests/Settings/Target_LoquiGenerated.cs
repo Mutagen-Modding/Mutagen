@@ -404,37 +404,6 @@ namespace Mutagen.Bethesda.Tests
             }
         }
 
-        public Target Copy(
-            Target_CopyMask copyMask = null,
-            Target def = null)
-        {
-            return Target.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static Target Copy(
-            Target item,
-            Target_CopyMask copyMask = null,
-            Target def = null)
-        {
-            Target ret;
-            if (item.GetType().Equals(typeof(Target)))
-            {
-                ret = new Target();
-            }
-            else
-            {
-                ret = (Target)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((TargetSetterCommon)((ITargetInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -642,6 +611,17 @@ namespace Mutagen.Bethesda.Tests
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static Target Copy(
+            this Target item,
+            Target_CopyMask copyMask = null,
+            Target def = null)
+        {
+            return ((TargetSetterCommon)((ITargetInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -906,10 +886,24 @@ namespace Mutagen.Bethesda.Tests.Internals
             item.Interest = default(RecordInterest);
         }
         
-        public static Target GetNew()
+        public Target GetNew()
         {
             return new Target();
         }
+        
+        public Target Copy(
+            Target item,
+            Target_CopyMask copyMask = null,
+            Target def = null)
+        {
+            Target ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class TargetCommon
     {
@@ -1164,8 +1158,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                             }
                             else
                             {
-                                item.Interest = RecordInterest.Copy(
-                                    rhs.Interest,
+                                item.Interest = rhs.Interest.Copy(
                                     copyMask?.Interest?.Specific,
                                     def?.Interest);
                             }

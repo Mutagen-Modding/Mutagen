@@ -963,37 +963,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        public Class Copy(
-            Class_CopyMask copyMask = null,
-            Class def = null)
-        {
-            return Class.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static Class Copy(
-            Class item,
-            Class_CopyMask copyMask = null,
-            Class def = null)
-        {
-            Class ret;
-            if (item.GetType().Equals(typeof(Class)))
-            {
-                ret = new Class();
-            }
-            else
-            {
-                ret = (Class)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((ClassSetterCommon)((IClassInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -1963,10 +1932,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IClassInternal)item);
         }
         
-        public static Class GetNew()
-        {
-            return (Class)System.Activator.CreateInstance(typeof(Class));
-        }
     }
     public partial class ClassCommon : SkyrimMajorRecordCommon
     {

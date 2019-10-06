@@ -389,37 +389,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public PathGridPoint Copy(
-            PathGridPoint_CopyMask copyMask = null,
-            PathGridPoint def = null)
-        {
-            return PathGridPoint.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static PathGridPoint Copy(
-            PathGridPoint item,
-            PathGridPoint_CopyMask copyMask = null,
-            PathGridPoint def = null)
-        {
-            PathGridPoint ret;
-            if (item.GetType().Equals(typeof(PathGridPoint)))
-            {
-                ret = new PathGridPoint();
-            }
-            else
-            {
-                ret = (PathGridPoint)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((PathGridPointSetterCommon)((IPathGridPointInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -611,6 +580,17 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static PathGridPoint Copy(
+            this PathGridPoint item,
+            PathGridPoint_CopyMask copyMask = null,
+            PathGridPoint def = null)
+        {
+            return ((PathGridPointSetterCommon)((IPathGridPointInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -852,10 +832,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Connections.Clear();
         }
         
-        public static PathGridPoint GetNew()
+        public PathGridPoint GetNew()
         {
             return new PathGridPoint();
         }
+        
+        public PathGridPoint Copy(
+            PathGridPoint item,
+            PathGridPoint_CopyMask copyMask = null,
+            PathGridPoint def = null)
+        {
+            PathGridPoint ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class PathGridPointCommon
     {

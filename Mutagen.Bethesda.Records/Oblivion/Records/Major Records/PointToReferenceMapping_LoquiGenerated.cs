@@ -374,37 +374,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public PointToReferenceMapping Copy(
-            PointToReferenceMapping_CopyMask copyMask = null,
-            PointToReferenceMapping def = null)
-        {
-            return PointToReferenceMapping.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static PointToReferenceMapping Copy(
-            PointToReferenceMapping item,
-            PointToReferenceMapping_CopyMask copyMask = null,
-            PointToReferenceMapping def = null)
-        {
-            PointToReferenceMapping ret;
-            if (item.GetType().Equals(typeof(PointToReferenceMapping)))
-            {
-                ret = new PointToReferenceMapping();
-            }
-            else
-            {
-                ret = (PointToReferenceMapping)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((PointToReferenceMappingSetterCommon)((IPointToReferenceMappingInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -587,6 +556,17 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static PointToReferenceMapping Copy(
+            this PointToReferenceMapping item,
+            PointToReferenceMapping_CopyMask copyMask = null,
+            PointToReferenceMapping def = null)
+        {
+            return ((PointToReferenceMappingSetterCommon)((IPointToReferenceMappingInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -804,10 +784,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Points.Clear();
         }
         
-        public static PointToReferenceMapping GetNew()
+        public PointToReferenceMapping GetNew()
         {
             return new PointToReferenceMapping();
         }
+        
+        public PointToReferenceMapping Copy(
+            PointToReferenceMapping item,
+            PointToReferenceMapping_CopyMask copyMask = null,
+            PointToReferenceMapping def = null)
+        {
+            PointToReferenceMapping ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class PointToReferenceMappingCommon
     {

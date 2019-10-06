@@ -445,29 +445,6 @@ namespace Mutagen.Bethesda
 
         #endregion
 
-        public MajorRecord Copy(
-            MajorRecord_CopyMask copyMask = null,
-            MajorRecord def = null)
-        {
-            return MajorRecord.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static MajorRecord Copy(
-            MajorRecord item,
-            MajorRecord_CopyMask copyMask = null,
-            MajorRecord def = null)
-        {
-            MajorRecord ret = (MajorRecord)System.Activator.CreateInstance(item.GetType());
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((MajorRecordSetterCommon)((IMajorRecordInternalGetter)this).CommonSetterInstance()).Clear(this);

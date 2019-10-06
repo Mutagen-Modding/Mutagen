@@ -759,37 +759,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public Region Copy(
-            Region_CopyMask copyMask = null,
-            Region def = null)
-        {
-            return Region.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static Region Copy(
-            Region item,
-            Region_CopyMask copyMask = null,
-            Region def = null)
-        {
-            Region ret;
-            if (item.GetType().Equals(typeof(Region)))
-            {
-                ret = new Region();
-            }
-            else
-            {
-                ret = (Region)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((RegionSetterCommon)((IRegionInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -1361,10 +1330,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IRegionInternal)item);
         }
         
-        public static Region GetNew()
-        {
-            return (Region)System.Activator.CreateInstance(typeof(Region));
-        }
     }
     public partial class RegionCommon : OblivionMajorRecordCommon
     {
@@ -1870,8 +1835,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return (RegionArea)r;
                                 case CopyOption.MakeCopy:
-                                    return RegionArea.Copy(
-                                        r,
+                                    return r.Copy(
                                         copyMask?.Areas?.Specific,
                                         def: d);
                                 default:
@@ -1915,8 +1879,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     copyMask: copyMask?.Objects.Specific);
                                 break;
                             case CopyOption.MakeCopy:
-                                item.Objects = RegionDataObjects.Copy(
-                                    rhsObjectsItem,
+                                item.Objects = rhsObjectsItem.Copy(
                                     copyMask?.Objects?.Specific,
                                     def: defObjectsItem);
                                 break;
@@ -1967,8 +1930,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     copyMask: copyMask?.Weather.Specific);
                                 break;
                             case CopyOption.MakeCopy:
-                                item.Weather = RegionDataWeather.Copy(
-                                    rhsWeatherItem,
+                                item.Weather = rhsWeatherItem.Copy(
                                     copyMask?.Weather?.Specific,
                                     def: defWeatherItem);
                                 break;
@@ -2019,8 +1981,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     copyMask: copyMask?.MapName.Specific);
                                 break;
                             case CopyOption.MakeCopy:
-                                item.MapName = RegionDataMapName.Copy(
-                                    rhsMapNameItem,
+                                item.MapName = rhsMapNameItem.Copy(
                                     copyMask?.MapName?.Specific,
                                     def: defMapNameItem);
                                 break;
@@ -2071,8 +2032,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     copyMask: copyMask?.Grasses.Specific);
                                 break;
                             case CopyOption.MakeCopy:
-                                item.Grasses = RegionDataGrasses.Copy(
-                                    rhsGrassesItem,
+                                item.Grasses = rhsGrassesItem.Copy(
                                     copyMask?.Grasses?.Specific,
                                     def: defGrassesItem);
                                 break;
@@ -2123,8 +2083,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     copyMask: copyMask?.Sounds.Specific);
                                 break;
                             case CopyOption.MakeCopy:
-                                item.Sounds = RegionDataSounds.Copy(
-                                    rhsSoundsItem,
+                                item.Sounds = rhsSoundsItem.Copy(
                                     copyMask?.Sounds?.Specific,
                                     def: defSoundsItem);
                                 break;

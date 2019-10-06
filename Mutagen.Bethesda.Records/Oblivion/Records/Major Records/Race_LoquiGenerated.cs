@@ -1297,37 +1297,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public Race Copy(
-            Race_CopyMask copyMask = null,
-            Race def = null)
-        {
-            return Race.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static Race Copy(
-            Race item,
-            Race_CopyMask copyMask = null,
-            Race def = null)
-        {
-            Race ret;
-            if (item.GetType().Equals(typeof(Race)))
-            {
-                ret = new Race();
-            }
-            else
-            {
-                ret = (Race)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((RaceSetterCommon)((IRaceInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -2202,10 +2171,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IRaceInternal)item);
         }
         
-        public static Race GetNew()
-        {
-            return (Race)System.Activator.CreateInstance(typeof(Race));
-        }
     }
     public partial class RaceCommon : OblivionMajorRecordCommon
     {
@@ -2970,8 +2935,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return (RaceRelation)r;
                                 case CopyOption.MakeCopy:
-                                    return RaceRelation.Copy(
-                                        r,
+                                    return r.Copy(
                                         copyMask?.Relations?.Specific,
                                         def: d);
                                 default:
@@ -3002,8 +2966,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             case CopyOption.Reference:
                                 return (SkillBoost)r;
                             case CopyOption.MakeCopy:
-                                return SkillBoost.Copy(
-                                    r,
+                                return r.Copy(
                                     copyMask.SkillBoosts?.Specific,
                                     def: d);
                             default:
@@ -3074,8 +3037,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     copyMask: copyMask?.Voices.Specific);
                                 break;
                             case CopyOption.MakeCopy:
-                                item.Voices = RaceVoices.Copy(
-                                    rhsVoicesItem,
+                                item.Voices = rhsVoicesItem.Copy(
                                     copyMask?.Voices?.Specific,
                                     def: defVoicesItem);
                                 break;
@@ -3126,8 +3088,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     copyMask: copyMask?.DefaultHair.Specific);
                                 break;
                             case CopyOption.MakeCopy:
-                                item.DefaultHair = RaceHair.Copy(
-                                    rhsDefaultHairItem,
+                                item.DefaultHair = rhsDefaultHairItem.Copy(
                                     copyMask?.DefaultHair?.Specific,
                                     def: defDefaultHairItem);
                                 break;
@@ -3268,8 +3229,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     copyMask: copyMask?.RaceStats.Specific);
                                 break;
                             case CopyOption.MakeCopy:
-                                item.RaceStats = RaceStatsGendered.Copy(
-                                    rhsRaceStatsItem,
+                                item.RaceStats = rhsRaceStatsItem.Copy(
                                     copyMask?.RaceStats?.Specific,
                                     def: defRaceStatsItem);
                                 break;
@@ -3309,8 +3269,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return (FacePart)r;
                                 case CopyOption.MakeCopy:
-                                    return FacePart.Copy(
-                                        r,
+                                    return r.Copy(
                                         copyMask?.FaceData?.Specific,
                                         def: d);
                                 default:
@@ -3354,8 +3313,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     copyMask: copyMask?.BodyData.Specific);
                                 break;
                             case CopyOption.MakeCopy:
-                                item.BodyData = GenderedBodyData.Copy(
-                                    rhsBodyDataItem,
+                                item.BodyData = rhsBodyDataItem.Copy(
                                     copyMask?.BodyData?.Specific,
                                     def: defBodyDataItem);
                                 break;
@@ -3444,8 +3402,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     copyMask: copyMask?.FaceGenData.Specific);
                                 break;
                             case CopyOption.MakeCopy:
-                                item.FaceGenData = FaceGenData.Copy(
-                                    rhsFaceGenDataItem,
+                                item.FaceGenData = rhsFaceGenDataItem.Copy(
                                     copyMask?.FaceGenData?.Specific,
                                     def: defFaceGenDataItem);
                                 break;

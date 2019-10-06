@@ -397,37 +397,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public WeatherType Copy(
-            WeatherType_CopyMask copyMask = null,
-            WeatherType def = null)
-        {
-            return WeatherType.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static WeatherType Copy(
-            WeatherType item,
-            WeatherType_CopyMask copyMask = null,
-            WeatherType def = null)
-        {
-            WeatherType ret;
-            if (item.GetType().Equals(typeof(WeatherType)))
-            {
-                ret = new WeatherType();
-            }
-            else
-            {
-                ret = (WeatherType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((WeatherTypeSetterCommon)((IWeatherTypeInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -621,6 +590,17 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static WeatherType Copy(
+            this WeatherType item,
+            WeatherType_CopyMask copyMask = null,
+            WeatherType def = null)
+        {
+            return ((WeatherTypeSetterCommon)((IWeatherTypeInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -861,10 +841,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Night = default(Color);
         }
         
-        public static WeatherType GetNew()
+        public WeatherType GetNew()
         {
             return new WeatherType();
         }
+        
+        public WeatherType Copy(
+            WeatherType item,
+            WeatherType_CopyMask copyMask = null,
+            WeatherType def = null)
+        {
+            WeatherType ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class WeatherTypeCommon
     {

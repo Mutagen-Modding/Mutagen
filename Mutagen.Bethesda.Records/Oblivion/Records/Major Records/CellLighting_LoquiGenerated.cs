@@ -455,37 +455,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public CellLighting Copy(
-            CellLighting_CopyMask copyMask = null,
-            CellLighting def = null)
-        {
-            return CellLighting.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static CellLighting Copy(
-            CellLighting item,
-            CellLighting_CopyMask copyMask = null,
-            CellLighting def = null)
-        {
-            CellLighting ret;
-            if (item.GetType().Equals(typeof(CellLighting)))
-            {
-                ret = new CellLighting();
-            }
-            else
-            {
-                ret = (CellLighting)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((CellLightingSetterCommon)((ICellLightingInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -709,6 +678,17 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static CellLighting Copy(
+            this CellLighting item,
+            CellLighting_CopyMask copyMask = null,
+            CellLighting def = null)
+        {
+            return ((CellLightingSetterCommon)((ICellLightingInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -1016,10 +996,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.FogClipDistance = default(Single);
         }
         
-        public static CellLighting GetNew()
+        public CellLighting GetNew()
         {
             return new CellLighting();
         }
+        
+        public CellLighting Copy(
+            CellLighting item,
+            CellLighting_CopyMask copyMask = null,
+            CellLighting def = null)
+        {
+            CellLighting ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class CellLightingCommon
     {

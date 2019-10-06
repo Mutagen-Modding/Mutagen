@@ -388,37 +388,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public RoadPoint Copy(
-            RoadPoint_CopyMask copyMask = null,
-            RoadPoint def = null)
-        {
-            return RoadPoint.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static RoadPoint Copy(
-            RoadPoint item,
-            RoadPoint_CopyMask copyMask = null,
-            RoadPoint def = null)
-        {
-            RoadPoint ret;
-            if (item.GetType().Equals(typeof(RoadPoint)))
-            {
-                ret = new RoadPoint();
-            }
-            else
-            {
-                ret = (RoadPoint)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((RoadPointSetterCommon)((IRoadPointInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -604,6 +573,17 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static RoadPoint Copy(
+            this RoadPoint item,
+            RoadPoint_CopyMask copyMask = null,
+            RoadPoint def = null)
+        {
+            return ((RoadPointSetterCommon)((IRoadPointInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -832,10 +812,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Connections.Clear();
         }
         
-        public static RoadPoint GetNew()
+        public RoadPoint GetNew()
         {
             return new RoadPoint();
         }
+        
+        public RoadPoint Copy(
+            RoadPoint item,
+            RoadPoint_CopyMask copyMask = null,
+            RoadPoint def = null)
+        {
+            RoadPoint ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class RoadPointCommon
     {

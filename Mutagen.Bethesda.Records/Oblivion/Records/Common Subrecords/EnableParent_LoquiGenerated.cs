@@ -383,37 +383,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public EnableParent Copy(
-            EnableParent_CopyMask copyMask = null,
-            EnableParent def = null)
-        {
-            return EnableParent.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static EnableParent Copy(
-            EnableParent item,
-            EnableParent_CopyMask copyMask = null,
-            EnableParent def = null)
-        {
-            EnableParent ret;
-            if (item.GetType().Equals(typeof(EnableParent)))
-            {
-                ret = new EnableParent();
-            }
-            else
-            {
-                ret = (EnableParent)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((EnableParentSetterCommon)((IEnableParentInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -598,6 +567,17 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static EnableParent Copy(
+            this EnableParent item,
+            EnableParent_CopyMask copyMask = null,
+            EnableParent def = null)
+        {
+            return ((EnableParentSetterCommon)((IEnableParentInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -814,10 +794,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Flags = default(EnableParent.Flag);
         }
         
-        public static EnableParent GetNew()
+        public EnableParent GetNew()
         {
             return new EnableParent();
         }
+        
+        public EnableParent Copy(
+            EnableParent item,
+            EnableParent_CopyMask copyMask = null,
+            EnableParent def = null)
+        {
+            EnableParent ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class EnableParentCommon
     {

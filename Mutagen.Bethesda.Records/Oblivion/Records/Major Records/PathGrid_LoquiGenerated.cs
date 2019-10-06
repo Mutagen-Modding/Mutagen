@@ -550,37 +550,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public PathGrid Copy(
-            PathGrid_CopyMask copyMask = null,
-            PathGrid def = null)
-        {
-            return PathGrid.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static PathGrid Copy(
-            PathGrid item,
-            PathGrid_CopyMask copyMask = null,
-            PathGrid def = null)
-        {
-            PathGrid ret;
-            if (item.GetType().Equals(typeof(PathGrid)))
-            {
-                ret = new PathGrid();
-            }
-            else
-            {
-                ret = (PathGrid)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((PathGridSetterCommon)((IPathGridInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -1024,10 +993,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IPathGridInternal)item);
         }
         
-        public static PathGrid GetNew()
-        {
-            return (PathGrid)System.Activator.CreateInstance(typeof(PathGrid));
-        }
     }
     public partial class PathGridCommon : OblivionMajorRecordCommon
     {
@@ -1373,8 +1338,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return (PathGridPoint)r;
                                 case CopyOption.MakeCopy:
-                                    return PathGridPoint.Copy(
-                                        r,
+                                    return r.Copy(
                                         copyMask?.PointToPointConnections?.Specific,
                                         def: d);
                                 default:
@@ -1437,8 +1401,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return (InterCellPoint)r;
                                 case CopyOption.MakeCopy:
-                                    return InterCellPoint.Copy(
-                                        r,
+                                    return r.Copy(
                                         copyMask?.InterCellConnections?.Specific,
                                         def: d);
                                 default:
@@ -1471,8 +1434,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return (PointToReferenceMapping)r;
                                 case CopyOption.MakeCopy:
-                                    return PointToReferenceMapping.Copy(
-                                        r,
+                                    return r.Copy(
                                         copyMask?.PointToReferenceMappings?.Specific,
                                         def: d);
                                 default:

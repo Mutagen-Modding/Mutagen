@@ -787,37 +787,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public DialogItem Copy(
-            DialogItem_CopyMask copyMask = null,
-            DialogItem def = null)
-        {
-            return DialogItem.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static DialogItem Copy(
-            DialogItem item,
-            DialogItem_CopyMask copyMask = null,
-            DialogItem def = null)
-        {
-            DialogItem ret;
-            if (item.GetType().Equals(typeof(DialogItem)))
-            {
-                ret = new DialogItem();
-            }
-            else
-            {
-                ret = (DialogItem)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((DialogItemSetterCommon)((IDialogItemInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -1400,10 +1369,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IDialogItemInternal)item);
         }
         
-        public static DialogItem GetNew()
-        {
-            return (DialogItem)System.Activator.CreateInstance(typeof(DialogItem));
-        }
     }
     public partial class DialogItemCommon : OblivionMajorRecordCommon
     {
@@ -1945,8 +1910,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return (DialogResponse)r;
                                 case CopyOption.MakeCopy:
-                                    return DialogResponse.Copy(
-                                        r,
+                                    return r.Copy(
                                         copyMask?.Responses?.Specific,
                                         def: d);
                                 default:
@@ -1979,8 +1943,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return (Condition)r;
                                 case CopyOption.MakeCopy:
-                                    return Condition.Copy(
-                                        r,
+                                    return r.Copy(
                                         copyMask?.Conditions?.Specific,
                                         def: d);
                                 default:

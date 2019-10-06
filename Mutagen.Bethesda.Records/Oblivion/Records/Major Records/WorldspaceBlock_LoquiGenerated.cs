@@ -457,37 +457,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public WorldspaceBlock Copy(
-            WorldspaceBlock_CopyMask copyMask = null,
-            WorldspaceBlock def = null)
-        {
-            return WorldspaceBlock.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static WorldspaceBlock Copy(
-            WorldspaceBlock item,
-            WorldspaceBlock_CopyMask copyMask = null,
-            WorldspaceBlock def = null)
-        {
-            WorldspaceBlock ret;
-            if (item.GetType().Equals(typeof(WorldspaceBlock)))
-            {
-                ret = new WorldspaceBlock();
-            }
-            else
-            {
-                ret = (WorldspaceBlock)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((WorldspaceBlockSetterCommon)((IWorldspaceBlockInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -687,6 +656,17 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static WorldspaceBlock Copy(
+            this WorldspaceBlock item,
+            WorldspaceBlock_CopyMask copyMask = null,
+            WorldspaceBlock def = null)
+        {
+            return ((WorldspaceBlockSetterCommon)((IWorldspaceBlockInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
         #region Mutagen
@@ -957,10 +937,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Items.Unset();
         }
         
-        public static WorldspaceBlock GetNew()
+        public WorldspaceBlock GetNew()
         {
             return new WorldspaceBlock();
         }
+        
+        public WorldspaceBlock Copy(
+            WorldspaceBlock item,
+            WorldspaceBlock_CopyMask copyMask = null,
+            WorldspaceBlock def = null)
+        {
+            WorldspaceBlock ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
         #region Mutagen
         public IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(IWorldspaceBlockInternal obj)
         {
@@ -1210,8 +1204,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return (WorldspaceSubBlock)r;
                                 case CopyOption.MakeCopy:
-                                    return WorldspaceSubBlock.Copy(
-                                        r,
+                                    return r.Copy(
                                         copyMask?.Items?.Specific,
                                         def: d);
                                 default:

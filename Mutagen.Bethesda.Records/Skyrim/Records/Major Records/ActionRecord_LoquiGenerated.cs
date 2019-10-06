@@ -448,37 +448,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        public ActionRecord Copy(
-            ActionRecord_CopyMask copyMask = null,
-            ActionRecord def = null)
-        {
-            return ActionRecord.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static ActionRecord Copy(
-            ActionRecord item,
-            ActionRecord_CopyMask copyMask = null,
-            ActionRecord def = null)
-        {
-            ActionRecord ret;
-            if (item.GetType().Equals(typeof(ActionRecord)))
-            {
-                ret = new ActionRecord();
-            }
-            else
-            {
-                ret = (ActionRecord)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((ActionRecordSetterCommon)((IActionRecordInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -868,10 +837,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IActionRecordInternal)item);
         }
         
-        public static ActionRecord GetNew()
-        {
-            return (ActionRecord)System.Activator.CreateInstance(typeof(ActionRecord));
-        }
     }
     public partial class ActionRecordCommon : SkyrimMajorRecordCommon
     {

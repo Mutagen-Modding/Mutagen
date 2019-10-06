@@ -303,29 +303,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        public NPCSpawn Copy(
-            NPCSpawn_CopyMask copyMask = null,
-            NPCSpawn def = null)
-        {
-            return NPCSpawn.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static NPCSpawn Copy(
-            NPCSpawn item,
-            NPCSpawn_CopyMask copyMask = null,
-            NPCSpawn def = null)
-        {
-            NPCSpawn ret = (NPCSpawn)System.Activator.CreateInstance(item.GetType());
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((NPCSpawnSetterCommon)((INPCSpawnInternalGetter)this).CommonSetterInstance()).Clear(this);

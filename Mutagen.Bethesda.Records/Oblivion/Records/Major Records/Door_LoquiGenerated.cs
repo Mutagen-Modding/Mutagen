@@ -676,37 +676,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public Door Copy(
-            Door_CopyMask copyMask = null,
-            Door def = null)
-        {
-            return Door.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static Door Copy(
-            Door item,
-            Door_CopyMask copyMask = null,
-            Door def = null)
-        {
-            Door ret;
-            if (item.GetType().Equals(typeof(Door)))
-            {
-                ret = new Door();
-            }
-            else
-            {
-                ret = (Door)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((DoorSetterCommon)((IDoorInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -1254,10 +1223,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IDoorInternal)item);
         }
         
-        public static Door GetNew()
-        {
-            return (Door)System.Activator.CreateInstance(typeof(Door));
-        }
     }
     public partial class DoorCommon : OblivionMajorRecordCommon
     {
@@ -1681,8 +1646,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     copyMask: copyMask?.Model.Specific);
                                 break;
                             case CopyOption.MakeCopy:
-                                item.Model = Model.Copy(
-                                    rhsModelItem,
+                                item.Model = rhsModelItem.Copy(
                                     copyMask?.Model?.Specific,
                                     def: defModelItem);
                                 break;

@@ -394,37 +394,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public RegionSound Copy(
-            RegionSound_CopyMask copyMask = null,
-            RegionSound def = null)
-        {
-            return RegionSound.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static RegionSound Copy(
-            RegionSound item,
-            RegionSound_CopyMask copyMask = null,
-            RegionSound def = null)
-        {
-            RegionSound ret;
-            if (item.GetType().Equals(typeof(RegionSound)))
-            {
-                ret = new RegionSound();
-            }
-            else
-            {
-                ret = (RegionSound)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((RegionSoundSetterCommon)((IRegionSoundInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -615,6 +584,17 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static RegionSound Copy(
+            this RegionSound item,
+            RegionSound_CopyMask copyMask = null,
+            RegionSound def = null)
+        {
+            return ((RegionSoundSetterCommon)((IRegionSoundInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -842,10 +822,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Chance = default(Single);
         }
         
-        public static RegionSound GetNew()
+        public RegionSound GetNew()
         {
             return new RegionSound();
         }
+        
+        public RegionSound Copy(
+            RegionSound item,
+            RegionSound_CopyMask copyMask = null,
+            RegionSound def = null)
+        {
+            RegionSound ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class RegionSoundCommon
     {

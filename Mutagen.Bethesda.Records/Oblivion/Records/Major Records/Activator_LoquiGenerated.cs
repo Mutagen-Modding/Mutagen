@@ -556,37 +556,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public Activator Copy(
-            Activator_CopyMask copyMask = null,
-            Activator def = null)
-        {
-            return Activator.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static Activator Copy(
-            Activator item,
-            Activator_CopyMask copyMask = null,
-            Activator def = null)
-        {
-            Activator ret;
-            if (item.GetType().Equals(typeof(Activator)))
-            {
-                ret = new Activator();
-            }
-            else
-            {
-                ret = (Activator)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((ActivatorSetterCommon)((IActivatorInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -1045,10 +1014,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IActivatorInternal)item);
         }
         
-        public static Activator GetNew()
-        {
-            return (Activator)System.Activator.CreateInstance(typeof(Activator));
-        }
     }
     public partial class ActivatorCommon : OblivionMajorRecordCommon
     {
@@ -1391,8 +1356,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     copyMask: copyMask?.Model.Specific);
                                 break;
                             case CopyOption.MakeCopy:
-                                item.Model = Model.Copy(
-                                    rhsModelItem,
+                                item.Model = rhsModelItem.Copy(
                                     copyMask?.Model?.Specific,
                                     def: defModelItem);
                                 break;

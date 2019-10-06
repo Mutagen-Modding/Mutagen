@@ -439,37 +439,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public GlobalInt Copy(
-            GlobalInt_CopyMask copyMask = null,
-            GlobalInt def = null)
-        {
-            return GlobalInt.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static GlobalInt Copy(
-            GlobalInt item,
-            GlobalInt_CopyMask copyMask = null,
-            GlobalInt def = null)
-        {
-            GlobalInt ret;
-            if (item.GetType().Equals(typeof(GlobalInt)))
-            {
-                ret = new GlobalInt();
-            }
-            else
-            {
-                ret = (GlobalInt)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((GlobalIntSetterCommon)((IGlobalIntInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -862,10 +831,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IGlobalIntInternal)item);
         }
         
-        public static GlobalInt GetNew()
-        {
-            return (GlobalInt)System.Activator.CreateInstance(typeof(GlobalInt));
-        }
     }
     public partial class GlobalIntCommon : GlobalCommon
     {

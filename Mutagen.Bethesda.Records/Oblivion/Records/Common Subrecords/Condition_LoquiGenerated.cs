@@ -430,37 +430,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public Condition Copy(
-            Condition_CopyMask copyMask = null,
-            Condition def = null)
-        {
-            return Condition.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static Condition Copy(
-            Condition item,
-            Condition_CopyMask copyMask = null,
-            Condition def = null)
-        {
-            Condition ret;
-            if (item.GetType().Equals(typeof(Condition)))
-            {
-                ret = new Condition();
-            }
-            else
-            {
-                ret = (Condition)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((ConditionSetterCommon)((IConditionInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -678,6 +647,17 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static Condition Copy(
+            this Condition item,
+            Condition_CopyMask copyMask = null,
+            Condition def = null)
+        {
+            return ((ConditionSetterCommon)((IConditionInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -984,10 +964,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.ThirdParameter = default(Int32);
         }
         
-        public static Condition GetNew()
+        public Condition GetNew()
         {
             return new Condition();
         }
+        
+        public Condition Copy(
+            Condition item,
+            Condition_CopyMask copyMask = null,
+            Condition def = null)
+        {
+            Condition ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class ConditionCommon
     {

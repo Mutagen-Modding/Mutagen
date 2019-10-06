@@ -591,37 +591,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public DialogTopic Copy(
-            DialogTopic_CopyMask copyMask = null,
-            DialogTopic def = null)
-        {
-            return DialogTopic.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static DialogTopic Copy(
-            DialogTopic item,
-            DialogTopic_CopyMask copyMask = null,
-            DialogTopic def = null)
-        {
-            DialogTopic ret;
-            if (item.GetType().Equals(typeof(DialogTopic)))
-            {
-                ret = new DialogTopic();
-            }
-            else
-            {
-                ret = (DialogTopic)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((DialogTopicSetterCommon)((IDialogTopicInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -1105,10 +1074,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IDialogTopicInternal)item);
         }
         
-        public static DialogTopic GetNew()
-        {
-            return (DialogTopic)System.Activator.CreateInstance(typeof(DialogTopic));
-        }
         #region Mutagen
         public IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(IDialogTopicInternal obj)
         {
@@ -1555,10 +1520,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return (DialogItem)r;
                                 case CopyOption.MakeCopy:
-                                    return DialogItem.Copy(
-                                        r,
-                                        copyMask?.Items?.Specific,
+                                    var copyRet = new DialogItem(r.FormKey);
+                                    copyRet.CopyFieldsFrom(
+                                        rhs: r,
+                                        copyMask: copyMask?.Items?.Specific,
                                         def: d);
+                                    return copyRet;
                                 default:
                                     throw new NotImplementedException($"Unknown CopyOption {copyMask?.Items.Overall}. Cannot execute copy.");
                             }

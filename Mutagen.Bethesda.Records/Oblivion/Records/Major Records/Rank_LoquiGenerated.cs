@@ -524,37 +524,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public Rank Copy(
-            Rank_CopyMask copyMask = null,
-            Rank def = null)
-        {
-            return Rank.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static Rank Copy(
-            Rank item,
-            Rank_CopyMask copyMask = null,
-            Rank def = null)
-        {
-            Rank ret;
-            if (item.GetType().Equals(typeof(Rank)))
-            {
-                ret = new Rank();
-            }
-            else
-            {
-                ret = (Rank)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((RankSetterCommon)((IRankInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -764,6 +733,17 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static Rank Copy(
+            this Rank item,
+            Rank_CopyMask copyMask = null,
+            Rank def = null)
+        {
+            return ((RankSetterCommon)((IRankInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -1022,10 +1002,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Insignia_Unset();
         }
         
-        public static Rank GetNew()
+        public Rank GetNew()
         {
             return new Rank();
         }
+        
+        public Rank Copy(
+            Rank item,
+            Rank_CopyMask copyMask = null,
+            Rank def = null)
+        {
+            Rank ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class RankCommon
     {

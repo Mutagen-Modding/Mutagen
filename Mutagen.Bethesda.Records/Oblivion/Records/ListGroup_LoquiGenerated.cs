@@ -405,39 +405,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public ListGroup<T> Copy<T_CopyMask>(
-            ListGroup_CopyMask<T_CopyMask> copyMask = null,
-            ListGroup<T> def = null)
-            where T_CopyMask : class, new()
-        {
-            return ListGroup<T>.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static ListGroup<T> Copy<T_CopyMask>(
-            ListGroup<T> item,
-            ListGroup_CopyMask<T_CopyMask> copyMask = null,
-            ListGroup<T> def = null)
-            where T_CopyMask : class, new()
-        {
-            ListGroup<T> ret;
-            if (item.GetType().Equals(typeof(ListGroup<T>)))
-            {
-                ret = new ListGroup<T>();
-            }
-            else
-            {
-                ret = (ListGroup<T>)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom<T, T_CopyMask>(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((ListGroupSetterCommon<T>)((IListGroupInternalGetter<T>)this).CommonSetterInstance()).Clear(this);
@@ -646,6 +613,19 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static ListGroup<T> Copy<T, T_CopyMask>(
+            this ListGroup<T> item,
+            ListGroup_CopyMask<T_CopyMask> copyMask = null,
+            ListGroup<T> def = null)
+            where T : IXmlItem, IBinaryItem, ILoquiObjectSetter<T>
+            where T_CopyMask : class, new()
+        {
+            return ((ListGroupSetterCommon<T>)((IListGroupInternalGetter<T>)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
         #region Mutagen
@@ -902,10 +882,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Items.Clear();
         }
         
-        public static ListGroup<T> GetNew()
+        public ListGroup<T> GetNew()
         {
             return new ListGroup<T>();
         }
+        
+        public ListGroup<T> Copy<T_CopyMask>(
+            ListGroup<T> item,
+            ListGroup_CopyMask<T_CopyMask> copyMask = null,
+            ListGroup<T> def = null)
+            where T_CopyMask : class, new()
+        {
+            ListGroup<T> ret = GetNew();
+            ret.CopyFieldsFrom<T, T_CopyMask>(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
         #region Mutagen
         public IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(IListGroupInternal<T> obj)
         {

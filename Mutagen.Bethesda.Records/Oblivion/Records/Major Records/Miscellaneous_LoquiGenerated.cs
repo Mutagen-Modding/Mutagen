@@ -648,37 +648,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public Miscellaneous Copy(
-            Miscellaneous_CopyMask copyMask = null,
-            Miscellaneous def = null)
-        {
-            return Miscellaneous.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static Miscellaneous Copy(
-            Miscellaneous item,
-            Miscellaneous_CopyMask copyMask = null,
-            Miscellaneous def = null)
-        {
-            Miscellaneous ret;
-            if (item.GetType().Equals(typeof(Miscellaneous)))
-            {
-                ret = new Miscellaneous();
-            }
-            else
-            {
-                ret = (Miscellaneous)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((MiscellaneousSetterCommon)((IMiscellaneousInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -1200,10 +1169,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IMiscellaneousInternal)item);
         }
         
-        public static Miscellaneous GetNew()
-        {
-            return (Miscellaneous)System.Activator.CreateInstance(typeof(Miscellaneous));
-        }
     }
     public partial class MiscellaneousCommon : ItemAbstractCommon
     {
@@ -1601,8 +1566,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     copyMask: copyMask?.Model.Specific);
                                 break;
                             case CopyOption.MakeCopy:
-                                item.Model = Model.Copy(
-                                    rhsModelItem,
+                                item.Model = rhsModelItem.Copy(
                                     copyMask?.Model?.Specific,
                                     def: defModelItem);
                                 break;

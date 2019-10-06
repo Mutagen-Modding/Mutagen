@@ -706,37 +706,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public Grass Copy(
-            Grass_CopyMask copyMask = null,
-            Grass def = null)
-        {
-            return Grass.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static Grass Copy(
-            Grass item,
-            Grass_CopyMask copyMask = null,
-            Grass def = null)
-        {
-            Grass ret;
-            if (item.GetType().Equals(typeof(Grass)))
-            {
-                ret = new Grass();
-            }
-            else
-            {
-                ret = (Grass)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((GrassSetterCommon)((IGrassInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -1372,10 +1341,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IGrassInternal)item);
         }
         
-        public static Grass GetNew()
-        {
-            return (Grass)System.Activator.CreateInstance(typeof(Grass));
-        }
     }
     public partial class GrassCommon : OblivionMajorRecordCommon
     {
@@ -1742,8 +1707,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     copyMask: copyMask?.Model.Specific);
                                 break;
                             case CopyOption.MakeCopy:
-                                item.Model = Model.Copy(
-                                    rhsModelItem,
+                                item.Model = rhsModelItem.Copy(
                                     copyMask?.Model?.Specific,
                                     def: defModelItem);
                                 break;

@@ -459,37 +459,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public GenderedBodyData Copy(
-            GenderedBodyData_CopyMask copyMask = null,
-            GenderedBodyData def = null)
-        {
-            return GenderedBodyData.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static GenderedBodyData Copy(
-            GenderedBodyData item,
-            GenderedBodyData_CopyMask copyMask = null,
-            GenderedBodyData def = null)
-        {
-            GenderedBodyData ret;
-            if (item.GetType().Equals(typeof(GenderedBodyData)))
-            {
-                ret = new GenderedBodyData();
-            }
-            else
-            {
-                ret = (GenderedBodyData)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((GenderedBodyDataSetterCommon)((IGenderedBodyDataInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -679,6 +648,17 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static GenderedBodyData Copy(
+            this GenderedBodyData item,
+            GenderedBodyData_CopyMask copyMask = null,
+            GenderedBodyData def = null)
+        {
+            return ((GenderedBodyDataSetterCommon)((IGenderedBodyDataInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -907,10 +887,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Female_Unset();
         }
         
-        public static GenderedBodyData GetNew()
+        public GenderedBodyData GetNew()
         {
             return new GenderedBodyData();
         }
+        
+        public GenderedBodyData Copy(
+            GenderedBodyData item,
+            GenderedBodyData_CopyMask copyMask = null,
+            GenderedBodyData def = null)
+        {
+            GenderedBodyData ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class GenderedBodyDataCommon
     {
@@ -1102,8 +1096,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     copyMask: copyMask?.Male.Specific);
                                 break;
                             case CopyOption.MakeCopy:
-                                item.Male = BodyData.Copy(
-                                    rhsMaleItem,
+                                item.Male = rhsMaleItem.Copy(
                                     copyMask?.Male?.Specific,
                                     def: defMaleItem);
                                 break;
@@ -1154,8 +1147,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     copyMask: copyMask?.Female.Specific);
                                 break;
                             case CopyOption.MakeCopy:
-                                item.Female = BodyData.Copy(
-                                    rhsFemaleItem,
+                                item.Female = rhsFemaleItem.Copy(
                                     copyMask?.Female?.Specific,
                                     def: defFemaleItem);
                                 break;

@@ -382,37 +382,6 @@ namespace Mutagen.Bethesda.Tests
             }
         }
 
-        public PassthroughSettings Copy(
-            PassthroughSettings_CopyMask copyMask = null,
-            PassthroughSettings def = null)
-        {
-            return PassthroughSettings.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static PassthroughSettings Copy(
-            PassthroughSettings item,
-            PassthroughSettings_CopyMask copyMask = null,
-            PassthroughSettings def = null)
-        {
-            PassthroughSettings ret;
-            if (item.GetType().Equals(typeof(PassthroughSettings)))
-            {
-                ret = new PassthroughSettings();
-            }
-            else
-            {
-                ret = (PassthroughSettings)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((PassthroughSettingsSetterCommon)((IPassthroughSettingsInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -623,6 +592,17 @@ namespace Mutagen.Bethesda.Tests
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static PassthroughSettings Copy(
+            this PassthroughSettings item,
+            PassthroughSettings_CopyMask copyMask = null,
+            PassthroughSettings def = null)
+        {
+            return ((PassthroughSettingsSetterCommon)((IPassthroughSettingsInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -899,10 +879,24 @@ namespace Mutagen.Bethesda.Tests.Internals
             item.TestFolder = default(Boolean);
         }
         
-        public static PassthroughSettings GetNew()
+        public PassthroughSettings GetNew()
         {
             return new PassthroughSettings();
         }
+        
+        public PassthroughSettings Copy(
+            PassthroughSettings item,
+            PassthroughSettings_CopyMask copyMask = null,
+            PassthroughSettings def = null)
+        {
+            PassthroughSettings ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class PassthroughSettingsCommon
     {

@@ -354,37 +354,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public SkillBoost Copy(
-            SkillBoost_CopyMask copyMask = null,
-            SkillBoost def = null)
-        {
-            return SkillBoost.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static SkillBoost Copy(
-            SkillBoost item,
-            SkillBoost_CopyMask copyMask = null,
-            SkillBoost def = null)
-        {
-            SkillBoost ret;
-            if (item.GetType().Equals(typeof(SkillBoost)))
-            {
-                ret = new SkillBoost();
-            }
-            else
-            {
-                ret = (SkillBoost)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((SkillBoostSetterCommon)((ISkillBoostInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -566,6 +535,17 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static SkillBoost Copy(
+            this SkillBoost item,
+            SkillBoost_CopyMask copyMask = null,
+            SkillBoost def = null)
+        {
+            return ((SkillBoostSetterCommon)((ISkillBoostInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -780,10 +760,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Boost = default(SByte);
         }
         
-        public static SkillBoost GetNew()
+        public SkillBoost GetNew()
         {
             return new SkillBoost();
         }
+        
+        public SkillBoost Copy(
+            SkillBoost item,
+            SkillBoost_CopyMask copyMask = null,
+            SkillBoost def = null)
+        {
+            SkillBoost ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class SkillBoostCommon
     {

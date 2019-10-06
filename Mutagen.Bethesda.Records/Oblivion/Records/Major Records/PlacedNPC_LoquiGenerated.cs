@@ -846,37 +846,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public PlacedNPC Copy(
-            PlacedNPC_CopyMask copyMask = null,
-            PlacedNPC def = null)
-        {
-            return PlacedNPC.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static PlacedNPC Copy(
-            PlacedNPC item,
-            PlacedNPC_CopyMask copyMask = null,
-            PlacedNPC def = null)
-        {
-            PlacedNPC ret;
-            if (item.GetType().Equals(typeof(PlacedNPC)))
-            {
-                ret = new PlacedNPC();
-            }
-            else
-            {
-                ret = (PlacedNPC)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((PlacedNPCSetterCommon)((IPlacedNPCInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -1513,10 +1482,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IPlacedNPCInternal)item);
         }
         
-        public static PlacedNPC GetNew()
-        {
-            return (PlacedNPC)System.Activator.CreateInstance(typeof(PlacedNPC));
-        }
     }
     public partial class PlacedNPCCommon : OblivionMajorRecordCommon
     {
@@ -2017,8 +1982,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     copyMask: copyMask?.DistantLODData.Specific);
                                 break;
                             case CopyOption.MakeCopy:
-                                item.DistantLODData = DistantLODData.Copy(
-                                    rhsDistantLODDataItem,
+                                item.DistantLODData = rhsDistantLODDataItem.Copy(
                                     copyMask?.DistantLODData?.Specific,
                                     def: defDistantLODDataItem);
                                 break;
@@ -2069,8 +2033,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     copyMask: copyMask?.EnableParent.Specific);
                                 break;
                             case CopyOption.MakeCopy:
-                                item.EnableParent = EnableParent.Copy(
-                                    rhsEnableParentItem,
+                                item.EnableParent = rhsEnableParentItem.Copy(
                                     copyMask?.EnableParent?.Specific,
                                     def: defEnableParentItem);
                                 break;

@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda.Generation
     {
         static void AttachDebugInspector()
         {
-            string testString = "lic static Ammo Copy_ToLoqui(";
+            string testString = "item.Landscape = rhsLandscapeItem.Copy(";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>

@@ -565,37 +565,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public LeveledItem Copy(
-            LeveledItem_CopyMask copyMask = null,
-            LeveledItem def = null)
-        {
-            return LeveledItem.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static LeveledItem Copy(
-            LeveledItem item,
-            LeveledItem_CopyMask copyMask = null,
-            LeveledItem def = null)
-        {
-            LeveledItem ret;
-            if (item.GetType().Equals(typeof(LeveledItem)))
-            {
-                ret = new LeveledItem();
-            }
-            else
-            {
-                ret = (LeveledItem)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((LeveledItemSetterCommon)((ILeveledItemInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -1033,10 +1002,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ILeveledItemInternal)item);
         }
         
-        public static LeveledItem GetNew()
-        {
-            return (LeveledItem)System.Activator.CreateInstance(typeof(LeveledItem));
-        }
     }
     public partial class LeveledItemCommon : ItemAbstractCommon
     {
@@ -1425,8 +1390,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return (LeveledEntry<ItemAbstract>)r;
                                 case CopyOption.MakeCopy:
-                                    return LeveledEntry<ItemAbstract>.Copy(
-                                        r,
+                                    return r.Copy(
                                         copyMask?.Entries?.Specific,
                                         def: d);
                                 default:

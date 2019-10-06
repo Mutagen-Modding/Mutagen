@@ -559,37 +559,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public LogEntry Copy(
-            LogEntry_CopyMask copyMask = null,
-            LogEntry def = null)
-        {
-            return LogEntry.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static LogEntry Copy(
-            LogEntry item,
-            LogEntry_CopyMask copyMask = null,
-            LogEntry def = null)
-        {
-            LogEntry ret;
-            if (item.GetType().Equals(typeof(LogEntry)))
-            {
-                ret = new LogEntry();
-            }
-            else
-            {
-                ret = (LogEntry)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((LogEntrySetterCommon)((ILogEntryInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -793,6 +762,17 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static LogEntry Copy(
+            this LogEntry item,
+            LogEntry_CopyMask copyMask = null,
+            LogEntry def = null)
+        {
+            return ((LogEntrySetterCommon)((ILogEntryInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -1057,10 +1037,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.ResultScript_Unset();
         }
         
-        public static LogEntry GetNew()
+        public LogEntry GetNew()
         {
             return new LogEntry();
         }
+        
+        public LogEntry Copy(
+            LogEntry item,
+            LogEntry_CopyMask copyMask = null,
+            LogEntry def = null)
+        {
+            LogEntry ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class LogEntryCommon
     {
@@ -1313,8 +1307,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return (Condition)r;
                                 case CopyOption.MakeCopy:
-                                    return Condition.Copy(
-                                        r,
+                                    return r.Copy(
                                         copyMask?.Conditions?.Specific,
                                         def: d);
                                 default:
@@ -1388,8 +1381,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     copyMask: copyMask?.ResultScript.Specific);
                                 break;
                             case CopyOption.MakeCopy:
-                                item.ResultScript = ScriptFields.Copy(
-                                    rhsResultScriptItem,
+                                item.ResultScript = rhsResultScriptItem.Copy(
                                     copyMask?.ResultScript?.Specific,
                                     def: defResultScriptItem);
                                 break;

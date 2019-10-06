@@ -734,37 +734,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public SoulGem Copy(
-            SoulGem_CopyMask copyMask = null,
-            SoulGem def = null)
-        {
-            return SoulGem.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static SoulGem Copy(
-            SoulGem item,
-            SoulGem_CopyMask copyMask = null,
-            SoulGem def = null)
-        {
-            SoulGem ret;
-            if (item.GetType().Equals(typeof(SoulGem)))
-            {
-                ret = new SoulGem();
-            }
-            else
-            {
-                ret = (SoulGem)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((SoulGemSetterCommon)((ISoulGemInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -1334,10 +1303,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ISoulGemInternal)item);
         }
         
-        public static SoulGem GetNew()
-        {
-            return (SoulGem)System.Activator.CreateInstance(typeof(SoulGem));
-        }
     }
     public partial class SoulGemCommon : ItemAbstractCommon
     {
@@ -1767,8 +1732,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     copyMask: copyMask?.Model.Specific);
                                 break;
                             case CopyOption.MakeCopy:
-                                item.Model = Model.Copy(
-                                    rhsModelItem,
+                                item.Model = rhsModelItem.Copy(
                                     copyMask?.Model?.Specific,
                                     def: defModelItem);
                                 break;

@@ -438,29 +438,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public RegionData Copy(
-            RegionData_CopyMask copyMask = null,
-            RegionData def = null)
-        {
-            return RegionData.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static RegionData Copy(
-            RegionData item,
-            RegionData_CopyMask copyMask = null,
-            RegionData def = null)
-        {
-            RegionData ret = (RegionData)System.Activator.CreateInstance(item.GetType());
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((RegionDataSetterCommon)((IRegionDataInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -652,6 +629,17 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static RegionData Copy(
+            this RegionData item,
+            RegionData_CopyMask copyMask = null,
+            RegionData def = null)
+        {
+            return ((RegionDataSetterCommon)((IRegionDataInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -891,6 +879,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ClearPartial();
             item.Flags = default(RegionData.RegionDataFlag);
             item.Priority = default(Byte);
+        }
+        
+        public RegionData Copy(
+            RegionData item,
+            RegionData_CopyMask copyMask = null,
+            RegionData def = null)
+        {
+            RegionData ret = (RegionData)System.Activator.CreateInstance(item.GetType());
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
         }
         
     }

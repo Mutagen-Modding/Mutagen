@@ -648,37 +648,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public Key Copy(
-            Key_CopyMask copyMask = null,
-            Key def = null)
-        {
-            return Key.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static Key Copy(
-            Key item,
-            Key_CopyMask copyMask = null,
-            Key def = null)
-        {
-            Key ret;
-            if (item.GetType().Equals(typeof(Key)))
-            {
-                ret = new Key();
-            }
-            else
-            {
-                ret = (Key)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((KeySetterCommon)((IKeyInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -1200,10 +1169,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IKeyInternal)item);
         }
         
-        public static Key GetNew()
-        {
-            return (Key)System.Activator.CreateInstance(typeof(Key));
-        }
     }
     public partial class KeyCommon : ItemAbstractCommon
     {
@@ -1601,8 +1566,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     copyMask: copyMask?.Model.Specific);
                                 break;
                             case CopyOption.MakeCopy:
-                                item.Model = Model.Copy(
-                                    rhsModelItem,
+                                item.Model = rhsModelItem.Copy(
                                     copyMask?.Model?.Specific,
                                     def: defModelItem);
                                 break;

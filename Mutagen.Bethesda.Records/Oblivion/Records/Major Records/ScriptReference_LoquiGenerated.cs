@@ -267,29 +267,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        public ScriptReference Copy(
-            ScriptReference_CopyMask copyMask = null,
-            ScriptReference def = null)
-        {
-            return ScriptReference.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static ScriptReference Copy(
-            ScriptReference item,
-            ScriptReference_CopyMask copyMask = null,
-            ScriptReference def = null)
-        {
-            ScriptReference ret = (ScriptReference)System.Activator.CreateInstance(item.GetType());
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((ScriptReferenceSetterCommon)((IScriptReferenceInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -459,6 +436,17 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static ScriptReference Copy(
+            this ScriptReference item,
+            ScriptReference_CopyMask copyMask = null,
+            ScriptReference def = null)
+        {
+            return ((ScriptReferenceSetterCommon)((IScriptReferenceInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -654,6 +642,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void Clear(IScriptReferenceInternal item)
         {
             ClearPartial();
+        }
+        
+        public ScriptReference Copy(
+            ScriptReference item,
+            ScriptReference_CopyMask copyMask = null,
+            ScriptReference def = null)
+        {
+            ScriptReference ret = (ScriptReference)System.Activator.CreateInstance(item.GetType());
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
         }
         
     }

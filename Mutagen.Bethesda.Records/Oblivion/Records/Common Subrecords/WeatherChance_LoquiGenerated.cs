@@ -370,37 +370,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public WeatherChance Copy(
-            WeatherChance_CopyMask copyMask = null,
-            WeatherChance def = null)
-        {
-            return WeatherChance.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static WeatherChance Copy(
-            WeatherChance item,
-            WeatherChance_CopyMask copyMask = null,
-            WeatherChance def = null)
-        {
-            WeatherChance ret;
-            if (item.GetType().Equals(typeof(WeatherChance)))
-            {
-                ret = new WeatherChance();
-            }
-            else
-            {
-                ret = (WeatherChance)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((WeatherChanceSetterCommon)((IWeatherChanceInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -585,6 +554,17 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static WeatherChance Copy(
+            this WeatherChance item,
+            WeatherChance_CopyMask copyMask = null,
+            WeatherChance def = null)
+        {
+            return ((WeatherChanceSetterCommon)((IWeatherChanceInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -799,10 +779,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Chance = default(Int32);
         }
         
-        public static WeatherChance GetNew()
+        public WeatherChance GetNew()
         {
             return new WeatherChance();
         }
+        
+        public WeatherChance Copy(
+            WeatherChance item,
+            WeatherChance_CopyMask copyMask = null,
+            WeatherChance def = null)
+        {
+            WeatherChance ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class WeatherChanceCommon
     {

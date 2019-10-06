@@ -408,37 +408,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public LockInformation Copy(
-            LockInformation_CopyMask copyMask = null,
-            LockInformation def = null)
-        {
-            return LockInformation.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static LockInformation Copy(
-            LockInformation item,
-            LockInformation_CopyMask copyMask = null,
-            LockInformation def = null)
-        {
-            LockInformation ret;
-            if (item.GetType().Equals(typeof(LockInformation)))
-            {
-                ret = new LockInformation();
-            }
-            else
-            {
-                ret = (LockInformation)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((LockInformationSetterCommon)((ILockInformationInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -635,6 +604,17 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static LockInformation Copy(
+            this LockInformation item,
+            LockInformation_CopyMask copyMask = null,
+            LockInformation def = null)
+        {
+            return ((LockInformationSetterCommon)((ILockInformationInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -877,10 +857,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Flags = default(LockInformation.Flag);
         }
         
-        public static LockInformation GetNew()
+        public LockInformation GetNew()
         {
             return new LockInformation();
         }
+        
+        public LockInformation Copy(
+            LockInformation item,
+            LockInformation_CopyMask copyMask = null,
+            LockInformation def = null)
+        {
+            LockInformation ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class LockInformationCommon
     {

@@ -440,37 +440,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public RegionDataObjects Copy(
-            RegionDataObjects_CopyMask copyMask = null,
-            RegionDataObjects def = null)
-        {
-            return RegionDataObjects.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static RegionDataObjects Copy(
-            RegionDataObjects item,
-            RegionDataObjects_CopyMask copyMask = null,
-            RegionDataObjects def = null)
-        {
-            RegionDataObjects ret;
-            if (item.GetType().Equals(typeof(RegionDataObjects)))
-            {
-                ret = new RegionDataObjects();
-            }
-            else
-            {
-                ret = (RegionDataObjects)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((RegionDataObjectsSetterCommon)((IRegionDataObjectsInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -632,6 +601,17 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static RegionDataObjects Copy(
+            this RegionDataObjects item,
+            RegionDataObjects_CopyMask copyMask = null,
+            RegionDataObjects def = null)
+        {
+            return ((RegionDataObjectsSetterCommon)((IRegionDataObjectsInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -846,10 +826,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IRegionDataObjectsInternal)item);
         }
         
-        public static RegionDataObjects GetNew()
+        public RegionDataObjects GetNew()
         {
             return new RegionDataObjects();
         }
+        
+        public new RegionDataObjects Copy(
+            RegionDataObjects item,
+            RegionDataObjects_CopyMask copyMask = null,
+            RegionDataObjects def = null)
+        {
+            RegionDataObjects ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class RegionDataObjectsCommon : RegionDataCommon
     {
@@ -1066,8 +1060,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return (RegionDataObject)r;
                                 case CopyOption.MakeCopy:
-                                    return RegionDataObject.Copy(
-                                        r,
+                                    return r.Copy(
                                         copyMask?.Objects?.Specific,
                                         def: d);
                                 default:

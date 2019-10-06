@@ -1183,37 +1183,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        public SkyrimMod Copy(
-            SkyrimMod_CopyMask copyMask = null,
-            SkyrimMod def = null)
-        {
-            return SkyrimMod.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static SkyrimMod Copy(
-            SkyrimMod item,
-            SkyrimMod_CopyMask copyMask = null,
-            SkyrimMod def = null)
-        {
-            SkyrimMod ret;
-            if (item.GetType().Equals(typeof(SkyrimMod)))
-            {
-                ret = new SkyrimMod();
-            }
-            else
-            {
-                ret = (SkyrimMod)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((SkyrimModSetterCommon)((ISkyrimModInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -1804,10 +1773,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ClearPartial();
         }
         
-        public static SkyrimMod GetNew()
-        {
-            return (SkyrimMod)System.Activator.CreateInstance(typeof(SkyrimMod));
-        }
         #region Mutagen
         public IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(ISkyrimModInternal obj)
         {

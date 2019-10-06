@@ -375,37 +375,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public ClassTraining Copy(
-            ClassTraining_CopyMask copyMask = null,
-            ClassTraining def = null)
-        {
-            return ClassTraining.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static ClassTraining Copy(
-            ClassTraining item,
-            ClassTraining_CopyMask copyMask = null,
-            ClassTraining def = null)
-        {
-            ClassTraining ret;
-            if (item.GetType().Equals(typeof(ClassTraining)))
-            {
-                ret = new ClassTraining();
-            }
-            else
-            {
-                ret = (ClassTraining)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((ClassTrainingSetterCommon)((IClassTrainingInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -593,6 +562,17 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static ClassTraining Copy(
+            this ClassTraining item,
+            ClassTraining_CopyMask copyMask = null,
+            ClassTraining def = null)
+        {
+            return ((ClassTrainingSetterCommon)((IClassTrainingInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -820,10 +800,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Fluff = default(Byte[]);
         }
         
-        public static ClassTraining GetNew()
+        public ClassTraining GetNew()
         {
             return new ClassTraining();
         }
+        
+        public ClassTraining Copy(
+            ClassTraining item,
+            ClassTraining_CopyMask copyMask = null,
+            ClassTraining def = null)
+        {
+            ClassTraining ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class ClassTrainingCommon
     {

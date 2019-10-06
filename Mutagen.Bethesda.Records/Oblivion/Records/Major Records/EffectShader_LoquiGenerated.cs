@@ -1856,37 +1856,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public EffectShader Copy(
-            EffectShader_CopyMask copyMask = null,
-            EffectShader def = null)
-        {
-            return EffectShader.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static EffectShader Copy(
-            EffectShader item,
-            EffectShader_CopyMask copyMask = null,
-            EffectShader def = null)
-        {
-            EffectShader ret;
-            if (item.GetType().Equals(typeof(EffectShader)))
-            {
-                ret = new EffectShader();
-            }
-            else
-            {
-                ret = (EffectShader)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((EffectShaderSetterCommon)((IEffectShaderInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -3381,10 +3350,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IEffectShaderInternal)item);
         }
         
-        public static EffectShader GetNew()
-        {
-            return (EffectShader)System.Activator.CreateInstance(typeof(EffectShader));
-        }
     }
     public partial class EffectShaderCommon : OblivionMajorRecordCommon
     {

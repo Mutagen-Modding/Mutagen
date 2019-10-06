@@ -448,37 +448,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        public LocationReferenceType Copy(
-            LocationReferenceType_CopyMask copyMask = null,
-            LocationReferenceType def = null)
-        {
-            return LocationReferenceType.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static LocationReferenceType Copy(
-            LocationReferenceType item,
-            LocationReferenceType_CopyMask copyMask = null,
-            LocationReferenceType def = null)
-        {
-            LocationReferenceType ret;
-            if (item.GetType().Equals(typeof(LocationReferenceType)))
-            {
-                ret = new LocationReferenceType();
-            }
-            else
-            {
-                ret = (LocationReferenceType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((LocationReferenceTypeSetterCommon)((ILocationReferenceTypeInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -868,10 +837,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (ILocationReferenceTypeInternal)item);
         }
         
-        public static LocationReferenceType GetNew()
-        {
-            return (LocationReferenceType)System.Activator.CreateInstance(typeof(LocationReferenceType));
-        }
     }
     public partial class LocationReferenceTypeCommon : SkyrimMajorRecordCommon
     {

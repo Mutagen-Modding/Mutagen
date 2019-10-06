@@ -415,37 +415,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public RegionArea Copy(
-            RegionArea_CopyMask copyMask = null,
-            RegionArea def = null)
-        {
-            return RegionArea.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static RegionArea Copy(
-            RegionArea item,
-            RegionArea_CopyMask copyMask = null,
-            RegionArea def = null)
-        {
-            RegionArea ret;
-            if (item.GetType().Equals(typeof(RegionArea)))
-            {
-                ret = new RegionArea();
-            }
-            else
-            {
-                ret = (RegionArea)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((RegionAreaSetterCommon)((IRegionAreaInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -629,6 +598,17 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static RegionArea Copy(
+            this RegionArea item,
+            RegionArea_CopyMask copyMask = null,
+            RegionArea def = null)
+        {
+            return ((RegionAreaSetterCommon)((IRegionAreaInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -858,10 +838,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.RegionPoints.Unset();
         }
         
-        public static RegionArea GetNew()
+        public RegionArea GetNew()
         {
             return new RegionArea();
         }
+        
+        public RegionArea Copy(
+            RegionArea item,
+            RegionArea_CopyMask copyMask = null,
+            RegionArea def = null)
+        {
+            RegionArea ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class RegionAreaCommon
     {

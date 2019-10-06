@@ -320,29 +320,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public Global Copy(
-            Global_CopyMask copyMask = null,
-            Global def = null)
-        {
-            return Global.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static Global Copy(
-            Global item,
-            Global_CopyMask copyMask = null,
-            Global def = null)
-        {
-            Global ret = (Global)System.Activator.CreateInstance(item.GetType());
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((GlobalSetterCommon)((IGlobalInternalGetter)this).CommonSetterInstance()).Clear(this);

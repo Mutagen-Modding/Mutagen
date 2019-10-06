@@ -573,37 +573,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public Effect Copy(
-            Effect_CopyMask copyMask = null,
-            Effect def = null)
-        {
-            return Effect.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static Effect Copy(
-            Effect item,
-            Effect_CopyMask copyMask = null,
-            Effect def = null)
-        {
-            Effect ret;
-            if (item.GetType().Equals(typeof(Effect)))
-            {
-                ret = new Effect();
-            }
-            else
-            {
-                ret = (Effect)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((EffectSetterCommon)((IEffectInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -828,6 +797,17 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static Effect Copy(
+            this Effect item,
+            Effect_CopyMask copyMask = null,
+            Effect def = null)
+        {
+            return ((EffectSetterCommon)((IEffectInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -1124,10 +1104,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.ScriptEffect_Unset();
         }
         
-        public static Effect GetNew()
+        public Effect GetNew()
         {
             return new Effect();
         }
+        
+        public Effect Copy(
+            Effect item,
+            Effect_CopyMask copyMask = null,
+            Effect def = null)
+        {
+            Effect ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class EffectCommon
     {
@@ -1397,8 +1391,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     copyMask: copyMask?.ScriptEffect.Specific);
                                 break;
                             case CopyOption.MakeCopy:
-                                item.ScriptEffect = ScriptEffect.Copy(
-                                    rhsScriptEffectItem,
+                                item.ScriptEffect = rhsScriptEffectItem.Copy(
                                     copyMask?.ScriptEffect?.Specific,
                                     def: defScriptEffectItem);
                                 break;

@@ -4873,37 +4873,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public OblivionMod Copy(
-            OblivionMod_CopyMask copyMask = null,
-            OblivionMod def = null)
-        {
-            return OblivionMod.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static OblivionMod Copy(
-            OblivionMod item,
-            OblivionMod_CopyMask copyMask = null,
-            OblivionMod def = null)
-        {
-            OblivionMod ret;
-            if (item.GetType().Equals(typeof(OblivionMod)))
-            {
-                ret = new OblivionMod();
-            }
-            else
-            {
-                ret = (OblivionMod)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((OblivionModSetterCommon)((IOblivionModInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -6376,10 +6345,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ClearPartial();
         }
         
-        public static OblivionMod GetNew()
-        {
-            return (OblivionMod)System.Activator.CreateInstance(typeof(OblivionMod));
-        }
         #region Mutagen
         public IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(IOblivionModInternal obj)
         {

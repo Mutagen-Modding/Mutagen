@@ -1284,37 +1284,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public CombatStyle Copy(
-            CombatStyle_CopyMask copyMask = null,
-            CombatStyle def = null)
-        {
-            return CombatStyle.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static CombatStyle Copy(
-            CombatStyle item,
-            CombatStyle_CopyMask copyMask = null,
-            CombatStyle def = null)
-        {
-            CombatStyle ret;
-            if (item.GetType().Equals(typeof(CombatStyle)))
-            {
-                ret = new CombatStyle();
-            }
-            else
-            {
-                ret = (CombatStyle)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((CombatStyleSetterCommon)((ICombatStyleInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -2406,10 +2375,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ICombatStyleInternal)item);
         }
         
-        public static CombatStyle GetNew()
-        {
-            return (CombatStyle)System.Activator.CreateInstance(typeof(CombatStyle));
-        }
     }
     public partial class CombatStyleCommon : OblivionMajorRecordCommon
     {
@@ -3184,8 +3149,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     copyMask: copyMask?.Advanced.Specific);
                                 break;
                             case CopyOption.MakeCopy:
-                                item.Advanced = CombatStyleAdvanced.Copy(
-                                    rhsAdvancedItem,
+                                item.Advanced = rhsAdvancedItem.Copy(
                                     copyMask?.Advanced?.Specific,
                                     def: defAdvancedItem);
                                 break;

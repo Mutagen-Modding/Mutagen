@@ -630,37 +630,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public Faction Copy(
-            Faction_CopyMask copyMask = null,
-            Faction def = null)
-        {
-            return Faction.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static Faction Copy(
-            Faction item,
-            Faction_CopyMask copyMask = null,
-            Faction def = null)
-        {
-            Faction ret;
-            if (item.GetType().Equals(typeof(Faction)))
-            {
-                ret = new Faction();
-            }
-            else
-            {
-                ret = (Faction)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((FactionSetterCommon)((IFactionInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -1137,10 +1106,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IFactionInternal)item);
         }
         
-        public static Faction GetNew()
-        {
-            return (Faction)System.Activator.CreateInstance(typeof(Faction));
-        }
     }
     public partial class FactionCommon : OblivionMajorRecordCommon
     {
@@ -1515,8 +1480,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return (Relation)r;
                                 case CopyOption.MakeCopy:
-                                    return Relation.Copy(
-                                        r,
+                                    return r.Copy(
                                         copyMask?.Relations?.Specific,
                                         def: d);
                                 default:
@@ -1609,8 +1573,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return (Rank)r;
                                 case CopyOption.MakeCopy:
-                                    return Rank.Copy(
-                                        r,
+                                    return r.Copy(
                                         copyMask?.Ranks?.Specific,
                                         def: d);
                                 default:

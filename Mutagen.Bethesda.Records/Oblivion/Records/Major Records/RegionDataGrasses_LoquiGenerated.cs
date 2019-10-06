@@ -432,37 +432,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public RegionDataGrasses Copy(
-            RegionDataGrasses_CopyMask copyMask = null,
-            RegionDataGrasses def = null)
-        {
-            return RegionDataGrasses.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static RegionDataGrasses Copy(
-            RegionDataGrasses item,
-            RegionDataGrasses_CopyMask copyMask = null,
-            RegionDataGrasses def = null)
-        {
-            RegionDataGrasses ret;
-            if (item.GetType().Equals(typeof(RegionDataGrasses)))
-            {
-                ret = new RegionDataGrasses();
-            }
-            else
-            {
-                ret = (RegionDataGrasses)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((RegionDataGrassesSetterCommon)((IRegionDataGrassesInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -624,6 +593,17 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static RegionDataGrasses Copy(
+            this RegionDataGrasses item,
+            RegionDataGrasses_CopyMask copyMask = null,
+            RegionDataGrasses def = null)
+        {
+            return ((RegionDataGrassesSetterCommon)((IRegionDataGrassesInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -838,10 +818,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IRegionDataGrassesInternal)item);
         }
         
-        public static RegionDataGrasses GetNew()
+        public RegionDataGrasses GetNew()
         {
             return new RegionDataGrasses();
         }
+        
+        public new RegionDataGrasses Copy(
+            RegionDataGrasses item,
+            RegionDataGrasses_CopyMask copyMask = null,
+            RegionDataGrasses def = null)
+        {
+            RegionDataGrasses ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class RegionDataGrassesCommon : RegionDataCommon
     {

@@ -412,37 +412,6 @@ namespace Mutagen.Bethesda
 
         #endregion
 
-        public MasterReference Copy(
-            MasterReference_CopyMask copyMask = null,
-            MasterReference def = null)
-        {
-            return MasterReference.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static MasterReference Copy(
-            MasterReference item,
-            MasterReference_CopyMask copyMask = null,
-            MasterReference def = null)
-        {
-            MasterReference ret;
-            if (item.GetType().Equals(typeof(MasterReference)))
-            {
-                ret = new MasterReference();
-            }
-            else
-            {
-                ret = (MasterReference)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((MasterReferenceSetterCommon)((IMasterReferenceInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -628,6 +597,17 @@ namespace Mutagen.Bethesda
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static MasterReference Copy(
+            this MasterReference item,
+            MasterReference_CopyMask copyMask = null,
+            MasterReference def = null)
+        {
+            return ((MasterReferenceSetterCommon)((IMasterReferenceInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -845,10 +825,24 @@ namespace Mutagen.Bethesda.Internals
             item.FileSize_Unset();
         }
         
-        public static MasterReference GetNew()
+        public MasterReference GetNew()
         {
             return new MasterReference();
         }
+        
+        public MasterReference Copy(
+            MasterReference item,
+            MasterReference_CopyMask copyMask = null,
+            MasterReference def = null)
+        {
+            MasterReference ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class MasterReferenceCommon
     {

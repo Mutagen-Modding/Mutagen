@@ -677,37 +677,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public ModHeader Copy(
-            ModHeader_CopyMask copyMask = null,
-            ModHeader def = null)
-        {
-            return ModHeader.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static ModHeader Copy(
-            ModHeader item,
-            ModHeader_CopyMask copyMask = null,
-            ModHeader def = null)
-        {
-            ModHeader ret;
-            if (item.GetType().Equals(typeof(ModHeader)))
-            {
-                ret = new ModHeader();
-            }
-            else
-            {
-                ret = (ModHeader)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((ModHeaderSetterCommon)((IModHeaderInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -954,6 +923,17 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static ModHeader Copy(
+            this ModHeader item,
+            ModHeader_CopyMask copyMask = null,
+            ModHeader def = null)
+        {
+            return ((ModHeaderSetterCommon)((IModHeaderInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -1283,10 +1263,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.VestigialData_Unset();
         }
         
-        public static ModHeader GetNew()
+        public ModHeader GetNew()
         {
             return new ModHeader();
         }
+        
+        public ModHeader Copy(
+            ModHeader item,
+            ModHeader_CopyMask copyMask = null,
+            ModHeader def = null)
+        {
+            ModHeader ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class ModHeaderCommon
     {
@@ -1586,8 +1580,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             }
                             else
                             {
-                                item.Stats = ModStats.Copy(
-                                    rhs.Stats,
+                                item.Stats = rhs.Stats.Copy(
                                     copyMask?.Stats?.Specific,
                                     def?.Stats);
                             }
@@ -1741,8 +1734,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return (MasterReference)r;
                                 case CopyOption.MakeCopy:
-                                    return MasterReference.Copy(
-                                        r,
+                                    return r.Copy(
                                         copyMask?.MasterReferences?.Specific,
                                         def: d);
                                 default:

@@ -305,29 +305,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        public Place Copy(
-            Place_CopyMask copyMask = null,
-            Place def = null)
-        {
-            return Place.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static Place Copy(
-            Place item,
-            Place_CopyMask copyMask = null,
-            Place def = null)
-        {
-            Place ret = (Place)System.Activator.CreateInstance(item.GetType());
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((PlaceSetterCommon)((IPlaceInternalGetter)this).CommonSetterInstance()).Clear(this);

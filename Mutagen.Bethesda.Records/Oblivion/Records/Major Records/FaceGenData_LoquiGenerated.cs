@@ -489,37 +489,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public FaceGenData Copy(
-            FaceGenData_CopyMask copyMask = null,
-            FaceGenData def = null)
-        {
-            return FaceGenData.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static FaceGenData Copy(
-            FaceGenData item,
-            FaceGenData_CopyMask copyMask = null,
-            FaceGenData def = null)
-        {
-            FaceGenData ret;
-            if (item.GetType().Equals(typeof(FaceGenData)))
-            {
-                ret = new FaceGenData();
-            }
-            else
-            {
-                ret = (FaceGenData)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((FaceGenDataSetterCommon)((IFaceGenDataInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -719,6 +688,17 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static FaceGenData Copy(
+            this FaceGenData item,
+            FaceGenData_CopyMask copyMask = null,
+            FaceGenData def = null)
+        {
+            return ((FaceGenDataSetterCommon)((IFaceGenDataInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -962,10 +942,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.SymmetricTexture_Unset();
         }
         
-        public static FaceGenData GetNew()
+        public FaceGenData GetNew()
         {
             return new FaceGenData();
         }
+        
+        public FaceGenData Copy(
+            FaceGenData item,
+            FaceGenData_CopyMask copyMask = null,
+            FaceGenData def = null)
+        {
+            FaceGenData ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class FaceGenDataCommon
     {

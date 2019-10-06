@@ -754,37 +754,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public Climate Copy(
-            Climate_CopyMask copyMask = null,
-            Climate def = null)
-        {
-            return Climate.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static Climate Copy(
-            Climate item,
-            Climate_CopyMask copyMask = null,
-            Climate def = null)
-        {
-            Climate ret;
-            if (item.GetType().Equals(typeof(Climate)))
-            {
-                ret = new Climate();
-            }
-            else
-            {
-                ret = (Climate)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((ClimateSetterCommon)((IClimateInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -1392,10 +1361,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IClimateInternal)item);
         }
         
-        public static Climate GetNew()
-        {
-            return (Climate)System.Activator.CreateInstance(typeof(Climate));
-        }
     }
     public partial class ClimateCommon : OblivionMajorRecordCommon
     {
@@ -1776,8 +1741,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return (WeatherChance)r;
                                 case CopyOption.MakeCopy:
-                                    return WeatherChance.Copy(
-                                        r,
+                                    return r.Copy(
                                         copyMask?.Weathers?.Specific,
                                         def: d);
                                 default:
@@ -1881,8 +1845,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     copyMask: copyMask?.Model.Specific);
                                 break;
                             case CopyOption.MakeCopy:
-                                item.Model = Model.Copy(
-                                    rhsModelItem,
+                                item.Model = rhsModelItem.Copy(
                                     copyMask?.Model?.Specific,
                                     def: defModelItem);
                                 break;

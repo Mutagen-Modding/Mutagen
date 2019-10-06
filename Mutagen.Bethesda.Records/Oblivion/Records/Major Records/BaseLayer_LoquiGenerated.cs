@@ -499,37 +499,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public BaseLayer Copy(
-            BaseLayer_CopyMask copyMask = null,
-            BaseLayer def = null)
-        {
-            return BaseLayer.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static BaseLayer Copy(
-            BaseLayer item,
-            BaseLayer_CopyMask copyMask = null,
-            BaseLayer def = null)
-        {
-            BaseLayer ret;
-            if (item.GetType().Equals(typeof(BaseLayer)))
-            {
-                ret = new BaseLayer();
-            }
-            else
-            {
-                ret = (BaseLayer)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((BaseLayerSetterCommon)((IBaseLayerInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -724,6 +693,17 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static BaseLayer Copy(
+            this BaseLayer item,
+            BaseLayer_CopyMask copyMask = null,
+            BaseLayer def = null)
+        {
+            return ((BaseLayerSetterCommon)((IBaseLayerInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -977,10 +957,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Quadrant = default(AlphaLayer.QuadrantEnum);
         }
         
-        public static BaseLayer GetNew()
+        public BaseLayer GetNew()
         {
             return new BaseLayer();
         }
+        
+        public BaseLayer Copy(
+            BaseLayer item,
+            BaseLayer_CopyMask copyMask = null,
+            BaseLayer def = null)
+        {
+            BaseLayer ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class BaseLayerCommon
     {

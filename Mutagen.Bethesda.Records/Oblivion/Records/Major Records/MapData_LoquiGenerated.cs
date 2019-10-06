@@ -384,37 +384,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public MapData Copy(
-            MapData_CopyMask copyMask = null,
-            MapData def = null)
-        {
-            return MapData.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static MapData Copy(
-            MapData item,
-            MapData_CopyMask copyMask = null,
-            MapData def = null)
-        {
-            MapData ret;
-            if (item.GetType().Equals(typeof(MapData)))
-            {
-                ret = new MapData();
-            }
-            else
-            {
-                ret = (MapData)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((MapDataSetterCommon)((IMapDataInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -602,6 +571,17 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static MapData Copy(
+            this MapData item,
+            MapData_CopyMask copyMask = null,
+            MapData def = null)
+        {
+            return ((MapDataSetterCommon)((IMapDataInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -831,10 +811,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.CellCoordinatesSECell = default(P2Int16);
         }
         
-        public static MapData GetNew()
+        public MapData GetNew()
         {
             return new MapData();
         }
+        
+        public MapData Copy(
+            MapData item,
+            MapData_CopyMask copyMask = null,
+            MapData def = null)
+        {
+            MapData ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class MapDataCommon
     {

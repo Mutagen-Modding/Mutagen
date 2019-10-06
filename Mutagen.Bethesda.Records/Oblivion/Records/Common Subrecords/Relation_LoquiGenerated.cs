@@ -374,37 +374,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public Relation Copy(
-            Relation_CopyMask copyMask = null,
-            Relation def = null)
-        {
-            return Relation.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static Relation Copy(
-            Relation item,
-            Relation_CopyMask copyMask = null,
-            Relation def = null)
-        {
-            Relation ret;
-            if (item.GetType().Equals(typeof(Relation)))
-            {
-                ret = new Relation();
-            }
-            else
-            {
-                ret = (Relation)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((RelationSetterCommon)((IRelationInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -589,6 +558,17 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static Relation Copy(
+            this Relation item,
+            Relation_CopyMask copyMask = null,
+            Relation def = null)
+        {
+            return ((RelationSetterCommon)((IRelationInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -805,10 +785,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Modifier = default(Int32);
         }
         
-        public static Relation GetNew()
+        public Relation GetNew()
         {
             return new Relation();
         }
+        
+        public Relation Copy(
+            Relation item,
+            Relation_CopyMask copyMask = null,
+            Relation def = null)
+        {
+            Relation ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class RelationCommon
     {

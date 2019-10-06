@@ -547,37 +547,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public RegionDataObject Copy(
-            RegionDataObject_CopyMask copyMask = null,
-            RegionDataObject def = null)
-        {
-            return RegionDataObject.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static RegionDataObject Copy(
-            RegionDataObject item,
-            RegionDataObject_CopyMask copyMask = null,
-            RegionDataObject def = null)
-        {
-            RegionDataObject ret;
-            if (item.GetType().Equals(typeof(RegionDataObject)))
-            {
-                ret = new RegionDataObject();
-            }
-            else
-            {
-                ret = (RegionDataObject)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((RegionDataObjectSetterCommon)((IRegionDataObjectInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -852,6 +821,17 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static RegionDataObject Copy(
+            this RegionDataObject item,
+            RegionDataObject_CopyMask copyMask = null,
+            RegionDataObject def = null)
+        {
+            return ((RegionDataObjectSetterCommon)((IRegionDataObjectInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -1261,10 +1241,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Unknown2 = default(Byte[]);
         }
         
-        public static RegionDataObject GetNew()
+        public RegionDataObject GetNew()
         {
             return new RegionDataObject();
         }
+        
+        public RegionDataObject Copy(
+            RegionDataObject item,
+            RegionDataObject_CopyMask copyMask = null,
+            RegionDataObject def = null)
+        {
+            RegionDataObject ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class RegionDataObjectCommon
     {

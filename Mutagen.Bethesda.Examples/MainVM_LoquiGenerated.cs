@@ -363,37 +363,6 @@ namespace Mutagen.Bethesda.Examples
             }
         }
 
-        public MainVM Copy(
-            MainVM_CopyMask copyMask = null,
-            MainVM def = null)
-        {
-            return MainVM.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static MainVM Copy(
-            MainVM item,
-            MainVM_CopyMask copyMask = null,
-            MainVM def = null)
-        {
-            MainVM ret;
-            if (item.GetType().Equals(typeof(MainVM)))
-            {
-                ret = new MainVM();
-            }
-            else
-            {
-                ret = (MainVM)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((MainVMSetterCommon)((IMainVMInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -568,6 +537,17 @@ namespace Mutagen.Bethesda.Examples
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static MainVM Copy(
+            this MainVM item,
+            MainVM_CopyMask copyMask = null,
+            MainVM def = null)
+        {
+            return ((MainVMSetterCommon)((IMainVMInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -766,10 +746,24 @@ namespace Mutagen.Bethesda.Examples.Internals
             item.ModFilePath = default(String);
         }
         
-        public static MainVM GetNew()
+        public MainVM GetNew()
         {
             return new MainVM();
         }
+        
+        public MainVM Copy(
+            MainVM item,
+            MainVM_CopyMask copyMask = null,
+            MainVM def = null)
+        {
+            MainVM ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class MainVMCommon
     {

@@ -366,37 +366,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public ModStats Copy(
-            ModStats_CopyMask copyMask = null,
-            ModStats def = null)
-        {
-            return ModStats.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static ModStats Copy(
-            ModStats item,
-            ModStats_CopyMask copyMask = null,
-            ModStats def = null)
-        {
-            ModStats ret;
-            if (item.GetType().Equals(typeof(ModStats)))
-            {
-                ret = new ModStats();
-            }
-            else
-            {
-                ret = (ModStats)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((ModStatsSetterCommon)((IModStatsInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -584,6 +553,17 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static ModStats Copy(
+            this ModStats item,
+            ModStats_CopyMask copyMask = null,
+            ModStats def = null)
+        {
+            return ((ModStatsSetterCommon)((IModStatsInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -813,10 +793,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.NextObjectID = default(UInt32);
         }
         
-        public static ModStats GetNew()
+        public ModStats GetNew()
         {
             return new ModStats();
         }
+        
+        public ModStats Copy(
+            ModStats item,
+            ModStats_CopyMask copyMask = null,
+            ModStats def = null)
+        {
+            ModStats ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class ModStatsCommon
     {

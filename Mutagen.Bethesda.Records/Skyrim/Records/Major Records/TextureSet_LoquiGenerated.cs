@@ -602,37 +602,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        public TextureSet Copy(
-            TextureSet_CopyMask copyMask = null,
-            TextureSet def = null)
-        {
-            return TextureSet.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static TextureSet Copy(
-            TextureSet item,
-            TextureSet_CopyMask copyMask = null,
-            TextureSet def = null)
-        {
-            TextureSet ret;
-            if (item.GetType().Equals(typeof(TextureSet)))
-            {
-                ret = new TextureSet();
-            }
-            else
-            {
-                ret = (TextureSet)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((TextureSetSetterCommon)((ITextureSetInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -1102,10 +1071,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (ITextureSetInternal)item);
         }
         
-        public static TextureSet GetNew()
-        {
-            return (TextureSet)System.Activator.CreateInstance(typeof(TextureSet));
-        }
     }
     public partial class TextureSetCommon : SkyrimMajorRecordCommon
     {
@@ -1436,8 +1401,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                     copyMask: copyMask?.ObjectBounds.Specific);
                                 break;
                             case CopyOption.MakeCopy:
-                                item.ObjectBounds = ObjectBounds.Copy(
-                                    rhsObjectBoundsItem,
+                                item.ObjectBounds = rhsObjectBoundsItem.Copy(
                                     copyMask?.ObjectBounds?.Specific,
                                     def: defObjectBoundsItem);
                                 break;
@@ -1488,8 +1452,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                     copyMask: copyMask?.Textures.Specific);
                                 break;
                             case CopyOption.MakeCopy:
-                                item.Textures = Textures.Copy(
-                                    rhsTexturesItem,
+                                item.Textures = rhsTexturesItem.Copy(
                                     copyMask?.Textures?.Specific,
                                     def: defTexturesItem);
                                 break;
@@ -1540,8 +1503,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                     copyMask: copyMask?.Decal.Specific);
                                 break;
                             case CopyOption.MakeCopy:
-                                item.Decal = Decal.Copy(
-                                    rhsDecalItem,
+                                item.Decal = rhsDecalItem.Copy(
                                     copyMask?.Decal?.Specific,
                                     def: defDecalItem);
                                 break;

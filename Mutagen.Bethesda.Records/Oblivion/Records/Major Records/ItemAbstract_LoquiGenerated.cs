@@ -303,29 +303,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        public ItemAbstract Copy(
-            ItemAbstract_CopyMask copyMask = null,
-            ItemAbstract def = null)
-        {
-            return ItemAbstract.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static ItemAbstract Copy(
-            ItemAbstract item,
-            ItemAbstract_CopyMask copyMask = null,
-            ItemAbstract def = null)
-        {
-            ItemAbstract ret = (ItemAbstract)System.Activator.CreateInstance(item.GetType());
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((ItemAbstractSetterCommon)((IItemAbstractInternalGetter)this).CommonSetterInstance()).Clear(this);

@@ -537,37 +537,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public ScriptEffect Copy(
-            ScriptEffect_CopyMask copyMask = null,
-            ScriptEffect def = null)
-        {
-            return ScriptEffect.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static ScriptEffect Copy(
-            ScriptEffect item,
-            ScriptEffect_CopyMask copyMask = null,
-            ScriptEffect def = null)
-        {
-            ScriptEffect ret;
-            if (item.GetType().Equals(typeof(ScriptEffect)))
-            {
-                ret = new ScriptEffect();
-            }
-            else
-            {
-                ret = (ScriptEffect)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((ScriptEffectSetterCommon)((IScriptEffectInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -783,6 +752,17 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static ScriptEffect Copy(
+            this ScriptEffect item,
+            ScriptEffect_CopyMask copyMask = null,
+            ScriptEffect def = null)
+        {
+            return ((ScriptEffectSetterCommon)((IScriptEffectInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -1051,10 +1031,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Name_Unset();
         }
         
-        public static ScriptEffect GetNew()
+        public ScriptEffect GetNew()
         {
             return new ScriptEffect();
         }
+        
+        public ScriptEffect Copy(
+            ScriptEffect item,
+            ScriptEffect_CopyMask copyMask = null,
+            ScriptEffect def = null)
+        {
+            ScriptEffect ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class ScriptEffectCommon
     {

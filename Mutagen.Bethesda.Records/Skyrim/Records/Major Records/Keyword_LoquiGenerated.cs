@@ -448,37 +448,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        public Keyword Copy(
-            Keyword_CopyMask copyMask = null,
-            Keyword def = null)
-        {
-            return Keyword.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static Keyword Copy(
-            Keyword item,
-            Keyword_CopyMask copyMask = null,
-            Keyword def = null)
-        {
-            Keyword ret;
-            if (item.GetType().Equals(typeof(Keyword)))
-            {
-                ret = new Keyword();
-            }
-            else
-            {
-                ret = (Keyword)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((KeywordSetterCommon)((IKeywordInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -868,10 +837,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IKeywordInternal)item);
         }
         
-        public static Keyword GetNew()
-        {
-            return (Keyword)System.Activator.CreateInstance(typeof(Keyword));
-        }
     }
     public partial class KeywordCommon : SkyrimMajorRecordCommon
     {

@@ -443,37 +443,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public BodyPart Copy(
-            BodyPart_CopyMask copyMask = null,
-            BodyPart def = null)
-        {
-            return BodyPart.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static BodyPart Copy(
-            BodyPart item,
-            BodyPart_CopyMask copyMask = null,
-            BodyPart def = null)
-        {
-            BodyPart ret;
-            if (item.GetType().Equals(typeof(BodyPart)))
-            {
-                ret = new BodyPart();
-            }
-            else
-            {
-                ret = (BodyPart)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((BodyPartSetterCommon)((IBodyPartInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -663,6 +632,17 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static BodyPart Copy(
+            this BodyPart item,
+            BodyPart_CopyMask copyMask = null,
+            BodyPart def = null)
+        {
+            return ((BodyPartSetterCommon)((IBodyPartInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -891,10 +871,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Icon_Unset();
         }
         
-        public static BodyPart GetNew()
+        public BodyPart GetNew()
         {
             return new BodyPart();
         }
+        
+        public BodyPart Copy(
+            BodyPart item,
+            BodyPart_CopyMask copyMask = null,
+            BodyPart def = null)
+        {
+            BodyPart ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class BodyPartCommon
     {

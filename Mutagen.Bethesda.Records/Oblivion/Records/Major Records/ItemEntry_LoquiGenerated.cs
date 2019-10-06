@@ -400,37 +400,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public ItemEntry Copy(
-            ItemEntry_CopyMask copyMask = null,
-            ItemEntry def = null)
-        {
-            return ItemEntry.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static ItemEntry Copy(
-            ItemEntry item,
-            ItemEntry_CopyMask copyMask = null,
-            ItemEntry def = null)
-        {
-            ItemEntry ret;
-            if (item.GetType().Equals(typeof(ItemEntry)))
-            {
-                ret = new ItemEntry();
-            }
-            else
-            {
-                ret = (ItemEntry)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((ItemEntrySetterCommon)((IItemEntryInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -619,6 +588,17 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static ItemEntry Copy(
+            this ItemEntry item,
+            ItemEntry_CopyMask copyMask = null,
+            ItemEntry def = null)
+        {
+            return ((ItemEntrySetterCommon)((IItemEntryInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -835,10 +815,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Count_Unset();
         }
         
-        public static ItemEntry GetNew()
+        public ItemEntry GetNew()
         {
             return new ItemEntry();
         }
+        
+        public ItemEntry Copy(
+            ItemEntry item,
+            ItemEntry_CopyMask copyMask = null,
+            ItemEntry def = null)
+        {
+            ItemEntry ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class ItemEntryCommon
     {

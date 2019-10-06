@@ -613,37 +613,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public Enchantment Copy(
-            Enchantment_CopyMask copyMask = null,
-            Enchantment def = null)
-        {
-            return Enchantment.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static Enchantment Copy(
-            Enchantment item,
-            Enchantment_CopyMask copyMask = null,
-            Enchantment def = null)
-        {
-            Enchantment ret;
-            if (item.GetType().Equals(typeof(Enchantment)))
-            {
-                ret = new Enchantment();
-            }
-            else
-            {
-                ret = (Enchantment)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((EnchantmentSetterCommon)((IEnchantmentInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -1146,10 +1115,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IEnchantmentInternal)item);
         }
         
-        public static Enchantment GetNew()
-        {
-            return (Enchantment)System.Activator.CreateInstance(typeof(Enchantment));
-        }
     }
     public partial class EnchantmentCommon : OblivionMajorRecordCommon
     {
@@ -1521,8 +1486,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return (Effect)r;
                                 case CopyOption.MakeCopy:
-                                    return Effect.Copy(
-                                        r,
+                                    return r.Copy(
                                         copyMask?.Effects?.Specific,
                                         def: d);
                                 default:

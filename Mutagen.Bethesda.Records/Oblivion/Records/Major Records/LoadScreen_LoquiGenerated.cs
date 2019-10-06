@@ -550,37 +550,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public LoadScreen Copy(
-            LoadScreen_CopyMask copyMask = null,
-            LoadScreen def = null)
-        {
-            return LoadScreen.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static LoadScreen Copy(
-            LoadScreen item,
-            LoadScreen_CopyMask copyMask = null,
-            LoadScreen def = null)
-        {
-            LoadScreen ret;
-            if (item.GetType().Equals(typeof(LoadScreen)))
-            {
-                ret = new LoadScreen();
-            }
-            else
-            {
-                ret = (LoadScreen)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((LoadScreenSetterCommon)((ILoadScreenInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -1012,10 +981,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ILoadScreenInternal)item);
         }
         
-        public static LoadScreen GetNew()
-        {
-            return (LoadScreen)System.Activator.CreateInstance(typeof(LoadScreen));
-        }
     }
     public partial class LoadScreenCommon : OblivionMajorRecordCommon
     {
@@ -1371,8 +1336,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return (LoadScreenLocation)r;
                                 case CopyOption.MakeCopy:
-                                    return LoadScreenLocation.Copy(
-                                        r,
+                                    return r.Copy(
                                         copyMask?.Locations?.Specific,
                                         def: d);
                                 default:

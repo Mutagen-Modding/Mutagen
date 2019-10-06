@@ -389,37 +389,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public RaceStatsGendered Copy(
-            RaceStatsGendered_CopyMask copyMask = null,
-            RaceStatsGendered def = null)
-        {
-            return RaceStatsGendered.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static RaceStatsGendered Copy(
-            RaceStatsGendered item,
-            RaceStatsGendered_CopyMask copyMask = null,
-            RaceStatsGendered def = null)
-        {
-            RaceStatsGendered ret;
-            if (item.GetType().Equals(typeof(RaceStatsGendered)))
-            {
-                ret = new RaceStatsGendered();
-            }
-            else
-            {
-                ret = (RaceStatsGendered)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((RaceStatsGenderedSetterCommon)((IRaceStatsGenderedInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -599,6 +568,17 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static RaceStatsGendered Copy(
+            this RaceStatsGendered item,
+            RaceStatsGendered_CopyMask copyMask = null,
+            RaceStatsGendered def = null)
+        {
+            return ((RaceStatsGenderedSetterCommon)((IRaceStatsGenderedInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -815,10 +795,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Female = default(RaceStats);
         }
         
-        public static RaceStatsGendered GetNew()
+        public RaceStatsGendered GetNew()
         {
             return new RaceStatsGendered();
         }
+        
+        public RaceStatsGendered Copy(
+            RaceStatsGendered item,
+            RaceStatsGendered_CopyMask copyMask = null,
+            RaceStatsGendered def = null)
+        {
+            RaceStatsGendered ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class RaceStatsGenderedCommon
     {
@@ -979,8 +973,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             }
                             else
                             {
-                                item.Male = RaceStats.Copy(
-                                    rhs.Male,
+                                item.Male = rhs.Male.Copy(
                                     copyMask?.Male?.Specific,
                                     def?.Male);
                             }
@@ -1024,8 +1017,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             }
                             else
                             {
-                                item.Female = RaceStats.Copy(
-                                    rhs.Female,
+                                item.Female = rhs.Female.Copy(
                                     copyMask?.Female?.Specific,
                                     def?.Female);
                             }

@@ -587,37 +587,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public Birthsign Copy(
-            Birthsign_CopyMask copyMask = null,
-            Birthsign def = null)
-        {
-            return Birthsign.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static Birthsign Copy(
-            Birthsign item,
-            Birthsign_CopyMask copyMask = null,
-            Birthsign def = null)
-        {
-            Birthsign ret;
-            if (item.GetType().Equals(typeof(Birthsign)))
-            {
-                ret = new Birthsign();
-            }
-            else
-            {
-                ret = (Birthsign)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((BirthsignSetterCommon)((IBirthsignInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -1072,10 +1041,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IBirthsignInternal)item);
         }
         
-        public static Birthsign GetNew()
-        {
-            return (Birthsign)System.Activator.CreateInstance(typeof(Birthsign));
-        }
     }
     public partial class BirthsignCommon : OblivionMajorRecordCommon
     {

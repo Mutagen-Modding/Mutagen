@@ -452,37 +452,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public CellBlock Copy(
-            CellBlock_CopyMask copyMask = null,
-            CellBlock def = null)
-        {
-            return CellBlock.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static CellBlock Copy(
-            CellBlock item,
-            CellBlock_CopyMask copyMask = null,
-            CellBlock def = null)
-        {
-            CellBlock ret;
-            if (item.GetType().Equals(typeof(CellBlock)))
-            {
-                ret = new CellBlock();
-            }
-            else
-            {
-                ret = (CellBlock)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((CellBlockSetterCommon)((ICellBlockInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -676,6 +645,17 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static CellBlock Copy(
+            this CellBlock item,
+            CellBlock_CopyMask copyMask = null,
+            CellBlock def = null)
+        {
+            return ((CellBlockSetterCommon)((ICellBlockInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
         #region Mutagen
@@ -933,10 +913,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Items.Unset();
         }
         
-        public static CellBlock GetNew()
+        public CellBlock GetNew()
         {
             return new CellBlock();
         }
+        
+        public CellBlock Copy(
+            CellBlock item,
+            CellBlock_CopyMask copyMask = null,
+            CellBlock def = null)
+        {
+            CellBlock ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
         #region Mutagen
         public IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(ICellBlockInternal obj)
         {
@@ -1172,8 +1166,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return (CellSubBlock)r;
                                 case CopyOption.MakeCopy:
-                                    return CellSubBlock.Copy(
-                                        r,
+                                    return r.Copy(
                                         copyMask?.Items?.Specific,
                                         def: d);
                                 default:

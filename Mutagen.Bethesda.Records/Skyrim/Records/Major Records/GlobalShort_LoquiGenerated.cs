@@ -439,37 +439,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        public GlobalShort Copy(
-            GlobalShort_CopyMask copyMask = null,
-            GlobalShort def = null)
-        {
-            return GlobalShort.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static GlobalShort Copy(
-            GlobalShort item,
-            GlobalShort_CopyMask copyMask = null,
-            GlobalShort def = null)
-        {
-            GlobalShort ret;
-            if (item.GetType().Equals(typeof(GlobalShort)))
-            {
-                ret = new GlobalShort();
-            }
-            else
-            {
-                ret = (GlobalShort)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((GlobalShortSetterCommon)((IGlobalShortInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -864,10 +833,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IGlobalShortInternal)item);
         }
         
-        public static GlobalShort GetNew()
-        {
-            return (GlobalShort)System.Activator.CreateInstance(typeof(GlobalShort));
-        }
     }
     public partial class GlobalShortCommon : GlobalCommon
     {

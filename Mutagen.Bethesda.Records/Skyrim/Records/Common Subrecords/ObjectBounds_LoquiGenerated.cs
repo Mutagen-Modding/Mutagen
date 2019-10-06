@@ -370,37 +370,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        public ObjectBounds Copy(
-            ObjectBounds_CopyMask copyMask = null,
-            ObjectBounds def = null)
-        {
-            return ObjectBounds.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static ObjectBounds Copy(
-            ObjectBounds item,
-            ObjectBounds_CopyMask copyMask = null,
-            ObjectBounds def = null)
-        {
-            ObjectBounds ret;
-            if (item.GetType().Equals(typeof(ObjectBounds)))
-            {
-                ret = new ObjectBounds();
-            }
-            else
-            {
-                ret = (ObjectBounds)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((ObjectBoundsSetterCommon)((IObjectBoundsInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -582,6 +551,17 @@ namespace Mutagen.Bethesda.Skyrim
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static ObjectBounds Copy(
+            this ObjectBounds item,
+            ObjectBounds_CopyMask copyMask = null,
+            ObjectBounds def = null)
+        {
+            return ((ObjectBoundsSetterCommon)((IObjectBoundsInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -798,10 +778,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Second = default(P3Int16);
         }
         
-        public static ObjectBounds GetNew()
+        public ObjectBounds GetNew()
         {
             return new ObjectBounds();
         }
+        
+        public ObjectBounds Copy(
+            ObjectBounds item,
+            ObjectBounds_CopyMask copyMask = null,
+            ObjectBounds def = null)
+        {
+            ObjectBounds ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class ObjectBoundsCommon
     {

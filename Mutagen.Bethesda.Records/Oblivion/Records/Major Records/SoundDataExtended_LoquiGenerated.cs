@@ -374,37 +374,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public SoundDataExtended Copy(
-            SoundDataExtended_CopyMask copyMask = null,
-            SoundDataExtended def = null)
-        {
-            return SoundDataExtended.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static SoundDataExtended Copy(
-            SoundDataExtended item,
-            SoundDataExtended_CopyMask copyMask = null,
-            SoundDataExtended def = null)
-        {
-            SoundDataExtended ret;
-            if (item.GetType().Equals(typeof(SoundDataExtended)))
-            {
-                ret = new SoundDataExtended();
-            }
-            else
-            {
-                ret = (SoundDataExtended)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((SoundDataExtendedSetterCommon)((ISoundDataExtendedInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -580,6 +549,17 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static SoundDataExtended Copy(
+            this SoundDataExtended item,
+            SoundDataExtended_CopyMask copyMask = null,
+            SoundDataExtended def = null)
+        {
+            return ((SoundDataExtendedSetterCommon)((ISoundDataExtendedInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -819,10 +799,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ISoundDataExtendedInternal)item);
         }
         
-        public static SoundDataExtended GetNew()
+        public new SoundDataExtended GetNew()
         {
             return new SoundDataExtended();
         }
+        
+        public new SoundDataExtended Copy(
+            SoundDataExtended item,
+            SoundDataExtended_CopyMask copyMask = null,
+            SoundDataExtended def = null)
+        {
+            SoundDataExtended ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class SoundDataExtendedCommon : SoundDataCommon
     {

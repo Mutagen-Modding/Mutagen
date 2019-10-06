@@ -502,37 +502,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public Armor Copy(
-            Armor_CopyMask copyMask = null,
-            Armor def = null)
-        {
-            return Armor.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static Armor Copy(
-            Armor item,
-            Armor_CopyMask copyMask = null,
-            Armor def = null)
-        {
-            Armor ret;
-            if (item.GetType().Equals(typeof(Armor)))
-            {
-                ret = new Armor();
-            }
-            else
-            {
-                ret = (Armor)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((ArmorSetterCommon)((IArmorInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -1014,10 +983,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IArmorInternal)item);
         }
         
-        public static Armor GetNew()
-        {
-            return (Armor)System.Activator.CreateInstance(typeof(Armor));
-        }
     }
     public partial class ArmorCommon : ClothingAbstractCommon
     {

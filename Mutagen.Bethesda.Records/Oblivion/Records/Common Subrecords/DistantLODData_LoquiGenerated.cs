@@ -384,37 +384,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public DistantLODData Copy(
-            DistantLODData_CopyMask copyMask = null,
-            DistantLODData def = null)
-        {
-            return DistantLODData.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static DistantLODData Copy(
-            DistantLODData item,
-            DistantLODData_CopyMask copyMask = null,
-            DistantLODData def = null)
-        {
-            DistantLODData ret;
-            if (item.GetType().Equals(typeof(DistantLODData)))
-            {
-                ret = new DistantLODData();
-            }
-            else
-            {
-                ret = (DistantLODData)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((DistantLODDataSetterCommon)((IDistantLODDataInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -602,6 +571,17 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static DistantLODData Copy(
+            this DistantLODData item,
+            DistantLODData_CopyMask copyMask = null,
+            DistantLODData def = null)
+        {
+            return ((DistantLODDataSetterCommon)((IDistantLODDataInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -831,10 +811,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Unknown2 = default(Single);
         }
         
-        public static DistantLODData GetNew()
+        public DistantLODData GetNew()
         {
             return new DistantLODData();
         }
+        
+        public DistantLODData Copy(
+            DistantLODData item,
+            DistantLODData_CopyMask copyMask = null,
+            DistantLODData def = null)
+        {
+            DistantLODData ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class DistantLODDataCommon
     {

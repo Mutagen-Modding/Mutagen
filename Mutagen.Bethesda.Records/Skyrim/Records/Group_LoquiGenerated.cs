@@ -436,39 +436,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        public Group<T> Copy<T_CopyMask>(
-            Group_CopyMask<T_CopyMask> copyMask = null,
-            Group<T> def = null)
-            where T_CopyMask : SkyrimMajorRecord_CopyMask, new()
-        {
-            return Group<T>.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static Group<T> Copy<T_CopyMask>(
-            Group<T> item,
-            Group_CopyMask<T_CopyMask> copyMask = null,
-            Group<T> def = null)
-            where T_CopyMask : SkyrimMajorRecord_CopyMask, new()
-        {
-            Group<T> ret;
-            if (item.GetType().Equals(typeof(Group<T>)))
-            {
-                ret = new Group<T>();
-            }
-            else
-            {
-                ret = (Group<T>)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom<T, T_CopyMask>(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((GroupSetterCommon<T>)((IGroupInternalGetter<T>)this).CommonSetterInstance()).Clear(this);
@@ -950,10 +917,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Items.Clear();
         }
         
-        public static Group<T> GetNew()
-        {
-            return (Group<T>)System.Activator.CreateInstance(typeof(Group<T>));
-        }
         #region Mutagen
         public IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(IGroupInternal<T> obj)
         {

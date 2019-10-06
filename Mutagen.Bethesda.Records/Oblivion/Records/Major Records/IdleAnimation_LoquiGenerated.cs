@@ -580,37 +580,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public IdleAnimation Copy(
-            IdleAnimation_CopyMask copyMask = null,
-            IdleAnimation def = null)
-        {
-            return IdleAnimation.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static IdleAnimation Copy(
-            IdleAnimation item,
-            IdleAnimation_CopyMask copyMask = null,
-            IdleAnimation def = null)
-        {
-            IdleAnimation ret;
-            if (item.GetType().Equals(typeof(IdleAnimation)))
-            {
-                ret = new IdleAnimation();
-            }
-            else
-            {
-                ret = (IdleAnimation)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((IdleAnimationSetterCommon)((IIdleAnimationInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -1061,10 +1030,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IIdleAnimationInternal)item);
         }
         
-        public static IdleAnimation GetNew()
-        {
-            return (IdleAnimation)System.Activator.CreateInstance(typeof(IdleAnimation));
-        }
     }
     public partial class IdleAnimationCommon : OblivionMajorRecordCommon
     {
@@ -1411,8 +1376,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     copyMask: copyMask?.Model.Specific);
                                 break;
                             case CopyOption.MakeCopy:
-                                item.Model = Model.Copy(
-                                    rhsModelItem,
+                                item.Model = rhsModelItem.Copy(
                                     copyMask?.Model?.Specific,
                                     def: defModelItem);
                                 break;
@@ -1452,8 +1416,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return (Condition)r;
                                 case CopyOption.MakeCopy:
-                                    return Condition.Copy(
-                                        r,
+                                    return r.Copy(
                                         copyMask?.Conditions?.Specific,
                                         def: d);
                                 default:

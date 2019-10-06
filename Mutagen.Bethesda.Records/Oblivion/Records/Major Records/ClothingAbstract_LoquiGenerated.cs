@@ -837,29 +837,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public ClothingAbstract Copy(
-            ClothingAbstract_CopyMask copyMask = null,
-            ClothingAbstract def = null)
-        {
-            return ClothingAbstract.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static ClothingAbstract Copy(
-            ClothingAbstract item,
-            ClothingAbstract_CopyMask copyMask = null,
-            ClothingAbstract def = null)
-        {
-            ClothingAbstract ret = (ClothingAbstract)System.Activator.CreateInstance(item.GetType());
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((ClothingAbstractSetterCommon)((IClothingAbstractInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -2161,8 +2138,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     copyMask: copyMask?.MaleBipedModel.Specific);
                                 break;
                             case CopyOption.MakeCopy:
-                                item.MaleBipedModel = Model.Copy(
-                                    rhsMaleBipedModelItem,
+                                item.MaleBipedModel = rhsMaleBipedModelItem.Copy(
                                     copyMask?.MaleBipedModel?.Specific,
                                     def: defMaleBipedModelItem);
                                 break;
@@ -2213,8 +2189,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     copyMask: copyMask?.MaleWorldModel.Specific);
                                 break;
                             case CopyOption.MakeCopy:
-                                item.MaleWorldModel = Model.Copy(
-                                    rhsMaleWorldModelItem,
+                                item.MaleWorldModel = rhsMaleWorldModelItem.Copy(
                                     copyMask?.MaleWorldModel?.Specific,
                                     def: defMaleWorldModelItem);
                                 break;
@@ -2295,8 +2270,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     copyMask: copyMask?.FemaleBipedModel.Specific);
                                 break;
                             case CopyOption.MakeCopy:
-                                item.FemaleBipedModel = Model.Copy(
-                                    rhsFemaleBipedModelItem,
+                                item.FemaleBipedModel = rhsFemaleBipedModelItem.Copy(
                                     copyMask?.FemaleBipedModel?.Specific,
                                     def: defFemaleBipedModelItem);
                                 break;
@@ -2347,8 +2321,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     copyMask: copyMask?.FemaleWorldModel.Specific);
                                 break;
                             case CopyOption.MakeCopy:
-                                item.FemaleWorldModel = Model.Copy(
-                                    rhsFemaleWorldModelItem,
+                                item.FemaleWorldModel = rhsFemaleWorldModelItem.Copy(
                                     copyMask?.FemaleWorldModel?.Specific,
                                     def: defFemaleWorldModelItem);
                                 break;

@@ -961,37 +961,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public Worldspace Copy(
-            Worldspace_CopyMask copyMask = null,
-            Worldspace def = null)
-        {
-            return Worldspace.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static Worldspace Copy(
-            Worldspace item,
-            Worldspace_CopyMask copyMask = null,
-            Worldspace def = null)
-        {
-            Worldspace ret;
-            if (item.GetType().Equals(typeof(Worldspace)))
-            {
-                ret = new Worldspace();
-            }
-            else
-            {
-                ret = (Worldspace)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((WorldspaceSetterCommon)((IWorldspaceInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -1743,10 +1712,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IWorldspaceInternal)item);
         }
         
-        public static Worldspace GetNew()
-        {
-            return (Worldspace)System.Activator.CreateInstance(typeof(Worldspace));
-        }
         #region Mutagen
         public IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(IWorldspaceInternal obj)
         {
@@ -2471,8 +2436,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     copyMask: copyMask?.MapData.Specific);
                                 break;
                             case CopyOption.MakeCopy:
-                                item.MapData = MapData.Copy(
-                                    rhsMapDataItem,
+                                item.MapData = rhsMapDataItem.Copy(
                                     copyMask?.MapData?.Specific,
                                     def: defMapDataItem);
                                 break;
@@ -2673,10 +2637,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     copyMask: copyMask?.Road.Specific);
                                 break;
                             case CopyOption.MakeCopy:
-                                item.Road = Road.Copy(
-                                    rhsRoadItem,
-                                    copyMask?.Road?.Specific,
+                                var copyRet = new Road(rhsRoadItem.FormKey);
+                                copyRet.CopyFieldsFrom(
+                                    rhs: rhsRoadItem,
+                                    copyMask: copyMask?.Road?.Specific,
                                     def: defRoadItem);
+                                item.Road = copyRet;
                                 break;
                             default:
                                 throw new NotImplementedException($"Unknown CopyOption {copyMask?.Road?.Overall}. Cannot execute copy.");
@@ -2725,10 +2691,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     copyMask: copyMask?.TopCell.Specific);
                                 break;
                             case CopyOption.MakeCopy:
-                                item.TopCell = Cell.Copy(
-                                    rhsTopCellItem,
-                                    copyMask?.TopCell?.Specific,
+                                var copyRet = new Cell(rhsTopCellItem.FormKey);
+                                copyRet.CopyFieldsFrom(
+                                    rhs: rhsTopCellItem,
+                                    copyMask: copyMask?.TopCell?.Specific,
                                     def: defTopCellItem);
+                                item.TopCell = copyRet;
                                 break;
                             default:
                                 throw new NotImplementedException($"Unknown CopyOption {copyMask?.TopCell?.Overall}. Cannot execute copy.");
@@ -2772,8 +2740,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return (WorldspaceBlock)r;
                                 case CopyOption.MakeCopy:
-                                    return WorldspaceBlock.Copy(
-                                        r,
+                                    return r.Copy(
                                         copyMask?.SubCells?.Specific,
                                         def: d);
                                 default:

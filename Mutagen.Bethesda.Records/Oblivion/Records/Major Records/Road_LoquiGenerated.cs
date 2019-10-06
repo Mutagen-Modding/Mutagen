@@ -415,37 +415,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public Road Copy(
-            Road_CopyMask copyMask = null,
-            Road def = null)
-        {
-            return Road.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static Road Copy(
-            Road item,
-            Road_CopyMask copyMask = null,
-            Road def = null)
-        {
-            Road ret;
-            if (item.GetType().Equals(typeof(Road)))
-            {
-                ret = new Road();
-            }
-            else
-            {
-                ret = (Road)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((RoadSetterCommon)((IRoadInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -827,10 +796,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IRoadInternal)item);
         }
         
-        public static Road GetNew()
-        {
-            return (Road)System.Activator.CreateInstance(typeof(Road));
-        }
     }
     public partial class RoadCommon : OblivionMajorRecordCommon
     {
@@ -1094,8 +1059,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return (RoadPoint)r;
                                 case CopyOption.MakeCopy:
-                                    return RoadPoint.Copy(
-                                        r,
+                                    return r.Copy(
                                         copyMask?.Points?.Specific,
                                         def: d);
                                 default:

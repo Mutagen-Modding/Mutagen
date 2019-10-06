@@ -847,37 +847,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public Light Copy(
-            Light_CopyMask copyMask = null,
-            Light def = null)
-        {
-            return Light.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static Light Copy(
-            Light item,
-            Light_CopyMask copyMask = null,
-            Light def = null)
-        {
-            Light ret;
-            if (item.GetType().Equals(typeof(Light)))
-            {
-                ret = new Light();
-            }
-            else
-            {
-                ret = (Light)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((LightSetterCommon)((ILightInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -1560,10 +1529,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ILightInternal)item);
         }
         
-        public static Light GetNew()
-        {
-            return (Light)System.Activator.CreateInstance(typeof(Light));
-        }
     }
     public partial class LightCommon : ItemAbstractCommon
     {
@@ -2011,8 +1976,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     copyMask: copyMask?.Model.Specific);
                                 break;
                             case CopyOption.MakeCopy:
-                                item.Model = Model.Copy(
-                                    rhsModelItem,
+                                item.Model = rhsModelItem.Copy(
                                     copyMask?.Model?.Specific,
                                     def: defModelItem);
                                 break;

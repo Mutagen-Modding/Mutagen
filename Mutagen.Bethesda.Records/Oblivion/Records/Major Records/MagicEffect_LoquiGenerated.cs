@@ -888,37 +888,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public MagicEffect Copy(
-            MagicEffect_CopyMask copyMask = null,
-            MagicEffect def = null)
-        {
-            return MagicEffect.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static MagicEffect Copy(
-            MagicEffect item,
-            MagicEffect_CopyMask copyMask = null,
-            MagicEffect def = null)
-        {
-            MagicEffect ret;
-            if (item.GetType().Equals(typeof(MagicEffect)))
-            {
-                ret = new MagicEffect();
-            }
-            else
-            {
-                ret = (MagicEffect)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((MagicEffectSetterCommon)((IMagicEffectInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -1612,10 +1581,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IMagicEffectInternal)item);
         }
         
-        public static MagicEffect GetNew()
-        {
-            return (MagicEffect)System.Activator.CreateInstance(typeof(MagicEffect));
-        }
     }
     public partial class MagicEffectCommon : OblivionMajorRecordCommon
     {
@@ -2137,8 +2102,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     copyMask: copyMask?.Model.Specific);
                                 break;
                             case CopyOption.MakeCopy:
-                                item.Model = Model.Copy(
-                                    rhsModelItem,
+                                item.Model = rhsModelItem.Copy(
                                     copyMask?.Model?.Specific,
                                     def: defModelItem);
                                 break;
@@ -2264,8 +2228,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             }
                             else
                             {
-                                item.SubData = MagicEffectSubData.Copy(
-                                    rhs.SubData,
+                                item.SubData = rhs.SubData.Copy(
                                     copyMask?.SubData?.Specific,
                                     def?.SubData);
                             }

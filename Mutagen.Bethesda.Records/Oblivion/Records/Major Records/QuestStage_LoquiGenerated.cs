@@ -430,37 +430,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public QuestStage Copy(
-            QuestStage_CopyMask copyMask = null,
-            QuestStage def = null)
-        {
-            return QuestStage.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static QuestStage Copy(
-            QuestStage item,
-            QuestStage_CopyMask copyMask = null,
-            QuestStage def = null)
-        {
-            QuestStage ret;
-            if (item.GetType().Equals(typeof(QuestStage)))
-            {
-                ret = new QuestStage();
-            }
-            else
-            {
-                ret = (QuestStage)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((QuestStageSetterCommon)((IQuestStageInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -640,6 +609,17 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static QuestStage Copy(
+            this QuestStage item,
+            QuestStage_CopyMask copyMask = null,
+            QuestStage def = null)
+        {
+            return ((QuestStageSetterCommon)((IQuestStageInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -864,10 +844,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.LogEntries.Unset();
         }
         
-        public static QuestStage GetNew()
+        public QuestStage GetNew()
         {
             return new QuestStage();
         }
+        
+        public QuestStage Copy(
+            QuestStage item,
+            QuestStage_CopyMask copyMask = null,
+            QuestStage def = null)
+        {
+            QuestStage ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class QuestStageCommon
     {
@@ -1049,8 +1043,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return (LogEntry)r;
                                 case CopyOption.MakeCopy:
-                                    return LogEntry.Copy(
-                                        r,
+                                    return r.Copy(
                                         copyMask?.LogEntries?.Specific,
                                         def: d);
                                 default:

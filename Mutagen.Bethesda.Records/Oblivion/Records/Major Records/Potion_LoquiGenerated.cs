@@ -734,37 +734,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public Potion Copy(
-            Potion_CopyMask copyMask = null,
-            Potion def = null)
-        {
-            return Potion.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static Potion Copy(
-            Potion item,
-            Potion_CopyMask copyMask = null,
-            Potion def = null)
-        {
-            Potion ret;
-            if (item.GetType().Equals(typeof(Potion)))
-            {
-                ret = new Potion();
-            }
-            else
-            {
-                ret = (Potion)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((PotionSetterCommon)((IPotionInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -1329,10 +1298,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IPotionInternal)item);
         }
         
-        public static Potion GetNew()
-        {
-            return (Potion)System.Activator.CreateInstance(typeof(Potion));
-        }
     }
     public partial class PotionCommon : ItemAbstractCommon
     {
@@ -1779,8 +1744,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     copyMask: copyMask?.Model.Specific);
                                 break;
                             case CopyOption.MakeCopy:
-                                item.Model = Model.Copy(
-                                    rhsModelItem,
+                                item.Model = rhsModelItem.Copy(
                                     copyMask?.Model?.Specific,
                                     def: defModelItem);
                                 break;
@@ -1911,8 +1875,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return (Effect)r;
                                 case CopyOption.MakeCopy:
-                                    return Effect.Copy(
-                                        r,
+                                    return r.Copy(
                                         copyMask?.Effects?.Specific,
                                         def: d);
                                 default:

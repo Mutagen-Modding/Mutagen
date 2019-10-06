@@ -287,29 +287,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        public GameSetting Copy(
-            GameSetting_CopyMask copyMask = null,
-            GameSetting def = null)
-        {
-            return GameSetting.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static GameSetting Copy(
-            GameSetting item,
-            GameSetting_CopyMask copyMask = null,
-            GameSetting def = null)
-        {
-            GameSetting ret = (GameSetting)System.Activator.CreateInstance(item.GetType());
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((GameSettingSetterCommon)((IGameSettingInternalGetter)this).CommonSetterInstance()).Clear(this);

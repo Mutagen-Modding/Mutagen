@@ -491,37 +491,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public Script Copy(
-            Script_CopyMask copyMask = null,
-            Script def = null)
-        {
-            return Script.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static Script Copy(
-            Script item,
-            Script_CopyMask copyMask = null,
-            Script def = null)
-        {
-            Script ret;
-            if (item.GetType().Equals(typeof(Script)))
-            {
-                ret = new Script();
-            }
-            else
-            {
-                ret = (Script)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((ScriptSetterCommon)((IScriptInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -906,10 +875,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IScriptInternal)item);
         }
         
-        public static Script GetNew()
-        {
-            return (Script)System.Activator.CreateInstance(typeof(Script));
-        }
     }
     public partial class ScriptCommon : OblivionMajorRecordCommon
     {

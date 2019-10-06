@@ -370,37 +370,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public RaceHair Copy(
-            RaceHair_CopyMask copyMask = null,
-            RaceHair def = null)
-        {
-            return RaceHair.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static RaceHair Copy(
-            RaceHair item,
-            RaceHair_CopyMask copyMask = null,
-            RaceHair def = null)
-        {
-            RaceHair ret;
-            if (item.GetType().Equals(typeof(RaceHair)))
-            {
-                ret = new RaceHair();
-            }
-            else
-            {
-                ret = (RaceHair)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((RaceHairSetterCommon)((IRaceHairInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -588,6 +557,17 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static RaceHair Copy(
+            this RaceHair item,
+            RaceHair_CopyMask copyMask = null,
+            RaceHair def = null)
+        {
+            return ((RaceHairSetterCommon)((IRaceHairInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -804,10 +784,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Female = default(Hair);
         }
         
-        public static RaceHair GetNew()
+        public RaceHair GetNew()
         {
             return new RaceHair();
         }
+        
+        public RaceHair Copy(
+            RaceHair item,
+            RaceHair_CopyMask copyMask = null,
+            RaceHair def = null)
+        {
+            RaceHair ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class RaceHairCommon
     {

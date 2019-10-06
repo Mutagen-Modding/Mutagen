@@ -382,37 +382,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public ScriptObjectReference Copy(
-            ScriptObjectReference_CopyMask copyMask = null,
-            ScriptObjectReference def = null)
-        {
-            return ScriptObjectReference.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static ScriptObjectReference Copy(
-            ScriptObjectReference item,
-            ScriptObjectReference_CopyMask copyMask = null,
-            ScriptObjectReference def = null)
-        {
-            ScriptObjectReference ret;
-            if (item.GetType().Equals(typeof(ScriptObjectReference)))
-            {
-                ret = new ScriptObjectReference();
-            }
-            else
-            {
-                ret = (ScriptObjectReference)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((ScriptObjectReferenceSetterCommon)((IScriptObjectReferenceInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -579,6 +548,17 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static ScriptObjectReference Copy(
+            this ScriptObjectReference item,
+            ScriptObjectReference_CopyMask copyMask = null,
+            ScriptObjectReference def = null)
+        {
+            return ((ScriptObjectReferenceSetterCommon)((IScriptObjectReferenceInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -788,10 +768,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IScriptObjectReferenceInternal)item);
         }
         
-        public static ScriptObjectReference GetNew()
+        public ScriptObjectReference GetNew()
         {
             return new ScriptObjectReference();
         }
+        
+        public new ScriptObjectReference Copy(
+            ScriptObjectReference item,
+            ScriptObjectReference_CopyMask copyMask = null,
+            ScriptObjectReference def = null)
+        {
+            ScriptObjectReference ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class ScriptObjectReferenceCommon : ScriptReferenceCommon
     {

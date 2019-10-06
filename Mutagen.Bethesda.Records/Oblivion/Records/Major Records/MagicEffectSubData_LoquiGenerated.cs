@@ -453,37 +453,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public MagicEffectSubData Copy(
-            MagicEffectSubData_CopyMask copyMask = null,
-            MagicEffectSubData def = null)
-        {
-            return MagicEffectSubData.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static MagicEffectSubData Copy(
-            MagicEffectSubData item,
-            MagicEffectSubData_CopyMask copyMask = null,
-            MagicEffectSubData def = null)
-        {
-            MagicEffectSubData ret;
-            if (item.GetType().Equals(typeof(MagicEffectSubData)))
-            {
-                ret = new MagicEffectSubData();
-            }
-            else
-            {
-                ret = (MagicEffectSubData)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((MagicEffectSubDataSetterCommon)((IMagicEffectSubDataInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -710,6 +679,17 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static MagicEffectSubData Copy(
+            this MagicEffectSubData item,
+            MagicEffectSubData_CopyMask copyMask = null,
+            MagicEffectSubData def = null)
+        {
+            return ((MagicEffectSubDataSetterCommon)((IMagicEffectSubDataInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -989,10 +969,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.ConstantEffectBarterFactor = default(Single);
         }
         
-        public static MagicEffectSubData GetNew()
+        public MagicEffectSubData GetNew()
         {
             return new MagicEffectSubData();
         }
+        
+        public MagicEffectSubData Copy(
+            MagicEffectSubData item,
+            MagicEffectSubData_CopyMask copyMask = null,
+            MagicEffectSubData def = null)
+        {
+            MagicEffectSubData ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class MagicEffectSubDataCommon
     {

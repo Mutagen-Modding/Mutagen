@@ -319,29 +319,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        public SkyrimMajorRecord Copy(
-            SkyrimMajorRecord_CopyMask copyMask = null,
-            SkyrimMajorRecord def = null)
-        {
-            return SkyrimMajorRecord.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static SkyrimMajorRecord Copy(
-            SkyrimMajorRecord item,
-            SkyrimMajorRecord_CopyMask copyMask = null,
-            SkyrimMajorRecord def = null)
-        {
-            SkyrimMajorRecord ret = (SkyrimMajorRecord)System.Activator.CreateInstance(item.GetType());
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((SkyrimMajorRecordSetterCommon)((ISkyrimMajorRecordInternalGetter)this).CommonSetterInstance()).Clear(this);

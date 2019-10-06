@@ -502,37 +502,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public Subspace Copy(
-            Subspace_CopyMask copyMask = null,
-            Subspace def = null)
-        {
-            return Subspace.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static Subspace Copy(
-            Subspace item,
-            Subspace_CopyMask copyMask = null,
-            Subspace def = null)
-        {
-            Subspace ret;
-            if (item.GetType().Equals(typeof(Subspace)))
-            {
-                ret = new Subspace();
-            }
-            else
-            {
-                ret = (Subspace)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((SubspaceSetterCommon)((ISubspaceInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -972,10 +941,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ISubspaceInternal)item);
         }
         
-        public static Subspace GetNew()
-        {
-            return (Subspace)System.Activator.CreateInstance(typeof(Subspace));
-        }
     }
     public partial class SubspaceCommon : OblivionMajorRecordCommon
     {

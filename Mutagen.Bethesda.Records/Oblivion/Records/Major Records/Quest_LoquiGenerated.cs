@@ -717,37 +717,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public Quest Copy(
-            Quest_CopyMask copyMask = null,
-            Quest def = null)
-        {
-            return Quest.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static Quest Copy(
-            Quest item,
-            Quest_CopyMask copyMask = null,
-            Quest def = null)
-        {
-            Quest ret;
-            if (item.GetType().Equals(typeof(Quest)))
-            {
-                ret = new Quest();
-            }
-            else
-            {
-                ret = (Quest)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((QuestSetterCommon)((IQuestInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -1296,10 +1265,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IQuestInternal)item);
         }
         
-        public static Quest GetNew()
-        {
-            return (Quest)System.Activator.CreateInstance(typeof(Quest));
-        }
     }
     public partial class QuestCommon : OblivionMajorRecordCommon
     {
@@ -1790,8 +1755,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return (Condition)r;
                                 case CopyOption.MakeCopy:
-                                    return Condition.Copy(
-                                        r,
+                                    return r.Copy(
                                         copyMask?.Conditions?.Specific,
                                         def: d);
                                 default:
@@ -1824,8 +1788,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return (QuestStage)r;
                                 case CopyOption.MakeCopy:
-                                    return QuestStage.Copy(
-                                        r,
+                                    return r.Copy(
                                         copyMask?.Stages?.Specific,
                                         def: d);
                                 default:
@@ -1858,8 +1821,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return (QuestTarget)r;
                                 case CopyOption.MakeCopy:
-                                    return QuestTarget.Copy(
-                                        r,
+                                    return r.Copy(
                                         copyMask?.Targets?.Specific,
                                         def: d);
                                 default:

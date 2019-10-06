@@ -368,37 +368,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public ScriptVariableReference Copy(
-            ScriptVariableReference_CopyMask copyMask = null,
-            ScriptVariableReference def = null)
-        {
-            return ScriptVariableReference.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static ScriptVariableReference Copy(
-            ScriptVariableReference item,
-            ScriptVariableReference_CopyMask copyMask = null,
-            ScriptVariableReference def = null)
-        {
-            ScriptVariableReference ret;
-            if (item.GetType().Equals(typeof(ScriptVariableReference)))
-            {
-                ret = new ScriptVariableReference();
-            }
-            else
-            {
-                ret = (ScriptVariableReference)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((ScriptVariableReferenceSetterCommon)((IScriptVariableReferenceInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -562,6 +531,17 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static ScriptVariableReference Copy(
+            this ScriptVariableReference item,
+            ScriptVariableReference_CopyMask copyMask = null,
+            ScriptVariableReference def = null)
+        {
+            return ((ScriptVariableReferenceSetterCommon)((IScriptVariableReferenceInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -771,10 +751,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IScriptVariableReferenceInternal)item);
         }
         
-        public static ScriptVariableReference GetNew()
+        public ScriptVariableReference GetNew()
         {
             return new ScriptVariableReference();
         }
+        
+        public new ScriptVariableReference Copy(
+            ScriptVariableReference item,
+            ScriptVariableReference_CopyMask copyMask = null,
+            ScriptVariableReference def = null)
+        {
+            ScriptVariableReference ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class ScriptVariableReferenceCommon : ScriptReferenceCommon
     {

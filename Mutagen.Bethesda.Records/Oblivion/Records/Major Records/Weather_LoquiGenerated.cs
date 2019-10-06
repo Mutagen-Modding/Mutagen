@@ -1342,37 +1342,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public Weather Copy(
-            Weather_CopyMask copyMask = null,
-            Weather def = null)
-        {
-            return Weather.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static Weather Copy(
-            Weather item,
-            Weather_CopyMask copyMask = null,
-            Weather def = null)
-        {
-            Weather ret;
-            if (item.GetType().Equals(typeof(Weather)))
-            {
-                ret = new Weather();
-            }
-            else
-            {
-                ret = (Weather)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((WeatherSetterCommon)((IWeatherInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -2492,10 +2461,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IWeatherInternal)item);
         }
         
-        public static Weather GetNew()
-        {
-            return (Weather)System.Activator.CreateInstance(typeof(Weather));
-        }
     }
     public partial class WeatherCommon : OblivionMajorRecordCommon
     {
@@ -3184,8 +3149,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     copyMask: copyMask?.Model.Specific);
                                 break;
                             case CopyOption.MakeCopy:
-                                item.Model = Model.Copy(
-                                    rhsModelItem,
+                                item.Model = rhsModelItem.Copy(
                                     copyMask?.Model?.Specific,
                                     def: defModelItem);
                                 break;
@@ -3225,8 +3189,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return (WeatherType)r;
                                 case CopyOption.MakeCopy:
-                                    return WeatherType.Copy(
-                                        r,
+                                    return r.Copy(
                                         copyMask?.WeatherTypes?.Specific,
                                         def: d);
                                 default:
@@ -3445,8 +3408,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return (WeatherSound)r;
                                 case CopyOption.MakeCopy:
-                                    return WeatherSound.Copy(
-                                        r,
+                                    return r.Copy(
                                         copyMask?.Sounds?.Specific,
                                         def: d);
                                 default:

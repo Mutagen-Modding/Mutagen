@@ -802,37 +802,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public Book Copy(
-            Book_CopyMask copyMask = null,
-            Book def = null)
-        {
-            return Book.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static Book Copy(
-            Book item,
-            Book_CopyMask copyMask = null,
-            Book def = null)
-        {
-            Book ret;
-            if (item.GetType().Equals(typeof(Book)))
-            {
-                ret = new Book();
-            }
-            else
-            {
-                ret = (Book)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((BookSetterCommon)((IBookInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -1463,10 +1432,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IBookInternal)item);
         }
         
-        public static Book GetNew()
-        {
-            return (Book)System.Activator.CreateInstance(typeof(Book));
-        }
     }
     public partial class BookCommon : ItemAbstractCommon
     {
@@ -1928,8 +1893,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     copyMask: copyMask?.Model.Specific);
                                 break;
                             case CopyOption.MakeCopy:
-                                item.Model = Model.Copy(
-                                    rhsModelItem,
+                                item.Model = rhsModelItem.Copy(
                                     copyMask?.Model?.Specific,
                                     def: defModelItem);
                                 break;

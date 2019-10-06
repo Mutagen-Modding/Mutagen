@@ -445,37 +445,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public GameSettingFloat Copy(
-            GameSettingFloat_CopyMask copyMask = null,
-            GameSettingFloat def = null)
-        {
-            return GameSettingFloat.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static GameSettingFloat Copy(
-            GameSettingFloat item,
-            GameSettingFloat_CopyMask copyMask = null,
-            GameSettingFloat def = null)
-        {
-            GameSettingFloat ret;
-            if (item.GetType().Equals(typeof(GameSettingFloat)))
-            {
-                ret = new GameSettingFloat();
-            }
-            else
-            {
-                ret = (GameSettingFloat)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((GameSettingFloatSetterCommon)((IGameSettingFloatInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -868,10 +837,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IGameSettingFloatInternal)item);
         }
         
-        public static GameSettingFloat GetNew()
-        {
-            return (GameSettingFloat)System.Activator.CreateInstance(typeof(GameSettingFloat));
-        }
     }
     public partial class GameSettingFloatCommon : GameSettingCommon
     {

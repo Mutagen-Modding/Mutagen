@@ -415,37 +415,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public ScriptMetaSummary Copy(
-            ScriptMetaSummary_CopyMask copyMask = null,
-            ScriptMetaSummary def = null)
-        {
-            return ScriptMetaSummary.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static ScriptMetaSummary Copy(
-            ScriptMetaSummary item,
-            ScriptMetaSummary_CopyMask copyMask = null,
-            ScriptMetaSummary def = null)
-        {
-            ScriptMetaSummary ret;
-            if (item.GetType().Equals(typeof(ScriptMetaSummary)))
-            {
-                ret = new ScriptMetaSummary();
-            }
-            else
-            {
-                ret = (ScriptMetaSummary)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((ScriptMetaSummarySetterCommon)((IScriptMetaSummaryInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -643,6 +612,17 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static ScriptMetaSummary Copy(
+            this ScriptMetaSummary item,
+            ScriptMetaSummary_CopyMask copyMask = null,
+            ScriptMetaSummary def = null)
+        {
+            return ((ScriptMetaSummarySetterCommon)((IScriptMetaSummaryInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -899,10 +879,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Type = default(ScriptFields.ScriptType);
         }
         
-        public static ScriptMetaSummary GetNew()
+        public ScriptMetaSummary GetNew()
         {
             return new ScriptMetaSummary();
         }
+        
+        public ScriptMetaSummary Copy(
+            ScriptMetaSummary item,
+            ScriptMetaSummary_CopyMask copyMask = null,
+            ScriptMetaSummary def = null)
+        {
+            ScriptMetaSummary ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class ScriptMetaSummaryCommon
     {

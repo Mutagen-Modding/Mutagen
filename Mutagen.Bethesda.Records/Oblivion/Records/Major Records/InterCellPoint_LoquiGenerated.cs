@@ -354,37 +354,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public InterCellPoint Copy(
-            InterCellPoint_CopyMask copyMask = null,
-            InterCellPoint def = null)
-        {
-            return InterCellPoint.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static InterCellPoint Copy(
-            InterCellPoint item,
-            InterCellPoint_CopyMask copyMask = null,
-            InterCellPoint def = null)
-        {
-            InterCellPoint ret;
-            if (item.GetType().Equals(typeof(InterCellPoint)))
-            {
-                ret = new InterCellPoint();
-            }
-            else
-            {
-                ret = (InterCellPoint)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((InterCellPointSetterCommon)((IInterCellPointInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -566,6 +535,17 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static InterCellPoint Copy(
+            this InterCellPoint item,
+            InterCellPoint_CopyMask copyMask = null,
+            InterCellPoint def = null)
+        {
+            return ((InterCellPointSetterCommon)((IInterCellPointInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -780,10 +760,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Point = default(P3Float);
         }
         
-        public static InterCellPoint GetNew()
+        public InterCellPoint GetNew()
         {
             return new InterCellPoint();
         }
+        
+        public InterCellPoint Copy(
+            InterCellPoint item,
+            InterCellPoint_CopyMask copyMask = null,
+            InterCellPoint def = null)
+        {
+            InterCellPoint ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class InterCellPointCommon
     {

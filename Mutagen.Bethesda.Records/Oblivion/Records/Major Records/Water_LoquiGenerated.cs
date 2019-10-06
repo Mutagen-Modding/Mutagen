@@ -1390,37 +1390,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public Water Copy(
-            Water_CopyMask copyMask = null,
-            Water def = null)
-        {
-            return Water.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static Water Copy(
-            Water item,
-            Water_CopyMask copyMask = null,
-            Water def = null)
-        {
-            Water ret;
-            if (item.GetType().Equals(typeof(Water)))
-            {
-                ret = new Water();
-            }
-            else
-            {
-                ret = (Water)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((WaterSetterCommon)((IWaterInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -2441,10 +2410,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IWaterInternal)item);
         }
         
-        public static Water GetNew()
-        {
-            return (Water)System.Activator.CreateInstance(typeof(Water));
-        }
     }
     public partial class WaterCommon : OblivionMajorRecordCommon
     {
@@ -3298,8 +3263,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     copyMask: copyMask?.RelatedWaters.Specific);
                                 break;
                             case CopyOption.MakeCopy:
-                                item.RelatedWaters = RelatedWaters.Copy(
-                                    rhsRelatedWatersItem,
+                                item.RelatedWaters = rhsRelatedWatersItem.Copy(
                                     copyMask?.RelatedWaters?.Specific,
                                     def: defRelatedWatersItem);
                                 break;

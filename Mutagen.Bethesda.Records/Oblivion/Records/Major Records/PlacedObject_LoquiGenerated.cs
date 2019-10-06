@@ -1351,37 +1351,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public PlacedObject Copy(
-            PlacedObject_CopyMask copyMask = null,
-            PlacedObject def = null)
-        {
-            return PlacedObject.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static PlacedObject Copy(
-            PlacedObject item,
-            PlacedObject_CopyMask copyMask = null,
-            PlacedObject def = null)
-        {
-            PlacedObject ret;
-            if (item.GetType().Equals(typeof(PlacedObject)))
-            {
-                ret = new PlacedObject();
-            }
-            else
-            {
-                ret = (PlacedObject)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((PlacedObjectSetterCommon)((IPlacedObjectInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -2347,10 +2316,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IPlacedObjectInternal)item);
         }
         
-        public static PlacedObject GetNew()
-        {
-            return (PlacedObject)System.Activator.CreateInstance(typeof(PlacedObject));
-        }
     }
     public partial class PlacedObjectCommon : OblivionMajorRecordCommon
     {
@@ -3088,8 +3053,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     copyMask: copyMask?.TeleportDestination.Specific);
                                 break;
                             case CopyOption.MakeCopy:
-                                item.TeleportDestination = TeleportDestination.Copy(
-                                    rhsTeleportDestinationItem,
+                                item.TeleportDestination = rhsTeleportDestinationItem.Copy(
                                     copyMask?.TeleportDestination?.Specific,
                                     def: defTeleportDestinationItem);
                                 break;
@@ -3140,8 +3104,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     copyMask: copyMask?.Lock.Specific);
                                 break;
                             case CopyOption.MakeCopy:
-                                item.Lock = LockInformation.Copy(
-                                    rhsLockItem,
+                                item.Lock = rhsLockItem.Copy(
                                     copyMask?.Lock?.Specific,
                                     def: defLockItem);
                                 break;
@@ -3260,8 +3223,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     copyMask: copyMask?.EnableParent.Specific);
                                 break;
                             case CopyOption.MakeCopy:
-                                item.EnableParent = EnableParent.Copy(
-                                    rhsEnableParentItem,
+                                item.EnableParent = rhsEnableParentItem.Copy(
                                     copyMask?.EnableParent?.Specific,
                                     def: defEnableParentItem);
                                 break;
@@ -3361,8 +3323,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     copyMask: copyMask?.DistantLODData.Specific);
                                 break;
                             case CopyOption.MakeCopy:
-                                item.DistantLODData = DistantLODData.Copy(
-                                    rhsDistantLODDataItem,
+                                item.DistantLODData = rhsDistantLODDataItem.Copy(
                                     copyMask?.DistantLODData?.Specific,
                                     def: defDistantLODDataItem);
                                 break;
@@ -3582,8 +3543,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     copyMask: copyMask?.MapMarker.Specific);
                                 break;
                             case CopyOption.MakeCopy:
-                                item.MapMarker = MapMarker.Copy(
-                                    rhsMapMarkerItem,
+                                item.MapMarker = rhsMapMarkerItem.Copy(
                                     copyMask?.MapMarker?.Specific,
                                     def: defMapMarkerItem);
                                 break;

@@ -443,37 +443,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public Model Copy(
-            Model_CopyMask copyMask = null,
-            Model def = null)
-        {
-            return Model.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static Model Copy(
-            Model item,
-            Model_CopyMask copyMask = null,
-            Model def = null)
-        {
-            Model ret;
-            if (item.GetType().Equals(typeof(Model)))
-            {
-                ret = new Model();
-            }
-            else
-            {
-                ret = (Model)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((ModelSetterCommon)((IModelInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -665,6 +634,17 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static Model Copy(
+            this Model item,
+            Model_CopyMask copyMask = null,
+            Model def = null)
+        {
+            return ((ModelSetterCommon)((IModelInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -896,10 +876,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Hashes_Unset();
         }
         
-        public static Model GetNew()
+        public Model GetNew()
         {
             return new Model();
         }
+        
+        public Model Copy(
+            Model item,
+            Model_CopyMask copyMask = null,
+            Model def = null)
+        {
+            Model ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class ModelCommon
     {

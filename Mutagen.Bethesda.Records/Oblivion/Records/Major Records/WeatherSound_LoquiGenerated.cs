@@ -383,37 +383,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public WeatherSound Copy(
-            WeatherSound_CopyMask copyMask = null,
-            WeatherSound def = null)
-        {
-            return WeatherSound.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static WeatherSound Copy(
-            WeatherSound item,
-            WeatherSound_CopyMask copyMask = null,
-            WeatherSound def = null)
-        {
-            WeatherSound ret;
-            if (item.GetType().Equals(typeof(WeatherSound)))
-            {
-                ret = new WeatherSound();
-            }
-            else
-            {
-                ret = (WeatherSound)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((WeatherSoundSetterCommon)((IWeatherSoundInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -598,6 +567,17 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static WeatherSound Copy(
+            this WeatherSound item,
+            WeatherSound_CopyMask copyMask = null,
+            WeatherSound def = null)
+        {
+            return ((WeatherSoundSetterCommon)((IWeatherSoundInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -814,10 +794,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Type = default(WeatherSound.SoundType);
         }
         
-        public static WeatherSound GetNew()
+        public WeatherSound GetNew()
         {
             return new WeatherSound();
         }
+        
+        public WeatherSound Copy(
+            WeatherSound item,
+            WeatherSound_CopyMask copyMask = null,
+            WeatherSound def = null)
+        {
+            WeatherSound ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class WeatherSoundCommon
     {

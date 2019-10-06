@@ -398,37 +398,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public LoadScreenLocation Copy(
-            LoadScreenLocation_CopyMask copyMask = null,
-            LoadScreenLocation def = null)
-        {
-            return LoadScreenLocation.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static LoadScreenLocation Copy(
-            LoadScreenLocation item,
-            LoadScreenLocation_CopyMask copyMask = null,
-            LoadScreenLocation def = null)
-        {
-            LoadScreenLocation ret;
-            if (item.GetType().Equals(typeof(LoadScreenLocation)))
-            {
-                ret = new LoadScreenLocation();
-            }
-            else
-            {
-                ret = (LoadScreenLocation)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((LoadScreenLocationSetterCommon)((ILoadScreenLocationInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -622,6 +591,17 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static LoadScreenLocation Copy(
+            this LoadScreenLocation item,
+            LoadScreenLocation_CopyMask copyMask = null,
+            LoadScreenLocation def = null)
+        {
+            return ((LoadScreenLocationSetterCommon)((ILoadScreenLocationInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -851,10 +831,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.GridPoint = default(P2Int16);
         }
         
-        public static LoadScreenLocation GetNew()
+        public LoadScreenLocation GetNew()
         {
             return new LoadScreenLocation();
         }
+        
+        public LoadScreenLocation Copy(
+            LoadScreenLocation item,
+            LoadScreenLocation_CopyMask copyMask = null,
+            LoadScreenLocation def = null)
+        {
+            LoadScreenLocation ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class LoadScreenLocationCommon
     {

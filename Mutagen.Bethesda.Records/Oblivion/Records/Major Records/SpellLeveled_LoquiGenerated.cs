@@ -368,37 +368,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public SpellLeveled Copy(
-            SpellLeveled_CopyMask copyMask = null,
-            SpellLeveled def = null)
-        {
-            return SpellLeveled.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static SpellLeveled Copy(
-            SpellLeveled item,
-            SpellLeveled_CopyMask copyMask = null,
-            SpellLeveled def = null)
-        {
-            SpellLeveled ret;
-            if (item.GetType().Equals(typeof(SpellLeveled)))
-            {
-                ret = new SpellLeveled();
-            }
-            else
-            {
-                ret = (SpellLeveled)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((SpellLeveledSetterCommon)((ISpellLeveledInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -768,10 +737,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ISpellLeveledInternal)item);
         }
         
-        public static SpellLeveled GetNew()
-        {
-            return (SpellLeveled)System.Activator.CreateInstance(typeof(SpellLeveled));
-        }
     }
     public partial class SpellLeveledCommon : SpellCommon
     {

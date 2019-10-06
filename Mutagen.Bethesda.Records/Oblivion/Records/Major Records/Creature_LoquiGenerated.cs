@@ -1690,37 +1690,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public Creature Copy(
-            Creature_CopyMask copyMask = null,
-            Creature def = null)
-        {
-            return Creature.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static Creature Copy(
-            Creature item,
-            Creature_CopyMask copyMask = null,
-            Creature def = null)
-        {
-            Creature ret;
-            if (item.GetType().Equals(typeof(Creature)))
-            {
-                ret = new Creature();
-            }
-            else
-            {
-                ret = (Creature)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((CreatureSetterCommon)((ICreatureInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -3140,10 +3109,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ICreatureInternal)item);
         }
         
-        public static Creature GetNew()
-        {
-            return (Creature)System.Activator.CreateInstance(typeof(Creature));
-        }
     }
     public partial class CreatureCommon : NPCAbstractCommon
     {
@@ -4177,8 +4142,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     copyMask: copyMask?.Model.Specific);
                                 break;
                             case CopyOption.MakeCopy:
-                                item.Model = Model.Copy(
-                                    rhsModelItem,
+                                item.Model = rhsModelItem.Copy(
                                     copyMask?.Model?.Specific,
                                     def: defModelItem);
                                 break;
@@ -4218,8 +4182,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return (ItemEntry)r;
                                 case CopyOption.MakeCopy:
-                                    return ItemEntry.Copy(
-                                        r,
+                                    return r.Copy(
                                         copyMask?.Items?.Specific,
                                         def: d);
                                 default:
@@ -4362,8 +4325,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return (RankPlacement)r;
                                 case CopyOption.MakeCopy:
-                                    return RankPlacement.Copy(
-                                        r,
+                                    return r.Copy(
                                         copyMask?.Factions?.Specific,
                                         def: d);
                                 default:
@@ -4822,8 +4784,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return (CreatureSound)r;
                                 case CopyOption.MakeCopy:
-                                    return CreatureSound.Copy(
-                                        r,
+                                    return r.Copy(
                                         copyMask?.Sounds?.Specific,
                                         def: d);
                                 default:

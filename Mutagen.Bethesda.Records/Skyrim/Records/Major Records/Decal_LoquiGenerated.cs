@@ -481,37 +481,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        public Decal Copy(
-            Decal_CopyMask copyMask = null,
-            Decal def = null)
-        {
-            return Decal.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static Decal Copy(
-            Decal item,
-            Decal_CopyMask copyMask = null,
-            Decal def = null)
-        {
-            Decal ret;
-            if (item.GetType().Equals(typeof(Decal)))
-            {
-                ret = new Decal();
-            }
-            else
-            {
-                ret = (Decal)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((DecalSetterCommon)((IDecalInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -747,6 +716,17 @@ namespace Mutagen.Bethesda.Skyrim
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static Decal Copy(
+            this Decal item,
+            Decal_CopyMask copyMask = null,
+            Decal def = null)
+        {
+            return ((DecalSetterCommon)((IDecalInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -1080,10 +1060,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Color = default(Color);
         }
         
-        public static Decal GetNew()
+        public Decal GetNew()
         {
             return new Decal();
         }
+        
+        public Decal Copy(
+            Decal item,
+            Decal_CopyMask copyMask = null,
+            Decal def = null)
+        {
+            Decal ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class DecalCommon
     {

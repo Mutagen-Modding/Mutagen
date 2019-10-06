@@ -636,37 +636,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public CombatStyleAdvanced Copy(
-            CombatStyleAdvanced_CopyMask copyMask = null,
-            CombatStyleAdvanced def = null)
-        {
-            return CombatStyleAdvanced.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static CombatStyleAdvanced Copy(
-            CombatStyleAdvanced item,
-            CombatStyleAdvanced_CopyMask copyMask = null,
-            CombatStyleAdvanced def = null)
-        {
-            CombatStyleAdvanced ret;
-            if (item.GetType().Equals(typeof(CombatStyleAdvanced)))
-            {
-                ret = new CombatStyleAdvanced();
-            }
-            else
-            {
-                ret = (CombatStyleAdvanced)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((CombatStyleAdvancedSetterCommon)((ICombatStyleAdvancedInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -962,6 +931,17 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static CombatStyleAdvanced Copy(
+            this CombatStyleAdvanced item,
+            CombatStyleAdvanced_CopyMask copyMask = null,
+            CombatStyleAdvanced def = null)
+        {
+            return ((CombatStyleAdvancedSetterCommon)((ICombatStyleAdvancedInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -1425,10 +1405,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.PowerAttackFatigueModMult = default(Single);
         }
         
-        public static CombatStyleAdvanced GetNew()
+        public CombatStyleAdvanced GetNew()
         {
             return new CombatStyleAdvanced();
         }
+        
+        public CombatStyleAdvanced Copy(
+            CombatStyleAdvanced item,
+            CombatStyleAdvanced_CopyMask copyMask = null,
+            CombatStyleAdvanced def = null)
+        {
+            CombatStyleAdvanced ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class CombatStyleAdvancedCommon
     {

@@ -480,39 +480,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public LeveledEntry<T> Copy<T_CopyMask>(
-            LeveledEntry_CopyMask<T_CopyMask> copyMask = null,
-            LeveledEntry<T> def = null)
-            where T_CopyMask : OblivionMajorRecord_CopyMask, new()
-        {
-            return LeveledEntry<T>.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static LeveledEntry<T> Copy<T_CopyMask>(
-            LeveledEntry<T> item,
-            LeveledEntry_CopyMask<T_CopyMask> copyMask = null,
-            LeveledEntry<T> def = null)
-            where T_CopyMask : OblivionMajorRecord_CopyMask, new()
-        {
-            LeveledEntry<T> ret;
-            if (item.GetType().Equals(typeof(LeveledEntry<T>)))
-            {
-                ret = new LeveledEntry<T>();
-            }
-            else
-            {
-                ret = (LeveledEntry<T>)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom<T, T_CopyMask>(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((LeveledEntrySetterCommon<T>)((ILeveledEntryInternalGetter<T>)this).CommonSetterInstance()).Clear(this);
@@ -744,6 +711,19 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static LeveledEntry<T> Copy<T, T_CopyMask>(
+            this LeveledEntry<T> item,
+            LeveledEntry_CopyMask<T_CopyMask> copyMask = null,
+            LeveledEntry<T> def = null)
+            where T : class, IOblivionMajorRecordInternal, IXmlItem, IBinaryItem
+            where T_CopyMask : OblivionMajorRecord_CopyMask, new()
+        {
+            return ((LeveledEntrySetterCommon<T>)((ILeveledEntryInternalGetter<T>)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -1009,10 +989,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Fluff2_Unset();
         }
         
-        public static LeveledEntry<T> GetNew()
+        public LeveledEntry<T> GetNew()
         {
             return new LeveledEntry<T>();
         }
+        
+        public LeveledEntry<T> Copy<T_CopyMask>(
+            LeveledEntry<T> item,
+            LeveledEntry_CopyMask<T_CopyMask> copyMask = null,
+            LeveledEntry<T> def = null)
+            where T_CopyMask : OblivionMajorRecord_CopyMask, new()
+        {
+            LeveledEntry<T> ret = GetNew();
+            ret.CopyFieldsFrom<T, T_CopyMask>(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class LeveledEntryCommon<T>
         where T : class, IOblivionMajorRecordInternalGetter, IXmlItem, IBinaryItem

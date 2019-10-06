@@ -374,37 +374,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public RaceRelation Copy(
-            RaceRelation_CopyMask copyMask = null,
-            RaceRelation def = null)
-        {
-            return RaceRelation.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static RaceRelation Copy(
-            RaceRelation item,
-            RaceRelation_CopyMask copyMask = null,
-            RaceRelation def = null)
-        {
-            RaceRelation ret;
-            if (item.GetType().Equals(typeof(RaceRelation)))
-            {
-                ret = new RaceRelation();
-            }
-            else
-            {
-                ret = (RaceRelation)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((RaceRelationSetterCommon)((IRaceRelationInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -589,6 +558,17 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static RaceRelation Copy(
+            this RaceRelation item,
+            RaceRelation_CopyMask copyMask = null,
+            RaceRelation def = null)
+        {
+            return ((RaceRelationSetterCommon)((IRaceRelationInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -805,10 +785,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Modifier = default(Int32);
         }
         
-        public static RaceRelation GetNew()
+        public RaceRelation GetNew()
         {
             return new RaceRelation();
         }
+        
+        public RaceRelation Copy(
+            RaceRelation item,
+            RaceRelation_CopyMask copyMask = null,
+            RaceRelation def = null)
+        {
+            RaceRelation ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class RaceRelationCommon
     {

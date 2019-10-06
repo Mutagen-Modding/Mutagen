@@ -856,37 +856,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public SkillRecord Copy(
-            SkillRecord_CopyMask copyMask = null,
-            SkillRecord def = null)
-        {
-            return SkillRecord.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static SkillRecord Copy(
-            SkillRecord item,
-            SkillRecord_CopyMask copyMask = null,
-            SkillRecord def = null)
-        {
-            SkillRecord ret;
-            if (item.GetType().Equals(typeof(SkillRecord)))
-            {
-                ret = new SkillRecord();
-            }
-            else
-            {
-                ret = (SkillRecord)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((SkillRecordSetterCommon)((ISkillRecordInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -1532,10 +1501,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ISkillRecordInternal)item);
         }
         
-        public static SkillRecord GetNew()
-        {
-            return (SkillRecord)System.Activator.CreateInstance(typeof(SkillRecord));
-        }
     }
     public partial class SkillRecordCommon : OblivionMajorRecordCommon
     {

@@ -366,37 +366,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public AIPackageTarget Copy(
-            AIPackageTarget_CopyMask copyMask = null,
-            AIPackageTarget def = null)
-        {
-            return AIPackageTarget.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static AIPackageTarget Copy(
-            AIPackageTarget item,
-            AIPackageTarget_CopyMask copyMask = null,
-            AIPackageTarget def = null)
-        {
-            AIPackageTarget ret;
-            if (item.GetType().Equals(typeof(AIPackageTarget)))
-            {
-                ret = new AIPackageTarget();
-            }
-            else
-            {
-                ret = (AIPackageTarget)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((AIPackageTargetSetterCommon)((IAIPackageTargetInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -584,6 +553,17 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static AIPackageTarget Copy(
+            this AIPackageTarget item,
+            AIPackageTarget_CopyMask copyMask = null,
+            AIPackageTarget def = null)
+        {
+            return ((AIPackageTargetSetterCommon)((IAIPackageTargetInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -813,10 +793,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Count = default(Int32);
         }
         
-        public static AIPackageTarget GetNew()
+        public AIPackageTarget GetNew()
         {
             return new AIPackageTarget();
         }
+        
+        public AIPackageTarget Copy(
+            AIPackageTarget item,
+            AIPackageTarget_CopyMask copyMask = null,
+            AIPackageTarget def = null)
+        {
+            AIPackageTarget ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class AIPackageTargetCommon
     {

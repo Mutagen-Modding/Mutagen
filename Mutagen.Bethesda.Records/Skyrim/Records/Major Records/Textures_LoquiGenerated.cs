@@ -714,37 +714,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        public Textures Copy(
-            Textures_CopyMask copyMask = null,
-            Textures def = null)
-        {
-            return Textures.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static Textures Copy(
-            Textures item,
-            Textures_CopyMask copyMask = null,
-            Textures def = null)
-        {
-            Textures ret;
-            if (item.GetType().Equals(typeof(Textures)))
-            {
-                ret = new Textures();
-            }
-            else
-            {
-                ret = (Textures)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((TexturesSetterCommon)((ITexturesInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -994,6 +963,17 @@ namespace Mutagen.Bethesda.Skyrim
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static Textures Copy(
+            this Textures item,
+            Textures_CopyMask copyMask = null,
+            Textures def = null)
+        {
+            return ((TexturesSetterCommon)((ITexturesInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -1312,10 +1292,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.BacklightMaskOrSpecular_Unset();
         }
         
-        public static Textures GetNew()
+        public Textures GetNew()
         {
             return new Textures();
         }
+        
+        public Textures Copy(
+            Textures item,
+            Textures_CopyMask copyMask = null,
+            Textures def = null)
+        {
+            Textures ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class TexturesCommon
     {

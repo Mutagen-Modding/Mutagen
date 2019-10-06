@@ -376,37 +376,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public SoundData Copy(
-            SoundData_CopyMask copyMask = null,
-            SoundData def = null)
-        {
-            return SoundData.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static SoundData Copy(
-            SoundData item,
-            SoundData_CopyMask copyMask = null,
-            SoundData def = null)
-        {
-            SoundData ret;
-            if (item.GetType().Equals(typeof(SoundData)))
-            {
-                ret = new SoundData();
-            }
-            else
-            {
-                ret = (SoundData)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((SoundDataSetterCommon)((ISoundDataInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -600,6 +569,17 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static SoundData Copy(
+            this SoundData item,
+            SoundData_CopyMask copyMask = null,
+            SoundData def = null)
+        {
+            return ((SoundDataSetterCommon)((ISoundDataInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -854,10 +834,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Flags = default(SoundData.Flag);
         }
         
-        public static SoundData GetNew()
+        public SoundData GetNew()
         {
             return new SoundData();
         }
+        
+        public SoundData Copy(
+            SoundData item,
+            SoundData_CopyMask copyMask = null,
+            SoundData def = null)
+        {
+            SoundData ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class SoundDataCommon
     {

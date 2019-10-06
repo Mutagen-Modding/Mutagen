@@ -440,37 +440,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public RegionDataWeather Copy(
-            RegionDataWeather_CopyMask copyMask = null,
-            RegionDataWeather def = null)
-        {
-            return RegionDataWeather.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static RegionDataWeather Copy(
-            RegionDataWeather item,
-            RegionDataWeather_CopyMask copyMask = null,
-            RegionDataWeather def = null)
-        {
-            RegionDataWeather ret;
-            if (item.GetType().Equals(typeof(RegionDataWeather)))
-            {
-                ret = new RegionDataWeather();
-            }
-            else
-            {
-                ret = (RegionDataWeather)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((RegionDataWeatherSetterCommon)((IRegionDataWeatherInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -632,6 +601,17 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static RegionDataWeather Copy(
+            this RegionDataWeather item,
+            RegionDataWeather_CopyMask copyMask = null,
+            RegionDataWeather def = null)
+        {
+            return ((RegionDataWeatherSetterCommon)((IRegionDataWeatherInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -846,10 +826,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IRegionDataWeatherInternal)item);
         }
         
-        public static RegionDataWeather GetNew()
+        public RegionDataWeather GetNew()
         {
             return new RegionDataWeather();
         }
+        
+        public new RegionDataWeather Copy(
+            RegionDataWeather item,
+            RegionDataWeather_CopyMask copyMask = null,
+            RegionDataWeather def = null)
+        {
+            RegionDataWeather ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class RegionDataWeatherCommon : RegionDataCommon
     {
@@ -1066,8 +1060,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return (WeatherChance)r;
                                 case CopyOption.MakeCopy:
-                                    return WeatherChance.Copy(
-                                        r,
+                                    return r.Copy(
                                         copyMask?.Weathers?.Specific,
                                         def: d);
                                 default:

@@ -425,37 +425,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public AlphaLayer Copy(
-            AlphaLayer_CopyMask copyMask = null,
-            AlphaLayer def = null)
-        {
-            return AlphaLayer.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static AlphaLayer Copy(
-            AlphaLayer item,
-            AlphaLayer_CopyMask copyMask = null,
-            AlphaLayer def = null)
-        {
-            AlphaLayer ret;
-            if (item.GetType().Equals(typeof(AlphaLayer)))
-            {
-                ret = new AlphaLayer();
-            }
-            else
-            {
-                ret = (AlphaLayer)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((AlphaLayerSetterCommon)((IAlphaLayerInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -623,6 +592,17 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static AlphaLayer Copy(
+            this AlphaLayer item,
+            AlphaLayer_CopyMask copyMask = null,
+            AlphaLayer def = null)
+        {
+            return ((AlphaLayerSetterCommon)((IAlphaLayerInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -841,10 +821,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IAlphaLayerInternal)item);
         }
         
-        public static AlphaLayer GetNew()
+        public new AlphaLayer GetNew()
         {
             return new AlphaLayer();
         }
+        
+        public new AlphaLayer Copy(
+            AlphaLayer item,
+            AlphaLayer_CopyMask copyMask = null,
+            AlphaLayer def = null)
+        {
+            AlphaLayer ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class AlphaLayerCommon : BaseLayerCommon
     {

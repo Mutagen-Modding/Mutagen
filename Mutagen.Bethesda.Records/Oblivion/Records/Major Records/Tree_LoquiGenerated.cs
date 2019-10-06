@@ -805,37 +805,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public Tree Copy(
-            Tree_CopyMask copyMask = null,
-            Tree def = null)
-        {
-            return Tree.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static Tree Copy(
-            Tree item,
-            Tree_CopyMask copyMask = null,
-            Tree def = null)
-        {
-            Tree ret;
-            if (item.GetType().Equals(typeof(Tree)))
-            {
-                ret = new Tree();
-            }
-            else
-            {
-                ret = (Tree)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((TreeSetterCommon)((ITreeInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -1495,10 +1464,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ITreeInternal)item);
         }
         
-        public static Tree GetNew()
-        {
-            return (Tree)System.Activator.CreateInstance(typeof(Tree));
-        }
     }
     public partial class TreeCommon : OblivionMajorRecordCommon
     {
@@ -1904,8 +1869,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     copyMask: copyMask?.Model.Specific);
                                 break;
                             case CopyOption.MakeCopy:
-                                item.Model = Model.Copy(
-                                    rhsModelItem,
+                                item.Model = rhsModelItem.Copy(
                                     copyMask?.Model?.Specific,
                                     def: defModelItem);
                                 break;

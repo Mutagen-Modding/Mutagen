@@ -458,37 +458,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public CreatureSound Copy(
-            CreatureSound_CopyMask copyMask = null,
-            CreatureSound def = null)
-        {
-            return CreatureSound.Copy(
-                this,
-                copyMask: copyMask,
-                def: def);
-        }
-
-        public static CreatureSound Copy(
-            CreatureSound item,
-            CreatureSound_CopyMask copyMask = null,
-            CreatureSound def = null)
-        {
-            CreatureSound ret;
-            if (item.GetType().Equals(typeof(CreatureSound)))
-            {
-                ret = new CreatureSound();
-            }
-            else
-            {
-                ret = (CreatureSound)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
         void IClearable.Clear()
         {
             ((CreatureSoundSetterCommon)((ICreatureSoundInternalGetter)this).CommonSetterInstance()).Clear(this);
@@ -672,6 +641,17 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
+        }
+
+        public static CreatureSound Copy(
+            this CreatureSound item,
+            CreatureSound_CopyMask copyMask = null,
+            CreatureSound def = null)
+        {
+            return ((CreatureSoundSetterCommon)((ICreatureSoundInternalGetter)item).CommonSetterInstance()).Copy(
+                item: item,
+                copyMask: copyMask,
+                def: def);
         }
 
     }
@@ -904,10 +884,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Sounds.Unset();
         }
         
-        public static CreatureSound GetNew()
+        public CreatureSound GetNew()
         {
             return new CreatureSound();
         }
+        
+        public CreatureSound Copy(
+            CreatureSound item,
+            CreatureSound_CopyMask copyMask = null,
+            CreatureSound def = null)
+        {
+            CreatureSound ret = GetNew();
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     public partial class CreatureSoundCommon
     {
@@ -1121,8 +1115,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return (SoundItem)r;
                                 case CopyOption.MakeCopy:
-                                    return SoundItem.Copy(
-                                        r,
+                                    return r.Copy(
                                         copyMask?.Sounds?.Specific,
                                         def: d);
                                 default:
