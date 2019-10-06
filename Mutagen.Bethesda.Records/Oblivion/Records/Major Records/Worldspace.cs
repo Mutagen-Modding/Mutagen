@@ -274,7 +274,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public partial class WorldspaceBinaryWriteTranslation
         {
-            static partial void WriteBinaryOffsetLengthCustom(MutagenWriter writer, IWorldspaceInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void WriteBinaryOffsetLengthCustom(MutagenWriter writer, IWorldspaceGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
                 if (!item.OffsetData_IsSet) return;
                 if (!item.UsingOffsetLength) return;
@@ -287,7 +287,7 @@ namespace Mutagen.Bethesda.Oblivion
                 writer.Write(item.OffsetData);
             }
 
-            static partial void WriteBinaryOffsetDataCustom(MutagenWriter writer, IWorldspaceInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void WriteBinaryOffsetDataCustom(MutagenWriter writer, IWorldspaceGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
                 if (item.UsingOffsetLength) return;
                 if (!item.OffsetData_IsSet) return;
@@ -297,7 +297,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
             }
 
-            static partial void CustomBinaryEndExport(MutagenWriter writer, IWorldspaceInternalGetter obj, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void CustomBinaryEndExport(MutagenWriter writer, IWorldspaceGetter obj, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
                 if (obj.SubCells.Count == 0
                     && !obj.Road_IsSet
@@ -325,12 +325,12 @@ namespace Mutagen.Bethesda.Oblivion
                             masterReferences: masterReferences,
                             errorMask: errorMask);
                     }
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IWorldspaceBlockInternalGetter>.Instance.Write(
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IWorldspaceBlockGetter>.Instance.Write(
                         writer: writer,
                         items: obj.SubCells,
                         fieldIndex: (int)Worldspace_FieldIndex.SubCells,
                         errorMask: errorMask,
-                        transl: (MutagenWriter subWriter, IWorldspaceBlockInternalGetter subItem, ErrorMaskBuilder listSubMask) =>
+                        transl: (MutagenWriter subWriter, IWorldspaceBlockGetter subItem, ErrorMaskBuilder listSubMask) =>
                         {
                             subItem.WriteToBinary(
                                 writer: subWriter,
@@ -467,15 +467,15 @@ namespace Mutagen.Bethesda.Oblivion
 
             private int? _RoadLocation;
             public bool Road_IsSet => this._RoadLocation.HasValue;
-            public IRoadInternalGetter Road => RoadBinaryWrapper.RoadFactory(new BinaryMemoryReadStream(_grupData.Value.Slice(_RoadLocation.Value)), _package);
+            public IRoadGetter Road => RoadBinaryWrapper.RoadFactory(new BinaryMemoryReadStream(_grupData.Value.Slice(_RoadLocation.Value)), _package);
 
             private int? _TopCellLocation;
             public bool TopCell_IsSet => this._TopCellLocation.HasValue;
-            public ICellInternalGetter TopCell => CellBinaryWrapper.CellFactory(new BinaryMemoryReadStream(_grupData.Value.Slice(_TopCellLocation.Value)), _package);
+            public ICellGetter TopCell => CellBinaryWrapper.CellFactory(new BinaryMemoryReadStream(_grupData.Value.Slice(_TopCellLocation.Value)), _package);
 
             public ReadOnlySpan<byte> SubCellsTimestamp => _grupData != null ? _package.Meta.Group(_grupData.Value).LastModifiedSpan : UtilityTranslation.Zeros.Slice(0, 4);
 
-            public IReadOnlySetList<IWorldspaceBlockInternalGetter> SubCells { get; private set; } = EmptySetList<IWorldspaceBlockInternalGetter>.Instance;
+            public IReadOnlySetList<IWorldspaceBlockGetter> SubCells { get; private set; } = EmptySetList<IWorldspaceBlockGetter>.Instance;
 
             private int? _OffsetLengthLocation;
             public bool UsingOffsetLength => this._OffsetLengthLocation.HasValue;
@@ -551,7 +551,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             break;
                         case 0x50555247: // "GRUP":
-                            this.SubCells = BinaryWrapperSetList<IWorldspaceBlockInternalGetter>.FactoryByArray(
+                            this.SubCells = BinaryWrapperSetList<IWorldspaceBlockGetter>.FactoryByArray(
                                 stream.RemainingMemory,
                                 _package,
                                 getter: (s, p) => WorldspaceBlockBinaryWrapper.WorldspaceBlockFactory(new BinaryMemoryReadStream(s), p),

@@ -150,10 +150,10 @@ namespace Mutagen.Bethesda.Oblivion
         {
             static partial void WriteBinaryContainedRecordTypeParseCustom<T>(
                 MutagenWriter writer,
-                IGroupInternalGetter<T> item,
+                IGroupGetter<T> item,
                 MasterReferences masterReferences,
                 ErrorMaskBuilder errorMask)
-                where T : IOblivionMajorRecordInternalGetter, IXmlItem, IBinaryItem
+                where T : IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
             {
                 Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
                     writer,

@@ -28,7 +28,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     public partial class ArmorBinaryWriteTranslation
     {
-        static partial void WriteBinaryArmorValueCustom(MutagenWriter writer, IArmorInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+        static partial void WriteBinaryArmorValueCustom(MutagenWriter writer, IArmorGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
             UInt16BinaryTranslation.Instance.Write(
                 writer,

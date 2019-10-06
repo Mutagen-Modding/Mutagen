@@ -117,7 +117,7 @@ namespace Mutagen.Bethesda.Generation
                 $"public static IEnumerable<{nameof(IMajorRecordCommonGetter)}> EnumerateMajorRecords{obj.GetGenericTypes(MaskType.Normal)}"))
             {
                 args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.IGetter, obj.Generics));
-                args.Add($"this {obj.Interface(getter: true)} obj");
+                args.Add($"this {obj.Interface(getter: true, internalInterface: true)} obj");
             }
             using (new BraceWrapper(fg))
             {
@@ -133,7 +133,7 @@ namespace Mutagen.Bethesda.Generation
                 $"public static IEnumerable<{nameof(IMajorRecordCommon)}> EnumerateMajorRecords{obj.GetGenericTypes(MaskType.Normal)}"))
             {
                 args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.ISetter, obj.Generics));
-                args.Add($"this {obj.Interface(getter: false)} obj");
+                args.Add($"this {obj.Interface(getter: false, internalInterface: true)} obj");
             }
             using (new BraceWrapper(fg))
             {
@@ -183,7 +183,7 @@ namespace Mutagen.Bethesda.Generation
             using (var args = new FunctionWrapper(fg,
                 $"public{overrideStr}IEnumerable<{nameof(IMajorRecordCommon)}{(getter ? "Getter" : null)}> EnumerateMajorRecords"))
             {
-                args.Add($"{obj.Interface(getter: getter)} obj");
+                args.Add($"{obj.Interface(getter: getter, internalInterface: true)} obj");
             }
             using (new BraceWrapper(fg))
             {

@@ -26,14 +26,14 @@ namespace Mutagen.Bethesda.Generation
                 using (var args = new ArgsWrapper(fg,
                     $"static partial void SpecialWrite_{field.Name}"))
                 {
-                    args.Add($"{obj.Interface(getter: true)} item");
+                    args.Add($"{obj.Interface(getter: true, internalInterface: true)} item");
                     args.Add($"{nameof(MutagenWriter)} writer");
                     args.Add($"ErrorMaskBuilder errorMask");
                 }
                 using (var args = new FunctionWrapper(fg,
                     $"internal static void SpecialWrite_{field.Name}_Internal"))
                 {
-                    args.Add($"{obj.Interface(getter: true)} item");
+                    args.Add($"{obj.Interface(getter: true, internalInterface: true)} item");
                     args.Add($"{nameof(MutagenWriter)} writer");
                     args.Add($"ErrorMaskBuilder errorMask");
                 }

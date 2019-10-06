@@ -111,7 +111,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     public partial class PathGridBinaryWriteTranslation
     {
-        static partial void WriteBinaryPointToPointConnectionsCustom(MutagenWriter writer, IPathGridInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+        static partial void WriteBinaryPointToPointConnectionsCustom(MutagenWriter writer, IPathGridGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
             using (HeaderExport.ExportSubRecordHeader(writer, PathGrid_Registration.DATA_HEADER))
             {
@@ -159,7 +159,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     public partial class PathGridBinaryWrapper
     {
-        public IReadOnlySetList<IPathGridPointInternalGetter> PointToPointConnections { get; private set; } = EmptySetList<IPathGridPointInternalGetter>.Instance;
+        public IReadOnlySetList<IPathGridPointGetter> PointToPointConnections { get; private set; } = EmptySetList<IPathGridPointGetter>.Instance;
 
         private int? _UnknownLocation;
         public bool Unknown_IsSet => this._UnknownLocation.HasValue;
@@ -194,13 +194,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     case 0x52524750: // "PGRR":
                         stream.Position += subMeta.HeaderLength;
                         var connectionPtData = stream.ReadMemory(subMeta.RecordLength);
-                        this.PointToPointConnections = BinaryWrapperSetList<IPathGridPointInternalGetter>.FactoryByLazyParse(
+                        this.PointToPointConnections = BinaryWrapperSetList<IPathGridPointGetter>.FactoryByLazyParse(
                             pointData,
                             _package,
                             getter: (s, p) =>
                             {
                                 var connectionInts = connectionPtData.Span.AsInt16Span();
-                                IPathGridPointInternalGetter[] pathGridPoints = new IPathGridPointInternalGetter[bytePointsNum];
+                                IPathGridPointGetter[] pathGridPoints = new IPathGridPointGetter[bytePointsNum];
                                 for (int i = 0; i < bytePointsNum; i++)
                                 {
                                     var pt = PathGridPointBinaryWrapper.Factory(s, p);
@@ -220,7 +220,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
             if (!readPGRR)
             {
-                this.PointToPointConnections = BinaryWrapperSetList<IPathGridPointInternalGetter>.FactoryByStartIndex(
+                this.PointToPointConnections = BinaryWrapperSetList<IPathGridPointGetter>.FactoryByStartIndex(
                     pointData,
                     this._package,
                     itemLength: 16,

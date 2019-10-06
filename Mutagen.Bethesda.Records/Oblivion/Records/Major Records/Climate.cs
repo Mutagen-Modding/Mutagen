@@ -32,34 +32,34 @@ namespace Mutagen.Bethesda.Oblivion
                 return (byte)(mins / 10);
             }
 
-            static partial void WriteBinarySunriseBeginCustom(MutagenWriter writer, IClimateInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void WriteBinarySunriseBeginCustom(MutagenWriter writer, IClimateGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
                 writer.Write(GetByte(item.SunriseBegin));
             }
 
-            static partial void WriteBinarySunriseEndCustom(MutagenWriter writer, IClimateInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void WriteBinarySunriseEndCustom(MutagenWriter writer, IClimateGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
                 writer.Write(GetByte(item.SunriseEnd));
             }
 
-            static partial void WriteBinarySunsetBeginCustom(MutagenWriter writer, IClimateInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void WriteBinarySunsetBeginCustom(MutagenWriter writer, IClimateGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
                 writer.Write(GetByte(item.SunsetBegin));
             }
 
-            static partial void WriteBinarySunsetEndCustom(MutagenWriter writer, IClimateInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void WriteBinarySunsetEndCustom(MutagenWriter writer, IClimateGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
                 writer.Write(GetByte(item.SunsetEnd));
             }
 
-            static partial void WriteBinaryPhaseCustom(MutagenWriter writer, IClimateInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void WriteBinaryPhaseCustom(MutagenWriter writer, IClimateGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
                 var eInt = (byte)(((int)item.Phase) * 64);
                 eInt += item.PhaseLength;
                 writer.Write(eInt);
             }
 
-            static partial void WriteBinaryPhaseLengthCustom(MutagenWriter writer, IClimateInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void WriteBinaryPhaseLengthCustom(MutagenWriter writer, IClimateGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             { // Handled in Phase section
             }
         }

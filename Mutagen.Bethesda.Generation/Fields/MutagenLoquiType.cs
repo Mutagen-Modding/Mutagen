@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Noggog;
+using Loqui;
 
 namespace Mutagen.Bethesda.Generation
 {
@@ -29,6 +30,40 @@ namespace Mutagen.Bethesda.Generation
         {
             if (this.RefType == LoquiRefType.Interface) return _interfObjectType;
             return this.TargetObjectGeneration?.GetObjectType();
+        }
+
+        public override void GenerateTypicalMakeCopy(FileGeneration fg, string retAccessor, Accessor rhsAccessor, Accessor defAccessor, string copyMaskAccessor)
+        {
+            if (this.GetObjectType() != ObjectType.Record)
+            {
+                base.GenerateTypicalMakeCopy(fg, retAccessor, rhsAccessor, defAccessor, copyMaskAccessor);
+                return;
+            }
+            switch (this.RefType)
+            {
+                case LoquiRefType.Direct:
+                    fg.AppendLine($"var copyRet = new {this.TargetObjectGeneration.ObjectName}({rhsAccessor}.FormKey);");
+                    using (var args2 = new ArgsWrapper(fg,
+                        $"copyRet.CopyFieldsFrom"))
+                    {
+                        args2.Add($"rhs: {rhsAccessor}");
+                        if (this.RefType == LoquiRefType.Direct)
+                        {
+                            args2.Add($"copyMask: {copyMaskAccessor}?.Specific");
+                        }
+                        args2.Add($"def: {defAccessor.DirectAccess}");
+                    }
+                    fg.AppendLine($"{retAccessor}copyRet;");
+                    break;
+                case LoquiRefType.Generic:
+                    fg.AppendLine($"{retAccessor}{nameof(LoquiRegistration)}.GetCopyFunc<{_generic}>()({rhsAccessor.DirectAccess}, null, {defAccessor.DirectAccess});");
+                    break;
+                case LoquiRefType.Interface:
+                    fg.AppendLine($"{retAccessor}{nameof(LoquiRegistration)}.GetCopyFunc<{this.TypeName()}>(r.GetType())({rhsAccessor.DirectAccess}, null, {defAccessor.DirectAccess});");
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
         }
     }
 }

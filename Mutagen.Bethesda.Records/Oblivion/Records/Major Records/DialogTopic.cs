@@ -63,7 +63,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public partial class DialogTopicBinaryWriteTranslation
         {
-            static partial void CustomBinaryEndExport(MutagenWriter writer, IDialogTopicInternalGetter obj, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void CustomBinaryEndExport(MutagenWriter writer, IDialogTopicGetter obj, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
                 if (obj.Items.Count == 0) return;
                 using (HeaderExport.ExportHeader(writer, Group_Registration.GRUP_HEADER, ObjectType.Group))
@@ -74,12 +74,12 @@ namespace Mutagen.Bethesda.Oblivion
                         masterReferences);
                     writer.Write((int)GroupTypeEnum.TopicChildren);
                     writer.Write(obj.Timestamp);
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IDialogItemInternalGetter>.Instance.Write(
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IDialogItemGetter>.Instance.Write(
                         writer: writer,
                         items: obj.Items,
                         fieldIndex: (int)DialogTopic_FieldIndex.Items,
                         errorMask: errorMask,
-                        transl: (MutagenWriter subWriter, IDialogItemInternalGetter subItem, ErrorMaskBuilder listErrMask) =>
+                        transl: (MutagenWriter subWriter, IDialogItemGetter subItem, ErrorMaskBuilder listErrMask) =>
                         {
                             subItem.WriteToBinary(
                                  writer: subWriter,
@@ -96,7 +96,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             public ReadOnlySpan<byte> Timestamp => _grupData != null ? _package.Meta.Group(_grupData.Value).LastModifiedSpan : UtilityTranslation.Zeros.Slice(0, 4);
 
-            public IReadOnlySetList<IDialogItemInternalGetter> Items { get; private set; } = EmptySetList<IDialogItemInternalGetter>.Instance;
+            public IReadOnlySetList<IDialogItemGetter> Items { get; private set; } = EmptySetList<IDialogItemGetter>.Instance;
 
             partial void CustomEnd(BinaryMemoryReadStream stream, long finalPos, int offset)
             {
@@ -112,7 +112,7 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException("Dialog children group did not match the FormID of the parent.");
                 }
                 var contentSpan = this._grupData.Value.Slice(_package.Meta.GroupConstants.HeaderLength);
-                this.Items = BinaryWrapperSetList<IDialogItemInternalGetter>.FactoryByArray(
+                this.Items = BinaryWrapperSetList<IDialogItemGetter>.FactoryByArray(
                     contentSpan,
                     _package,
                     getter: (s, p) => DialogItemBinaryWrapper.DialogItemFactory(new BinaryMemoryReadStream(s), p),

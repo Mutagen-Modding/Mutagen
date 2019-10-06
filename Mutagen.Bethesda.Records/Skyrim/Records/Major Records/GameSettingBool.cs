@@ -26,7 +26,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class GameSettingBoolBinaryWriteTranslation
         {
-            static partial void WriteBinaryDataCustom(MutagenWriter writer, IGameSettingBoolInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void WriteBinaryDataCustom(MutagenWriter writer, IGameSettingBoolGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
                 using (HeaderExport.ExportSubRecordHeader(writer, GameSettingBool_Registration.DATA_HEADER))
                 {

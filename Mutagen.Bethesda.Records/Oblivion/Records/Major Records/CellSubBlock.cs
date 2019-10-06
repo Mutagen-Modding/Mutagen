@@ -48,7 +48,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         partial class CellSubBlockBinaryWrapper
         {
-            public IReadOnlySetList<ICellInternalGetter> Items { get; private set; } = EmptySetList<CellBinaryWrapper>.Instance;
+            public IReadOnlySetList<ICellGetter> Items { get; private set; } = EmptySetList<CellBinaryWrapper>.Instance;
 
             partial void ItemsCustomParse(BinaryMemoryReadStream stream, long finalPos, int offset, RecordType type, int? lastParsed)
             {

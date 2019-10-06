@@ -83,7 +83,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     public partial class RoadBinaryWriteTranslation
     {
-        static partial void WriteBinaryPointsCustom(MutagenWriter writer, IRoadInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+        static partial void WriteBinaryPointsCustom(MutagenWriter writer, IRoadGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
             bool anyConnections = false;
             using (HeaderExport.ExportSubRecordHeader(writer, RoadBinaryCreateTranslation.PGRP))
@@ -120,7 +120,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     public partial class RoadBinaryWrapper
     {
-        public IReadOnlySetList<IRoadPointInternalGetter> Points { get; private set; } = EmptySetList<IRoadPointInternalGetter>.Instance;
+        public IReadOnlySetList<IRoadPointGetter> Points { get; private set; } = EmptySetList<IRoadPointGetter>.Instance;
 
         partial void PointsCustomParse(BinaryMemoryReadStream stream, long finalPos, int offset, RecordType type, int? lastParsed)
         {
@@ -135,7 +135,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x52524750: // "PGRR":
                     stream.Position += subMeta.HeaderLength;
                     var connBytes = stream.ReadMemory(subMeta.RecordLength);
-                    this.Points = BinaryWrapperSetList<IRoadPointInternalGetter>.FactoryByLazyParse(
+                    this.Points = BinaryWrapperSetList<IRoadPointGetter>.FactoryByLazyParse(
                         pointBytes,
                         _package,
                         getter: (s, p) =>
@@ -163,7 +163,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         });
                     break;
                 default:
-                    this.Points = BinaryWrapperSetList<IRoadPointInternalGetter>.FactoryByStartIndex(
+                    this.Points = BinaryWrapperSetList<IRoadPointGetter>.FactoryByStartIndex(
                         pointBytes,
                         _package,
                         itemLength: RoadBinaryCreateTranslation.POINT_LEN,

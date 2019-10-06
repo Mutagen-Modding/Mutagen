@@ -2,19 +2,19 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>d770a207139f3e476a773f0fe5f38044084bd4ba</Sha>
+         <Sha>850509a7844098d55075130fface27006ecf7217</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>09-28-2019 23:32:07</CommitDate>
-         <Description>CacheExt work</Description>
+         <CommitDate>10-17-2019 08:57:16</CommitDate>
+         <Description>IBinaryReadStream.Read/GetMemory</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/CSharpExt.git</OriginHint>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>0df02d28961e63f3ab74cf4f9ecb5b5be9fd7249</Sha>
+         <Sha>1420d7b29c7b27d3200190037dc71ce87f455bd7</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>10-05-2019 08:25:59</CommitDate>
-         <Description>Common.GetNew</Description>
+         <CommitDate>10-15-2019 17:12:43</CommitDate>
+         <Description>Using statements generate in a region</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/Loqui.git</OriginHint>
       </RepoListing>

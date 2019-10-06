@@ -300,7 +300,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public partial class CellBinaryWriteTranslation
         {
-            static partial void CustomBinaryEndExport(MutagenWriter writer, ICellInternalGetter obj, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void CustomBinaryEndExport(MutagenWriter writer, ICellGetter obj, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
                 if (obj.Persistent.Count == 0
                     && obj.Temporary.Count == 0
@@ -420,11 +420,11 @@ namespace Mutagen.Bethesda.Oblivion
 
             private int? _pathgridLocation;
             public bool PathGrid_IsSet => _pathgridLocation.HasValue;
-            public IPathGridInternalGetter PathGrid => PathGridBinaryWrapper.PathGridFactory(new BinaryMemoryReadStream(_grupData.Value.Slice(_pathgridLocation.Value)), _package);
+            public IPathGridGetter PathGrid => PathGridBinaryWrapper.PathGridFactory(new BinaryMemoryReadStream(_grupData.Value.Slice(_pathgridLocation.Value)), _package);
 
             private int? _landscapeLocation;
             public bool Landscape_IsSet => _landscapeLocation.HasValue;
-            public ILandscapeInternalGetter Landscape => LandscapeBinaryWrapper.LandscapeFactory(new BinaryMemoryReadStream(_grupData.Value.Slice(_landscapeLocation.Value)), _package);
+            public ILandscapeGetter Landscape => LandscapeBinaryWrapper.LandscapeFactory(new BinaryMemoryReadStream(_grupData.Value.Slice(_landscapeLocation.Value)), _package);
 
             public ReadOnlySpan<byte> Timestamp => _grupData != null ? _package.Meta.Group(_grupData.Value).LastModifiedSpan : UtilityTranslation.Zeros.Slice(0, 4);
 

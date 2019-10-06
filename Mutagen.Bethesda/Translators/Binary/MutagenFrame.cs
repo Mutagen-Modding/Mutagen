@@ -418,6 +418,26 @@ namespace Mutagen.Bethesda.Binary
             return Reader.GetSpan(amount, offset);
         }
 
+        public ReadOnlyMemorySlice<byte> ReadMemory(int amount)
+        {
+            return Reader.ReadMemory(amount);
+        }
+
+        public ReadOnlyMemorySlice<byte> ReadMemory(int amount, int offset)
+        {
+            return Reader.ReadMemory(amount, offset);
+        }
+
+        public ReadOnlyMemorySlice<byte> GetMemory(int amount)
+        {
+            return Reader.GetMemory(amount);
+        }
+
+        public ReadOnlyMemorySlice<byte> GetMemory(int amount, int offset)
+        {
+            return Reader.GetMemory(amount, offset);
+        }
+
         public string ReadZString(int length)
         {
             return Reader.ReadZString(length);
