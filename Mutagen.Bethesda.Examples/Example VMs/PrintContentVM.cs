@@ -21,7 +21,7 @@ namespace Mutagen.Bethesda.Examples
         {
         }
 
-        protected override void ToDo()
+        protected override async Task ToDo()
         {
             PrintContentCode.PrintContent(this.MainVM.ModFilePath, (s) => this.Output.Add(s));
         }

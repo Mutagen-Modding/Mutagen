@@ -46,14 +46,14 @@ namespace Mutagen.Bethesda.Examples
 
         protected Task Run()
         {
-            return Task.Run(() =>
+            return Task.Run(async () =>
             {
                 this.Output.Clear();
-                ToDo();
+                await ToDo();
                 GC.Collect();
             });
         }
 
-        protected abstract void ToDo();
+        protected abstract Task ToDo();
     }
 }

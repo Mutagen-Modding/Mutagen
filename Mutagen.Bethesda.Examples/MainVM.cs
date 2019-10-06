@@ -20,6 +20,8 @@ namespace Mutagen.Bethesda.Examples
         public MainVM(MainWindow window)
         {
             this.Examples.Add(new PrintContentVM(this));
+            this.Examples.Add(new RecordAccessThroughFormLinksVM(this));
+            this.Examples.Add(new ImportComparisonVM(this));
         }
     }
 }
