@@ -37,7 +37,6 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class OblivionMod :
-        LoquiNotifyingObject,
         IOblivionModInternal,
         ILoquiObjectSetter<OblivionMod>,
         ILinkContainer,

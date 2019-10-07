@@ -35,7 +35,6 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class CreatureSound :
-        LoquiNotifyingObject,
         ICreatureSoundInternal,
         ILoquiObjectSetter<CreatureSound>,
         ILinkSubContainer,

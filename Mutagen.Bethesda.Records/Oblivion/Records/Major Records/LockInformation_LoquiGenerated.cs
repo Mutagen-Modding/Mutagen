@@ -33,7 +33,6 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class LockInformation :
-        LoquiNotifyingObject,
         ILockInformationInternal,
         ILoquiObjectSetter<LockInformation>,
         ILinkSubContainer,
@@ -1041,19 +1040,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Key ?? true)
             {
                 errorMask?.PushIndex((int)LockInformation_FieldIndex.Key);
-                try
-                {
-                    item.Key_Property.SetLink(value: rhs.Key_Property);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Key_Property.SetLink(value: rhs.Key_Property);
+                errorMask?.PopIndex();
             }
             if (copyMask?.Flags ?? true)
             {

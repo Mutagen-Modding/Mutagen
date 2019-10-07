@@ -33,7 +33,6 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class InterCellPoint :
-        LoquiNotifyingObject,
         IInterCellPointInternal,
         ILoquiObjectSetter<InterCellPoint>,
         IEquatable<InterCellPoint>,

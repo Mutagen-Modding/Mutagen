@@ -49,7 +49,6 @@ namespace Mutagen.Bethesda.Generation
             await base.Load(node, requireName);
             LoquiType = this.ObjectGen.ProtoGen.Gen.GetTypeGeneration<LoquiType>();
             _rawFormID = this.ObjectGen.ProtoGen.Gen.GetTypeGeneration<FormIDType>();
-            this.NotifyingProperty.OnNext(NotifyingType.ReactiveUI);
             this.ObjectCentralizedProperty.OnNext(false);
             LoquiType.SetObjectGeneration(this.ObjectGen, setDefaults: true);
             await LoquiType.Load(node, requireName: false);

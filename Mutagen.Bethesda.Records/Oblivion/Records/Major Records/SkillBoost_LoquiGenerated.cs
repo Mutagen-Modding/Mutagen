@@ -33,7 +33,6 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class SkillBoost :
-        LoquiNotifyingObject,
         ISkillBoostInternal,
         ILoquiObjectSetter<SkillBoost>,
         IEquatable<SkillBoost>,

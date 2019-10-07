@@ -105,7 +105,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool EnableParent_IsSet
         {
             get => _hasBeenSetTracker[(int)PlacedCreature_FieldIndex.EnableParent];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)PlacedCreature_FieldIndex.EnableParent, nameof(EnableParent_IsSet));
+            set => _hasBeenSetTracker[(int)PlacedCreature_FieldIndex.EnableParent] = value;
         }
         bool IPlacedCreatureGetter.EnableParent_IsSet => EnableParent_IsSet;
         private EnableParent _EnableParent;
@@ -119,7 +119,8 @@ namespace Mutagen.Bethesda.Oblivion
             EnableParent value,
             bool hasBeenSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _EnableParent, value, _hasBeenSetTracker, hasBeenSet, (int)PlacedCreature_FieldIndex.EnableParent, nameof(EnableParent), nameof(EnableParent_IsSet));
+            _EnableParent = value;
+            _hasBeenSetTracker[(int)PlacedCreature_FieldIndex.EnableParent] = hasBeenSet;
         }
         public void EnableParent_Unset()
         {
@@ -133,7 +134,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool RagdollData_IsSet
         {
             get => _hasBeenSetTracker[(int)PlacedCreature_FieldIndex.RagdollData];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)PlacedCreature_FieldIndex.RagdollData, nameof(RagdollData_IsSet));
+            set => _hasBeenSetTracker[(int)PlacedCreature_FieldIndex.RagdollData] = value;
         }
         bool IPlacedCreatureGetter.RagdollData_IsSet => RagdollData_IsSet;
         protected Byte[] _RagdollData;
@@ -149,7 +150,8 @@ namespace Mutagen.Bethesda.Oblivion
             Byte[] value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _RagdollData, value, _hasBeenSetTracker, markSet, (int)PlacedCreature_FieldIndex.RagdollData, nameof(RagdollData), nameof(RagdollData_IsSet));
+            _RagdollData = value;
+            _hasBeenSetTracker[(int)PlacedCreature_FieldIndex.RagdollData] = markSet;
         }
         public void RagdollData_Unset()
         {

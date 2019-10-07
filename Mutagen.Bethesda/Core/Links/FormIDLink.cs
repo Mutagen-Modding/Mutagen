@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda
 {
-    public class FormIDLink<T> : LoquiNotifyingObject, IFormIDLink<T>, IEquatable<ILink<T>>
+    public class FormIDLink<T> : IFormIDLink<T>, IEquatable<ILink<T>>
        where T : class, IMajorRecordCommonGetter
     {
         public static readonly IFormIDLinkGetter<T> Empty = new FormIDLink<T>();
@@ -65,7 +65,6 @@ namespace Mutagen.Bethesda
         {
             UpdateUnlinkedForm(value);
             this._Item = value;
-            this.RaiseAndSetIfChanged(ref this._Item, value, nameof(Item));
         }
 
         public void SetIfSucceeded(TryGet<FormKey> formKey)

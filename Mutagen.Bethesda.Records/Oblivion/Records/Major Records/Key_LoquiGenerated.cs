@@ -82,7 +82,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Model_IsSet
         {
             get => _hasBeenSetTracker[(int)Key_FieldIndex.Model];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Key_FieldIndex.Model, nameof(Model_IsSet));
+            set => _hasBeenSetTracker[(int)Key_FieldIndex.Model] = value;
         }
         bool IKeyGetter.Model_IsSet => Model_IsSet;
         private Model _Model;
@@ -96,7 +96,8 @@ namespace Mutagen.Bethesda.Oblivion
             Model value,
             bool hasBeenSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Model, value, _hasBeenSetTracker, hasBeenSet, (int)Key_FieldIndex.Model, nameof(Model), nameof(Model_IsSet));
+            _Model = value;
+            _hasBeenSetTracker[(int)Key_FieldIndex.Model] = hasBeenSet;
         }
         public void Model_Unset()
         {

@@ -33,7 +33,6 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class FaceGenData :
-        LoquiNotifyingObject,
         IFaceGenDataInternal,
         ILoquiObjectSetter<FaceGenData>,
         IEquatable<FaceGenData>,
@@ -53,7 +52,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool SymmetricGeometry_IsSet
         {
             get => _hasBeenSetTracker[(int)FaceGenData_FieldIndex.SymmetricGeometry];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)FaceGenData_FieldIndex.SymmetricGeometry, nameof(SymmetricGeometry_IsSet));
+            set => _hasBeenSetTracker[(int)FaceGenData_FieldIndex.SymmetricGeometry] = value;
         }
         bool IFaceGenDataGetter.SymmetricGeometry_IsSet => SymmetricGeometry_IsSet;
         protected Byte[] _SymmetricGeometry;
@@ -69,7 +68,8 @@ namespace Mutagen.Bethesda.Oblivion
             Byte[] value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _SymmetricGeometry, value, _hasBeenSetTracker, markSet, (int)FaceGenData_FieldIndex.SymmetricGeometry, nameof(SymmetricGeometry), nameof(SymmetricGeometry_IsSet));
+            _SymmetricGeometry = value;
+            _hasBeenSetTracker[(int)FaceGenData_FieldIndex.SymmetricGeometry] = markSet;
         }
         public void SymmetricGeometry_Unset()
         {
@@ -81,7 +81,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool AsymmetricGeometry_IsSet
         {
             get => _hasBeenSetTracker[(int)FaceGenData_FieldIndex.AsymmetricGeometry];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)FaceGenData_FieldIndex.AsymmetricGeometry, nameof(AsymmetricGeometry_IsSet));
+            set => _hasBeenSetTracker[(int)FaceGenData_FieldIndex.AsymmetricGeometry] = value;
         }
         bool IFaceGenDataGetter.AsymmetricGeometry_IsSet => AsymmetricGeometry_IsSet;
         protected Byte[] _AsymmetricGeometry;
@@ -97,7 +97,8 @@ namespace Mutagen.Bethesda.Oblivion
             Byte[] value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _AsymmetricGeometry, value, _hasBeenSetTracker, markSet, (int)FaceGenData_FieldIndex.AsymmetricGeometry, nameof(AsymmetricGeometry), nameof(AsymmetricGeometry_IsSet));
+            _AsymmetricGeometry = value;
+            _hasBeenSetTracker[(int)FaceGenData_FieldIndex.AsymmetricGeometry] = markSet;
         }
         public void AsymmetricGeometry_Unset()
         {
@@ -109,7 +110,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool SymmetricTexture_IsSet
         {
             get => _hasBeenSetTracker[(int)FaceGenData_FieldIndex.SymmetricTexture];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)FaceGenData_FieldIndex.SymmetricTexture, nameof(SymmetricTexture_IsSet));
+            set => _hasBeenSetTracker[(int)FaceGenData_FieldIndex.SymmetricTexture] = value;
         }
         bool IFaceGenDataGetter.SymmetricTexture_IsSet => SymmetricTexture_IsSet;
         protected Byte[] _SymmetricTexture;
@@ -125,7 +126,8 @@ namespace Mutagen.Bethesda.Oblivion
             Byte[] value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _SymmetricTexture, value, _hasBeenSetTracker, markSet, (int)FaceGenData_FieldIndex.SymmetricTexture, nameof(SymmetricTexture), nameof(SymmetricTexture_IsSet));
+            _SymmetricTexture = value;
+            _hasBeenSetTracker[(int)FaceGenData_FieldIndex.SymmetricTexture] = markSet;
         }
         public void SymmetricTexture_Unset()
         {

@@ -33,7 +33,6 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class LeveledEntry<T> :
-        LoquiNotifyingObject,
         ILeveledEntryInternal<T>,
         ILoquiObjectSetter<LeveledEntry<T>>,
         ILinkSubContainer,
@@ -102,7 +101,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Fluff2_IsSet
         {
             get => _hasBeenSetTracker[(int)LeveledEntry_FieldIndex.Fluff2];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)LeveledEntry_FieldIndex.Fluff2, nameof(Fluff2_IsSet));
+            set => _hasBeenSetTracker[(int)LeveledEntry_FieldIndex.Fluff2] = value;
         }
         bool ILeveledEntryGetter<T>.Fluff2_IsSet => Fluff2_IsSet;
         protected Byte[] _Fluff2;
@@ -118,7 +117,8 @@ namespace Mutagen.Bethesda.Oblivion
             Byte[] value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Fluff2, value, _hasBeenSetTracker, markSet, (int)LeveledEntry_FieldIndex.Fluff2, nameof(Fluff2), nameof(Fluff2_IsSet));
+            _Fluff2 = value;
+            _hasBeenSetTracker[(int)LeveledEntry_FieldIndex.Fluff2] = markSet;
         }
         public void Fluff2_Unset()
         {
@@ -1201,19 +1201,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Reference ?? true)
             {
                 errorMask?.PushIndex((int)LeveledEntry_FieldIndex.Reference);
-                try
-                {
-                    item.Reference_Property.SetLink(value: rhs.Reference_Property);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Reference_Property.SetLink(value: rhs.Reference_Property);
+                errorMask?.PopIndex();
             }
             if (copyMask?.Count ?? true)
             {

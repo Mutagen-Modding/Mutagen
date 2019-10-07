@@ -33,7 +33,6 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class MagicEffectSubData :
-        LoquiNotifyingObject,
         IMagicEffectSubDataInternal,
         ILoquiObjectSetter<MagicEffectSubData>,
         ILinkSubContainer,
@@ -1165,87 +1164,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.EnchantEffect ?? true)
             {
                 errorMask?.PushIndex((int)MagicEffectSubData_FieldIndex.EnchantEffect);
-                try
-                {
-                    item.EnchantEffect_Property.SetLink(value: rhs.EnchantEffect_Property);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.EnchantEffect_Property.SetLink(value: rhs.EnchantEffect_Property);
+                errorMask?.PopIndex();
             }
             if (copyMask?.CastingSound ?? true)
             {
                 errorMask?.PushIndex((int)MagicEffectSubData_FieldIndex.CastingSound);
-                try
-                {
-                    item.CastingSound_Property.SetLink(value: rhs.CastingSound_Property);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.CastingSound_Property.SetLink(value: rhs.CastingSound_Property);
+                errorMask?.PopIndex();
             }
             if (copyMask?.BoltSound ?? true)
             {
                 errorMask?.PushIndex((int)MagicEffectSubData_FieldIndex.BoltSound);
-                try
-                {
-                    item.BoltSound_Property.SetLink(value: rhs.BoltSound_Property);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.BoltSound_Property.SetLink(value: rhs.BoltSound_Property);
+                errorMask?.PopIndex();
             }
             if (copyMask?.HitSound ?? true)
             {
                 errorMask?.PushIndex((int)MagicEffectSubData_FieldIndex.HitSound);
-                try
-                {
-                    item.HitSound_Property.SetLink(value: rhs.HitSound_Property);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.HitSound_Property.SetLink(value: rhs.HitSound_Property);
+                errorMask?.PopIndex();
             }
             if (copyMask?.AreaSound ?? true)
             {
                 errorMask?.PushIndex((int)MagicEffectSubData_FieldIndex.AreaSound);
-                try
-                {
-                    item.AreaSound_Property.SetLink(value: rhs.AreaSound_Property);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.AreaSound_Property.SetLink(value: rhs.AreaSound_Property);
+                errorMask?.PopIndex();
             }
             if (copyMask?.ConstantEffectEnchantmentFactor ?? true)
             {

@@ -33,7 +33,6 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class RelatedWaters :
-        LoquiNotifyingObject,
         IRelatedWatersInternal,
         ILoquiObjectSetter<RelatedWaters>,
         ILinkSubContainer,
@@ -984,53 +983,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.RelatedWaterDaytime ?? true)
             {
                 errorMask?.PushIndex((int)RelatedWaters_FieldIndex.RelatedWaterDaytime);
-                try
-                {
-                    item.RelatedWaterDaytime_Property.SetLink(value: rhs.RelatedWaterDaytime_Property);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.RelatedWaterDaytime_Property.SetLink(value: rhs.RelatedWaterDaytime_Property);
+                errorMask?.PopIndex();
             }
             if (copyMask?.RelatedWaterNighttime ?? true)
             {
                 errorMask?.PushIndex((int)RelatedWaters_FieldIndex.RelatedWaterNighttime);
-                try
-                {
-                    item.RelatedWaterNighttime_Property.SetLink(value: rhs.RelatedWaterNighttime_Property);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.RelatedWaterNighttime_Property.SetLink(value: rhs.RelatedWaterNighttime_Property);
+                errorMask?.PopIndex();
             }
             if (copyMask?.RelatedWaterUnderwater ?? true)
             {
                 errorMask?.PushIndex((int)RelatedWaters_FieldIndex.RelatedWaterUnderwater);
-                try
-                {
-                    item.RelatedWaterUnderwater_Property.SetLink(value: rhs.RelatedWaterUnderwater_Property);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.RelatedWaterUnderwater_Property.SetLink(value: rhs.RelatedWaterUnderwater_Property);
+                errorMask?.PopIndex();
             }
         }
         

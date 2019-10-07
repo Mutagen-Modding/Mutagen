@@ -69,7 +69,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Unknown_IsSet
         {
             get => _hasBeenSetTracker[(int)PathGrid_FieldIndex.Unknown];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)PathGrid_FieldIndex.Unknown, nameof(Unknown_IsSet));
+            set => _hasBeenSetTracker[(int)PathGrid_FieldIndex.Unknown] = value;
         }
         bool IPathGridGetter.Unknown_IsSet => Unknown_IsSet;
         protected Byte[] _Unknown;
@@ -85,7 +85,8 @@ namespace Mutagen.Bethesda.Oblivion
             Byte[] value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Unknown, value, _hasBeenSetTracker, markSet, (int)PathGrid_FieldIndex.Unknown, nameof(Unknown), nameof(Unknown_IsSet));
+            _Unknown = value;
+            _hasBeenSetTracker[(int)PathGrid_FieldIndex.Unknown] = markSet;
         }
         public void Unknown_Unset()
         {

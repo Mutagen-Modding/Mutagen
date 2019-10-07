@@ -33,7 +33,6 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class RankPlacement :
-        LoquiNotifyingObject,
         IRankPlacementInternal,
         ILoquiObjectSetter<RankPlacement>,
         ILinkSubContainer,
@@ -988,19 +987,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Faction ?? true)
             {
                 errorMask?.PushIndex((int)RankPlacement_FieldIndex.Faction);
-                try
-                {
-                    item.Faction_Property.SetLink(value: rhs.Faction_Property);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Faction_Property.SetLink(value: rhs.Faction_Property);
+                errorMask?.PopIndex();
             }
             if (copyMask?.Rank ?? true)
             {

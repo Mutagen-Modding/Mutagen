@@ -35,7 +35,6 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class CellLighting :
-        LoquiNotifyingObject,
         ICellLightingInternal,
         ILoquiObjectSetter<CellLighting>,
         IEquatable<CellLighting>,

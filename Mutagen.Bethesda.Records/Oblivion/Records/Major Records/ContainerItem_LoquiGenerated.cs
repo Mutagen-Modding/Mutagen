@@ -33,7 +33,6 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class ContainerItem :
-        LoquiNotifyingObject,
         IContainerItemInternal,
         ILoquiObjectSetter<ContainerItem>,
         ILinkSubContainer,
@@ -941,19 +940,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Item ?? true)
             {
                 errorMask?.PushIndex((int)ContainerItem_FieldIndex.Item);
-                try
-                {
-                    item.Item_Property.SetLink(value: rhs.Item_Property);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Item_Property.SetLink(value: rhs.Item_Property);
+                errorMask?.PopIndex();
             }
             if (copyMask?.Count ?? true)
             {

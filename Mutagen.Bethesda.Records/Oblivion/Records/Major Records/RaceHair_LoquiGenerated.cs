@@ -33,7 +33,6 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class RaceHair :
-        LoquiNotifyingObject,
         IRaceHairInternal,
         ILoquiObjectSetter<RaceHair>,
         ILinkSubContainer,
@@ -940,36 +939,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Male ?? true)
             {
                 errorMask?.PushIndex((int)RaceHair_FieldIndex.Male);
-                try
-                {
-                    item.Male_Property.SetLink(value: rhs.Male_Property);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Male_Property.SetLink(value: rhs.Male_Property);
+                errorMask?.PopIndex();
             }
             if (copyMask?.Female ?? true)
             {
                 errorMask?.PushIndex((int)RaceHair_FieldIndex.Female);
-                try
-                {
-                    item.Female_Property.SetLink(value: rhs.Female_Property);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Female_Property.SetLink(value: rhs.Female_Property);
+                errorMask?.PopIndex();
             }
         }
         

@@ -33,7 +33,6 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class EnableParent :
-        LoquiNotifyingObject,
         IEnableParentInternal,
         ILoquiObjectSetter<EnableParent>,
         ILinkSubContainer,
@@ -950,19 +949,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Reference ?? true)
             {
                 errorMask?.PushIndex((int)EnableParent_FieldIndex.Reference);
-                try
-                {
-                    item.Reference_Property.SetLink(value: rhs.Reference_Property);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Reference_Property.SetLink(value: rhs.Reference_Property);
+                errorMask?.PopIndex();
             }
             if (copyMask?.Flags ?? true)
             {

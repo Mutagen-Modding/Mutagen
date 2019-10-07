@@ -33,7 +33,6 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class SoundItem :
-        LoquiNotifyingObject,
         ISoundItemInternal,
         ILoquiObjectSetter<SoundItem>,
         ILinkSubContainer,

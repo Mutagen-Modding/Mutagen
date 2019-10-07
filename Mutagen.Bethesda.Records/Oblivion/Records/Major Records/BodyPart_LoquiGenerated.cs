@@ -33,7 +33,6 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class BodyPart :
-        LoquiNotifyingObject,
         IBodyPartInternal,
         ILoquiObjectSetter<BodyPart>,
         IEquatable<BodyPart>,

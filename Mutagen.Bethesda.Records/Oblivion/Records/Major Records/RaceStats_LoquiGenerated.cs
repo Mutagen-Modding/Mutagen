@@ -33,7 +33,6 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class RaceStats :
-        LoquiNotifyingObject,
         IRaceStatsInternal,
         ILoquiObjectSetter<RaceStats>,
         IEquatable<RaceStats>,

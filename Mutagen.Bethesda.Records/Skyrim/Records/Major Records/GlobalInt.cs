@@ -27,7 +27,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (this.Data != val)
                 {
                     this.Data = val;
-                    this.RaisePropertyChanged();
                 }
                 else
                 {

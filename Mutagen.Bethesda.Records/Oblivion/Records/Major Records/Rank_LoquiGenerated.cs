@@ -33,7 +33,6 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class Rank :
-        LoquiNotifyingObject,
         IRankInternal,
         ILoquiObjectSetter<Rank>,
         IEquatable<Rank>,

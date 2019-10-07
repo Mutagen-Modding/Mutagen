@@ -12,7 +12,6 @@ using Loqui;
 using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Tests.Internals;
-using ReactiveUI;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -26,7 +25,6 @@ namespace Mutagen.Bethesda.Tests
 {
     #region Class
     public partial class PassthroughSettings :
-        LoquiNotifyingObject,
         IPassthroughSettingsInternal,
         ILoquiObjectSetter<PassthroughSettings>,
         IEquatable<PassthroughSettings>,

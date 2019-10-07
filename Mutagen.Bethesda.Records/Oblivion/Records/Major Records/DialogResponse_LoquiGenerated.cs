@@ -33,7 +33,6 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class DialogResponse :
-        LoquiNotifyingObject,
         IDialogResponseInternal,
         ILoquiObjectSetter<DialogResponse>,
         IEquatable<DialogResponse>,

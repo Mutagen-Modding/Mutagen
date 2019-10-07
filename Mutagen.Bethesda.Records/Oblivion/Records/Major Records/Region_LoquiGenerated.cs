@@ -132,7 +132,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Objects_IsSet
         {
             get => _hasBeenSetTracker[(int)Region_FieldIndex.Objects];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Region_FieldIndex.Objects, nameof(Objects_IsSet));
+            set => _hasBeenSetTracker[(int)Region_FieldIndex.Objects] = value;
         }
         bool IRegionGetter.Objects_IsSet => Objects_IsSet;
         private RegionDataObjects _Objects;
@@ -146,7 +146,8 @@ namespace Mutagen.Bethesda.Oblivion
             RegionDataObjects value,
             bool hasBeenSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Objects, value, _hasBeenSetTracker, hasBeenSet, (int)Region_FieldIndex.Objects, nameof(Objects), nameof(Objects_IsSet));
+            _Objects = value;
+            _hasBeenSetTracker[(int)Region_FieldIndex.Objects] = hasBeenSet;
         }
         public void Objects_Unset()
         {
@@ -159,7 +160,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Weather_IsSet
         {
             get => _hasBeenSetTracker[(int)Region_FieldIndex.Weather];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Region_FieldIndex.Weather, nameof(Weather_IsSet));
+            set => _hasBeenSetTracker[(int)Region_FieldIndex.Weather] = value;
         }
         bool IRegionGetter.Weather_IsSet => Weather_IsSet;
         private RegionDataWeather _Weather;
@@ -173,7 +174,8 @@ namespace Mutagen.Bethesda.Oblivion
             RegionDataWeather value,
             bool hasBeenSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Weather, value, _hasBeenSetTracker, hasBeenSet, (int)Region_FieldIndex.Weather, nameof(Weather), nameof(Weather_IsSet));
+            _Weather = value;
+            _hasBeenSetTracker[(int)Region_FieldIndex.Weather] = hasBeenSet;
         }
         public void Weather_Unset()
         {
@@ -186,7 +188,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool MapName_IsSet
         {
             get => _hasBeenSetTracker[(int)Region_FieldIndex.MapName];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Region_FieldIndex.MapName, nameof(MapName_IsSet));
+            set => _hasBeenSetTracker[(int)Region_FieldIndex.MapName] = value;
         }
         bool IRegionGetter.MapName_IsSet => MapName_IsSet;
         private RegionDataMapName _MapName;
@@ -200,7 +202,8 @@ namespace Mutagen.Bethesda.Oblivion
             RegionDataMapName value,
             bool hasBeenSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _MapName, value, _hasBeenSetTracker, hasBeenSet, (int)Region_FieldIndex.MapName, nameof(MapName), nameof(MapName_IsSet));
+            _MapName = value;
+            _hasBeenSetTracker[(int)Region_FieldIndex.MapName] = hasBeenSet;
         }
         public void MapName_Unset()
         {
@@ -213,7 +216,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Grasses_IsSet
         {
             get => _hasBeenSetTracker[(int)Region_FieldIndex.Grasses];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Region_FieldIndex.Grasses, nameof(Grasses_IsSet));
+            set => _hasBeenSetTracker[(int)Region_FieldIndex.Grasses] = value;
         }
         bool IRegionGetter.Grasses_IsSet => Grasses_IsSet;
         private RegionDataGrasses _Grasses;
@@ -227,7 +230,8 @@ namespace Mutagen.Bethesda.Oblivion
             RegionDataGrasses value,
             bool hasBeenSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Grasses, value, _hasBeenSetTracker, hasBeenSet, (int)Region_FieldIndex.Grasses, nameof(Grasses), nameof(Grasses_IsSet));
+            _Grasses = value;
+            _hasBeenSetTracker[(int)Region_FieldIndex.Grasses] = hasBeenSet;
         }
         public void Grasses_Unset()
         {
@@ -240,7 +244,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Sounds_IsSet
         {
             get => _hasBeenSetTracker[(int)Region_FieldIndex.Sounds];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Region_FieldIndex.Sounds, nameof(Sounds_IsSet));
+            set => _hasBeenSetTracker[(int)Region_FieldIndex.Sounds] = value;
         }
         bool IRegionGetter.Sounds_IsSet => Sounds_IsSet;
         private RegionDataSounds _Sounds;
@@ -254,7 +258,8 @@ namespace Mutagen.Bethesda.Oblivion
             RegionDataSounds value,
             bool hasBeenSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Sounds, value, _hasBeenSetTracker, hasBeenSet, (int)Region_FieldIndex.Sounds, nameof(Sounds), nameof(Sounds_IsSet));
+            _Sounds = value;
+            _hasBeenSetTracker[(int)Region_FieldIndex.Sounds] = hasBeenSet;
         }
         public void Sounds_Unset()
         {

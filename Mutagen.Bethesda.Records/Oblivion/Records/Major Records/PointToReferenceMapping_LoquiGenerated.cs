@@ -35,7 +35,6 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class PointToReferenceMapping :
-        LoquiNotifyingObject,
         IPointToReferenceMappingInternal,
         ILoquiObjectSetter<PointToReferenceMapping>,
         ILinkSubContainer,
@@ -957,19 +956,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Reference ?? true)
             {
                 errorMask?.PushIndex((int)PointToReferenceMapping_FieldIndex.Reference);
-                try
-                {
-                    item.Reference_Property.SetLink(value: rhs.Reference_Property);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Reference_Property.SetLink(value: rhs.Reference_Property);
+                errorMask?.PopIndex();
             }
             if (copyMask?.Points != CopyOption.Skip)
             {

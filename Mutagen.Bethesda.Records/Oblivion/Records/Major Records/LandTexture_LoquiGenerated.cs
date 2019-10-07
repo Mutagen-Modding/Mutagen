@@ -83,7 +83,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Havok_IsSet
         {
             get => _hasBeenSetTracker[(int)LandTexture_FieldIndex.Havok];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)LandTexture_FieldIndex.Havok, nameof(Havok_IsSet));
+            set => _hasBeenSetTracker[(int)LandTexture_FieldIndex.Havok] = value;
         }
         bool ILandTextureGetter.Havok_IsSet => Havok_IsSet;
         private HavokData _Havok;
@@ -97,7 +97,8 @@ namespace Mutagen.Bethesda.Oblivion
             HavokData value,
             bool hasBeenSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Havok, value, _hasBeenSetTracker, hasBeenSet, (int)LandTexture_FieldIndex.Havok, nameof(Havok), nameof(Havok_IsSet));
+            _Havok = value;
+            _hasBeenSetTracker[(int)LandTexture_FieldIndex.Havok] = hasBeenSet;
         }
         public void Havok_Unset()
         {

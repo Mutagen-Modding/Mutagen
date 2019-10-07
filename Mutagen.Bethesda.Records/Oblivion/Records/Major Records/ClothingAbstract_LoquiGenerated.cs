@@ -149,7 +149,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool MaleBipedModel_IsSet
         {
             get => _hasBeenSetTracker[(int)ClothingAbstract_FieldIndex.MaleBipedModel];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)ClothingAbstract_FieldIndex.MaleBipedModel, nameof(MaleBipedModel_IsSet));
+            set => _hasBeenSetTracker[(int)ClothingAbstract_FieldIndex.MaleBipedModel] = value;
         }
         bool IClothingAbstractGetter.MaleBipedModel_IsSet => MaleBipedModel_IsSet;
         private Model _MaleBipedModel;
@@ -163,7 +163,8 @@ namespace Mutagen.Bethesda.Oblivion
             Model value,
             bool hasBeenSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _MaleBipedModel, value, _hasBeenSetTracker, hasBeenSet, (int)ClothingAbstract_FieldIndex.MaleBipedModel, nameof(MaleBipedModel), nameof(MaleBipedModel_IsSet));
+            _MaleBipedModel = value;
+            _hasBeenSetTracker[(int)ClothingAbstract_FieldIndex.MaleBipedModel] = hasBeenSet;
         }
         public void MaleBipedModel_Unset()
         {
@@ -176,7 +177,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool MaleWorldModel_IsSet
         {
             get => _hasBeenSetTracker[(int)ClothingAbstract_FieldIndex.MaleWorldModel];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)ClothingAbstract_FieldIndex.MaleWorldModel, nameof(MaleWorldModel_IsSet));
+            set => _hasBeenSetTracker[(int)ClothingAbstract_FieldIndex.MaleWorldModel] = value;
         }
         bool IClothingAbstractGetter.MaleWorldModel_IsSet => MaleWorldModel_IsSet;
         private Model _MaleWorldModel;
@@ -190,7 +191,8 @@ namespace Mutagen.Bethesda.Oblivion
             Model value,
             bool hasBeenSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _MaleWorldModel, value, _hasBeenSetTracker, hasBeenSet, (int)ClothingAbstract_FieldIndex.MaleWorldModel, nameof(MaleWorldModel), nameof(MaleWorldModel_IsSet));
+            _MaleWorldModel = value;
+            _hasBeenSetTracker[(int)ClothingAbstract_FieldIndex.MaleWorldModel] = hasBeenSet;
         }
         public void MaleWorldModel_Unset()
         {
@@ -230,7 +232,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool FemaleBipedModel_IsSet
         {
             get => _hasBeenSetTracker[(int)ClothingAbstract_FieldIndex.FemaleBipedModel];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)ClothingAbstract_FieldIndex.FemaleBipedModel, nameof(FemaleBipedModel_IsSet));
+            set => _hasBeenSetTracker[(int)ClothingAbstract_FieldIndex.FemaleBipedModel] = value;
         }
         bool IClothingAbstractGetter.FemaleBipedModel_IsSet => FemaleBipedModel_IsSet;
         private Model _FemaleBipedModel;
@@ -244,7 +246,8 @@ namespace Mutagen.Bethesda.Oblivion
             Model value,
             bool hasBeenSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _FemaleBipedModel, value, _hasBeenSetTracker, hasBeenSet, (int)ClothingAbstract_FieldIndex.FemaleBipedModel, nameof(FemaleBipedModel), nameof(FemaleBipedModel_IsSet));
+            _FemaleBipedModel = value;
+            _hasBeenSetTracker[(int)ClothingAbstract_FieldIndex.FemaleBipedModel] = hasBeenSet;
         }
         public void FemaleBipedModel_Unset()
         {
@@ -257,7 +260,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool FemaleWorldModel_IsSet
         {
             get => _hasBeenSetTracker[(int)ClothingAbstract_FieldIndex.FemaleWorldModel];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)ClothingAbstract_FieldIndex.FemaleWorldModel, nameof(FemaleWorldModel_IsSet));
+            set => _hasBeenSetTracker[(int)ClothingAbstract_FieldIndex.FemaleWorldModel] = value;
         }
         bool IClothingAbstractGetter.FemaleWorldModel_IsSet => FemaleWorldModel_IsSet;
         private Model _FemaleWorldModel;
@@ -271,7 +274,8 @@ namespace Mutagen.Bethesda.Oblivion
             Model value,
             bool hasBeenSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _FemaleWorldModel, value, _hasBeenSetTracker, hasBeenSet, (int)ClothingAbstract_FieldIndex.FemaleWorldModel, nameof(FemaleWorldModel), nameof(FemaleWorldModel_IsSet));
+            _FemaleWorldModel = value;
+            _hasBeenSetTracker[(int)ClothingAbstract_FieldIndex.FemaleWorldModel] = hasBeenSet;
         }
         public void FemaleWorldModel_Unset()
         {

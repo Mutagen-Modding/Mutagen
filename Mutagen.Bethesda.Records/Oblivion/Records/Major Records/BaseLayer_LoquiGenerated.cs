@@ -33,7 +33,6 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class BaseLayer :
-        LoquiNotifyingObject,
         IBaseLayerInternal,
         ILoquiObjectSetter<BaseLayer>,
         ILinkSubContainer,
@@ -1127,19 +1126,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Texture ?? true)
             {
                 errorMask?.PushIndex((int)BaseLayer_FieldIndex.Texture);
-                try
-                {
-                    item.Texture_Property.SetLink(value: rhs.Texture_Property);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Texture_Property.SetLink(value: rhs.Texture_Property);
+                errorMask?.PopIndex();
             }
             if (copyMask?.Quadrant ?? true)
             {

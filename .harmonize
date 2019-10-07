@@ -11,10 +11,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>0df02d28961e63f3ab74cf4f9ecb5b5be9fd7249</Sha>
+         <Sha>a2faf686109139c8fc88f7f3a5261fa50b951b27</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>10-05-2019 08:25:59</CommitDate>
-         <Description>Common.GetNew</Description>
+         <CommitDate>10-06-2019 19:08:32</CommitDate>
+         <Description>ReactiveModule only activates if any fields are Rx</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/Loqui.git</OriginHint>
       </RepoListing>

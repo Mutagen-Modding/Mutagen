@@ -33,7 +33,6 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class RegionDataObject :
-        LoquiNotifyingObject,
         IRegionDataObjectInternal,
         ILoquiObjectSetter<RegionDataObject>,
         ILinkSubContainer,
@@ -1517,19 +1516,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Object ?? true)
             {
                 errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Object);
-                try
-                {
-                    item.Object_Property.SetLink(value: rhs.Object_Property);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Object_Property.SetLink(value: rhs.Object_Property);
+                errorMask?.PopIndex();
             }
             if (copyMask?.ParentIndex ?? true)
             {

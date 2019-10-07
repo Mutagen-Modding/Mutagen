@@ -35,7 +35,6 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class MapMarker :
-        LoquiNotifyingObject,
         IMapMarkerInternal,
         ILoquiObjectSetter<MapMarker>,
         INamed,

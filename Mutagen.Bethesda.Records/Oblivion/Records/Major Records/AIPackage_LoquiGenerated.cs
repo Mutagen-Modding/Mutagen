@@ -80,7 +80,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Location_IsSet
         {
             get => _hasBeenSetTracker[(int)AIPackage_FieldIndex.Location];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)AIPackage_FieldIndex.Location, nameof(Location_IsSet));
+            set => _hasBeenSetTracker[(int)AIPackage_FieldIndex.Location] = value;
         }
         bool IAIPackageGetter.Location_IsSet => Location_IsSet;
         private AIPackageLocation _Location;
@@ -94,7 +94,8 @@ namespace Mutagen.Bethesda.Oblivion
             AIPackageLocation value,
             bool hasBeenSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Location, value, _hasBeenSetTracker, hasBeenSet, (int)AIPackage_FieldIndex.Location, nameof(Location), nameof(Location_IsSet));
+            _Location = value;
+            _hasBeenSetTracker[(int)AIPackage_FieldIndex.Location] = hasBeenSet;
         }
         public void Location_Unset()
         {
@@ -107,7 +108,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Schedule_IsSet
         {
             get => _hasBeenSetTracker[(int)AIPackage_FieldIndex.Schedule];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)AIPackage_FieldIndex.Schedule, nameof(Schedule_IsSet));
+            set => _hasBeenSetTracker[(int)AIPackage_FieldIndex.Schedule] = value;
         }
         bool IAIPackageGetter.Schedule_IsSet => Schedule_IsSet;
         private AIPackageSchedule _Schedule;
@@ -121,7 +122,8 @@ namespace Mutagen.Bethesda.Oblivion
             AIPackageSchedule value,
             bool hasBeenSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Schedule, value, _hasBeenSetTracker, hasBeenSet, (int)AIPackage_FieldIndex.Schedule, nameof(Schedule), nameof(Schedule_IsSet));
+            _Schedule = value;
+            _hasBeenSetTracker[(int)AIPackage_FieldIndex.Schedule] = hasBeenSet;
         }
         public void Schedule_Unset()
         {
@@ -134,7 +136,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Target_IsSet
         {
             get => _hasBeenSetTracker[(int)AIPackage_FieldIndex.Target];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)AIPackage_FieldIndex.Target, nameof(Target_IsSet));
+            set => _hasBeenSetTracker[(int)AIPackage_FieldIndex.Target] = value;
         }
         bool IAIPackageGetter.Target_IsSet => Target_IsSet;
         private AIPackageTarget _Target;
@@ -148,7 +150,8 @@ namespace Mutagen.Bethesda.Oblivion
             AIPackageTarget value,
             bool hasBeenSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Target, value, _hasBeenSetTracker, hasBeenSet, (int)AIPackage_FieldIndex.Target, nameof(Target), nameof(Target_IsSet));
+            _Target = value;
+            _hasBeenSetTracker[(int)AIPackage_FieldIndex.Target] = hasBeenSet;
         }
         public void Target_Unset()
         {

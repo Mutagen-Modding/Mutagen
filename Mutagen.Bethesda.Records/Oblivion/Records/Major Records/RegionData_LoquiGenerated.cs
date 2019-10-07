@@ -33,7 +33,6 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public abstract partial class RegionData :
-        LoquiNotifyingObject,
         IRegionDataInternal,
         ILoquiObjectSetter<RegionData>,
         ILinkSubContainer,

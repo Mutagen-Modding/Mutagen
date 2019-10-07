@@ -32,7 +32,6 @@ namespace Mutagen.Bethesda
 {
     #region Class
     public partial class MasterReference :
-        LoquiNotifyingObject,
         IMasterReferenceInternal,
         ILoquiObjectSetter<MasterReference>,
         IEquatable<MasterReference>,

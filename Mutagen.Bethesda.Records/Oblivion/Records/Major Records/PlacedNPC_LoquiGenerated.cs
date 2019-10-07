@@ -63,7 +63,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool XPCIFluff_IsSet
         {
             get => _hasBeenSetTracker[(int)PlacedNPC_FieldIndex.XPCIFluff];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)PlacedNPC_FieldIndex.XPCIFluff, nameof(XPCIFluff_IsSet));
+            set => _hasBeenSetTracker[(int)PlacedNPC_FieldIndex.XPCIFluff] = value;
         }
         bool IPlacedNPCGetter.XPCIFluff_IsSet => XPCIFluff_IsSet;
         protected Byte[] _XPCIFluff;
@@ -79,7 +79,8 @@ namespace Mutagen.Bethesda.Oblivion
             Byte[] value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _XPCIFluff, value, _hasBeenSetTracker, markSet, (int)PlacedNPC_FieldIndex.XPCIFluff, nameof(XPCIFluff), nameof(XPCIFluff_IsSet));
+            _XPCIFluff = value;
+            _hasBeenSetTracker[(int)PlacedNPC_FieldIndex.XPCIFluff] = markSet;
         }
         public void XPCIFluff_Unset()
         {
@@ -91,7 +92,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool FULLFluff_IsSet
         {
             get => _hasBeenSetTracker[(int)PlacedNPC_FieldIndex.FULLFluff];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)PlacedNPC_FieldIndex.FULLFluff, nameof(FULLFluff_IsSet));
+            set => _hasBeenSetTracker[(int)PlacedNPC_FieldIndex.FULLFluff] = value;
         }
         bool IPlacedNPCGetter.FULLFluff_IsSet => FULLFluff_IsSet;
         protected Byte[] _FULLFluff;
@@ -107,7 +108,8 @@ namespace Mutagen.Bethesda.Oblivion
             Byte[] value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _FULLFluff, value, _hasBeenSetTracker, markSet, (int)PlacedNPC_FieldIndex.FULLFluff, nameof(FULLFluff), nameof(FULLFluff_IsSet));
+            _FULLFluff = value;
+            _hasBeenSetTracker[(int)PlacedNPC_FieldIndex.FULLFluff] = markSet;
         }
         public void FULLFluff_Unset()
         {
@@ -118,7 +120,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool DistantLODData_IsSet
         {
             get => _hasBeenSetTracker[(int)PlacedNPC_FieldIndex.DistantLODData];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)PlacedNPC_FieldIndex.DistantLODData, nameof(DistantLODData_IsSet));
+            set => _hasBeenSetTracker[(int)PlacedNPC_FieldIndex.DistantLODData] = value;
         }
         bool IPlacedNPCGetter.DistantLODData_IsSet => DistantLODData_IsSet;
         private DistantLODData _DistantLODData;
@@ -132,7 +134,8 @@ namespace Mutagen.Bethesda.Oblivion
             DistantLODData value,
             bool hasBeenSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _DistantLODData, value, _hasBeenSetTracker, hasBeenSet, (int)PlacedNPC_FieldIndex.DistantLODData, nameof(DistantLODData), nameof(DistantLODData_IsSet));
+            _DistantLODData = value;
+            _hasBeenSetTracker[(int)PlacedNPC_FieldIndex.DistantLODData] = hasBeenSet;
         }
         public void DistantLODData_Unset()
         {
@@ -145,7 +148,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool EnableParent_IsSet
         {
             get => _hasBeenSetTracker[(int)PlacedNPC_FieldIndex.EnableParent];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)PlacedNPC_FieldIndex.EnableParent, nameof(EnableParent_IsSet));
+            set => _hasBeenSetTracker[(int)PlacedNPC_FieldIndex.EnableParent] = value;
         }
         bool IPlacedNPCGetter.EnableParent_IsSet => EnableParent_IsSet;
         private EnableParent _EnableParent;
@@ -159,7 +162,8 @@ namespace Mutagen.Bethesda.Oblivion
             EnableParent value,
             bool hasBeenSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _EnableParent, value, _hasBeenSetTracker, hasBeenSet, (int)PlacedNPC_FieldIndex.EnableParent, nameof(EnableParent), nameof(EnableParent_IsSet));
+            _EnableParent = value;
+            _hasBeenSetTracker[(int)PlacedNPC_FieldIndex.EnableParent] = hasBeenSet;
         }
         public void EnableParent_Unset()
         {
@@ -189,7 +193,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool RagdollData_IsSet
         {
             get => _hasBeenSetTracker[(int)PlacedNPC_FieldIndex.RagdollData];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)PlacedNPC_FieldIndex.RagdollData, nameof(RagdollData_IsSet));
+            set => _hasBeenSetTracker[(int)PlacedNPC_FieldIndex.RagdollData] = value;
         }
         bool IPlacedNPCGetter.RagdollData_IsSet => RagdollData_IsSet;
         protected Byte[] _RagdollData;
@@ -205,7 +209,8 @@ namespace Mutagen.Bethesda.Oblivion
             Byte[] value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _RagdollData, value, _hasBeenSetTracker, markSet, (int)PlacedNPC_FieldIndex.RagdollData, nameof(RagdollData), nameof(RagdollData_IsSet));
+            _RagdollData = value;
+            _hasBeenSetTracker[(int)PlacedNPC_FieldIndex.RagdollData] = markSet;
         }
         public void RagdollData_Unset()
         {

@@ -33,7 +33,6 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class MapData :
-        LoquiNotifyingObject,
         IMapDataInternal,
         ILoquiObjectSetter<MapData>,
         IEquatable<MapData>,

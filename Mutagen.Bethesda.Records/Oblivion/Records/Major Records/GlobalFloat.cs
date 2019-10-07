@@ -22,7 +22,6 @@ namespace Mutagen.Bethesda.Oblivion
                 if (this.Data != value)
                 {
                     this.Data = value;
-                    this.RaisePropertyChanged();
                 }
                 else
                 {

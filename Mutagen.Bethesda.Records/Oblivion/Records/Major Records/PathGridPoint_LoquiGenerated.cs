@@ -35,7 +35,6 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class PathGridPoint :
-        LoquiNotifyingObject,
         IPathGridPointInternal,
         ILoquiObjectSetter<PathGridPoint>,
         IEquatable<PathGridPoint>,

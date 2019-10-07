@@ -12,7 +12,6 @@ using Loqui;
 using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Tests.Internals;
-using ReactiveUI;
 using Mutagen.Bethesda.Tests;
 using DynamicData;
 using CSharpExt.Rx;
@@ -29,7 +28,6 @@ namespace Mutagen.Bethesda.Tests
 {
     #region Class
     public partial class TestingSettings :
-        LoquiNotifyingObject,
         ITestingSettingsInternal,
         ILoquiObjectSetter<TestingSettings>,
         IEquatable<TestingSettings>,

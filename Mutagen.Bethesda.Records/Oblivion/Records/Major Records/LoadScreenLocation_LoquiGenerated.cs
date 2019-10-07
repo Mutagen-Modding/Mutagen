@@ -33,7 +33,6 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class LoadScreenLocation :
-        LoquiNotifyingObject,
         ILoadScreenLocationInternal,
         ILoquiObjectSetter<LoadScreenLocation>,
         ILinkSubContainer,
@@ -995,36 +994,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Direct ?? true)
             {
                 errorMask?.PushIndex((int)LoadScreenLocation_FieldIndex.Direct);
-                try
-                {
-                    item.Direct_Property.SetLink(value: rhs.Direct_Property);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Direct_Property.SetLink(value: rhs.Direct_Property);
+                errorMask?.PopIndex();
             }
             if (copyMask?.Indirect ?? true)
             {
                 errorMask?.PushIndex((int)LoadScreenLocation_FieldIndex.Indirect);
-                try
-                {
-                    item.Indirect_Property.SetLink(value: rhs.Indirect_Property);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Indirect_Property.SetLink(value: rhs.Indirect_Property);
+                errorMask?.PopIndex();
             }
             if (copyMask?.GridPoint ?? true)
             {

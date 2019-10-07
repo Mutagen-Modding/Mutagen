@@ -33,7 +33,6 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public abstract partial class ScriptReference :
-        LoquiNotifyingObject,
         IScriptReferenceInternal,
         ILoquiObjectSetter<ScriptReference>,
         ILinkSubContainer,

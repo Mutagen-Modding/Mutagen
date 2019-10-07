@@ -37,7 +37,6 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class SkyrimMod :
-        LoquiNotifyingObject,
         ISkyrimModInternal,
         ILoquiObjectSetter<SkyrimMod>,
         ILinkContainer,

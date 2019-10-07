@@ -12,7 +12,6 @@ using Loqui;
 using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Tests.Internals;
-using ReactiveUI;
 using DynamicData;
 using CSharpExt.Rx;
 using System.Xml;
@@ -28,7 +27,6 @@ namespace Mutagen.Bethesda.Tests
 {
     #region Class
     public partial class TargetGroup :
-        LoquiNotifyingObject,
         ITargetGroupInternal,
         ILoquiObjectSetter<TargetGroup>,
         IEquatable<TargetGroup>,

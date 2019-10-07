@@ -33,7 +33,6 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class HavokData :
-        LoquiNotifyingObject,
         IHavokDataInternal,
         ILoquiObjectSetter<HavokData>,
         IEquatable<HavokData>,

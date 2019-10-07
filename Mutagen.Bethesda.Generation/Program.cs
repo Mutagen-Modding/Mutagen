@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda.Generation
     {
         static void AttachDebugInspector()
         {
-            string testString = "item.Landscape = rhsLandscapeItem.Copy(";
+            string testString = ".RaiseAndSetIfChanged(ref _RagdollData, value, _hasBeenSetTracker, markSet, (int)PlacedObject_FieldIndex.RagdollData, nameof(RagdollData), nameof(RagdollData_IsSet));";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>

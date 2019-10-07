@@ -33,7 +33,6 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class AIPackageSchedule :
-        LoquiNotifyingObject,
         IAIPackageScheduleInternal,
         ILoquiObjectSetter<AIPackageSchedule>,
         IEquatable<AIPackageSchedule>,

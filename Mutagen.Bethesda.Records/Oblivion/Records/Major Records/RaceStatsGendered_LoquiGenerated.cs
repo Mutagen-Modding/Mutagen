@@ -34,7 +34,6 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class RaceStatsGendered :
-        LoquiNotifyingObject,
         IRaceStatsGenderedInternal,
         ILoquiObjectSetter<RaceStatsGendered>,
         IEquatable<RaceStatsGendered>,

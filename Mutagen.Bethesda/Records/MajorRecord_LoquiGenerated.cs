@@ -32,7 +32,6 @@ namespace Mutagen.Bethesda
 {
     #region Class
     public abstract partial class MajorRecord :
-        LoquiNotifyingObject,
         IMajorRecordInternal,
         ILoquiObjectSetter<MajorRecord>,
         ILinkSubContainer,

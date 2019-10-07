@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Skyrim
         public bool ObjectBounds_IsSet
         {
             get => _hasBeenSetTracker[(int)TextureSet_FieldIndex.ObjectBounds];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)TextureSet_FieldIndex.ObjectBounds, nameof(ObjectBounds_IsSet));
+            set => _hasBeenSetTracker[(int)TextureSet_FieldIndex.ObjectBounds] = value;
         }
         bool ITextureSetGetter.ObjectBounds_IsSet => ObjectBounds_IsSet;
         private ObjectBounds _ObjectBounds;
@@ -67,7 +67,8 @@ namespace Mutagen.Bethesda.Skyrim
             ObjectBounds value,
             bool hasBeenSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _ObjectBounds, value, _hasBeenSetTracker, hasBeenSet, (int)TextureSet_FieldIndex.ObjectBounds, nameof(ObjectBounds), nameof(ObjectBounds_IsSet));
+            _ObjectBounds = value;
+            _hasBeenSetTracker[(int)TextureSet_FieldIndex.ObjectBounds] = hasBeenSet;
         }
         public void ObjectBounds_Unset()
         {
@@ -80,7 +81,7 @@ namespace Mutagen.Bethesda.Skyrim
         public bool Textures_IsSet
         {
             get => _hasBeenSetTracker[(int)TextureSet_FieldIndex.Textures];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)TextureSet_FieldIndex.Textures, nameof(Textures_IsSet));
+            set => _hasBeenSetTracker[(int)TextureSet_FieldIndex.Textures] = value;
         }
         bool ITextureSetGetter.Textures_IsSet => Textures_IsSet;
         private Textures _Textures;
@@ -94,7 +95,8 @@ namespace Mutagen.Bethesda.Skyrim
             Textures value,
             bool hasBeenSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Textures, value, _hasBeenSetTracker, hasBeenSet, (int)TextureSet_FieldIndex.Textures, nameof(Textures), nameof(Textures_IsSet));
+            _Textures = value;
+            _hasBeenSetTracker[(int)TextureSet_FieldIndex.Textures] = hasBeenSet;
         }
         public void Textures_Unset()
         {
@@ -107,7 +109,7 @@ namespace Mutagen.Bethesda.Skyrim
         public bool Decal_IsSet
         {
             get => _hasBeenSetTracker[(int)TextureSet_FieldIndex.Decal];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)TextureSet_FieldIndex.Decal, nameof(Decal_IsSet));
+            set => _hasBeenSetTracker[(int)TextureSet_FieldIndex.Decal] = value;
         }
         bool ITextureSetGetter.Decal_IsSet => Decal_IsSet;
         private Decal _Decal;
@@ -121,7 +123,8 @@ namespace Mutagen.Bethesda.Skyrim
             Decal value,
             bool hasBeenSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Decal, value, _hasBeenSetTracker, hasBeenSet, (int)TextureSet_FieldIndex.Decal, nameof(Decal), nameof(Decal_IsSet));
+            _Decal = value;
+            _hasBeenSetTracker[(int)TextureSet_FieldIndex.Decal] = hasBeenSet;
         }
         public void Decal_Unset()
         {

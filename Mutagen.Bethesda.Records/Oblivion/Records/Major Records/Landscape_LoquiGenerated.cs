@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Unknown_IsSet
         {
             get => _hasBeenSetTracker[(int)Landscape_FieldIndex.Unknown];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Landscape_FieldIndex.Unknown, nameof(Unknown_IsSet));
+            set => _hasBeenSetTracker[(int)Landscape_FieldIndex.Unknown] = value;
         }
         bool ILandscapeGetter.Unknown_IsSet => Unknown_IsSet;
         protected Byte[] _Unknown;
@@ -73,7 +73,8 @@ namespace Mutagen.Bethesda.Oblivion
             Byte[] value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Unknown, value, _hasBeenSetTracker, markSet, (int)Landscape_FieldIndex.Unknown, nameof(Unknown), nameof(Unknown_IsSet));
+            _Unknown = value;
+            _hasBeenSetTracker[(int)Landscape_FieldIndex.Unknown] = markSet;
         }
         public void Unknown_Unset()
         {
@@ -85,7 +86,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool VertexNormals_IsSet
         {
             get => _hasBeenSetTracker[(int)Landscape_FieldIndex.VertexNormals];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Landscape_FieldIndex.VertexNormals, nameof(VertexNormals_IsSet));
+            set => _hasBeenSetTracker[(int)Landscape_FieldIndex.VertexNormals] = value;
         }
         bool ILandscapeGetter.VertexNormals_IsSet => VertexNormals_IsSet;
         protected Byte[] _VertexNormals;
@@ -101,7 +102,8 @@ namespace Mutagen.Bethesda.Oblivion
             Byte[] value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _VertexNormals, value, _hasBeenSetTracker, markSet, (int)Landscape_FieldIndex.VertexNormals, nameof(VertexNormals), nameof(VertexNormals_IsSet));
+            _VertexNormals = value;
+            _hasBeenSetTracker[(int)Landscape_FieldIndex.VertexNormals] = markSet;
         }
         public void VertexNormals_Unset()
         {
@@ -113,7 +115,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool VertexHeightMap_IsSet
         {
             get => _hasBeenSetTracker[(int)Landscape_FieldIndex.VertexHeightMap];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Landscape_FieldIndex.VertexHeightMap, nameof(VertexHeightMap_IsSet));
+            set => _hasBeenSetTracker[(int)Landscape_FieldIndex.VertexHeightMap] = value;
         }
         bool ILandscapeGetter.VertexHeightMap_IsSet => VertexHeightMap_IsSet;
         protected Byte[] _VertexHeightMap;
@@ -129,7 +131,8 @@ namespace Mutagen.Bethesda.Oblivion
             Byte[] value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _VertexHeightMap, value, _hasBeenSetTracker, markSet, (int)Landscape_FieldIndex.VertexHeightMap, nameof(VertexHeightMap), nameof(VertexHeightMap_IsSet));
+            _VertexHeightMap = value;
+            _hasBeenSetTracker[(int)Landscape_FieldIndex.VertexHeightMap] = markSet;
         }
         public void VertexHeightMap_Unset()
         {
@@ -141,7 +144,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool VertexColors_IsSet
         {
             get => _hasBeenSetTracker[(int)Landscape_FieldIndex.VertexColors];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Landscape_FieldIndex.VertexColors, nameof(VertexColors_IsSet));
+            set => _hasBeenSetTracker[(int)Landscape_FieldIndex.VertexColors] = value;
         }
         bool ILandscapeGetter.VertexColors_IsSet => VertexColors_IsSet;
         protected Byte[] _VertexColors;
@@ -157,7 +160,8 @@ namespace Mutagen.Bethesda.Oblivion
             Byte[] value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _VertexColors, value, _hasBeenSetTracker, markSet, (int)Landscape_FieldIndex.VertexColors, nameof(VertexColors), nameof(VertexColors_IsSet));
+            _VertexColors = value;
+            _hasBeenSetTracker[(int)Landscape_FieldIndex.VertexColors] = markSet;
         }
         public void VertexColors_Unset()
         {

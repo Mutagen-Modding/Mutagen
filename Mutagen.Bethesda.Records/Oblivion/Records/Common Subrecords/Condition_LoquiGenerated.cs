@@ -33,7 +33,6 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class Condition :
-        LoquiNotifyingObject,
         IConditionInternal,
         ILoquiObjectSetter<Condition>,
         IEquatable<Condition>,

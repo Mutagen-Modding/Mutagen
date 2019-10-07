@@ -138,7 +138,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Model_IsSet
         {
             get => _hasBeenSetTracker[(int)MagicEffect_FieldIndex.Model];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)MagicEffect_FieldIndex.Model, nameof(Model_IsSet));
+            set => _hasBeenSetTracker[(int)MagicEffect_FieldIndex.Model] = value;
         }
         bool IMagicEffectGetter.Model_IsSet => Model_IsSet;
         private Model _Model;
@@ -152,7 +152,8 @@ namespace Mutagen.Bethesda.Oblivion
             Model value,
             bool hasBeenSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Model, value, _hasBeenSetTracker, hasBeenSet, (int)MagicEffect_FieldIndex.Model, nameof(Model), nameof(Model_IsSet));
+            _Model = value;
+            _hasBeenSetTracker[(int)MagicEffect_FieldIndex.Model] = hasBeenSet;
         }
         public void Model_Unset()
         {
@@ -2166,19 +2167,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Light ?? true)
             {
                 errorMask?.PushIndex((int)MagicEffect_FieldIndex.Light);
-                try
-                {
-                    item.Light_Property.SetLink(value: rhs.Light_Property);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Light_Property.SetLink(value: rhs.Light_Property);
+                errorMask?.PopIndex();
             }
             if (copyMask?.ProjectileSpeed ?? true)
             {
@@ -2189,19 +2179,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.EffectShader ?? true)
             {
                 errorMask?.PushIndex((int)MagicEffect_FieldIndex.EffectShader);
-                try
-                {
-                    item.EffectShader_Property.SetLink(value: rhs.EffectShader_Property);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.EffectShader_Property.SetLink(value: rhs.EffectShader_Property);
+                errorMask?.PopIndex();
             }
             if (copyMask?.SubData.Overall != CopyOption.Skip)
             {

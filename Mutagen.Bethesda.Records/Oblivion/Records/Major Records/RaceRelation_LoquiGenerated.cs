@@ -33,7 +33,6 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class RaceRelation :
-        LoquiNotifyingObject,
         IRaceRelationInternal,
         ILoquiObjectSetter<RaceRelation>,
         ILinkSubContainer,
@@ -941,19 +940,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Race ?? true)
             {
                 errorMask?.PushIndex((int)RaceRelation_FieldIndex.Race);
-                try
-                {
-                    item.Race_Property.SetLink(value: rhs.Race_Property);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Race_Property.SetLink(value: rhs.Race_Property);
+                errorMask?.PopIndex();
             }
             if (copyMask?.Modifier ?? true)
             {

@@ -36,7 +36,6 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class ScriptFields :
-        LoquiNotifyingObject,
         IScriptFieldsInternal,
         ILoquiObjectSetter<ScriptFields>,
         ILinkSubContainer,

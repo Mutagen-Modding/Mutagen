@@ -33,7 +33,6 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class Textures :
-        LoquiNotifyingObject,
         ITexturesInternal,
         ILoquiObjectSetter<Textures>,
         IEquatable<Textures>,

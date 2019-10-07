@@ -84,7 +84,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Model_IsSet
         {
             get => _hasBeenSetTracker[(int)Creature_FieldIndex.Model];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Creature_FieldIndex.Model, nameof(Model_IsSet));
+            set => _hasBeenSetTracker[(int)Creature_FieldIndex.Model] = value;
         }
         bool ICreatureGetter.Model_IsSet => Model_IsSet;
         private Model _Model;
@@ -98,7 +98,8 @@ namespace Mutagen.Bethesda.Oblivion
             Model value,
             bool hasBeenSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Model, value, _hasBeenSetTracker, hasBeenSet, (int)Creature_FieldIndex.Model, nameof(Model), nameof(Model_IsSet));
+            _Model = value;
+            _hasBeenSetTracker[(int)Creature_FieldIndex.Model] = hasBeenSet;
         }
         public void Model_Unset()
         {
@@ -148,7 +149,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool NIFT_IsSet
         {
             get => _hasBeenSetTracker[(int)Creature_FieldIndex.NIFT];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Creature_FieldIndex.NIFT, nameof(NIFT_IsSet));
+            set => _hasBeenSetTracker[(int)Creature_FieldIndex.NIFT] = value;
         }
         bool ICreatureGetter.NIFT_IsSet => NIFT_IsSet;
         protected Byte[] _NIFT;
@@ -164,7 +165,8 @@ namespace Mutagen.Bethesda.Oblivion
             Byte[] value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _NIFT, value, _hasBeenSetTracker, markSet, (int)Creature_FieldIndex.NIFT, nameof(NIFT), nameof(NIFT_IsSet));
+            _NIFT = value;
+            _hasBeenSetTracker[(int)Creature_FieldIndex.NIFT] = markSet;
         }
         public void NIFT_Unset()
         {

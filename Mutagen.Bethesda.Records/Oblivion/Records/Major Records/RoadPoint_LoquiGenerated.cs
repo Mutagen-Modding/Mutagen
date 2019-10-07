@@ -35,7 +35,6 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class RoadPoint :
-        LoquiNotifyingObject,
         IRoadPointInternal,
         ILoquiObjectSetter<RoadPoint>,
         IEquatable<RoadPoint>,

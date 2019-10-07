@@ -33,7 +33,6 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class ScriptEffect :
-        LoquiNotifyingObject,
         IScriptEffectInternal,
         ILoquiObjectSetter<ScriptEffect>,
         INamed,
@@ -1225,19 +1224,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Script ?? true)
             {
                 errorMask?.PushIndex((int)ScriptEffect_FieldIndex.Script);
-                try
-                {
-                    item.Script_Property.SetLink(value: rhs.Script_Property);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Script_Property.SetLink(value: rhs.Script_Property);
+                errorMask?.PopIndex();
             }
             if (copyMask?.MagicSchool ?? true)
             {
@@ -1248,19 +1236,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.VisualEffect ?? true)
             {
                 errorMask?.PushIndex((int)ScriptEffect_FieldIndex.VisualEffect);
-                try
-                {
-                    item.VisualEffect_Property.SetLink(value: rhs.VisualEffect_Property);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.VisualEffect_Property.SetLink(value: rhs.VisualEffect_Property);
+                errorMask?.PopIndex();
             }
             if (copyMask?.Flags ?? true)
             {

@@ -33,7 +33,6 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class ObjectBounds :
-        LoquiNotifyingObject,
         IObjectBoundsInternal,
         ILoquiObjectSetter<ObjectBounds>,
         IEquatable<ObjectBounds>,

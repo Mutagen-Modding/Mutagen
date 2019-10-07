@@ -80,7 +80,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Data_IsSet
         {
             get => _hasBeenSetTracker[(int)Sound_FieldIndex.Data];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Sound_FieldIndex.Data, nameof(Data_IsSet));
+            set => _hasBeenSetTracker[(int)Sound_FieldIndex.Data] = value;
         }
         bool ISoundGetter.Data_IsSet => Data_IsSet;
         private SoundData _Data;
@@ -94,7 +94,8 @@ namespace Mutagen.Bethesda.Oblivion
             SoundData value,
             bool hasBeenSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Data, value, _hasBeenSetTracker, hasBeenSet, (int)Sound_FieldIndex.Data, nameof(Data), nameof(Data_IsSet));
+            _Data = value;
+            _hasBeenSetTracker[(int)Sound_FieldIndex.Data] = hasBeenSet;
         }
         public void Data_Unset()
         {

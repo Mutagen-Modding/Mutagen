@@ -216,7 +216,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Voices_IsSet
         {
             get => _hasBeenSetTracker[(int)Race_FieldIndex.Voices];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Race_FieldIndex.Voices, nameof(Voices_IsSet));
+            set => _hasBeenSetTracker[(int)Race_FieldIndex.Voices] = value;
         }
         bool IRaceGetter.Voices_IsSet => Voices_IsSet;
         private RaceVoices _Voices;
@@ -230,7 +230,8 @@ namespace Mutagen.Bethesda.Oblivion
             RaceVoices value,
             bool hasBeenSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Voices, value, _hasBeenSetTracker, hasBeenSet, (int)Race_FieldIndex.Voices, nameof(Voices), nameof(Voices_IsSet));
+            _Voices = value;
+            _hasBeenSetTracker[(int)Race_FieldIndex.Voices] = hasBeenSet;
         }
         public void Voices_Unset()
         {
@@ -243,7 +244,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool DefaultHair_IsSet
         {
             get => _hasBeenSetTracker[(int)Race_FieldIndex.DefaultHair];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Race_FieldIndex.DefaultHair, nameof(DefaultHair_IsSet));
+            set => _hasBeenSetTracker[(int)Race_FieldIndex.DefaultHair] = value;
         }
         bool IRaceGetter.DefaultHair_IsSet => DefaultHair_IsSet;
         private RaceHair _DefaultHair;
@@ -257,7 +258,8 @@ namespace Mutagen.Bethesda.Oblivion
             RaceHair value,
             bool hasBeenSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _DefaultHair, value, _hasBeenSetTracker, hasBeenSet, (int)Race_FieldIndex.DefaultHair, nameof(DefaultHair), nameof(DefaultHair_IsSet));
+            _DefaultHair = value;
+            _hasBeenSetTracker[(int)Race_FieldIndex.DefaultHair] = hasBeenSet;
         }
         public void DefaultHair_Unset()
         {
@@ -351,7 +353,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool RaceStats_IsSet
         {
             get => _hasBeenSetTracker[(int)Race_FieldIndex.RaceStats];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Race_FieldIndex.RaceStats, nameof(RaceStats_IsSet));
+            set => _hasBeenSetTracker[(int)Race_FieldIndex.RaceStats] = value;
         }
         bool IRaceGetter.RaceStats_IsSet => RaceStats_IsSet;
         private RaceStatsGendered _RaceStats;
@@ -365,7 +367,8 @@ namespace Mutagen.Bethesda.Oblivion
             RaceStatsGendered value,
             bool hasBeenSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _RaceStats, value, _hasBeenSetTracker, hasBeenSet, (int)Race_FieldIndex.RaceStats, nameof(RaceStats), nameof(RaceStats_IsSet));
+            _RaceStats = value;
+            _hasBeenSetTracker[(int)Race_FieldIndex.RaceStats] = hasBeenSet;
         }
         public void RaceStats_Unset()
         {
@@ -390,7 +393,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool BodyData_IsSet
         {
             get => _hasBeenSetTracker[(int)Race_FieldIndex.BodyData];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Race_FieldIndex.BodyData, nameof(BodyData_IsSet));
+            set => _hasBeenSetTracker[(int)Race_FieldIndex.BodyData] = value;
         }
         bool IRaceGetter.BodyData_IsSet => BodyData_IsSet;
         private GenderedBodyData _BodyData;
@@ -404,7 +407,8 @@ namespace Mutagen.Bethesda.Oblivion
             GenderedBodyData value,
             bool hasBeenSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _BodyData, value, _hasBeenSetTracker, hasBeenSet, (int)Race_FieldIndex.BodyData, nameof(BodyData), nameof(BodyData_IsSet));
+            _BodyData = value;
+            _hasBeenSetTracker[(int)Race_FieldIndex.BodyData] = hasBeenSet;
         }
         public void BodyData_Unset()
         {
@@ -441,7 +445,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool FaceGenData_IsSet
         {
             get => _hasBeenSetTracker[(int)Race_FieldIndex.FaceGenData];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Race_FieldIndex.FaceGenData, nameof(FaceGenData_IsSet));
+            set => _hasBeenSetTracker[(int)Race_FieldIndex.FaceGenData] = value;
         }
         bool IRaceGetter.FaceGenData_IsSet => FaceGenData_IsSet;
         private FaceGenData _FaceGenData;
@@ -455,7 +459,8 @@ namespace Mutagen.Bethesda.Oblivion
             FaceGenData value,
             bool hasBeenSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _FaceGenData, value, _hasBeenSetTracker, hasBeenSet, (int)Race_FieldIndex.FaceGenData, nameof(FaceGenData), nameof(FaceGenData_IsSet));
+            _FaceGenData = value;
+            _hasBeenSetTracker[(int)Race_FieldIndex.FaceGenData] = hasBeenSet;
         }
         public void FaceGenData_Unset()
         {
@@ -469,7 +474,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Unknown_IsSet
         {
             get => _hasBeenSetTracker[(int)Race_FieldIndex.Unknown];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Race_FieldIndex.Unknown, nameof(Unknown_IsSet));
+            set => _hasBeenSetTracker[(int)Race_FieldIndex.Unknown] = value;
         }
         bool IRaceGetter.Unknown_IsSet => Unknown_IsSet;
         protected Byte[] _Unknown;
@@ -485,7 +490,8 @@ namespace Mutagen.Bethesda.Oblivion
             Byte[] value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Unknown, value, _hasBeenSetTracker, markSet, (int)Race_FieldIndex.Unknown, nameof(Unknown), nameof(Unknown_IsSet));
+            _Unknown = value;
+            _hasBeenSetTracker[(int)Race_FieldIndex.Unknown] = markSet;
         }
         public void Unknown_Unset()
         {

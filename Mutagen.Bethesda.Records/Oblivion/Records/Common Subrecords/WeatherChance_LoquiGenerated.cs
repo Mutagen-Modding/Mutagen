@@ -33,7 +33,6 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class WeatherChance :
-        LoquiNotifyingObject,
         IWeatherChanceInternal,
         ILoquiObjectSetter<WeatherChance>,
         ILinkSubContainer,
@@ -935,19 +934,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Weather ?? true)
             {
                 errorMask?.PushIndex((int)WeatherChance_FieldIndex.Weather);
-                try
-                {
-                    item.Weather_Property.SetLink(value: rhs.Weather_Property);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Weather_Property.SetLink(value: rhs.Weather_Property);
+                errorMask?.PopIndex();
             }
             if (copyMask?.Chance ?? true)
             {

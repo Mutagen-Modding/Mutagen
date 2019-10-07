@@ -36,7 +36,6 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class LogEntry :
-        LoquiNotifyingObject,
         ILogEntryInternal,
         ILoquiObjectSetter<LogEntry>,
         ILinkSubContainer,
@@ -122,7 +121,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool ResultScript_IsSet
         {
             get => _hasBeenSetTracker[(int)LogEntry_FieldIndex.ResultScript];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)LogEntry_FieldIndex.ResultScript, nameof(ResultScript_IsSet));
+            set => _hasBeenSetTracker[(int)LogEntry_FieldIndex.ResultScript] = value;
         }
         bool ILogEntryGetter.ResultScript_IsSet => ResultScript_IsSet;
         private ScriptFields _ResultScript;
@@ -136,7 +135,8 @@ namespace Mutagen.Bethesda.Oblivion
             ScriptFields value,
             bool hasBeenSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _ResultScript, value, _hasBeenSetTracker, hasBeenSet, (int)LogEntry_FieldIndex.ResultScript, nameof(ResultScript), nameof(ResultScript_IsSet));
+            _ResultScript = value;
+            _hasBeenSetTracker[(int)LogEntry_FieldIndex.ResultScript] = hasBeenSet;
         }
         public void ResultScript_Unset()
         {

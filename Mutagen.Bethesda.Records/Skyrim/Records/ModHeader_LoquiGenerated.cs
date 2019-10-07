@@ -36,7 +36,6 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class ModHeader :
-        LoquiNotifyingObject,
         IModHeaderInternal,
         ILoquiObjectSetter<ModHeader>,
         ILinkSubContainer,
@@ -82,7 +81,7 @@ namespace Mutagen.Bethesda.Skyrim
         public bool TypeOffsets_IsSet
         {
             get => _hasBeenSetTracker[(int)ModHeader_FieldIndex.TypeOffsets];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)ModHeader_FieldIndex.TypeOffsets, nameof(TypeOffsets_IsSet));
+            set => _hasBeenSetTracker[(int)ModHeader_FieldIndex.TypeOffsets] = value;
         }
         bool IModHeaderGetter.TypeOffsets_IsSet => TypeOffsets_IsSet;
         protected Byte[] _TypeOffsets;
@@ -98,7 +97,8 @@ namespace Mutagen.Bethesda.Skyrim
             Byte[] value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _TypeOffsets, value, _hasBeenSetTracker, markSet, (int)ModHeader_FieldIndex.TypeOffsets, nameof(TypeOffsets), nameof(TypeOffsets_IsSet));
+            _TypeOffsets = value;
+            _hasBeenSetTracker[(int)ModHeader_FieldIndex.TypeOffsets] = markSet;
         }
         public void TypeOffsets_Unset()
         {
@@ -110,7 +110,7 @@ namespace Mutagen.Bethesda.Skyrim
         public bool Deleted_IsSet
         {
             get => _hasBeenSetTracker[(int)ModHeader_FieldIndex.Deleted];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)ModHeader_FieldIndex.Deleted, nameof(Deleted_IsSet));
+            set => _hasBeenSetTracker[(int)ModHeader_FieldIndex.Deleted] = value;
         }
         bool IModHeaderGetter.Deleted_IsSet => Deleted_IsSet;
         protected Byte[] _Deleted;
@@ -126,7 +126,8 @@ namespace Mutagen.Bethesda.Skyrim
             Byte[] value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Deleted, value, _hasBeenSetTracker, markSet, (int)ModHeader_FieldIndex.Deleted, nameof(Deleted), nameof(Deleted_IsSet));
+            _Deleted = value;
+            _hasBeenSetTracker[(int)ModHeader_FieldIndex.Deleted] = markSet;
         }
         public void Deleted_Unset()
         {

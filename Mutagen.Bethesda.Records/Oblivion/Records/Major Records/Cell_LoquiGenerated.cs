@@ -139,7 +139,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Lighting_IsSet
         {
             get => _hasBeenSetTracker[(int)Cell_FieldIndex.Lighting];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Cell_FieldIndex.Lighting, nameof(Lighting_IsSet));
+            set => _hasBeenSetTracker[(int)Cell_FieldIndex.Lighting] = value;
         }
         bool ICellGetter.Lighting_IsSet => Lighting_IsSet;
         private CellLighting _Lighting;
@@ -153,7 +153,8 @@ namespace Mutagen.Bethesda.Oblivion
             CellLighting value,
             bool hasBeenSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Lighting, value, _hasBeenSetTracker, hasBeenSet, (int)Cell_FieldIndex.Lighting, nameof(Lighting), nameof(Lighting_IsSet));
+            _Lighting = value;
+            _hasBeenSetTracker[(int)Cell_FieldIndex.Lighting] = hasBeenSet;
         }
         public void Lighting_Unset()
         {
@@ -291,7 +292,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool PathGrid_IsSet
         {
             get => _hasBeenSetTracker[(int)Cell_FieldIndex.PathGrid];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Cell_FieldIndex.PathGrid, nameof(PathGrid_IsSet));
+            set => _hasBeenSetTracker[(int)Cell_FieldIndex.PathGrid] = value;
         }
         bool ICellGetter.PathGrid_IsSet => PathGrid_IsSet;
         private PathGrid _PathGrid;
@@ -305,7 +306,8 @@ namespace Mutagen.Bethesda.Oblivion
             PathGrid value,
             bool hasBeenSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _PathGrid, value, _hasBeenSetTracker, hasBeenSet, (int)Cell_FieldIndex.PathGrid, nameof(PathGrid), nameof(PathGrid_IsSet));
+            _PathGrid = value;
+            _hasBeenSetTracker[(int)Cell_FieldIndex.PathGrid] = hasBeenSet;
         }
         public void PathGrid_Unset()
         {
@@ -318,7 +320,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Landscape_IsSet
         {
             get => _hasBeenSetTracker[(int)Cell_FieldIndex.Landscape];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Cell_FieldIndex.Landscape, nameof(Landscape_IsSet));
+            set => _hasBeenSetTracker[(int)Cell_FieldIndex.Landscape] = value;
         }
         bool ICellGetter.Landscape_IsSet => Landscape_IsSet;
         private Landscape _Landscape;
@@ -332,7 +334,8 @@ namespace Mutagen.Bethesda.Oblivion
             Landscape value,
             bool hasBeenSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Landscape, value, _hasBeenSetTracker, hasBeenSet, (int)Cell_FieldIndex.Landscape, nameof(Landscape), nameof(Landscape_IsSet));
+            _Landscape = value;
+            _hasBeenSetTracker[(int)Cell_FieldIndex.Landscape] = hasBeenSet;
         }
         public void Landscape_Unset()
         {

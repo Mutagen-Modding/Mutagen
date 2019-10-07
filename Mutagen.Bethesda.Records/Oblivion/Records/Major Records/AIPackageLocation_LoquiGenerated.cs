@@ -33,7 +33,6 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class AIPackageLocation :
-        LoquiNotifyingObject,
         IAIPackageLocationInternal,
         ILoquiObjectSetter<AIPackageLocation>,
         ILinkSubContainer,
@@ -997,19 +996,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.LocationReference ?? true)
             {
                 errorMask?.PushIndex((int)AIPackageLocation_FieldIndex.LocationReference);
-                try
-                {
-                    item.LocationReference_Property.SetLink(value: rhs.LocationReference_Property);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.LocationReference_Property.SetLink(value: rhs.LocationReference_Property);
+                errorMask?.PopIndex();
             }
             if (copyMask?.Radius ?? true)
             {

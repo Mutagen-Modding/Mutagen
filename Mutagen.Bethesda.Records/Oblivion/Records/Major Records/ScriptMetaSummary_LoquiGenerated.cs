@@ -33,7 +33,6 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class ScriptMetaSummary :
-        LoquiNotifyingObject,
         IScriptMetaSummaryInternal,
         ILoquiObjectSetter<ScriptMetaSummary>,
         IEquatable<ScriptMetaSummary>,

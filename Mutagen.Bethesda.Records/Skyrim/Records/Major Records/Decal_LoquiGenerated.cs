@@ -35,7 +35,6 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class Decal :
-        LoquiNotifyingObject,
         IDecalInternal,
         ILoquiObjectSetter<Decal>,
         IEquatable<Decal>,

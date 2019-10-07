@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool CompiledScript_IsSet
         {
             get => _hasBeenSetTracker[(int)ScriptFields_FieldIndex.CompiledScript];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)ScriptFields_FieldIndex.CompiledScript, nameof(CompiledScript_IsSet));
+            set => _hasBeenSetTracker[(int)ScriptFields_FieldIndex.CompiledScript] = value;
         }
         bool IScriptFieldsGetter.CompiledScript_IsSet => CompiledScript_IsSet;
         protected Byte[] _CompiledScript;
@@ -47,7 +47,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool markSet = true)
         {
             this.MetadataSummary.CompiledSizeInternal = value?.Length ?? 0;
-            this.RaiseAndSetIfChanged(ref _CompiledScript, value, _hasBeenSetTracker, markSet, (int)ScriptFields_FieldIndex.CompiledScript, nameof(CompiledScript), nameof(CompiledScript_IsSet));
+            _CompiledScript = value;
+            _hasBeenSetTracker[(int)ScriptFields_FieldIndex.CompiledScript] = markSet;
         }
         public void CompiledScript_Unset()
         {

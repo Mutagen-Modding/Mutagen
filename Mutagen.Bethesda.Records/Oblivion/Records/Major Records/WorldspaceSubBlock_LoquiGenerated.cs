@@ -35,7 +35,6 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class WorldspaceSubBlock :
-        LoquiNotifyingObject,
         IWorldspaceSubBlockInternal,
         ILoquiObjectSetter<WorldspaceSubBlock>,
         ILinkSubContainer,

@@ -33,7 +33,6 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class TeleportDestination :
-        LoquiNotifyingObject,
         ITeleportDestinationInternal,
         ILoquiObjectSetter<TeleportDestination>,
         ILinkSubContainer,
@@ -991,19 +990,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Destination ?? true)
             {
                 errorMask?.PushIndex((int)TeleportDestination_FieldIndex.Destination);
-                try
-                {
-                    item.Destination_Property.SetLink(value: rhs.Destination_Property);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Destination_Property.SetLink(value: rhs.Destination_Property);
+                errorMask?.PopIndex();
             }
             if (copyMask?.Position ?? true)
             {

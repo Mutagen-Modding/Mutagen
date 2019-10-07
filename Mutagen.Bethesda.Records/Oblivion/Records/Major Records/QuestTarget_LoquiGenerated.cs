@@ -35,7 +35,6 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class QuestTarget :
-        LoquiNotifyingObject,
         IQuestTargetInternal,
         ILoquiObjectSetter<QuestTarget>,
         ILinkSubContainer,
@@ -1118,19 +1117,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Target ?? true)
             {
                 errorMask?.PushIndex((int)QuestTarget_FieldIndex.Target);
-                try
-                {
-                    item.Target_Property.SetLink(value: rhs.Target_Property);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Target_Property.SetLink(value: rhs.Target_Property);
+                errorMask?.PopIndex();
             }
             if (copyMask?.Flags ?? true)
             {

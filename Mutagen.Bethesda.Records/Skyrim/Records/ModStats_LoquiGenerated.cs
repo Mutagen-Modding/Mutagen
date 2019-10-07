@@ -33,7 +33,6 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class ModStats :
-        LoquiNotifyingObject,
         IModStatsInternal,
         ILoquiObjectSetter<ModStats>,
         IEquatable<ModStats>,

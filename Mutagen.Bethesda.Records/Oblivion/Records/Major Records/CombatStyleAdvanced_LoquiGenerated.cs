@@ -33,7 +33,6 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class CombatStyleAdvanced :
-        LoquiNotifyingObject,
         ICombatStyleAdvancedInternal,
         ILoquiObjectSetter<CombatStyleAdvanced>,
         IEquatable<CombatStyleAdvanced>,

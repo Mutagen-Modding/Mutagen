@@ -82,7 +82,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Model_IsSet
         {
             get => _hasBeenSetTracker[(int)Furnature_FieldIndex.Model];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Furnature_FieldIndex.Model, nameof(Model_IsSet));
+            set => _hasBeenSetTracker[(int)Furnature_FieldIndex.Model] = value;
         }
         bool IFurnatureGetter.Model_IsSet => Model_IsSet;
         private Model _Model;
@@ -96,7 +96,8 @@ namespace Mutagen.Bethesda.Oblivion
             Model value,
             bool hasBeenSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Model, value, _hasBeenSetTracker, hasBeenSet, (int)Furnature_FieldIndex.Model, nameof(Model), nameof(Model_IsSet));
+            _Model = value;
+            _hasBeenSetTracker[(int)Furnature_FieldIndex.Model] = hasBeenSet;
         }
         public void Model_Unset()
         {
@@ -118,7 +119,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool MarkerFlags_IsSet
         {
             get => _hasBeenSetTracker[(int)Furnature_FieldIndex.MarkerFlags];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Furnature_FieldIndex.MarkerFlags, nameof(MarkerFlags_IsSet));
+            set => _hasBeenSetTracker[(int)Furnature_FieldIndex.MarkerFlags] = value;
         }
         bool IFurnatureGetter.MarkerFlags_IsSet => MarkerFlags_IsSet;
         protected Byte[] _MarkerFlags;
@@ -134,7 +135,8 @@ namespace Mutagen.Bethesda.Oblivion
             Byte[] value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _MarkerFlags, value, _hasBeenSetTracker, markSet, (int)Furnature_FieldIndex.MarkerFlags, nameof(MarkerFlags), nameof(MarkerFlags_IsSet));
+            _MarkerFlags = value;
+            _hasBeenSetTracker[(int)Furnature_FieldIndex.MarkerFlags] = markSet;
         }
         public void MarkerFlags_Unset()
         {

@@ -33,7 +33,6 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class RegionSound :
-        LoquiNotifyingObject,
         IRegionSoundInternal,
         ILoquiObjectSetter<RegionSound>,
         ILinkSubContainer,
@@ -986,19 +985,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.Sound ?? true)
             {
                 errorMask?.PushIndex((int)RegionSound_FieldIndex.Sound);
-                try
-                {
-                    item.Sound_Property.SetLink(value: rhs.Sound_Property);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Sound_Property.SetLink(value: rhs.Sound_Property);
+                errorMask?.PopIndex();
             }
             if (copyMask?.Flags ?? true)
             {

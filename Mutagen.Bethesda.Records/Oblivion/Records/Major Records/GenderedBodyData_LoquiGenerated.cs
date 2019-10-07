@@ -34,7 +34,6 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class GenderedBodyData :
-        LoquiNotifyingObject,
         IGenderedBodyDataInternal,
         ILoquiObjectSetter<GenderedBodyData>,
         IEquatable<GenderedBodyData>,
@@ -53,7 +52,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Male_IsSet
         {
             get => _hasBeenSetTracker[(int)GenderedBodyData_FieldIndex.Male];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)GenderedBodyData_FieldIndex.Male, nameof(Male_IsSet));
+            set => _hasBeenSetTracker[(int)GenderedBodyData_FieldIndex.Male] = value;
         }
         bool IGenderedBodyDataGetter.Male_IsSet => Male_IsSet;
         private BodyData _Male;
@@ -67,7 +66,8 @@ namespace Mutagen.Bethesda.Oblivion
             BodyData value,
             bool hasBeenSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Male, value, _hasBeenSetTracker, hasBeenSet, (int)GenderedBodyData_FieldIndex.Male, nameof(Male), nameof(Male_IsSet));
+            _Male = value;
+            _hasBeenSetTracker[(int)GenderedBodyData_FieldIndex.Male] = hasBeenSet;
         }
         public void Male_Unset()
         {
@@ -80,7 +80,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Female_IsSet
         {
             get => _hasBeenSetTracker[(int)GenderedBodyData_FieldIndex.Female];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)GenderedBodyData_FieldIndex.Female, nameof(Female_IsSet));
+            set => _hasBeenSetTracker[(int)GenderedBodyData_FieldIndex.Female] = value;
         }
         bool IGenderedBodyDataGetter.Female_IsSet => Female_IsSet;
         private BodyData _Female;
@@ -94,7 +94,8 @@ namespace Mutagen.Bethesda.Oblivion
             BodyData value,
             bool hasBeenSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Female, value, _hasBeenSetTracker, hasBeenSet, (int)GenderedBodyData_FieldIndex.Female, nameof(Female), nameof(Female_IsSet));
+            _Female = value;
+            _hasBeenSetTracker[(int)GenderedBodyData_FieldIndex.Female] = hasBeenSet;
         }
         public void Female_Unset()
         {

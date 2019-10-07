@@ -33,7 +33,6 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class ClassTraining :
-        LoquiNotifyingObject,
         IClassTrainingInternal,
         ILoquiObjectSetter<ClassTraining>,
         IEquatable<ClassTraining>,

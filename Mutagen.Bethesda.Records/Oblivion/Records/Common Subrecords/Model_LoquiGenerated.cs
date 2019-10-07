@@ -33,7 +33,6 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class Model :
-        LoquiNotifyingObject,
         IModelInternal,
         ILoquiObjectSetter<Model>,
         IEquatable<Model>,
@@ -59,7 +58,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Hashes_IsSet
         {
             get => _hasBeenSetTracker[(int)Model_FieldIndex.Hashes];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Model_FieldIndex.Hashes, nameof(Hashes_IsSet));
+            set => _hasBeenSetTracker[(int)Model_FieldIndex.Hashes] = value;
         }
         bool IModelGetter.Hashes_IsSet => Hashes_IsSet;
         protected Byte[] _Hashes;
@@ -75,7 +74,8 @@ namespace Mutagen.Bethesda.Oblivion
             Byte[] value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Hashes, value, _hasBeenSetTracker, markSet, (int)Model_FieldIndex.Hashes, nameof(Hashes), nameof(Hashes_IsSet));
+            _Hashes = value;
+            _hasBeenSetTracker[(int)Model_FieldIndex.Hashes] = markSet;
         }
         public void Hashes_Unset()
         {

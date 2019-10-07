@@ -35,7 +35,6 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class ListGroup<T> :
-        LoquiNotifyingObject,
         IListGroupInternal<T>,
         ILoquiObjectSetter<ListGroup<T>>,
         ILinkSubContainer,

@@ -542,7 +542,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool RelatedWaters_IsSet
         {
             get => _hasBeenSetTracker[(int)Water_FieldIndex.RelatedWaters];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Water_FieldIndex.RelatedWaters, nameof(RelatedWaters_IsSet));
+            set => _hasBeenSetTracker[(int)Water_FieldIndex.RelatedWaters] = value;
         }
         bool IWaterGetter.RelatedWaters_IsSet => RelatedWaters_IsSet;
         private RelatedWaters _RelatedWaters;
@@ -556,7 +556,8 @@ namespace Mutagen.Bethesda.Oblivion
             RelatedWaters value,
             bool hasBeenSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _RelatedWaters, value, _hasBeenSetTracker, hasBeenSet, (int)Water_FieldIndex.RelatedWaters, nameof(RelatedWaters), nameof(RelatedWaters_IsSet));
+            _RelatedWaters = value;
+            _hasBeenSetTracker[(int)Water_FieldIndex.RelatedWaters] = hasBeenSet;
         }
         public void RelatedWaters_Unset()
         {

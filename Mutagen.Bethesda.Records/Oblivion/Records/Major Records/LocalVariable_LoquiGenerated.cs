@@ -33,7 +33,6 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class LocalVariable :
-        LoquiNotifyingObject,
         ILocalVariableInternal,
         ILoquiObjectSetter<LocalVariable>,
         IEquatable<LocalVariable>,

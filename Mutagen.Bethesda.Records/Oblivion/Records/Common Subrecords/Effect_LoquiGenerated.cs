@@ -34,7 +34,6 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class Effect :
-        LoquiNotifyingObject,
         IEffectInternal,
         ILoquiObjectSetter<Effect>,
         ILinkSubContainer,
@@ -122,7 +121,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool ScriptEffect_IsSet
         {
             get => _hasBeenSetTracker[(int)Effect_FieldIndex.ScriptEffect];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Effect_FieldIndex.ScriptEffect, nameof(ScriptEffect_IsSet));
+            set => _hasBeenSetTracker[(int)Effect_FieldIndex.ScriptEffect] = value;
         }
         bool IEffectGetter.ScriptEffect_IsSet => ScriptEffect_IsSet;
         private ScriptEffect _ScriptEffect;
@@ -136,7 +135,8 @@ namespace Mutagen.Bethesda.Oblivion
             ScriptEffect value,
             bool hasBeenSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _ScriptEffect, value, _hasBeenSetTracker, hasBeenSet, (int)Effect_FieldIndex.ScriptEffect, nameof(ScriptEffect), nameof(ScriptEffect_IsSet));
+            _ScriptEffect = value;
+            _hasBeenSetTracker[(int)Effect_FieldIndex.ScriptEffect] = hasBeenSet;
         }
         public void ScriptEffect_Unset()
         {
@@ -1321,19 +1321,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (copyMask?.MagicEffect ?? true)
             {
                 errorMask?.PushIndex((int)Effect_FieldIndex.MagicEffect);
-                try
-                {
-                    item.MagicEffect_Property.SetLink(value: rhs.MagicEffect_Property);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.MagicEffect_Property.SetLink(value: rhs.MagicEffect_Property);
+                errorMask?.PopIndex();
             }
             if (copyMask?.Magnitude ?? true)
             {

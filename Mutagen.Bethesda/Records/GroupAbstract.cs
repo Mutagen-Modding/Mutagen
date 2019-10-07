@@ -13,7 +13,7 @@ using System.Text;
 
 namespace Mutagen.Bethesda
 {
-    public abstract class GroupAbstract<T> : LoquiNotifyingObject, IEnumerable<T>, IGroupCommon<T>
+    public abstract class GroupAbstract<T> : IEnumerable<T>, IGroupCommon<T>
         where T : IMajorRecordInternal, IXmlItem, IBinaryItem
     {
         protected abstract IObservableCache<T, FormKey> InternalItems { get; }
