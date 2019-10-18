@@ -288,7 +288,7 @@ namespace Mutagen.Bethesda.Oblivion
         public partial class OblivionModCommon
         {
             public static void WriteCellsParallel(
-                IListGroupInternalGetter<ICellBlockInternalGetter> group,
+                IListGroupGetter<ICellBlockGetter> group,
                 MasterReferences masters,
                 int targetIndex,
                 Stream[] streamDepositArray)
@@ -301,7 +301,7 @@ namespace Mutagen.Bethesda.Oblivion
                 using (var stream = new MutagenWriter(groupByteStream, MetaDataConstants.Oblivion, dispose: false))
                 {
                     stream.Position += 8;
-                    ListGroupBinaryWriteTranslation.Write_Embedded<ICellBlockInternalGetter>(group, stream, default, default);
+                    ListGroupBinaryWriteTranslation.Write_Embedded<ICellBlockGetter>(group, stream, default, default);
                 }
                 streams[0] = groupByteStream;
                 Parallel.ForEach(group.Items, (cellBlock, state, counter) =>
@@ -317,7 +317,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
 
             public static void WriteBlocksParallel(
-                ICellBlockInternalGetter block,
+                ICellBlockGetter block,
                 MasterReferences masters,
                 int targetIndex,
                 Stream[] streamDepositArray)
@@ -346,7 +346,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
 
             public static void WriteSubBlocksParallel(
-                ICellSubBlockInternalGetter subBlock,
+                ICellSubBlockGetter subBlock,
                 MasterReferences masters,
                 int targetIndex,
                 Stream[] streamDepositArray)
@@ -373,7 +373,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
 
             public static void WriteWorldspacesParallel(
-                IGroupInternalGetter<IWorldspaceInternalGetter> group,
+                IGroupGetter<IWorldspaceGetter> group,
                 MasterReferences masters,
                 int targetIndex,
                 Stream[] streamDepositArray)
@@ -386,7 +386,7 @@ namespace Mutagen.Bethesda.Oblivion
                 using (var stream = new MutagenWriter(groupByteStream, MetaDataConstants.Oblivion, dispose: false))
                 {
                     stream.Position += 8;
-                    GroupBinaryWriteTranslation.Write_Embedded<IWorldspaceInternalGetter>(group, stream, default, default);
+                    GroupBinaryWriteTranslation.Write_Embedded<IWorldspaceGetter>(group, stream, default, default);
                 }
                 streams[0] = groupByteStream;
                 Parallel.ForEach(group.Items.Items, (worldspace, worldspaceState, worldspaceCounter) =>
@@ -466,7 +466,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
 
             public static void WriteBlocksAsync(
-                IWorldspaceBlockInternalGetter block,
+                IWorldspaceBlockGetter block,
                 MasterReferences masters,
                 int targetIndex,
                 Stream[] streamDepositArray)
@@ -494,7 +494,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
 
             public static void WriteSubBlocksParallel(
-                IWorldspaceSubBlockInternalGetter subBlock,
+                IWorldspaceSubBlockGetter subBlock,
                 MasterReferences masters,
                 int targetIndex,
                 Stream[] streamDepositArray)
@@ -520,7 +520,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
 
             public static void WriteDialogTopicsParallel(
-                IGroupInternalGetter<IDialogTopicInternalGetter> group,
+                IGroupGetter<IDialogTopicGetter> group,
                 MasterReferences masters,
                 int targetIndex,
                 Stream[] streamDepositArray)
@@ -529,7 +529,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
 
             public static async Task<IEnumerable<Stream>> WriteCellsAsync(
-                IListGroupInternalGetter<ICellBlockInternalGetter> group,
+                IListGroupGetter<ICellBlockGetter> group,
                 MasterReferences masters)
             {
                 if (group.Items.Count == 0)
@@ -542,7 +542,7 @@ namespace Mutagen.Bethesda.Oblivion
                 using (var stream = new MutagenWriter(new MemoryStream(groupBytes), MetaDataConstants.Oblivion))
                 {
                     stream.Position += 8;
-                    ListGroupBinaryWriteTranslation.Write_Embedded<ICellBlockInternalGetter>(group, stream, default, default);
+                    ListGroupBinaryWriteTranslation.Write_Embedded<ICellBlockGetter>(group, stream, default, default);
                 }
                 streams.Add(Task.FromResult<Stream>(new MemoryStream(groupBytes)));
                 foreach (var cellBlock in group.Items)
@@ -562,7 +562,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
 
             public static async Task<IEnumerable<Stream>> WriteBlocksAsync(
-                ICellBlockInternalGetter block,
+                ICellBlockGetter block,
                 MasterReferences masters)
             {
                 if (block.Items.Count == 0)
@@ -595,7 +595,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
 
             public static async Task<IEnumerable<Stream>> WriteSubBlocksAsync(
-                ICellSubBlockInternalGetter subBlock,
+                ICellSubBlockGetter subBlock,
                 MasterReferences masters)
             {
                 if (subBlock.Items.Count == 0)
@@ -624,7 +624,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
 
             public static async Task<IEnumerable<Stream>> WriteWorldspacesAsync(
-                IGroupInternalGetter<IWorldspaceInternalGetter> group,
+                IGroupGetter<IWorldspaceGetter> group,
                 MasterReferences masters)
             {
                 if (group.Items.Count == 0)
@@ -637,7 +637,7 @@ namespace Mutagen.Bethesda.Oblivion
                 using (var stream = new MutagenWriter(new MemoryStream(groupBytes), MetaDataConstants.Oblivion))
                 {
                     stream.Position += 8;
-                    GroupBinaryWriteTranslation.Write_Embedded<IWorldspaceInternalGetter>(group, stream, default, default);
+                    GroupBinaryWriteTranslation.Write_Embedded<IWorldspaceGetter>(group, stream, default, default);
                 }
                 streams.Add(Task.FromResult<Stream>(new MemoryStream(groupBytes)));
                 foreach (var worldspaceKv in group.Items)
@@ -719,7 +719,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
 
             public static async Task<IEnumerable<Stream>> WriteBlocksAsync(
-                IWorldspaceBlockInternalGetter block,
+                IWorldspaceBlockGetter block,
                 MasterReferences masters)
             {
                 List<Task<Stream>> streams = new List<Task<Stream>>();
@@ -748,7 +748,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
 
             public static async Task<IEnumerable<Stream>> WriteSubBlocksAsync(
-                IWorldspaceSubBlockInternalGetter subBlock,
+                IWorldspaceSubBlockGetter subBlock,
                 MasterReferences masters)
             {
                 List<Task<Stream>> streams = new List<Task<Stream>>();
@@ -773,7 +773,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
 
             public static Task<IEnumerable<Stream>> WriteDialogTopicsAsync(
-                IGroupInternalGetter<IDialogTopicInternalGetter> group,
+                IGroupGetter<IDialogTopicGetter> group,
                 MasterReferences masters)
             {
                 return WriteGroupAsync(group, masters);

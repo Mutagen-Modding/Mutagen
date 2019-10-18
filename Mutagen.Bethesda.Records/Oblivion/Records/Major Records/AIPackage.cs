@@ -84,7 +84,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public partial class AIPackageBinaryWriteTranslation
         {
-            static partial void WriteBinaryFlagsCustom(MutagenWriter writer, IAIPackageInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void WriteBinaryFlagsCustom(MutagenWriter writer, IAIPackageGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<AIPackage.Flag>.Instance.Write(
                     writer,

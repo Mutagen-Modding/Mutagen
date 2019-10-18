@@ -2,28 +2,28 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>d770a207139f3e476a773f0fe5f38044084bd4ba</Sha>
+         <Sha>cb26ffe1be65c24916fefb2ae1f9a254fc0b68cd</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>09-28-2019 23:32:07</CommitDate>
-         <Description>CacheExt work</Description>
+         <CommitDate>10-18-2019 18:19:21</CommitDate>
+         <Description>DynamicData update</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/CSharpExt.git</OriginHint>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>a2faf686109139c8fc88f7f3a5261fa50b951b27</Sha>
+         <Sha>539cb8f9914be57023339a85b34d18c3d3832592</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>10-06-2019 19:08:32</CommitDate>
-         <Description>ReactiveModule only activates if any fields are Rx</Description>
+         <CommitDate>10-18-2019 18:19:26</CommitDate>
+         <Description>Merge remote-tracking branch 'origin/dev' into dev</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/Loqui.git</OriginHint>
       </RepoListing>
       <RepoListing>
          <Nickname>DynamicData</Nickname>
-         <Sha>22b0745592a640f0dc332c86581d708ce1bd4228</Sha>
+         <Sha>c78c6e40223e62ff65f1cbf5e3524eb639a1ba4d</Sha>
          <Path>../DynamicData</Path>
-         <CommitDate>09-28-2019 22:02:29</CommitDate>
-         <Description>Cache implementation</Description>
+         <CommitDate>10-18-2019 18:19:05</CommitDate>
+         <Description>IReadOnlyDictionary removed from ICache</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/DynamicData.git</OriginHint>
       </RepoListing>

@@ -125,7 +125,7 @@ namespace Mutagen.Bethesda.Generation
                         fg.AppendLine($"this.{field.Name}.Items.{(dictGroup ? "Set" : "AddRange")}(");
                         using (new DepthWrapper(fg))
                         {
-                            fg.AppendLine($"rhs.{field.Name}.Items{(dictGroup ? ".Values" : null)}");
+                            fg.AppendLine($"rhs.{field.Name}.Items{(dictGroup ? ".Items" : null)}");
                             using (new DepthWrapper(fg))
                             {
                                 fg.AppendLine($".Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))");
@@ -427,6 +427,14 @@ namespace Mutagen.Bethesda.Generation
                         fg.AppendLine($"case \"{subObj.Name}\":");
                         fg.AppendLine($"case \"{subObj.Interface(getter: true)}\":");
                         fg.AppendLine($"case \"{subObj.Interface(getter: false)}\":");
+                        if (subObj.HasInternalGetInterface)
+                        {
+                            fg.AppendLine($"case \"{subObj.Interface(getter: true, internalInterface: true)}\":");
+                        }
+                        if (subObj.HasInternalSetInterface)
+                        {
+                            fg.AppendLine($"case \"{subObj.Interface(getter: false, internalInterface: true)}\":");
+                        }
                         using (new DepthWrapper(fg))
                         {
                             fg.AppendLine($"return obj.{field.Name}.Items;");
@@ -510,7 +518,7 @@ namespace Mutagen.Bethesda.Generation
                 using (var args = new FunctionWrapper(fg,
                     $"public static void WriteGroupParallel<T>"))
                 {
-                    args.Add("IGroupInternalGetter<T> group");
+                    args.Add("IGroupGetter<T> group");
                     args.Add("MasterReferences masters");
                     args.Add("int targetIndex");
                     args.Add("Stream[] streamDepositArray");
@@ -610,7 +618,7 @@ namespace Mutagen.Bethesda.Generation
                 using (var args = new FunctionWrapper(fg,
                     $"public static async Task<IEnumerable<Stream>> WriteGroupAsync<T>"))
                 {
-                    args.Add("IGroupInternalGetter<T> group");
+                    args.Add("IGroupGetter<T> group");
                     args.Add("MasterReferences masters");
                     args.Wheres.AddRange(groupInstance.TargetObjectGeneration.GenerateWhereClauses(LoquiInterfaceType.IGetter, groupInstance.TargetObjectGeneration.Generics));
                 }

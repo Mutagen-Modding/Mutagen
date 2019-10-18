@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Skyrim
 {
-    public partial interface IGlobalInternalGetter
+    public partial interface IGlobalGetter
     {
         char TypeChar { get; }
     }
@@ -58,7 +58,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             static partial void WriteBinaryTypeCharCustom(
                 MutagenWriter writer,
-                IGlobalInternalGetter item,
+                IGlobalGetter item,
                 MasterReferences masterReferences,
                 ErrorMaskBuilder errorMask)
             {

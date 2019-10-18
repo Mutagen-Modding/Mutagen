@@ -276,25 +276,25 @@ namespace Mutagen.Bethesda.Generation
                     }
                     if (loqui.GetFieldData()?.HasTrigger ?? false)
                     {
-                        fg.AppendLine($"public {loqui.Interface(getter: true)} {typeGen.Name} {{ get; private set; }}");
+                        fg.AppendLine($"public {loqui.Interface(getter: true, internalInterface: true)} {typeGen.Name} {{ get; private set; }}");
                     }
                     else
                     {
-                        fg.AppendLine($"public {loqui.Interface(getter: true)} {typeGen.Name} => {this.Module.BinaryWrapperClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(BinaryMemoryReadStream)}({dataAccessor}.Slice({currentPosition})), _package);");
+                        fg.AppendLine($"public {loqui.Interface(getter: true, internalInterface: true)} {typeGen.Name} => {this.Module.BinaryWrapperClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(BinaryMemoryReadStream)}({dataAccessor}.Slice({currentPosition})), _package);");
                     }
                     break;
                 case SingletonLevel.NotNull:
                 case SingletonLevel.Singleton:
                     if (dataType == null)
                     {
-                        fg.AppendLine($"private {loqui.Interface(getter: true)} _{typeGen.Name};");
+                        fg.AppendLine($"private {loqui.Interface(getter: true, internalInterface: true)} _{typeGen.Name};");
                     }
                     else
                     {
                         DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(fg, dataType, objGen, typeGen, currentPosition);
-                        fg.AppendLine($"private {loqui.Interface(getter: true)} _{typeGen.Name} => _{typeGen.Name}_IsSet ? {loqui.TargetObjectGeneration.Name}BinaryWrapper.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(BinaryMemoryReadStream)}({dataAccessor}.Slice(_{typeGen.Name}Location)), _package) : default;");
+                        fg.AppendLine($"private {loqui.Interface(getter: true, internalInterface: true)} _{typeGen.Name} => _{typeGen.Name}_IsSet ? {loqui.TargetObjectGeneration.Name}BinaryWrapper.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(BinaryMemoryReadStream)}({dataAccessor}.Slice(_{typeGen.Name}Location)), _package) : default;");
                     }
-                    fg.AppendLine($"public {loqui.Interface(getter: true)} {typeGen.Name} => _{typeGen.Name} ?? new {loqui.DirectTypeName}({(loqui.ThisConstruction ? "this" : null)});");
+                    fg.AppendLine($"public {loqui.Interface(getter: true, internalInterface: true)} {typeGen.Name} => _{typeGen.Name} ?? new {loqui.DirectTypeName}({(loqui.ThisConstruction ? "this" : null)});");
                     break;
                 default:
                     break;

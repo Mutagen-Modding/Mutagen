@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Oblivion
 {
-    public partial interface IGlobalInternalGetter
+    public partial interface IGlobalGetter
     {
         char TypeChar { get; }
     }
@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             static partial void WriteBinaryTypeCharCustom(
                 MutagenWriter writer,
-                IGlobalInternalGetter item,
+                IGlobalGetter item,
                 MasterReferences masterReferences,
                 ErrorMaskBuilder errorMask)
             {

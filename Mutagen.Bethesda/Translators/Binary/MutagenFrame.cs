@@ -33,6 +33,7 @@ namespace Mutagen.Bethesda.Binary
         public long OffsetReference => this.Reader.OffsetReference;
 
         public ReadOnlySpan<byte> RemainingSpan => this.Reader.RemainingSpan;
+        public ReadOnlyMemorySlice<byte> RemainingMemory => this.Reader.RemainingMemory;
 
         public MetaDataConstants MetaData => this.Reader.MetaData;
 
@@ -416,6 +417,26 @@ namespace Mutagen.Bethesda.Binary
         public ReadOnlySpan<byte> GetSpan(int amount, int offset)
         {
             return Reader.GetSpan(amount, offset);
+        }
+
+        public ReadOnlyMemorySlice<byte> ReadMemory(int amount)
+        {
+            return Reader.ReadMemory(amount);
+        }
+
+        public ReadOnlyMemorySlice<byte> ReadMemory(int amount, int offset)
+        {
+            return Reader.ReadMemory(amount, offset);
+        }
+
+        public ReadOnlyMemorySlice<byte> GetMemory(int amount)
+        {
+            return Reader.GetMemory(amount);
+        }
+
+        public ReadOnlyMemorySlice<byte> GetMemory(int amount, int offset)
+        {
+            return Reader.GetMemory(amount, offset);
         }
 
         public string ReadZString(int length)

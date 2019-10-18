@@ -58,10 +58,10 @@ namespace Mutagen.Bethesda.Skyrim
         {
             static partial void WriteBinaryContainedRecordTypeParseCustom<T>(
                 MutagenWriter writer,
-                IGroupInternalGetter<T> item,
+                IGroupGetter<T> item,
                 MasterReferences masterReferences,
                 ErrorMaskBuilder errorMask)
-                where T : ISkyrimMajorRecordInternalGetter, IXmlItem, IBinaryItem
+                where T : ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
             {
                 Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
                     writer,

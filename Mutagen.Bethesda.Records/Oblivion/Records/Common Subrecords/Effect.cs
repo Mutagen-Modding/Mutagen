@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public partial class EffectBinaryWriteTranslation
         {
-            static partial void WriteBinaryEffectInitialCustom(MutagenWriter writer, IEffectInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void WriteBinaryEffectInitialCustom(MutagenWriter writer, IEffectGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
                 using (HeaderExport.ExportSubRecordHeader(writer, Effect_Registration.EFID_HEADER))
                 {

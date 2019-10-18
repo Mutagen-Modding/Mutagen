@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Generation
                 var posStr = $"_{dataType.GetFieldData().RecordType}Location.Value + {currentPosition}";
                 if (arr.SubTypeGeneration is EnumType e)
                 {
-                    fg.AppendLine($"public {arr.Interface(getter: true)} {typeGen.Name} => BinaryWrapperArrayHelper.EnumSliceFromFixedSize<{arr.SubTypeGeneration.TypeName(getter: true)}>(_{dataType.GetFieldData().RecordType}Location.HasValue ? {dataAccessor}.Slice({posStr}) : default, amount: {arr.FixedSize.Value}, enumLength: {e.ByteLength});");
+                    fg.AppendLine($"public {arr.Interface(getter: true, internalInterface: true)} {typeGen.Name} => BinaryWrapperArrayHelper.EnumSliceFromFixedSize<{arr.SubTypeGeneration.TypeName(getter: true)}>(_{dataType.GetFieldData().RecordType}Location.HasValue ? {dataAccessor}.Slice({posStr}) : default, amount: {arr.FixedSize.Value}, enumLength: {e.ByteLength});");
                 }
                 else if (arr.SubTypeGeneration is LoquiType loqui)
                 {
@@ -43,7 +43,7 @@ namespace Mutagen.Bethesda.Generation
                         recConverter = $"recordTypeConverter: {objGen.RegistrationName}.{typeGen.Name}Converter";
                     }
                     var gen = this.Module.GetTypeGeneration(loqui.GetType());
-                    fg.AppendLine($"public {arr.Interface(getter: true)} {typeGen.Name} => BinaryWrapperArrayHelper.LoquiSliceFromFixedSize<{arr.SubTypeGeneration.TypeName(getter: true)}>(_{dataType.GetFieldData().RecordType}Location.HasValue ? {dataAccessor}.Slice({posStr}) : default, amount: {arr.FixedSize.Value}, length: {gen.ExpectedLength(objGen, loqui)}, _package, {recConverter}, {this.Module.BinaryWrapperClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory);");
+                    fg.AppendLine($"public {arr.Interface(getter: true, internalInterface: true)} {typeGen.Name} => BinaryWrapperArrayHelper.LoquiSliceFromFixedSize<{arr.SubTypeGeneration.TypeName(getter: true)}>(_{dataType.GetFieldData().RecordType}Location.HasValue ? {dataAccessor}.Slice({posStr}) : default, amount: {arr.FixedSize.Value}, length: {gen.ExpectedLength(objGen, loqui)}, _package, {recConverter}, {this.Module.BinaryWrapperClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory);");
                 }
                 else
                 {

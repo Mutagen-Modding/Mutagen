@@ -25,9 +25,9 @@ namespace Mutagen.Bethesda.Generation
         public LoquiType LoquiType { get; private set; }
         public FormIDTypeEnum FormIDType;
         public override bool HasProperty => true;
-        public override string TypeName(bool getter) =>  $"I{(this.FormIDType == FormIDTypeEnum.Normal ? "FormID" : "EDID")}{(this.HasBeenSet ? "Set" : string.Empty)}Link{(getter ? "Getter" : null)}<{LoquiType.TypeName(getter)}>";
+        public override string TypeName(bool getter) =>  $"I{(this.FormIDType == FormIDTypeEnum.Normal ? "FormID" : "EDID")}{(this.HasBeenSet ? "Set" : string.Empty)}Link{(getter ? "Getter" : null)}<{LoquiType.TypeName(getter, internalInterface: true)}>";
         public override Type Type(bool getter) => typeof(FormID);
-        public string DirectTypeName(bool getter)
+        public string DirectTypeName(bool getter, bool internalInterface = false)
         {
             string linkString;
             switch (this.FormIDType)
@@ -41,7 +41,7 @@ namespace Mutagen.Bethesda.Generation
                 default:
                     throw new NotImplementedException();
             }
-            return $"{linkString}{(this.HasBeenSet ? "Set" : string.Empty)}Link<{LoquiType.TypeName(getter: getter)}>";
+            return $"{linkString}{(this.HasBeenSet ? "Set" : string.Empty)}Link<{LoquiType.TypeName(getter: getter, internalInterface: internalInterface)}>";
         }
 
         public override async Task Load(XElement node, bool requireName = true)
@@ -87,7 +87,7 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine($"public {LoquiType.TypeName(getter: false)} {this.Name} {{ get => {this.Property}.Item; {(this.ReadOnly ? string.Empty : $"set => {this.Property}.Item = value; ")}}}");
             fg.AppendLine($"[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
             fg.AppendLine($"{this.TypeName(getter: false)} {this.ObjectGen.Interface(getter: false, internalInterface: this.InternalGetInterface)}.{this.Property} => this.{this.Property};");
-            fg.AppendLine($"{LoquiType.TypeName(getter: true)} {this.ObjectGen.Interface(getter: true, internalInterface: this.InternalGetInterface)}.{this.Name} => this.{this.Property}.Item;");
+            fg.AppendLine($"{LoquiType.TypeName(getter: true, internalInterface: true)} {this.ObjectGen.Interface(getter: true, internalInterface: this.InternalGetInterface)}.{this.Name} => this.{this.Property}.Item;");
             fg.AppendLine($"{this.TypeName(getter: true)} {this.ObjectGen.Interface(getter: true, internalInterface: this.InternalGetInterface)}.{this.Property} => this.{this.Property};");
         }
 
@@ -95,9 +95,10 @@ namespace Mutagen.Bethesda.Generation
 
         public override void GenerateForInterface(FileGeneration fg, bool getter, bool internalInterface)
         {
+            if (!ApplicableInterfaceField(getter, internalInterface)) return;
             if (getter)
             {
-                fg.AppendLine($"{LoquiType.TypeName(getter: true)} {this.Name} {{ get; }}");
+                fg.AppendLine($"{LoquiType.TypeName(getter: true, internalInterface: true)} {this.Name} {{ get; }}");
                 fg.AppendLine($"{TypeName(getter: true)} {this.Property} {{ get; }}");
                 fg.AppendLine();
             }

@@ -113,7 +113,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     public partial class RegionBinaryWriteTranslation
     {
-        static partial void WriteBinaryRegionAreaLogicCustom(MutagenWriter writer, IRegionInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+        static partial void WriteBinaryRegionAreaLogicCustom(MutagenWriter writer, IRegionGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
             if (item.Objects_IsSet)
             {
@@ -138,7 +138,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
 
-    public partial class RegionBinaryWrapper : IRegionInternalGetter
+    public partial class RegionBinaryWrapper : IRegionGetter
     {
         #region Icon
         private int? _IconLocation;
@@ -160,23 +160,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         private ReadOnlyMemorySlice<byte>? _ObjectsSpan;
         public bool Objects_IsSet => _ObjectsSpan.HasValue;
-        public IRegionDataObjectsInternalGetter Objects => RegionDataObjectsBinaryWrapper.RegionDataObjectsFactory(new BinaryMemoryReadStream(_ObjectsSpan.Value), _package);
+        public IRegionDataObjectsGetter Objects => RegionDataObjectsBinaryWrapper.RegionDataObjectsFactory(new BinaryMemoryReadStream(_ObjectsSpan.Value), _package);
 
         private ReadOnlyMemorySlice<byte>? _WeatherSpan;
         public bool Weather_IsSet => _WeatherSpan.HasValue;
-        public IRegionDataWeatherInternalGetter Weather => RegionDataWeatherBinaryWrapper.RegionDataWeatherFactory(new BinaryMemoryReadStream(_WeatherSpan.Value), _package);
+        public IRegionDataWeatherGetter Weather => RegionDataWeatherBinaryWrapper.RegionDataWeatherFactory(new BinaryMemoryReadStream(_WeatherSpan.Value), _package);
         
         private ReadOnlyMemorySlice<byte>? _MapNameSpan;
         public bool MapName_IsSet => _MapNameSpan.HasValue;
-        public IRegionDataMapNameInternalGetter MapName => RegionDataMapNameBinaryWrapper.RegionDataMapNameFactory(new BinaryMemoryReadStream(_MapNameSpan.Value), _package);
+        public IRegionDataMapNameGetter MapName => RegionDataMapNameBinaryWrapper.RegionDataMapNameFactory(new BinaryMemoryReadStream(_MapNameSpan.Value), _package);
         
         private ReadOnlyMemorySlice<byte>? _GrassesSpan;
         public bool Grasses_IsSet => _GrassesSpan.HasValue;
-        public IRegionDataGrassesInternalGetter Grasses => RegionDataGrassesBinaryWrapper.RegionDataGrassesFactory(new BinaryMemoryReadStream(_GrassesSpan.Value), _package);
+        public IRegionDataGrassesGetter Grasses => RegionDataGrassesBinaryWrapper.RegionDataGrassesFactory(new BinaryMemoryReadStream(_GrassesSpan.Value), _package);
 
         private ReadOnlyMemorySlice<byte>? _SoundsSpan;
         public bool Sounds_IsSet => _SoundsSpan.HasValue;
-        public IRegionDataSoundsInternalGetter Sounds => RegionDataSoundsBinaryWrapper.RegionDataSoundsFactory(new BinaryMemoryReadStream(_SoundsSpan.Value), _package);
+        public IRegionDataSoundsGetter Sounds => RegionDataSoundsBinaryWrapper.RegionDataSoundsFactory(new BinaryMemoryReadStream(_SoundsSpan.Value), _package);
 
         partial void RegionAreaLogicCustomParse(
             BinaryMemoryReadStream stream,

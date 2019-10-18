@@ -113,8 +113,14 @@ namespace Mutagen.Bethesda.Generation
                 && listBinaryType == ListBinaryType.SubTrigger
                 && allowDirectWrite;
 
+            var typeName = list.SubTypeGeneration.TypeName(getter: true);
+            if (list.SubTypeGeneration is LoquiType loqui)
+            {
+                typeName = loqui.TypeName(getter: true, internalInterface: true);
+            }
+
             using (var args = new ArgsWrapper(fg,
-                $"{this.Namespace}ListBinaryTranslation<{list.SubTypeGeneration.TypeName(getter: true)}>.Instance.Write{(listOfRecords ? "ListOfRecords" : null)}"))
+                $"{this.Namespace}ListBinaryTranslation<{typeName}>.Instance.Write{(listOfRecords ? "ListOfRecords" : null)}"))
             {
                 args.Add($"writer: {writerAccessor}");
                 args.Add($"items: {GetWriteAccessor(itemAccessor)}");
@@ -147,7 +153,7 @@ namespace Mutagen.Bethesda.Generation
                     args.Add((gen) =>
                     {
                         var listTranslMask = this.MaskModule.GetMaskModule(list.SubTypeGeneration.GetType()).GetTranslationMaskTypeStr(list.SubTypeGeneration);
-                        gen.AppendLine($"transl: (MutagenWriter subWriter, {list.SubTypeGeneration.TypeName(getter: true)} subItem{(subTransl.DoErrorMasks ? ", ErrorMaskBuilder listErrorMask" : null)}) =>");
+                        gen.AppendLine($"transl: (MutagenWriter subWriter, {typeName} subItem{(subTransl.DoErrorMasks ? ", ErrorMaskBuilder listErrorMask" : null)}) =>");
                         using (new BraceWrapper(gen))
                         {
                             subTransl.GenerateWrite(
@@ -398,15 +404,15 @@ namespace Mutagen.Bethesda.Generation
             if (list.SubTypeGeneration is LoquiType loqui)
             {
                 var typeName = this.Module.BinaryWrapperClassName(loqui);
-                fg.AppendLine($"public {list.Interface(true)} {typeGen.Name} {{ get; private set; }} = EmptySetList<{typeName}>.Instance;");
+                fg.AppendLine($"public {list.Interface(getter: true, internalInterface: true)} {typeGen.Name} {{ get; private set; }} = EmptySetList<{typeName}>.Instance;");
             }
             else if (data.HasTrigger)
             {
-                fg.AppendLine($"public {list.Interface(true)} {typeGen.Name} {{ get; private set; }} = EmptySetList<{list.SubTypeGeneration.TypeName(getter: true)}>.Instance;");
+                fg.AppendLine($"public {list.Interface(getter: true, internalInterface: true)} {typeGen.Name} {{ get; private set; }} = EmptySetList<{list.SubTypeGeneration.TypeName(getter: true)}>.Instance;");
             }
             else
             {
-                fg.AppendLine($"public {list.Interface(true)} {typeGen.Name} => BinaryWrapperSetList<{list.SubTypeGeneration.TypeName(getter: true)}>.FactoryByStartIndex({dataAccessor}.Slice({currentPosition}), _package, {subGen.ExpectedLength(objGen, list.SubTypeGeneration)}, (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, "s", "p")});");
+                fg.AppendLine($"public {list.Interface(getter: true, internalInterface: true)} {typeGen.Name} => BinaryWrapperSetList<{list.SubTypeGeneration.TypeName(getter: true)}>.FactoryByStartIndex({dataAccessor}.Slice({currentPosition}), _package, {subGen.ExpectedLength(objGen, list.SubTypeGeneration)}, (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, "s", "p")});");
             }
         }
 

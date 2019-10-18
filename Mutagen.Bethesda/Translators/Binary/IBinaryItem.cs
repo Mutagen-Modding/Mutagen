@@ -17,6 +17,7 @@ namespace Mutagen.Bethesda.Binary
 
     public interface IBinaryItem
     {
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object BinaryWriteTranslator { get; }
         void WriteToBinary(
             MutagenWriter writer,

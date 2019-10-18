@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public partial class ScriptMetaSummaryBinaryWriteTranslation
         {
-            static partial void WriteBinaryCompiledSizeCustom(MutagenWriter writer, IScriptMetaSummaryInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void WriteBinaryCompiledSizeCustom(MutagenWriter writer, IScriptMetaSummaryGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
                 Int32BinaryTranslation.Instance.Write(
                     writer,

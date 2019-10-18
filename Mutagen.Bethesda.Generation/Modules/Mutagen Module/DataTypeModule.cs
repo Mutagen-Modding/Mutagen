@@ -21,8 +21,6 @@ namespace Mutagen.Bethesda.Generation
                 elem.Add(new XAttribute(Loqui.Generation.Constants.NAME, dataType.StateName));
                 elem.Add(new XAttribute(Loqui.Generation.Constants.ENUM_NAME, $"{obj.ObjectName}.{dataType.EnumName}"));
                 elem.Add(new XAttribute("binary", nameof(BinaryGenerationType.NoGeneration)));
-                elem.Add(new XAttribute(Loqui.Generation.Constants.INTERNAL_GET_INTERFACE, "true"));
-                elem.Add(new XAttribute(Loqui.Generation.Constants.INTERNAL_SET_INTERFACE, "true"));
                 elem.Add(new XAttribute(Loqui.Generation.Constants.HAS_BEEN_SET, "false"));
                 await obj.LoadField(elem, requireName: true, add: true);
             }
