@@ -1518,6 +1518,23 @@ namespace Mutagen.Bethesda.Examples.Internals
 
     }
 
+    public class MainVM_DeepCopyMask
+    {
+        public MainVM_DeepCopyMask()
+        {
+        }
+
+        public MainVM_DeepCopyMask(bool defaultOn)
+        {
+            this.ModFilePath = defaultOn;
+        }
+
+        #region Members
+        public bool ModFilePath;
+        #endregion
+
+    }
+
     public class MainVM_TranslationMask : ITranslationMask
     {
         #region Members

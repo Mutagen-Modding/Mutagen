@@ -1379,6 +1379,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public class NPCAbstract_DeepCopyMask : NPCSpawn_DeepCopyMask
+    {
+        public NPCAbstract_DeepCopyMask()
+        {
+        }
+
+        public NPCAbstract_DeepCopyMask(bool defaultOn)
+        {
+        }
+
+    }
+
     public class NPCAbstract_TranslationMask : NPCSpawn_TranslationMask
     {
         #region Ctors

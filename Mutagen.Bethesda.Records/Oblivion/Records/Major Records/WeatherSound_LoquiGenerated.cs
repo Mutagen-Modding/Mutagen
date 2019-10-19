@@ -1603,6 +1603,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public class WeatherSound_DeepCopyMask
+    {
+        public WeatherSound_DeepCopyMask()
+        {
+        }
+
+        public WeatherSound_DeepCopyMask(bool defaultOn)
+        {
+            this.Sound = defaultOn;
+            this.Type = defaultOn;
+        }
+
+        #region Members
+        public bool Sound;
+        public bool Type;
+        #endregion
+
+    }
+
     public class WeatherSound_TranslationMask : ITranslationMask
     {
         #region Members

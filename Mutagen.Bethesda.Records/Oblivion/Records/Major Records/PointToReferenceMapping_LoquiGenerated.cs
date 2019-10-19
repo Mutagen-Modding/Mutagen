@@ -1703,6 +1703,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public class PointToReferenceMapping_DeepCopyMask
+    {
+        public PointToReferenceMapping_DeepCopyMask()
+        {
+        }
+
+        public PointToReferenceMapping_DeepCopyMask(bool defaultOn)
+        {
+            this.Reference = defaultOn;
+            this.Points = defaultOn;
+        }
+
+        #region Members
+        public bool Reference;
+        public bool Points;
+        #endregion
+
+    }
+
     public class PointToReferenceMapping_TranslationMask : ITranslationMask
     {
         #region Members

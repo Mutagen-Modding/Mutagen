@@ -485,8 +485,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            var ret = UtilityTranslation.MajorRecordParse<DialogTopic>(
-                record: new DialogTopic(),
+            var ret = new DialogTopic();
+            UtilityTranslation.MajorRecordParse<DialogTopic>(
+                record: ret,
                 frame: frame,
                 errorMask: errorMask,
                 recType: DialogTopic_Registration.DIAL_HEADER,
@@ -2458,6 +2459,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool DialogType;
         public bool Timestamp;
         public MaskItem<CopyOption, DialogItem_CopyMask> Items;
+        #endregion
+
+    }
+
+    public class DialogTopic_DeepCopyMask : OblivionMajorRecord_DeepCopyMask
+    {
+        public DialogTopic_DeepCopyMask()
+        {
+        }
+
+        public DialogTopic_DeepCopyMask(bool defaultOn)
+        {
+            this.Quests = defaultOn;
+            this.Name = defaultOn;
+            this.DialogType = defaultOn;
+            this.Timestamp = defaultOn;
+            this.Items = new MaskItem<bool, DialogItem_DeepCopyMask>(defaultOn, default);
+        }
+
+        #region Members
+        public bool Quests;
+        public bool Name;
+        public bool DialogType;
+        public bool Timestamp;
+        public MaskItem<bool, DialogItem_DeepCopyMask> Items;
         #endregion
 
     }

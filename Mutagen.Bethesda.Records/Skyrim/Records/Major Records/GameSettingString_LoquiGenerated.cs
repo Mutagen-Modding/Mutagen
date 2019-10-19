@@ -380,8 +380,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            return UtilityTranslation.MajorRecordParse<GameSettingString>(
-                record: new GameSettingString(),
+            var ret = new GameSettingString();
+            UtilityTranslation.MajorRecordParse<GameSettingString>(
+                record: ret,
                 frame: frame,
                 errorMask: errorMask,
                 recType: GameSettingString_Registration.GMST_HEADER,
@@ -389,6 +390,7 @@ namespace Mutagen.Bethesda.Skyrim
                 masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
+            return ret;
         }
 
         #endregion
@@ -1658,6 +1660,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public GameSettingString_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Data = defaultOn;
+        }
+
+        #region Members
+        public bool Data;
+        #endregion
+
+    }
+
+    public class GameSettingString_DeepCopyMask : GameSetting_DeepCopyMask
+    {
+        public GameSettingString_DeepCopyMask()
+        {
+        }
+
+        public GameSettingString_DeepCopyMask(bool defaultOn)
         {
             this.Data = defaultOn;
         }

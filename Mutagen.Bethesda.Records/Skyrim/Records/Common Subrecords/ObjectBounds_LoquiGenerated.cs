@@ -1608,6 +1608,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
+    public class ObjectBounds_DeepCopyMask
+    {
+        public ObjectBounds_DeepCopyMask()
+        {
+        }
+
+        public ObjectBounds_DeepCopyMask(bool defaultOn)
+        {
+            this.First = defaultOn;
+            this.Second = defaultOn;
+        }
+
+        #region Members
+        public bool First;
+        public bool Second;
+        #endregion
+
+    }
+
     public class ObjectBounds_TranslationMask : ITranslationMask
     {
         #region Members

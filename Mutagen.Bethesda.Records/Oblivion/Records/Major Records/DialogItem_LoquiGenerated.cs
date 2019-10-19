@@ -575,8 +575,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            return UtilityTranslation.MajorRecordParse<DialogItem>(
-                record: new DialogItem(),
+            var ret = new DialogItem();
+            UtilityTranslation.MajorRecordParse<DialogItem>(
+                record: ret,
                 frame: frame,
                 errorMask: errorMask,
                 recType: DialogItem_Registration.INFO_HEADER,
@@ -584,6 +585,7 @@ namespace Mutagen.Bethesda.Oblivion
                 masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
+            return ret;
         }
 
         #endregion
@@ -3504,6 +3506,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public CopyOption Choices;
         public CopyOption LinkFrom;
         public MaskItem<bool, ScriptFields_CopyMask> Script;
+        public bool DATADataTypeState;
+        #endregion
+
+    }
+
+    public class DialogItem_DeepCopyMask : OblivionMajorRecord_DeepCopyMask
+    {
+        public DialogItem_DeepCopyMask()
+        {
+        }
+
+        public DialogItem_DeepCopyMask(bool defaultOn)
+        {
+            this.DialogType = defaultOn;
+            this.Flags = defaultOn;
+            this.Quest = defaultOn;
+            this.PreviousTopic = defaultOn;
+            this.Topics = defaultOn;
+            this.Responses = new MaskItem<bool, DialogResponse_DeepCopyMask>(defaultOn, default);
+            this.Conditions = new MaskItem<bool, Condition_DeepCopyMask>(defaultOn, default);
+            this.Choices = defaultOn;
+            this.LinkFrom = defaultOn;
+            this.Script = new MaskItem<bool, ScriptFields_DeepCopyMask>(defaultOn, default);
+            this.DATADataTypeState = defaultOn;
+        }
+
+        #region Members
+        public bool DialogType;
+        public bool Flags;
+        public bool Quest;
+        public bool PreviousTopic;
+        public bool Topics;
+        public MaskItem<bool, DialogResponse_DeepCopyMask> Responses;
+        public MaskItem<bool, Condition_DeepCopyMask> Conditions;
+        public bool Choices;
+        public bool LinkFrom;
+        public MaskItem<bool, ScriptFields_DeepCopyMask> Script;
         public bool DATADataTypeState;
         #endregion
 

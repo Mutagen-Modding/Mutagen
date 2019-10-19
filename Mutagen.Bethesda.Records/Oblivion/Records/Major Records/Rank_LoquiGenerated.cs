@@ -2110,6 +2110,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public class Rank_DeepCopyMask
+    {
+        public Rank_DeepCopyMask()
+        {
+        }
+
+        public Rank_DeepCopyMask(bool defaultOn)
+        {
+            this.RankNumber = defaultOn;
+            this.MaleName = defaultOn;
+            this.FemaleName = defaultOn;
+            this.Insignia = defaultOn;
+        }
+
+        #region Members
+        public bool RankNumber;
+        public bool MaleName;
+        public bool FemaleName;
+        public bool Insignia;
+        #endregion
+
+    }
+
     public class Rank_TranslationMask : ITranslationMask
     {
         #region Members

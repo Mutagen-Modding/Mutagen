@@ -457,8 +457,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            return UtilityTranslation.MajorRecordParse<SpellUnleveled>(
-                record: new SpellUnleveled(),
+            var ret = new SpellUnleveled();
+            UtilityTranslation.MajorRecordParse<SpellUnleveled>(
+                record: ret,
                 frame: frame,
                 errorMask: errorMask,
                 recType: SpellUnleveled_Registration.SPEL_HEADER,
@@ -466,6 +467,7 @@ namespace Mutagen.Bethesda.Oblivion
                 masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
+            return ret;
         }
 
         #endregion
@@ -2402,6 +2404,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Level;
         public bool Flag;
         public MaskItem<CopyOption, Effect_CopyMask> Effects;
+        public bool SPITDataTypeState;
+        #endregion
+
+    }
+
+    public class SpellUnleveled_DeepCopyMask : Spell_DeepCopyMask
+    {
+        public SpellUnleveled_DeepCopyMask()
+        {
+        }
+
+        public SpellUnleveled_DeepCopyMask(bool defaultOn)
+        {
+            this.Type = defaultOn;
+            this.Cost = defaultOn;
+            this.Level = defaultOn;
+            this.Flag = defaultOn;
+            this.Effects = new MaskItem<bool, Effect_DeepCopyMask>(defaultOn, default);
+            this.SPITDataTypeState = defaultOn;
+        }
+
+        #region Members
+        public bool Type;
+        public bool Cost;
+        public bool Level;
+        public bool Flag;
+        public MaskItem<bool, Effect_DeepCopyMask> Effects;
         public bool SPITDataTypeState;
         #endregion
 

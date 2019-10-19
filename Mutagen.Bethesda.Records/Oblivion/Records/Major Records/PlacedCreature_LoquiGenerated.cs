@@ -570,8 +570,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            return UtilityTranslation.MajorRecordParse<PlacedCreature>(
-                record: new PlacedCreature(),
+            var ret = new PlacedCreature();
+            UtilityTranslation.MajorRecordParse<PlacedCreature>(
+                record: ret,
                 frame: frame,
                 errorMask: errorMask,
                 recType: PlacedCreature_Registration.ACRE_HEADER,
@@ -579,6 +580,7 @@ namespace Mutagen.Bethesda.Oblivion
                 masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
+            return ret;
         }
 
         #endregion
@@ -2893,6 +2895,41 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool FactionRank;
         public bool GlobalVariable;
         public MaskItem<CopyOption, EnableParent_CopyMask> EnableParent;
+        public bool RagdollData;
+        public bool Scale;
+        public bool Position;
+        public bool Rotation;
+        public bool DATADataTypeState;
+        #endregion
+
+    }
+
+    public class PlacedCreature_DeepCopyMask : OblivionMajorRecord_DeepCopyMask
+    {
+        public PlacedCreature_DeepCopyMask()
+        {
+        }
+
+        public PlacedCreature_DeepCopyMask(bool defaultOn)
+        {
+            this.Base = defaultOn;
+            this.Owner = defaultOn;
+            this.FactionRank = defaultOn;
+            this.GlobalVariable = defaultOn;
+            this.EnableParent = new MaskItem<bool, EnableParent_DeepCopyMask>(defaultOn, default);
+            this.RagdollData = defaultOn;
+            this.Scale = defaultOn;
+            this.Position = defaultOn;
+            this.Rotation = defaultOn;
+            this.DATADataTypeState = defaultOn;
+        }
+
+        #region Members
+        public bool Base;
+        public bool Owner;
+        public bool FactionRank;
+        public bool GlobalVariable;
+        public MaskItem<bool, EnableParent_DeepCopyMask> EnableParent;
         public bool RagdollData;
         public bool Scale;
         public bool Position;

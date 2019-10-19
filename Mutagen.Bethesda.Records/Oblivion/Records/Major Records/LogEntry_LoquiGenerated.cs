@@ -2300,6 +2300,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public class LogEntry_DeepCopyMask
+    {
+        public LogEntry_DeepCopyMask()
+        {
+        }
+
+        public LogEntry_DeepCopyMask(bool defaultOn)
+        {
+            this.Flags = defaultOn;
+            this.Conditions = new MaskItem<bool, Condition_DeepCopyMask>(defaultOn, default);
+            this.Entry = defaultOn;
+            this.ResultScript = new MaskItem<bool, ScriptFields_DeepCopyMask>(defaultOn, default);
+        }
+
+        #region Members
+        public bool Flags;
+        public MaskItem<bool, Condition_DeepCopyMask> Conditions;
+        public bool Entry;
+        public MaskItem<bool, ScriptFields_DeepCopyMask> ResultScript;
+        #endregion
+
+    }
+
     public class LogEntry_TranslationMask : ITranslationMask
     {
         #region Members

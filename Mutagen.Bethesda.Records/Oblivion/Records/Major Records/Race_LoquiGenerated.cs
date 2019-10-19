@@ -912,8 +912,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            return UtilityTranslation.MajorRecordParse<Race>(
-                record: new Race(),
+            var ret = new Race();
+            UtilityTranslation.MajorRecordParse<Race>(
+                record: ret,
                 frame: frame,
                 errorMask: errorMask,
                 recType: Race_Registration.RACE_HEADER,
@@ -921,6 +922,7 @@ namespace Mutagen.Bethesda.Oblivion
                 masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
+            return ret;
         }
 
         #endregion
@@ -5932,6 +5934,69 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public CopyOption Hairs;
         public CopyOption Eyes;
         public MaskItem<CopyOption, FaceGenData_CopyMask> FaceGenData;
+        public bool Unknown;
+        public bool DATADataTypeState;
+        #endregion
+
+    }
+
+    public class Race_DeepCopyMask : OblivionMajorRecord_DeepCopyMask
+    {
+        public Race_DeepCopyMask()
+        {
+        }
+
+        public Race_DeepCopyMask(bool defaultOn)
+        {
+            this.Name = defaultOn;
+            this.Description = defaultOn;
+            this.Spells = defaultOn;
+            this.Relations = new MaskItem<bool, RaceRelation_DeepCopyMask>(defaultOn, default);
+            this.SkillBoosts = new MaskItem<bool, SkillBoost_DeepCopyMask>(defaultOn, default);
+            this.Fluff = defaultOn;
+            this.MaleHeight = defaultOn;
+            this.FemaleHeight = defaultOn;
+            this.MaleWeight = defaultOn;
+            this.FemaleWeight = defaultOn;
+            this.Flags = defaultOn;
+            this.Voices = new MaskItem<bool, RaceVoices_DeepCopyMask>(defaultOn, default);
+            this.DefaultHair = new MaskItem<bool, RaceHair_DeepCopyMask>(defaultOn, default);
+            this.DefaultHairColor = defaultOn;
+            this.FaceGenMainClamp = defaultOn;
+            this.FaceGenFaceClamp = defaultOn;
+            this.RaceStats = new MaskItem<bool, RaceStatsGendered_DeepCopyMask>(defaultOn, default);
+            this.FaceData = new MaskItem<bool, FacePart_DeepCopyMask>(defaultOn, default);
+            this.BodyData = new MaskItem<bool, GenderedBodyData_DeepCopyMask>(defaultOn, default);
+            this.Hairs = defaultOn;
+            this.Eyes = defaultOn;
+            this.FaceGenData = new MaskItem<bool, FaceGenData_DeepCopyMask>(defaultOn, default);
+            this.Unknown = defaultOn;
+            this.DATADataTypeState = defaultOn;
+        }
+
+        #region Members
+        public bool Name;
+        public bool Description;
+        public bool Spells;
+        public MaskItem<bool, RaceRelation_DeepCopyMask> Relations;
+        public MaskItem<bool, SkillBoost_DeepCopyMask> SkillBoosts;
+        public bool Fluff;
+        public bool MaleHeight;
+        public bool FemaleHeight;
+        public bool MaleWeight;
+        public bool FemaleWeight;
+        public bool Flags;
+        public MaskItem<bool, RaceVoices_DeepCopyMask> Voices;
+        public MaskItem<bool, RaceHair_DeepCopyMask> DefaultHair;
+        public bool DefaultHairColor;
+        public bool FaceGenMainClamp;
+        public bool FaceGenFaceClamp;
+        public MaskItem<bool, RaceStatsGendered_DeepCopyMask> RaceStats;
+        public MaskItem<bool, FacePart_DeepCopyMask> FaceData;
+        public MaskItem<bool, GenderedBodyData_DeepCopyMask> BodyData;
+        public bool Hairs;
+        public bool Eyes;
+        public MaskItem<bool, FaceGenData_DeepCopyMask> FaceGenData;
         public bool Unknown;
         public bool DATADataTypeState;
         #endregion

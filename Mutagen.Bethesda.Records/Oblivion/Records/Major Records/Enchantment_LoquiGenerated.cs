@@ -487,8 +487,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            return UtilityTranslation.MajorRecordParse<Enchantment>(
-                record: new Enchantment(),
+            var ret = new Enchantment();
+            UtilityTranslation.MajorRecordParse<Enchantment>(
+                record: ret,
                 frame: frame,
                 errorMask: errorMask,
                 recType: Enchantment_Registration.ENCH_HEADER,
@@ -496,6 +497,7 @@ namespace Mutagen.Bethesda.Oblivion
                 masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
+            return ret;
         }
 
         #endregion
@@ -2460,6 +2462,35 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool EnchantCost;
         public bool Flags;
         public MaskItem<CopyOption, Effect_CopyMask> Effects;
+        public bool ENITDataTypeState;
+        #endregion
+
+    }
+
+    public class Enchantment_DeepCopyMask : OblivionMajorRecord_DeepCopyMask
+    {
+        public Enchantment_DeepCopyMask()
+        {
+        }
+
+        public Enchantment_DeepCopyMask(bool defaultOn)
+        {
+            this.Name = defaultOn;
+            this.Type = defaultOn;
+            this.ChargeAmount = defaultOn;
+            this.EnchantCost = defaultOn;
+            this.Flags = defaultOn;
+            this.Effects = new MaskItem<bool, Effect_DeepCopyMask>(defaultOn, default);
+            this.ENITDataTypeState = defaultOn;
+        }
+
+        #region Members
+        public bool Name;
+        public bool Type;
+        public bool ChargeAmount;
+        public bool EnchantCost;
+        public bool Flags;
+        public MaskItem<bool, Effect_DeepCopyMask> Effects;
         public bool ENITDataTypeState;
         #endregion
 

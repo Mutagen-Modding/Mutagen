@@ -1714,6 +1714,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public class DistantLODData_DeepCopyMask
+    {
+        public DistantLODData_DeepCopyMask()
+        {
+        }
+
+        public DistantLODData_DeepCopyMask(bool defaultOn)
+        {
+            this.Unknown0 = defaultOn;
+            this.Unknown1 = defaultOn;
+            this.Unknown2 = defaultOn;
+        }
+
+        #region Members
+        public bool Unknown0;
+        public bool Unknown1;
+        public bool Unknown2;
+        #endregion
+
+    }
+
     public class DistantLODData_TranslationMask : ITranslationMask
     {
         #region Members

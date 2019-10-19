@@ -633,8 +633,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            return UtilityTranslation.MajorRecordParse<Light>(
-                record: new Light(),
+            var ret = new Light();
+            UtilityTranslation.MajorRecordParse<Light>(
+                record: ret,
                 frame: frame,
                 errorMask: errorMask,
                 recType: Light_Registration.LIGH_HEADER,
@@ -642,6 +643,7 @@ namespace Mutagen.Bethesda.Oblivion
                 masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
+            return ret;
         }
 
         #endregion
@@ -3502,6 +3504,51 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Members
         public MaskItem<CopyOption, Model_CopyMask> Model;
+        public bool Script;
+        public bool Name;
+        public bool Icon;
+        public bool Time;
+        public bool Radius;
+        public bool Color;
+        public bool Flags;
+        public bool FalloffExponent;
+        public bool FOV;
+        public bool Value;
+        public bool Weight;
+        public bool Fade;
+        public bool Sound;
+        public bool DATADataTypeState;
+        #endregion
+
+    }
+
+    public class Light_DeepCopyMask : ItemAbstract_DeepCopyMask
+    {
+        public Light_DeepCopyMask()
+        {
+        }
+
+        public Light_DeepCopyMask(bool defaultOn)
+        {
+            this.Model = new MaskItem<bool, Model_DeepCopyMask>(defaultOn, default);
+            this.Script = defaultOn;
+            this.Name = defaultOn;
+            this.Icon = defaultOn;
+            this.Time = defaultOn;
+            this.Radius = defaultOn;
+            this.Color = defaultOn;
+            this.Flags = defaultOn;
+            this.FalloffExponent = defaultOn;
+            this.FOV = defaultOn;
+            this.Value = defaultOn;
+            this.Weight = defaultOn;
+            this.Fade = defaultOn;
+            this.Sound = defaultOn;
+            this.DATADataTypeState = defaultOn;
+        }
+
+        #region Members
+        public MaskItem<bool, Model_DeepCopyMask> Model;
         public bool Script;
         public bool Name;
         public bool Icon;

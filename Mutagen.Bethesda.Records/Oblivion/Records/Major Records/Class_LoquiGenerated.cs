@@ -530,8 +530,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            return UtilityTranslation.MajorRecordParse<Class>(
-                record: new Class(),
+            var ret = new Class();
+            UtilityTranslation.MajorRecordParse<Class>(
+                record: ret,
                 frame: frame,
                 errorMask: errorMask,
                 recType: Class_Registration.CLAS_HEADER,
@@ -539,6 +540,7 @@ namespace Mutagen.Bethesda.Oblivion
                 masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
+            return ret;
         }
 
         #endregion
@@ -3030,6 +3032,41 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Flags;
         public bool ClassServices;
         public MaskItem<CopyOption, ClassTraining_CopyMask> Training;
+        public bool DATADataTypeState;
+        #endregion
+
+    }
+
+    public class Class_DeepCopyMask : OblivionMajorRecord_DeepCopyMask
+    {
+        public Class_DeepCopyMask()
+        {
+        }
+
+        public Class_DeepCopyMask(bool defaultOn)
+        {
+            this.Name = defaultOn;
+            this.Description = defaultOn;
+            this.Icon = defaultOn;
+            this.PrimaryAttributes = defaultOn;
+            this.Specialization = defaultOn;
+            this.SecondaryAttributes = defaultOn;
+            this.Flags = defaultOn;
+            this.ClassServices = defaultOn;
+            this.Training = new MaskItem<bool, ClassTraining_DeepCopyMask>(defaultOn, default);
+            this.DATADataTypeState = defaultOn;
+        }
+
+        #region Members
+        public bool Name;
+        public bool Description;
+        public bool Icon;
+        public bool PrimaryAttributes;
+        public bool Specialization;
+        public bool SecondaryAttributes;
+        public bool Flags;
+        public bool ClassServices;
+        public MaskItem<bool, ClassTraining_DeepCopyMask> Training;
         public bool DATADataTypeState;
         #endregion
 

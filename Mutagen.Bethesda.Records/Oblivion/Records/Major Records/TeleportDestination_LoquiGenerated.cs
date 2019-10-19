@@ -1709,6 +1709,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public class TeleportDestination_DeepCopyMask
+    {
+        public TeleportDestination_DeepCopyMask()
+        {
+        }
+
+        public TeleportDestination_DeepCopyMask(bool defaultOn)
+        {
+            this.Destination = defaultOn;
+            this.Position = defaultOn;
+            this.Rotation = defaultOn;
+        }
+
+        #region Members
+        public bool Destination;
+        public bool Position;
+        public bool Rotation;
+        #endregion
+
+    }
+
     public class TeleportDestination_TranslationMask : ITranslationMask
     {
         #region Members

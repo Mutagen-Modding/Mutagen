@@ -906,8 +906,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            return UtilityTranslation.MajorRecordParse<CombatStyle>(
-                record: new CombatStyle(),
+            var ret = new CombatStyle();
+            UtilityTranslation.MajorRecordParse<CombatStyle>(
+                record: ret,
                 frame: frame,
                 errorMask: errorMask,
                 recType: CombatStyle_Registration.CSTY_HEADER,
@@ -915,6 +916,7 @@ namespace Mutagen.Bethesda.Oblivion
                 masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
+            return ret;
         }
 
         #endregion
@@ -5903,6 +5905,97 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool RushingAttackPercentChance;
         public bool RushingAttackDistanceMult;
         public MaskItem<CopyOption, CombatStyleAdvanced_CopyMask> Advanced;
+        public bool CSTDDataTypeState;
+        #endregion
+
+    }
+
+    public class CombatStyle_DeepCopyMask : OblivionMajorRecord_DeepCopyMask
+    {
+        public CombatStyle_DeepCopyMask()
+        {
+        }
+
+        public CombatStyle_DeepCopyMask(bool defaultOn)
+        {
+            this.DodgePercentChance = defaultOn;
+            this.LeftRightPercentChance = defaultOn;
+            this.DodgeLeftRightTimerMin = defaultOn;
+            this.DodgeLeftRightTimerMax = defaultOn;
+            this.DodgeForwardTimerMin = defaultOn;
+            this.DodgeForwardTimerMax = defaultOn;
+            this.DodgeBackTimerMin = defaultOn;
+            this.DodgeBackTimerMax = defaultOn;
+            this.IdleTimerMin = defaultOn;
+            this.IdleTimerMax = defaultOn;
+            this.BlockPercentChance = defaultOn;
+            this.AttackPercentChance = defaultOn;
+            this.RecoilStaggerBonusToAttack = defaultOn;
+            this.UnconsciousBonusToAttack = defaultOn;
+            this.HandToHandBonusToAttack = defaultOn;
+            this.PowerAttackPercentChance = defaultOn;
+            this.RecoilStaggerBonusToPowerAttack = defaultOn;
+            this.UnconsciousBonusToPowerAttack = defaultOn;
+            this.PowerAttackNormal = defaultOn;
+            this.PowerAttackForward = defaultOn;
+            this.PowerAttackBack = defaultOn;
+            this.PowerAttackLeft = defaultOn;
+            this.PowerAttackRight = defaultOn;
+            this.HoldTimerMin = defaultOn;
+            this.HoldTimerMax = defaultOn;
+            this.Flags = defaultOn;
+            this.AcrobaticDodgePercentChance = defaultOn;
+            this.RangeMultOptimal = defaultOn;
+            this.RangeMultMax = defaultOn;
+            this.SwitchDistanceMelee = defaultOn;
+            this.SwitchDistanceRanged = defaultOn;
+            this.BuffStandoffDistance = defaultOn;
+            this.RangedStandoffDistance = defaultOn;
+            this.GroupStandoffDistance = defaultOn;
+            this.RushingAttackPercentChance = defaultOn;
+            this.RushingAttackDistanceMult = defaultOn;
+            this.Advanced = new MaskItem<bool, CombatStyleAdvanced_DeepCopyMask>(defaultOn, default);
+            this.CSTDDataTypeState = defaultOn;
+        }
+
+        #region Members
+        public bool DodgePercentChance;
+        public bool LeftRightPercentChance;
+        public bool DodgeLeftRightTimerMin;
+        public bool DodgeLeftRightTimerMax;
+        public bool DodgeForwardTimerMin;
+        public bool DodgeForwardTimerMax;
+        public bool DodgeBackTimerMin;
+        public bool DodgeBackTimerMax;
+        public bool IdleTimerMin;
+        public bool IdleTimerMax;
+        public bool BlockPercentChance;
+        public bool AttackPercentChance;
+        public bool RecoilStaggerBonusToAttack;
+        public bool UnconsciousBonusToAttack;
+        public bool HandToHandBonusToAttack;
+        public bool PowerAttackPercentChance;
+        public bool RecoilStaggerBonusToPowerAttack;
+        public bool UnconsciousBonusToPowerAttack;
+        public bool PowerAttackNormal;
+        public bool PowerAttackForward;
+        public bool PowerAttackBack;
+        public bool PowerAttackLeft;
+        public bool PowerAttackRight;
+        public bool HoldTimerMin;
+        public bool HoldTimerMax;
+        public bool Flags;
+        public bool AcrobaticDodgePercentChance;
+        public bool RangeMultOptimal;
+        public bool RangeMultMax;
+        public bool SwitchDistanceMelee;
+        public bool SwitchDistanceRanged;
+        public bool BuffStandoffDistance;
+        public bool RangedStandoffDistance;
+        public bool GroupStandoffDistance;
+        public bool RushingAttackPercentChance;
+        public bool RushingAttackDistanceMult;
+        public MaskItem<bool, CombatStyleAdvanced_DeepCopyMask> Advanced;
         public bool CSTDDataTypeState;
         #endregion
 

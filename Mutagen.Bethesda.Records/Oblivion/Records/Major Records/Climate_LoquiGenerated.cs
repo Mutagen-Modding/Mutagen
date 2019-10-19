@@ -583,8 +583,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            return UtilityTranslation.MajorRecordParse<Climate>(
-                record: new Climate(),
+            var ret = new Climate();
+            UtilityTranslation.MajorRecordParse<Climate>(
+                record: ret,
                 frame: frame,
                 errorMask: errorMask,
                 recType: Climate_Registration.CLMT_HEADER,
@@ -592,6 +593,7 @@ namespace Mutagen.Bethesda.Oblivion
                 masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
+            return ret;
         }
 
         #endregion
@@ -3174,6 +3176,45 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool SunTexture;
         public bool SunGlareTexture;
         public MaskItem<CopyOption, Model_CopyMask> Model;
+        public bool SunriseBegin;
+        public bool SunriseEnd;
+        public bool SunsetBegin;
+        public bool SunsetEnd;
+        public bool Volatility;
+        public bool Phase;
+        public bool PhaseLength;
+        public bool TNAMDataTypeState;
+        #endregion
+
+    }
+
+    public class Climate_DeepCopyMask : OblivionMajorRecord_DeepCopyMask
+    {
+        public Climate_DeepCopyMask()
+        {
+        }
+
+        public Climate_DeepCopyMask(bool defaultOn)
+        {
+            this.Weathers = new MaskItem<bool, WeatherChance_DeepCopyMask>(defaultOn, default);
+            this.SunTexture = defaultOn;
+            this.SunGlareTexture = defaultOn;
+            this.Model = new MaskItem<bool, Model_DeepCopyMask>(defaultOn, default);
+            this.SunriseBegin = defaultOn;
+            this.SunriseEnd = defaultOn;
+            this.SunsetBegin = defaultOn;
+            this.SunsetEnd = defaultOn;
+            this.Volatility = defaultOn;
+            this.Phase = defaultOn;
+            this.PhaseLength = defaultOn;
+            this.TNAMDataTypeState = defaultOn;
+        }
+
+        #region Members
+        public MaskItem<bool, WeatherChance_DeepCopyMask> Weathers;
+        public bool SunTexture;
+        public bool SunGlareTexture;
+        public MaskItem<bool, Model_DeepCopyMask> Model;
         public bool SunriseBegin;
         public bool SunriseEnd;
         public bool SunsetBegin;

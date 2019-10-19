@@ -1598,6 +1598,25 @@ namespace Mutagen.Bethesda.Tests.Internals
 
     }
 
+    public class DataFolderLocations_DeepCopyMask
+    {
+        public DataFolderLocations_DeepCopyMask()
+        {
+        }
+
+        public DataFolderLocations_DeepCopyMask(bool defaultOn)
+        {
+            this.Oblivion = defaultOn;
+            this.Skyrim = defaultOn;
+        }
+
+        #region Members
+        public bool Oblivion;
+        public bool Skyrim;
+        #endregion
+
+    }
+
     public class DataFolderLocations_TranslationMask : ITranslationMask
     {
         #region Members

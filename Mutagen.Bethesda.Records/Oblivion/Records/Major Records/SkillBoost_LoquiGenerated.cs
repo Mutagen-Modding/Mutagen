@@ -1590,6 +1590,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public class SkillBoost_DeepCopyMask
+    {
+        public SkillBoost_DeepCopyMask()
+        {
+        }
+
+        public SkillBoost_DeepCopyMask(bool defaultOn)
+        {
+            this.Skill = defaultOn;
+            this.Boost = defaultOn;
+        }
+
+        #region Members
+        public bool Skill;
+        public bool Boost;
+        #endregion
+
+    }
+
     public class SkillBoost_TranslationMask : ITranslationMask
     {
         #region Members

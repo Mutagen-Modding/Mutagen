@@ -493,8 +493,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            return UtilityTranslation.MajorRecordParse<Faction>(
-                record: new Faction(),
+            var ret = new Faction();
+            UtilityTranslation.MajorRecordParse<Faction>(
+                record: ret,
                 frame: frame,
                 errorMask: errorMask,
                 recType: Faction_Registration.FACT_HEADER,
@@ -502,6 +503,7 @@ namespace Mutagen.Bethesda.Oblivion
                 masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
+            return ret;
         }
 
         #endregion
@@ -2520,6 +2522,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Flags;
         public bool CrimeGoldMultiplier;
         public MaskItem<CopyOption, Rank_CopyMask> Ranks;
+        #endregion
+
+    }
+
+    public class Faction_DeepCopyMask : OblivionMajorRecord_DeepCopyMask
+    {
+        public Faction_DeepCopyMask()
+        {
+        }
+
+        public Faction_DeepCopyMask(bool defaultOn)
+        {
+            this.Name = defaultOn;
+            this.Relations = new MaskItem<bool, Relation_DeepCopyMask>(defaultOn, default);
+            this.Flags = defaultOn;
+            this.CrimeGoldMultiplier = defaultOn;
+            this.Ranks = new MaskItem<bool, Rank_DeepCopyMask>(defaultOn, default);
+        }
+
+        #region Members
+        public bool Name;
+        public MaskItem<bool, Relation_DeepCopyMask> Relations;
+        public bool Flags;
+        public bool CrimeGoldMultiplier;
+        public MaskItem<bool, Rank_DeepCopyMask> Ranks;
         #endregion
 
     }

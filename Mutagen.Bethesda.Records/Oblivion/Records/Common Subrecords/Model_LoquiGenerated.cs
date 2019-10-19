@@ -1813,6 +1813,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public class Model_DeepCopyMask
+    {
+        public Model_DeepCopyMask()
+        {
+        }
+
+        public Model_DeepCopyMask(bool defaultOn)
+        {
+            this.File = defaultOn;
+            this.BoundRadius = defaultOn;
+            this.Hashes = defaultOn;
+        }
+
+        #region Members
+        public bool File;
+        public bool BoundRadius;
+        public bool Hashes;
+        #endregion
+
+    }
+
     public class Model_TranslationMask : ITranslationMask
     {
         #region Members

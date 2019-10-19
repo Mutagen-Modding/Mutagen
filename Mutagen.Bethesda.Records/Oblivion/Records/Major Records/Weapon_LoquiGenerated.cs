@@ -624,8 +624,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            return UtilityTranslation.MajorRecordParse<Weapon>(
-                record: new Weapon(),
+            var ret = new Weapon();
+            UtilityTranslation.MajorRecordParse<Weapon>(
+                record: ret,
                 frame: frame,
                 errorMask: errorMask,
                 recType: Weapon_Registration.WEAP_HEADER,
@@ -633,6 +634,7 @@ namespace Mutagen.Bethesda.Oblivion
                 masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
+            return ret;
         }
 
         #endregion
@@ -3471,6 +3473,51 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Members
         public bool Name;
         public MaskItem<CopyOption, Model_CopyMask> Model;
+        public bool Icon;
+        public bool Script;
+        public bool Enchantment;
+        public bool EnchantmentPoints;
+        public bool Type;
+        public bool Speed;
+        public bool Reach;
+        public bool Flags;
+        public bool Value;
+        public bool Health;
+        public bool Weight;
+        public bool Damage;
+        public bool DATADataTypeState;
+        #endregion
+
+    }
+
+    public class Weapon_DeepCopyMask : ItemAbstract_DeepCopyMask
+    {
+        public Weapon_DeepCopyMask()
+        {
+        }
+
+        public Weapon_DeepCopyMask(bool defaultOn)
+        {
+            this.Name = defaultOn;
+            this.Model = new MaskItem<bool, Model_DeepCopyMask>(defaultOn, default);
+            this.Icon = defaultOn;
+            this.Script = defaultOn;
+            this.Enchantment = defaultOn;
+            this.EnchantmentPoints = defaultOn;
+            this.Type = defaultOn;
+            this.Speed = defaultOn;
+            this.Reach = defaultOn;
+            this.Flags = defaultOn;
+            this.Value = defaultOn;
+            this.Health = defaultOn;
+            this.Weight = defaultOn;
+            this.Damage = defaultOn;
+            this.DATADataTypeState = defaultOn;
+        }
+
+        #region Members
+        public bool Name;
+        public MaskItem<bool, Model_DeepCopyMask> Model;
         public bool Icon;
         public bool Script;
         public bool Enchantment;

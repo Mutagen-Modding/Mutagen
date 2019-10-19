@@ -1703,6 +1703,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public class ClassTraining_DeepCopyMask
+    {
+        public ClassTraining_DeepCopyMask()
+        {
+        }
+
+        public ClassTraining_DeepCopyMask(bool defaultOn)
+        {
+            this.TrainedSkill = defaultOn;
+            this.MaximumTrainingLevel = defaultOn;
+            this.Fluff = defaultOn;
+        }
+
+        #region Members
+        public bool TrainedSkill;
+        public bool MaximumTrainingLevel;
+        public bool Fluff;
+        #endregion
+
+    }
+
     public class ClassTraining_TranslationMask : ITranslationMask
     {
         #region Members

@@ -2148,6 +2148,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public class LocalVariable_DeepCopyMask
+    {
+        public LocalVariable_DeepCopyMask()
+        {
+        }
+
+        public LocalVariable_DeepCopyMask(bool defaultOn)
+        {
+            this.Index = defaultOn;
+            this.Fluff = defaultOn;
+            this.Flags = defaultOn;
+            this.Fluff2 = defaultOn;
+            this.Name = defaultOn;
+            this.SLSDDataTypeState = defaultOn;
+        }
+
+        #region Members
+        public bool Index;
+        public bool Fluff;
+        public bool Flags;
+        public bool Fluff2;
+        public bool Name;
+        public bool SLSDDataTypeState;
+        #endregion
+
+    }
+
     public class LocalVariable_TranslationMask : ITranslationMask
     {
         #region Members

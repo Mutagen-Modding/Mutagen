@@ -1298,6 +1298,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public class GameSetting_DeepCopyMask : OblivionMajorRecord_DeepCopyMask
+    {
+        public GameSetting_DeepCopyMask()
+        {
+        }
+
+        public GameSetting_DeepCopyMask(bool defaultOn)
+        {
+        }
+
+    }
+
     public class GameSetting_TranslationMask : OblivionMajorRecord_TranslationMask
     {
         #region Ctors

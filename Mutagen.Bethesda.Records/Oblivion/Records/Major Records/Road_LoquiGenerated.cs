@@ -356,8 +356,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            return UtilityTranslation.MajorRecordParse<Road>(
-                record: new Road(),
+            var ret = new Road();
+            UtilityTranslation.MajorRecordParse<Road>(
+                record: ret,
                 frame: frame,
                 errorMask: errorMask,
                 recType: Road_Registration.ROAD_HEADER,
@@ -365,6 +366,7 @@ namespace Mutagen.Bethesda.Oblivion
                 masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
+            return ret;
         }
 
         #endregion
@@ -1675,6 +1677,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Members
         public MaskItem<CopyOption, RoadPoint_CopyMask> Points;
+        #endregion
+
+    }
+
+    public class Road_DeepCopyMask : OblivionMajorRecord_DeepCopyMask
+    {
+        public Road_DeepCopyMask()
+        {
+        }
+
+        public Road_DeepCopyMask(bool defaultOn)
+        {
+            this.Points = new MaskItem<bool, RoadPoint_DeepCopyMask>(defaultOn, default);
+        }
+
+        #region Members
+        public MaskItem<bool, RoadPoint_DeepCopyMask> Points;
         #endregion
 
     }

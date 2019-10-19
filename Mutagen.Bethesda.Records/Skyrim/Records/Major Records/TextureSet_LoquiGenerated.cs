@@ -467,8 +467,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            return UtilityTranslation.MajorRecordParse<TextureSet>(
-                record: new TextureSet(),
+            var ret = new TextureSet();
+            UtilityTranslation.MajorRecordParse<TextureSet>(
+                record: ret,
                 frame: frame,
                 errorMask: errorMask,
                 recType: TextureSet_Registration.TXST_HEADER,
@@ -476,6 +477,7 @@ namespace Mutagen.Bethesda.Skyrim
                 masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
+            return ret;
         }
 
         #endregion
@@ -2292,6 +2294,29 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public MaskItem<CopyOption, ObjectBounds_CopyMask> ObjectBounds;
         public MaskItem<CopyOption, Textures_CopyMask> Textures;
         public MaskItem<CopyOption, Decal_CopyMask> Decal;
+        public bool Flags;
+        #endregion
+
+    }
+
+    public class TextureSet_DeepCopyMask : SkyrimMajorRecord_DeepCopyMask
+    {
+        public TextureSet_DeepCopyMask()
+        {
+        }
+
+        public TextureSet_DeepCopyMask(bool defaultOn)
+        {
+            this.ObjectBounds = new MaskItem<bool, ObjectBounds_DeepCopyMask>(defaultOn, default);
+            this.Textures = new MaskItem<bool, Textures_DeepCopyMask>(defaultOn, default);
+            this.Decal = new MaskItem<bool, Decal_DeepCopyMask>(defaultOn, default);
+            this.Flags = defaultOn;
+        }
+
+        #region Members
+        public MaskItem<bool, ObjectBounds_DeepCopyMask> ObjectBounds;
+        public MaskItem<bool, Textures_DeepCopyMask> Textures;
+        public MaskItem<bool, Decal_DeepCopyMask> Decal;
         public bool Flags;
         #endregion
 

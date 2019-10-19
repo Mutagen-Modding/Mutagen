@@ -473,8 +473,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            return UtilityTranslation.MajorRecordParse<LeveledCreature>(
-                record: new LeveledCreature(),
+            var ret = new LeveledCreature();
+            UtilityTranslation.MajorRecordParse<LeveledCreature>(
+                record: ret,
                 frame: frame,
                 errorMask: errorMask,
                 recType: LeveledCreature_Registration.LVLC_HEADER,
@@ -482,6 +483,7 @@ namespace Mutagen.Bethesda.Oblivion
                 masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
+            return ret;
         }
 
         #endregion
@@ -2348,6 +2350,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool ChanceNone;
         public bool Flags;
         public MaskItem<CopyOption, LeveledEntry_CopyMask<NPCSpawn_CopyMask>> Entries;
+        public bool Script;
+        public bool Template;
+        #endregion
+
+    }
+
+    public class LeveledCreature_DeepCopyMask : NPCSpawn_DeepCopyMask
+    {
+        public LeveledCreature_DeepCopyMask()
+        {
+        }
+
+        public LeveledCreature_DeepCopyMask(bool defaultOn)
+        {
+            this.ChanceNone = defaultOn;
+            this.Flags = defaultOn;
+            this.Entries = new MaskItem<bool, LeveledEntry_DeepCopyMask<NPCSpawn_DeepCopyMask>>(defaultOn, default);
+            this.Script = defaultOn;
+            this.Template = defaultOn;
+        }
+
+        #region Members
+        public bool ChanceNone;
+        public bool Flags;
+        public MaskItem<bool, LeveledEntry_DeepCopyMask<NPCSpawn_DeepCopyMask>> Entries;
         public bool Script;
         public bool Template;
         #endregion

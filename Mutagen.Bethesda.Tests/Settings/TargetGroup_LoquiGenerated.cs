@@ -1744,6 +1744,25 @@ namespace Mutagen.Bethesda.Tests.Internals
 
     }
 
+    public class TargetGroup_DeepCopyMask
+    {
+        public TargetGroup_DeepCopyMask()
+        {
+        }
+
+        public TargetGroup_DeepCopyMask(bool defaultOn)
+        {
+            this.Do = defaultOn;
+            this.Targets = new MaskItem<bool, Target_DeepCopyMask>(defaultOn, default);
+        }
+
+        #region Members
+        public bool Do;
+        public MaskItem<bool, Target_DeepCopyMask> Targets;
+        #endregion
+
+    }
+
     public class TargetGroup_TranslationMask : ITranslationMask
     {
         #region Members

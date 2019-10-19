@@ -976,8 +976,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            return UtilityTranslation.MajorRecordParse<PlacedObject>(
-                record: new PlacedObject(),
+            var ret = new PlacedObject();
+            UtilityTranslation.MajorRecordParse<PlacedObject>(
+                record: ret,
                 frame: frame,
                 errorMask: errorMask,
                 recType: PlacedObject_Registration.REFR_HEADER,
@@ -985,6 +986,7 @@ namespace Mutagen.Bethesda.Oblivion
                 masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
+            return ret;
         }
 
         #endregion
@@ -5622,6 +5624,73 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool ActionFlags;
         public bool Count;
         public MaskItem<CopyOption, MapMarker_CopyMask> MapMarker;
+        public bool OpenByDefault;
+        public bool RagdollData;
+        public bool Scale;
+        public bool ContainedSoul;
+        public bool Position;
+        public bool Rotation;
+        public bool DATADataTypeState;
+        #endregion
+
+    }
+
+    public class PlacedObject_DeepCopyMask : OblivionMajorRecord_DeepCopyMask
+    {
+        public PlacedObject_DeepCopyMask()
+        {
+        }
+
+        public PlacedObject_DeepCopyMask(bool defaultOn)
+        {
+            this.Base = defaultOn;
+            this.XPCIFluff = defaultOn;
+            this.FULLFluff = defaultOn;
+            this.TeleportDestination = new MaskItem<bool, TeleportDestination_DeepCopyMask>(defaultOn, default);
+            this.Lock = new MaskItem<bool, LockInformation_DeepCopyMask>(defaultOn, default);
+            this.Owner = defaultOn;
+            this.FactionRank = defaultOn;
+            this.GlobalVariable = defaultOn;
+            this.EnableParent = new MaskItem<bool, EnableParent_DeepCopyMask>(defaultOn, default);
+            this.Target = defaultOn;
+            this.SpeedTreeSeed = defaultOn;
+            this.DistantLODData = new MaskItem<bool, DistantLODData_DeepCopyMask>(defaultOn, default);
+            this.Charge = defaultOn;
+            this.Health = defaultOn;
+            this.LevelModifier = defaultOn;
+            this.Unknown = defaultOn;
+            this.ActionFlags = defaultOn;
+            this.Count = defaultOn;
+            this.MapMarker = new MaskItem<bool, MapMarker_DeepCopyMask>(defaultOn, default);
+            this.OpenByDefault = defaultOn;
+            this.RagdollData = defaultOn;
+            this.Scale = defaultOn;
+            this.ContainedSoul = defaultOn;
+            this.Position = defaultOn;
+            this.Rotation = defaultOn;
+            this.DATADataTypeState = defaultOn;
+        }
+
+        #region Members
+        public bool Base;
+        public bool XPCIFluff;
+        public bool FULLFluff;
+        public MaskItem<bool, TeleportDestination_DeepCopyMask> TeleportDestination;
+        public MaskItem<bool, LockInformation_DeepCopyMask> Lock;
+        public bool Owner;
+        public bool FactionRank;
+        public bool GlobalVariable;
+        public MaskItem<bool, EnableParent_DeepCopyMask> EnableParent;
+        public bool Target;
+        public bool SpeedTreeSeed;
+        public MaskItem<bool, DistantLODData_DeepCopyMask> DistantLODData;
+        public bool Charge;
+        public bool Health;
+        public bool LevelModifier;
+        public bool Unknown;
+        public bool ActionFlags;
+        public bool Count;
+        public MaskItem<bool, MapMarker_DeepCopyMask> MapMarker;
         public bool OpenByDefault;
         public bool RagdollData;
         public bool Scale;

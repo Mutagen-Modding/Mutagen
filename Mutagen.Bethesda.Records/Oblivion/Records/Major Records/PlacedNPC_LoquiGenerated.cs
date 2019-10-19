@@ -631,8 +631,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            return UtilityTranslation.MajorRecordParse<PlacedNPC>(
-                record: new PlacedNPC(),
+            var ret = new PlacedNPC();
+            UtilityTranslation.MajorRecordParse<PlacedNPC>(
+                record: ret,
                 frame: frame,
                 errorMask: errorMask,
                 recType: PlacedNPC_Registration.ACHR_HEADER,
@@ -640,6 +641,7 @@ namespace Mutagen.Bethesda.Oblivion
                 masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
+            return ret;
         }
 
         #endregion
@@ -3301,6 +3303,45 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool FULLFluff;
         public MaskItem<CopyOption, DistantLODData_CopyMask> DistantLODData;
         public MaskItem<CopyOption, EnableParent_CopyMask> EnableParent;
+        public bool MerchantContainer;
+        public bool Horse;
+        public bool RagdollData;
+        public bool Scale;
+        public bool Position;
+        public bool Rotation;
+        public bool DATADataTypeState;
+        #endregion
+
+    }
+
+    public class PlacedNPC_DeepCopyMask : OblivionMajorRecord_DeepCopyMask
+    {
+        public PlacedNPC_DeepCopyMask()
+        {
+        }
+
+        public PlacedNPC_DeepCopyMask(bool defaultOn)
+        {
+            this.Base = defaultOn;
+            this.XPCIFluff = defaultOn;
+            this.FULLFluff = defaultOn;
+            this.DistantLODData = new MaskItem<bool, DistantLODData_DeepCopyMask>(defaultOn, default);
+            this.EnableParent = new MaskItem<bool, EnableParent_DeepCopyMask>(defaultOn, default);
+            this.MerchantContainer = defaultOn;
+            this.Horse = defaultOn;
+            this.RagdollData = defaultOn;
+            this.Scale = defaultOn;
+            this.Position = defaultOn;
+            this.Rotation = defaultOn;
+            this.DATADataTypeState = defaultOn;
+        }
+
+        #region Members
+        public bool Base;
+        public bool XPCIFluff;
+        public bool FULLFluff;
+        public MaskItem<bool, DistantLODData_DeepCopyMask> DistantLODData;
+        public MaskItem<bool, EnableParent_DeepCopyMask> EnableParent;
         public bool MerchantContainer;
         public bool Horse;
         public bool RagdollData;

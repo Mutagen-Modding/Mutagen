@@ -1647,6 +1647,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public class SoundDataExtended_DeepCopyMask : SoundData_DeepCopyMask
+    {
+        public SoundDataExtended_DeepCopyMask()
+        {
+        }
+
+        public SoundDataExtended_DeepCopyMask(bool defaultOn)
+        {
+            this.StaticAttenuation = defaultOn;
+            this.StopTime = defaultOn;
+            this.StartTime = defaultOn;
+        }
+
+        #region Members
+        public bool StaticAttenuation;
+        public bool StopTime;
+        public bool StartTime;
+        #endregion
+
+    }
+
     public class SoundDataExtended_TranslationMask : SoundData_TranslationMask
     {
         #region Members

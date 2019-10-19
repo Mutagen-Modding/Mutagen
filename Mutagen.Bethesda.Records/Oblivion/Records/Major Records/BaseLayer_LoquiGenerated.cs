@@ -1876,6 +1876,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public class BaseLayer_DeepCopyMask
+    {
+        public BaseLayer_DeepCopyMask()
+        {
+        }
+
+        public BaseLayer_DeepCopyMask(bool defaultOn)
+        {
+            this.Texture = defaultOn;
+            this.Quadrant = defaultOn;
+            this.LayerNumber = defaultOn;
+            this.BTXTDataTypeState = defaultOn;
+        }
+
+        #region Members
+        public bool Texture;
+        public bool Quadrant;
+        public bool LayerNumber;
+        public bool BTXTDataTypeState;
+        #endregion
+
+    }
+
     public class BaseLayer_TranslationMask : ITranslationMask
     {
         #region Members

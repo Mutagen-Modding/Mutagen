@@ -3453,6 +3453,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
+    public class SkyrimMod_DeepCopyMask
+    {
+        public SkyrimMod_DeepCopyMask()
+        {
+        }
+
+        public SkyrimMod_DeepCopyMask(bool defaultOn)
+        {
+            this.ModHeader = new MaskItem<bool, ModHeader_DeepCopyMask>(defaultOn, default);
+            this.GameSettings = new MaskItem<bool, Group_DeepCopyMask<GameSetting_DeepCopyMask>>(defaultOn, default);
+            this.Keywords = new MaskItem<bool, Group_DeepCopyMask<Keyword_DeepCopyMask>>(defaultOn, default);
+            this.LocationReferenceTypes = new MaskItem<bool, Group_DeepCopyMask<LocationReferenceType_DeepCopyMask>>(defaultOn, default);
+            this.Actions = new MaskItem<bool, Group_DeepCopyMask<ActionRecord_DeepCopyMask>>(defaultOn, default);
+            this.TextureSets = new MaskItem<bool, Group_DeepCopyMask<TextureSet_DeepCopyMask>>(defaultOn, default);
+            this.Globals = new MaskItem<bool, Group_DeepCopyMask<Global_DeepCopyMask>>(defaultOn, default);
+            this.Classes = new MaskItem<bool, Group_DeepCopyMask<Class_DeepCopyMask>>(defaultOn, default);
+        }
+
+        #region Members
+        public MaskItem<bool, ModHeader_DeepCopyMask> ModHeader;
+        public MaskItem<bool, Group_DeepCopyMask<GameSetting_DeepCopyMask>> GameSettings;
+        public MaskItem<bool, Group_DeepCopyMask<Keyword_DeepCopyMask>> Keywords;
+        public MaskItem<bool, Group_DeepCopyMask<LocationReferenceType_DeepCopyMask>> LocationReferenceTypes;
+        public MaskItem<bool, Group_DeepCopyMask<ActionRecord_DeepCopyMask>> Actions;
+        public MaskItem<bool, Group_DeepCopyMask<TextureSet_DeepCopyMask>> TextureSets;
+        public MaskItem<bool, Group_DeepCopyMask<Global_DeepCopyMask>> Globals;
+        public MaskItem<bool, Group_DeepCopyMask<Class_DeepCopyMask>> Classes;
+        #endregion
+
+    }
+
     public class SkyrimMod_TranslationMask : ITranslationMask
     {
         #region Members

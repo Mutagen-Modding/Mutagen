@@ -382,8 +382,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            return UtilityTranslation.MajorRecordParse<LocationReferenceType>(
-                record: new LocationReferenceType(),
+            var ret = new LocationReferenceType();
+            UtilityTranslation.MajorRecordParse<LocationReferenceType>(
+                record: ret,
                 frame: frame,
                 errorMask: errorMask,
                 recType: LocationReferenceType_Registration.LCRT_HEADER,
@@ -391,6 +392,7 @@ namespace Mutagen.Bethesda.Skyrim
                 masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
+            return ret;
         }
 
         #endregion
@@ -1603,6 +1605,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public LocationReferenceType_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Color = defaultOn;
+        }
+
+        #region Members
+        public bool Color;
+        #endregion
+
+    }
+
+    public class LocationReferenceType_DeepCopyMask : SkyrimMajorRecord_DeepCopyMask
+    {
+        public LocationReferenceType_DeepCopyMask()
+        {
+        }
+
+        public LocationReferenceType_DeepCopyMask(bool defaultOn)
         {
             this.Color = defaultOn;
         }

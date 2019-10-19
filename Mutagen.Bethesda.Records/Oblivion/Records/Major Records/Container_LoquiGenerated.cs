@@ -526,8 +526,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            return UtilityTranslation.MajorRecordParse<Container>(
-                record: new Container(),
+            var ret = new Container();
+            UtilityTranslation.MajorRecordParse<Container>(
+                record: ret,
                 frame: frame,
                 errorMask: errorMask,
                 recType: Container_Registration.CONT_HEADER,
@@ -535,6 +536,7 @@ namespace Mutagen.Bethesda.Oblivion
                 masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
+            return ret;
         }
 
         #endregion
@@ -2822,6 +2824,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<CopyOption, Model_CopyMask> Model;
         public bool Script;
         public MaskItem<CopyOption, ContainerItem_CopyMask> Items;
+        public bool Flags;
+        public bool Weight;
+        public bool OpenSound;
+        public bool CloseSound;
+        public bool DATADataTypeState;
+        #endregion
+
+    }
+
+    public class Container_DeepCopyMask : OblivionMajorRecord_DeepCopyMask
+    {
+        public Container_DeepCopyMask()
+        {
+        }
+
+        public Container_DeepCopyMask(bool defaultOn)
+        {
+            this.Name = defaultOn;
+            this.Model = new MaskItem<bool, Model_DeepCopyMask>(defaultOn, default);
+            this.Script = defaultOn;
+            this.Items = new MaskItem<bool, ContainerItem_DeepCopyMask>(defaultOn, default);
+            this.Flags = defaultOn;
+            this.Weight = defaultOn;
+            this.OpenSound = defaultOn;
+            this.CloseSound = defaultOn;
+            this.DATADataTypeState = defaultOn;
+        }
+
+        #region Members
+        public bool Name;
+        public MaskItem<bool, Model_DeepCopyMask> Model;
+        public bool Script;
+        public MaskItem<bool, ContainerItem_DeepCopyMask> Items;
         public bool Flags;
         public bool Weight;
         public bool OpenSound;

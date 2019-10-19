@@ -1815,6 +1815,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public class RegionData_DeepCopyMask
+    {
+        public RegionData_DeepCopyMask()
+        {
+        }
+
+        public RegionData_DeepCopyMask(bool defaultOn)
+        {
+            this.DataType = defaultOn;
+            this.Flags = defaultOn;
+            this.Priority = defaultOn;
+            this.RDATDataTypeState = defaultOn;
+        }
+
+        #region Members
+        public bool DataType;
+        public bool Flags;
+        public bool Priority;
+        public bool RDATDataTypeState;
+        #endregion
+
+    }
+
     public class RegionData_TranslationMask : ITranslationMask
     {
         #region Members

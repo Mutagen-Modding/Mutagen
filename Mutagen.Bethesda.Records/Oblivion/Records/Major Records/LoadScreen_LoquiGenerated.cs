@@ -449,8 +449,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            return UtilityTranslation.MajorRecordParse<LoadScreen>(
-                record: new LoadScreen(),
+            var ret = new LoadScreen();
+            UtilityTranslation.MajorRecordParse<LoadScreen>(
+                record: ret,
                 frame: frame,
                 errorMask: errorMask,
                 recType: LoadScreen_Registration.LSCR_HEADER,
@@ -458,6 +459,7 @@ namespace Mutagen.Bethesda.Oblivion
                 masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
+            return ret;
         }
 
         #endregion
@@ -2072,6 +2074,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Icon;
         public bool Description;
         public MaskItem<CopyOption, LoadScreenLocation_CopyMask> Locations;
+        #endregion
+
+    }
+
+    public class LoadScreen_DeepCopyMask : OblivionMajorRecord_DeepCopyMask
+    {
+        public LoadScreen_DeepCopyMask()
+        {
+        }
+
+        public LoadScreen_DeepCopyMask(bool defaultOn)
+        {
+            this.Icon = defaultOn;
+            this.Description = defaultOn;
+            this.Locations = new MaskItem<bool, LoadScreenLocation_DeepCopyMask>(defaultOn, default);
+        }
+
+        #region Members
+        public bool Icon;
+        public bool Description;
+        public MaskItem<bool, LoadScreenLocation_DeepCopyMask> Locations;
         #endregion
 
     }

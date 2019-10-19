@@ -380,8 +380,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            return UtilityTranslation.MajorRecordParse<GameSettingInt>(
-                record: new GameSettingInt(),
+            var ret = new GameSettingInt();
+            UtilityTranslation.MajorRecordParse<GameSettingInt>(
+                record: ret,
                 frame: frame,
                 errorMask: errorMask,
                 recType: GameSettingInt_Registration.GMST_HEADER,
@@ -389,6 +390,7 @@ namespace Mutagen.Bethesda.Oblivion
                 masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
+            return ret;
         }
 
         #endregion
@@ -1638,6 +1640,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public GameSettingInt_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Data = defaultOn;
+        }
+
+        #region Members
+        public bool Data;
+        #endregion
+
+    }
+
+    public class GameSettingInt_DeepCopyMask : GameSetting_DeepCopyMask
+    {
+        public GameSettingInt_DeepCopyMask()
+        {
+        }
+
+        public GameSettingInt_DeepCopyMask(bool defaultOn)
         {
             this.Data = defaultOn;
         }

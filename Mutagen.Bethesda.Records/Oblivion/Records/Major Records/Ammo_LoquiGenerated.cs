@@ -573,8 +573,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            return UtilityTranslation.MajorRecordParse<Ammo>(
-                record: new Ammo(),
+            var ret = new Ammo();
+            UtilityTranslation.MajorRecordParse<Ammo>(
+                record: ret,
                 frame: frame,
                 errorMask: errorMask,
                 recType: Ammo_Registration.AMMO_HEADER,
@@ -582,6 +583,7 @@ namespace Mutagen.Bethesda.Oblivion
                 masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
+            return ret;
         }
 
         #endregion
@@ -3021,6 +3023,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Members
         public bool Name;
         public MaskItem<CopyOption, Model_CopyMask> Model;
+        public bool Icon;
+        public bool Enchantment;
+        public bool EnchantmentPoints;
+        public bool Speed;
+        public bool Flags;
+        public bool Value;
+        public bool Weight;
+        public bool Damage;
+        public bool DATADataTypeState;
+        #endregion
+
+    }
+
+    public class Ammo_DeepCopyMask : ItemAbstract_DeepCopyMask
+    {
+        public Ammo_DeepCopyMask()
+        {
+        }
+
+        public Ammo_DeepCopyMask(bool defaultOn)
+        {
+            this.Name = defaultOn;
+            this.Model = new MaskItem<bool, Model_DeepCopyMask>(defaultOn, default);
+            this.Icon = defaultOn;
+            this.Enchantment = defaultOn;
+            this.EnchantmentPoints = defaultOn;
+            this.Speed = defaultOn;
+            this.Flags = defaultOn;
+            this.Value = defaultOn;
+            this.Weight = defaultOn;
+            this.Damage = defaultOn;
+            this.DATADataTypeState = defaultOn;
+        }
+
+        #region Members
+        public bool Name;
+        public MaskItem<bool, Model_DeepCopyMask> Model;
         public bool Icon;
         public bool Enchantment;
         public bool EnchantmentPoints;

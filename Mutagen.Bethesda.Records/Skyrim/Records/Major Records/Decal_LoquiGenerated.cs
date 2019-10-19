@@ -2547,6 +2547,43 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
+    public class Decal_DeepCopyMask
+    {
+        public Decal_DeepCopyMask()
+        {
+        }
+
+        public Decal_DeepCopyMask(bool defaultOn)
+        {
+            this.MinWidth = defaultOn;
+            this.MaxWidth = defaultOn;
+            this.MinHeight = defaultOn;
+            this.MaxHeight = defaultOn;
+            this.Depth = defaultOn;
+            this.Shininess = defaultOn;
+            this.ParallaxScale = defaultOn;
+            this.ParallaxPasses = defaultOn;
+            this.Flags = defaultOn;
+            this.Unknown = defaultOn;
+            this.Color = defaultOn;
+        }
+
+        #region Members
+        public bool MinWidth;
+        public bool MaxWidth;
+        public bool MinHeight;
+        public bool MaxHeight;
+        public bool Depth;
+        public bool Shininess;
+        public bool ParallaxScale;
+        public bool ParallaxPasses;
+        public bool Flags;
+        public bool Unknown;
+        public bool Color;
+        #endregion
+
+    }
+
     public class Decal_TranslationMask : ITranslationMask
     {
         #region Members

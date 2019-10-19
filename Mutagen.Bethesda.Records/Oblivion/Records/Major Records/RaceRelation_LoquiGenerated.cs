@@ -1594,6 +1594,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public class RaceRelation_DeepCopyMask
+    {
+        public RaceRelation_DeepCopyMask()
+        {
+        }
+
+        public RaceRelation_DeepCopyMask(bool defaultOn)
+        {
+            this.Race = defaultOn;
+            this.Modifier = defaultOn;
+        }
+
+        #region Members
+        public bool Race;
+        public bool Modifier;
+        #endregion
+
+    }
+
     public class RaceRelation_TranslationMask : ITranslationMask
     {
         #region Members

@@ -626,8 +626,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            return UtilityTranslation.MajorRecordParse<SkillRecord>(
-                record: new SkillRecord(),
+            var ret = new SkillRecord();
+            UtilityTranslation.MajorRecordParse<SkillRecord>(
+                record: ret,
                 frame: frame,
                 errorMask: errorMask,
                 recType: SkillRecord_Registration.SKIL_HEADER,
@@ -635,6 +636,7 @@ namespace Mutagen.Bethesda.Oblivion
                 masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
+            return ret;
         }
 
         #endregion
@@ -3309,6 +3311,47 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public SkillRecord_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Skill = defaultOn;
+            this.Description = defaultOn;
+            this.Icon = defaultOn;
+            this.Action = defaultOn;
+            this.Attribute = defaultOn;
+            this.Specialization = defaultOn;
+            this.UseValueFirst = defaultOn;
+            this.UseValueSecond = defaultOn;
+            this.ApprenticeText = defaultOn;
+            this.JourneymanText = defaultOn;
+            this.ExpertText = defaultOn;
+            this.MasterText = defaultOn;
+            this.DATADataTypeState = defaultOn;
+        }
+
+        #region Members
+        public bool Skill;
+        public bool Description;
+        public bool Icon;
+        public bool Action;
+        public bool Attribute;
+        public bool Specialization;
+        public bool UseValueFirst;
+        public bool UseValueSecond;
+        public bool ApprenticeText;
+        public bool JourneymanText;
+        public bool ExpertText;
+        public bool MasterText;
+        public bool DATADataTypeState;
+        #endregion
+
+    }
+
+    public class SkillRecord_DeepCopyMask : OblivionMajorRecord_DeepCopyMask
+    {
+        public SkillRecord_DeepCopyMask()
+        {
+        }
+
+        public SkillRecord_DeepCopyMask(bool defaultOn)
         {
             this.Skill = defaultOn;
             this.Description = defaultOn;

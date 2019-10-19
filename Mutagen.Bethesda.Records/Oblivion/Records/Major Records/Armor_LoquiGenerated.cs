@@ -416,8 +416,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            return UtilityTranslation.MajorRecordParse<Armor>(
-                record: new Armor(),
+            var ret = new Armor();
+            UtilityTranslation.MajorRecordParse<Armor>(
+                record: ret,
                 frame: frame,
                 errorMask: errorMask,
                 recType: Armor_Registration.ARMO_HEADER,
@@ -425,6 +426,7 @@ namespace Mutagen.Bethesda.Oblivion
                 masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
+            return ret;
         }
 
         #endregion
@@ -2114,6 +2116,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public Armor_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.ArmorValue = defaultOn;
+            this.Value = defaultOn;
+            this.Health = defaultOn;
+            this.Weight = defaultOn;
+            this.DATADataTypeState = defaultOn;
+        }
+
+        #region Members
+        public bool ArmorValue;
+        public bool Value;
+        public bool Health;
+        public bool Weight;
+        public bool DATADataTypeState;
+        #endregion
+
+    }
+
+    public class Armor_DeepCopyMask : ClothingAbstract_DeepCopyMask
+    {
+        public Armor_DeepCopyMask()
+        {
+        }
+
+        public Armor_DeepCopyMask(bool defaultOn)
         {
             this.ArmorValue = defaultOn;
             this.Value = defaultOn;

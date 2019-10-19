@@ -380,8 +380,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            return UtilityTranslation.MajorRecordParse<GlobalInt>(
-                record: new GlobalInt(),
+            var ret = new GlobalInt();
+            UtilityTranslation.MajorRecordParse<GlobalInt>(
+                record: ret,
                 frame: frame,
                 errorMask: errorMask,
                 recType: GlobalInt_Registration.GLOB_HEADER,
@@ -389,6 +390,7 @@ namespace Mutagen.Bethesda.Skyrim
                 masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
+            return ret;
         }
 
         #endregion
@@ -1651,6 +1653,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public GlobalInt_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Data = defaultOn;
+        }
+
+        #region Members
+        public bool Data;
+        #endregion
+
+    }
+
+    public class GlobalInt_DeepCopyMask : Global_DeepCopyMask
+    {
+        public GlobalInt_DeepCopyMask()
+        {
+        }
+
+        public GlobalInt_DeepCopyMask(bool defaultOn)
         {
             this.Data = defaultOn;
         }

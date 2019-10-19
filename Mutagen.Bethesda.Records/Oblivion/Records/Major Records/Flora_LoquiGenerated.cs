@@ -516,8 +516,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            return UtilityTranslation.MajorRecordParse<Flora>(
-                record: new Flora(),
+            var ret = new Flora();
+            UtilityTranslation.MajorRecordParse<Flora>(
+                record: ret,
                 frame: frame,
                 errorMask: errorMask,
                 recType: Flora_Registration.FLOR_HEADER,
@@ -525,6 +526,7 @@ namespace Mutagen.Bethesda.Oblivion
                 masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
+            return ret;
         }
 
         #endregion
@@ -2617,6 +2619,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Members
         public bool Name;
         public MaskItem<CopyOption, Model_CopyMask> Model;
+        public bool Script;
+        public bool Ingredient;
+        public bool Spring;
+        public bool Summer;
+        public bool Fall;
+        public bool Winter;
+        public bool PFPCDataTypeState;
+        #endregion
+
+    }
+
+    public class Flora_DeepCopyMask : OblivionMajorRecord_DeepCopyMask
+    {
+        public Flora_DeepCopyMask()
+        {
+        }
+
+        public Flora_DeepCopyMask(bool defaultOn)
+        {
+            this.Name = defaultOn;
+            this.Model = new MaskItem<bool, Model_DeepCopyMask>(defaultOn, default);
+            this.Script = defaultOn;
+            this.Ingredient = defaultOn;
+            this.Spring = defaultOn;
+            this.Summer = defaultOn;
+            this.Fall = defaultOn;
+            this.Winter = defaultOn;
+            this.PFPCDataTypeState = defaultOn;
+        }
+
+        #region Members
+        public bool Name;
+        public MaskItem<bool, Model_DeepCopyMask> Model;
         public bool Script;
         public bool Ingredient;
         public bool Spring;

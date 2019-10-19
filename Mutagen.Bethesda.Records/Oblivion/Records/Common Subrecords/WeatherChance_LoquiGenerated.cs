@@ -1588,6 +1588,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public class WeatherChance_DeepCopyMask
+    {
+        public WeatherChance_DeepCopyMask()
+        {
+        }
+
+        public WeatherChance_DeepCopyMask(bool defaultOn)
+        {
+            this.Weather = defaultOn;
+            this.Chance = defaultOn;
+        }
+
+        #region Members
+        public bool Weather;
+        public bool Chance;
+        #endregion
+
+    }
+
     public class WeatherChance_TranslationMask : ITranslationMask
     {
         #region Members

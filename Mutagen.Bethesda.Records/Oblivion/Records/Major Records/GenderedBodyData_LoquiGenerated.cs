@@ -1871,6 +1871,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public class GenderedBodyData_DeepCopyMask
+    {
+        public GenderedBodyData_DeepCopyMask()
+        {
+        }
+
+        public GenderedBodyData_DeepCopyMask(bool defaultOn)
+        {
+            this.Male = new MaskItem<bool, BodyData_DeepCopyMask>(defaultOn, default);
+            this.Female = new MaskItem<bool, BodyData_DeepCopyMask>(defaultOn, default);
+        }
+
+        #region Members
+        public MaskItem<bool, BodyData_DeepCopyMask> Male;
+        public MaskItem<bool, BodyData_DeepCopyMask> Female;
+        #endregion
+
+    }
+
     public class GenderedBodyData_TranslationMask : ITranslationMask
     {
         #region Members

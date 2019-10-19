@@ -382,8 +382,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            return UtilityTranslation.MajorRecordParse<Keyword>(
-                record: new Keyword(),
+            var ret = new Keyword();
+            UtilityTranslation.MajorRecordParse<Keyword>(
+                record: ret,
                 frame: frame,
                 errorMask: errorMask,
                 recType: Keyword_Registration.KYWD_HEADER,
@@ -391,6 +392,7 @@ namespace Mutagen.Bethesda.Skyrim
                 masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
+            return ret;
         }
 
         #endregion
@@ -1603,6 +1605,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public Keyword_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Color = defaultOn;
+        }
+
+        #region Members
+        public bool Color;
+        #endregion
+
+    }
+
+    public class Keyword_DeepCopyMask : SkyrimMajorRecord_DeepCopyMask
+    {
+        public Keyword_DeepCopyMask()
+        {
+        }
+
+        public Keyword_DeepCopyMask(bool defaultOn)
         {
             this.Color = defaultOn;
         }

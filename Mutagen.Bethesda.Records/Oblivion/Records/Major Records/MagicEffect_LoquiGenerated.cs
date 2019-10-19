@@ -648,8 +648,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            return UtilityTranslation.MajorRecordParse<MagicEffect>(
-                record: new MagicEffect(),
+            var ret = new MagicEffect();
+            UtilityTranslation.MajorRecordParse<MagicEffect>(
+                record: ret,
                 frame: frame,
                 errorMask: errorMask,
                 recType: MagicEffect_Registration.MGEF_HEADER,
@@ -657,6 +658,7 @@ namespace Mutagen.Bethesda.Oblivion
                 masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
+            return ret;
         }
 
         #endregion
@@ -3720,6 +3722,53 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool EffectShader;
         public MaskItem<CopyOption, MagicEffectSubData_CopyMask> SubData;
         public CopyOption CounterEffects;
+        public bool DATADataTypeState;
+        #endregion
+
+    }
+
+    public class MagicEffect_DeepCopyMask : OblivionMajorRecord_DeepCopyMask
+    {
+        public MagicEffect_DeepCopyMask()
+        {
+        }
+
+        public MagicEffect_DeepCopyMask(bool defaultOn)
+        {
+            this.Name = defaultOn;
+            this.Description = defaultOn;
+            this.Icon = defaultOn;
+            this.Model = new MaskItem<bool, Model_DeepCopyMask>(defaultOn, default);
+            this.Flags = defaultOn;
+            this.BaseCost = defaultOn;
+            this.Unused = defaultOn;
+            this.MagicSchool = defaultOn;
+            this.Resistance = defaultOn;
+            this.CounterEffectCount = defaultOn;
+            this.Light = defaultOn;
+            this.ProjectileSpeed = defaultOn;
+            this.EffectShader = defaultOn;
+            this.SubData = new MaskItem<bool, MagicEffectSubData_DeepCopyMask>(defaultOn, default);
+            this.CounterEffects = defaultOn;
+            this.DATADataTypeState = defaultOn;
+        }
+
+        #region Members
+        public bool Name;
+        public bool Description;
+        public bool Icon;
+        public MaskItem<bool, Model_DeepCopyMask> Model;
+        public bool Flags;
+        public bool BaseCost;
+        public bool Unused;
+        public bool MagicSchool;
+        public bool Resistance;
+        public bool CounterEffectCount;
+        public bool Light;
+        public bool ProjectileSpeed;
+        public bool EffectShader;
+        public MaskItem<bool, MagicEffectSubData_DeepCopyMask> SubData;
+        public bool CounterEffects;
         public bool DATADataTypeState;
         #endregion
 

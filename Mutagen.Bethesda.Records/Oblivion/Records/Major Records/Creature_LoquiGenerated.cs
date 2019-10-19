@@ -1227,8 +1227,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            return UtilityTranslation.MajorRecordParse<Creature>(
-                record: new Creature(),
+            var ret = new Creature();
+            UtilityTranslation.MajorRecordParse<Creature>(
+                record: ret,
                 frame: frame,
                 errorMask: errorMask,
                 recType: Creature_Registration.CREA_HEADER,
@@ -1236,6 +1237,7 @@ namespace Mutagen.Bethesda.Oblivion
                 masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
+            return ret;
         }
 
         #endregion
@@ -8902,6 +8904,125 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool BloodDecal;
         public bool InheritsSoundFrom;
         public MaskItem<CopyOption, CreatureSound_CopyMask> Sounds;
+        public bool ACBSDataTypeState;
+        public bool AIDTDataTypeState;
+        public bool DATADataTypeState;
+        #endregion
+
+    }
+
+    public class Creature_DeepCopyMask : NPCAbstract_DeepCopyMask
+    {
+        public Creature_DeepCopyMask()
+        {
+        }
+
+        public Creature_DeepCopyMask(bool defaultOn)
+        {
+            this.Name = defaultOn;
+            this.Model = new MaskItem<bool, Model_DeepCopyMask>(defaultOn, default);
+            this.Items = new MaskItem<bool, ItemEntry_DeepCopyMask>(defaultOn, default);
+            this.Spells = defaultOn;
+            this.Models = defaultOn;
+            this.NIFT = defaultOn;
+            this.Flags = defaultOn;
+            this.BaseSpellPoints = defaultOn;
+            this.Fatigue = defaultOn;
+            this.BarterGold = defaultOn;
+            this.LevelOffset = defaultOn;
+            this.CalcMin = defaultOn;
+            this.CalcMax = defaultOn;
+            this.Factions = new MaskItem<bool, RankPlacement_DeepCopyMask>(defaultOn, default);
+            this.DeathItem = defaultOn;
+            this.Script = defaultOn;
+            this.Aggression = defaultOn;
+            this.Confidence = defaultOn;
+            this.EnergyLevel = defaultOn;
+            this.Responsibility = defaultOn;
+            this.BuySellServices = defaultOn;
+            this.Teaches = defaultOn;
+            this.MaximumTrainingLevel = defaultOn;
+            this.AIPackages = defaultOn;
+            this.Animations = defaultOn;
+            this.CreatureType = defaultOn;
+            this.CombatSkill = defaultOn;
+            this.MagicSkill = defaultOn;
+            this.StealthSkill = defaultOn;
+            this.SoulLevel = defaultOn;
+            this.Health = defaultOn;
+            this.AttackDamage = defaultOn;
+            this.Strength = defaultOn;
+            this.Intelligence = defaultOn;
+            this.Willpower = defaultOn;
+            this.Agility = defaultOn;
+            this.Speed = defaultOn;
+            this.Endurance = defaultOn;
+            this.Personality = defaultOn;
+            this.Luck = defaultOn;
+            this.AttackReach = defaultOn;
+            this.CombatStyle = defaultOn;
+            this.TurningSpeed = defaultOn;
+            this.BaseScale = defaultOn;
+            this.FootWeight = defaultOn;
+            this.BloodSpray = defaultOn;
+            this.BloodDecal = defaultOn;
+            this.InheritsSoundFrom = defaultOn;
+            this.Sounds = new MaskItem<bool, CreatureSound_DeepCopyMask>(defaultOn, default);
+            this.ACBSDataTypeState = defaultOn;
+            this.AIDTDataTypeState = defaultOn;
+            this.DATADataTypeState = defaultOn;
+        }
+
+        #region Members
+        public bool Name;
+        public MaskItem<bool, Model_DeepCopyMask> Model;
+        public MaskItem<bool, ItemEntry_DeepCopyMask> Items;
+        public bool Spells;
+        public bool Models;
+        public bool NIFT;
+        public bool Flags;
+        public bool BaseSpellPoints;
+        public bool Fatigue;
+        public bool BarterGold;
+        public bool LevelOffset;
+        public bool CalcMin;
+        public bool CalcMax;
+        public MaskItem<bool, RankPlacement_DeepCopyMask> Factions;
+        public bool DeathItem;
+        public bool Script;
+        public bool Aggression;
+        public bool Confidence;
+        public bool EnergyLevel;
+        public bool Responsibility;
+        public bool BuySellServices;
+        public bool Teaches;
+        public bool MaximumTrainingLevel;
+        public bool AIPackages;
+        public bool Animations;
+        public bool CreatureType;
+        public bool CombatSkill;
+        public bool MagicSkill;
+        public bool StealthSkill;
+        public bool SoulLevel;
+        public bool Health;
+        public bool AttackDamage;
+        public bool Strength;
+        public bool Intelligence;
+        public bool Willpower;
+        public bool Agility;
+        public bool Speed;
+        public bool Endurance;
+        public bool Personality;
+        public bool Luck;
+        public bool AttackReach;
+        public bool CombatStyle;
+        public bool TurningSpeed;
+        public bool BaseScale;
+        public bool FootWeight;
+        public bool BloodSpray;
+        public bool BloodDecal;
+        public bool InheritsSoundFrom;
+        public MaskItem<bool, CreatureSound_DeepCopyMask> Sounds;
         public bool ACBSDataTypeState;
         public bool AIDTDataTypeState;
         public bool DATADataTypeState;

@@ -413,8 +413,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            return UtilityTranslation.MajorRecordParse<Script>(
-                record: new Script(),
+            var ret = new Script();
+            UtilityTranslation.MajorRecordParse<Script>(
+                record: ret,
                 frame: frame,
                 errorMask: errorMask,
                 recType: Script_Registration.SCPT_HEADER,
@@ -422,6 +423,7 @@ namespace Mutagen.Bethesda.Oblivion
                 masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
+            return ret;
         }
 
         #endregion
@@ -1630,6 +1632,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Members
         public MaskItem<bool, ScriptFields_CopyMask> Fields;
+        #endregion
+
+    }
+
+    public class Script_DeepCopyMask : OblivionMajorRecord_DeepCopyMask
+    {
+        public Script_DeepCopyMask()
+        {
+        }
+
+        public Script_DeepCopyMask(bool defaultOn)
+        {
+            this.Fields = new MaskItem<bool, ScriptFields_DeepCopyMask>(defaultOn, default);
+        }
+
+        #region Members
+        public MaskItem<bool, ScriptFields_DeepCopyMask> Fields;
         #endregion
 
     }

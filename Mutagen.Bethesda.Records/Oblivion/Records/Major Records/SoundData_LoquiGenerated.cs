@@ -1821,6 +1821,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public class SoundData_DeepCopyMask
+    {
+        public SoundData_DeepCopyMask()
+        {
+        }
+
+        public SoundData_DeepCopyMask(bool defaultOn)
+        {
+            this.MinimumAttenuationDistance = defaultOn;
+            this.MaximumAttenuationDistance = defaultOn;
+            this.FrequencyAdjustment = defaultOn;
+            this.Flags = defaultOn;
+        }
+
+        #region Members
+        public bool MinimumAttenuationDistance;
+        public bool MaximumAttenuationDistance;
+        public bool FrequencyAdjustment;
+        public bool Flags;
+        #endregion
+
+    }
+
     public class SoundData_TranslationMask : ITranslationMask
     {
         #region Members

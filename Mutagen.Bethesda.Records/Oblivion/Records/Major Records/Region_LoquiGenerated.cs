@@ -644,8 +644,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            return UtilityTranslation.MajorRecordParse<Region>(
-                record: new Region(),
+            var ret = new Region();
+            UtilityTranslation.MajorRecordParse<Region>(
+                record: ret,
                 frame: frame,
                 errorMask: errorMask,
                 recType: Region_Registration.REGN_HEADER,
@@ -653,6 +654,7 @@ namespace Mutagen.Bethesda.Oblivion
                 masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
+            return ret;
         }
 
         #endregion
@@ -3245,6 +3247,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<CopyOption, RegionDataMapName_CopyMask> MapName;
         public MaskItem<CopyOption, RegionDataGrasses_CopyMask> Grasses;
         public MaskItem<CopyOption, RegionDataSounds_CopyMask> Sounds;
+        #endregion
+
+    }
+
+    public class Region_DeepCopyMask : OblivionMajorRecord_DeepCopyMask
+    {
+        public Region_DeepCopyMask()
+        {
+        }
+
+        public Region_DeepCopyMask(bool defaultOn)
+        {
+            this.Icon = defaultOn;
+            this.MapColor = defaultOn;
+            this.Worldspace = defaultOn;
+            this.Areas = new MaskItem<bool, RegionArea_DeepCopyMask>(defaultOn, default);
+            this.Objects = new MaskItem<bool, RegionDataObjects_DeepCopyMask>(defaultOn, default);
+            this.Weather = new MaskItem<bool, RegionDataWeather_DeepCopyMask>(defaultOn, default);
+            this.MapName = new MaskItem<bool, RegionDataMapName_DeepCopyMask>(defaultOn, default);
+            this.Grasses = new MaskItem<bool, RegionDataGrasses_DeepCopyMask>(defaultOn, default);
+            this.Sounds = new MaskItem<bool, RegionDataSounds_DeepCopyMask>(defaultOn, default);
+        }
+
+        #region Members
+        public bool Icon;
+        public bool MapColor;
+        public bool Worldspace;
+        public MaskItem<bool, RegionArea_DeepCopyMask> Areas;
+        public MaskItem<bool, RegionDataObjects_DeepCopyMask> Objects;
+        public MaskItem<bool, RegionDataWeather_DeepCopyMask> Weather;
+        public MaskItem<bool, RegionDataMapName_DeepCopyMask> MapName;
+        public MaskItem<bool, RegionDataGrasses_DeepCopyMask> Grasses;
+        public MaskItem<bool, RegionDataSounds_DeepCopyMask> Sounds;
         #endregion
 
     }

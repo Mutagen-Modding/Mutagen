@@ -522,8 +522,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            return UtilityTranslation.MajorRecordParse<AIPackage>(
-                record: new AIPackage(),
+            var ret = new AIPackage();
+            UtilityTranslation.MajorRecordParse<AIPackage>(
+                record: ret,
                 frame: frame,
                 errorMask: errorMask,
                 recType: AIPackage_Registration.PACK_HEADER,
@@ -531,6 +532,7 @@ namespace Mutagen.Bethesda.Oblivion
                 masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
+            return ret;
         }
 
         #endregion
@@ -2740,6 +2742,35 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<CopyOption, AIPackageSchedule_CopyMask> Schedule;
         public MaskItem<CopyOption, AIPackageTarget_CopyMask> Target;
         public MaskItem<CopyOption, Condition_CopyMask> Conditions;
+        public bool PKDTDataTypeState;
+        #endregion
+
+    }
+
+    public class AIPackage_DeepCopyMask : OblivionMajorRecord_DeepCopyMask
+    {
+        public AIPackage_DeepCopyMask()
+        {
+        }
+
+        public AIPackage_DeepCopyMask(bool defaultOn)
+        {
+            this.Flags = defaultOn;
+            this.GeneralType = defaultOn;
+            this.Location = new MaskItem<bool, AIPackageLocation_DeepCopyMask>(defaultOn, default);
+            this.Schedule = new MaskItem<bool, AIPackageSchedule_DeepCopyMask>(defaultOn, default);
+            this.Target = new MaskItem<bool, AIPackageTarget_DeepCopyMask>(defaultOn, default);
+            this.Conditions = new MaskItem<bool, Condition_DeepCopyMask>(defaultOn, default);
+            this.PKDTDataTypeState = defaultOn;
+        }
+
+        #region Members
+        public bool Flags;
+        public bool GeneralType;
+        public MaskItem<bool, AIPackageLocation_DeepCopyMask> Location;
+        public MaskItem<bool, AIPackageSchedule_DeepCopyMask> Schedule;
+        public MaskItem<bool, AIPackageTarget_DeepCopyMask> Target;
+        public MaskItem<bool, Condition_DeepCopyMask> Conditions;
         public bool PKDTDataTypeState;
         #endregion
 

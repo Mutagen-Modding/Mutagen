@@ -1964,6 +1964,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public class ListGroup_DeepCopyMask<T_DeepCopyMask>
+        where T_DeepCopyMask : class, new()
+    {
+        public ListGroup_DeepCopyMask()
+        {
+        }
+
+        public ListGroup_DeepCopyMask(bool defaultOn)
+        {
+            this.GroupType = defaultOn;
+            this.LastModified = defaultOn;
+            this.Items = new MaskItem<bool, T_DeepCopyMask>(defaultOn, default);
+        }
+
+        #region Members
+        public bool GroupType;
+        public bool LastModified;
+        public MaskItem<bool, T_DeepCopyMask> Items;
+        #endregion
+
+    }
+
     public class ListGroup_TranslationMask<T_TranslMask> : ITranslationMask
         where T_TranslMask : class, ITranslationMask, new()
     {

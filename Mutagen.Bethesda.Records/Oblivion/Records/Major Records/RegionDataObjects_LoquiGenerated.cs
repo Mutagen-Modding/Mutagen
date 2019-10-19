@@ -1658,6 +1658,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public class RegionDataObjects_DeepCopyMask : RegionData_DeepCopyMask
+    {
+        public RegionDataObjects_DeepCopyMask()
+        {
+        }
+
+        public RegionDataObjects_DeepCopyMask(bool defaultOn)
+        {
+            this.Objects = new MaskItem<bool, RegionDataObject_DeepCopyMask>(defaultOn, default);
+        }
+
+        #region Members
+        public MaskItem<bool, RegionDataObject_DeepCopyMask> Objects;
+        #endregion
+
+    }
+
     public class RegionDataObjects_TranslationMask : RegionData_TranslationMask
     {
         #region Members

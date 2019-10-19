@@ -550,8 +550,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            return UtilityTranslation.MajorRecordParse<Grass>(
-                record: new Grass(),
+            var ret = new Grass();
+            UtilityTranslation.MajorRecordParse<Grass>(
+                record: ret,
                 frame: frame,
                 errorMask: errorMask,
                 recType: Grass_Registration.GRAS_HEADER,
@@ -559,6 +560,7 @@ namespace Mutagen.Bethesda.Oblivion
                 masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
+            return ret;
         }
 
         #endregion
@@ -3085,6 +3087,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Members
         public MaskItem<CopyOption, Model_CopyMask> Model;
+        public bool Density;
+        public bool MinSlope;
+        public bool MaxSlope;
+        public bool Fluff1;
+        public bool UnitFromWaterAmount;
+        public bool Fluff2;
+        public bool UnitFromWaterMode;
+        public bool PositionRange;
+        public bool HeightRange;
+        public bool ColorRange;
+        public bool WavePeriod;
+        public bool Flags;
+        public bool DATADataTypeState;
+        #endregion
+
+    }
+
+    public class Grass_DeepCopyMask : OblivionMajorRecord_DeepCopyMask
+    {
+        public Grass_DeepCopyMask()
+        {
+        }
+
+        public Grass_DeepCopyMask(bool defaultOn)
+        {
+            this.Model = new MaskItem<bool, Model_DeepCopyMask>(defaultOn, default);
+            this.Density = defaultOn;
+            this.MinSlope = defaultOn;
+            this.MaxSlope = defaultOn;
+            this.Fluff1 = defaultOn;
+            this.UnitFromWaterAmount = defaultOn;
+            this.Fluff2 = defaultOn;
+            this.UnitFromWaterMode = defaultOn;
+            this.PositionRange = defaultOn;
+            this.HeightRange = defaultOn;
+            this.ColorRange = defaultOn;
+            this.WavePeriod = defaultOn;
+            this.Flags = defaultOn;
+            this.DATADataTypeState = defaultOn;
+        }
+
+        #region Members
+        public MaskItem<bool, Model_DeepCopyMask> Model;
         public bool Density;
         public bool MinSlope;
         public bool MaxSlope;

@@ -2018,6 +2018,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public class QuestTarget_DeepCopyMask
+    {
+        public QuestTarget_DeepCopyMask()
+        {
+        }
+
+        public QuestTarget_DeepCopyMask(bool defaultOn)
+        {
+            this.Target = defaultOn;
+            this.Flags = defaultOn;
+            this.Conditions = new MaskItem<bool, Condition_DeepCopyMask>(defaultOn, default);
+            this.QSTADataTypeState = defaultOn;
+        }
+
+        #region Members
+        public bool Target;
+        public bool Flags;
+        public MaskItem<bool, Condition_DeepCopyMask> Conditions;
+        public bool QSTADataTypeState;
+        #endregion
+
+    }
+
     public class QuestTarget_TranslationMask : ITranslationMask
     {
         #region Members

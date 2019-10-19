@@ -830,8 +830,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            var ret = UtilityTranslation.MajorRecordParse<Cell>(
-                record: new Cell(),
+            var ret = new Cell();
+            UtilityTranslation.MajorRecordParse<Cell>(
+                record: ret,
                 frame: frame,
                 errorMask: errorMask,
                 recType: Cell_Registration.CELL_HEADER,
@@ -5165,6 +5166,63 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public CopyOption Temporary;
         public bool VisibleWhenDistantTimestamp;
         public CopyOption VisibleWhenDistant;
+        #endregion
+
+    }
+
+    public class Cell_DeepCopyMask : Place_DeepCopyMask
+    {
+        public Cell_DeepCopyMask()
+        {
+        }
+
+        public Cell_DeepCopyMask(bool defaultOn)
+        {
+            this.Name = defaultOn;
+            this.Flags = defaultOn;
+            this.Grid = defaultOn;
+            this.Lighting = new MaskItem<bool, CellLighting_DeepCopyMask>(defaultOn, default);
+            this.Regions = defaultOn;
+            this.MusicType = defaultOn;
+            this.WaterHeight = defaultOn;
+            this.Climate = defaultOn;
+            this.Water = defaultOn;
+            this.Owner = defaultOn;
+            this.FactionRank = defaultOn;
+            this.GlobalVariable = defaultOn;
+            this.PathGrid = new MaskItem<bool, PathGrid_DeepCopyMask>(defaultOn, default);
+            this.Landscape = new MaskItem<bool, Landscape_DeepCopyMask>(defaultOn, default);
+            this.Timestamp = defaultOn;
+            this.PersistentTimestamp = defaultOn;
+            this.Persistent = defaultOn;
+            this.TemporaryTimestamp = defaultOn;
+            this.Temporary = defaultOn;
+            this.VisibleWhenDistantTimestamp = defaultOn;
+            this.VisibleWhenDistant = defaultOn;
+        }
+
+        #region Members
+        public bool Name;
+        public bool Flags;
+        public bool Grid;
+        public MaskItem<bool, CellLighting_DeepCopyMask> Lighting;
+        public bool Regions;
+        public bool MusicType;
+        public bool WaterHeight;
+        public bool Climate;
+        public bool Water;
+        public bool Owner;
+        public bool FactionRank;
+        public bool GlobalVariable;
+        public MaskItem<bool, PathGrid_DeepCopyMask> PathGrid;
+        public MaskItem<bool, Landscape_DeepCopyMask> Landscape;
+        public bool Timestamp;
+        public bool PersistentTimestamp;
+        public bool Persistent;
+        public bool TemporaryTimestamp;
+        public bool Temporary;
+        public bool VisibleWhenDistantTimestamp;
+        public bool VisibleWhenDistant;
         #endregion
 
     }

@@ -535,8 +535,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            return UtilityTranslation.MajorRecordParse<Landscape>(
-                record: new Landscape(),
+            var ret = new Landscape();
+            UtilityTranslation.MajorRecordParse<Landscape>(
+                record: ret,
                 frame: frame,
                 errorMask: errorMask,
                 recType: Landscape_Registration.LAND_HEADER,
@@ -544,6 +545,7 @@ namespace Mutagen.Bethesda.Oblivion
                 masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
+            return ret;
         }
 
         #endregion
@@ -2682,6 +2684,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool VertexColors;
         public MaskItem<CopyOption, BaseLayer_CopyMask> Layers;
         public CopyOption Textures;
+        #endregion
+
+    }
+
+    public class Landscape_DeepCopyMask : OblivionMajorRecord_DeepCopyMask
+    {
+        public Landscape_DeepCopyMask()
+        {
+        }
+
+        public Landscape_DeepCopyMask(bool defaultOn)
+        {
+            this.Unknown = defaultOn;
+            this.VertexNormals = defaultOn;
+            this.VertexHeightMap = defaultOn;
+            this.VertexColors = defaultOn;
+            this.Layers = new MaskItem<bool, BaseLayer_DeepCopyMask>(defaultOn, default);
+            this.Textures = defaultOn;
+        }
+
+        #region Members
+        public bool Unknown;
+        public bool VertexNormals;
+        public bool VertexHeightMap;
+        public bool VertexColors;
+        public MaskItem<bool, BaseLayer_DeepCopyMask> Layers;
+        public bool Textures;
         #endregion
 
     }

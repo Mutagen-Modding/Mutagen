@@ -1812,6 +1812,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public class LockInformation_DeepCopyMask
+    {
+        public LockInformation_DeepCopyMask()
+        {
+        }
+
+        public LockInformation_DeepCopyMask(bool defaultOn)
+        {
+            this.LockLevel = defaultOn;
+            this.Fluff = defaultOn;
+            this.Key = defaultOn;
+            this.Flags = defaultOn;
+        }
+
+        #region Members
+        public bool LockLevel;
+        public bool Fluff;
+        public bool Key;
+        public bool Flags;
+        #endregion
+
+    }
+
     public class LockInformation_TranslationMask : ITranslationMask
     {
         #region Members

@@ -742,8 +742,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            var ret = await UtilityAsyncTranslation.MajorRecordParse<Worldspace>(
-                record: new Worldspace(),
+            var ret = new Worldspace();
+            await UtilityAsyncTranslation.MajorRecordParse<Worldspace>(
+                record: ret,
                 frame: frame,
                 errorMask: errorMask,
                 recType: Worldspace_Registration.WRLD_HEADER,
@@ -4260,6 +4261,53 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<CopyOption, Cell_CopyMask> TopCell;
         public bool SubCellsTimestamp;
         public MaskItem<CopyOption, WorldspaceBlock_CopyMask> SubCells;
+        public bool UsingOffsetLength;
+        #endregion
+
+    }
+
+    public class Worldspace_DeepCopyMask : Place_DeepCopyMask
+    {
+        public Worldspace_DeepCopyMask()
+        {
+        }
+
+        public Worldspace_DeepCopyMask(bool defaultOn)
+        {
+            this.Name = defaultOn;
+            this.Parent = defaultOn;
+            this.Climate = defaultOn;
+            this.Water = defaultOn;
+            this.Icon = defaultOn;
+            this.MapData = new MaskItem<bool, MapData_DeepCopyMask>(defaultOn, default);
+            this.Flags = defaultOn;
+            this.ObjectBoundsMin = defaultOn;
+            this.ObjectBoundsMax = defaultOn;
+            this.Music = defaultOn;
+            this.OffsetData = defaultOn;
+            this.Road = new MaskItem<bool, Road_DeepCopyMask>(defaultOn, default);
+            this.TopCell = new MaskItem<bool, Cell_DeepCopyMask>(defaultOn, default);
+            this.SubCellsTimestamp = defaultOn;
+            this.SubCells = new MaskItem<bool, WorldspaceBlock_DeepCopyMask>(defaultOn, default);
+            this.UsingOffsetLength = defaultOn;
+        }
+
+        #region Members
+        public bool Name;
+        public bool Parent;
+        public bool Climate;
+        public bool Water;
+        public bool Icon;
+        public MaskItem<bool, MapData_DeepCopyMask> MapData;
+        public bool Flags;
+        public bool ObjectBoundsMin;
+        public bool ObjectBoundsMax;
+        public bool Music;
+        public bool OffsetData;
+        public MaskItem<bool, Road_DeepCopyMask> Road;
+        public MaskItem<bool, Cell_DeepCopyMask> TopCell;
+        public bool SubCellsTimestamp;
+        public MaskItem<bool, WorldspaceBlock_DeepCopyMask> SubCells;
         public bool UsingOffsetLength;
         #endregion
 

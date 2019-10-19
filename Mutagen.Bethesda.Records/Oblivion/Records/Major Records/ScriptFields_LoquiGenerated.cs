@@ -2523,6 +2523,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public class ScriptFields_DeepCopyMask
+    {
+        public ScriptFields_DeepCopyMask()
+        {
+        }
+
+        public ScriptFields_DeepCopyMask(bool defaultOn)
+        {
+            this.MetadataSummary = new MaskItem<bool, ScriptMetaSummary_DeepCopyMask>(defaultOn, default);
+            this.CompiledScript = defaultOn;
+            this.SourceCode = defaultOn;
+            this.LocalVariables = new MaskItem<bool, LocalVariable_DeepCopyMask>(defaultOn, default);
+            this.References = new MaskItem<bool, ScriptReference_DeepCopyMask>(defaultOn, default);
+        }
+
+        #region Members
+        public MaskItem<bool, ScriptMetaSummary_DeepCopyMask> MetadataSummary;
+        public bool CompiledScript;
+        public bool SourceCode;
+        public MaskItem<bool, LocalVariable_DeepCopyMask> LocalVariables;
+        public MaskItem<bool, ScriptReference_DeepCopyMask> References;
+        #endregion
+
+    }
+
     public class ScriptFields_TranslationMask : ITranslationMask
     {
         #region Members

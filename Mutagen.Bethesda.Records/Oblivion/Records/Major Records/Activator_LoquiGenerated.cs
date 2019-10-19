@@ -451,8 +451,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            return UtilityTranslation.MajorRecordParse<Activator>(
-                record: new Activator(),
+            var ret = new Activator();
+            UtilityTranslation.MajorRecordParse<Activator>(
+                record: ret,
                 frame: frame,
                 errorMask: errorMask,
                 recType: Activator_Registration.ACTI_HEADER,
@@ -460,6 +461,7 @@ namespace Mutagen.Bethesda.Oblivion
                 masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
+            return ret;
         }
 
         #endregion
@@ -2078,6 +2080,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Members
         public bool Name;
         public MaskItem<CopyOption, Model_CopyMask> Model;
+        public bool Script;
+        public bool Sound;
+        #endregion
+
+    }
+
+    public class Activator_DeepCopyMask : OblivionMajorRecord_DeepCopyMask
+    {
+        public Activator_DeepCopyMask()
+        {
+        }
+
+        public Activator_DeepCopyMask(bool defaultOn)
+        {
+            this.Name = defaultOn;
+            this.Model = new MaskItem<bool, Model_DeepCopyMask>(defaultOn, default);
+            this.Script = defaultOn;
+            this.Sound = defaultOn;
+        }
+
+        #region Members
+        public bool Name;
+        public MaskItem<bool, Model_DeepCopyMask> Model;
         public bool Script;
         public bool Sound;
         #endregion

@@ -1919,6 +1919,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public class BodyData_DeepCopyMask
+    {
+        public BodyData_DeepCopyMask()
+        {
+        }
+
+        public BodyData_DeepCopyMask(bool defaultOn)
+        {
+            this.Model = new MaskItem<bool, Model_DeepCopyMask>(defaultOn, default);
+            this.BodyParts = new MaskItem<bool, BodyPart_DeepCopyMask>(defaultOn, default);
+        }
+
+        #region Members
+        public MaskItem<bool, Model_DeepCopyMask> Model;
+        public MaskItem<bool, BodyPart_DeepCopyMask> BodyParts;
+        #endregion
+
+    }
+
     public class BodyData_TranslationMask : ITranslationMask
     {
         #region Members

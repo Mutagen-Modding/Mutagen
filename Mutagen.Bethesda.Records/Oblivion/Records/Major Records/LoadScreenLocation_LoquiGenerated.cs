@@ -1692,6 +1692,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public class LoadScreenLocation_DeepCopyMask
+    {
+        public LoadScreenLocation_DeepCopyMask()
+        {
+        }
+
+        public LoadScreenLocation_DeepCopyMask(bool defaultOn)
+        {
+            this.Direct = defaultOn;
+            this.Indirect = defaultOn;
+            this.GridPoint = defaultOn;
+        }
+
+        #region Members
+        public bool Direct;
+        public bool Indirect;
+        public bool GridPoint;
+        #endregion
+
+    }
+
     public class LoadScreenLocation_TranslationMask : ITranslationMask
     {
         #region Members

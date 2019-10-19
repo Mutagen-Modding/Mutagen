@@ -2824,6 +2824,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
+    public class Textures_DeepCopyMask
+    {
+        public Textures_DeepCopyMask()
+        {
+        }
+
+        public Textures_DeepCopyMask(bool defaultOn)
+        {
+            this.Diffuse = defaultOn;
+            this.NormalOrGloss = defaultOn;
+            this.EnvironmentMaskOrSubsurfaceTint = defaultOn;
+            this.GlowOrDetailMap = defaultOn;
+            this.Height = defaultOn;
+            this.Environment = defaultOn;
+            this.Multilayer = defaultOn;
+            this.BacklightMaskOrSpecular = defaultOn;
+        }
+
+        #region Members
+        public bool Diffuse;
+        public bool NormalOrGloss;
+        public bool EnvironmentMaskOrSubsurfaceTint;
+        public bool GlowOrDetailMap;
+        public bool Height;
+        public bool Environment;
+        public bool Multilayer;
+        public bool BacklightMaskOrSpecular;
+        #endregion
+
+    }
+
     public class Textures_TranslationMask : ITranslationMask
     {
         #region Members

@@ -1304,6 +1304,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
+    public class GameSetting_DeepCopyMask : SkyrimMajorRecord_DeepCopyMask
+    {
+        public GameSetting_DeepCopyMask()
+        {
+        }
+
+        public GameSetting_DeepCopyMask(bool defaultOn)
+        {
+        }
+
+    }
+
     public class GameSetting_TranslationMask : SkyrimMajorRecord_TranslationMask
     {
         #region Ctors

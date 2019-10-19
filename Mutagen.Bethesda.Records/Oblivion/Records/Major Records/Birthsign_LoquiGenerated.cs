@@ -478,8 +478,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            return UtilityTranslation.MajorRecordParse<Birthsign>(
-                record: new Birthsign(),
+            var ret = new Birthsign();
+            UtilityTranslation.MajorRecordParse<Birthsign>(
+                record: ret,
                 frame: frame,
                 errorMask: errorMask,
                 recType: Birthsign_Registration.BSGN_HEADER,
@@ -487,6 +488,7 @@ namespace Mutagen.Bethesda.Oblivion
                 masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
+            return ret;
         }
 
         #endregion
@@ -2213,6 +2215,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Icon;
         public bool Description;
         public CopyOption Spells;
+        #endregion
+
+    }
+
+    public class Birthsign_DeepCopyMask : OblivionMajorRecord_DeepCopyMask
+    {
+        public Birthsign_DeepCopyMask()
+        {
+        }
+
+        public Birthsign_DeepCopyMask(bool defaultOn)
+        {
+            this.Name = defaultOn;
+            this.Icon = defaultOn;
+            this.Description = defaultOn;
+            this.Spells = defaultOn;
+        }
+
+        #region Members
+        public bool Name;
+        public bool Icon;
+        public bool Description;
+        public bool Spells;
         #endregion
 
     }

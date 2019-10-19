@@ -1588,6 +1588,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
+    public class SkyrimMajorRecord_DeepCopyMask : MajorRecord_DeepCopyMask
+    {
+        public SkyrimMajorRecord_DeepCopyMask()
+        {
+        }
+
+        public SkyrimMajorRecord_DeepCopyMask(bool defaultOn)
+        {
+            this.SkyrimMajorRecordFlags = defaultOn;
+            this.FormVersion = defaultOn;
+            this.Version2 = defaultOn;
+        }
+
+        #region Members
+        public bool SkyrimMajorRecordFlags;
+        public bool FormVersion;
+        public bool Version2;
+        #endregion
+
+    }
+
     public class SkyrimMajorRecord_TranslationMask : MajorRecord_TranslationMask
     {
         #region Members

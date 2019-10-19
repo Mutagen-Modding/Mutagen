@@ -1767,6 +1767,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public class BodyPart_DeepCopyMask
+    {
+        public BodyPart_DeepCopyMask()
+        {
+        }
+
+        public BodyPart_DeepCopyMask(bool defaultOn)
+        {
+            this.Index = defaultOn;
+            this.Icon = defaultOn;
+        }
+
+        #region Members
+        public bool Index;
+        public bool Icon;
+        #endregion
+
+    }
+
     public class BodyPart_TranslationMask : ITranslationMask
     {
         #region Members

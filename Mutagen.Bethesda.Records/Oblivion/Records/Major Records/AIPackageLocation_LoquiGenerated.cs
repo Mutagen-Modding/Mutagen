@@ -1709,6 +1709,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public class AIPackageLocation_DeepCopyMask
+    {
+        public AIPackageLocation_DeepCopyMask()
+        {
+        }
+
+        public AIPackageLocation_DeepCopyMask(bool defaultOn)
+        {
+            this.Type = defaultOn;
+            this.LocationReference = defaultOn;
+            this.Radius = defaultOn;
+        }
+
+        #region Members
+        public bool Type;
+        public bool LocationReference;
+        public bool Radius;
+        #endregion
+
+    }
+
     public class AIPackageLocation_TranslationMask : ITranslationMask
     {
         #region Members

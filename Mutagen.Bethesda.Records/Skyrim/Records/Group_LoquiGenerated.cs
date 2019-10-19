@@ -2043,6 +2043,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
+    public class Group_DeepCopyMask<T_DeepCopyMask>
+        where T_DeepCopyMask : SkyrimMajorRecord_DeepCopyMask, new()
+    {
+        public Group_DeepCopyMask()
+        {
+        }
+
+        public Group_DeepCopyMask(bool defaultOn)
+        {
+            this.GroupType = defaultOn;
+            this.LastModified = defaultOn;
+            this.Unknown = defaultOn;
+            this.Items = new MaskItem<bool, T_DeepCopyMask>(defaultOn, default);
+        }
+
+        #region Members
+        public bool GroupType;
+        public bool LastModified;
+        public bool Unknown;
+        public MaskItem<bool, T_DeepCopyMask> Items;
+        #endregion
+
+    }
+
     public class Group_TranslationMask<T_TranslMask> : ITranslationMask
         where T_TranslMask : SkyrimMajorRecord_TranslationMask, ITranslationMask, new()
     {

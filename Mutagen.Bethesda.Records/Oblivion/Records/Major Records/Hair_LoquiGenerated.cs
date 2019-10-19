@@ -466,8 +466,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            return UtilityTranslation.MajorRecordParse<Hair>(
-                record: new Hair(),
+            var ret = new Hair();
+            UtilityTranslation.MajorRecordParse<Hair>(
+                record: ret,
                 frame: frame,
                 errorMask: errorMask,
                 recType: Hair_Registration.HAIR_HEADER,
@@ -475,6 +476,7 @@ namespace Mutagen.Bethesda.Oblivion
                 masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
+            return ret;
         }
 
         #endregion
@@ -2172,6 +2174,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Members
         public bool Name;
         public MaskItem<CopyOption, Model_CopyMask> Model;
+        public bool Icon;
+        public bool Flags;
+        #endregion
+
+    }
+
+    public class Hair_DeepCopyMask : OblivionMajorRecord_DeepCopyMask
+    {
+        public Hair_DeepCopyMask()
+        {
+        }
+
+        public Hair_DeepCopyMask(bool defaultOn)
+        {
+            this.Name = defaultOn;
+            this.Model = new MaskItem<bool, Model_DeepCopyMask>(defaultOn, default);
+            this.Icon = defaultOn;
+            this.Flags = defaultOn;
+        }
+
+        #region Members
+        public bool Name;
+        public MaskItem<bool, Model_DeepCopyMask> Model;
         public bool Icon;
         public bool Flags;
         #endregion

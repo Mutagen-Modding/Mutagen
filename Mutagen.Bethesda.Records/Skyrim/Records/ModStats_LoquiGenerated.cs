@@ -1696,6 +1696,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
+    public class ModStats_DeepCopyMask
+    {
+        public ModStats_DeepCopyMask()
+        {
+        }
+
+        public ModStats_DeepCopyMask(bool defaultOn)
+        {
+            this.Version = defaultOn;
+            this.NumRecords = defaultOn;
+            this.NextObjectID = defaultOn;
+        }
+
+        #region Members
+        public bool Version;
+        public bool NumRecords;
+        public bool NextObjectID;
+        #endregion
+
+    }
+
     public class ModStats_TranslationMask : ITranslationMask
     {
         #region Members

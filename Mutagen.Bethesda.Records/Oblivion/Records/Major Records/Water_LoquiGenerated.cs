@@ -952,8 +952,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            return UtilityTranslation.MajorRecordParse<Water>(
-                record: new Water(),
+            var ret = new Water();
+            UtilityTranslation.MajorRecordParse<Water>(
+                record: ret,
                 frame: frame,
                 errorMask: errorMask,
                 recType: Water_Registration.WATR_HEADER,
@@ -961,6 +962,7 @@ namespace Mutagen.Bethesda.Oblivion
                 masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
+            return ret;
         }
 
         #endregion
@@ -5705,6 +5707,87 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool DisplacementSimulatorStartingSize;
         public bool Damage;
         public MaskItem<CopyOption, RelatedWaters_CopyMask> RelatedWaters;
+        public bool DATADataTypeState;
+        #endregion
+
+    }
+
+    public class Water_DeepCopyMask : OblivionMajorRecord_DeepCopyMask
+    {
+        public Water_DeepCopyMask()
+        {
+        }
+
+        public Water_DeepCopyMask(bool defaultOn)
+        {
+            this.Texture = defaultOn;
+            this.Opacity = defaultOn;
+            this.Flags = defaultOn;
+            this.MaterialID = defaultOn;
+            this.Sound = defaultOn;
+            this.WindVelocity = defaultOn;
+            this.WindDirection = defaultOn;
+            this.WaveAmplitude = defaultOn;
+            this.WaveFrequency = defaultOn;
+            this.SunPower = defaultOn;
+            this.ReflectivityAmount = defaultOn;
+            this.FresnelAmount = defaultOn;
+            this.ScrollXSpeed = defaultOn;
+            this.ScrollYSpeed = defaultOn;
+            this.FogDistanceNearPlane = defaultOn;
+            this.FogDistanceFarPlane = defaultOn;
+            this.ShallowColor = defaultOn;
+            this.DeepColor = defaultOn;
+            this.ReflectionColor = defaultOn;
+            this.TextureBlend = defaultOn;
+            this.RainSimulatorForce = defaultOn;
+            this.RainSimulatorVelocity = defaultOn;
+            this.RainSimulatorFalloff = defaultOn;
+            this.RainSimulatorDampner = defaultOn;
+            this.RainSimulatorStartingSize = defaultOn;
+            this.DisplacementSimulatorForce = defaultOn;
+            this.DisplacementSimulatorVelocity = defaultOn;
+            this.DisplacementSimulatorFalloff = defaultOn;
+            this.DisplacementSimulatorDampner = defaultOn;
+            this.DisplacementSimulatorStartingSize = defaultOn;
+            this.Damage = defaultOn;
+            this.RelatedWaters = new MaskItem<bool, RelatedWaters_DeepCopyMask>(defaultOn, default);
+            this.DATADataTypeState = defaultOn;
+        }
+
+        #region Members
+        public bool Texture;
+        public bool Opacity;
+        public bool Flags;
+        public bool MaterialID;
+        public bool Sound;
+        public bool WindVelocity;
+        public bool WindDirection;
+        public bool WaveAmplitude;
+        public bool WaveFrequency;
+        public bool SunPower;
+        public bool ReflectivityAmount;
+        public bool FresnelAmount;
+        public bool ScrollXSpeed;
+        public bool ScrollYSpeed;
+        public bool FogDistanceNearPlane;
+        public bool FogDistanceFarPlane;
+        public bool ShallowColor;
+        public bool DeepColor;
+        public bool ReflectionColor;
+        public bool TextureBlend;
+        public bool RainSimulatorForce;
+        public bool RainSimulatorVelocity;
+        public bool RainSimulatorFalloff;
+        public bool RainSimulatorDampner;
+        public bool RainSimulatorStartingSize;
+        public bool DisplacementSimulatorForce;
+        public bool DisplacementSimulatorVelocity;
+        public bool DisplacementSimulatorFalloff;
+        public bool DisplacementSimulatorDampner;
+        public bool DisplacementSimulatorStartingSize;
+        public bool Damage;
+        public MaskItem<bool, RelatedWaters_DeepCopyMask> RelatedWaters;
         public bool DATADataTypeState;
         #endregion
 

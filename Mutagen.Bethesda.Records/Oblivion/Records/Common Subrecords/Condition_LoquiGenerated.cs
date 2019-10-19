@@ -2232,6 +2232,37 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public class Condition_DeepCopyMask
+    {
+        public Condition_DeepCopyMask()
+        {
+        }
+
+        public Condition_DeepCopyMask(bool defaultOn)
+        {
+            this.CompareOperator = defaultOn;
+            this.Flags = defaultOn;
+            this.Fluff = defaultOn;
+            this.ComparisonValue = defaultOn;
+            this.Function = defaultOn;
+            this.FirstParameter = defaultOn;
+            this.SecondParameter = defaultOn;
+            this.ThirdParameter = defaultOn;
+        }
+
+        #region Members
+        public bool CompareOperator;
+        public bool Flags;
+        public bool Fluff;
+        public bool ComparisonValue;
+        public bool Function;
+        public bool FirstParameter;
+        public bool SecondParameter;
+        public bool ThirdParameter;
+        #endregion
+
+    }
+
     public class Condition_TranslationMask : ITranslationMask
     {
         #region Members

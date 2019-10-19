@@ -562,8 +562,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            return UtilityTranslation.MajorRecordParse<SoulGem>(
-                record: new SoulGem(),
+            var ret = new SoulGem();
+            UtilityTranslation.MajorRecordParse<SoulGem>(
+                record: ret,
                 frame: frame,
                 errorMask: errorMask,
                 recType: SoulGem_Registration.SLGM_HEADER,
@@ -571,6 +572,7 @@ namespace Mutagen.Bethesda.Oblivion
                 masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
+            return ret;
         }
 
         #endregion
@@ -2869,6 +2871,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Members
         public bool Name;
         public MaskItem<CopyOption, Model_CopyMask> Model;
+        public bool Icon;
+        public bool Script;
+        public bool Value;
+        public bool Weight;
+        public bool ContainedSoul;
+        public bool MaximumCapacity;
+        public bool DATADataTypeState;
+        #endregion
+
+    }
+
+    public class SoulGem_DeepCopyMask : ItemAbstract_DeepCopyMask
+    {
+        public SoulGem_DeepCopyMask()
+        {
+        }
+
+        public SoulGem_DeepCopyMask(bool defaultOn)
+        {
+            this.Name = defaultOn;
+            this.Model = new MaskItem<bool, Model_DeepCopyMask>(defaultOn, default);
+            this.Icon = defaultOn;
+            this.Script = defaultOn;
+            this.Value = defaultOn;
+            this.Weight = defaultOn;
+            this.ContainedSoul = defaultOn;
+            this.MaximumCapacity = defaultOn;
+            this.DATADataTypeState = defaultOn;
+        }
+
+        #region Members
+        public bool Name;
+        public MaskItem<bool, Model_DeepCopyMask> Model;
         public bool Icon;
         public bool Script;
         public bool Value;

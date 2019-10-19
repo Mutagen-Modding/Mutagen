@@ -2445,6 +2445,37 @@ namespace Mutagen.Bethesda.Tests.Internals
 
     }
 
+    public class TestingSettings_DeepCopyMask
+    {
+        public TestingSettings_DeepCopyMask()
+        {
+        }
+
+        public TestingSettings_DeepCopyMask(bool defaultOn)
+        {
+            this.TestGroupMasks = defaultOn;
+            this.TestModList = defaultOn;
+            this.TestFlattenedMod = defaultOn;
+            this.TestBenchmarks = defaultOn;
+            this.TestLocators = defaultOn;
+            this.DataFolderLocations = new MaskItem<bool, DataFolderLocations_DeepCopyMask>(defaultOn, default);
+            this.PassthroughSettings = new MaskItem<bool, PassthroughSettings_DeepCopyMask>(defaultOn, default);
+            this.TargetGroups = new MaskItem<bool, TargetGroup_DeepCopyMask>(defaultOn, default);
+        }
+
+        #region Members
+        public bool TestGroupMasks;
+        public bool TestModList;
+        public bool TestFlattenedMod;
+        public bool TestBenchmarks;
+        public bool TestLocators;
+        public MaskItem<bool, DataFolderLocations_DeepCopyMask> DataFolderLocations;
+        public MaskItem<bool, PassthroughSettings_DeepCopyMask> PassthroughSettings;
+        public MaskItem<bool, TargetGroup_DeepCopyMask> TargetGroups;
+        #endregion
+
+    }
+
     public class TestingSettings_TranslationMask : ITranslationMask
     {
         #region Members

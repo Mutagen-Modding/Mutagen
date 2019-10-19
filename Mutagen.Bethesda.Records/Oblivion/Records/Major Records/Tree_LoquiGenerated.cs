@@ -580,8 +580,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            return UtilityTranslation.MajorRecordParse<Tree>(
-                record: new Tree(),
+            var ret = new Tree();
+            UtilityTranslation.MajorRecordParse<Tree>(
+                record: ret,
                 frame: frame,
                 errorMask: errorMask,
                 recType: Tree_Registration.TREE_HEADER,
@@ -589,6 +590,7 @@ namespace Mutagen.Bethesda.Oblivion
                 masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
+            return ret;
         }
 
         #endregion
@@ -3430,6 +3432,51 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<CopyOption, Model_CopyMask> Model;
         public bool Icon;
         public CopyOption SpeedTreeSeeds;
+        public bool LeafCurvature;
+        public bool MinimumLeafAngle;
+        public bool MaximumLeafAngle;
+        public bool BranchDimmingValue;
+        public bool LeafDimmingValue;
+        public bool ShadowRadius;
+        public bool RockingSpeed;
+        public bool RustleSpeed;
+        public bool BillboardWidth;
+        public bool BillboardHeight;
+        public bool CNAMDataTypeState;
+        public bool BNAMDataTypeState;
+        #endregion
+
+    }
+
+    public class Tree_DeepCopyMask : OblivionMajorRecord_DeepCopyMask
+    {
+        public Tree_DeepCopyMask()
+        {
+        }
+
+        public Tree_DeepCopyMask(bool defaultOn)
+        {
+            this.Model = new MaskItem<bool, Model_DeepCopyMask>(defaultOn, default);
+            this.Icon = defaultOn;
+            this.SpeedTreeSeeds = defaultOn;
+            this.LeafCurvature = defaultOn;
+            this.MinimumLeafAngle = defaultOn;
+            this.MaximumLeafAngle = defaultOn;
+            this.BranchDimmingValue = defaultOn;
+            this.LeafDimmingValue = defaultOn;
+            this.ShadowRadius = defaultOn;
+            this.RockingSpeed = defaultOn;
+            this.RustleSpeed = defaultOn;
+            this.BillboardWidth = defaultOn;
+            this.BillboardHeight = defaultOn;
+            this.CNAMDataTypeState = defaultOn;
+            this.BNAMDataTypeState = defaultOn;
+        }
+
+        #region Members
+        public MaskItem<bool, Model_DeepCopyMask> Model;
+        public bool Icon;
+        public bool SpeedTreeSeeds;
         public bool LeafCurvature;
         public bool MinimumLeafAngle;
         public bool MaximumLeafAngle;

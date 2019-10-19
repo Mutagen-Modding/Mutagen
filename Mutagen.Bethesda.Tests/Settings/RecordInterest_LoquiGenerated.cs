@@ -1820,6 +1820,25 @@ namespace Mutagen.Bethesda.Tests.Internals
 
     }
 
+    public class RecordInterest_DeepCopyMask
+    {
+        public RecordInterest_DeepCopyMask()
+        {
+        }
+
+        public RecordInterest_DeepCopyMask(bool defaultOn)
+        {
+            this.InterestingTypes = defaultOn;
+            this.UninterestingTypes = defaultOn;
+        }
+
+        #region Members
+        public bool InterestingTypes;
+        public bool UninterestingTypes;
+        #endregion
+
+    }
+
     public class RecordInterest_TranslationMask : ITranslationMask
     {
         #region Members

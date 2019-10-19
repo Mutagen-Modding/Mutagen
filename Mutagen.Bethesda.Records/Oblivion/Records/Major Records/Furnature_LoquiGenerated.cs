@@ -469,8 +469,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            return UtilityTranslation.MajorRecordParse<Furnature>(
-                record: new Furnature(),
+            var ret = new Furnature();
+            UtilityTranslation.MajorRecordParse<Furnature>(
+                record: ret,
                 frame: frame,
                 errorMask: errorMask,
                 recType: Furnature_Registration.FURN_HEADER,
@@ -478,6 +479,7 @@ namespace Mutagen.Bethesda.Oblivion
                 masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
+            return ret;
         }
 
         #endregion
@@ -2135,6 +2137,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Members
         public bool Name;
         public MaskItem<CopyOption, Model_CopyMask> Model;
+        public bool Script;
+        public bool MarkerFlags;
+        #endregion
+
+    }
+
+    public class Furnature_DeepCopyMask : OblivionMajorRecord_DeepCopyMask
+    {
+        public Furnature_DeepCopyMask()
+        {
+        }
+
+        public Furnature_DeepCopyMask(bool defaultOn)
+        {
+            this.Name = defaultOn;
+            this.Model = new MaskItem<bool, Model_DeepCopyMask>(defaultOn, default);
+            this.Script = defaultOn;
+            this.MarkerFlags = defaultOn;
+        }
+
+        #region Members
+        public bool Name;
+        public MaskItem<bool, Model_DeepCopyMask> Model;
         public bool Script;
         public bool MarkerFlags;
         #endregion

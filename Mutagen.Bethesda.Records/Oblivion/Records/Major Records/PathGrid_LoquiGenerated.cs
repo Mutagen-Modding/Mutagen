@@ -451,8 +451,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            return UtilityTranslation.MajorRecordParse<PathGrid>(
-                record: new PathGrid(),
+            var ret = new PathGrid();
+            UtilityTranslation.MajorRecordParse<PathGrid>(
+                record: ret,
                 frame: frame,
                 errorMask: errorMask,
                 recType: PathGrid_Registration.PGRD_HEADER,
@@ -460,6 +461,7 @@ namespace Mutagen.Bethesda.Oblivion
                 masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
+            return ret;
         }
 
         #endregion
@@ -2413,6 +2415,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Unknown;
         public MaskItem<CopyOption, InterCellPoint_CopyMask> InterCellConnections;
         public MaskItem<CopyOption, PointToReferenceMapping_CopyMask> PointToReferenceMappings;
+        #endregion
+
+    }
+
+    public class PathGrid_DeepCopyMask : OblivionMajorRecord_DeepCopyMask
+    {
+        public PathGrid_DeepCopyMask()
+        {
+        }
+
+        public PathGrid_DeepCopyMask(bool defaultOn)
+        {
+            this.PointToPointConnections = new MaskItem<bool, PathGridPoint_DeepCopyMask>(defaultOn, default);
+            this.Unknown = defaultOn;
+            this.InterCellConnections = new MaskItem<bool, InterCellPoint_DeepCopyMask>(defaultOn, default);
+            this.PointToReferenceMappings = new MaskItem<bool, PointToReferenceMapping_DeepCopyMask>(defaultOn, default);
+        }
+
+        #region Members
+        public MaskItem<bool, PathGridPoint_DeepCopyMask> PointToPointConnections;
+        public bool Unknown;
+        public MaskItem<bool, InterCellPoint_DeepCopyMask> InterCellConnections;
+        public MaskItem<bool, PointToReferenceMapping_DeepCopyMask> PointToReferenceMappings;
         #endregion
 
     }

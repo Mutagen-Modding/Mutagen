@@ -527,8 +527,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            return UtilityTranslation.MajorRecordParse<Door>(
-                record: new Door(),
+            var ret = new Door();
+            UtilityTranslation.MajorRecordParse<Door>(
+                record: ret,
                 frame: frame,
                 errorMask: errorMask,
                 recType: Door_Registration.DOOR_HEADER,
@@ -536,6 +537,7 @@ namespace Mutagen.Bethesda.Oblivion
                 masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
+            return ret;
         }
 
         #endregion
@@ -2735,6 +2737,37 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool LoopSound;
         public bool Flags;
         public CopyOption RandomTeleportDestinations;
+        #endregion
+
+    }
+
+    public class Door_DeepCopyMask : OblivionMajorRecord_DeepCopyMask
+    {
+        public Door_DeepCopyMask()
+        {
+        }
+
+        public Door_DeepCopyMask(bool defaultOn)
+        {
+            this.Name = defaultOn;
+            this.Model = new MaskItem<bool, Model_DeepCopyMask>(defaultOn, default);
+            this.Script = defaultOn;
+            this.OpenSound = defaultOn;
+            this.CloseSound = defaultOn;
+            this.LoopSound = defaultOn;
+            this.Flags = defaultOn;
+            this.RandomTeleportDestinations = defaultOn;
+        }
+
+        #region Members
+        public bool Name;
+        public MaskItem<bool, Model_DeepCopyMask> Model;
+        public bool Script;
+        public bool OpenSound;
+        public bool CloseSound;
+        public bool LoopSound;
+        public bool Flags;
+        public bool RandomTeleportDestinations;
         #endregion
 
     }

@@ -478,8 +478,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            return UtilityTranslation.MajorRecordParse<LandTexture>(
-                record: new LandTexture(),
+            var ret = new LandTexture();
+            UtilityTranslation.MajorRecordParse<LandTexture>(
+                record: ret,
                 frame: frame,
                 errorMask: errorMask,
                 recType: LandTexture_Registration.LTEX_HEADER,
@@ -487,6 +488,7 @@ namespace Mutagen.Bethesda.Oblivion
                 masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
+            return ret;
         }
 
         #endregion
@@ -2253,6 +2255,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<CopyOption, HavokData_CopyMask> Havok;
         public bool TextureSpecularExponent;
         public CopyOption PotentialGrass;
+        #endregion
+
+    }
+
+    public class LandTexture_DeepCopyMask : OblivionMajorRecord_DeepCopyMask
+    {
+        public LandTexture_DeepCopyMask()
+        {
+        }
+
+        public LandTexture_DeepCopyMask(bool defaultOn)
+        {
+            this.Icon = defaultOn;
+            this.Havok = new MaskItem<bool, HavokData_DeepCopyMask>(defaultOn, default);
+            this.TextureSpecularExponent = defaultOn;
+            this.PotentialGrass = defaultOn;
+        }
+
+        #region Members
+        public bool Icon;
+        public MaskItem<bool, HavokData_DeepCopyMask> Havok;
+        public bool TextureSpecularExponent;
+        public bool PotentialGrass;
         #endregion
 
     }

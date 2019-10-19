@@ -2048,6 +2048,29 @@ namespace Mutagen.Bethesda.Internals
 
     }
 
+    public class MajorRecord_DeepCopyMask
+    {
+        public MajorRecord_DeepCopyMask()
+        {
+        }
+
+        public MajorRecord_DeepCopyMask(bool defaultOn)
+        {
+            this.MajorRecordFlagsRaw = defaultOn;
+            this.FormKey = defaultOn;
+            this.Version = defaultOn;
+            this.EditorID = defaultOn;
+        }
+
+        #region Members
+        public bool MajorRecordFlagsRaw;
+        public bool FormKey;
+        public bool Version;
+        public bool EditorID;
+        #endregion
+
+    }
+
     public class MajorRecord_TranslationMask : ITranslationMask
     {
         #region Members

@@ -2094,6 +2094,35 @@ namespace Mutagen.Bethesda.Tests.Internals
 
     }
 
+    public class PassthroughSettings_DeepCopyMask
+    {
+        public PassthroughSettings_DeepCopyMask()
+        {
+        }
+
+        public PassthroughSettings_DeepCopyMask(bool defaultOn)
+        {
+            this.ReuseCaches = defaultOn;
+            this.ReorderRecords = defaultOn;
+            this.DeleteCachesAfter = defaultOn;
+            this.TestNormal = defaultOn;
+            this.TestBinaryWrapper = defaultOn;
+            this.TestImport = defaultOn;
+            this.TestFolder = defaultOn;
+        }
+
+        #region Members
+        public bool ReuseCaches;
+        public bool ReorderRecords;
+        public bool DeleteCachesAfter;
+        public bool TestNormal;
+        public bool TestBinaryWrapper;
+        public bool TestImport;
+        public bool TestFolder;
+        #endregion
+
+    }
+
     public class PassthroughSettings_TranslationMask : ITranslationMask
     {
         #region Members

@@ -1918,6 +1918,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public class PathGridPoint_DeepCopyMask
+    {
+        public PathGridPoint_DeepCopyMask()
+        {
+        }
+
+        public PathGridPoint_DeepCopyMask(bool defaultOn)
+        {
+            this.Point = defaultOn;
+            this.NumConnections = defaultOn;
+            this.FluffBytes = defaultOn;
+            this.Connections = defaultOn;
+        }
+
+        #region Members
+        public bool Point;
+        public bool NumConnections;
+        public bool FluffBytes;
+        public bool Connections;
+        #endregion
+
+    }
+
     public class PathGridPoint_TranslationMask : ITranslationMask
     {
         #region Members

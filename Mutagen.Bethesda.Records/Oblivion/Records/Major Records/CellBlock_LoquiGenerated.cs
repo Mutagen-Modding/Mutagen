@@ -2059,6 +2059,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public class CellBlock_DeepCopyMask
+    {
+        public CellBlock_DeepCopyMask()
+        {
+        }
+
+        public CellBlock_DeepCopyMask(bool defaultOn)
+        {
+            this.BlockNumber = defaultOn;
+            this.GroupType = defaultOn;
+            this.LastModified = defaultOn;
+            this.Items = new MaskItem<bool, CellSubBlock_DeepCopyMask>(defaultOn, default);
+        }
+
+        #region Members
+        public bool BlockNumber;
+        public bool GroupType;
+        public bool LastModified;
+        public MaskItem<bool, CellSubBlock_DeepCopyMask> Items;
+        #endregion
+
+    }
+
     public class CellBlock_TranslationMask : ITranslationMask
     {
         #region Members

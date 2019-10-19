@@ -1714,6 +1714,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public class MapData_DeepCopyMask
+    {
+        public MapData_DeepCopyMask()
+        {
+        }
+
+        public MapData_DeepCopyMask(bool defaultOn)
+        {
+            this.UsableDimensions = defaultOn;
+            this.CellCoordinatesNWCell = defaultOn;
+            this.CellCoordinatesSECell = defaultOn;
+        }
+
+        #region Members
+        public bool UsableDimensions;
+        public bool CellCoordinatesNWCell;
+        public bool CellCoordinatesSECell;
+        #endregion
+
+    }
+
     public class MapData_TranslationMask : ITranslationMask
     {
         #region Members

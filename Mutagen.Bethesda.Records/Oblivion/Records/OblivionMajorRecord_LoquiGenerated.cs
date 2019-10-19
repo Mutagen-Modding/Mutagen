@@ -1561,6 +1561,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public class OblivionMajorRecord_DeepCopyMask : MajorRecord_DeepCopyMask
+    {
+        public OblivionMajorRecord_DeepCopyMask()
+        {
+        }
+
+        public OblivionMajorRecord_DeepCopyMask(bool defaultOn)
+        {
+            this.OblivionMajorRecordFlags = defaultOn;
+        }
+
+        #region Members
+        public bool OblivionMajorRecordFlags;
+        #endregion
+
+    }
+
     public class OblivionMajorRecord_TranslationMask : MajorRecord_TranslationMask
     {
         #region Members

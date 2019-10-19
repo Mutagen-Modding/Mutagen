@@ -437,8 +437,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            return UtilityTranslation.MajorRecordParse<Eye>(
-                record: new Eye(),
+            var ret = new Eye();
+            UtilityTranslation.MajorRecordParse<Eye>(
+                record: ret,
                 frame: frame,
                 errorMask: errorMask,
                 recType: Eye_Registration.EYES_HEADER,
@@ -446,6 +447,7 @@ namespace Mutagen.Bethesda.Oblivion
                 masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
+            return ret;
         }
 
         #endregion
@@ -1939,6 +1941,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public Eye_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Name = defaultOn;
+            this.Icon = defaultOn;
+            this.Flags = defaultOn;
+        }
+
+        #region Members
+        public bool Name;
+        public bool Icon;
+        public bool Flags;
+        #endregion
+
+    }
+
+    public class Eye_DeepCopyMask : OblivionMajorRecord_DeepCopyMask
+    {
+        public Eye_DeepCopyMask()
+        {
+        }
+
+        public Eye_DeepCopyMask(bool defaultOn)
         {
             this.Name = defaultOn;
             this.Icon = defaultOn;

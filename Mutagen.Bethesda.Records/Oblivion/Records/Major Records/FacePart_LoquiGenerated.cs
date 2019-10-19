@@ -1995,6 +1995,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public class FacePart_DeepCopyMask
+    {
+        public FacePart_DeepCopyMask()
+        {
+        }
+
+        public FacePart_DeepCopyMask(bool defaultOn)
+        {
+            this.Index = defaultOn;
+            this.Model = new MaskItem<bool, Model_DeepCopyMask>(defaultOn, default);
+            this.Icon = defaultOn;
+        }
+
+        #region Members
+        public bool Index;
+        public MaskItem<bool, Model_DeepCopyMask> Model;
+        public bool Icon;
+        #endregion
+
+    }
+
     public class FacePart_TranslationMask : ITranslationMask
     {
         #region Members

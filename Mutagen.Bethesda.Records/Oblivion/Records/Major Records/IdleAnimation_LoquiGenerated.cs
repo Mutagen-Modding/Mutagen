@@ -464,8 +464,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            return UtilityTranslation.MajorRecordParse<IdleAnimation>(
-                record: new IdleAnimation(),
+            var ret = new IdleAnimation();
+            UtilityTranslation.MajorRecordParse<IdleAnimation>(
+                record: ret,
                 frame: frame,
                 errorMask: errorMask,
                 recType: IdleAnimation_Registration.IDLE_HEADER,
@@ -473,6 +474,7 @@ namespace Mutagen.Bethesda.Oblivion
                 masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
+            return ret;
         }
 
         #endregion
@@ -2357,6 +2359,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<CopyOption, Condition_CopyMask> Conditions;
         public bool AnimationGroupSection;
         public CopyOption RelatedIdleAnimations;
+        #endregion
+
+    }
+
+    public class IdleAnimation_DeepCopyMask : OblivionMajorRecord_DeepCopyMask
+    {
+        public IdleAnimation_DeepCopyMask()
+        {
+        }
+
+        public IdleAnimation_DeepCopyMask(bool defaultOn)
+        {
+            this.Model = new MaskItem<bool, Model_DeepCopyMask>(defaultOn, default);
+            this.Conditions = new MaskItem<bool, Condition_DeepCopyMask>(defaultOn, default);
+            this.AnimationGroupSection = defaultOn;
+            this.RelatedIdleAnimations = defaultOn;
+        }
+
+        #region Members
+        public MaskItem<bool, Model_DeepCopyMask> Model;
+        public MaskItem<bool, Condition_DeepCopyMask> Conditions;
+        public bool AnimationGroupSection;
+        public bool RelatedIdleAnimations;
         #endregion
 
     }

@@ -1706,6 +1706,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public class RankPlacement_DeepCopyMask
+    {
+        public RankPlacement_DeepCopyMask()
+        {
+        }
+
+        public RankPlacement_DeepCopyMask(bool defaultOn)
+        {
+            this.Faction = defaultOn;
+            this.Rank = defaultOn;
+            this.Fluff = defaultOn;
+        }
+
+        #region Members
+        public bool Faction;
+        public bool Rank;
+        public bool Fluff;
+        #endregion
+
+    }
+
     public class RankPlacement_TranslationMask : ITranslationMask
     {
         #region Members

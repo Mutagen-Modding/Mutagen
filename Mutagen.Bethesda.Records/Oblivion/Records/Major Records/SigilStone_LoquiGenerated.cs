@@ -543,8 +543,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            return UtilityTranslation.MajorRecordParse<SigilStone>(
-                record: new SigilStone(),
+            var ret = new SigilStone();
+            UtilityTranslation.MajorRecordParse<SigilStone>(
+                record: ret,
                 frame: frame,
                 errorMask: errorMask,
                 recType: SigilStone_Registration.SGST_HEADER,
@@ -552,6 +553,7 @@ namespace Mutagen.Bethesda.Oblivion
                 masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
+            return ret;
         }
 
         #endregion
@@ -2911,6 +2913,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Icon;
         public bool Script;
         public MaskItem<CopyOption, Effect_CopyMask> Effects;
+        public bool Uses;
+        public bool Value;
+        public bool Weight;
+        public bool DATADataTypeState;
+        #endregion
+
+    }
+
+    public class SigilStone_DeepCopyMask : ItemAbstract_DeepCopyMask
+    {
+        public SigilStone_DeepCopyMask()
+        {
+        }
+
+        public SigilStone_DeepCopyMask(bool defaultOn)
+        {
+            this.Name = defaultOn;
+            this.Model = new MaskItem<bool, Model_DeepCopyMask>(defaultOn, default);
+            this.Icon = defaultOn;
+            this.Script = defaultOn;
+            this.Effects = new MaskItem<bool, Effect_DeepCopyMask>(defaultOn, default);
+            this.Uses = defaultOn;
+            this.Value = defaultOn;
+            this.Weight = defaultOn;
+            this.DATADataTypeState = defaultOn;
+        }
+
+        #region Members
+        public bool Name;
+        public MaskItem<bool, Model_DeepCopyMask> Model;
+        public bool Icon;
+        public bool Script;
+        public MaskItem<bool, Effect_DeepCopyMask> Effects;
         public bool Uses;
         public bool Value;
         public bool Weight;

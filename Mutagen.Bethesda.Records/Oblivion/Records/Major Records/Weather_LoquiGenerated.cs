@@ -934,8 +934,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            return UtilityTranslation.MajorRecordParse<Weather>(
-                record: new Weather(),
+            var ret = new Weather();
+            UtilityTranslation.MajorRecordParse<Weather>(
+                record: ret,
                 frame: frame,
                 errorMask: errorMask,
                 recType: Weather_Registration.WTHR_HEADER,
@@ -943,6 +944,7 @@ namespace Mutagen.Bethesda.Oblivion
                 masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
+            return ret;
         }
 
         #endregion
@@ -6386,6 +6388,99 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Classification;
         public bool LightningColor;
         public MaskItem<CopyOption, WeatherSound_CopyMask> Sounds;
+        public bool FNAMDataTypeState;
+        public bool HNAMDataTypeState;
+        public bool DATADataTypeState;
+        #endregion
+
+    }
+
+    public class Weather_DeepCopyMask : OblivionMajorRecord_DeepCopyMask
+    {
+        public Weather_DeepCopyMask()
+        {
+        }
+
+        public Weather_DeepCopyMask(bool defaultOn)
+        {
+            this.TextureLowerLayer = defaultOn;
+            this.TextureUpperLayer = defaultOn;
+            this.Model = new MaskItem<bool, Model_DeepCopyMask>(defaultOn, default);
+            this.WeatherTypes = new MaskItem<bool, WeatherType_DeepCopyMask>(defaultOn, default);
+            this.FogDayNear = defaultOn;
+            this.FogDayFar = defaultOn;
+            this.FogNightNear = defaultOn;
+            this.FogNightFar = defaultOn;
+            this.HdrEyeAdaptSpeed = defaultOn;
+            this.HdrBlurRadius = defaultOn;
+            this.HdrBlurPasses = defaultOn;
+            this.HdrEmissiveMult = defaultOn;
+            this.HdrTargetLum = defaultOn;
+            this.HdrUpperLumClamp = defaultOn;
+            this.HdrBrightScale = defaultOn;
+            this.HdrBrightClamp = defaultOn;
+            this.HdrLumRampNoTex = defaultOn;
+            this.HdrLumRampMin = defaultOn;
+            this.HdrLumRampMax = defaultOn;
+            this.HdrSunlightDimmer = defaultOn;
+            this.HdrGrassDimmer = defaultOn;
+            this.HdrTreeDimmer = defaultOn;
+            this.WindSpeed = defaultOn;
+            this.CloudSpeedLower = defaultOn;
+            this.CloudSpeedUpper = defaultOn;
+            this.TransDelta = defaultOn;
+            this.SunGlare = defaultOn;
+            this.SunDamage = defaultOn;
+            this.PrecipitationBeginFadeIn = defaultOn;
+            this.PrecipitationEndFadeOut = defaultOn;
+            this.ThunderLightningBeginFadeIn = defaultOn;
+            this.ThunderLightningEndFadeOut = defaultOn;
+            this.ThunderLightningFrequency = defaultOn;
+            this.Classification = defaultOn;
+            this.LightningColor = defaultOn;
+            this.Sounds = new MaskItem<bool, WeatherSound_DeepCopyMask>(defaultOn, default);
+            this.FNAMDataTypeState = defaultOn;
+            this.HNAMDataTypeState = defaultOn;
+            this.DATADataTypeState = defaultOn;
+        }
+
+        #region Members
+        public bool TextureLowerLayer;
+        public bool TextureUpperLayer;
+        public MaskItem<bool, Model_DeepCopyMask> Model;
+        public MaskItem<bool, WeatherType_DeepCopyMask> WeatherTypes;
+        public bool FogDayNear;
+        public bool FogDayFar;
+        public bool FogNightNear;
+        public bool FogNightFar;
+        public bool HdrEyeAdaptSpeed;
+        public bool HdrBlurRadius;
+        public bool HdrBlurPasses;
+        public bool HdrEmissiveMult;
+        public bool HdrTargetLum;
+        public bool HdrUpperLumClamp;
+        public bool HdrBrightScale;
+        public bool HdrBrightClamp;
+        public bool HdrLumRampNoTex;
+        public bool HdrLumRampMin;
+        public bool HdrLumRampMax;
+        public bool HdrSunlightDimmer;
+        public bool HdrGrassDimmer;
+        public bool HdrTreeDimmer;
+        public bool WindSpeed;
+        public bool CloudSpeedLower;
+        public bool CloudSpeedUpper;
+        public bool TransDelta;
+        public bool SunGlare;
+        public bool SunDamage;
+        public bool PrecipitationBeginFadeIn;
+        public bool PrecipitationEndFadeOut;
+        public bool ThunderLightningBeginFadeIn;
+        public bool ThunderLightningEndFadeOut;
+        public bool ThunderLightningFrequency;
+        public bool Classification;
+        public bool LightningColor;
+        public MaskItem<bool, WeatherSound_DeepCopyMask> Sounds;
         public bool FNAMDataTypeState;
         public bool HNAMDataTypeState;
         public bool DATADataTypeState;

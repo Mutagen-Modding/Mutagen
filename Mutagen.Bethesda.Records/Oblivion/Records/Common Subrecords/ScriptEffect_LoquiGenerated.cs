@@ -2152,6 +2152,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public class ScriptEffect_DeepCopyMask
+    {
+        public ScriptEffect_DeepCopyMask()
+        {
+        }
+
+        public ScriptEffect_DeepCopyMask(bool defaultOn)
+        {
+            this.Script = defaultOn;
+            this.MagicSchool = defaultOn;
+            this.VisualEffect = defaultOn;
+            this.Flags = defaultOn;
+            this.Name = defaultOn;
+            this.SCITDataTypeState = defaultOn;
+        }
+
+        #region Members
+        public bool Script;
+        public bool MagicSchool;
+        public bool VisualEffect;
+        public bool Flags;
+        public bool Name;
+        public bool SCITDataTypeState;
+        #endregion
+
+    }
+
     public class ScriptEffect_TranslationMask : ITranslationMask
     {
         #region Members

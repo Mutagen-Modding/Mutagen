@@ -3645,6 +3645,47 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public class ClothingAbstract_DeepCopyMask : ItemAbstract_DeepCopyMask
+    {
+        public ClothingAbstract_DeepCopyMask()
+        {
+        }
+
+        public ClothingAbstract_DeepCopyMask(bool defaultOn)
+        {
+            this.Name = defaultOn;
+            this.Script = defaultOn;
+            this.Enchantment = defaultOn;
+            this.EnchantmentPoints = defaultOn;
+            this.BipedFlags = defaultOn;
+            this.Flags = defaultOn;
+            this.MaleBipedModel = new MaskItem<bool, Model_DeepCopyMask>(defaultOn, default);
+            this.MaleWorldModel = new MaskItem<bool, Model_DeepCopyMask>(defaultOn, default);
+            this.MaleIcon = defaultOn;
+            this.FemaleBipedModel = new MaskItem<bool, Model_DeepCopyMask>(defaultOn, default);
+            this.FemaleWorldModel = new MaskItem<bool, Model_DeepCopyMask>(defaultOn, default);
+            this.FemaleIcon = defaultOn;
+            this.BMDTDataTypeState = defaultOn;
+        }
+
+        #region Members
+        public bool Name;
+        public bool Script;
+        public bool Enchantment;
+        public bool EnchantmentPoints;
+        public bool BipedFlags;
+        public bool Flags;
+        public MaskItem<bool, Model_DeepCopyMask> MaleBipedModel;
+        public MaskItem<bool, Model_DeepCopyMask> MaleWorldModel;
+        public bool MaleIcon;
+        public MaskItem<bool, Model_DeepCopyMask> FemaleBipedModel;
+        public MaskItem<bool, Model_DeepCopyMask> FemaleWorldModel;
+        public bool FemaleIcon;
+        public bool BMDTDataTypeState;
+        #endregion
+
+    }
+
     public class ClothingAbstract_TranslationMask : ItemAbstract_TranslationMask
     {
         #region Members

@@ -1603,6 +1603,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public class Spell_DeepCopyMask : SpellAbstract_DeepCopyMask
+    {
+        public Spell_DeepCopyMask()
+        {
+        }
+
+        public Spell_DeepCopyMask(bool defaultOn)
+        {
+            this.Name = defaultOn;
+        }
+
+        #region Members
+        public bool Name;
+        #endregion
+
+    }
+
     public class Spell_TranslationMask : SpellAbstract_TranslationMask
     {
         #region Members

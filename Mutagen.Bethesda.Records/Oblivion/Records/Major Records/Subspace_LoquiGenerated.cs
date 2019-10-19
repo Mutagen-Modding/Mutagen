@@ -403,8 +403,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            return UtilityTranslation.MajorRecordParse<Subspace>(
-                record: new Subspace(),
+            var ret = new Subspace();
+            UtilityTranslation.MajorRecordParse<Subspace>(
+                record: ret,
                 frame: frame,
                 errorMask: errorMask,
                 recType: Subspace_Registration.SBSP_HEADER,
@@ -412,6 +413,7 @@ namespace Mutagen.Bethesda.Oblivion
                 masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
+            return ret;
         }
 
         #endregion
@@ -1879,6 +1881,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public Subspace_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.X = defaultOn;
+            this.Y = defaultOn;
+            this.Z = defaultOn;
+            this.DNAMDataTypeState = defaultOn;
+        }
+
+        #region Members
+        public bool X;
+        public bool Y;
+        public bool Z;
+        public bool DNAMDataTypeState;
+        #endregion
+
+    }
+
+    public class Subspace_DeepCopyMask : OblivionMajorRecord_DeepCopyMask
+    {
+        public Subspace_DeepCopyMask()
+        {
+        }
+
+        public Subspace_DeepCopyMask(bool defaultOn)
         {
             this.X = defaultOn;
             this.Y = defaultOn;

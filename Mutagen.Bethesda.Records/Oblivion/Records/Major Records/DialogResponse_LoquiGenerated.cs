@@ -2428,6 +2428,37 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public class DialogResponse_DeepCopyMask
+    {
+        public DialogResponse_DeepCopyMask()
+        {
+        }
+
+        public DialogResponse_DeepCopyMask(bool defaultOn)
+        {
+            this.Emotion = defaultOn;
+            this.EmotionValue = defaultOn;
+            this.Fluff1 = defaultOn;
+            this.ResponseNumber = defaultOn;
+            this.Fluff2 = defaultOn;
+            this.ResponseText = defaultOn;
+            this.ActorNotes = defaultOn;
+            this.TRDTDataTypeState = defaultOn;
+        }
+
+        #region Members
+        public bool Emotion;
+        public bool EmotionValue;
+        public bool Fluff1;
+        public bool ResponseNumber;
+        public bool Fluff2;
+        public bool ResponseText;
+        public bool ActorNotes;
+        public bool TRDTDataTypeState;
+        #endregion
+
+    }
+
     public class DialogResponse_TranslationMask : ITranslationMask
     {
         #region Members

@@ -2424,6 +2424,37 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public class Effect_DeepCopyMask
+    {
+        public Effect_DeepCopyMask()
+        {
+        }
+
+        public Effect_DeepCopyMask(bool defaultOn)
+        {
+            this.MagicEffect = defaultOn;
+            this.Magnitude = defaultOn;
+            this.Area = defaultOn;
+            this.Duration = defaultOn;
+            this.Type = defaultOn;
+            this.ActorValue = defaultOn;
+            this.ScriptEffect = new MaskItem<bool, ScriptEffect_DeepCopyMask>(defaultOn, default);
+            this.EFITDataTypeState = defaultOn;
+        }
+
+        #region Members
+        public bool MagicEffect;
+        public bool Magnitude;
+        public bool Area;
+        public bool Duration;
+        public bool Type;
+        public bool ActorValue;
+        public MaskItem<bool, ScriptEffect_DeepCopyMask> ScriptEffect;
+        public bool EFITDataTypeState;
+        #endregion
+
+    }
+
     public class Effect_TranslationMask : ITranslationMask
     {
         #region Members

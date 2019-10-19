@@ -3032,6 +3032,41 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public class ModHeader_DeepCopyMask
+    {
+        public ModHeader_DeepCopyMask()
+        {
+        }
+
+        public ModHeader_DeepCopyMask(bool defaultOn)
+        {
+            this.Flags = defaultOn;
+            this.FormID = defaultOn;
+            this.Version = defaultOn;
+            this.Stats = new MaskItem<bool, ModStats_DeepCopyMask>(defaultOn, default);
+            this.TypeOffsets = defaultOn;
+            this.Deleted = defaultOn;
+            this.Author = defaultOn;
+            this.Description = defaultOn;
+            this.MasterReferences = new MaskItem<bool, MasterReference_DeepCopyMask>(defaultOn, default);
+            this.VestigialData = defaultOn;
+        }
+
+        #region Members
+        public bool Flags;
+        public bool FormID;
+        public bool Version;
+        public MaskItem<bool, ModStats_DeepCopyMask> Stats;
+        public bool TypeOffsets;
+        public bool Deleted;
+        public bool Author;
+        public bool Description;
+        public MaskItem<bool, MasterReference_DeepCopyMask> MasterReferences;
+        public bool VestigialData;
+        #endregion
+
+    }
+
     public class ModHeader_TranslationMask : ITranslationMask
     {
         #region Members

@@ -3622,6 +3622,63 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public class CombatStyleAdvanced_DeepCopyMask
+    {
+        public CombatStyleAdvanced_DeepCopyMask()
+        {
+        }
+
+        public CombatStyleAdvanced_DeepCopyMask(bool defaultOn)
+        {
+            this.DodgeFatigueModMult = defaultOn;
+            this.DodgeFatigueModBase = defaultOn;
+            this.EncumbSpeedModBase = defaultOn;
+            this.EncumbSpeedModMult = defaultOn;
+            this.DodgeWhileUnderAttackMult = defaultOn;
+            this.DodgeNotUnderAttackMult = defaultOn;
+            this.DodgeBackWhileUnderAttackMult = defaultOn;
+            this.DodgeBackNotUnderAttackMult = defaultOn;
+            this.DodgeForwardWhileUnderAttackMult = defaultOn;
+            this.DodgeForwardNotUnderAttackMult = defaultOn;
+            this.BlockSkillModifierMult = defaultOn;
+            this.BlockSkillModifierBase = defaultOn;
+            this.BlockWhileUnderAttackMult = defaultOn;
+            this.BlockNotUnderAttackMult = defaultOn;
+            this.AttackSkillModifierMult = defaultOn;
+            this.AttackSkillModifierBase = defaultOn;
+            this.AttackWhileUnderAttackMult = defaultOn;
+            this.AttackNotUnderAttackMult = defaultOn;
+            this.AttackDuringBlockMult = defaultOn;
+            this.PowerAttackFatigueModBase = defaultOn;
+            this.PowerAttackFatigueModMult = defaultOn;
+        }
+
+        #region Members
+        public bool DodgeFatigueModMult;
+        public bool DodgeFatigueModBase;
+        public bool EncumbSpeedModBase;
+        public bool EncumbSpeedModMult;
+        public bool DodgeWhileUnderAttackMult;
+        public bool DodgeNotUnderAttackMult;
+        public bool DodgeBackWhileUnderAttackMult;
+        public bool DodgeBackNotUnderAttackMult;
+        public bool DodgeForwardWhileUnderAttackMult;
+        public bool DodgeForwardNotUnderAttackMult;
+        public bool BlockSkillModifierMult;
+        public bool BlockSkillModifierBase;
+        public bool BlockWhileUnderAttackMult;
+        public bool BlockNotUnderAttackMult;
+        public bool AttackSkillModifierMult;
+        public bool AttackSkillModifierBase;
+        public bool AttackWhileUnderAttackMult;
+        public bool AttackNotUnderAttackMult;
+        public bool AttackDuringBlockMult;
+        public bool PowerAttackFatigueModBase;
+        public bool PowerAttackFatigueModMult;
+        #endregion
+
+    }
+
     public class CombatStyleAdvanced_TranslationMask : ITranslationMask
     {
         #region Members

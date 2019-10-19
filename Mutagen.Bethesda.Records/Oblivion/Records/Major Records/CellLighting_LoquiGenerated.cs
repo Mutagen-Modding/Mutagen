@@ -2337,6 +2337,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public class CellLighting_DeepCopyMask
+    {
+        public CellLighting_DeepCopyMask()
+        {
+        }
+
+        public CellLighting_DeepCopyMask(bool defaultOn)
+        {
+            this.AmbientColor = defaultOn;
+            this.DirectionalColor = defaultOn;
+            this.FogColor = defaultOn;
+            this.FogNear = defaultOn;
+            this.FogFar = defaultOn;
+            this.DirectionalRotationXY = defaultOn;
+            this.DirectionalRotationZ = defaultOn;
+            this.DirectionalFade = defaultOn;
+            this.FogClipDistance = defaultOn;
+        }
+
+        #region Members
+        public bool AmbientColor;
+        public bool DirectionalColor;
+        public bool FogColor;
+        public bool FogNear;
+        public bool FogFar;
+        public bool DirectionalRotationXY;
+        public bool DirectionalRotationZ;
+        public bool DirectionalFade;
+        public bool FogClipDistance;
+        #endregion
+
+    }
+
     public class CellLighting_TranslationMask : ITranslationMask
     {
         #region Members

@@ -11,10 +11,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>539cb8f9914be57023339a85b34d18c3d3832592</Sha>
+         <Sha>5e757901ac9a08a57ca6509df75d701c7d99aeb8</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>10-18-2019 18:19:26</CommitDate>
-         <Description>Merge remote-tracking branch 'origin/dev' into dev</Description>
+         <CommitDate>10-18-2019 20:47:14</CommitDate>
+         <Description>TranslationModule.GenerateNewSnippet</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/Loqui.git</OriginHint>
       </RepoListing>

@@ -1899,6 +1899,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public class AIPackageSchedule_DeepCopyMask
+    {
+        public AIPackageSchedule_DeepCopyMask()
+        {
+        }
+
+        public AIPackageSchedule_DeepCopyMask(bool defaultOn)
+        {
+            this.Month = defaultOn;
+            this.DayOfWeek = defaultOn;
+            this.Day = defaultOn;
+            this.Time = defaultOn;
+            this.Duration = defaultOn;
+        }
+
+        #region Members
+        public bool Month;
+        public bool DayOfWeek;
+        public bool Day;
+        public bool Time;
+        public bool Duration;
+        #endregion
+
+    }
+
     public class AIPackageSchedule_TranslationMask : ITranslationMask
     {
         #region Members

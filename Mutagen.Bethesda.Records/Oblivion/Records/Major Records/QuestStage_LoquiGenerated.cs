@@ -1818,6 +1818,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public class QuestStage_DeepCopyMask
+    {
+        public QuestStage_DeepCopyMask()
+        {
+        }
+
+        public QuestStage_DeepCopyMask(bool defaultOn)
+        {
+            this.Stage = defaultOn;
+            this.LogEntries = new MaskItem<bool, LogEntry_DeepCopyMask>(defaultOn, default);
+        }
+
+        #region Members
+        public bool Stage;
+        public MaskItem<bool, LogEntry_DeepCopyMask> LogEntries;
+        #endregion
+
+    }
+
     public class QuestStage_TranslationMask : ITranslationMask
     {
         #region Members

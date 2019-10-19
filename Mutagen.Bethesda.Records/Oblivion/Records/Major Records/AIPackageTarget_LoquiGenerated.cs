@@ -1696,6 +1696,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public class AIPackageTarget_DeepCopyMask
+    {
+        public AIPackageTarget_DeepCopyMask()
+        {
+        }
+
+        public AIPackageTarget_DeepCopyMask(bool defaultOn)
+        {
+            this.ObjectType = defaultOn;
+            this.Object = defaultOn;
+            this.Count = defaultOn;
+        }
+
+        #region Members
+        public bool ObjectType;
+        public bool Object;
+        public bool Count;
+        #endregion
+
+    }
+
     public class AIPackageTarget_TranslationMask : ITranslationMask
     {
         #region Members

@@ -1817,6 +1817,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public class WeatherType_DeepCopyMask
+    {
+        public WeatherType_DeepCopyMask()
+        {
+        }
+
+        public WeatherType_DeepCopyMask(bool defaultOn)
+        {
+            this.Sunrise = defaultOn;
+            this.Day = defaultOn;
+            this.Sunset = defaultOn;
+            this.Night = defaultOn;
+        }
+
+        #region Members
+        public bool Sunrise;
+        public bool Day;
+        public bool Sunset;
+        public bool Night;
+        #endregion
+
+    }
+
     public class WeatherType_TranslationMask : ITranslationMask
     {
         #region Members

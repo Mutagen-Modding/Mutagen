@@ -342,8 +342,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            return UtilityTranslation.MajorRecordParse<SpellLeveled>(
-                record: new SpellLeveled(),
+            var ret = new SpellLeveled();
+            UtilityTranslation.MajorRecordParse<SpellLeveled>(
+                record: ret,
                 frame: frame,
                 errorMask: errorMask,
                 recType: SpellLeveled_Registration.LVSP_HEADER,
@@ -351,6 +352,7 @@ namespace Mutagen.Bethesda.Oblivion
                 masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
+            return ret;
         }
 
         #endregion
@@ -1487,6 +1489,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public SpellLeveled_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+        }
+
+    }
+
+    public class SpellLeveled_DeepCopyMask : Spell_DeepCopyMask
+    {
+        public SpellLeveled_DeepCopyMask()
+        {
+        }
+
+        public SpellLeveled_DeepCopyMask(bool defaultOn)
         {
         }
 

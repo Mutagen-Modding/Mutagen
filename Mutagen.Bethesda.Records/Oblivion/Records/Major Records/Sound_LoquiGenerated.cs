@@ -409,8 +409,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            return UtilityTranslation.MajorRecordParse<Sound>(
-                record: new Sound(),
+            var ret = new Sound();
+            UtilityTranslation.MajorRecordParse<Sound>(
+                record: ret,
                 frame: frame,
                 errorMask: errorMask,
                 recType: Sound_Registration.SOUN_HEADER,
@@ -418,6 +419,7 @@ namespace Mutagen.Bethesda.Oblivion
                 masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
+            return ret;
         }
 
         #endregion
@@ -1849,6 +1851,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Members
         public bool File;
         public MaskItem<CopyOption, SoundData_CopyMask> Data;
+        #endregion
+
+    }
+
+    public class Sound_DeepCopyMask : OblivionMajorRecord_DeepCopyMask
+    {
+        public Sound_DeepCopyMask()
+        {
+        }
+
+        public Sound_DeepCopyMask(bool defaultOn)
+        {
+            this.File = defaultOn;
+            this.Data = new MaskItem<bool, SoundData_DeepCopyMask>(defaultOn, default);
+        }
+
+        #region Members
+        public bool File;
+        public MaskItem<bool, SoundData_DeepCopyMask> Data;
         #endregion
 
     }

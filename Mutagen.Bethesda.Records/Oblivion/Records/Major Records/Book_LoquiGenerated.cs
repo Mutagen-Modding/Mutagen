@@ -600,8 +600,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            return UtilityTranslation.MajorRecordParse<Book>(
-                record: new Book(),
+            var ret = new Book();
+            UtilityTranslation.MajorRecordParse<Book>(
+                record: ret,
                 frame: frame,
                 errorMask: errorMask,
                 recType: Book_Registration.BOOK_HEADER,
@@ -609,6 +610,7 @@ namespace Mutagen.Bethesda.Oblivion
                 masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
+            return ret;
         }
 
         #endregion
@@ -3215,6 +3217,45 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Members
         public bool Name;
         public MaskItem<CopyOption, Model_CopyMask> Model;
+        public bool Icon;
+        public bool Script;
+        public bool Enchantment;
+        public bool EnchantmentPoints;
+        public bool Description;
+        public bool Flags;
+        public bool Teaches;
+        public bool Value;
+        public bool Weight;
+        public bool DATADataTypeState;
+        #endregion
+
+    }
+
+    public class Book_DeepCopyMask : ItemAbstract_DeepCopyMask
+    {
+        public Book_DeepCopyMask()
+        {
+        }
+
+        public Book_DeepCopyMask(bool defaultOn)
+        {
+            this.Name = defaultOn;
+            this.Model = new MaskItem<bool, Model_DeepCopyMask>(defaultOn, default);
+            this.Icon = defaultOn;
+            this.Script = defaultOn;
+            this.Enchantment = defaultOn;
+            this.EnchantmentPoints = defaultOn;
+            this.Description = defaultOn;
+            this.Flags = defaultOn;
+            this.Teaches = defaultOn;
+            this.Value = defaultOn;
+            this.Weight = defaultOn;
+            this.DATADataTypeState = defaultOn;
+        }
+
+        #region Members
+        public bool Name;
+        public MaskItem<bool, Model_DeepCopyMask> Model;
         public bool Icon;
         public bool Script;
         public bool Enchantment;

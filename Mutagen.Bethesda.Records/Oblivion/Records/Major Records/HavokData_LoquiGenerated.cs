@@ -1696,6 +1696,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public class HavokData_DeepCopyMask
+    {
+        public HavokData_DeepCopyMask()
+        {
+        }
+
+        public HavokData_DeepCopyMask(bool defaultOn)
+        {
+            this.Material = defaultOn;
+            this.Friction = defaultOn;
+            this.Restitution = defaultOn;
+        }
+
+        #region Members
+        public bool Material;
+        public bool Friction;
+        public bool Restitution;
+        #endregion
+
+    }
+
     public class HavokData_TranslationMask : ITranslationMask
     {
         #region Members

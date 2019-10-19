@@ -390,8 +390,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            return UtilityTranslation.MajorRecordParse<Clothing>(
-                record: new Clothing(),
+            var ret = new Clothing();
+            UtilityTranslation.MajorRecordParse<Clothing>(
+                record: ret,
                 frame: frame,
                 errorMask: errorMask,
                 recType: Clothing_Registration.CLOT_HEADER,
@@ -399,6 +400,7 @@ namespace Mutagen.Bethesda.Oblivion
                 masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
+            return ret;
         }
 
         #endregion
@@ -1902,6 +1904,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public Clothing_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Value = defaultOn;
+            this.Weight = defaultOn;
+            this.DATADataTypeState = defaultOn;
+        }
+
+        #region Members
+        public bool Value;
+        public bool Weight;
+        public bool DATADataTypeState;
+        #endregion
+
+    }
+
+    public class Clothing_DeepCopyMask : ClothingAbstract_DeepCopyMask
+    {
+        public Clothing_DeepCopyMask()
+        {
+        }
+
+        public Clothing_DeepCopyMask(bool defaultOn)
         {
             this.Value = defaultOn;
             this.Weight = defaultOn;

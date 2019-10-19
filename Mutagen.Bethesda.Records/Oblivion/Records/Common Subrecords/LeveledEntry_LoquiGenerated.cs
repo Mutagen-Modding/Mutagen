@@ -2107,6 +2107,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public class LeveledEntry_DeepCopyMask<T_DeepCopyMask>
+        where T_DeepCopyMask : OblivionMajorRecord_DeepCopyMask, new()
+    {
+        public LeveledEntry_DeepCopyMask()
+        {
+        }
+
+        public LeveledEntry_DeepCopyMask(bool defaultOn)
+        {
+            this.Level = defaultOn;
+            this.Fluff = defaultOn;
+            this.Reference = defaultOn;
+            this.Count = defaultOn;
+            this.Fluff2 = defaultOn;
+        }
+
+        #region Members
+        public bool Level;
+        public bool Fluff;
+        public bool Reference;
+        public bool Count;
+        public bool Fluff2;
+        #endregion
+
+    }
+
     public class LeveledEntry_TranslationMask<T_TranslMask> : ITranslationMask
         where T_TranslMask : OblivionMajorRecord_TranslationMask, ITranslationMask, new()
     {

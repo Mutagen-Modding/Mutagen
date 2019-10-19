@@ -801,8 +801,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            return UtilityTranslation.MajorRecordParse<Class>(
-                record: new Class(),
+            var ret = new Class();
+            UtilityTranslation.MajorRecordParse<Class>(
+                record: ret,
                 frame: frame,
                 errorMask: errorMask,
                 recType: Class_Registration.CLAS_HEADER,
@@ -810,6 +811,7 @@ namespace Mutagen.Bethesda.Skyrim
                 masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
+            return ret;
         }
 
         #endregion
@@ -4890,6 +4892,83 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public Class_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Name = defaultOn;
+            this.Description = defaultOn;
+            this.Icon = defaultOn;
+            this.Unknown = defaultOn;
+            this.Teaches = defaultOn;
+            this.MaxTrainingLevel = defaultOn;
+            this.OneHandedWeight = defaultOn;
+            this.TwoHandedWeight = defaultOn;
+            this.MarksmanWeight = defaultOn;
+            this.BlockWeight = defaultOn;
+            this.SmithingWeight = defaultOn;
+            this.HeavyArmorWeight = defaultOn;
+            this.LightArmorWeight = defaultOn;
+            this.PickpocketWeight = defaultOn;
+            this.LockpickingWeight = defaultOn;
+            this.SneakWeight = defaultOn;
+            this.AlchemyWeight = defaultOn;
+            this.SpeechcraftWeight = defaultOn;
+            this.AlterationWeight = defaultOn;
+            this.ConjurationWeight = defaultOn;
+            this.DestructionWeight = defaultOn;
+            this.IllusionWeight = defaultOn;
+            this.RestorationWeight = defaultOn;
+            this.EnchantingWeight = defaultOn;
+            this.BleedoutDefault = defaultOn;
+            this.VoicePoints = defaultOn;
+            this.HealthWeight = defaultOn;
+            this.MagickaWeight = defaultOn;
+            this.StaminaWeight = defaultOn;
+            this.Unknown2 = defaultOn;
+            this.DATADataTypeState = defaultOn;
+        }
+
+        #region Members
+        public bool Name;
+        public bool Description;
+        public bool Icon;
+        public bool Unknown;
+        public bool Teaches;
+        public bool MaxTrainingLevel;
+        public bool OneHandedWeight;
+        public bool TwoHandedWeight;
+        public bool MarksmanWeight;
+        public bool BlockWeight;
+        public bool SmithingWeight;
+        public bool HeavyArmorWeight;
+        public bool LightArmorWeight;
+        public bool PickpocketWeight;
+        public bool LockpickingWeight;
+        public bool SneakWeight;
+        public bool AlchemyWeight;
+        public bool SpeechcraftWeight;
+        public bool AlterationWeight;
+        public bool ConjurationWeight;
+        public bool DestructionWeight;
+        public bool IllusionWeight;
+        public bool RestorationWeight;
+        public bool EnchantingWeight;
+        public bool BleedoutDefault;
+        public bool VoicePoints;
+        public bool HealthWeight;
+        public bool MagickaWeight;
+        public bool StaminaWeight;
+        public bool Unknown2;
+        public bool DATADataTypeState;
+        #endregion
+
+    }
+
+    public class Class_DeepCopyMask : SkyrimMajorRecord_DeepCopyMask
+    {
+        public Class_DeepCopyMask()
+        {
+        }
+
+        public Class_DeepCopyMask(bool defaultOn)
         {
             this.Name = defaultOn;
             this.Description = defaultOn;

@@ -449,8 +449,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            return UtilityTranslation.MajorRecordParse<LeveledSpell>(
-                record: new LeveledSpell(),
+            var ret = new LeveledSpell();
+            UtilityTranslation.MajorRecordParse<LeveledSpell>(
+                record: ret,
                 frame: frame,
                 errorMask: errorMask,
                 recType: LeveledSpell_Registration.LVSP_HEADER,
@@ -458,6 +459,7 @@ namespace Mutagen.Bethesda.Oblivion
                 masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
+            return ret;
         }
 
         #endregion
@@ -2114,6 +2116,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool ChanceNone;
         public bool Flags;
         public MaskItem<CopyOption, LeveledEntry_CopyMask<SpellAbstract_CopyMask>> Entries;
+        #endregion
+
+    }
+
+    public class LeveledSpell_DeepCopyMask : SpellAbstract_DeepCopyMask
+    {
+        public LeveledSpell_DeepCopyMask()
+        {
+        }
+
+        public LeveledSpell_DeepCopyMask(bool defaultOn)
+        {
+            this.ChanceNone = defaultOn;
+            this.Flags = defaultOn;
+            this.Entries = new MaskItem<bool, LeveledEntry_DeepCopyMask<SpellAbstract_DeepCopyMask>>(defaultOn, default);
+        }
+
+        #region Members
+        public bool ChanceNone;
+        public bool Flags;
+        public MaskItem<bool, LeveledEntry_DeepCopyMask<SpellAbstract_DeepCopyMask>> Entries;
         #endregion
 
     }

@@ -558,8 +558,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            return UtilityTranslation.MajorRecordParse<Potion>(
-                record: new Potion(),
+            var ret = new Potion();
+            UtilityTranslation.MajorRecordParse<Potion>(
+                record: ret,
                 frame: frame,
                 errorMask: errorMask,
                 recType: Potion_Registration.ALCH_HEADER,
@@ -567,6 +568,7 @@ namespace Mutagen.Bethesda.Oblivion
                 masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
+            return ret;
         }
 
         #endregion
@@ -2981,6 +2983,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Value;
         public bool Flags;
         public MaskItem<CopyOption, Effect_CopyMask> Effects;
+        public bool ENITDataTypeState;
+        #endregion
+
+    }
+
+    public class Potion_DeepCopyMask : ItemAbstract_DeepCopyMask
+    {
+        public Potion_DeepCopyMask()
+        {
+        }
+
+        public Potion_DeepCopyMask(bool defaultOn)
+        {
+            this.Name = defaultOn;
+            this.Model = new MaskItem<bool, Model_DeepCopyMask>(defaultOn, default);
+            this.Icon = defaultOn;
+            this.Script = defaultOn;
+            this.Weight = defaultOn;
+            this.Value = defaultOn;
+            this.Flags = defaultOn;
+            this.Effects = new MaskItem<bool, Effect_DeepCopyMask>(defaultOn, default);
+            this.ENITDataTypeState = defaultOn;
+        }
+
+        #region Members
+        public bool Name;
+        public MaskItem<bool, Model_DeepCopyMask> Model;
+        public bool Icon;
+        public bool Script;
+        public bool Weight;
+        public bool Value;
+        public bool Flags;
+        public MaskItem<bool, Effect_DeepCopyMask> Effects;
         public bool ENITDataTypeState;
         #endregion
 

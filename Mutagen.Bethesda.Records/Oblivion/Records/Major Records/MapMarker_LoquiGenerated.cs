@@ -2011,6 +2011,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public class MapMarker_DeepCopyMask
+    {
+        public MapMarker_DeepCopyMask()
+        {
+        }
+
+        public MapMarker_DeepCopyMask(bool defaultOn)
+        {
+            this.Flags = defaultOn;
+            this.Name = defaultOn;
+            this.Types = defaultOn;
+        }
+
+        #region Members
+        public bool Flags;
+        public bool Name;
+        public bool Types;
+        #endregion
+
+    }
+
     public class MapMarker_TranslationMask : ITranslationMask
     {
         #region Members

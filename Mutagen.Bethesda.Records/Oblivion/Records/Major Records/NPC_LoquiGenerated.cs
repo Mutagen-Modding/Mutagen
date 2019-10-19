@@ -1423,8 +1423,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            return UtilityTranslation.MajorRecordParse<NPC>(
-                record: new NPC(),
+            var ret = new NPC();
+            UtilityTranslation.MajorRecordParse<NPC>(
+                record: ret,
                 frame: frame,
                 errorMask: errorMask,
                 recType: NPC_Registration.NPC__HEADER,
@@ -1432,6 +1433,7 @@ namespace Mutagen.Bethesda.Oblivion
                 masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
+            return ret;
         }
 
         #endregion
@@ -10382,6 +10384,157 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Hair;
         public bool HairLength;
         public CopyOption Eyes;
+        public bool HairColor;
+        public bool CombatStyle;
+        public bool FaceGenGeometrySymmetric;
+        public bool FaceGenGeometryAsymmetric;
+        public bool FaceGenTextureSymmetric;
+        public bool Unknown;
+        public bool ACBSDataTypeState;
+        public bool AIDTDataTypeState;
+        public bool DATADataTypeState;
+        #endregion
+
+    }
+
+    public class NPC_DeepCopyMask : NPCAbstract_DeepCopyMask
+    {
+        public NPC_DeepCopyMask()
+        {
+        }
+
+        public NPC_DeepCopyMask(bool defaultOn)
+        {
+            this.Name = defaultOn;
+            this.Model = new MaskItem<bool, Model_DeepCopyMask>(defaultOn, default);
+            this.Flags = defaultOn;
+            this.BaseSpellPoints = defaultOn;
+            this.Fatigue = defaultOn;
+            this.BarterGold = defaultOn;
+            this.LevelOffset = defaultOn;
+            this.CalcMin = defaultOn;
+            this.CalcMax = defaultOn;
+            this.Factions = new MaskItem<bool, RankPlacement_DeepCopyMask>(defaultOn, default);
+            this.DeathItem = defaultOn;
+            this.Race = defaultOn;
+            this.Spells = defaultOn;
+            this.Script = defaultOn;
+            this.Items = new MaskItem<bool, ItemEntry_DeepCopyMask>(defaultOn, default);
+            this.Aggression = defaultOn;
+            this.Confidence = defaultOn;
+            this.EnergyLevel = defaultOn;
+            this.Responsibility = defaultOn;
+            this.BuySellServices = defaultOn;
+            this.Teaches = defaultOn;
+            this.MaximumTrainingLevel = defaultOn;
+            this.Fluff = defaultOn;
+            this.AIPackages = defaultOn;
+            this.Animations = defaultOn;
+            this.Class = defaultOn;
+            this.Armorer = defaultOn;
+            this.Athletics = defaultOn;
+            this.Blade = defaultOn;
+            this.Block = defaultOn;
+            this.Blunt = defaultOn;
+            this.HandToHand = defaultOn;
+            this.HeavyArmor = defaultOn;
+            this.Alchemy = defaultOn;
+            this.Alteration = defaultOn;
+            this.Conjuration = defaultOn;
+            this.Destruction = defaultOn;
+            this.Illusion = defaultOn;
+            this.Mysticism = defaultOn;
+            this.Restoration = defaultOn;
+            this.Acrobatics = defaultOn;
+            this.LightArmor = defaultOn;
+            this.Marksman = defaultOn;
+            this.Mercantile = defaultOn;
+            this.Security = defaultOn;
+            this.Sneak = defaultOn;
+            this.Speechcraft = defaultOn;
+            this.Health = defaultOn;
+            this.Strength = defaultOn;
+            this.Intelligence = defaultOn;
+            this.Willpower = defaultOn;
+            this.Agility = defaultOn;
+            this.Speed = defaultOn;
+            this.Endurance = defaultOn;
+            this.Personality = defaultOn;
+            this.Luck = defaultOn;
+            this.Hair = defaultOn;
+            this.HairLength = defaultOn;
+            this.Eyes = defaultOn;
+            this.HairColor = defaultOn;
+            this.CombatStyle = defaultOn;
+            this.FaceGenGeometrySymmetric = defaultOn;
+            this.FaceGenGeometryAsymmetric = defaultOn;
+            this.FaceGenTextureSymmetric = defaultOn;
+            this.Unknown = defaultOn;
+            this.ACBSDataTypeState = defaultOn;
+            this.AIDTDataTypeState = defaultOn;
+            this.DATADataTypeState = defaultOn;
+        }
+
+        #region Members
+        public bool Name;
+        public MaskItem<bool, Model_DeepCopyMask> Model;
+        public bool Flags;
+        public bool BaseSpellPoints;
+        public bool Fatigue;
+        public bool BarterGold;
+        public bool LevelOffset;
+        public bool CalcMin;
+        public bool CalcMax;
+        public MaskItem<bool, RankPlacement_DeepCopyMask> Factions;
+        public bool DeathItem;
+        public bool Race;
+        public bool Spells;
+        public bool Script;
+        public MaskItem<bool, ItemEntry_DeepCopyMask> Items;
+        public bool Aggression;
+        public bool Confidence;
+        public bool EnergyLevel;
+        public bool Responsibility;
+        public bool BuySellServices;
+        public bool Teaches;
+        public bool MaximumTrainingLevel;
+        public bool Fluff;
+        public bool AIPackages;
+        public bool Animations;
+        public bool Class;
+        public bool Armorer;
+        public bool Athletics;
+        public bool Blade;
+        public bool Block;
+        public bool Blunt;
+        public bool HandToHand;
+        public bool HeavyArmor;
+        public bool Alchemy;
+        public bool Alteration;
+        public bool Conjuration;
+        public bool Destruction;
+        public bool Illusion;
+        public bool Mysticism;
+        public bool Restoration;
+        public bool Acrobatics;
+        public bool LightArmor;
+        public bool Marksman;
+        public bool Mercantile;
+        public bool Security;
+        public bool Sneak;
+        public bool Speechcraft;
+        public bool Health;
+        public bool Strength;
+        public bool Intelligence;
+        public bool Willpower;
+        public bool Agility;
+        public bool Speed;
+        public bool Endurance;
+        public bool Personality;
+        public bool Luck;
+        public bool Hair;
+        public bool HairLength;
+        public bool Eyes;
         public bool HairColor;
         public bool CombatStyle;
         public bool FaceGenGeometrySymmetric;

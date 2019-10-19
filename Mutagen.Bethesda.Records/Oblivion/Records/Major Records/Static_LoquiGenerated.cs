@@ -381,8 +381,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            return UtilityTranslation.MajorRecordParse<Static>(
-                record: new Static(),
+            var ret = new Static();
+            UtilityTranslation.MajorRecordParse<Static>(
+                record: ret,
                 frame: frame,
                 errorMask: errorMask,
                 recType: Static_Registration.STAT_HEADER,
@@ -390,6 +391,7 @@ namespace Mutagen.Bethesda.Oblivion
                 masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
+            return ret;
         }
 
         #endregion
@@ -1651,6 +1653,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Members
         public MaskItem<CopyOption, Model_CopyMask> Model;
+        #endregion
+
+    }
+
+    public class Static_DeepCopyMask : OblivionMajorRecord_DeepCopyMask
+    {
+        public Static_DeepCopyMask()
+        {
+        }
+
+        public Static_DeepCopyMask(bool defaultOn)
+        {
+            this.Model = new MaskItem<bool, Model_DeepCopyMask>(defaultOn, default);
+        }
+
+        #region Members
+        public MaskItem<bool, Model_DeepCopyMask> Model;
         #endregion
 
     }

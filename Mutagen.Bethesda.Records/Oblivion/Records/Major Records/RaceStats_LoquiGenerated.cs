@@ -2163,6 +2163,37 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public class RaceStats_DeepCopyMask
+    {
+        public RaceStats_DeepCopyMask()
+        {
+        }
+
+        public RaceStats_DeepCopyMask(bool defaultOn)
+        {
+            this.Strength = defaultOn;
+            this.Intelligence = defaultOn;
+            this.Willpower = defaultOn;
+            this.Agility = defaultOn;
+            this.Speed = defaultOn;
+            this.Endurance = defaultOn;
+            this.Personality = defaultOn;
+            this.Luck = defaultOn;
+        }
+
+        #region Members
+        public bool Strength;
+        public bool Intelligence;
+        public bool Willpower;
+        public bool Agility;
+        public bool Speed;
+        public bool Endurance;
+        public bool Personality;
+        public bool Luck;
+        #endregion
+
+    }
+
     public class RaceStats_TranslationMask : ITranslationMask
     {
         #region Members

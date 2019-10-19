@@ -1704,6 +1704,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public class RegionSound_DeepCopyMask
+    {
+        public RegionSound_DeepCopyMask()
+        {
+        }
+
+        public RegionSound_DeepCopyMask(bool defaultOn)
+        {
+            this.Sound = defaultOn;
+            this.Flags = defaultOn;
+            this.Chance = defaultOn;
+        }
+
+        #region Members
+        public bool Sound;
+        public bool Flags;
+        public bool Chance;
+        #endregion
+
+    }
+
     public class RegionSound_TranslationMask : ITranslationMask
     {
         #region Members

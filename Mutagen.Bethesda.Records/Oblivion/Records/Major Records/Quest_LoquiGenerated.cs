@@ -538,8 +538,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            return UtilityTranslation.MajorRecordParse<Quest>(
-                record: new Quest(),
+            var ret = new Quest();
+            UtilityTranslation.MajorRecordParse<Quest>(
+                record: ret,
                 frame: frame,
                 errorMask: errorMask,
                 recType: Quest_Registration.QUST_HEADER,
@@ -547,6 +548,7 @@ namespace Mutagen.Bethesda.Oblivion
                 masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
+            return ret;
         }
 
         #endregion
@@ -3078,6 +3080,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<CopyOption, Condition_CopyMask> Conditions;
         public MaskItem<CopyOption, QuestStage_CopyMask> Stages;
         public MaskItem<CopyOption, QuestTarget_CopyMask> Targets;
+        public bool DATADataTypeState;
+        #endregion
+
+    }
+
+    public class Quest_DeepCopyMask : OblivionMajorRecord_DeepCopyMask
+    {
+        public Quest_DeepCopyMask()
+        {
+        }
+
+        public Quest_DeepCopyMask(bool defaultOn)
+        {
+            this.Script = defaultOn;
+            this.Name = defaultOn;
+            this.Icon = defaultOn;
+            this.Flags = defaultOn;
+            this.Priority = defaultOn;
+            this.Conditions = new MaskItem<bool, Condition_DeepCopyMask>(defaultOn, default);
+            this.Stages = new MaskItem<bool, QuestStage_DeepCopyMask>(defaultOn, default);
+            this.Targets = new MaskItem<bool, QuestTarget_DeepCopyMask>(defaultOn, default);
+            this.DATADataTypeState = defaultOn;
+        }
+
+        #region Members
+        public bool Script;
+        public bool Name;
+        public bool Icon;
+        public bool Flags;
+        public bool Priority;
+        public MaskItem<bool, Condition_DeepCopyMask> Conditions;
+        public MaskItem<bool, QuestStage_DeepCopyMask> Stages;
+        public MaskItem<bool, QuestTarget_DeepCopyMask> Targets;
         public bool DATADataTypeState;
         #endregion
 

@@ -13587,6 +13587,135 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public class OblivionMod_DeepCopyMask
+    {
+        public OblivionMod_DeepCopyMask()
+        {
+        }
+
+        public OblivionMod_DeepCopyMask(bool defaultOn)
+        {
+            this.ModHeader = new MaskItem<bool, ModHeader_DeepCopyMask>(defaultOn, default);
+            this.GameSettings = new MaskItem<bool, Group_DeepCopyMask<GameSetting_DeepCopyMask>>(defaultOn, default);
+            this.Globals = new MaskItem<bool, Group_DeepCopyMask<Global_DeepCopyMask>>(defaultOn, default);
+            this.Classes = new MaskItem<bool, Group_DeepCopyMask<Class_DeepCopyMask>>(defaultOn, default);
+            this.Factions = new MaskItem<bool, Group_DeepCopyMask<Faction_DeepCopyMask>>(defaultOn, default);
+            this.Hairs = new MaskItem<bool, Group_DeepCopyMask<Hair_DeepCopyMask>>(defaultOn, default);
+            this.Eyes = new MaskItem<bool, Group_DeepCopyMask<Eye_DeepCopyMask>>(defaultOn, default);
+            this.Races = new MaskItem<bool, Group_DeepCopyMask<Race_DeepCopyMask>>(defaultOn, default);
+            this.Sounds = new MaskItem<bool, Group_DeepCopyMask<Sound_DeepCopyMask>>(defaultOn, default);
+            this.Skills = new MaskItem<bool, Group_DeepCopyMask<SkillRecord_DeepCopyMask>>(defaultOn, default);
+            this.MagicEffects = new MaskItem<bool, Group_DeepCopyMask<MagicEffect_DeepCopyMask>>(defaultOn, default);
+            this.Scripts = new MaskItem<bool, Group_DeepCopyMask<Script_DeepCopyMask>>(defaultOn, default);
+            this.LandTextures = new MaskItem<bool, Group_DeepCopyMask<LandTexture_DeepCopyMask>>(defaultOn, default);
+            this.Enchantments = new MaskItem<bool, Group_DeepCopyMask<Enchantment_DeepCopyMask>>(defaultOn, default);
+            this.Spells = new MaskItem<bool, Group_DeepCopyMask<SpellUnleveled_DeepCopyMask>>(defaultOn, default);
+            this.Birthsigns = new MaskItem<bool, Group_DeepCopyMask<Birthsign_DeepCopyMask>>(defaultOn, default);
+            this.Activators = new MaskItem<bool, Group_DeepCopyMask<Activator_DeepCopyMask>>(defaultOn, default);
+            this.AlchemicalApparatus = new MaskItem<bool, Group_DeepCopyMask<AlchemicalApparatus_DeepCopyMask>>(defaultOn, default);
+            this.Armors = new MaskItem<bool, Group_DeepCopyMask<Armor_DeepCopyMask>>(defaultOn, default);
+            this.Books = new MaskItem<bool, Group_DeepCopyMask<Book_DeepCopyMask>>(defaultOn, default);
+            this.Clothes = new MaskItem<bool, Group_DeepCopyMask<Clothing_DeepCopyMask>>(defaultOn, default);
+            this.Containers = new MaskItem<bool, Group_DeepCopyMask<Container_DeepCopyMask>>(defaultOn, default);
+            this.Doors = new MaskItem<bool, Group_DeepCopyMask<Door_DeepCopyMask>>(defaultOn, default);
+            this.Ingredients = new MaskItem<bool, Group_DeepCopyMask<Ingredient_DeepCopyMask>>(defaultOn, default);
+            this.Lights = new MaskItem<bool, Group_DeepCopyMask<Light_DeepCopyMask>>(defaultOn, default);
+            this.Miscellaneous = new MaskItem<bool, Group_DeepCopyMask<Miscellaneous_DeepCopyMask>>(defaultOn, default);
+            this.Statics = new MaskItem<bool, Group_DeepCopyMask<Static_DeepCopyMask>>(defaultOn, default);
+            this.Grasses = new MaskItem<bool, Group_DeepCopyMask<Grass_DeepCopyMask>>(defaultOn, default);
+            this.Trees = new MaskItem<bool, Group_DeepCopyMask<Tree_DeepCopyMask>>(defaultOn, default);
+            this.Flora = new MaskItem<bool, Group_DeepCopyMask<Flora_DeepCopyMask>>(defaultOn, default);
+            this.Furnature = new MaskItem<bool, Group_DeepCopyMask<Furnature_DeepCopyMask>>(defaultOn, default);
+            this.Weapons = new MaskItem<bool, Group_DeepCopyMask<Weapon_DeepCopyMask>>(defaultOn, default);
+            this.Ammo = new MaskItem<bool, Group_DeepCopyMask<Ammo_DeepCopyMask>>(defaultOn, default);
+            this.NPCs = new MaskItem<bool, Group_DeepCopyMask<NPC_DeepCopyMask>>(defaultOn, default);
+            this.Creatures = new MaskItem<bool, Group_DeepCopyMask<Creature_DeepCopyMask>>(defaultOn, default);
+            this.LeveledCreatures = new MaskItem<bool, Group_DeepCopyMask<LeveledCreature_DeepCopyMask>>(defaultOn, default);
+            this.SoulGems = new MaskItem<bool, Group_DeepCopyMask<SoulGem_DeepCopyMask>>(defaultOn, default);
+            this.Keys = new MaskItem<bool, Group_DeepCopyMask<Key_DeepCopyMask>>(defaultOn, default);
+            this.Potions = new MaskItem<bool, Group_DeepCopyMask<Potion_DeepCopyMask>>(defaultOn, default);
+            this.Subspaces = new MaskItem<bool, Group_DeepCopyMask<Subspace_DeepCopyMask>>(defaultOn, default);
+            this.SigilStones = new MaskItem<bool, Group_DeepCopyMask<SigilStone_DeepCopyMask>>(defaultOn, default);
+            this.LeveledItems = new MaskItem<bool, Group_DeepCopyMask<LeveledItem_DeepCopyMask>>(defaultOn, default);
+            this.Weathers = new MaskItem<bool, Group_DeepCopyMask<Weather_DeepCopyMask>>(defaultOn, default);
+            this.Climates = new MaskItem<bool, Group_DeepCopyMask<Climate_DeepCopyMask>>(defaultOn, default);
+            this.Regions = new MaskItem<bool, Group_DeepCopyMask<Region_DeepCopyMask>>(defaultOn, default);
+            this.Cells = new MaskItem<bool, ListGroup_DeepCopyMask<CellBlock_DeepCopyMask>>(defaultOn, default);
+            this.Worldspaces = new MaskItem<bool, Group_DeepCopyMask<Worldspace_DeepCopyMask>>(defaultOn, default);
+            this.DialogTopics = new MaskItem<bool, Group_DeepCopyMask<DialogTopic_DeepCopyMask>>(defaultOn, default);
+            this.Quests = new MaskItem<bool, Group_DeepCopyMask<Quest_DeepCopyMask>>(defaultOn, default);
+            this.IdleAnimations = new MaskItem<bool, Group_DeepCopyMask<IdleAnimation_DeepCopyMask>>(defaultOn, default);
+            this.AIPackages = new MaskItem<bool, Group_DeepCopyMask<AIPackage_DeepCopyMask>>(defaultOn, default);
+            this.CombatStyles = new MaskItem<bool, Group_DeepCopyMask<CombatStyle_DeepCopyMask>>(defaultOn, default);
+            this.LoadScreens = new MaskItem<bool, Group_DeepCopyMask<LoadScreen_DeepCopyMask>>(defaultOn, default);
+            this.LeveledSpells = new MaskItem<bool, Group_DeepCopyMask<LeveledSpell_DeepCopyMask>>(defaultOn, default);
+            this.AnimatedObjects = new MaskItem<bool, Group_DeepCopyMask<AnimatedObject_DeepCopyMask>>(defaultOn, default);
+            this.Waters = new MaskItem<bool, Group_DeepCopyMask<Water_DeepCopyMask>>(defaultOn, default);
+            this.EffectShaders = new MaskItem<bool, Group_DeepCopyMask<EffectShader_DeepCopyMask>>(defaultOn, default);
+        }
+
+        #region Members
+        public MaskItem<bool, ModHeader_DeepCopyMask> ModHeader;
+        public MaskItem<bool, Group_DeepCopyMask<GameSetting_DeepCopyMask>> GameSettings;
+        public MaskItem<bool, Group_DeepCopyMask<Global_DeepCopyMask>> Globals;
+        public MaskItem<bool, Group_DeepCopyMask<Class_DeepCopyMask>> Classes;
+        public MaskItem<bool, Group_DeepCopyMask<Faction_DeepCopyMask>> Factions;
+        public MaskItem<bool, Group_DeepCopyMask<Hair_DeepCopyMask>> Hairs;
+        public MaskItem<bool, Group_DeepCopyMask<Eye_DeepCopyMask>> Eyes;
+        public MaskItem<bool, Group_DeepCopyMask<Race_DeepCopyMask>> Races;
+        public MaskItem<bool, Group_DeepCopyMask<Sound_DeepCopyMask>> Sounds;
+        public MaskItem<bool, Group_DeepCopyMask<SkillRecord_DeepCopyMask>> Skills;
+        public MaskItem<bool, Group_DeepCopyMask<MagicEffect_DeepCopyMask>> MagicEffects;
+        public MaskItem<bool, Group_DeepCopyMask<Script_DeepCopyMask>> Scripts;
+        public MaskItem<bool, Group_DeepCopyMask<LandTexture_DeepCopyMask>> LandTextures;
+        public MaskItem<bool, Group_DeepCopyMask<Enchantment_DeepCopyMask>> Enchantments;
+        public MaskItem<bool, Group_DeepCopyMask<SpellUnleveled_DeepCopyMask>> Spells;
+        public MaskItem<bool, Group_DeepCopyMask<Birthsign_DeepCopyMask>> Birthsigns;
+        public MaskItem<bool, Group_DeepCopyMask<Activator_DeepCopyMask>> Activators;
+        public MaskItem<bool, Group_DeepCopyMask<AlchemicalApparatus_DeepCopyMask>> AlchemicalApparatus;
+        public MaskItem<bool, Group_DeepCopyMask<Armor_DeepCopyMask>> Armors;
+        public MaskItem<bool, Group_DeepCopyMask<Book_DeepCopyMask>> Books;
+        public MaskItem<bool, Group_DeepCopyMask<Clothing_DeepCopyMask>> Clothes;
+        public MaskItem<bool, Group_DeepCopyMask<Container_DeepCopyMask>> Containers;
+        public MaskItem<bool, Group_DeepCopyMask<Door_DeepCopyMask>> Doors;
+        public MaskItem<bool, Group_DeepCopyMask<Ingredient_DeepCopyMask>> Ingredients;
+        public MaskItem<bool, Group_DeepCopyMask<Light_DeepCopyMask>> Lights;
+        public MaskItem<bool, Group_DeepCopyMask<Miscellaneous_DeepCopyMask>> Miscellaneous;
+        public MaskItem<bool, Group_DeepCopyMask<Static_DeepCopyMask>> Statics;
+        public MaskItem<bool, Group_DeepCopyMask<Grass_DeepCopyMask>> Grasses;
+        public MaskItem<bool, Group_DeepCopyMask<Tree_DeepCopyMask>> Trees;
+        public MaskItem<bool, Group_DeepCopyMask<Flora_DeepCopyMask>> Flora;
+        public MaskItem<bool, Group_DeepCopyMask<Furnature_DeepCopyMask>> Furnature;
+        public MaskItem<bool, Group_DeepCopyMask<Weapon_DeepCopyMask>> Weapons;
+        public MaskItem<bool, Group_DeepCopyMask<Ammo_DeepCopyMask>> Ammo;
+        public MaskItem<bool, Group_DeepCopyMask<NPC_DeepCopyMask>> NPCs;
+        public MaskItem<bool, Group_DeepCopyMask<Creature_DeepCopyMask>> Creatures;
+        public MaskItem<bool, Group_DeepCopyMask<LeveledCreature_DeepCopyMask>> LeveledCreatures;
+        public MaskItem<bool, Group_DeepCopyMask<SoulGem_DeepCopyMask>> SoulGems;
+        public MaskItem<bool, Group_DeepCopyMask<Key_DeepCopyMask>> Keys;
+        public MaskItem<bool, Group_DeepCopyMask<Potion_DeepCopyMask>> Potions;
+        public MaskItem<bool, Group_DeepCopyMask<Subspace_DeepCopyMask>> Subspaces;
+        public MaskItem<bool, Group_DeepCopyMask<SigilStone_DeepCopyMask>> SigilStones;
+        public MaskItem<bool, Group_DeepCopyMask<LeveledItem_DeepCopyMask>> LeveledItems;
+        public MaskItem<bool, Group_DeepCopyMask<Weather_DeepCopyMask>> Weathers;
+        public MaskItem<bool, Group_DeepCopyMask<Climate_DeepCopyMask>> Climates;
+        public MaskItem<bool, Group_DeepCopyMask<Region_DeepCopyMask>> Regions;
+        public MaskItem<bool, ListGroup_DeepCopyMask<CellBlock_DeepCopyMask>> Cells;
+        public MaskItem<bool, Group_DeepCopyMask<Worldspace_DeepCopyMask>> Worldspaces;
+        public MaskItem<bool, Group_DeepCopyMask<DialogTopic_DeepCopyMask>> DialogTopics;
+        public MaskItem<bool, Group_DeepCopyMask<Quest_DeepCopyMask>> Quests;
+        public MaskItem<bool, Group_DeepCopyMask<IdleAnimation_DeepCopyMask>> IdleAnimations;
+        public MaskItem<bool, Group_DeepCopyMask<AIPackage_DeepCopyMask>> AIPackages;
+        public MaskItem<bool, Group_DeepCopyMask<CombatStyle_DeepCopyMask>> CombatStyles;
+        public MaskItem<bool, Group_DeepCopyMask<LoadScreen_DeepCopyMask>> LoadScreens;
+        public MaskItem<bool, Group_DeepCopyMask<LeveledSpell_DeepCopyMask>> LeveledSpells;
+        public MaskItem<bool, Group_DeepCopyMask<AnimatedObject_DeepCopyMask>> AnimatedObjects;
+        public MaskItem<bool, Group_DeepCopyMask<Water_DeepCopyMask>> Waters;
+        public MaskItem<bool, Group_DeepCopyMask<EffectShader_DeepCopyMask>> EffectShaders;
+        #endregion
+
+    }
+
     public class OblivionMod_TranslationMask : ITranslationMask
     {
         #region Members

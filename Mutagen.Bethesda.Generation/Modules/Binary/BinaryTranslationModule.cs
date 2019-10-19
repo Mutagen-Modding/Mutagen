@@ -925,70 +925,18 @@ namespace Mutagen.Bethesda.Generation
             return !data.CustomBinary;
         }
 
-        protected override async Task GenerateCreateSnippet(ObjectGeneration obj, FileGeneration fg)
+        protected override async Task GenerateNewSnippet(ObjectGeneration obj, FileGeneration fg)
         {
-            var data = obj.GetObjectData();
-
-            bool typelessStruct = obj.IsTypelessStruct();
-            ObjectType objType = obj.GetObjectType();
-
             if (await obj.IsMajorRecord())
             {
-                bool async = this.HasAsync(obj, self: true);
-                string ret;
-                switch (data.CustomBinaryEnd)
-                {
-                    case CustomEnd.Off:
-                        ret = "return";
-                        break;
-                    case CustomEnd.Normal:
-                    case CustomEnd.Async:
-                        ret = "var ret =";
-                        break;
-                    default:
-                        throw new NotImplementedException();
-                }
-                using (var args = new ArgsWrapper(fg,
-                    $"{ret} {Loqui.Generation.Utility.Await(async)}Utility{(async ? "Async" : null)}Translation.MajorRecordParse<{obj.Name}>"))
-                {
-                    args.Add($"record: new {obj.Name}()");
-                    args.Add($"frame: frame");
-                    args.Add($"errorMask: errorMask");
-                    args.Add($"recType: {obj.GetTriggeringSource()}");
-                    args.Add($"recordTypeConverter: recordTypeConverter");
-                    args.Add($"masterReferences: masterReferences");
-                    args.Add($"fillStructs: FillBinaryStructs");
-                    args.Add($"fillTyped: FillBinaryRecordTypes");
-                }
-                if (data.CustomBinaryEnd != CustomEnd.Off)
-                {
-                    fg.AppendLine("try");
-                    using (new BraceWrapper(fg))
-                    {
-                        using (var args = new ArgsWrapper(fg,
-                            $"{Loqui.Generation.Utility.Await(data.CustomBinaryEnd == CustomEnd.Async)}{this.TranslationCreateClass(obj)}.CustomBinaryEndImport{(await this.AsyncImport(obj) ? null : "Public")}"))
-                        {
-                            args.Add("frame: frame");
-                            args.Add("obj: ret");
-                            args.Add("masterReferences: masterReferences");
-                            args.Add("errorMask: errorMask");
-                        }
-                    }
-                    fg.AppendLine("catch (Exception ex)");
-                    fg.AppendLine("when (errorMask != null)");
-                    using (new BraceWrapper(fg))
-                    {
-                        fg.AppendLine("errorMask.ReportException(ex);");
-                    }
-                    fg.AppendLine("return ret;");
-                }
+                fg.AppendLine($"var ret = new {obj.Name}();");
             }
             else
             {
                 if (obj.TryGetCustomRecordTypeTriggers(out var customLogicTriggers))
                 {
                     using (var args = new ArgsWrapper(fg,
-                        $"var nextRecord = HeaderTranslation.GetNext{(objType == ObjectType.Subrecord ? "Sub" : null)}RecordType"))
+                        $"var nextRecord = HeaderTranslation.GetNext{(obj.GetObjectType() == ObjectType.Subrecord ? "Sub" : null)}RecordType"))
                     {
                         args.Add("reader: frame.Reader");
                         args.Add("contentLength: out var customLen");
@@ -1029,6 +977,55 @@ namespace Mutagen.Bethesda.Generation
                 {
                     fg.AppendLine($"var ret = new {obj.Name}{obj.GetGenericTypes(MaskType.Normal)}();");
                 }
+            }
+        }
+
+        protected override async Task GenerateCreateSnippet(ObjectGeneration obj, FileGeneration fg)
+        {
+            var data = obj.GetObjectData();
+
+            bool typelessStruct = obj.IsTypelessStruct();
+            ObjectType objType = obj.GetObjectType();
+
+            if (await obj.IsMajorRecord())
+            {
+                bool async = this.HasAsync(obj, self: true);
+                using (var args = new ArgsWrapper(fg,
+                    $"{Loqui.Generation.Utility.Await(async)}Utility{(async ? "Async" : null)}Translation.MajorRecordParse<{obj.Name}>"))
+                {
+                    args.Add($"record: ret");
+                    args.Add($"frame: frame");
+                    args.Add($"errorMask: errorMask");
+                    args.Add($"recType: {obj.GetTriggeringSource()}");
+                    args.Add($"recordTypeConverter: recordTypeConverter");
+                    args.Add($"masterReferences: masterReferences");
+                    args.Add($"fillStructs: FillBinaryStructs");
+                    args.Add($"fillTyped: FillBinaryRecordTypes");
+                }
+                if (data.CustomBinaryEnd != CustomEnd.Off)
+                {
+                    fg.AppendLine("try");
+                    using (new BraceWrapper(fg))
+                    {
+                        using (var args = new ArgsWrapper(fg,
+                            $"{Loqui.Generation.Utility.Await(data.CustomBinaryEnd == CustomEnd.Async)}{this.TranslationCreateClass(obj)}.CustomBinaryEndImport{(await this.AsyncImport(obj) ? null : "Public")}"))
+                        {
+                            args.Add("frame: frame");
+                            args.Add("obj: ret");
+                            args.Add("masterReferences: masterReferences");
+                            args.Add("errorMask: errorMask");
+                        }
+                    }
+                    fg.AppendLine("catch (Exception ex)");
+                    fg.AppendLine("when (errorMask != null)");
+                    using (new BraceWrapper(fg))
+                    {
+                        fg.AppendLine("errorMask.ReportException(ex);");
+                    }
+                }
+            }
+            else
+            {
                 IEnumerable<RecordType> recordTypes = await obj.GetTriggeringRecordTypes();
                 var frameMod = (objType != ObjectType.Subrecord || recordTypes.Any())
                     && objType != ObjectType.Mod;
@@ -1138,8 +1135,8 @@ namespace Mutagen.Bethesda.Generation
                         args.Add("masterReferences: masterReferences");
                     }
                 }
-                fg.AppendLine("return ret;");
             }
+            fg.AppendLine("return ret;");
         }
 
         protected override void GenerateWriteSnippet(ObjectGeneration obj, FileGeneration fg)

@@ -3644,6 +3644,49 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
+    public class ModHeader_DeepCopyMask
+    {
+        public ModHeader_DeepCopyMask()
+        {
+        }
+
+        public ModHeader_DeepCopyMask(bool defaultOn)
+        {
+            this.Flags = defaultOn;
+            this.FormID = defaultOn;
+            this.Version = defaultOn;
+            this.FormVersion = defaultOn;
+            this.Version2 = defaultOn;
+            this.Stats = new MaskItem<bool, ModStats_DeepCopyMask>(defaultOn, default);
+            this.TypeOffsets = defaultOn;
+            this.Deleted = defaultOn;
+            this.Author = defaultOn;
+            this.Description = defaultOn;
+            this.MasterReferences = new MaskItem<bool, MasterReference_DeepCopyMask>(defaultOn, default);
+            this.OverriddenForms = defaultOn;
+            this.INTV = defaultOn;
+            this.INCC = defaultOn;
+        }
+
+        #region Members
+        public bool Flags;
+        public bool FormID;
+        public bool Version;
+        public bool FormVersion;
+        public bool Version2;
+        public MaskItem<bool, ModStats_DeepCopyMask> Stats;
+        public bool TypeOffsets;
+        public bool Deleted;
+        public bool Author;
+        public bool Description;
+        public MaskItem<bool, MasterReference_DeepCopyMask> MasterReferences;
+        public bool OverriddenForms;
+        public bool INTV;
+        public bool INCC;
+        #endregion
+
+    }
+
     public class ModHeader_TranslationMask : ITranslationMask
     {
         #region Members

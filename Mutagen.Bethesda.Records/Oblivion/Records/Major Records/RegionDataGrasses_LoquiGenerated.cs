@@ -1625,6 +1625,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public class RegionDataGrasses_DeepCopyMask : RegionData_DeepCopyMask
+    {
+        public RegionDataGrasses_DeepCopyMask()
+        {
+        }
+
+        public RegionDataGrasses_DeepCopyMask(bool defaultOn)
+        {
+            this.Grasses = defaultOn;
+        }
+
+        #region Members
+        public bool Grasses;
+        #endregion
+
+    }
+
     public class RegionDataGrasses_TranslationMask : RegionData_TranslationMask
     {
         #region Members

@@ -1887,6 +1887,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public class ScriptMetaSummary_DeepCopyMask
+    {
+        public ScriptMetaSummary_DeepCopyMask()
+        {
+        }
+
+        public ScriptMetaSummary_DeepCopyMask(bool defaultOn)
+        {
+            this.Fluff = defaultOn;
+            this.RefCount = defaultOn;
+            this.CompiledSize = defaultOn;
+            this.VariableCount = defaultOn;
+            this.Type = defaultOn;
+        }
+
+        #region Members
+        public bool Fluff;
+        public bool RefCount;
+        public bool CompiledSize;
+        public bool VariableCount;
+        public bool Type;
+        #endregion
+
+    }
+
     public class ScriptMetaSummary_TranslationMask : ITranslationMask
     {
         #region Members

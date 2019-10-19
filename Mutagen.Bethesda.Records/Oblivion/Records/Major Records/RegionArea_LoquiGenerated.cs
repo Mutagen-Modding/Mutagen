@@ -1820,6 +1820,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public class RegionArea_DeepCopyMask
+    {
+        public RegionArea_DeepCopyMask()
+        {
+        }
+
+        public RegionArea_DeepCopyMask(bool defaultOn)
+        {
+            this.EdgeFallOff = defaultOn;
+            this.RegionPoints = defaultOn;
+        }
+
+        #region Members
+        public bool EdgeFallOff;
+        public bool RegionPoints;
+        #endregion
+
+    }
+
     public class RegionArea_TranslationMask : ITranslationMask
     {
         #region Members

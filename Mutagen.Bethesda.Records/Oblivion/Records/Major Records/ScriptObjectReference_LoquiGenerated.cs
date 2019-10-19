@@ -1427,6 +1427,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
+    public class ScriptObjectReference_DeepCopyMask : ScriptReference_DeepCopyMask
+    {
+        public ScriptObjectReference_DeepCopyMask()
+        {
+        }
+
+        public ScriptObjectReference_DeepCopyMask(bool defaultOn)
+        {
+            this.Reference = defaultOn;
+        }
+
+        #region Members
+        public bool Reference;
+        #endregion
+
+    }
+
     public class ScriptObjectReference_TranslationMask : ScriptReference_TranslationMask
     {
         #region Members
