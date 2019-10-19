@@ -185,11 +185,16 @@ namespace Mutagen.Bethesda
                 default:
                     break;
             }
-            MajorRecord ret;
-            if (!LoquiXmlTranslation.Instance.TryCreate(node, out ret, errorMask, translationMask))
+            if (!LoquiXmlTranslation.Instance.TryCreate(node, out MajorRecord ret, errorMask, translationMask))
             {
                 throw new ArgumentException($"Unknown MajorRecord subclass: {node.Name.LocalName}");
             }
+            ((MajorRecordSetterCommon)((IMajorRecordGetter)ret).CommonSetterInstance()).CopyInFromXml(
+                item: ret,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             return ret;
         }
 
@@ -275,46 +280,6 @@ namespace Mutagen.Bethesda
 
         #endregion
 
-        protected static void FillPrivateElementXml(
-            MajorRecord item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "FormKey":
-                    try
-                    {
-                        errorMask?.PushIndex((int)MajorRecord_FieldIndex.FormKey);
-                        if (FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out FormKey FormKeyParse,
-                            errorMask: errorMask))
-                        {
-                            item.FormKey = FormKeyParse;
-                        }
-                        else
-                        {
-                            item.FormKey = default(FormKey);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-
         #endregion
 
         protected readonly BitArray _hasBeenSetTracker;
@@ -388,62 +353,6 @@ namespace Mutagen.Bethesda
                 recordTypeConverter: null,
                 errorMask: errorMask);
         }
-        protected static void FillBinaryStructs(
-            IMajorRecordInternal item,
-            MutagenFrame frame,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            item.MajorRecordFlagsRaw = frame.ReadInt32();
-            if (Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Parse(
-                frame: frame,
-                masterReferences: masterReferences,
-                item: out FormKey FormKeyParse))
-            {
-                item.FormKey = FormKeyParse;
-            }
-            else
-            {
-                item.FormKey = default(FormKey);
-            }
-            item.Version = frame.ReadUInt32();
-        }
-
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IMajorRecordInternal item,
-            MutagenFrame frame,
-            RecordType nextRecordType,
-            int contentLength,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask,
-            RecordTypeConverter recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x44494445: // EDID
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String EditorIDParse))
-                    {
-                        item.EditorID = EditorIDParse;
-                    }
-                    else
-                    {
-                        item.EditorID = default(String);
-                    }
-                    return TryGet<int?>.Succeed((int)MajorRecord_FieldIndex.EditorID);
-                }
-                default:
-                    errorMask?.ReportWarning($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
-                    frame.Position += contentLength + frame.MetaData.SubConstants.HeaderLength;
-                    return TryGet<int?>.Succeed(null);
-            }
-        }
-
         #endregion
 
         void IClearable.Clear()
@@ -620,8 +529,8 @@ namespace Mutagen.Bethesda
             MajorRecord def = null,
             bool doMasks = true)
         {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            MajorRecordSetterCopyCommon.CopyFieldsFrom(
+            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((MajorRecordSetterCopyCommon)((IMajorRecordGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -637,13 +546,156 @@ namespace Mutagen.Bethesda
             MajorRecord_CopyMask copyMask = null,
             MajorRecord def = null)
         {
-            MajorRecordSetterCopyCommon.CopyFieldsFrom(
+            ((MajorRecordSetterCopyCommon)((IMajorRecordGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
+
+        #region Xml Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this IMajorRecordInternal item,
+            XElement node,
+            MissingCreate missing = MissingCreate.New,
+            MajorRecord_TranslationMask translationMask = null)
+        {
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: null,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this IMajorRecordInternal item,
+            XElement node,
+            out MajorRecord_ErrorMask errorMask,
+            bool doMasks = true,
+            MajorRecord_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask.GetCrystal());
+            errorMask = MajorRecord_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyInFromXml(
+            this IMajorRecordInternal item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ((MajorRecordSetterCommon)((IMajorRecordGetter)item).CommonSetterInstance()).CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        public static void CopyInFromXml(
+            this IMajorRecordInternal item,
+            string path,
+            MissingCreate missing = MissingCreate.New,
+            MajorRecord_TranslationMask translationMask = null)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IMajorRecordInternal item,
+            string path,
+            out MajorRecord_ErrorMask errorMask,
+            MajorRecord_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IMajorRecordInternal item,
+            string path,
+            ErrorMaskBuilder errorMask,
+            MajorRecord_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        public static void CopyInFromXml(
+            this IMajorRecordInternal item,
+            Stream stream,
+            MissingCreate missing = MissingCreate.New,
+            MajorRecord_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IMajorRecordInternal item,
+            Stream stream,
+            out MajorRecord_ErrorMask errorMask,
+            MajorRecord_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IMajorRecordInternal item,
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            MajorRecord_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        #endregion
 
         #region Mutagen
         public static IMajorRecordCommon Duplicate(
@@ -666,6 +718,55 @@ namespace Mutagen.Bethesda
             return ((MajorRecordSetterCommon)((IMajorRecordGetter)obj).CommonSetterInstance()).EnumerateMajorRecords(obj: obj);
         }
 
+        #endregion
+
+        #region Binary Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this IMajorRecordInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences)
+        {
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: null);
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this IMajorRecordInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            out MajorRecord_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: errorMaskBuilder);
+            errorMask = MajorRecord_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyInFromBinary(
+            this IMajorRecordInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((MajorRecordSetterCommon)((IMajorRecordGetter)item).CommonSetterInstance()).CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
         #endregion
 
     }
@@ -1061,11 +1162,155 @@ namespace Mutagen.Bethesda.Internals
             item.EditorID_Unset();
         }
         
+        #region Xml Translation
+        protected static void FillPrivateElementXml(
+            IMajorRecordInternal item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "FormKey":
+                    try
+                    {
+                        errorMask?.PushIndex((int)MajorRecord_FieldIndex.FormKey);
+                        if (FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out FormKey FormKeyParse,
+                            errorMask: errorMask))
+                        {
+                            item.FormKey = FormKeyParse;
+                        }
+                        else
+                        {
+                            item.FormKey = default(FormKey);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+        
+        public void CopyInFromXml(
+            IMajorRecordInternal item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    FillPrivateElementXml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    MajorRecordXmlCreateTranslation.FillPublicElementXml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+        
+        #endregion
+        
         #region Mutagen
         public virtual IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(IMajorRecordInternal obj)
         {
             yield break;
         }
+        #endregion
+        
+        #region Binary Translation
+        public virtual RecordType RecordType => throw new ArgumentException();
+        protected static void FillBinaryStructs(
+            IMajorRecordInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            item.MajorRecordFlagsRaw = frame.ReadInt32();
+            if (Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Parse(
+                frame: frame,
+                masterReferences: masterReferences,
+                item: out FormKey FormKeyParse))
+            {
+                item.FormKey = FormKeyParse;
+            }
+            else
+            {
+                item.FormKey = default(FormKey);
+            }
+            item.Version = frame.ReadUInt32();
+        }
+        
+        protected static TryGet<int?> FillBinaryRecordTypes(
+            IMajorRecordInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x44494445: // EDID
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String EditorIDParse))
+                    {
+                        item.EditorID = EditorIDParse;
+                    }
+                    else
+                    {
+                        item.EditorID = default(String);
+                    }
+                    return TryGet<int?>.Succeed((int)MajorRecord_FieldIndex.EditorID);
+                }
+                default:
+                    errorMask?.ReportWarning($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
+                    frame.Position += contentLength + frame.MetaData.SubConstants.HeaderLength;
+                    return TryGet<int?>.Succeed(null);
+            }
+        }
+        
+        public void CopyInFromBinary(
+            IMajorRecordInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+        }
+        
         #endregion
         
     }
@@ -1234,7 +1479,7 @@ namespace Mutagen.Bethesda.Internals
         public static readonly MajorRecordSetterCopyCommon Instance = new MajorRecordSetterCopyCommon();
 
         #region Copy Fields From
-        public static void CopyFieldsFrom(
+        public void CopyFieldsFrom(
             MajorRecord item,
             MajorRecord rhs,
             MajorRecord def,
@@ -2032,29 +2277,6 @@ namespace Mutagen.Bethesda.Internals
         }
 
         public MajorRecord_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.MajorRecordFlagsRaw = defaultOn;
-            this.FormKey = defaultOn;
-            this.Version = defaultOn;
-            this.EditorID = defaultOn;
-        }
-
-        #region Members
-        public bool MajorRecordFlagsRaw;
-        public bool FormKey;
-        public bool Version;
-        public bool EditorID;
-        #endregion
-
-    }
-
-    public class MajorRecord_DeepCopyMask
-    {
-        public MajorRecord_DeepCopyMask()
-        {
-        }
-
-        public MajorRecord_DeepCopyMask(bool defaultOn)
         {
             this.MajorRecordFlagsRaw = defaultOn;
             this.FormKey = defaultOn;

@@ -148,23 +148,12 @@ namespace Mutagen.Bethesda.Tests
                     break;
             }
             var ret = new DataFolderLocations();
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    DataFolderLocationsXmlCreateTranslation.FillPublicElementXml(
-                        item: ret,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
+            ((DataFolderLocationsSetterCommon)((IDataFolderLocationsGetter)ret).CommonSetterInstance()).CopyInFromXml(
+                item: ret,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             return ret;
         }
 
@@ -246,102 +235,6 @@ namespace Mutagen.Bethesda.Tests
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
-        #region Xml Copy In
-        public void CopyInXml(
-            XElement node,
-            MissingCreate missing = MissingCreate.New)
-        {
-            CopyInXmlInternal(
-                missing: missing,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-        }
-
-        public virtual void CopyInXml(
-            XElement node,
-            out DataFolderLocations_ErrorMask errorMask,
-            DataFolderLocations_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            CopyInXmlInternal(
-                missing: missing,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = DataFolderLocations_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        protected void CopyInXmlInternal(
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
-        {
-            var obj = DataFolderLocations.CreateFromXml(
-                missing: missing,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            this.CopyFieldsFrom(obj);
-        }
-
-        public void CopyInXml(
-            string path,
-            MissingCreate missing = MissingCreate.New)
-        {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            this.CopyInXml(
-                missing: missing,
-                node: node);
-        }
-
-        public void CopyInXml(
-            string path,
-            out DataFolderLocations_ErrorMask errorMask,
-            DataFolderLocations_TranslationMask translationMask,
-            MissingCreate missing = MissingCreate.New,
-            bool doMasks = true)
-        {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            this.CopyInXml(
-                missing: missing,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask,
-                doMasks: doMasks);
-        }
-
-        public void CopyInXml(
-            Stream stream,
-            MissingCreate missing = MissingCreate.New)
-        {
-            var node = XDocument.Load(stream).Root;
-            this.CopyInXml(
-                missing: missing,
-                node: node);
-        }
-
-        public void CopyInXml(
-            Stream stream,
-            out DataFolderLocations_ErrorMask errorMask,
-            DataFolderLocations_TranslationMask translationMask,
-            MissingCreate missing = MissingCreate.New,
-            bool doMasks = true)
-        {
-            var node = XDocument.Load(stream).Root;
-            this.CopyInXml(
-                missing: missing,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask,
-                doMasks: doMasks);
         }
 
         #endregion
@@ -510,8 +403,8 @@ namespace Mutagen.Bethesda.Tests
             DataFolderLocations def = null,
             bool doMasks = true)
         {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            DataFolderLocationsSetterCopyCommon.CopyFieldsFrom(
+            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((DataFolderLocationsSetterCopyCommon)((IDataFolderLocationsGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -527,7 +420,7 @@ namespace Mutagen.Bethesda.Tests
             DataFolderLocations_CopyMask copyMask = null,
             DataFolderLocations def = null)
         {
-            DataFolderLocationsSetterCopyCommon.CopyFieldsFrom(
+            ((DataFolderLocationsSetterCopyCommon)((IDataFolderLocationsGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -545,6 +438,149 @@ namespace Mutagen.Bethesda.Tests
                 copyMask: copyMask,
                 def: def);
         }
+
+        #region Xml Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this IDataFolderLocations item,
+            XElement node,
+            MissingCreate missing = MissingCreate.New,
+            DataFolderLocations_TranslationMask translationMask = null)
+        {
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: null,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this IDataFolderLocations item,
+            XElement node,
+            out DataFolderLocations_ErrorMask errorMask,
+            bool doMasks = true,
+            DataFolderLocations_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask.GetCrystal());
+            errorMask = DataFolderLocations_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyInFromXml(
+            this IDataFolderLocations item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ((DataFolderLocationsSetterCommon)((IDataFolderLocationsGetter)item).CommonSetterInstance()).CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        public static void CopyInFromXml(
+            this IDataFolderLocations item,
+            string path,
+            MissingCreate missing = MissingCreate.New,
+            DataFolderLocations_TranslationMask translationMask = null)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IDataFolderLocations item,
+            string path,
+            out DataFolderLocations_ErrorMask errorMask,
+            DataFolderLocations_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IDataFolderLocations item,
+            string path,
+            ErrorMaskBuilder errorMask,
+            DataFolderLocations_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        public static void CopyInFromXml(
+            this IDataFolderLocations item,
+            Stream stream,
+            MissingCreate missing = MissingCreate.New,
+            DataFolderLocations_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IDataFolderLocations item,
+            Stream stream,
+            out DataFolderLocations_ErrorMask errorMask,
+            DataFolderLocations_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IDataFolderLocations item,
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            DataFolderLocations_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        #endregion
 
     }
     #endregion
@@ -773,6 +809,35 @@ namespace Mutagen.Bethesda.Tests.Internals
             return ret;
         }
         
+        #region Xml Translation
+        public void CopyInFromXml(
+            IDataFolderLocations item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    DataFolderLocationsXmlCreateTranslation.FillPublicElementXml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+        
+        #endregion
+        
     }
     public partial class DataFolderLocationsCommon
     {
@@ -901,7 +966,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         public static readonly DataFolderLocationsSetterCopyCommon Instance = new DataFolderLocationsSetterCopyCommon();
 
         #region Copy Fields From
-        public static void CopyFieldsFrom(
+        public void CopyFieldsFrom(
             DataFolderLocations item,
             DataFolderLocations rhs,
             DataFolderLocations def,
@@ -1586,25 +1651,6 @@ namespace Mutagen.Bethesda.Tests.Internals
         }
 
         public DataFolderLocations_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Oblivion = defaultOn;
-            this.Skyrim = defaultOn;
-        }
-
-        #region Members
-        public bool Oblivion;
-        public bool Skyrim;
-        #endregion
-
-    }
-
-    public class DataFolderLocations_DeepCopyMask
-    {
-        public DataFolderLocations_DeepCopyMask()
-        {
-        }
-
-        public DataFolderLocations_DeepCopyMask(bool defaultOn)
         {
             this.Oblivion = defaultOn;
             this.Skyrim = defaultOn;

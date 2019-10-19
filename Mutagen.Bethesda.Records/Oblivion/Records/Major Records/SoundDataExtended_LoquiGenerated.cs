@@ -157,23 +157,12 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
             }
             var ret = new SoundDataExtended();
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    SoundDataExtendedXmlCreateTranslation.FillPublicElementXml(
-                        item: ret,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
+            ((SoundDataExtendedSetterCommon)((ISoundDataExtendedGetter)ret).CommonSetterInstance()).CopyInFromXml(
+                item: ret,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             return ret;
         }
 
@@ -330,49 +319,16 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new SoundDataExtended();
-            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
-                frame.Reader,
-                recordTypeConverter.ConvertToCustom(SoundDataExtended_Registration.SNDX_HEADER)));
-            UtilityTranslation.RecordParse(
-                record: ret,
-                frame: frame,
-                setFinal: true,
+            ((SoundDataExtendedSetterCommon)((ISoundDataExtendedGetter)ret).CommonSetterInstance()).CopyInFromBinary(
+                item: ret,
                 masterReferences: masterReferences,
-                errorMask: errorMask,
+                frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                errorMask: errorMask);
             return ret;
         }
 
         #endregion
-
-        protected static void FillBinaryStructs(
-            ISoundDataExtendedInternal item,
-            MutagenFrame frame,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            SoundData.FillBinaryStructs(
-                item: item,
-                frame: frame,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
-            SoundDataExtendedBinaryCreateTranslation.FillBinaryStaticAttenuationCustomPublic(
-                frame: frame,
-                item: item,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
-            SoundDataExtendedBinaryCreateTranslation.FillBinaryStopTimeCustomPublic(
-                frame: frame,
-                item: item,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
-            SoundDataExtendedBinaryCreateTranslation.FillBinaryStartTimeCustomPublic(
-                frame: frame,
-                item: item,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
-        }
 
         #endregion
 
@@ -528,8 +484,8 @@ namespace Mutagen.Bethesda.Oblivion
             SoundDataExtended def = null,
             bool doMasks = true)
         {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            SoundDataExtendedSetterCopyCommon.CopyFieldsFrom(
+            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((SoundDataExtendedSetterCopyCommon)((ISoundDataExtendedGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -545,7 +501,7 @@ namespace Mutagen.Bethesda.Oblivion
             SoundDataExtended_CopyMask copyMask = null,
             SoundDataExtended def = null)
         {
-            SoundDataExtendedSetterCopyCommon.CopyFieldsFrom(
+            ((SoundDataExtendedSetterCopyCommon)((ISoundDataExtendedGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -563,6 +519,198 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
         }
+
+        #region Xml Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this ISoundDataExtendedInternal item,
+            XElement node,
+            MissingCreate missing = MissingCreate.New,
+            SoundDataExtended_TranslationMask translationMask = null)
+        {
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: null,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this ISoundDataExtendedInternal item,
+            XElement node,
+            out SoundDataExtended_ErrorMask errorMask,
+            bool doMasks = true,
+            SoundDataExtended_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask.GetCrystal());
+            errorMask = SoundDataExtended_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public new static void CopyInFromXml(
+            this ISoundDataExtendedInternal item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ((SoundDataExtendedSetterCommon)((ISoundDataExtendedGetter)item).CommonSetterInstance()).CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        public static void CopyInFromXml(
+            this ISoundDataExtendedInternal item,
+            string path,
+            MissingCreate missing = MissingCreate.New,
+            SoundDataExtended_TranslationMask translationMask = null)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this ISoundDataExtendedInternal item,
+            string path,
+            out SoundDataExtended_ErrorMask errorMask,
+            SoundDataExtended_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this ISoundDataExtendedInternal item,
+            string path,
+            ErrorMaskBuilder errorMask,
+            SoundDataExtended_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        public static void CopyInFromXml(
+            this ISoundDataExtendedInternal item,
+            Stream stream,
+            MissingCreate missing = MissingCreate.New,
+            SoundDataExtended_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this ISoundDataExtendedInternal item,
+            Stream stream,
+            out SoundDataExtended_ErrorMask errorMask,
+            SoundDataExtended_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this ISoundDataExtendedInternal item,
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            SoundDataExtended_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        #endregion
+
+        #region Binary Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this ISoundDataExtendedInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences)
+        {
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: null);
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this ISoundDataExtendedInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            out SoundDataExtended_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: errorMaskBuilder);
+            errorMask = SoundDataExtended_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public new static void CopyInFromBinary(
+            this ISoundDataExtendedInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((SoundDataExtendedSetterCommon)((ISoundDataExtendedGetter)item).CommonSetterInstance()).CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+        #endregion
 
     }
     #endregion
@@ -819,6 +967,86 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
         
+        #region Xml Translation
+        public new void CopyInFromXml(
+            ISoundDataExtendedInternal item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    SoundDataExtendedXmlCreateTranslation.FillPublicElementXml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+        
+        #endregion
+        
+        #region Binary Translation
+        protected static void FillBinaryStructs(
+            ISoundDataExtendedInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            SoundDataSetterCommon.FillBinaryStructs(
+                item: item,
+                frame: frame,
+                masterReferences: masterReferences,
+                errorMask: errorMask);
+            SoundDataExtendedBinaryCreateTranslation.FillBinaryStaticAttenuationCustomPublic(
+                frame: frame,
+                item: item,
+                masterReferences: masterReferences,
+                errorMask: errorMask);
+            SoundDataExtendedBinaryCreateTranslation.FillBinaryStopTimeCustomPublic(
+                frame: frame,
+                item: item,
+                masterReferences: masterReferences,
+                errorMask: errorMask);
+            SoundDataExtendedBinaryCreateTranslation.FillBinaryStartTimeCustomPublic(
+                frame: frame,
+                item: item,
+                masterReferences: masterReferences,
+                errorMask: errorMask);
+        }
+        
+        public new void CopyInFromBinary(
+            ISoundDataExtendedInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
+                frame.Reader,
+                recordTypeConverter.ConvertToCustom(SoundDataExtended_Registration.SNDX_HEADER)));
+            UtilityTranslation.RecordParse(
+                record: item,
+                frame: frame,
+                setFinal: true,
+                masterReferences: masterReferences,
+                errorMask: errorMask,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: FillBinaryStructs);
+        }
+        
+        #endregion
+        
     }
     public partial class SoundDataExtendedCommon : SoundDataCommon
     {
@@ -998,14 +1226,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public new static readonly SoundDataExtendedSetterCopyCommon Instance = new SoundDataExtendedSetterCopyCommon();
 
         #region Copy Fields From
-        public static void CopyFieldsFrom(
+        public void CopyFieldsFrom(
             SoundDataExtended item,
             SoundDataExtended rhs,
             SoundDataExtended def,
             ErrorMaskBuilder errorMask,
             SoundDataExtended_CopyMask copyMask)
         {
-            SoundDataSetterCopyCommon.CopyFieldsFrom(
+            ((SoundDataSetterCopyCommon)((ISoundDataGetter)item).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1633,27 +1861,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public SoundDataExtended_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.StaticAttenuation = defaultOn;
-            this.StopTime = defaultOn;
-            this.StartTime = defaultOn;
-        }
-
-        #region Members
-        public bool StaticAttenuation;
-        public bool StopTime;
-        public bool StartTime;
-        #endregion
-
-    }
-
-    public class SoundDataExtended_DeepCopyMask : SoundData_DeepCopyMask
-    {
-        public SoundDataExtended_DeepCopyMask()
-        {
-        }
-
-        public SoundDataExtended_DeepCopyMask(bool defaultOn)
         {
             this.StaticAttenuation = defaultOn;
             this.StopTime = defaultOn;

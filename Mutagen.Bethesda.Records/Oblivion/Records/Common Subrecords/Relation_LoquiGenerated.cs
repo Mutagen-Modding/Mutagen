@@ -157,23 +157,12 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
             }
             var ret = new Relation();
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    RelationXmlCreateTranslation.FillPublicElementXml(
-                        item: ret,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
+            ((RelationSetterCommon)((IRelationGetter)ret).CommonSetterInstance()).CopyInFromXml(
+                item: ret,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             return ret;
         }
 
@@ -344,34 +333,16 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new Relation();
-            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
-                frame.Reader,
-                recordTypeConverter.ConvertToCustom(Relation_Registration.XNAM_HEADER)));
-            UtilityTranslation.RecordParse(
-                record: ret,
-                frame: frame,
-                setFinal: true,
+            ((RelationSetterCommon)((IRelationGetter)ret).CommonSetterInstance()).CopyInFromBinary(
+                item: ret,
                 masterReferences: masterReferences,
-                errorMask: errorMask,
+                frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                errorMask: errorMask);
             return ret;
         }
 
         #endregion
-
-        protected static void FillBinaryStructs(
-            IRelation item,
-            MutagenFrame frame,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
-                frame: frame,
-                masterReferences: masterReferences,
-                item: item.Faction_Property);
-            item.Modifier = frame.ReadInt32();
-        }
 
         #endregion
 
@@ -526,8 +497,8 @@ namespace Mutagen.Bethesda.Oblivion
             Relation def = null,
             bool doMasks = true)
         {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            RelationSetterCopyCommon.CopyFieldsFrom(
+            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((RelationSetterCopyCommon)((IRelationGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -543,7 +514,7 @@ namespace Mutagen.Bethesda.Oblivion
             Relation_CopyMask copyMask = null,
             Relation def = null)
         {
-            RelationSetterCopyCommon.CopyFieldsFrom(
+            ((RelationSetterCopyCommon)((IRelationGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -561,6 +532,198 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
         }
+
+        #region Xml Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this IRelation item,
+            XElement node,
+            MissingCreate missing = MissingCreate.New,
+            Relation_TranslationMask translationMask = null)
+        {
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: null,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this IRelation item,
+            XElement node,
+            out Relation_ErrorMask errorMask,
+            bool doMasks = true,
+            Relation_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask.GetCrystal());
+            errorMask = Relation_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyInFromXml(
+            this IRelation item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ((RelationSetterCommon)((IRelationGetter)item).CommonSetterInstance()).CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        public static void CopyInFromXml(
+            this IRelation item,
+            string path,
+            MissingCreate missing = MissingCreate.New,
+            Relation_TranslationMask translationMask = null)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IRelation item,
+            string path,
+            out Relation_ErrorMask errorMask,
+            Relation_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IRelation item,
+            string path,
+            ErrorMaskBuilder errorMask,
+            Relation_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        public static void CopyInFromXml(
+            this IRelation item,
+            Stream stream,
+            MissingCreate missing = MissingCreate.New,
+            Relation_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IRelation item,
+            Stream stream,
+            out Relation_ErrorMask errorMask,
+            Relation_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IRelation item,
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            Relation_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        #endregion
+
+        #region Binary Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this IRelation item,
+            MutagenFrame frame,
+            MasterReferences masterReferences)
+        {
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: null);
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this IRelation item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            out Relation_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: errorMaskBuilder);
+            errorMask = Relation_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyInFromBinary(
+            this IRelation item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((RelationSetterCommon)((IRelationGetter)item).CommonSetterInstance()).CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+        #endregion
 
     }
     #endregion
@@ -794,6 +957,71 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
         
+        #region Xml Translation
+        public void CopyInFromXml(
+            IRelation item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    RelationXmlCreateTranslation.FillPublicElementXml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+        
+        #endregion
+        
+        #region Binary Translation
+        protected static void FillBinaryStructs(
+            IRelation item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
+                frame: frame,
+                masterReferences: masterReferences,
+                item: item.Faction_Property);
+            item.Modifier = frame.ReadInt32();
+        }
+        
+        public void CopyInFromBinary(
+            IRelation item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
+                frame.Reader,
+                recordTypeConverter.ConvertToCustom(Relation_Registration.XNAM_HEADER)));
+            UtilityTranslation.RecordParse(
+                record: item,
+                frame: frame,
+                setFinal: true,
+                masterReferences: masterReferences,
+                errorMask: errorMask,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: FillBinaryStructs);
+        }
+        
+        #endregion
+        
     }
     public partial class RelationCommon
     {
@@ -922,7 +1150,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RelationSetterCopyCommon Instance = new RelationSetterCopyCommon();
 
         #region Copy Fields From
-        public static void CopyFieldsFrom(
+        public void CopyFieldsFrom(
             Relation item,
             Relation rhs,
             Relation def,
@@ -1582,25 +1810,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public Relation_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Faction = defaultOn;
-            this.Modifier = defaultOn;
-        }
-
-        #region Members
-        public bool Faction;
-        public bool Modifier;
-        #endregion
-
-    }
-
-    public class Relation_DeepCopyMask
-    {
-        public Relation_DeepCopyMask()
-        {
-        }
-
-        public Relation_DeepCopyMask(bool defaultOn)
         {
             this.Faction = defaultOn;
             this.Modifier = defaultOn;

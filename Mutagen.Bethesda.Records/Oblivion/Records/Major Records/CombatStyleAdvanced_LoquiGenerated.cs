@@ -208,23 +208,12 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
             }
             var ret = new CombatStyleAdvanced();
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    CombatStyleAdvancedXmlCreateTranslation.FillPublicElementXml(
-                        item: ret,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
+            ((CombatStyleAdvancedSetterCommon)((ICombatStyleAdvancedGetter)ret).CommonSetterInstance()).CopyInFromXml(
+                item: ret,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             return ret;
         }
 
@@ -401,239 +390,16 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new CombatStyleAdvanced();
-            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
-                frame.Reader,
-                recordTypeConverter.ConvertToCustom(CombatStyleAdvanced_Registration.CSAD_HEADER)));
-            UtilityTranslation.RecordParse(
-                record: ret,
-                frame: frame,
-                setFinal: true,
+            ((CombatStyleAdvancedSetterCommon)((ICombatStyleAdvancedGetter)ret).CommonSetterInstance()).CopyInFromBinary(
+                item: ret,
                 masterReferences: masterReferences,
-                errorMask: errorMask,
+                frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                errorMask: errorMask);
             return ret;
         }
 
         #endregion
-
-        protected static void FillBinaryStructs(
-            ICombatStyleAdvanced item,
-            MutagenFrame frame,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Single DodgeFatigueModMultParse))
-            {
-                item.DodgeFatigueModMult = DodgeFatigueModMultParse;
-            }
-            else
-            {
-                item.DodgeFatigueModMult = default(Single);
-            }
-            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Single DodgeFatigueModBaseParse))
-            {
-                item.DodgeFatigueModBase = DodgeFatigueModBaseParse;
-            }
-            else
-            {
-                item.DodgeFatigueModBase = default(Single);
-            }
-            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Single EncumbSpeedModBaseParse))
-            {
-                item.EncumbSpeedModBase = EncumbSpeedModBaseParse;
-            }
-            else
-            {
-                item.EncumbSpeedModBase = default(Single);
-            }
-            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Single EncumbSpeedModMultParse))
-            {
-                item.EncumbSpeedModMult = EncumbSpeedModMultParse;
-            }
-            else
-            {
-                item.EncumbSpeedModMult = default(Single);
-            }
-            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Single DodgeWhileUnderAttackMultParse))
-            {
-                item.DodgeWhileUnderAttackMult = DodgeWhileUnderAttackMultParse;
-            }
-            else
-            {
-                item.DodgeWhileUnderAttackMult = default(Single);
-            }
-            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Single DodgeNotUnderAttackMultParse))
-            {
-                item.DodgeNotUnderAttackMult = DodgeNotUnderAttackMultParse;
-            }
-            else
-            {
-                item.DodgeNotUnderAttackMult = default(Single);
-            }
-            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Single DodgeBackWhileUnderAttackMultParse))
-            {
-                item.DodgeBackWhileUnderAttackMult = DodgeBackWhileUnderAttackMultParse;
-            }
-            else
-            {
-                item.DodgeBackWhileUnderAttackMult = default(Single);
-            }
-            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Single DodgeBackNotUnderAttackMultParse))
-            {
-                item.DodgeBackNotUnderAttackMult = DodgeBackNotUnderAttackMultParse;
-            }
-            else
-            {
-                item.DodgeBackNotUnderAttackMult = default(Single);
-            }
-            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Single DodgeForwardWhileUnderAttackMultParse))
-            {
-                item.DodgeForwardWhileUnderAttackMult = DodgeForwardWhileUnderAttackMultParse;
-            }
-            else
-            {
-                item.DodgeForwardWhileUnderAttackMult = default(Single);
-            }
-            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Single DodgeForwardNotUnderAttackMultParse))
-            {
-                item.DodgeForwardNotUnderAttackMult = DodgeForwardNotUnderAttackMultParse;
-            }
-            else
-            {
-                item.DodgeForwardNotUnderAttackMult = default(Single);
-            }
-            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Single BlockSkillModifierMultParse))
-            {
-                item.BlockSkillModifierMult = BlockSkillModifierMultParse;
-            }
-            else
-            {
-                item.BlockSkillModifierMult = default(Single);
-            }
-            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Single BlockSkillModifierBaseParse))
-            {
-                item.BlockSkillModifierBase = BlockSkillModifierBaseParse;
-            }
-            else
-            {
-                item.BlockSkillModifierBase = default(Single);
-            }
-            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Single BlockWhileUnderAttackMultParse))
-            {
-                item.BlockWhileUnderAttackMult = BlockWhileUnderAttackMultParse;
-            }
-            else
-            {
-                item.BlockWhileUnderAttackMult = default(Single);
-            }
-            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Single BlockNotUnderAttackMultParse))
-            {
-                item.BlockNotUnderAttackMult = BlockNotUnderAttackMultParse;
-            }
-            else
-            {
-                item.BlockNotUnderAttackMult = default(Single);
-            }
-            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Single AttackSkillModifierMultParse))
-            {
-                item.AttackSkillModifierMult = AttackSkillModifierMultParse;
-            }
-            else
-            {
-                item.AttackSkillModifierMult = default(Single);
-            }
-            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Single AttackSkillModifierBaseParse))
-            {
-                item.AttackSkillModifierBase = AttackSkillModifierBaseParse;
-            }
-            else
-            {
-                item.AttackSkillModifierBase = default(Single);
-            }
-            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Single AttackWhileUnderAttackMultParse))
-            {
-                item.AttackWhileUnderAttackMult = AttackWhileUnderAttackMultParse;
-            }
-            else
-            {
-                item.AttackWhileUnderAttackMult = default(Single);
-            }
-            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Single AttackNotUnderAttackMultParse))
-            {
-                item.AttackNotUnderAttackMult = AttackNotUnderAttackMultParse;
-            }
-            else
-            {
-                item.AttackNotUnderAttackMult = default(Single);
-            }
-            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Single AttackDuringBlockMultParse))
-            {
-                item.AttackDuringBlockMult = AttackDuringBlockMultParse;
-            }
-            else
-            {
-                item.AttackDuringBlockMult = default(Single);
-            }
-            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Single PowerAttackFatigueModBaseParse))
-            {
-                item.PowerAttackFatigueModBase = PowerAttackFatigueModBaseParse;
-            }
-            else
-            {
-                item.PowerAttackFatigueModBase = default(Single);
-            }
-            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Single PowerAttackFatigueModMultParse))
-            {
-                item.PowerAttackFatigueModMult = PowerAttackFatigueModMultParse;
-            }
-            else
-            {
-                item.PowerAttackFatigueModMult = default(Single);
-            }
-        }
 
         #endregion
 
@@ -901,8 +667,8 @@ namespace Mutagen.Bethesda.Oblivion
             CombatStyleAdvanced def = null,
             bool doMasks = true)
         {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            CombatStyleAdvancedSetterCopyCommon.CopyFieldsFrom(
+            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((CombatStyleAdvancedSetterCopyCommon)((ICombatStyleAdvancedGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -918,7 +684,7 @@ namespace Mutagen.Bethesda.Oblivion
             CombatStyleAdvanced_CopyMask copyMask = null,
             CombatStyleAdvanced def = null)
         {
-            CombatStyleAdvancedSetterCopyCommon.CopyFieldsFrom(
+            ((CombatStyleAdvancedSetterCopyCommon)((ICombatStyleAdvancedGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -936,6 +702,198 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
         }
+
+        #region Xml Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this ICombatStyleAdvanced item,
+            XElement node,
+            MissingCreate missing = MissingCreate.New,
+            CombatStyleAdvanced_TranslationMask translationMask = null)
+        {
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: null,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this ICombatStyleAdvanced item,
+            XElement node,
+            out CombatStyleAdvanced_ErrorMask errorMask,
+            bool doMasks = true,
+            CombatStyleAdvanced_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask.GetCrystal());
+            errorMask = CombatStyleAdvanced_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyInFromXml(
+            this ICombatStyleAdvanced item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ((CombatStyleAdvancedSetterCommon)((ICombatStyleAdvancedGetter)item).CommonSetterInstance()).CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        public static void CopyInFromXml(
+            this ICombatStyleAdvanced item,
+            string path,
+            MissingCreate missing = MissingCreate.New,
+            CombatStyleAdvanced_TranslationMask translationMask = null)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this ICombatStyleAdvanced item,
+            string path,
+            out CombatStyleAdvanced_ErrorMask errorMask,
+            CombatStyleAdvanced_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this ICombatStyleAdvanced item,
+            string path,
+            ErrorMaskBuilder errorMask,
+            CombatStyleAdvanced_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        public static void CopyInFromXml(
+            this ICombatStyleAdvanced item,
+            Stream stream,
+            MissingCreate missing = MissingCreate.New,
+            CombatStyleAdvanced_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this ICombatStyleAdvanced item,
+            Stream stream,
+            out CombatStyleAdvanced_ErrorMask errorMask,
+            CombatStyleAdvanced_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this ICombatStyleAdvanced item,
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            CombatStyleAdvanced_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        #endregion
+
+        #region Binary Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this ICombatStyleAdvanced item,
+            MutagenFrame frame,
+            MasterReferences masterReferences)
+        {
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: null);
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this ICombatStyleAdvanced item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            out CombatStyleAdvanced_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: errorMaskBuilder);
+            errorMask = CombatStyleAdvanced_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyInFromBinary(
+            this ICombatStyleAdvanced item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((CombatStyleAdvancedSetterCommon)((ICombatStyleAdvancedGetter)item).CommonSetterInstance()).CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+        #endregion
 
     }
     #endregion
@@ -1416,6 +1374,276 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
         
+        #region Xml Translation
+        public void CopyInFromXml(
+            ICombatStyleAdvanced item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    CombatStyleAdvancedXmlCreateTranslation.FillPublicElementXml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+        
+        #endregion
+        
+        #region Binary Translation
+        protected static void FillBinaryStructs(
+            ICombatStyleAdvanced item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single DodgeFatigueModMultParse))
+            {
+                item.DodgeFatigueModMult = DodgeFatigueModMultParse;
+            }
+            else
+            {
+                item.DodgeFatigueModMult = default(Single);
+            }
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single DodgeFatigueModBaseParse))
+            {
+                item.DodgeFatigueModBase = DodgeFatigueModBaseParse;
+            }
+            else
+            {
+                item.DodgeFatigueModBase = default(Single);
+            }
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single EncumbSpeedModBaseParse))
+            {
+                item.EncumbSpeedModBase = EncumbSpeedModBaseParse;
+            }
+            else
+            {
+                item.EncumbSpeedModBase = default(Single);
+            }
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single EncumbSpeedModMultParse))
+            {
+                item.EncumbSpeedModMult = EncumbSpeedModMultParse;
+            }
+            else
+            {
+                item.EncumbSpeedModMult = default(Single);
+            }
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single DodgeWhileUnderAttackMultParse))
+            {
+                item.DodgeWhileUnderAttackMult = DodgeWhileUnderAttackMultParse;
+            }
+            else
+            {
+                item.DodgeWhileUnderAttackMult = default(Single);
+            }
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single DodgeNotUnderAttackMultParse))
+            {
+                item.DodgeNotUnderAttackMult = DodgeNotUnderAttackMultParse;
+            }
+            else
+            {
+                item.DodgeNotUnderAttackMult = default(Single);
+            }
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single DodgeBackWhileUnderAttackMultParse))
+            {
+                item.DodgeBackWhileUnderAttackMult = DodgeBackWhileUnderAttackMultParse;
+            }
+            else
+            {
+                item.DodgeBackWhileUnderAttackMult = default(Single);
+            }
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single DodgeBackNotUnderAttackMultParse))
+            {
+                item.DodgeBackNotUnderAttackMult = DodgeBackNotUnderAttackMultParse;
+            }
+            else
+            {
+                item.DodgeBackNotUnderAttackMult = default(Single);
+            }
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single DodgeForwardWhileUnderAttackMultParse))
+            {
+                item.DodgeForwardWhileUnderAttackMult = DodgeForwardWhileUnderAttackMultParse;
+            }
+            else
+            {
+                item.DodgeForwardWhileUnderAttackMult = default(Single);
+            }
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single DodgeForwardNotUnderAttackMultParse))
+            {
+                item.DodgeForwardNotUnderAttackMult = DodgeForwardNotUnderAttackMultParse;
+            }
+            else
+            {
+                item.DodgeForwardNotUnderAttackMult = default(Single);
+            }
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single BlockSkillModifierMultParse))
+            {
+                item.BlockSkillModifierMult = BlockSkillModifierMultParse;
+            }
+            else
+            {
+                item.BlockSkillModifierMult = default(Single);
+            }
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single BlockSkillModifierBaseParse))
+            {
+                item.BlockSkillModifierBase = BlockSkillModifierBaseParse;
+            }
+            else
+            {
+                item.BlockSkillModifierBase = default(Single);
+            }
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single BlockWhileUnderAttackMultParse))
+            {
+                item.BlockWhileUnderAttackMult = BlockWhileUnderAttackMultParse;
+            }
+            else
+            {
+                item.BlockWhileUnderAttackMult = default(Single);
+            }
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single BlockNotUnderAttackMultParse))
+            {
+                item.BlockNotUnderAttackMult = BlockNotUnderAttackMultParse;
+            }
+            else
+            {
+                item.BlockNotUnderAttackMult = default(Single);
+            }
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single AttackSkillModifierMultParse))
+            {
+                item.AttackSkillModifierMult = AttackSkillModifierMultParse;
+            }
+            else
+            {
+                item.AttackSkillModifierMult = default(Single);
+            }
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single AttackSkillModifierBaseParse))
+            {
+                item.AttackSkillModifierBase = AttackSkillModifierBaseParse;
+            }
+            else
+            {
+                item.AttackSkillModifierBase = default(Single);
+            }
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single AttackWhileUnderAttackMultParse))
+            {
+                item.AttackWhileUnderAttackMult = AttackWhileUnderAttackMultParse;
+            }
+            else
+            {
+                item.AttackWhileUnderAttackMult = default(Single);
+            }
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single AttackNotUnderAttackMultParse))
+            {
+                item.AttackNotUnderAttackMult = AttackNotUnderAttackMultParse;
+            }
+            else
+            {
+                item.AttackNotUnderAttackMult = default(Single);
+            }
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single AttackDuringBlockMultParse))
+            {
+                item.AttackDuringBlockMult = AttackDuringBlockMultParse;
+            }
+            else
+            {
+                item.AttackDuringBlockMult = default(Single);
+            }
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single PowerAttackFatigueModBaseParse))
+            {
+                item.PowerAttackFatigueModBase = PowerAttackFatigueModBaseParse;
+            }
+            else
+            {
+                item.PowerAttackFatigueModBase = default(Single);
+            }
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single PowerAttackFatigueModMultParse))
+            {
+                item.PowerAttackFatigueModMult = PowerAttackFatigueModMultParse;
+            }
+            else
+            {
+                item.PowerAttackFatigueModMult = default(Single);
+            }
+        }
+        
+        public void CopyInFromBinary(
+            ICombatStyleAdvanced item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
+                frame.Reader,
+                recordTypeConverter.ConvertToCustom(CombatStyleAdvanced_Registration.CSAD_HEADER)));
+            UtilityTranslation.RecordParse(
+                record: item,
+                frame: frame,
+                setFinal: true,
+                masterReferences: masterReferences,
+                errorMask: errorMask,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: FillBinaryStructs);
+        }
+        
+        #endregion
+        
     }
     public partial class CombatStyleAdvancedCommon
     {
@@ -1696,7 +1924,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly CombatStyleAdvancedSetterCopyCommon Instance = new CombatStyleAdvancedSetterCopyCommon();
 
         #region Copy Fields From
-        public static void CopyFieldsFrom(
+        public void CopyFieldsFrom(
             CombatStyleAdvanced item,
             CombatStyleAdvanced rhs,
             CombatStyleAdvanced def,
@@ -3572,63 +3800,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public CombatStyleAdvanced_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.DodgeFatigueModMult = defaultOn;
-            this.DodgeFatigueModBase = defaultOn;
-            this.EncumbSpeedModBase = defaultOn;
-            this.EncumbSpeedModMult = defaultOn;
-            this.DodgeWhileUnderAttackMult = defaultOn;
-            this.DodgeNotUnderAttackMult = defaultOn;
-            this.DodgeBackWhileUnderAttackMult = defaultOn;
-            this.DodgeBackNotUnderAttackMult = defaultOn;
-            this.DodgeForwardWhileUnderAttackMult = defaultOn;
-            this.DodgeForwardNotUnderAttackMult = defaultOn;
-            this.BlockSkillModifierMult = defaultOn;
-            this.BlockSkillModifierBase = defaultOn;
-            this.BlockWhileUnderAttackMult = defaultOn;
-            this.BlockNotUnderAttackMult = defaultOn;
-            this.AttackSkillModifierMult = defaultOn;
-            this.AttackSkillModifierBase = defaultOn;
-            this.AttackWhileUnderAttackMult = defaultOn;
-            this.AttackNotUnderAttackMult = defaultOn;
-            this.AttackDuringBlockMult = defaultOn;
-            this.PowerAttackFatigueModBase = defaultOn;
-            this.PowerAttackFatigueModMult = defaultOn;
-        }
-
-        #region Members
-        public bool DodgeFatigueModMult;
-        public bool DodgeFatigueModBase;
-        public bool EncumbSpeedModBase;
-        public bool EncumbSpeedModMult;
-        public bool DodgeWhileUnderAttackMult;
-        public bool DodgeNotUnderAttackMult;
-        public bool DodgeBackWhileUnderAttackMult;
-        public bool DodgeBackNotUnderAttackMult;
-        public bool DodgeForwardWhileUnderAttackMult;
-        public bool DodgeForwardNotUnderAttackMult;
-        public bool BlockSkillModifierMult;
-        public bool BlockSkillModifierBase;
-        public bool BlockWhileUnderAttackMult;
-        public bool BlockNotUnderAttackMult;
-        public bool AttackSkillModifierMult;
-        public bool AttackSkillModifierBase;
-        public bool AttackWhileUnderAttackMult;
-        public bool AttackNotUnderAttackMult;
-        public bool AttackDuringBlockMult;
-        public bool PowerAttackFatigueModBase;
-        public bool PowerAttackFatigueModMult;
-        #endregion
-
-    }
-
-    public class CombatStyleAdvanced_DeepCopyMask
-    {
-        public CombatStyleAdvanced_DeepCopyMask()
-        {
-        }
-
-        public CombatStyleAdvanced_DeepCopyMask(bool defaultOn)
         {
             this.DodgeFatigueModMult = defaultOn;
             this.DodgeFatigueModBase = defaultOn;

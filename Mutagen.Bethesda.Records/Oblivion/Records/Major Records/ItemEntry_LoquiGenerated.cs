@@ -181,23 +181,12 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
             }
             var ret = new ItemEntry();
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    ItemEntryXmlCreateTranslation.FillPublicElementXml(
-                        item: ret,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
+            ((ItemEntrySetterCommon)((IItemEntryGetter)ret).CommonSetterInstance()).CopyInFromXml(
+                item: ret,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             return ret;
         }
 
@@ -369,35 +358,16 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new ItemEntry();
-            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
-                frame.Reader,
-                recordTypeConverter.ConvertToCustom(ItemEntry_Registration.CNTO_HEADER)));
-            UtilityTranslation.RecordParse(
-                record: ret,
-                frame: frame,
-                setFinal: true,
+            ((ItemEntrySetterCommon)((IItemEntryGetter)ret).CommonSetterInstance()).CopyInFromBinary(
+                item: ret,
                 masterReferences: masterReferences,
-                errorMask: errorMask,
+                frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                errorMask: errorMask);
             return ret;
         }
 
         #endregion
-
-        protected static void FillBinaryStructs(
-            IItemEntry item,
-            MutagenFrame frame,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
-                frame: frame,
-                masterReferences: masterReferences,
-                item: item.Item_Property);
-            if (frame.Complete) return;
-            item.Count = frame.ReadInt32();
-        }
 
         #endregion
 
@@ -556,8 +526,8 @@ namespace Mutagen.Bethesda.Oblivion
             ItemEntry def = null,
             bool doMasks = true)
         {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            ItemEntrySetterCopyCommon.CopyFieldsFrom(
+            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((ItemEntrySetterCopyCommon)((IItemEntryGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -573,7 +543,7 @@ namespace Mutagen.Bethesda.Oblivion
             ItemEntry_CopyMask copyMask = null,
             ItemEntry def = null)
         {
-            ItemEntrySetterCopyCommon.CopyFieldsFrom(
+            ((ItemEntrySetterCopyCommon)((IItemEntryGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -591,6 +561,198 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
         }
+
+        #region Xml Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this IItemEntry item,
+            XElement node,
+            MissingCreate missing = MissingCreate.New,
+            ItemEntry_TranslationMask translationMask = null)
+        {
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: null,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this IItemEntry item,
+            XElement node,
+            out ItemEntry_ErrorMask errorMask,
+            bool doMasks = true,
+            ItemEntry_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask.GetCrystal());
+            errorMask = ItemEntry_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyInFromXml(
+            this IItemEntry item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ((ItemEntrySetterCommon)((IItemEntryGetter)item).CommonSetterInstance()).CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        public static void CopyInFromXml(
+            this IItemEntry item,
+            string path,
+            MissingCreate missing = MissingCreate.New,
+            ItemEntry_TranslationMask translationMask = null)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IItemEntry item,
+            string path,
+            out ItemEntry_ErrorMask errorMask,
+            ItemEntry_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IItemEntry item,
+            string path,
+            ErrorMaskBuilder errorMask,
+            ItemEntry_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        public static void CopyInFromXml(
+            this IItemEntry item,
+            Stream stream,
+            MissingCreate missing = MissingCreate.New,
+            ItemEntry_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IItemEntry item,
+            Stream stream,
+            out ItemEntry_ErrorMask errorMask,
+            ItemEntry_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IItemEntry item,
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            ItemEntry_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        #endregion
+
+        #region Binary Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this IItemEntry item,
+            MutagenFrame frame,
+            MasterReferences masterReferences)
+        {
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: null);
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this IItemEntry item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            out ItemEntry_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: errorMaskBuilder);
+            errorMask = ItemEntry_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyInFromBinary(
+            this IItemEntry item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((ItemEntrySetterCommon)((IItemEntryGetter)item).CommonSetterInstance()).CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+        #endregion
 
     }
     #endregion
@@ -824,6 +986,72 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
         
+        #region Xml Translation
+        public void CopyInFromXml(
+            IItemEntry item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    ItemEntryXmlCreateTranslation.FillPublicElementXml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+        
+        #endregion
+        
+        #region Binary Translation
+        protected static void FillBinaryStructs(
+            IItemEntry item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
+                frame: frame,
+                masterReferences: masterReferences,
+                item: item.Item_Property);
+            if (frame.Complete) return;
+            item.Count = frame.ReadInt32();
+        }
+        
+        public void CopyInFromBinary(
+            IItemEntry item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
+                frame.Reader,
+                recordTypeConverter.ConvertToCustom(ItemEntry_Registration.CNTO_HEADER)));
+            UtilityTranslation.RecordParse(
+                record: item,
+                frame: frame,
+                setFinal: true,
+                masterReferences: masterReferences,
+                errorMask: errorMask,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: FillBinaryStructs);
+        }
+        
+        #endregion
+        
     }
     public partial class ItemEntryCommon
     {
@@ -960,7 +1188,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly ItemEntrySetterCopyCommon Instance = new ItemEntrySetterCopyCommon();
 
         #region Copy Fields From
-        public static void CopyFieldsFrom(
+        public void CopyFieldsFrom(
             ItemEntry item,
             ItemEntry rhs,
             ItemEntry def,
@@ -1645,25 +1873,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public ItemEntry_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Item = defaultOn;
-            this.Count = defaultOn;
-        }
-
-        #region Members
-        public bool Item;
-        public bool Count;
-        #endregion
-
-    }
-
-    public class ItemEntry_DeepCopyMask
-    {
-        public ItemEntry_DeepCopyMask()
-        {
-        }
-
-        public ItemEntry_DeepCopyMask(bool defaultOn)
         {
             this.Item = defaultOn;
             this.Count = defaultOn;

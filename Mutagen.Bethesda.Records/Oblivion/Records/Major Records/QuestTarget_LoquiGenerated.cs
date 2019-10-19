@@ -183,23 +183,12 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
             }
             var ret = new QuestTarget();
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    QuestTargetXmlCreateTranslation.FillPublicElementXml(
-                        item: ret,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
+            ((QuestTargetSetterCommon)((IQuestTargetGetter)ret).CommonSetterInstance()).CopyInFromXml(
+                item: ret,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             return ret;
         }
 
@@ -378,90 +367,16 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new QuestTarget();
-            UtilityTranslation.TypelessRecordParse(
-                record: ret,
-                frame: frame,
-                setFinal: false,
+            ((QuestTargetSetterCommon)((IQuestTargetGetter)ret).CommonSetterInstance()).CopyInFromBinary(
+                item: ret,
                 masterReferences: masterReferences,
-                errorMask: errorMask,
+                frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                errorMask: errorMask);
             return ret;
         }
 
         #endregion
-
-        protected static void FillBinaryStructs(
-            IQuestTarget item,
-            MutagenFrame frame,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-        }
-
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IQuestTarget item,
-            MutagenFrame frame,
-            int? lastParsed,
-            RecordType nextRecordType,
-            int contentLength,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask,
-            RecordTypeConverter recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x41545351: // QSTA
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)QuestTarget_FieldIndex.Flags) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    var dataFrame = frame.SpawnWithLength(contentLength);
-                    if (!dataFrame.Complete)
-                    {
-                        item.QSTADataTypeState = QSTADataType.Has;
-                    }
-                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
-                        frame: dataFrame,
-                        masterReferences: masterReferences,
-                        item: item.Target_Property);
-                    if (EnumBinaryTranslation<QuestTarget.Flag>.Instance.Parse(
-                        frame: dataFrame.SpawnWithLength(4),
-                        item: out QuestTarget.Flag FlagsParse))
-                    {
-                        item.Flags = FlagsParse;
-                    }
-                    else
-                    {
-                        item.Flags = default(QuestTarget.Flag);
-                    }
-                    return TryGet<int?>.Succeed((int)QuestTarget_FieldIndex.Flags);
-                }
-                case 0x41445443: // CTDA
-                case 0x54445443: // CTDT
-                {
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.ParseRepeatedItem(
-                        frame: frame,
-                        triggeringRecord: Condition_Registration.TriggeringRecordTypes,
-                        item: item.Conditions,
-                        fieldIndex: (int)QuestTarget_FieldIndex.Conditions,
-                        lengthLength: frame.MetaData.SubConstants.LengthLength,
-                        errorMask: errorMask,
-                        transl: (MutagenFrame r, out Condition listSubItem, ErrorMaskBuilder listErrMask) =>
-                        {
-                            return LoquiBinaryTranslation<Condition>.Instance.Parse(
-                                frame: r,
-                                item: out listSubItem,
-                                errorMask: listErrMask,
-                                masterReferences: masterReferences);
-                        });
-                    return TryGet<int?>.Succeed((int)QuestTarget_FieldIndex.Conditions);
-                }
-                default:
-                    return TryGet<int?>.Failure;
-            }
-        }
 
         #endregion
 
@@ -626,8 +541,8 @@ namespace Mutagen.Bethesda.Oblivion
             QuestTarget def = null,
             bool doMasks = true)
         {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            QuestTargetSetterCopyCommon.CopyFieldsFrom(
+            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((QuestTargetSetterCopyCommon)((IQuestTargetGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -643,7 +558,7 @@ namespace Mutagen.Bethesda.Oblivion
             QuestTarget_CopyMask copyMask = null,
             QuestTarget def = null)
         {
-            QuestTargetSetterCopyCommon.CopyFieldsFrom(
+            ((QuestTargetSetterCopyCommon)((IQuestTargetGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -661,6 +576,198 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
         }
+
+        #region Xml Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this IQuestTarget item,
+            XElement node,
+            MissingCreate missing = MissingCreate.New,
+            QuestTarget_TranslationMask translationMask = null)
+        {
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: null,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this IQuestTarget item,
+            XElement node,
+            out QuestTarget_ErrorMask errorMask,
+            bool doMasks = true,
+            QuestTarget_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask.GetCrystal());
+            errorMask = QuestTarget_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyInFromXml(
+            this IQuestTarget item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ((QuestTargetSetterCommon)((IQuestTargetGetter)item).CommonSetterInstance()).CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        public static void CopyInFromXml(
+            this IQuestTarget item,
+            string path,
+            MissingCreate missing = MissingCreate.New,
+            QuestTarget_TranslationMask translationMask = null)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IQuestTarget item,
+            string path,
+            out QuestTarget_ErrorMask errorMask,
+            QuestTarget_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IQuestTarget item,
+            string path,
+            ErrorMaskBuilder errorMask,
+            QuestTarget_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        public static void CopyInFromXml(
+            this IQuestTarget item,
+            Stream stream,
+            MissingCreate missing = MissingCreate.New,
+            QuestTarget_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IQuestTarget item,
+            Stream stream,
+            out QuestTarget_ErrorMask errorMask,
+            QuestTarget_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IQuestTarget item,
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            QuestTarget_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        #endregion
+
+        #region Binary Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this IQuestTarget item,
+            MutagenFrame frame,
+            MasterReferences masterReferences)
+        {
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: null);
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this IQuestTarget item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            out QuestTarget_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: errorMaskBuilder);
+            errorMask = QuestTarget_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyInFromBinary(
+            this IQuestTarget item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((QuestTargetSetterCommon)((IQuestTargetGetter)item).CommonSetterInstance()).CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+        #endregion
 
     }
     #endregion
@@ -924,6 +1031,127 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
         
+        #region Xml Translation
+        public void CopyInFromXml(
+            IQuestTarget item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    QuestTargetXmlCreateTranslation.FillPublicElementXml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+        
+        #endregion
+        
+        #region Binary Translation
+        protected static void FillBinaryStructs(
+            IQuestTarget item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+        }
+        
+        protected static TryGet<int?> FillBinaryRecordTypes(
+            IQuestTarget item,
+            MutagenFrame frame,
+            int? lastParsed,
+            RecordType nextRecordType,
+            int contentLength,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x41545351: // QSTA
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)QuestTarget_FieldIndex.Flags) return TryGet<int?>.Failure;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (!dataFrame.Complete)
+                    {
+                        item.QSTADataTypeState = QuestTarget.QSTADataType.Has;
+                    }
+                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
+                        frame: dataFrame,
+                        masterReferences: masterReferences,
+                        item: item.Target_Property);
+                    if (EnumBinaryTranslation<QuestTarget.Flag>.Instance.Parse(
+                        frame: dataFrame.SpawnWithLength(4),
+                        item: out QuestTarget.Flag FlagsParse))
+                    {
+                        item.Flags = FlagsParse;
+                    }
+                    else
+                    {
+                        item.Flags = default(QuestTarget.Flag);
+                    }
+                    return TryGet<int?>.Succeed((int)QuestTarget_FieldIndex.Flags);
+                }
+                case 0x41445443: // CTDA
+                case 0x54445443: // CTDT
+                {
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.ParseRepeatedItem(
+                        frame: frame,
+                        triggeringRecord: Condition_Registration.TriggeringRecordTypes,
+                        item: item.Conditions,
+                        fieldIndex: (int)QuestTarget_FieldIndex.Conditions,
+                        lengthLength: frame.MetaData.SubConstants.LengthLength,
+                        errorMask: errorMask,
+                        transl: (MutagenFrame r, out Condition listSubItem, ErrorMaskBuilder listErrMask) =>
+                        {
+                            return LoquiBinaryTranslation<Condition>.Instance.Parse(
+                                frame: r,
+                                item: out listSubItem,
+                                errorMask: listErrMask,
+                                masterReferences: masterReferences);
+                        });
+                    return TryGet<int?>.Succeed((int)QuestTarget_FieldIndex.Conditions);
+                }
+                default:
+                    return TryGet<int?>.Failure;
+            }
+        }
+        
+        public void CopyInFromBinary(
+            IQuestTarget item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            UtilityTranslation.TypelessRecordParse(
+                record: item,
+                frame: frame,
+                setFinal: false,
+                masterReferences: masterReferences,
+                errorMask: errorMask,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: FillBinaryStructs,
+                fillTyped: FillBinaryRecordTypes);
+        }
+        
+        #endregion
+        
     }
     public partial class QuestTargetCommon
     {
@@ -1093,7 +1321,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly QuestTargetSetterCopyCommon Instance = new QuestTargetSetterCopyCommon();
 
         #region Copy Fields From
-        public static void CopyFieldsFrom(
+        public void CopyFieldsFrom(
             QuestTarget item,
             QuestTarget rhs,
             QuestTarget def,
@@ -2013,29 +2241,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Target;
         public bool Flags;
         public MaskItem<CopyOption, Condition_CopyMask> Conditions;
-        public bool QSTADataTypeState;
-        #endregion
-
-    }
-
-    public class QuestTarget_DeepCopyMask
-    {
-        public QuestTarget_DeepCopyMask()
-        {
-        }
-
-        public QuestTarget_DeepCopyMask(bool defaultOn)
-        {
-            this.Target = defaultOn;
-            this.Flags = defaultOn;
-            this.Conditions = new MaskItem<bool, Condition_DeepCopyMask>(defaultOn, default);
-            this.QSTADataTypeState = defaultOn;
-        }
-
-        #region Members
-        public bool Target;
-        public bool Flags;
-        public MaskItem<bool, Condition_DeepCopyMask> Conditions;
         public bool QSTADataTypeState;
         #endregion
 

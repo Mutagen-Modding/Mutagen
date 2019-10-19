@@ -253,23 +253,12 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
             }
             var ret = new Rank();
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    RankXmlCreateTranslation.FillPublicElementXml(
-                        item: ret,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
+            ((RankSetterCommon)((IRankGetter)ret).CommonSetterInstance()).CopyInFromXml(
+                item: ret,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             return ret;
         }
 
@@ -425,103 +414,16 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new Rank();
-            UtilityTranslation.TypelessRecordParse(
-                record: ret,
-                frame: frame,
-                setFinal: false,
+            ((RankSetterCommon)((IRankGetter)ret).CommonSetterInstance()).CopyInFromBinary(
+                item: ret,
                 masterReferences: masterReferences,
-                errorMask: errorMask,
+                frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                errorMask: errorMask);
             return ret;
         }
 
         #endregion
-
-        protected static void FillBinaryStructs(
-            IRank item,
-            MutagenFrame frame,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-        }
-
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IRank item,
-            MutagenFrame frame,
-            int? lastParsed,
-            RecordType nextRecordType,
-            int contentLength,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask,
-            RecordTypeConverter recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x4D414E52: // RNAM
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.RankNumber) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.RankNumber = frame.ReadInt32();
-                    return TryGet<int?>.Succeed((int)Rank_FieldIndex.RankNumber);
-                }
-                case 0x4D414E4D: // MNAM
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.MaleName) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String MaleNameParse))
-                    {
-                        item.MaleName = MaleNameParse;
-                    }
-                    else
-                    {
-                        item.MaleName = default(String);
-                    }
-                    return TryGet<int?>.Succeed((int)Rank_FieldIndex.MaleName);
-                }
-                case 0x4D414E46: // FNAM
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.FemaleName) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String FemaleNameParse))
-                    {
-                        item.FemaleName = FemaleNameParse;
-                    }
-                    else
-                    {
-                        item.FemaleName = default(String);
-                    }
-                    return TryGet<int?>.Succeed((int)Rank_FieldIndex.FemaleName);
-                }
-                case 0x4D414E49: // INAM
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.Insignia) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String InsigniaParse))
-                    {
-                        item.Insignia = InsigniaParse;
-                    }
-                    else
-                    {
-                        item.Insignia = default(String);
-                    }
-                    return TryGet<int?>.Succeed((int)Rank_FieldIndex.Insignia);
-                }
-                default:
-                    return TryGet<int?>.Failure;
-            }
-        }
 
         #endregion
 
@@ -703,8 +605,8 @@ namespace Mutagen.Bethesda.Oblivion
             Rank def = null,
             bool doMasks = true)
         {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            RankSetterCopyCommon.CopyFieldsFrom(
+            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((RankSetterCopyCommon)((IRankGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -720,7 +622,7 @@ namespace Mutagen.Bethesda.Oblivion
             Rank_CopyMask copyMask = null,
             Rank def = null)
         {
-            RankSetterCopyCommon.CopyFieldsFrom(
+            ((RankSetterCopyCommon)((IRankGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -738,6 +640,198 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
         }
+
+        #region Xml Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this IRank item,
+            XElement node,
+            MissingCreate missing = MissingCreate.New,
+            Rank_TranslationMask translationMask = null)
+        {
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: null,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this IRank item,
+            XElement node,
+            out Rank_ErrorMask errorMask,
+            bool doMasks = true,
+            Rank_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask.GetCrystal());
+            errorMask = Rank_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyInFromXml(
+            this IRank item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ((RankSetterCommon)((IRankGetter)item).CommonSetterInstance()).CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        public static void CopyInFromXml(
+            this IRank item,
+            string path,
+            MissingCreate missing = MissingCreate.New,
+            Rank_TranslationMask translationMask = null)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IRank item,
+            string path,
+            out Rank_ErrorMask errorMask,
+            Rank_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IRank item,
+            string path,
+            ErrorMaskBuilder errorMask,
+            Rank_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        public static void CopyInFromXml(
+            this IRank item,
+            Stream stream,
+            MissingCreate missing = MissingCreate.New,
+            Rank_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IRank item,
+            Stream stream,
+            out Rank_ErrorMask errorMask,
+            Rank_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IRank item,
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            Rank_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        #endregion
+
+        #region Binary Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this IRank item,
+            MutagenFrame frame,
+            MasterReferences masterReferences)
+        {
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: null);
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this IRank item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            out Rank_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: errorMaskBuilder);
+            errorMask = Rank_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyInFromBinary(
+            this IRank item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((RankSetterCommon)((IRankGetter)item).CommonSetterInstance()).CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+        #endregion
 
     }
     #endregion
@@ -1013,6 +1107,140 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
         
+        #region Xml Translation
+        public void CopyInFromXml(
+            IRank item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    RankXmlCreateTranslation.FillPublicElementXml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+        
+        #endregion
+        
+        #region Binary Translation
+        protected static void FillBinaryStructs(
+            IRank item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+        }
+        
+        protected static TryGet<int?> FillBinaryRecordTypes(
+            IRank item,
+            MutagenFrame frame,
+            int? lastParsed,
+            RecordType nextRecordType,
+            int contentLength,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x4D414E52: // RNAM
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.RankNumber) return TryGet<int?>.Failure;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    item.RankNumber = frame.ReadInt32();
+                    return TryGet<int?>.Succeed((int)Rank_FieldIndex.RankNumber);
+                }
+                case 0x4D414E4D: // MNAM
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.MaleName) return TryGet<int?>.Failure;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String MaleNameParse))
+                    {
+                        item.MaleName = MaleNameParse;
+                    }
+                    else
+                    {
+                        item.MaleName = default(String);
+                    }
+                    return TryGet<int?>.Succeed((int)Rank_FieldIndex.MaleName);
+                }
+                case 0x4D414E46: // FNAM
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.FemaleName) return TryGet<int?>.Failure;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String FemaleNameParse))
+                    {
+                        item.FemaleName = FemaleNameParse;
+                    }
+                    else
+                    {
+                        item.FemaleName = default(String);
+                    }
+                    return TryGet<int?>.Succeed((int)Rank_FieldIndex.FemaleName);
+                }
+                case 0x4D414E49: // INAM
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.Insignia) return TryGet<int?>.Failure;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String InsigniaParse))
+                    {
+                        item.Insignia = InsigniaParse;
+                    }
+                    else
+                    {
+                        item.Insignia = default(String);
+                    }
+                    return TryGet<int?>.Succeed((int)Rank_FieldIndex.Insignia);
+                }
+                default:
+                    return TryGet<int?>.Failure;
+            }
+        }
+        
+        public void CopyInFromBinary(
+            IRank item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            UtilityTranslation.TypelessRecordParse(
+                record: item,
+                frame: frame,
+                setFinal: false,
+                masterReferences: masterReferences,
+                errorMask: errorMask,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: FillBinaryStructs,
+                fillTyped: FillBinaryRecordTypes);
+        }
+        
+        #endregion
+        
     }
     public partial class RankCommon
     {
@@ -1189,7 +1417,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RankSetterCopyCommon Instance = new RankSetterCopyCommon();
 
         #region Copy Fields From
-        public static void CopyFieldsFrom(
+        public void CopyFieldsFrom(
             Rank item,
             Rank rhs,
             Rank def,
@@ -2094,29 +2322,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public Rank_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.RankNumber = defaultOn;
-            this.MaleName = defaultOn;
-            this.FemaleName = defaultOn;
-            this.Insignia = defaultOn;
-        }
-
-        #region Members
-        public bool RankNumber;
-        public bool MaleName;
-        public bool FemaleName;
-        public bool Insignia;
-        #endregion
-
-    }
-
-    public class Rank_DeepCopyMask
-    {
-        public Rank_DeepCopyMask()
-        {
-        }
-
-        public Rank_DeepCopyMask(bool defaultOn)
         {
             this.RankNumber = defaultOn;
             this.MaleName = defaultOn;

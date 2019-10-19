@@ -164,23 +164,12 @@ namespace Mutagen.Bethesda.Tests
                     break;
             }
             var ret = new PassthroughSettings();
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    PassthroughSettingsXmlCreateTranslation.FillPublicElementXml(
-                        item: ret,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
+            ((PassthroughSettingsSetterCommon)((IPassthroughSettingsGetter)ret).CommonSetterInstance()).CopyInFromXml(
+                item: ret,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             return ret;
         }
 
@@ -262,102 +251,6 @@ namespace Mutagen.Bethesda.Tests
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
-        #region Xml Copy In
-        public void CopyInXml(
-            XElement node,
-            MissingCreate missing = MissingCreate.New)
-        {
-            CopyInXmlInternal(
-                missing: missing,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-        }
-
-        public virtual void CopyInXml(
-            XElement node,
-            out PassthroughSettings_ErrorMask errorMask,
-            PassthroughSettings_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            CopyInXmlInternal(
-                missing: missing,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = PassthroughSettings_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        protected void CopyInXmlInternal(
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
-        {
-            var obj = PassthroughSettings.CreateFromXml(
-                missing: missing,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            this.CopyFieldsFrom(obj);
-        }
-
-        public void CopyInXml(
-            string path,
-            MissingCreate missing = MissingCreate.New)
-        {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            this.CopyInXml(
-                missing: missing,
-                node: node);
-        }
-
-        public void CopyInXml(
-            string path,
-            out PassthroughSettings_ErrorMask errorMask,
-            PassthroughSettings_TranslationMask translationMask,
-            MissingCreate missing = MissingCreate.New,
-            bool doMasks = true)
-        {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            this.CopyInXml(
-                missing: missing,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask,
-                doMasks: doMasks);
-        }
-
-        public void CopyInXml(
-            Stream stream,
-            MissingCreate missing = MissingCreate.New)
-        {
-            var node = XDocument.Load(stream).Root;
-            this.CopyInXml(
-                missing: missing,
-                node: node);
-        }
-
-        public void CopyInXml(
-            Stream stream,
-            out PassthroughSettings_ErrorMask errorMask,
-            PassthroughSettings_TranslationMask translationMask,
-            MissingCreate missing = MissingCreate.New,
-            bool doMasks = true)
-        {
-            var node = XDocument.Load(stream).Root;
-            this.CopyInXml(
-                missing: missing,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask,
-                doMasks: doMasks);
         }
 
         #endregion
@@ -561,8 +454,8 @@ namespace Mutagen.Bethesda.Tests
             PassthroughSettings def = null,
             bool doMasks = true)
         {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            PassthroughSettingsSetterCopyCommon.CopyFieldsFrom(
+            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((PassthroughSettingsSetterCopyCommon)((IPassthroughSettingsGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -578,7 +471,7 @@ namespace Mutagen.Bethesda.Tests
             PassthroughSettings_CopyMask copyMask = null,
             PassthroughSettings def = null)
         {
-            PassthroughSettingsSetterCopyCommon.CopyFieldsFrom(
+            ((PassthroughSettingsSetterCopyCommon)((IPassthroughSettingsGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -596,6 +489,149 @@ namespace Mutagen.Bethesda.Tests
                 copyMask: copyMask,
                 def: def);
         }
+
+        #region Xml Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this IPassthroughSettings item,
+            XElement node,
+            MissingCreate missing = MissingCreate.New,
+            PassthroughSettings_TranslationMask translationMask = null)
+        {
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: null,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this IPassthroughSettings item,
+            XElement node,
+            out PassthroughSettings_ErrorMask errorMask,
+            bool doMasks = true,
+            PassthroughSettings_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask.GetCrystal());
+            errorMask = PassthroughSettings_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyInFromXml(
+            this IPassthroughSettings item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ((PassthroughSettingsSetterCommon)((IPassthroughSettingsGetter)item).CommonSetterInstance()).CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        public static void CopyInFromXml(
+            this IPassthroughSettings item,
+            string path,
+            MissingCreate missing = MissingCreate.New,
+            PassthroughSettings_TranslationMask translationMask = null)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IPassthroughSettings item,
+            string path,
+            out PassthroughSettings_ErrorMask errorMask,
+            PassthroughSettings_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IPassthroughSettings item,
+            string path,
+            ErrorMaskBuilder errorMask,
+            PassthroughSettings_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        public static void CopyInFromXml(
+            this IPassthroughSettings item,
+            Stream stream,
+            MissingCreate missing = MissingCreate.New,
+            PassthroughSettings_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IPassthroughSettings item,
+            Stream stream,
+            out PassthroughSettings_ErrorMask errorMask,
+            PassthroughSettings_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IPassthroughSettings item,
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            PassthroughSettings_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        #endregion
 
     }
     #endregion
@@ -889,6 +925,35 @@ namespace Mutagen.Bethesda.Tests.Internals
             return ret;
         }
         
+        #region Xml Translation
+        public void CopyInFromXml(
+            IPassthroughSettings item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    PassthroughSettingsXmlCreateTranslation.FillPublicElementXml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+        
+        #endregion
+        
     }
     public partial class PassthroughSettingsCommon
     {
@@ -1057,7 +1122,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         public static readonly PassthroughSettingsSetterCopyCommon Instance = new PassthroughSettingsSetterCopyCommon();
 
         #region Copy Fields From
-        public static void CopyFieldsFrom(
+        public void CopyFieldsFrom(
             PassthroughSettings item,
             PassthroughSettings rhs,
             PassthroughSettings def,
@@ -2072,35 +2137,6 @@ namespace Mutagen.Bethesda.Tests.Internals
         }
 
         public PassthroughSettings_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.ReuseCaches = defaultOn;
-            this.ReorderRecords = defaultOn;
-            this.DeleteCachesAfter = defaultOn;
-            this.TestNormal = defaultOn;
-            this.TestBinaryWrapper = defaultOn;
-            this.TestImport = defaultOn;
-            this.TestFolder = defaultOn;
-        }
-
-        #region Members
-        public bool ReuseCaches;
-        public bool ReorderRecords;
-        public bool DeleteCachesAfter;
-        public bool TestNormal;
-        public bool TestBinaryWrapper;
-        public bool TestImport;
-        public bool TestFolder;
-        #endregion
-
-    }
-
-    public class PassthroughSettings_DeepCopyMask
-    {
-        public PassthroughSettings_DeepCopyMask()
-        {
-        }
-
-        public PassthroughSettings_DeepCopyMask(bool defaultOn)
         {
             this.ReuseCaches = defaultOn;
             this.ReorderRecords = defaultOn;

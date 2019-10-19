@@ -156,29 +156,12 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
             }
             var ret = new Script();
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    FillPrivateElementXml(
-                        item: ret,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    ScriptXmlCreateTranslation.FillPublicElementXml(
-                        item: ret,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
+            ((ScriptSetterCommon)((IScriptGetter)ret).CommonSetterInstance()).CopyInFromXml(
+                item: ret,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             return ret;
         }
 
@@ -263,49 +246,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #endregion
-
-        protected static void FillPrivateElementXml(
-            Script item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "Fields":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Script_FieldIndex.Fields);
-                        item.Fields.CopyFieldsFrom(
-                            rhs: ScriptFields.CreateFromXml(
-                                node: node,
-                                errorMask: errorMask,
-                                translationMask: translationMask),
-                            def: null,
-                            copyMask: null,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    OblivionMajorRecord.FillPrivateElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
 
         #endregion
 
@@ -414,84 +354,16 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new Script();
-            UtilityTranslation.MajorRecordParse<IScriptInternal>(
-                record: ret,
-                frame: frame,
-                errorMask: errorMask,
-                recType: Script_Registration.SCPT_HEADER,
-                recordTypeConverter: recordTypeConverter,
+            ((ScriptSetterCommon)((IScriptGetter)ret).CommonSetterInstance()).CopyInFromBinary(
+                item: ret,
                 masterReferences: masterReferences,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                frame: frame,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
             return ret;
         }
 
         #endregion
-
-        protected static void FillBinaryStructs(
-            IScriptInternal item,
-            MutagenFrame frame,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            OblivionMajorRecord.FillBinaryStructs(
-                item: item,
-                frame: frame,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
-        }
-
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IScriptInternal item,
-            MutagenFrame frame,
-            RecordType nextRecordType,
-            int contentLength,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask,
-            RecordTypeConverter recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x52484353: // SCHR
-                case 0x44484353: // SCHD
-                {
-                    try
-                    {
-                        errorMask?.PushIndex((int)Script_FieldIndex.Fields);
-                        var tmpFields = ScriptFields.CreateFromBinary(
-                            frame: frame,
-                            errorMask: errorMask,
-                            recordTypeConverter: null,
-                            masterReferences: masterReferences);
-                        item.Fields.CopyFieldsFrom(
-                            rhs: tmpFields,
-                            def: null,
-                            copyMask: null,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    return TryGet<int?>.Succeed((int)Script_FieldIndex.Fields);
-                }
-                default:
-                    return OblivionMajorRecord.FillBinaryRecordTypes(
-                        item: item,
-                        frame: frame,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength,
-                        recordTypeConverter: recordTypeConverter,
-                        masterReferences: masterReferences,
-                        errorMask: errorMask);
-            }
-        }
 
         #endregion
 
@@ -629,8 +501,8 @@ namespace Mutagen.Bethesda.Oblivion
             Script def = null,
             bool doMasks = true)
         {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            ScriptSetterCopyCommon.CopyFieldsFrom(
+            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((ScriptSetterCopyCommon)((IScriptGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -646,13 +518,205 @@ namespace Mutagen.Bethesda.Oblivion
             Script_CopyMask copyMask = null,
             Script def = null)
         {
-            ScriptSetterCopyCommon.CopyFieldsFrom(
+            ((ScriptSetterCopyCommon)((IScriptGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
+
+        #region Xml Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this IScriptInternal item,
+            XElement node,
+            MissingCreate missing = MissingCreate.New,
+            Script_TranslationMask translationMask = null)
+        {
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: null,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this IScriptInternal item,
+            XElement node,
+            out Script_ErrorMask errorMask,
+            bool doMasks = true,
+            Script_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask.GetCrystal());
+            errorMask = Script_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public new static void CopyInFromXml(
+            this IScriptInternal item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ((ScriptSetterCommon)((IScriptGetter)item).CommonSetterInstance()).CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        public static void CopyInFromXml(
+            this IScriptInternal item,
+            string path,
+            MissingCreate missing = MissingCreate.New,
+            Script_TranslationMask translationMask = null)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IScriptInternal item,
+            string path,
+            out Script_ErrorMask errorMask,
+            Script_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IScriptInternal item,
+            string path,
+            ErrorMaskBuilder errorMask,
+            Script_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        public static void CopyInFromXml(
+            this IScriptInternal item,
+            Stream stream,
+            MissingCreate missing = MissingCreate.New,
+            Script_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IScriptInternal item,
+            Stream stream,
+            out Script_ErrorMask errorMask,
+            Script_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IScriptInternal item,
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            Script_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        #endregion
+
+        #region Binary Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this IScriptInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences)
+        {
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: null);
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this IScriptInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            out Script_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: errorMaskBuilder);
+            errorMask = Script_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public new static void CopyInFromBinary(
+            this IScriptInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((ScriptSetterCommon)((IScriptGetter)item).CommonSetterInstance()).CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+        #endregion
 
     }
     #endregion
@@ -871,6 +935,162 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Clear(item: (IScriptInternal)item);
         }
+        
+        #region Xml Translation
+        protected static void FillPrivateElementXml(
+            IScriptInternal item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Fields":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Script_FieldIndex.Fields);
+                        item.Fields.CopyInFromXml(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    OblivionMajorRecordSetterCommon.FillPrivateElementXml(
+                        item: item,
+                        node: node,
+                        name: name,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    break;
+            }
+        }
+        
+        public new void CopyInFromXml(
+            IScriptInternal item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    FillPrivateElementXml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    ScriptXmlCreateTranslation.FillPublicElementXml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+        
+        #endregion
+        
+        #region Binary Translation
+        public override RecordType RecordType => Script_Registration.SCPT_HEADER;
+        protected static void FillBinaryStructs(
+            IScriptInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            OblivionMajorRecordSetterCommon.FillBinaryStructs(
+                item: item,
+                frame: frame,
+                masterReferences: masterReferences,
+                errorMask: errorMask);
+        }
+        
+        protected static TryGet<int?> FillBinaryRecordTypes(
+            IScriptInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x52484353: // SCHR
+                case 0x44484353: // SCHD
+                {
+                    try
+                    {
+                        errorMask?.PushIndex((int)Script_FieldIndex.Fields);
+                        item.Fields.CopyInFromBinary(
+                            frame: frame,
+                            errorMask: errorMask,
+                            recordTypeConverter: null,
+                            masterReferences: masterReferences);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    return TryGet<int?>.Succeed((int)Script_FieldIndex.Fields);
+                }
+                default:
+                    return OblivionMajorRecordSetterCommon.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter,
+                        masterReferences: masterReferences,
+                        errorMask: errorMask);
+            }
+        }
+        
+        public new void CopyInFromBinary(
+            IScriptInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            UtilityTranslation.MajorRecordParse<IScriptInternal>(
+                record: item,
+                frame: frame,
+                errorMask: errorMask,
+                recType: RecordType,
+                recordTypeConverter: recordTypeConverter,
+                masterReferences: masterReferences,
+                fillStructs: FillBinaryStructs,
+                fillTyped: FillBinaryRecordTypes);
+        }
+        
+        #endregion
         
     }
     public partial class ScriptCommon : OblivionMajorRecordCommon
@@ -1097,14 +1317,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public new static readonly ScriptSetterCopyCommon Instance = new ScriptSetterCopyCommon();
 
         #region Copy Fields From
-        public static void CopyFieldsFrom(
+        public void CopyFieldsFrom(
             Script item,
             Script rhs,
             Script def,
             ErrorMaskBuilder errorMask,
             Script_CopyMask copyMask)
         {
-            OblivionMajorRecordSetterCopyCommon.CopyFieldsFrom(
+            ((OblivionMajorRecordSetterCopyCommon)((IOblivionMajorRecordGetter)item).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1115,7 +1335,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Script_FieldIndex.Fields);
                 try
                 {
-                    ScriptFieldsSetterCopyCommon.CopyFieldsFrom(
+                    ((ScriptFieldsSetterCopyCommon)((IScriptFieldsGetter)item.Fields).CommonSetterCopyInstance()).CopyFieldsFrom(
                         item: item.Fields,
                         rhs: rhs.Fields,
                         def: def?.Fields,
@@ -1632,23 +1852,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Members
         public MaskItem<bool, ScriptFields_CopyMask> Fields;
-        #endregion
-
-    }
-
-    public class Script_DeepCopyMask : OblivionMajorRecord_DeepCopyMask
-    {
-        public Script_DeepCopyMask()
-        {
-        }
-
-        public Script_DeepCopyMask(bool defaultOn)
-        {
-            this.Fields = new MaskItem<bool, ScriptFields_DeepCopyMask>(defaultOn, default);
-        }
-
-        #region Members
-        public MaskItem<bool, ScriptFields_DeepCopyMask> Fields;
         #endregion
 
     }

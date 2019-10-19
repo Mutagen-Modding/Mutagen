@@ -159,23 +159,12 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
             }
             var ret = new WeatherType();
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    WeatherTypeXmlCreateTranslation.FillPublicElementXml(
-                        item: ret,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
+            ((WeatherTypeSetterCommon)((IWeatherTypeGetter)ret).CommonSetterInstance()).CopyInFromXml(
+                item: ret,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             return ret;
         }
 
@@ -331,70 +320,16 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new WeatherType();
-            UtilityTranslation.TypelessRecordParse(
-                record: ret,
-                frame: frame,
-                setFinal: false,
+            ((WeatherTypeSetterCommon)((IWeatherTypeGetter)ret).CommonSetterInstance()).CopyInFromBinary(
+                item: ret,
                 masterReferences: masterReferences,
-                errorMask: errorMask,
+                frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                errorMask: errorMask);
             return ret;
         }
 
         #endregion
-
-        protected static void FillBinaryStructs(
-            IWeatherType item,
-            MutagenFrame frame,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                frame: frame,
-                extraByte: true,
-                item: out Color SunriseParse))
-            {
-                item.Sunrise = SunriseParse;
-            }
-            else
-            {
-                item.Sunrise = default(Color);
-            }
-            if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                frame: frame,
-                extraByte: true,
-                item: out Color DayParse))
-            {
-                item.Day = DayParse;
-            }
-            else
-            {
-                item.Day = default(Color);
-            }
-            if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                frame: frame,
-                extraByte: true,
-                item: out Color SunsetParse))
-            {
-                item.Sunset = SunsetParse;
-            }
-            else
-            {
-                item.Sunset = default(Color);
-            }
-            if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                frame: frame,
-                extraByte: true,
-                item: out Color NightParse))
-            {
-                item.Night = NightParse;
-            }
-            else
-            {
-                item.Night = default(Color);
-            }
-        }
 
         #endregion
 
@@ -560,8 +495,8 @@ namespace Mutagen.Bethesda.Oblivion
             WeatherType def = null,
             bool doMasks = true)
         {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            WeatherTypeSetterCopyCommon.CopyFieldsFrom(
+            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((WeatherTypeSetterCopyCommon)((IWeatherTypeGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -577,7 +512,7 @@ namespace Mutagen.Bethesda.Oblivion
             WeatherType_CopyMask copyMask = null,
             WeatherType def = null)
         {
-            WeatherTypeSetterCopyCommon.CopyFieldsFrom(
+            ((WeatherTypeSetterCopyCommon)((IWeatherTypeGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -595,6 +530,198 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
         }
+
+        #region Xml Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this IWeatherType item,
+            XElement node,
+            MissingCreate missing = MissingCreate.New,
+            WeatherType_TranslationMask translationMask = null)
+        {
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: null,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this IWeatherType item,
+            XElement node,
+            out WeatherType_ErrorMask errorMask,
+            bool doMasks = true,
+            WeatherType_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask.GetCrystal());
+            errorMask = WeatherType_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyInFromXml(
+            this IWeatherType item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ((WeatherTypeSetterCommon)((IWeatherTypeGetter)item).CommonSetterInstance()).CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        public static void CopyInFromXml(
+            this IWeatherType item,
+            string path,
+            MissingCreate missing = MissingCreate.New,
+            WeatherType_TranslationMask translationMask = null)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IWeatherType item,
+            string path,
+            out WeatherType_ErrorMask errorMask,
+            WeatherType_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IWeatherType item,
+            string path,
+            ErrorMaskBuilder errorMask,
+            WeatherType_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        public static void CopyInFromXml(
+            this IWeatherType item,
+            Stream stream,
+            MissingCreate missing = MissingCreate.New,
+            WeatherType_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IWeatherType item,
+            Stream stream,
+            out WeatherType_ErrorMask errorMask,
+            WeatherType_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IWeatherType item,
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            WeatherType_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        #endregion
+
+        #region Binary Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this IWeatherType item,
+            MutagenFrame frame,
+            MasterReferences masterReferences)
+        {
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: null);
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this IWeatherType item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            out WeatherType_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: errorMaskBuilder);
+            errorMask = WeatherType_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyInFromBinary(
+            this IWeatherType item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((WeatherTypeSetterCommon)((IWeatherTypeGetter)item).CommonSetterInstance()).CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+        #endregion
 
     }
     #endregion
@@ -852,6 +979,107 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
         
+        #region Xml Translation
+        public void CopyInFromXml(
+            IWeatherType item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    WeatherTypeXmlCreateTranslation.FillPublicElementXml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+        
+        #endregion
+        
+        #region Binary Translation
+        protected static void FillBinaryStructs(
+            IWeatherType item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
+                frame: frame,
+                extraByte: true,
+                item: out Color SunriseParse))
+            {
+                item.Sunrise = SunriseParse;
+            }
+            else
+            {
+                item.Sunrise = default(Color);
+            }
+            if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
+                frame: frame,
+                extraByte: true,
+                item: out Color DayParse))
+            {
+                item.Day = DayParse;
+            }
+            else
+            {
+                item.Day = default(Color);
+            }
+            if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
+                frame: frame,
+                extraByte: true,
+                item: out Color SunsetParse))
+            {
+                item.Sunset = SunsetParse;
+            }
+            else
+            {
+                item.Sunset = default(Color);
+            }
+            if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
+                frame: frame,
+                extraByte: true,
+                item: out Color NightParse))
+            {
+                item.Night = NightParse;
+            }
+            else
+            {
+                item.Night = default(Color);
+            }
+        }
+        
+        public void CopyInFromBinary(
+            IWeatherType item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            UtilityTranslation.TypelessRecordParse(
+                record: item,
+                frame: frame,
+                setFinal: false,
+                masterReferences: masterReferences,
+                errorMask: errorMask,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: FillBinaryStructs);
+        }
+        
+        #endregion
+        
     }
     public partial class WeatherTypeCommon
     {
@@ -996,7 +1224,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly WeatherTypeSetterCopyCommon Instance = new WeatherTypeSetterCopyCommon();
 
         #region Copy Fields From
-        public static void CopyFieldsFrom(
+        public void CopyFieldsFrom(
             WeatherType item,
             WeatherType rhs,
             WeatherType def,
@@ -1801,29 +2029,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public WeatherType_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Sunrise = defaultOn;
-            this.Day = defaultOn;
-            this.Sunset = defaultOn;
-            this.Night = defaultOn;
-        }
-
-        #region Members
-        public bool Sunrise;
-        public bool Day;
-        public bool Sunset;
-        public bool Night;
-        #endregion
-
-    }
-
-    public class WeatherType_DeepCopyMask
-    {
-        public WeatherType_DeepCopyMask()
-        {
-        }
-
-        public WeatherType_DeepCopyMask(bool defaultOn)
         {
             this.Sunrise = defaultOn;
             this.Day = defaultOn;

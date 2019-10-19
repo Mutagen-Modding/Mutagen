@@ -201,29 +201,12 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
             }
             var ret = new Sound();
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    FillPrivateElementXml(
-                        item: ret,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    SoundXmlCreateTranslation.FillPublicElementXml(
-                        item: ret,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
+            ((SoundSetterCommon)((ISoundGetter)ret).CommonSetterInstance()).CopyInFromXml(
+                item: ret,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             return ret;
         }
 
@@ -308,26 +291,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #endregion
-
-        protected static void FillPrivateElementXml(
-            Sound item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                default:
-                    OblivionMajorRecord.FillPrivateElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
 
         #endregion
 
@@ -410,116 +373,16 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new Sound();
-            UtilityTranslation.MajorRecordParse<ISoundInternal>(
-                record: ret,
-                frame: frame,
-                errorMask: errorMask,
-                recType: Sound_Registration.SOUN_HEADER,
-                recordTypeConverter: recordTypeConverter,
+            ((SoundSetterCommon)((ISoundGetter)ret).CommonSetterInstance()).CopyInFromBinary(
+                item: ret,
                 masterReferences: masterReferences,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                frame: frame,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
             return ret;
         }
 
         #endregion
-
-        protected static void FillBinaryStructs(
-            ISoundInternal item,
-            MutagenFrame frame,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            OblivionMajorRecord.FillBinaryStructs(
-                item: item,
-                frame: frame,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
-        }
-
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            ISoundInternal item,
-            MutagenFrame frame,
-            RecordType nextRecordType,
-            int contentLength,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask,
-            RecordTypeConverter recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x4D414E46: // FNAM
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String FileParse))
-                    {
-                        item.File = FileParse;
-                    }
-                    else
-                    {
-                        item.File = default(String);
-                    }
-                    return TryGet<int?>.Succeed((int)Sound_FieldIndex.File);
-                }
-                case 0x44444E53: // SNDD
-                {
-                    try
-                    {
-                        errorMask?.PushIndex((int)Sound_FieldIndex.Data);
-                        item.Data = Mutagen.Bethesda.Oblivion.SoundData.CreateFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null,
-                            masterReferences: masterReferences,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    return TryGet<int?>.Succeed((int)Sound_FieldIndex.Data);
-                }
-                case 0x58444E53: // SNDX
-                {
-                    try
-                    {
-                        errorMask?.PushIndex((int)Sound_FieldIndex.Data);
-                        item.Data = Mutagen.Bethesda.Oblivion.SoundDataExtended.CreateFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null,
-                            masterReferences: masterReferences,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    return TryGet<int?>.Succeed((int)Sound_FieldIndex.Data);
-                }
-                default:
-                    return OblivionMajorRecord.FillBinaryRecordTypes(
-                        item: item,
-                        frame: frame,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength,
-                        recordTypeConverter: recordTypeConverter,
-                        masterReferences: masterReferences,
-                        errorMask: errorMask);
-            }
-        }
 
         #endregion
 
@@ -670,8 +533,8 @@ namespace Mutagen.Bethesda.Oblivion
             Sound def = null,
             bool doMasks = true)
         {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            SoundSetterCopyCommon.CopyFieldsFrom(
+            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((SoundSetterCopyCommon)((ISoundGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -687,13 +550,205 @@ namespace Mutagen.Bethesda.Oblivion
             Sound_CopyMask copyMask = null,
             Sound def = null)
         {
-            SoundSetterCopyCommon.CopyFieldsFrom(
+            ((SoundSetterCopyCommon)((ISoundGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
+
+        #region Xml Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this ISoundInternal item,
+            XElement node,
+            MissingCreate missing = MissingCreate.New,
+            Sound_TranslationMask translationMask = null)
+        {
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: null,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this ISoundInternal item,
+            XElement node,
+            out Sound_ErrorMask errorMask,
+            bool doMasks = true,
+            Sound_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask.GetCrystal());
+            errorMask = Sound_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public new static void CopyInFromXml(
+            this ISoundInternal item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ((SoundSetterCommon)((ISoundGetter)item).CommonSetterInstance()).CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        public static void CopyInFromXml(
+            this ISoundInternal item,
+            string path,
+            MissingCreate missing = MissingCreate.New,
+            Sound_TranslationMask translationMask = null)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this ISoundInternal item,
+            string path,
+            out Sound_ErrorMask errorMask,
+            Sound_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this ISoundInternal item,
+            string path,
+            ErrorMaskBuilder errorMask,
+            Sound_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        public static void CopyInFromXml(
+            this ISoundInternal item,
+            Stream stream,
+            MissingCreate missing = MissingCreate.New,
+            Sound_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this ISoundInternal item,
+            Stream stream,
+            out Sound_ErrorMask errorMask,
+            Sound_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this ISoundInternal item,
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            Sound_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        #endregion
+
+        #region Binary Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this ISoundInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences)
+        {
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: null);
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this ISoundInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            out Sound_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: errorMaskBuilder);
+            errorMask = Sound_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public new static void CopyInFromBinary(
+            this ISoundInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((SoundSetterCommon)((ISoundGetter)item).CommonSetterInstance()).CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+        #endregion
 
     }
     #endregion
@@ -928,6 +983,180 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Clear(item: (ISoundInternal)item);
         }
+        
+        #region Xml Translation
+        protected static void FillPrivateElementXml(
+            ISoundInternal item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                default:
+                    OblivionMajorRecordSetterCommon.FillPrivateElementXml(
+                        item: item,
+                        node: node,
+                        name: name,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    break;
+            }
+        }
+        
+        public new void CopyInFromXml(
+            ISoundInternal item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    FillPrivateElementXml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    SoundXmlCreateTranslation.FillPublicElementXml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+        
+        #endregion
+        
+        #region Binary Translation
+        public override RecordType RecordType => Sound_Registration.SOUN_HEADER;
+        protected static void FillBinaryStructs(
+            ISoundInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            OblivionMajorRecordSetterCommon.FillBinaryStructs(
+                item: item,
+                frame: frame,
+                masterReferences: masterReferences,
+                errorMask: errorMask);
+        }
+        
+        protected static TryGet<int?> FillBinaryRecordTypes(
+            ISoundInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x4D414E46: // FNAM
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String FileParse))
+                    {
+                        item.File = FileParse;
+                    }
+                    else
+                    {
+                        item.File = default(String);
+                    }
+                    return TryGet<int?>.Succeed((int)Sound_FieldIndex.File);
+                }
+                case 0x44444E53: // SNDD
+                {
+                    try
+                    {
+                        errorMask?.PushIndex((int)Sound_FieldIndex.Data);
+                        item.Data = Mutagen.Bethesda.Oblivion.SoundData.CreateFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null,
+                            masterReferences: masterReferences,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    return TryGet<int?>.Succeed((int)Sound_FieldIndex.Data);
+                }
+                case 0x58444E53: // SNDX
+                {
+                    try
+                    {
+                        errorMask?.PushIndex((int)Sound_FieldIndex.Data);
+                        item.Data = Mutagen.Bethesda.Oblivion.SoundDataExtended.CreateFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null,
+                            masterReferences: masterReferences,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    return TryGet<int?>.Succeed((int)Sound_FieldIndex.Data);
+                }
+                default:
+                    return OblivionMajorRecordSetterCommon.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter,
+                        masterReferences: masterReferences,
+                        errorMask: errorMask);
+            }
+        }
+        
+        public new void CopyInFromBinary(
+            ISoundInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            UtilityTranslation.MajorRecordParse<ISoundInternal>(
+                record: item,
+                frame: frame,
+                errorMask: errorMask,
+                recType: RecordType,
+                recordTypeConverter: recordTypeConverter,
+                masterReferences: masterReferences,
+                fillStructs: FillBinaryStructs,
+                fillTyped: FillBinaryRecordTypes);
+        }
+        
+        #endregion
         
     }
     public partial class SoundCommon : OblivionMajorRecordCommon
@@ -1170,14 +1399,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public new static readonly SoundSetterCopyCommon Instance = new SoundSetterCopyCommon();
 
         #region Copy Fields From
-        public static void CopyFieldsFrom(
+        public void CopyFieldsFrom(
             Sound item,
             Sound rhs,
             Sound def,
             ErrorMaskBuilder errorMask,
             Sound_CopyMask copyMask)
         {
-            OblivionMajorRecordSetterCopyCommon.CopyFieldsFrom(
+            ((OblivionMajorRecordSetterCopyCommon)((IOblivionMajorRecordGetter)item).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1231,7 +1460,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             case CopyOption.Reference:
                                 throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
-                                SoundDataSetterCopyCommon.CopyFieldsFrom(
+                                ((SoundDataSetterCopyCommon)((ISoundDataGetter)item.Data).CommonSetterCopyInstance()).CopyFieldsFrom(
                                     item: item.Data,
                                     rhs: rhs.Data,
                                     def: def?.Data,
@@ -1851,25 +2080,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Members
         public bool File;
         public MaskItem<CopyOption, SoundData_CopyMask> Data;
-        #endregion
-
-    }
-
-    public class Sound_DeepCopyMask : OblivionMajorRecord_DeepCopyMask
-    {
-        public Sound_DeepCopyMask()
-        {
-        }
-
-        public Sound_DeepCopyMask(bool defaultOn)
-        {
-            this.File = defaultOn;
-            this.Data = new MaskItem<bool, SoundData_DeepCopyMask>(defaultOn, default);
-        }
-
-        #region Members
-        public bool File;
-        public MaskItem<bool, SoundData_DeepCopyMask> Data;
         #endregion
 
     }

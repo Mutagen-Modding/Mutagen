@@ -154,23 +154,12 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
             }
             var ret = new DistantLODData();
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    DistantLODDataXmlCreateTranslation.FillPublicElementXml(
-                        item: ret,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
+            ((DistantLODDataSetterCommon)((IDistantLODDataGetter)ret).CommonSetterInstance()).CopyInFromXml(
+                item: ret,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             return ret;
         }
 
@@ -329,59 +318,16 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new DistantLODData();
-            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
-                frame.Reader,
-                recordTypeConverter.ConvertToCustom(DistantLODData_Registration.XLOD_HEADER)));
-            UtilityTranslation.RecordParse(
-                record: ret,
-                frame: frame,
-                setFinal: true,
+            ((DistantLODDataSetterCommon)((IDistantLODDataGetter)ret).CommonSetterInstance()).CopyInFromBinary(
+                item: ret,
                 masterReferences: masterReferences,
-                errorMask: errorMask,
+                frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                errorMask: errorMask);
             return ret;
         }
 
         #endregion
-
-        protected static void FillBinaryStructs(
-            IDistantLODData item,
-            MutagenFrame frame,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Single Unknown0Parse))
-            {
-                item.Unknown0 = Unknown0Parse;
-            }
-            else
-            {
-                item.Unknown0 = default(Single);
-            }
-            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Single Unknown1Parse))
-            {
-                item.Unknown1 = Unknown1Parse;
-            }
-            else
-            {
-                item.Unknown1 = default(Single);
-            }
-            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Single Unknown2Parse))
-            {
-                item.Unknown2 = Unknown2Parse;
-            }
-            else
-            {
-                item.Unknown2 = default(Single);
-            }
-        }
 
         #endregion
 
@@ -541,8 +487,8 @@ namespace Mutagen.Bethesda.Oblivion
             DistantLODData def = null,
             bool doMasks = true)
         {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            DistantLODDataSetterCopyCommon.CopyFieldsFrom(
+            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((DistantLODDataSetterCopyCommon)((IDistantLODDataGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -558,7 +504,7 @@ namespace Mutagen.Bethesda.Oblivion
             DistantLODData_CopyMask copyMask = null,
             DistantLODData def = null)
         {
-            DistantLODDataSetterCopyCommon.CopyFieldsFrom(
+            ((DistantLODDataSetterCopyCommon)((IDistantLODDataGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -576,6 +522,198 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
         }
+
+        #region Xml Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this IDistantLODData item,
+            XElement node,
+            MissingCreate missing = MissingCreate.New,
+            DistantLODData_TranslationMask translationMask = null)
+        {
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: null,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this IDistantLODData item,
+            XElement node,
+            out DistantLODData_ErrorMask errorMask,
+            bool doMasks = true,
+            DistantLODData_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask.GetCrystal());
+            errorMask = DistantLODData_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyInFromXml(
+            this IDistantLODData item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ((DistantLODDataSetterCommon)((IDistantLODDataGetter)item).CommonSetterInstance()).CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        public static void CopyInFromXml(
+            this IDistantLODData item,
+            string path,
+            MissingCreate missing = MissingCreate.New,
+            DistantLODData_TranslationMask translationMask = null)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IDistantLODData item,
+            string path,
+            out DistantLODData_ErrorMask errorMask,
+            DistantLODData_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IDistantLODData item,
+            string path,
+            ErrorMaskBuilder errorMask,
+            DistantLODData_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        public static void CopyInFromXml(
+            this IDistantLODData item,
+            Stream stream,
+            MissingCreate missing = MissingCreate.New,
+            DistantLODData_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IDistantLODData item,
+            Stream stream,
+            out DistantLODData_ErrorMask errorMask,
+            DistantLODData_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IDistantLODData item,
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            DistantLODData_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        #endregion
+
+        #region Binary Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this IDistantLODData item,
+            MutagenFrame frame,
+            MasterReferences masterReferences)
+        {
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: null);
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this IDistantLODData item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            out DistantLODData_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: errorMaskBuilder);
+            errorMask = DistantLODData_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyInFromBinary(
+            this IDistantLODData item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((DistantLODDataSetterCommon)((IDistantLODDataGetter)item).CommonSetterInstance()).CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+        #endregion
 
     }
     #endregion
@@ -822,6 +960,96 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
         
+        #region Xml Translation
+        public void CopyInFromXml(
+            IDistantLODData item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    DistantLODDataXmlCreateTranslation.FillPublicElementXml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+        
+        #endregion
+        
+        #region Binary Translation
+        protected static void FillBinaryStructs(
+            IDistantLODData item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single Unknown0Parse))
+            {
+                item.Unknown0 = Unknown0Parse;
+            }
+            else
+            {
+                item.Unknown0 = default(Single);
+            }
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single Unknown1Parse))
+            {
+                item.Unknown1 = Unknown1Parse;
+            }
+            else
+            {
+                item.Unknown1 = default(Single);
+            }
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single Unknown2Parse))
+            {
+                item.Unknown2 = Unknown2Parse;
+            }
+            else
+            {
+                item.Unknown2 = default(Single);
+            }
+        }
+        
+        public void CopyInFromBinary(
+            IDistantLODData item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
+                frame.Reader,
+                recordTypeConverter.ConvertToCustom(DistantLODData_Registration.XLOD_HEADER)));
+            UtilityTranslation.RecordParse(
+                record: item,
+                frame: frame,
+                setFinal: true,
+                masterReferences: masterReferences,
+                errorMask: errorMask,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: FillBinaryStructs);
+        }
+        
+        #endregion
+        
     }
     public partial class DistantLODDataCommon
     {
@@ -958,7 +1186,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly DistantLODDataSetterCopyCommon Instance = new DistantLODDataSetterCopyCommon();
 
         #region Copy Fields From
-        public static void CopyFieldsFrom(
+        public void CopyFieldsFrom(
             DistantLODData item,
             DistantLODData rhs,
             DistantLODData def,
@@ -1700,27 +1928,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public DistantLODData_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Unknown0 = defaultOn;
-            this.Unknown1 = defaultOn;
-            this.Unknown2 = defaultOn;
-        }
-
-        #region Members
-        public bool Unknown0;
-        public bool Unknown1;
-        public bool Unknown2;
-        #endregion
-
-    }
-
-    public class DistantLODData_DeepCopyMask
-    {
-        public DistantLODData_DeepCopyMask()
-        {
-        }
-
-        public DistantLODData_DeepCopyMask(bool defaultOn)
         {
             this.Unknown0 = defaultOn;
             this.Unknown1 = defaultOn;

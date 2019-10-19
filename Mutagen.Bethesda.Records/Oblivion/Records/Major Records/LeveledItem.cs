@@ -10,29 +10,29 @@ using Noggog;
 
 namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class LeveledItem
-    {
-        static partial void SpecialParse_Vestigial(ILeveledItemInternal item, MutagenFrame frame, ErrorMaskBuilder errorMask)
-        {
-            var rec = HeaderTranslation.ReadNextSubRecordType(frame.Reader, out var length);
-            if (length != 1)
-            {
-                errorMask.ReportExceptionOrThrow(
-                    new ArgumentException($"Unexpected length: {length}"));
-                return;
-            }
-            if (ByteBinaryTranslation.Instance.Parse(
-                frame,
-                out var parseVal)
-                && parseVal > 0)
-            {
-                item.Flags |= LeveledFlag.CalculateForEachItemInCount;
-            }
-        }
-    }
-
     namespace Internals
     {
+        public partial class LeveledItemSetterCommon
+        {
+            static partial void SpecialParse_Vestigial(ILeveledItemInternal item, MutagenFrame frame, ErrorMaskBuilder errorMask)
+            {
+                var rec = HeaderTranslation.ReadNextSubRecordType(frame.Reader, out var length);
+                if (length != 1)
+                {
+                    errorMask.ReportExceptionOrThrow(
+                        new ArgumentException($"Unexpected length: {length}"));
+                    return;
+                }
+                if (ByteBinaryTranslation.Instance.Parse(
+                    frame,
+                    out var parseVal)
+                    && parseVal > 0)
+                {
+                    item.Flags |= LeveledFlag.CalculateForEachItemInCount;
+                }
+            }
+        }
+
         public partial class LeveledItemBinaryWrapper
         {
             private bool _vestigialMarker;

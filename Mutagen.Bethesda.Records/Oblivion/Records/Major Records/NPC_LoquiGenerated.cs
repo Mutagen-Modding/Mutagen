@@ -1044,29 +1044,12 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
             }
             var ret = new NPC();
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    FillPrivateElementXml(
-                        item: ret,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    NPCXmlCreateTranslation.FillPublicElementXml(
-                        item: ret,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
+            ((NPCSetterCommon)((INPCGetter)ret).CommonSetterInstance()).CopyInFromXml(
+                item: ret,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             return ret;
         }
 
@@ -1151,35 +1134,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #endregion
-
-        protected static void FillPrivateElementXml(
-            NPC item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "HasACBSDataType":
-                    item.ACBSDataTypeState |= NPC.ACBSDataType.Has;
-                    break;
-                case "HasAIDTDataType":
-                    item.AIDTDataTypeState |= NPC.AIDTDataType.Has;
-                    break;
-                case "HasDATADataType":
-                    item.DATADataTypeState |= NPC.DATADataType.Has;
-                    break;
-                default:
-                    NPCAbstract.FillPrivateElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
 
         #endregion
 
@@ -1424,435 +1378,16 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new NPC();
-            UtilityTranslation.MajorRecordParse<INPCInternal>(
-                record: ret,
-                frame: frame,
-                errorMask: errorMask,
-                recType: NPC_Registration.NPC__HEADER,
-                recordTypeConverter: recordTypeConverter,
+            ((NPCSetterCommon)((INPCGetter)ret).CommonSetterInstance()).CopyInFromBinary(
+                item: ret,
                 masterReferences: masterReferences,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                frame: frame,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
             return ret;
         }
 
         #endregion
-
-        protected static void FillBinaryStructs(
-            INPCInternal item,
-            MutagenFrame frame,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            NPCAbstract.FillBinaryStructs(
-                item: item,
-                frame: frame,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
-        }
-
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            INPCInternal item,
-            MutagenFrame frame,
-            RecordType nextRecordType,
-            int contentLength,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask,
-            RecordTypeConverter recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x4C4C5546: // FULL
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String NameParse))
-                    {
-                        item.Name = NameParse;
-                    }
-                    else
-                    {
-                        item.Name = default(String);
-                    }
-                    return TryGet<int?>.Succeed((int)NPC_FieldIndex.Name);
-                }
-                case 0x4C444F4D: // MODL
-                {
-                    try
-                    {
-                        errorMask?.PushIndex((int)NPC_FieldIndex.Model);
-                        item.Model = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null,
-                            masterReferences: masterReferences,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    return TryGet<int?>.Succeed((int)NPC_FieldIndex.Model);
-                }
-                case 0x53424341: // ACBS
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    var dataFrame = frame.SpawnWithLength(contentLength);
-                    if (!dataFrame.Complete)
-                    {
-                        item.ACBSDataTypeState = ACBSDataType.Has;
-                    }
-                    if (EnumBinaryTranslation<NPC.NPCFlag>.Instance.Parse(
-                        frame: dataFrame.SpawnWithLength(4),
-                        item: out NPC.NPCFlag FlagsParse))
-                    {
-                        item.Flags = FlagsParse;
-                    }
-                    else
-                    {
-                        item.Flags = default(NPC.NPCFlag);
-                    }
-                    item.BaseSpellPoints = dataFrame.ReadUInt16();
-                    item.Fatigue = dataFrame.ReadUInt16();
-                    item.BarterGold = dataFrame.ReadUInt16();
-                    item.LevelOffset = dataFrame.ReadInt16();
-                    item.CalcMin = dataFrame.ReadUInt16();
-                    item.CalcMax = dataFrame.ReadUInt16();
-                    return TryGet<int?>.Succeed((int)NPC_FieldIndex.CalcMax);
-                }
-                case 0x4D414E53: // SNAM
-                {
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<RankPlacement>.Instance.ParseRepeatedItem(
-                        frame: frame,
-                        triggeringRecord: NPC_Registration.SNAM_HEADER,
-                        item: item.Factions,
-                        fieldIndex: (int)NPC_FieldIndex.Factions,
-                        lengthLength: frame.MetaData.SubConstants.LengthLength,
-                        errorMask: errorMask,
-                        transl: (MutagenFrame r, out RankPlacement listSubItem, ErrorMaskBuilder listErrMask) =>
-                        {
-                            return LoquiBinaryTranslation<RankPlacement>.Instance.Parse(
-                                frame: r,
-                                item: out listSubItem,
-                                errorMask: listErrMask,
-                                masterReferences: masterReferences);
-                        });
-                    return TryGet<int?>.Succeed((int)NPC_FieldIndex.Factions);
-                }
-                case 0x4D414E49: // INAM
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
-                        frame: frame.SpawnWithLength(contentLength),
-                        masterReferences: masterReferences,
-                        item: item.DeathItem_Property);
-                    return TryGet<int?>.Succeed((int)NPC_FieldIndex.DeathItem);
-                }
-                case 0x4D414E52: // RNAM
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
-                        frame: frame.SpawnWithLength(contentLength),
-                        masterReferences: masterReferences,
-                        item: item.Race_Property);
-                    return TryGet<int?>.Succeed((int)NPC_FieldIndex.Race);
-                }
-                case 0x4F4C5053: // SPLO
-                {
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDLink<SpellAbstract>>.Instance.ParseRepeatedItem(
-                        frame: frame,
-                        triggeringRecord: NPC_Registration.SPLO_HEADER,
-                        masterReferences: masterReferences,
-                        item: item.Spells,
-                        lengthLength: frame.MetaData.SubConstants.LengthLength,
-                        transl: FormLinkBinaryTranslation.Instance.Parse);
-                    return TryGet<int?>.Succeed((int)NPC_FieldIndex.Spells);
-                }
-                case 0x49524353: // SCRI
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
-                        frame: frame.SpawnWithLength(contentLength),
-                        masterReferences: masterReferences,
-                        item: item.Script_Property);
-                    return TryGet<int?>.Succeed((int)NPC_FieldIndex.Script);
-                }
-                case 0x4F544E43: // CNTO
-                {
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<ItemEntry>.Instance.ParseRepeatedItem(
-                        frame: frame,
-                        triggeringRecord: NPC_Registration.CNTO_HEADER,
-                        item: item.Items,
-                        fieldIndex: (int)NPC_FieldIndex.Items,
-                        lengthLength: frame.MetaData.SubConstants.LengthLength,
-                        errorMask: errorMask,
-                        transl: (MutagenFrame r, out ItemEntry listSubItem, ErrorMaskBuilder listErrMask) =>
-                        {
-                            return LoquiBinaryTranslation<ItemEntry>.Instance.Parse(
-                                frame: r,
-                                item: out listSubItem,
-                                errorMask: listErrMask,
-                                masterReferences: masterReferences);
-                        });
-                    return TryGet<int?>.Succeed((int)NPC_FieldIndex.Items);
-                }
-                case 0x54444941: // AIDT
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    var dataFrame = frame.SpawnWithLength(contentLength);
-                    if (!dataFrame.Complete)
-                    {
-                        item.AIDTDataTypeState = AIDTDataType.Has;
-                    }
-                    item.Aggression = dataFrame.ReadUInt8();
-                    item.Confidence = dataFrame.ReadUInt8();
-                    item.EnergyLevel = dataFrame.ReadUInt8();
-                    item.Responsibility = dataFrame.ReadUInt8();
-                    if (EnumBinaryTranslation<NPC.BuySellServiceFlag>.Instance.Parse(
-                        frame: dataFrame.SpawnWithLength(4),
-                        item: out NPC.BuySellServiceFlag BuySellServicesParse))
-                    {
-                        item.BuySellServices = BuySellServicesParse;
-                    }
-                    else
-                    {
-                        item.BuySellServices = default(NPC.BuySellServiceFlag);
-                    }
-                    if (EnumBinaryTranslation<Skill>.Instance.Parse(
-                        frame: dataFrame.SpawnWithLength(1),
-                        item: out Skill TeachesParse))
-                    {
-                        item.Teaches = TeachesParse;
-                    }
-                    else
-                    {
-                        item.Teaches = default(Skill);
-                    }
-                    item.MaximumTrainingLevel = dataFrame.ReadUInt8();
-                    if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                        frame: dataFrame.SpawnWithLength(2),
-                        item: out Byte[] FluffParse))
-                    {
-                        item.Fluff = FluffParse;
-                    }
-                    else
-                    {
-                        item.Fluff = default(Byte[]);
-                    }
-                    return TryGet<int?>.Succeed((int)NPC_FieldIndex.Fluff);
-                }
-                case 0x44494B50: // PKID
-                {
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDLink<AIPackage>>.Instance.ParseRepeatedItem(
-                        frame: frame,
-                        triggeringRecord: NPC_Registration.PKID_HEADER,
-                        masterReferences: masterReferences,
-                        item: item.AIPackages,
-                        lengthLength: frame.MetaData.SubConstants.LengthLength,
-                        transl: FormLinkBinaryTranslation.Instance.Parse);
-                    return TryGet<int?>.Succeed((int)NPC_FieldIndex.AIPackages);
-                }
-                case 0x5A46464B: // KFFZ
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<String>.Instance.ParseRepeatedItem(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: item.Animations,
-                        transl: (MutagenFrame r, out String listSubItem) =>
-                        {
-                            return Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                                r,
-                                item: out listSubItem,
-                                parseWhole: false);
-                        });
-                    return TryGet<int?>.Succeed((int)NPC_FieldIndex.Animations);
-                }
-                case 0x4D414E43: // CNAM
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
-                        frame: frame.SpawnWithLength(contentLength),
-                        masterReferences: masterReferences,
-                        item: item.Class_Property);
-                    return TryGet<int?>.Succeed((int)NPC_FieldIndex.Class);
-                }
-                case 0x41544144: // DATA
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    var dataFrame = frame.SpawnWithLength(contentLength);
-                    if (!dataFrame.Complete)
-                    {
-                        item.DATADataTypeState = DATADataType.Has;
-                    }
-                    item.Armorer = dataFrame.ReadUInt8();
-                    item.Athletics = dataFrame.ReadUInt8();
-                    item.Blade = dataFrame.ReadUInt8();
-                    item.Block = dataFrame.ReadUInt8();
-                    item.Blunt = dataFrame.ReadUInt8();
-                    item.HandToHand = dataFrame.ReadUInt8();
-                    item.HeavyArmor = dataFrame.ReadUInt8();
-                    item.Alchemy = dataFrame.ReadUInt8();
-                    item.Alteration = dataFrame.ReadUInt8();
-                    item.Conjuration = dataFrame.ReadUInt8();
-                    item.Destruction = dataFrame.ReadUInt8();
-                    item.Illusion = dataFrame.ReadUInt8();
-                    item.Mysticism = dataFrame.ReadUInt8();
-                    item.Restoration = dataFrame.ReadUInt8();
-                    item.Acrobatics = dataFrame.ReadUInt8();
-                    item.LightArmor = dataFrame.ReadUInt8();
-                    item.Marksman = dataFrame.ReadUInt8();
-                    item.Mercantile = dataFrame.ReadUInt8();
-                    item.Security = dataFrame.ReadUInt8();
-                    item.Sneak = dataFrame.ReadUInt8();
-                    item.Speechcraft = dataFrame.ReadUInt8();
-                    item.Health = dataFrame.ReadUInt32();
-                    item.Strength = dataFrame.ReadUInt8();
-                    item.Intelligence = dataFrame.ReadUInt8();
-                    item.Willpower = dataFrame.ReadUInt8();
-                    item.Agility = dataFrame.ReadUInt8();
-                    item.Speed = dataFrame.ReadUInt8();
-                    item.Endurance = dataFrame.ReadUInt8();
-                    item.Personality = dataFrame.ReadUInt8();
-                    item.Luck = dataFrame.ReadUInt8();
-                    return TryGet<int?>.Succeed((int)NPC_FieldIndex.Luck);
-                }
-                case 0x4D414E48: // HNAM
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
-                        frame: frame.SpawnWithLength(contentLength),
-                        masterReferences: masterReferences,
-                        item: item.Hair_Property);
-                    return TryGet<int?>.Succeed((int)NPC_FieldIndex.Hair);
-                }
-                case 0x4D414E4C: // LNAM
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out Single HairLengthParse))
-                    {
-                        item.HairLength = HairLengthParse;
-                    }
-                    else
-                    {
-                        item.HairLength = default(Single);
-                    }
-                    return TryGet<int?>.Succeed((int)NPC_FieldIndex.HairLength);
-                }
-                case 0x4D414E45: // ENAM
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDLink<Eye>>.Instance.ParseRepeatedItem(
-                        frame: frame.SpawnWithLength(contentLength),
-                        masterReferences: masterReferences,
-                        item: item.Eyes,
-                        transl: FormLinkBinaryTranslation.Instance.Parse);
-                    return TryGet<int?>.Succeed((int)NPC_FieldIndex.Eyes);
-                }
-                case 0x524C4348: // HCLR
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        extraByte: true,
-                        item: out Color HairColorParse))
-                    {
-                        item.HairColor = HairColorParse;
-                    }
-                    else
-                    {
-                        item.HairColor = default(Color);
-                    }
-                    return TryGet<int?>.Succeed((int)NPC_FieldIndex.HairColor);
-                }
-                case 0x4D414E5A: // ZNAM
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
-                        frame: frame.SpawnWithLength(contentLength),
-                        masterReferences: masterReferences,
-                        item: item.CombatStyle_Property);
-                    return TryGet<int?>.Succeed((int)NPC_FieldIndex.CombatStyle);
-                }
-                case 0x53474746: // FGGS
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out Byte[] FaceGenGeometrySymmetricParse))
-                    {
-                        item.FaceGenGeometrySymmetric = FaceGenGeometrySymmetricParse;
-                    }
-                    else
-                    {
-                        item.FaceGenGeometrySymmetric = default(Byte[]);
-                    }
-                    return TryGet<int?>.Succeed((int)NPC_FieldIndex.FaceGenGeometrySymmetric);
-                }
-                case 0x41474746: // FGGA
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out Byte[] FaceGenGeometryAsymmetricParse))
-                    {
-                        item.FaceGenGeometryAsymmetric = FaceGenGeometryAsymmetricParse;
-                    }
-                    else
-                    {
-                        item.FaceGenGeometryAsymmetric = default(Byte[]);
-                    }
-                    return TryGet<int?>.Succeed((int)NPC_FieldIndex.FaceGenGeometryAsymmetric);
-                }
-                case 0x53544746: // FGTS
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out Byte[] FaceGenTextureSymmetricParse))
-                    {
-                        item.FaceGenTextureSymmetric = FaceGenTextureSymmetricParse;
-                    }
-                    else
-                    {
-                        item.FaceGenTextureSymmetric = default(Byte[]);
-                    }
-                    return TryGet<int?>.Succeed((int)NPC_FieldIndex.FaceGenTextureSymmetric);
-                }
-                case 0x4D414E46: // FNAM
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out Byte[] UnknownParse))
-                    {
-                        item.Unknown = UnknownParse;
-                    }
-                    else
-                    {
-                        item.Unknown = default(Byte[]);
-                    }
-                    return TryGet<int?>.Succeed((int)NPC_FieldIndex.Unknown);
-                }
-                default:
-                    return NPCAbstract.FillBinaryRecordTypes(
-                        item: item,
-                        frame: frame,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength,
-                        recordTypeConverter: recordTypeConverter,
-                        masterReferences: masterReferences,
-                        errorMask: errorMask);
-            }
-        }
 
         #endregion
 
@@ -2417,8 +1952,8 @@ namespace Mutagen.Bethesda.Oblivion
             NPC def = null,
             bool doMasks = true)
         {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            NPCSetterCopyCommon.CopyFieldsFrom(
+            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((NPCSetterCopyCommon)((INPCGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -2434,13 +1969,205 @@ namespace Mutagen.Bethesda.Oblivion
             NPC_CopyMask copyMask = null,
             NPC def = null)
         {
-            NPCSetterCopyCommon.CopyFieldsFrom(
+            ((NPCSetterCopyCommon)((INPCGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
+
+        #region Xml Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this INPCInternal item,
+            XElement node,
+            MissingCreate missing = MissingCreate.New,
+            NPC_TranslationMask translationMask = null)
+        {
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: null,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this INPCInternal item,
+            XElement node,
+            out NPC_ErrorMask errorMask,
+            bool doMasks = true,
+            NPC_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask.GetCrystal());
+            errorMask = NPC_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public new static void CopyInFromXml(
+            this INPCInternal item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ((NPCSetterCommon)((INPCGetter)item).CommonSetterInstance()).CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        public static void CopyInFromXml(
+            this INPCInternal item,
+            string path,
+            MissingCreate missing = MissingCreate.New,
+            NPC_TranslationMask translationMask = null)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this INPCInternal item,
+            string path,
+            out NPC_ErrorMask errorMask,
+            NPC_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this INPCInternal item,
+            string path,
+            ErrorMaskBuilder errorMask,
+            NPC_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        public static void CopyInFromXml(
+            this INPCInternal item,
+            Stream stream,
+            MissingCreate missing = MissingCreate.New,
+            NPC_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this INPCInternal item,
+            Stream stream,
+            out NPC_ErrorMask errorMask,
+            NPC_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this INPCInternal item,
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            NPC_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        #endregion
+
+        #region Binary Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this INPCInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences)
+        {
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: null);
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this INPCInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            out NPC_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: errorMaskBuilder);
+            errorMask = NPC_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public new static void CopyInFromBinary(
+            this INPCInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((NPCSetterCommon)((INPCGetter)item).CommonSetterInstance()).CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+        #endregion
 
     }
     #endregion
@@ -3565,6 +3292,508 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (INPCInternal)item);
         }
         
+        #region Xml Translation
+        protected static void FillPrivateElementXml(
+            INPCInternal item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "HasACBSDataType":
+                    item.ACBSDataTypeState |= NPC.ACBSDataType.Has;
+                    break;
+                case "HasAIDTDataType":
+                    item.AIDTDataTypeState |= NPC.AIDTDataType.Has;
+                    break;
+                case "HasDATADataType":
+                    item.DATADataTypeState |= NPC.DATADataType.Has;
+                    break;
+                default:
+                    NPCAbstractSetterCommon.FillPrivateElementXml(
+                        item: item,
+                        node: node,
+                        name: name,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    break;
+            }
+        }
+        
+        public new void CopyInFromXml(
+            INPCInternal item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    FillPrivateElementXml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    NPCXmlCreateTranslation.FillPublicElementXml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+        
+        #endregion
+        
+        #region Binary Translation
+        public override RecordType RecordType => NPC_Registration.NPC__HEADER;
+        protected static void FillBinaryStructs(
+            INPCInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            NPCAbstractSetterCommon.FillBinaryStructs(
+                item: item,
+                frame: frame,
+                masterReferences: masterReferences,
+                errorMask: errorMask);
+        }
+        
+        protected static TryGet<int?> FillBinaryRecordTypes(
+            INPCInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x4C4C5546: // FULL
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String NameParse))
+                    {
+                        item.Name = NameParse;
+                    }
+                    else
+                    {
+                        item.Name = default(String);
+                    }
+                    return TryGet<int?>.Succeed((int)NPC_FieldIndex.Name);
+                }
+                case 0x4C444F4D: // MODL
+                {
+                    try
+                    {
+                        errorMask?.PushIndex((int)NPC_FieldIndex.Model);
+                        item.Model = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null,
+                            masterReferences: masterReferences,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    return TryGet<int?>.Succeed((int)NPC_FieldIndex.Model);
+                }
+                case 0x53424341: // ACBS
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (!dataFrame.Complete)
+                    {
+                        item.ACBSDataTypeState = NPC.ACBSDataType.Has;
+                    }
+                    if (EnumBinaryTranslation<NPC.NPCFlag>.Instance.Parse(
+                        frame: dataFrame.SpawnWithLength(4),
+                        item: out NPC.NPCFlag FlagsParse))
+                    {
+                        item.Flags = FlagsParse;
+                    }
+                    else
+                    {
+                        item.Flags = default(NPC.NPCFlag);
+                    }
+                    item.BaseSpellPoints = dataFrame.ReadUInt16();
+                    item.Fatigue = dataFrame.ReadUInt16();
+                    item.BarterGold = dataFrame.ReadUInt16();
+                    item.LevelOffset = dataFrame.ReadInt16();
+                    item.CalcMin = dataFrame.ReadUInt16();
+                    item.CalcMax = dataFrame.ReadUInt16();
+                    return TryGet<int?>.Succeed((int)NPC_FieldIndex.CalcMax);
+                }
+                case 0x4D414E53: // SNAM
+                {
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<RankPlacement>.Instance.ParseRepeatedItem(
+                        frame: frame,
+                        triggeringRecord: NPC_Registration.SNAM_HEADER,
+                        item: item.Factions,
+                        fieldIndex: (int)NPC_FieldIndex.Factions,
+                        lengthLength: frame.MetaData.SubConstants.LengthLength,
+                        errorMask: errorMask,
+                        transl: (MutagenFrame r, out RankPlacement listSubItem, ErrorMaskBuilder listErrMask) =>
+                        {
+                            return LoquiBinaryTranslation<RankPlacement>.Instance.Parse(
+                                frame: r,
+                                item: out listSubItem,
+                                errorMask: listErrMask,
+                                masterReferences: masterReferences);
+                        });
+                    return TryGet<int?>.Succeed((int)NPC_FieldIndex.Factions);
+                }
+                case 0x4D414E49: // INAM
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
+                        frame: frame.SpawnWithLength(contentLength),
+                        masterReferences: masterReferences,
+                        item: item.DeathItem_Property);
+                    return TryGet<int?>.Succeed((int)NPC_FieldIndex.DeathItem);
+                }
+                case 0x4D414E52: // RNAM
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
+                        frame: frame.SpawnWithLength(contentLength),
+                        masterReferences: masterReferences,
+                        item: item.Race_Property);
+                    return TryGet<int?>.Succeed((int)NPC_FieldIndex.Race);
+                }
+                case 0x4F4C5053: // SPLO
+                {
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDLink<SpellAbstract>>.Instance.ParseRepeatedItem(
+                        frame: frame,
+                        triggeringRecord: NPC_Registration.SPLO_HEADER,
+                        masterReferences: masterReferences,
+                        item: item.Spells,
+                        lengthLength: frame.MetaData.SubConstants.LengthLength,
+                        transl: FormLinkBinaryTranslation.Instance.Parse);
+                    return TryGet<int?>.Succeed((int)NPC_FieldIndex.Spells);
+                }
+                case 0x49524353: // SCRI
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
+                        frame: frame.SpawnWithLength(contentLength),
+                        masterReferences: masterReferences,
+                        item: item.Script_Property);
+                    return TryGet<int?>.Succeed((int)NPC_FieldIndex.Script);
+                }
+                case 0x4F544E43: // CNTO
+                {
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<ItemEntry>.Instance.ParseRepeatedItem(
+                        frame: frame,
+                        triggeringRecord: NPC_Registration.CNTO_HEADER,
+                        item: item.Items,
+                        fieldIndex: (int)NPC_FieldIndex.Items,
+                        lengthLength: frame.MetaData.SubConstants.LengthLength,
+                        errorMask: errorMask,
+                        transl: (MutagenFrame r, out ItemEntry listSubItem, ErrorMaskBuilder listErrMask) =>
+                        {
+                            return LoquiBinaryTranslation<ItemEntry>.Instance.Parse(
+                                frame: r,
+                                item: out listSubItem,
+                                errorMask: listErrMask,
+                                masterReferences: masterReferences);
+                        });
+                    return TryGet<int?>.Succeed((int)NPC_FieldIndex.Items);
+                }
+                case 0x54444941: // AIDT
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (!dataFrame.Complete)
+                    {
+                        item.AIDTDataTypeState = NPC.AIDTDataType.Has;
+                    }
+                    item.Aggression = dataFrame.ReadUInt8();
+                    item.Confidence = dataFrame.ReadUInt8();
+                    item.EnergyLevel = dataFrame.ReadUInt8();
+                    item.Responsibility = dataFrame.ReadUInt8();
+                    if (EnumBinaryTranslation<NPC.BuySellServiceFlag>.Instance.Parse(
+                        frame: dataFrame.SpawnWithLength(4),
+                        item: out NPC.BuySellServiceFlag BuySellServicesParse))
+                    {
+                        item.BuySellServices = BuySellServicesParse;
+                    }
+                    else
+                    {
+                        item.BuySellServices = default(NPC.BuySellServiceFlag);
+                    }
+                    if (EnumBinaryTranslation<Skill>.Instance.Parse(
+                        frame: dataFrame.SpawnWithLength(1),
+                        item: out Skill TeachesParse))
+                    {
+                        item.Teaches = TeachesParse;
+                    }
+                    else
+                    {
+                        item.Teaches = default(Skill);
+                    }
+                    item.MaximumTrainingLevel = dataFrame.ReadUInt8();
+                    if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                        frame: dataFrame.SpawnWithLength(2),
+                        item: out Byte[] FluffParse))
+                    {
+                        item.Fluff = FluffParse;
+                    }
+                    else
+                    {
+                        item.Fluff = default(Byte[]);
+                    }
+                    return TryGet<int?>.Succeed((int)NPC_FieldIndex.Fluff);
+                }
+                case 0x44494B50: // PKID
+                {
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDLink<AIPackage>>.Instance.ParseRepeatedItem(
+                        frame: frame,
+                        triggeringRecord: NPC_Registration.PKID_HEADER,
+                        masterReferences: masterReferences,
+                        item: item.AIPackages,
+                        lengthLength: frame.MetaData.SubConstants.LengthLength,
+                        transl: FormLinkBinaryTranslation.Instance.Parse);
+                    return TryGet<int?>.Succeed((int)NPC_FieldIndex.AIPackages);
+                }
+                case 0x5A46464B: // KFFZ
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<String>.Instance.ParseRepeatedItem(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: item.Animations,
+                        transl: (MutagenFrame r, out String listSubItem) =>
+                        {
+                            return Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                                r,
+                                item: out listSubItem,
+                                parseWhole: false);
+                        });
+                    return TryGet<int?>.Succeed((int)NPC_FieldIndex.Animations);
+                }
+                case 0x4D414E43: // CNAM
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
+                        frame: frame.SpawnWithLength(contentLength),
+                        masterReferences: masterReferences,
+                        item: item.Class_Property);
+                    return TryGet<int?>.Succeed((int)NPC_FieldIndex.Class);
+                }
+                case 0x41544144: // DATA
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (!dataFrame.Complete)
+                    {
+                        item.DATADataTypeState = NPC.DATADataType.Has;
+                    }
+                    item.Armorer = dataFrame.ReadUInt8();
+                    item.Athletics = dataFrame.ReadUInt8();
+                    item.Blade = dataFrame.ReadUInt8();
+                    item.Block = dataFrame.ReadUInt8();
+                    item.Blunt = dataFrame.ReadUInt8();
+                    item.HandToHand = dataFrame.ReadUInt8();
+                    item.HeavyArmor = dataFrame.ReadUInt8();
+                    item.Alchemy = dataFrame.ReadUInt8();
+                    item.Alteration = dataFrame.ReadUInt8();
+                    item.Conjuration = dataFrame.ReadUInt8();
+                    item.Destruction = dataFrame.ReadUInt8();
+                    item.Illusion = dataFrame.ReadUInt8();
+                    item.Mysticism = dataFrame.ReadUInt8();
+                    item.Restoration = dataFrame.ReadUInt8();
+                    item.Acrobatics = dataFrame.ReadUInt8();
+                    item.LightArmor = dataFrame.ReadUInt8();
+                    item.Marksman = dataFrame.ReadUInt8();
+                    item.Mercantile = dataFrame.ReadUInt8();
+                    item.Security = dataFrame.ReadUInt8();
+                    item.Sneak = dataFrame.ReadUInt8();
+                    item.Speechcraft = dataFrame.ReadUInt8();
+                    item.Health = dataFrame.ReadUInt32();
+                    item.Strength = dataFrame.ReadUInt8();
+                    item.Intelligence = dataFrame.ReadUInt8();
+                    item.Willpower = dataFrame.ReadUInt8();
+                    item.Agility = dataFrame.ReadUInt8();
+                    item.Speed = dataFrame.ReadUInt8();
+                    item.Endurance = dataFrame.ReadUInt8();
+                    item.Personality = dataFrame.ReadUInt8();
+                    item.Luck = dataFrame.ReadUInt8();
+                    return TryGet<int?>.Succeed((int)NPC_FieldIndex.Luck);
+                }
+                case 0x4D414E48: // HNAM
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
+                        frame: frame.SpawnWithLength(contentLength),
+                        masterReferences: masterReferences,
+                        item: item.Hair_Property);
+                    return TryGet<int?>.Succeed((int)NPC_FieldIndex.Hair);
+                }
+                case 0x4D414E4C: // LNAM
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: out Single HairLengthParse))
+                    {
+                        item.HairLength = HairLengthParse;
+                    }
+                    else
+                    {
+                        item.HairLength = default(Single);
+                    }
+                    return TryGet<int?>.Succeed((int)NPC_FieldIndex.HairLength);
+                }
+                case 0x4D414E45: // ENAM
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDLink<Eye>>.Instance.ParseRepeatedItem(
+                        frame: frame.SpawnWithLength(contentLength),
+                        masterReferences: masterReferences,
+                        item: item.Eyes,
+                        transl: FormLinkBinaryTranslation.Instance.Parse);
+                    return TryGet<int?>.Succeed((int)NPC_FieldIndex.Eyes);
+                }
+                case 0x524C4348: // HCLR
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        extraByte: true,
+                        item: out Color HairColorParse))
+                    {
+                        item.HairColor = HairColorParse;
+                    }
+                    else
+                    {
+                        item.HairColor = default(Color);
+                    }
+                    return TryGet<int?>.Succeed((int)NPC_FieldIndex.HairColor);
+                }
+                case 0x4D414E5A: // ZNAM
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
+                        frame: frame.SpawnWithLength(contentLength),
+                        masterReferences: masterReferences,
+                        item: item.CombatStyle_Property);
+                    return TryGet<int?>.Succeed((int)NPC_FieldIndex.CombatStyle);
+                }
+                case 0x53474746: // FGGS
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: out Byte[] FaceGenGeometrySymmetricParse))
+                    {
+                        item.FaceGenGeometrySymmetric = FaceGenGeometrySymmetricParse;
+                    }
+                    else
+                    {
+                        item.FaceGenGeometrySymmetric = default(Byte[]);
+                    }
+                    return TryGet<int?>.Succeed((int)NPC_FieldIndex.FaceGenGeometrySymmetric);
+                }
+                case 0x41474746: // FGGA
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: out Byte[] FaceGenGeometryAsymmetricParse))
+                    {
+                        item.FaceGenGeometryAsymmetric = FaceGenGeometryAsymmetricParse;
+                    }
+                    else
+                    {
+                        item.FaceGenGeometryAsymmetric = default(Byte[]);
+                    }
+                    return TryGet<int?>.Succeed((int)NPC_FieldIndex.FaceGenGeometryAsymmetric);
+                }
+                case 0x53544746: // FGTS
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: out Byte[] FaceGenTextureSymmetricParse))
+                    {
+                        item.FaceGenTextureSymmetric = FaceGenTextureSymmetricParse;
+                    }
+                    else
+                    {
+                        item.FaceGenTextureSymmetric = default(Byte[]);
+                    }
+                    return TryGet<int?>.Succeed((int)NPC_FieldIndex.FaceGenTextureSymmetric);
+                }
+                case 0x4D414E46: // FNAM
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: out Byte[] UnknownParse))
+                    {
+                        item.Unknown = UnknownParse;
+                    }
+                    else
+                    {
+                        item.Unknown = default(Byte[]);
+                    }
+                    return TryGet<int?>.Succeed((int)NPC_FieldIndex.Unknown);
+                }
+                default:
+                    return NPCAbstractSetterCommon.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter,
+                        masterReferences: masterReferences,
+                        errorMask: errorMask);
+            }
+        }
+        
+        public new void CopyInFromBinary(
+            INPCInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            UtilityTranslation.MajorRecordParse<INPCInternal>(
+                record: item,
+                frame: frame,
+                errorMask: errorMask,
+                recType: RecordType,
+                recordTypeConverter: recordTypeConverter,
+                masterReferences: masterReferences,
+                fillStructs: FillBinaryStructs,
+                fillTyped: FillBinaryRecordTypes);
+        }
+        
+        #endregion
+        
     }
     public partial class NPCCommon : NPCAbstractCommon
     {
@@ -4646,14 +4875,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public new static readonly NPCSetterCopyCommon Instance = new NPCSetterCopyCommon();
 
         #region Copy Fields From
-        public static void CopyFieldsFrom(
+        public void CopyFieldsFrom(
             NPC item,
             NPC rhs,
             NPC def,
             ErrorMaskBuilder errorMask,
             NPC_CopyMask copyMask)
         {
-            NPCAbstractSetterCopyCommon.CopyFieldsFrom(
+            ((NPCAbstractSetterCopyCommon)((INPCAbstractGetter)item).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -4707,7 +4936,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             case CopyOption.Reference:
                                 throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
-                                ModelSetterCopyCommon.CopyFieldsFrom(
+                                ((ModelSetterCopyCommon)((IModelGetter)item.Model).CommonSetterCopyInstance()).CopyFieldsFrom(
                                     item: item.Model,
                                     rhs: rhs.Model,
                                     def: def?.Model,
@@ -10384,157 +10613,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Hair;
         public bool HairLength;
         public CopyOption Eyes;
-        public bool HairColor;
-        public bool CombatStyle;
-        public bool FaceGenGeometrySymmetric;
-        public bool FaceGenGeometryAsymmetric;
-        public bool FaceGenTextureSymmetric;
-        public bool Unknown;
-        public bool ACBSDataTypeState;
-        public bool AIDTDataTypeState;
-        public bool DATADataTypeState;
-        #endregion
-
-    }
-
-    public class NPC_DeepCopyMask : NPCAbstract_DeepCopyMask
-    {
-        public NPC_DeepCopyMask()
-        {
-        }
-
-        public NPC_DeepCopyMask(bool defaultOn)
-        {
-            this.Name = defaultOn;
-            this.Model = new MaskItem<bool, Model_DeepCopyMask>(defaultOn, default);
-            this.Flags = defaultOn;
-            this.BaseSpellPoints = defaultOn;
-            this.Fatigue = defaultOn;
-            this.BarterGold = defaultOn;
-            this.LevelOffset = defaultOn;
-            this.CalcMin = defaultOn;
-            this.CalcMax = defaultOn;
-            this.Factions = new MaskItem<bool, RankPlacement_DeepCopyMask>(defaultOn, default);
-            this.DeathItem = defaultOn;
-            this.Race = defaultOn;
-            this.Spells = defaultOn;
-            this.Script = defaultOn;
-            this.Items = new MaskItem<bool, ItemEntry_DeepCopyMask>(defaultOn, default);
-            this.Aggression = defaultOn;
-            this.Confidence = defaultOn;
-            this.EnergyLevel = defaultOn;
-            this.Responsibility = defaultOn;
-            this.BuySellServices = defaultOn;
-            this.Teaches = defaultOn;
-            this.MaximumTrainingLevel = defaultOn;
-            this.Fluff = defaultOn;
-            this.AIPackages = defaultOn;
-            this.Animations = defaultOn;
-            this.Class = defaultOn;
-            this.Armorer = defaultOn;
-            this.Athletics = defaultOn;
-            this.Blade = defaultOn;
-            this.Block = defaultOn;
-            this.Blunt = defaultOn;
-            this.HandToHand = defaultOn;
-            this.HeavyArmor = defaultOn;
-            this.Alchemy = defaultOn;
-            this.Alteration = defaultOn;
-            this.Conjuration = defaultOn;
-            this.Destruction = defaultOn;
-            this.Illusion = defaultOn;
-            this.Mysticism = defaultOn;
-            this.Restoration = defaultOn;
-            this.Acrobatics = defaultOn;
-            this.LightArmor = defaultOn;
-            this.Marksman = defaultOn;
-            this.Mercantile = defaultOn;
-            this.Security = defaultOn;
-            this.Sneak = defaultOn;
-            this.Speechcraft = defaultOn;
-            this.Health = defaultOn;
-            this.Strength = defaultOn;
-            this.Intelligence = defaultOn;
-            this.Willpower = defaultOn;
-            this.Agility = defaultOn;
-            this.Speed = defaultOn;
-            this.Endurance = defaultOn;
-            this.Personality = defaultOn;
-            this.Luck = defaultOn;
-            this.Hair = defaultOn;
-            this.HairLength = defaultOn;
-            this.Eyes = defaultOn;
-            this.HairColor = defaultOn;
-            this.CombatStyle = defaultOn;
-            this.FaceGenGeometrySymmetric = defaultOn;
-            this.FaceGenGeometryAsymmetric = defaultOn;
-            this.FaceGenTextureSymmetric = defaultOn;
-            this.Unknown = defaultOn;
-            this.ACBSDataTypeState = defaultOn;
-            this.AIDTDataTypeState = defaultOn;
-            this.DATADataTypeState = defaultOn;
-        }
-
-        #region Members
-        public bool Name;
-        public MaskItem<bool, Model_DeepCopyMask> Model;
-        public bool Flags;
-        public bool BaseSpellPoints;
-        public bool Fatigue;
-        public bool BarterGold;
-        public bool LevelOffset;
-        public bool CalcMin;
-        public bool CalcMax;
-        public MaskItem<bool, RankPlacement_DeepCopyMask> Factions;
-        public bool DeathItem;
-        public bool Race;
-        public bool Spells;
-        public bool Script;
-        public MaskItem<bool, ItemEntry_DeepCopyMask> Items;
-        public bool Aggression;
-        public bool Confidence;
-        public bool EnergyLevel;
-        public bool Responsibility;
-        public bool BuySellServices;
-        public bool Teaches;
-        public bool MaximumTrainingLevel;
-        public bool Fluff;
-        public bool AIPackages;
-        public bool Animations;
-        public bool Class;
-        public bool Armorer;
-        public bool Athletics;
-        public bool Blade;
-        public bool Block;
-        public bool Blunt;
-        public bool HandToHand;
-        public bool HeavyArmor;
-        public bool Alchemy;
-        public bool Alteration;
-        public bool Conjuration;
-        public bool Destruction;
-        public bool Illusion;
-        public bool Mysticism;
-        public bool Restoration;
-        public bool Acrobatics;
-        public bool LightArmor;
-        public bool Marksman;
-        public bool Mercantile;
-        public bool Security;
-        public bool Sneak;
-        public bool Speechcraft;
-        public bool Health;
-        public bool Strength;
-        public bool Intelligence;
-        public bool Willpower;
-        public bool Agility;
-        public bool Speed;
-        public bool Endurance;
-        public bool Personality;
-        public bool Luck;
-        public bool Hair;
-        public bool HairLength;
-        public bool Eyes;
         public bool HairColor;
         public bool CombatStyle;
         public bool FaceGenGeometrySymmetric;

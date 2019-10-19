@@ -303,30 +303,12 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
             }
             var ret = new Class();
-            try
-            {
-                ret.DATADataTypeState |= Class.DATADataType.Break0;
-                foreach (var elem in node.Elements())
-                {
-                    FillPrivateElementXml(
-                        item: ret,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    ClassXmlCreateTranslation.FillPublicElementXml(
-                        item: ret,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
+            ((ClassSetterCommon)((IClassGetter)ret).CommonSetterInstance()).CopyInFromXml(
+                item: ret,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             return ret;
         }
 
@@ -411,29 +393,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #endregion
-
-        protected static void FillPrivateElementXml(
-            Class item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "HasDATADataType":
-                    item.DATADataTypeState |= Class.DATADataType.Has;
-                    break;
-                default:
-                    OblivionMajorRecord.FillPrivateElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
 
         #endregion
 
@@ -531,187 +490,16 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new Class();
-            UtilityTranslation.MajorRecordParse<IClassInternal>(
-                record: ret,
-                frame: frame,
-                errorMask: errorMask,
-                recType: Class_Registration.CLAS_HEADER,
-                recordTypeConverter: recordTypeConverter,
+            ((ClassSetterCommon)((IClassGetter)ret).CommonSetterInstance()).CopyInFromBinary(
+                item: ret,
                 masterReferences: masterReferences,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                frame: frame,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
             return ret;
         }
 
         #endregion
-
-        protected static void FillBinaryStructs(
-            IClassInternal item,
-            MutagenFrame frame,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            OblivionMajorRecord.FillBinaryStructs(
-                item: item,
-                frame: frame,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
-        }
-
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IClassInternal item,
-            MutagenFrame frame,
-            RecordType nextRecordType,
-            int contentLength,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask,
-            RecordTypeConverter recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x4C4C5546: // FULL
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String NameParse))
-                    {
-                        item.Name = NameParse;
-                    }
-                    else
-                    {
-                        item.Name = default(String);
-                    }
-                    return TryGet<int?>.Succeed((int)Class_FieldIndex.Name);
-                }
-                case 0x43534544: // DESC
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String DescriptionParse))
-                    {
-                        item.Description = DescriptionParse;
-                    }
-                    else
-                    {
-                        item.Description = default(String);
-                    }
-                    return TryGet<int?>.Succeed((int)Class_FieldIndex.Description);
-                }
-                case 0x4E4F4349: // ICON
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String IconParse))
-                    {
-                        item.Icon = IconParse;
-                    }
-                    else
-                    {
-                        item.Icon = default(String);
-                    }
-                    return TryGet<int?>.Succeed((int)Class_FieldIndex.Icon);
-                }
-                case 0x41544144: // DATA
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    var dataFrame = frame.SpawnWithLength(contentLength);
-                    if (!dataFrame.Complete)
-                    {
-                        item.DATADataTypeState = DATADataType.Has;
-                    }
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<ActorValue>.Instance.ParseRepeatedItem(
-                        frame: frame,
-                        amount: 2,
-                        item: item.PrimaryAttributes,
-                        transl: (MutagenFrame r, out ActorValue listSubItem) =>
-                        {
-                            return Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
-                                frame: r.SpawnWithLength(4),
-                                item: out listSubItem);
-                        });
-                    if (EnumBinaryTranslation<Class.SpecializationFlag>.Instance.Parse(
-                        frame: dataFrame.SpawnWithLength(4),
-                        item: out Class.SpecializationFlag SpecializationParse))
-                    {
-                        item.Specialization = SpecializationParse;
-                    }
-                    else
-                    {
-                        item.Specialization = default(Class.SpecializationFlag);
-                    }
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<ActorValue>.Instance.ParseRepeatedItem(
-                        frame: frame,
-                        amount: 7,
-                        item: item.SecondaryAttributes,
-                        transl: (MutagenFrame r, out ActorValue listSubItem) =>
-                        {
-                            return Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
-                                frame: r.SpawnWithLength(4),
-                                item: out listSubItem);
-                        });
-                    if (EnumBinaryTranslation<ClassFlag>.Instance.Parse(
-                        frame: dataFrame.SpawnWithLength(4),
-                        item: out ClassFlag FlagsParse))
-                    {
-                        item.Flags = FlagsParse;
-                    }
-                    else
-                    {
-                        item.Flags = default(ClassFlag);
-                    }
-                    if (EnumBinaryTranslation<ClassService>.Instance.Parse(
-                        frame: dataFrame.SpawnWithLength(4),
-                        item: out ClassService ClassServicesParse))
-                    {
-                        item.ClassServices = ClassServicesParse;
-                    }
-                    else
-                    {
-                        item.ClassServices = default(ClassService);
-                    }
-                    if (dataFrame.Complete)
-                    {
-                        item.DATADataTypeState |= DATADataType.Break0;
-                        return TryGet<int?>.Succeed((int)Class_FieldIndex.ClassServices);
-                    }
-                    try
-                    {
-                        errorMask?.PushIndex((int)Class_FieldIndex.Training);
-                        item.Training = Mutagen.Bethesda.Oblivion.ClassTraining.CreateFromBinary(
-                            frame: dataFrame,
-                            recordTypeConverter: null,
-                            masterReferences: masterReferences,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    return TryGet<int?>.Succeed((int)Class_FieldIndex.Training);
-                }
-                default:
-                    return OblivionMajorRecord.FillBinaryRecordTypes(
-                        item: item,
-                        frame: frame,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength,
-                        recordTypeConverter: recordTypeConverter,
-                        masterReferences: masterReferences,
-                        errorMask: errorMask);
-            }
-        }
 
         #endregion
 
@@ -909,8 +697,8 @@ namespace Mutagen.Bethesda.Oblivion
             Class def = null,
             bool doMasks = true)
         {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            ClassSetterCopyCommon.CopyFieldsFrom(
+            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((ClassSetterCopyCommon)((IClassGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -926,13 +714,205 @@ namespace Mutagen.Bethesda.Oblivion
             Class_CopyMask copyMask = null,
             Class def = null)
         {
-            ClassSetterCopyCommon.CopyFieldsFrom(
+            ((ClassSetterCopyCommon)((IClassGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
+
+        #region Xml Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this IClassInternal item,
+            XElement node,
+            MissingCreate missing = MissingCreate.New,
+            Class_TranslationMask translationMask = null)
+        {
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: null,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this IClassInternal item,
+            XElement node,
+            out Class_ErrorMask errorMask,
+            bool doMasks = true,
+            Class_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask.GetCrystal());
+            errorMask = Class_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public new static void CopyInFromXml(
+            this IClassInternal item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ((ClassSetterCommon)((IClassGetter)item).CommonSetterInstance()).CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        public static void CopyInFromXml(
+            this IClassInternal item,
+            string path,
+            MissingCreate missing = MissingCreate.New,
+            Class_TranslationMask translationMask = null)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IClassInternal item,
+            string path,
+            out Class_ErrorMask errorMask,
+            Class_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IClassInternal item,
+            string path,
+            ErrorMaskBuilder errorMask,
+            Class_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        public static void CopyInFromXml(
+            this IClassInternal item,
+            Stream stream,
+            MissingCreate missing = MissingCreate.New,
+            Class_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IClassInternal item,
+            Stream stream,
+            out Class_ErrorMask errorMask,
+            Class_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IClassInternal item,
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            Class_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        #endregion
+
+        #region Binary Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this IClassInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences)
+        {
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: null);
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this IClassInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            out Class_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: errorMaskBuilder);
+            errorMask = Class_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public new static void CopyInFromBinary(
+            this IClassInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((ClassSetterCommon)((IClassGetter)item).CommonSetterInstance()).CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+        #endregion
 
     }
     #endregion
@@ -1274,6 +1254,255 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IClassInternal)item);
         }
         
+        #region Xml Translation
+        protected static void FillPrivateElementXml(
+            IClassInternal item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "HasDATADataType":
+                    item.DATADataTypeState |= Class.DATADataType.Has;
+                    break;
+                default:
+                    OblivionMajorRecordSetterCommon.FillPrivateElementXml(
+                        item: item,
+                        node: node,
+                        name: name,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    break;
+            }
+        }
+        
+        public new void CopyInFromXml(
+            IClassInternal item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            try
+            {
+                item.DATADataTypeState |= Class.DATADataType.Break0;
+                foreach (var elem in node.Elements())
+                {
+                    FillPrivateElementXml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    ClassXmlCreateTranslation.FillPublicElementXml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+        
+        #endregion
+        
+        #region Binary Translation
+        public override RecordType RecordType => Class_Registration.CLAS_HEADER;
+        protected static void FillBinaryStructs(
+            IClassInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            OblivionMajorRecordSetterCommon.FillBinaryStructs(
+                item: item,
+                frame: frame,
+                masterReferences: masterReferences,
+                errorMask: errorMask);
+        }
+        
+        protected static TryGet<int?> FillBinaryRecordTypes(
+            IClassInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x4C4C5546: // FULL
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String NameParse))
+                    {
+                        item.Name = NameParse;
+                    }
+                    else
+                    {
+                        item.Name = default(String);
+                    }
+                    return TryGet<int?>.Succeed((int)Class_FieldIndex.Name);
+                }
+                case 0x43534544: // DESC
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String DescriptionParse))
+                    {
+                        item.Description = DescriptionParse;
+                    }
+                    else
+                    {
+                        item.Description = default(String);
+                    }
+                    return TryGet<int?>.Succeed((int)Class_FieldIndex.Description);
+                }
+                case 0x4E4F4349: // ICON
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String IconParse))
+                    {
+                        item.Icon = IconParse;
+                    }
+                    else
+                    {
+                        item.Icon = default(String);
+                    }
+                    return TryGet<int?>.Succeed((int)Class_FieldIndex.Icon);
+                }
+                case 0x41544144: // DATA
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (!dataFrame.Complete)
+                    {
+                        item.DATADataTypeState = Class.DATADataType.Has;
+                    }
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<ActorValue>.Instance.ParseRepeatedItem(
+                        frame: frame,
+                        amount: 2,
+                        item: item.PrimaryAttributes,
+                        transl: (MutagenFrame r, out ActorValue listSubItem) =>
+                        {
+                            return Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
+                                frame: r.SpawnWithLength(4),
+                                item: out listSubItem);
+                        });
+                    if (EnumBinaryTranslation<Class.SpecializationFlag>.Instance.Parse(
+                        frame: dataFrame.SpawnWithLength(4),
+                        item: out Class.SpecializationFlag SpecializationParse))
+                    {
+                        item.Specialization = SpecializationParse;
+                    }
+                    else
+                    {
+                        item.Specialization = default(Class.SpecializationFlag);
+                    }
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<ActorValue>.Instance.ParseRepeatedItem(
+                        frame: frame,
+                        amount: 7,
+                        item: item.SecondaryAttributes,
+                        transl: (MutagenFrame r, out ActorValue listSubItem) =>
+                        {
+                            return Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
+                                frame: r.SpawnWithLength(4),
+                                item: out listSubItem);
+                        });
+                    if (EnumBinaryTranslation<ClassFlag>.Instance.Parse(
+                        frame: dataFrame.SpawnWithLength(4),
+                        item: out ClassFlag FlagsParse))
+                    {
+                        item.Flags = FlagsParse;
+                    }
+                    else
+                    {
+                        item.Flags = default(ClassFlag);
+                    }
+                    if (EnumBinaryTranslation<ClassService>.Instance.Parse(
+                        frame: dataFrame.SpawnWithLength(4),
+                        item: out ClassService ClassServicesParse))
+                    {
+                        item.ClassServices = ClassServicesParse;
+                    }
+                    else
+                    {
+                        item.ClassServices = default(ClassService);
+                    }
+                    if (dataFrame.Complete)
+                    {
+                        item.DATADataTypeState |= Class.DATADataType.Break0;
+                        return TryGet<int?>.Succeed((int)Class_FieldIndex.ClassServices);
+                    }
+                    try
+                    {
+                        errorMask?.PushIndex((int)Class_FieldIndex.Training);
+                        item.Training = Mutagen.Bethesda.Oblivion.ClassTraining.CreateFromBinary(
+                            frame: dataFrame,
+                            recordTypeConverter: null,
+                            masterReferences: masterReferences,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    return TryGet<int?>.Succeed((int)Class_FieldIndex.Training);
+                }
+                default:
+                    return OblivionMajorRecordSetterCommon.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter,
+                        masterReferences: masterReferences,
+                        errorMask: errorMask);
+            }
+        }
+        
+        public new void CopyInFromBinary(
+            IClassInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            UtilityTranslation.MajorRecordParse<IClassInternal>(
+                record: item,
+                frame: frame,
+                errorMask: errorMask,
+                recType: RecordType,
+                recordTypeConverter: recordTypeConverter,
+                masterReferences: masterReferences,
+                fillStructs: FillBinaryStructs,
+                fillTyped: FillBinaryRecordTypes);
+        }
+        
+        #endregion
+        
     }
     public partial class ClassCommon : OblivionMajorRecordCommon
     {
@@ -1614,14 +1843,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public new static readonly ClassSetterCopyCommon Instance = new ClassSetterCopyCommon();
 
         #region Copy Fields From
-        public static void CopyFieldsFrom(
+        public void CopyFieldsFrom(
             Class item,
             Class rhs,
             Class def,
             ErrorMaskBuilder errorMask,
             Class_CopyMask copyMask)
         {
-            OblivionMajorRecordSetterCopyCommon.CopyFieldsFrom(
+            ((OblivionMajorRecordSetterCopyCommon)((IOblivionMajorRecordGetter)item).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1762,7 +1991,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             item.Training = Utility.GetGetterInterfaceReference<ClassTraining>(rhs.Training);
                             break;
                         case CopyOption.CopyIn:
-                            ClassTrainingSetterCopyCommon.CopyFieldsFrom(
+                            ((ClassTrainingSetterCopyCommon)((IClassTrainingGetter)item.Training).CommonSetterCopyInstance()).CopyFieldsFrom(
                                 item: item.Training,
                                 rhs: rhs.Training,
                                 def: def?.Training,
@@ -3032,41 +3261,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Flags;
         public bool ClassServices;
         public MaskItem<CopyOption, ClassTraining_CopyMask> Training;
-        public bool DATADataTypeState;
-        #endregion
-
-    }
-
-    public class Class_DeepCopyMask : OblivionMajorRecord_DeepCopyMask
-    {
-        public Class_DeepCopyMask()
-        {
-        }
-
-        public Class_DeepCopyMask(bool defaultOn)
-        {
-            this.Name = defaultOn;
-            this.Description = defaultOn;
-            this.Icon = defaultOn;
-            this.PrimaryAttributes = defaultOn;
-            this.Specialization = defaultOn;
-            this.SecondaryAttributes = defaultOn;
-            this.Flags = defaultOn;
-            this.ClassServices = defaultOn;
-            this.Training = new MaskItem<bool, ClassTraining_DeepCopyMask>(defaultOn, default);
-            this.DATADataTypeState = defaultOn;
-        }
-
-        #region Members
-        public bool Name;
-        public bool Description;
-        public bool Icon;
-        public bool PrimaryAttributes;
-        public bool Specialization;
-        public bool SecondaryAttributes;
-        public bool Flags;
-        public bool ClassServices;
-        public MaskItem<bool, ClassTraining_DeepCopyMask> Training;
         public bool DATADataTypeState;
         #endregion
 

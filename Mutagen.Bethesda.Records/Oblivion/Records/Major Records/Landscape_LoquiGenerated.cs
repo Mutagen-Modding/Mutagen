@@ -289,29 +289,12 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
             }
             var ret = new Landscape();
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    FillPrivateElementXml(
-                        item: ret,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    LandscapeXmlCreateTranslation.FillPublicElementXml(
-                        item: ret,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
+            ((LandscapeSetterCommon)((ILandscapeGetter)ret).CommonSetterInstance()).CopyInFromXml(
+                item: ret,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             return ret;
         }
 
@@ -396,26 +379,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #endregion
-
-        protected static void FillPrivateElementXml(
-            Landscape item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                default:
-                    OblivionMajorRecord.FillPrivateElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
 
         #endregion
 
@@ -536,158 +499,16 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new Landscape();
-            UtilityTranslation.MajorRecordParse<ILandscapeInternal>(
-                record: ret,
-                frame: frame,
-                errorMask: errorMask,
-                recType: Landscape_Registration.LAND_HEADER,
-                recordTypeConverter: recordTypeConverter,
+            ((LandscapeSetterCommon)((ILandscapeGetter)ret).CommonSetterInstance()).CopyInFromBinary(
+                item: ret,
                 masterReferences: masterReferences,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                frame: frame,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
             return ret;
         }
 
         #endregion
-
-        protected static void FillBinaryStructs(
-            ILandscapeInternal item,
-            MutagenFrame frame,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            OblivionMajorRecord.FillBinaryStructs(
-                item: item,
-                frame: frame,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
-        }
-
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            ILandscapeInternal item,
-            MutagenFrame frame,
-            RecordType nextRecordType,
-            int contentLength,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask,
-            RecordTypeConverter recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x41544144: // DATA
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out Byte[] UnknownParse))
-                    {
-                        item.Unknown = UnknownParse;
-                    }
-                    else
-                    {
-                        item.Unknown = default(Byte[]);
-                    }
-                    return TryGet<int?>.Succeed((int)Landscape_FieldIndex.Unknown);
-                }
-                case 0x4C4D4E56: // VNML
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out Byte[] VertexNormalsParse))
-                    {
-                        item.VertexNormals = VertexNormalsParse;
-                    }
-                    else
-                    {
-                        item.VertexNormals = default(Byte[]);
-                    }
-                    return TryGet<int?>.Succeed((int)Landscape_FieldIndex.VertexNormals);
-                }
-                case 0x54474856: // VHGT
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out Byte[] VertexHeightMapParse))
-                    {
-                        item.VertexHeightMap = VertexHeightMapParse;
-                    }
-                    else
-                    {
-                        item.VertexHeightMap = default(Byte[]);
-                    }
-                    return TryGet<int?>.Succeed((int)Landscape_FieldIndex.VertexHeightMap);
-                }
-                case 0x524C4356: // VCLR
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out Byte[] VertexColorsParse))
-                    {
-                        item.VertexColors = VertexColorsParse;
-                    }
-                    else
-                    {
-                        item.VertexColors = default(Byte[]);
-                    }
-                    return TryGet<int?>.Succeed((int)Landscape_FieldIndex.VertexColors);
-                }
-                case 0x54585442: // BTXT
-                case 0x54585441: // ATXT
-                {
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<BaseLayer>.Instance.ParseRepeatedItem(
-                        frame: frame,
-                        triggeringRecord: BaseLayer_Registration.TriggeringRecordTypes,
-                        item: item.Layers,
-                        fieldIndex: (int)Landscape_FieldIndex.Layers,
-                        lengthLength: frame.MetaData.SubConstants.LengthLength,
-                        errorMask: errorMask,
-                        transl: (MutagenFrame r, RecordType header, out BaseLayer listSubItem, ErrorMaskBuilder listErrMask) =>
-                        {
-                            switch (header.TypeInt)
-                            {
-                                case 0x54585442: // BTXT
-                                    return LoquiBinaryTranslation<BaseLayer>.Instance.Parse(
-                                        frame: r,
-                                        item: out listSubItem,
-                                        errorMask: listErrMask,
-                                        masterReferences: masterReferences);
-                                case 0x54585441: // ATXT
-                                    return LoquiBinaryTranslation<AlphaLayer>.Instance.Parse(
-                                        frame: r,
-                                        item: out listSubItem,
-                                        errorMask: listErrMask,
-                                        masterReferences: masterReferences);
-                                default:
-                                    throw new NotImplementedException();
-                            }
-                        });
-                    return TryGet<int?>.Succeed((int)Landscape_FieldIndex.Layers);
-                }
-                case 0x58455456: // VTEX
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDLink<LandTexture>>.Instance.ParseRepeatedItem(
-                        frame: frame.SpawnWithLength(contentLength),
-                        masterReferences: masterReferences,
-                        item: item.Textures,
-                        transl: FormLinkBinaryTranslation.Instance.Parse);
-                    return TryGet<int?>.Succeed((int)Landscape_FieldIndex.Textures);
-                }
-                default:
-                    return OblivionMajorRecord.FillBinaryRecordTypes(
-                        item: item,
-                        frame: frame,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength,
-                        recordTypeConverter: recordTypeConverter,
-                        masterReferences: masterReferences,
-                        errorMask: errorMask);
-            }
-        }
 
         #endregion
 
@@ -868,8 +689,8 @@ namespace Mutagen.Bethesda.Oblivion
             Landscape def = null,
             bool doMasks = true)
         {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            LandscapeSetterCopyCommon.CopyFieldsFrom(
+            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((LandscapeSetterCopyCommon)((ILandscapeGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -885,13 +706,205 @@ namespace Mutagen.Bethesda.Oblivion
             Landscape_CopyMask copyMask = null,
             Landscape def = null)
         {
-            LandscapeSetterCopyCommon.CopyFieldsFrom(
+            ((LandscapeSetterCopyCommon)((ILandscapeGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
+
+        #region Xml Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this ILandscapeInternal item,
+            XElement node,
+            MissingCreate missing = MissingCreate.New,
+            Landscape_TranslationMask translationMask = null)
+        {
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: null,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this ILandscapeInternal item,
+            XElement node,
+            out Landscape_ErrorMask errorMask,
+            bool doMasks = true,
+            Landscape_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask.GetCrystal());
+            errorMask = Landscape_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public new static void CopyInFromXml(
+            this ILandscapeInternal item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ((LandscapeSetterCommon)((ILandscapeGetter)item).CommonSetterInstance()).CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        public static void CopyInFromXml(
+            this ILandscapeInternal item,
+            string path,
+            MissingCreate missing = MissingCreate.New,
+            Landscape_TranslationMask translationMask = null)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this ILandscapeInternal item,
+            string path,
+            out Landscape_ErrorMask errorMask,
+            Landscape_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this ILandscapeInternal item,
+            string path,
+            ErrorMaskBuilder errorMask,
+            Landscape_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        public static void CopyInFromXml(
+            this ILandscapeInternal item,
+            Stream stream,
+            MissingCreate missing = MissingCreate.New,
+            Landscape_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this ILandscapeInternal item,
+            Stream stream,
+            out Landscape_ErrorMask errorMask,
+            Landscape_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this ILandscapeInternal item,
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            Landscape_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        #endregion
+
+        #region Binary Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this ILandscapeInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences)
+        {
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: null);
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this ILandscapeInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            out Landscape_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: errorMaskBuilder);
+            errorMask = Landscape_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public new static void CopyInFromBinary(
+            this ILandscapeInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((LandscapeSetterCommon)((ILandscapeGetter)item).CommonSetterInstance()).CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+        #endregion
 
     }
     #endregion
@@ -1183,6 +1196,222 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Clear(item: (ILandscapeInternal)item);
         }
+        
+        #region Xml Translation
+        protected static void FillPrivateElementXml(
+            ILandscapeInternal item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                default:
+                    OblivionMajorRecordSetterCommon.FillPrivateElementXml(
+                        item: item,
+                        node: node,
+                        name: name,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    break;
+            }
+        }
+        
+        public new void CopyInFromXml(
+            ILandscapeInternal item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    FillPrivateElementXml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    LandscapeXmlCreateTranslation.FillPublicElementXml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+        
+        #endregion
+        
+        #region Binary Translation
+        public override RecordType RecordType => Landscape_Registration.LAND_HEADER;
+        protected static void FillBinaryStructs(
+            ILandscapeInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            OblivionMajorRecordSetterCommon.FillBinaryStructs(
+                item: item,
+                frame: frame,
+                masterReferences: masterReferences,
+                errorMask: errorMask);
+        }
+        
+        protected static TryGet<int?> FillBinaryRecordTypes(
+            ILandscapeInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x41544144: // DATA
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: out Byte[] UnknownParse))
+                    {
+                        item.Unknown = UnknownParse;
+                    }
+                    else
+                    {
+                        item.Unknown = default(Byte[]);
+                    }
+                    return TryGet<int?>.Succeed((int)Landscape_FieldIndex.Unknown);
+                }
+                case 0x4C4D4E56: // VNML
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: out Byte[] VertexNormalsParse))
+                    {
+                        item.VertexNormals = VertexNormalsParse;
+                    }
+                    else
+                    {
+                        item.VertexNormals = default(Byte[]);
+                    }
+                    return TryGet<int?>.Succeed((int)Landscape_FieldIndex.VertexNormals);
+                }
+                case 0x54474856: // VHGT
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: out Byte[] VertexHeightMapParse))
+                    {
+                        item.VertexHeightMap = VertexHeightMapParse;
+                    }
+                    else
+                    {
+                        item.VertexHeightMap = default(Byte[]);
+                    }
+                    return TryGet<int?>.Succeed((int)Landscape_FieldIndex.VertexHeightMap);
+                }
+                case 0x524C4356: // VCLR
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: out Byte[] VertexColorsParse))
+                    {
+                        item.VertexColors = VertexColorsParse;
+                    }
+                    else
+                    {
+                        item.VertexColors = default(Byte[]);
+                    }
+                    return TryGet<int?>.Succeed((int)Landscape_FieldIndex.VertexColors);
+                }
+                case 0x54585442: // BTXT
+                case 0x54585441: // ATXT
+                {
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<BaseLayer>.Instance.ParseRepeatedItem(
+                        frame: frame,
+                        triggeringRecord: BaseLayer_Registration.TriggeringRecordTypes,
+                        item: item.Layers,
+                        fieldIndex: (int)Landscape_FieldIndex.Layers,
+                        lengthLength: frame.MetaData.SubConstants.LengthLength,
+                        errorMask: errorMask,
+                        transl: (MutagenFrame r, RecordType header, out BaseLayer listSubItem, ErrorMaskBuilder listErrMask) =>
+                        {
+                            switch (header.TypeInt)
+                            {
+                                case 0x54585442: // BTXT
+                                    return LoquiBinaryTranslation<BaseLayer>.Instance.Parse(
+                                        frame: r,
+                                        item: out listSubItem,
+                                        errorMask: listErrMask,
+                                        masterReferences: masterReferences);
+                                case 0x54585441: // ATXT
+                                    return LoquiBinaryTranslation<AlphaLayer>.Instance.Parse(
+                                        frame: r,
+                                        item: out listSubItem,
+                                        errorMask: listErrMask,
+                                        masterReferences: masterReferences);
+                                default:
+                                    throw new NotImplementedException();
+                            }
+                        });
+                    return TryGet<int?>.Succeed((int)Landscape_FieldIndex.Layers);
+                }
+                case 0x58455456: // VTEX
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDLink<LandTexture>>.Instance.ParseRepeatedItem(
+                        frame: frame.SpawnWithLength(contentLength),
+                        masterReferences: masterReferences,
+                        item: item.Textures,
+                        transl: FormLinkBinaryTranslation.Instance.Parse);
+                    return TryGet<int?>.Succeed((int)Landscape_FieldIndex.Textures);
+                }
+                default:
+                    return OblivionMajorRecordSetterCommon.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter,
+                        masterReferences: masterReferences,
+                        errorMask: errorMask);
+            }
+        }
+        
+        public new void CopyInFromBinary(
+            ILandscapeInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            UtilityTranslation.MajorRecordParse<ILandscapeInternal>(
+                record: item,
+                frame: frame,
+                errorMask: errorMask,
+                recType: RecordType,
+                recordTypeConverter: recordTypeConverter,
+                masterReferences: masterReferences,
+                fillStructs: FillBinaryStructs,
+                fillTyped: FillBinaryRecordTypes);
+        }
+        
+        #endregion
         
     }
     public partial class LandscapeCommon : OblivionMajorRecordCommon
@@ -1516,14 +1745,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public new static readonly LandscapeSetterCopyCommon Instance = new LandscapeSetterCopyCommon();
 
         #region Copy Fields From
-        public static void CopyFieldsFrom(
+        public void CopyFieldsFrom(
             Landscape item,
             Landscape rhs,
             Landscape def,
             ErrorMaskBuilder errorMask,
             Landscape_CopyMask copyMask)
         {
-            OblivionMajorRecordSetterCopyCommon.CopyFieldsFrom(
+            ((OblivionMajorRecordSetterCopyCommon)((IOblivionMajorRecordGetter)item).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -2684,33 +2913,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool VertexColors;
         public MaskItem<CopyOption, BaseLayer_CopyMask> Layers;
         public CopyOption Textures;
-        #endregion
-
-    }
-
-    public class Landscape_DeepCopyMask : OblivionMajorRecord_DeepCopyMask
-    {
-        public Landscape_DeepCopyMask()
-        {
-        }
-
-        public Landscape_DeepCopyMask(bool defaultOn)
-        {
-            this.Unknown = defaultOn;
-            this.VertexNormals = defaultOn;
-            this.VertexHeightMap = defaultOn;
-            this.VertexColors = defaultOn;
-            this.Layers = new MaskItem<bool, BaseLayer_DeepCopyMask>(defaultOn, default);
-            this.Textures = defaultOn;
-        }
-
-        #region Members
-        public bool Unknown;
-        public bool VertexNormals;
-        public bool VertexHeightMap;
-        public bool VertexColors;
-        public MaskItem<bool, BaseLayer_DeepCopyMask> Layers;
-        public bool Textures;
         #endregion
 
     }

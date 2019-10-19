@@ -215,29 +215,12 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
             }
             var ret = new LeveledItem();
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    FillPrivateElementXml(
-                        item: ret,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    LeveledItemXmlCreateTranslation.FillPublicElementXml(
-                        item: ret,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
+            ((LeveledItemSetterCommon)((ILeveledItemGetter)ret).CommonSetterInstance()).CopyInFromXml(
+                item: ret,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             return ret;
         }
 
@@ -323,26 +306,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        protected static void FillPrivateElementXml(
-            LeveledItem item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                default:
-                    ItemAbstract.FillPrivateElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-
         #endregion
 
         protected override bool GetHasBeenSet(int index)
@@ -361,24 +324,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = LeveledItem_Registration.TRIGGERING_RECORD_TYPE;
-        static partial void SpecialParse_Vestigial(
-            ILeveledItemInternal item,
-            MutagenFrame frame,
-            ErrorMaskBuilder errorMask);
-        static partial void SpecialWrite_Vestigial(
-            ILeveledItemGetter item,
-            MutagenWriter writer,
-            ErrorMaskBuilder errorMask);
-        internal static void SpecialWrite_Vestigial_Internal(
-            ILeveledItemGetter item,
-            MutagenWriter writer,
-            ErrorMaskBuilder errorMask)
-        {
-            SpecialWrite_Vestigial(
-                item: item,
-                writer: writer,
-                errorMask: errorMask);
-        }
         public override IEnumerable<ILink> Links => GetLinks();
         private IEnumerable<ILink> GetLinks()
         {
@@ -468,104 +413,16 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new LeveledItem();
-            UtilityTranslation.MajorRecordParse<ILeveledItemInternal>(
-                record: ret,
-                frame: frame,
-                errorMask: errorMask,
-                recType: LeveledItem_Registration.LVLI_HEADER,
-                recordTypeConverter: recordTypeConverter,
+            ((LeveledItemSetterCommon)((ILeveledItemGetter)ret).CommonSetterInstance()).CopyInFromBinary(
+                item: ret,
                 masterReferences: masterReferences,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                frame: frame,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
             return ret;
         }
 
         #endregion
-
-        protected static void FillBinaryStructs(
-            ILeveledItemInternal item,
-            MutagenFrame frame,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            ItemAbstract.FillBinaryStructs(
-                item: item,
-                frame: frame,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
-        }
-
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            ILeveledItemInternal item,
-            MutagenFrame frame,
-            RecordType nextRecordType,
-            int contentLength,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask,
-            RecordTypeConverter recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x444C564C: // LVLD
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.ChanceNone = frame.ReadUInt8();
-                    return TryGet<int?>.Succeed((int)LeveledItem_FieldIndex.ChanceNone);
-                }
-                case 0x464C564C: // LVLF
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (EnumBinaryTranslation<LeveledFlag>.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out LeveledFlag FlagsParse))
-                    {
-                        item.Flags = FlagsParse;
-                    }
-                    else
-                    {
-                        item.Flags = default(LeveledFlag);
-                    }
-                    return TryGet<int?>.Succeed((int)LeveledItem_FieldIndex.Flags);
-                }
-                case 0x4F4C564C: // LVLO
-                {
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<LeveledEntry<ItemAbstract>>.Instance.ParseRepeatedItem(
-                        frame: frame,
-                        triggeringRecord: LeveledItem_Registration.LVLO_HEADER,
-                        item: item.Entries,
-                        fieldIndex: (int)LeveledItem_FieldIndex.Entries,
-                        lengthLength: frame.MetaData.SubConstants.LengthLength,
-                        errorMask: errorMask,
-                        transl: (MutagenFrame r, out LeveledEntry<ItemAbstract> listSubItem, ErrorMaskBuilder listErrMask) =>
-                        {
-                            return LoquiBinaryTranslation<LeveledEntry<ItemAbstract>>.Instance.Parse(
-                                frame: r,
-                                item: out listSubItem,
-                                errorMask: listErrMask,
-                                masterReferences: masterReferences);
-                        });
-                    return TryGet<int?>.Succeed((int)LeveledItem_FieldIndex.Entries);
-                }
-                case 0x41544144: // DATA
-                {
-                    SpecialParse_Vestigial(
-                        item: item,
-                        frame: frame,
-                        errorMask: errorMask);
-                    return TryGet<int?>.Succeed(null);
-                }
-                default:
-                    return ItemAbstract.FillBinaryRecordTypes(
-                        item: item,
-                        frame: frame,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength,
-                        recordTypeConverter: recordTypeConverter,
-                        masterReferences: masterReferences,
-                        errorMask: errorMask);
-            }
-        }
 
         #endregion
 
@@ -720,8 +577,8 @@ namespace Mutagen.Bethesda.Oblivion
             LeveledItem def = null,
             bool doMasks = true)
         {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            LeveledItemSetterCopyCommon.CopyFieldsFrom(
+            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((LeveledItemSetterCopyCommon)((ILeveledItemGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -737,13 +594,205 @@ namespace Mutagen.Bethesda.Oblivion
             LeveledItem_CopyMask copyMask = null,
             LeveledItem def = null)
         {
-            LeveledItemSetterCopyCommon.CopyFieldsFrom(
+            ((LeveledItemSetterCopyCommon)((ILeveledItemGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
+
+        #region Xml Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this ILeveledItemInternal item,
+            XElement node,
+            MissingCreate missing = MissingCreate.New,
+            LeveledItem_TranslationMask translationMask = null)
+        {
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: null,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this ILeveledItemInternal item,
+            XElement node,
+            out LeveledItem_ErrorMask errorMask,
+            bool doMasks = true,
+            LeveledItem_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask.GetCrystal());
+            errorMask = LeveledItem_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public new static void CopyInFromXml(
+            this ILeveledItemInternal item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ((LeveledItemSetterCommon)((ILeveledItemGetter)item).CommonSetterInstance()).CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        public static void CopyInFromXml(
+            this ILeveledItemInternal item,
+            string path,
+            MissingCreate missing = MissingCreate.New,
+            LeveledItem_TranslationMask translationMask = null)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this ILeveledItemInternal item,
+            string path,
+            out LeveledItem_ErrorMask errorMask,
+            LeveledItem_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this ILeveledItemInternal item,
+            string path,
+            ErrorMaskBuilder errorMask,
+            LeveledItem_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        public static void CopyInFromXml(
+            this ILeveledItemInternal item,
+            Stream stream,
+            MissingCreate missing = MissingCreate.New,
+            LeveledItem_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this ILeveledItemInternal item,
+            Stream stream,
+            out LeveledItem_ErrorMask errorMask,
+            LeveledItem_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this ILeveledItemInternal item,
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            LeveledItem_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        #endregion
+
+        #region Binary Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this ILeveledItemInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences)
+        {
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: null);
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this ILeveledItemInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            out LeveledItem_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: errorMaskBuilder);
+            errorMask = LeveledItem_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public new static void CopyInFromBinary(
+            this ILeveledItemInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((LeveledItemSetterCommon)((ILeveledItemGetter)item).CommonSetterInstance()).CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+        #endregion
 
     }
     #endregion
@@ -998,6 +1047,189 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Clear(item: (ILeveledItemInternal)item);
         }
+        
+        #region Xml Translation
+        protected static void FillPrivateElementXml(
+            ILeveledItemInternal item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                default:
+                    ItemAbstractSetterCommon.FillPrivateElementXml(
+                        item: item,
+                        node: node,
+                        name: name,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    break;
+            }
+        }
+        
+        public new void CopyInFromXml(
+            ILeveledItemInternal item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    FillPrivateElementXml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    LeveledItemXmlCreateTranslation.FillPublicElementXml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+        
+        #endregion
+        
+        #region Mutagen
+        static partial void SpecialParse_Vestigial(
+            ILeveledItemInternal item,
+            MutagenFrame frame,
+            ErrorMaskBuilder errorMask);
+        static partial void SpecialWrite_Vestigial(
+            ILeveledItemGetter item,
+            MutagenWriter writer,
+            ErrorMaskBuilder errorMask);
+        internal static void SpecialWrite_Vestigial_Internal(
+            ILeveledItemGetter item,
+            MutagenWriter writer,
+            ErrorMaskBuilder errorMask)
+        {
+            SpecialWrite_Vestigial(
+                item: item,
+                writer: writer,
+                errorMask: errorMask);
+        }
+        #endregion
+        
+        #region Binary Translation
+        public override RecordType RecordType => LeveledItem_Registration.LVLI_HEADER;
+        protected static void FillBinaryStructs(
+            ILeveledItemInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            ItemAbstractSetterCommon.FillBinaryStructs(
+                item: item,
+                frame: frame,
+                masterReferences: masterReferences,
+                errorMask: errorMask);
+        }
+        
+        protected static TryGet<int?> FillBinaryRecordTypes(
+            ILeveledItemInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x444C564C: // LVLD
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    item.ChanceNone = frame.ReadUInt8();
+                    return TryGet<int?>.Succeed((int)LeveledItem_FieldIndex.ChanceNone);
+                }
+                case 0x464C564C: // LVLF
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    if (EnumBinaryTranslation<LeveledFlag>.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: out LeveledFlag FlagsParse))
+                    {
+                        item.Flags = FlagsParse;
+                    }
+                    else
+                    {
+                        item.Flags = default(LeveledFlag);
+                    }
+                    return TryGet<int?>.Succeed((int)LeveledItem_FieldIndex.Flags);
+                }
+                case 0x4F4C564C: // LVLO
+                {
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<LeveledEntry<ItemAbstract>>.Instance.ParseRepeatedItem(
+                        frame: frame,
+                        triggeringRecord: LeveledItem_Registration.LVLO_HEADER,
+                        item: item.Entries,
+                        fieldIndex: (int)LeveledItem_FieldIndex.Entries,
+                        lengthLength: frame.MetaData.SubConstants.LengthLength,
+                        errorMask: errorMask,
+                        transl: (MutagenFrame r, out LeveledEntry<ItemAbstract> listSubItem, ErrorMaskBuilder listErrMask) =>
+                        {
+                            return LoquiBinaryTranslation<LeveledEntry<ItemAbstract>>.Instance.Parse(
+                                frame: r,
+                                item: out listSubItem,
+                                errorMask: listErrMask,
+                                masterReferences: masterReferences);
+                        });
+                    return TryGet<int?>.Succeed((int)LeveledItem_FieldIndex.Entries);
+                }
+                case 0x41544144: // DATA
+                {
+                    SpecialParse_Vestigial(
+                        item: item,
+                        frame: frame,
+                        errorMask: errorMask);
+                    return TryGet<int?>.Succeed(null);
+                }
+                default:
+                    return ItemAbstractSetterCommon.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter,
+                        masterReferences: masterReferences,
+                        errorMask: errorMask);
+            }
+        }
+        
+        public new void CopyInFromBinary(
+            ILeveledItemInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            UtilityTranslation.MajorRecordParse<ILeveledItemInternal>(
+                record: item,
+                frame: frame,
+                errorMask: errorMask,
+                recType: RecordType,
+                recordTypeConverter: recordTypeConverter,
+                masterReferences: masterReferences,
+                fillStructs: FillBinaryStructs,
+                fillTyped: FillBinaryRecordTypes);
+        }
+        
+        #endregion
         
     }
     public partial class LeveledItemCommon : ItemAbstractCommon
@@ -1299,14 +1531,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public new static readonly LeveledItemSetterCopyCommon Instance = new LeveledItemSetterCopyCommon();
 
         #region Copy Fields From
-        public static void CopyFieldsFrom(
+        public void CopyFieldsFrom(
             LeveledItem item,
             LeveledItem rhs,
             LeveledItem def,
             ErrorMaskBuilder errorMask,
             LeveledItem_CopyMask copyMask)
         {
-            ItemAbstractSetterCopyCommon.CopyFieldsFrom(
+            ((ItemAbstractSetterCopyCommon)((IItemAbstractGetter)item).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -2147,27 +2379,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class LeveledItem_DeepCopyMask : ItemAbstract_DeepCopyMask
-    {
-        public LeveledItem_DeepCopyMask()
-        {
-        }
-
-        public LeveledItem_DeepCopyMask(bool defaultOn)
-        {
-            this.ChanceNone = defaultOn;
-            this.Flags = defaultOn;
-            this.Entries = new MaskItem<bool, LeveledEntry_DeepCopyMask<ItemAbstract_DeepCopyMask>>(defaultOn, default);
-        }
-
-        #region Members
-        public bool ChanceNone;
-        public bool Flags;
-        public MaskItem<bool, LeveledEntry_DeepCopyMask<ItemAbstract_DeepCopyMask>> Entries;
-        #endregion
-
-    }
-
     public class LeveledItem_TranslationMask : ItemAbstract_TranslationMask
     {
         #region Members
@@ -2260,7 +2471,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             recordTypeConverter: null);
                     });
             }
-            LeveledItem.SpecialWrite_Vestigial_Internal(
+            LeveledItemSetterCommon.SpecialWrite_Vestigial_Internal(
                 item: item,
                 writer: writer,
                 errorMask: errorMask);

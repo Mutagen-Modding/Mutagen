@@ -159,23 +159,12 @@ namespace Mutagen.Bethesda.Tests
                     break;
             }
             var ret = new TargetGroup();
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    TargetGroupXmlCreateTranslation.FillPublicElementXml(
-                        item: ret,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
+            ((TargetGroupSetterCommon)((ITargetGroupGetter)ret).CommonSetterInstance()).CopyInFromXml(
+                item: ret,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             return ret;
         }
 
@@ -257,102 +246,6 @@ namespace Mutagen.Bethesda.Tests
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
-        #region Xml Copy In
-        public void CopyInXml(
-            XElement node,
-            MissingCreate missing = MissingCreate.New)
-        {
-            CopyInXmlInternal(
-                missing: missing,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-        }
-
-        public virtual void CopyInXml(
-            XElement node,
-            out TargetGroup_ErrorMask errorMask,
-            TargetGroup_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            CopyInXmlInternal(
-                missing: missing,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = TargetGroup_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        protected void CopyInXmlInternal(
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
-        {
-            var obj = TargetGroup.CreateFromXml(
-                missing: missing,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            this.CopyFieldsFrom(obj);
-        }
-
-        public void CopyInXml(
-            string path,
-            MissingCreate missing = MissingCreate.New)
-        {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            this.CopyInXml(
-                missing: missing,
-                node: node);
-        }
-
-        public void CopyInXml(
-            string path,
-            out TargetGroup_ErrorMask errorMask,
-            TargetGroup_TranslationMask translationMask,
-            MissingCreate missing = MissingCreate.New,
-            bool doMasks = true)
-        {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            this.CopyInXml(
-                missing: missing,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask,
-                doMasks: doMasks);
-        }
-
-        public void CopyInXml(
-            Stream stream,
-            MissingCreate missing = MissingCreate.New)
-        {
-            var node = XDocument.Load(stream).Root;
-            this.CopyInXml(
-                missing: missing,
-                node: node);
-        }
-
-        public void CopyInXml(
-            Stream stream,
-            out TargetGroup_ErrorMask errorMask,
-            TargetGroup_TranslationMask translationMask,
-            MissingCreate missing = MissingCreate.New,
-            bool doMasks = true)
-        {
-            var node = XDocument.Load(stream).Root;
-            this.CopyInXml(
-                missing: missing,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask,
-                doMasks: doMasks);
         }
 
         #endregion
@@ -519,8 +412,8 @@ namespace Mutagen.Bethesda.Tests
             TargetGroup def = null,
             bool doMasks = true)
         {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            TargetGroupSetterCopyCommon.CopyFieldsFrom(
+            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((TargetGroupSetterCopyCommon)((ITargetGroupGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -536,7 +429,7 @@ namespace Mutagen.Bethesda.Tests
             TargetGroup_CopyMask copyMask = null,
             TargetGroup def = null)
         {
-            TargetGroupSetterCopyCommon.CopyFieldsFrom(
+            ((TargetGroupSetterCopyCommon)((ITargetGroupGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -554,6 +447,149 @@ namespace Mutagen.Bethesda.Tests
                 copyMask: copyMask,
                 def: def);
         }
+
+        #region Xml Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this ITargetGroup item,
+            XElement node,
+            MissingCreate missing = MissingCreate.New,
+            TargetGroup_TranslationMask translationMask = null)
+        {
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: null,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this ITargetGroup item,
+            XElement node,
+            out TargetGroup_ErrorMask errorMask,
+            bool doMasks = true,
+            TargetGroup_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask.GetCrystal());
+            errorMask = TargetGroup_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyInFromXml(
+            this ITargetGroup item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ((TargetGroupSetterCommon)((ITargetGroupGetter)item).CommonSetterInstance()).CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        public static void CopyInFromXml(
+            this ITargetGroup item,
+            string path,
+            MissingCreate missing = MissingCreate.New,
+            TargetGroup_TranslationMask translationMask = null)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this ITargetGroup item,
+            string path,
+            out TargetGroup_ErrorMask errorMask,
+            TargetGroup_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this ITargetGroup item,
+            string path,
+            ErrorMaskBuilder errorMask,
+            TargetGroup_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        public static void CopyInFromXml(
+            this ITargetGroup item,
+            Stream stream,
+            MissingCreate missing = MissingCreate.New,
+            TargetGroup_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this ITargetGroup item,
+            Stream stream,
+            out TargetGroup_ErrorMask errorMask,
+            TargetGroup_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this ITargetGroup item,
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            TargetGroup_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        #endregion
 
     }
     #endregion
@@ -784,6 +820,35 @@ namespace Mutagen.Bethesda.Tests.Internals
             return ret;
         }
         
+        #region Xml Translation
+        public void CopyInFromXml(
+            ITargetGroup item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    TargetGroupXmlCreateTranslation.FillPublicElementXml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+        
+        #endregion
+        
     }
     public partial class TargetGroupCommon
     {
@@ -929,7 +994,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         public static readonly TargetGroupSetterCopyCommon Instance = new TargetGroupSetterCopyCommon();
 
         #region Copy Fields From
-        public static void CopyFieldsFrom(
+        public void CopyFieldsFrom(
             TargetGroup item,
             TargetGroup rhs,
             TargetGroup def,
@@ -1740,25 +1805,6 @@ namespace Mutagen.Bethesda.Tests.Internals
         #region Members
         public bool Do;
         public MaskItem<CopyOption, Target_CopyMask> Targets;
-        #endregion
-
-    }
-
-    public class TargetGroup_DeepCopyMask
-    {
-        public TargetGroup_DeepCopyMask()
-        {
-        }
-
-        public TargetGroup_DeepCopyMask(bool defaultOn)
-        {
-            this.Do = defaultOn;
-            this.Targets = new MaskItem<bool, Target_DeepCopyMask>(defaultOn, default);
-        }
-
-        #region Members
-        public bool Do;
-        public MaskItem<bool, Target_DeepCopyMask> Targets;
         #endregion
 
     }

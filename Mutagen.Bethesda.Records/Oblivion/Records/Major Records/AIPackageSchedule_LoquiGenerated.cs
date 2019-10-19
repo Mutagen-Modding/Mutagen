@@ -160,23 +160,12 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
             }
             var ret = new AIPackageSchedule();
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    AIPackageScheduleXmlCreateTranslation.FillPublicElementXml(
-                        item: ret,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
+            ((AIPackageScheduleSetterCommon)((IAIPackageScheduleGetter)ret).CommonSetterInstance()).CopyInFromXml(
+                item: ret,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             return ret;
         }
 
@@ -337,52 +326,16 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new AIPackageSchedule();
-            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
-                frame.Reader,
-                recordTypeConverter.ConvertToCustom(AIPackageSchedule_Registration.PSDT_HEADER)));
-            UtilityTranslation.RecordParse(
-                record: ret,
-                frame: frame,
-                setFinal: true,
+            ((AIPackageScheduleSetterCommon)((IAIPackageScheduleGetter)ret).CommonSetterInstance()).CopyInFromBinary(
+                item: ret,
                 masterReferences: masterReferences,
-                errorMask: errorMask,
+                frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                errorMask: errorMask);
             return ret;
         }
 
         #endregion
-
-        protected static void FillBinaryStructs(
-            IAIPackageSchedule item,
-            MutagenFrame frame,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            if (EnumBinaryTranslation<Month>.Instance.Parse(
-                frame: frame.SpawnWithLength(1),
-                item: out Month MonthParse))
-            {
-                item.Month = MonthParse;
-            }
-            else
-            {
-                item.Month = default(Month);
-            }
-            if (EnumBinaryTranslation<Weekday>.Instance.Parse(
-                frame: frame.SpawnWithLength(1),
-                item: out Weekday DayOfWeekParse))
-            {
-                item.DayOfWeek = DayOfWeekParse;
-            }
-            else
-            {
-                item.DayOfWeek = default(Weekday);
-            }
-            item.Day = frame.ReadUInt8();
-            item.Time = frame.ReadUInt8();
-            item.Duration = frame.ReadInt32();
-        }
 
         #endregion
 
@@ -554,8 +507,8 @@ namespace Mutagen.Bethesda.Oblivion
             AIPackageSchedule def = null,
             bool doMasks = true)
         {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            AIPackageScheduleSetterCopyCommon.CopyFieldsFrom(
+            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((AIPackageScheduleSetterCopyCommon)((IAIPackageScheduleGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -571,7 +524,7 @@ namespace Mutagen.Bethesda.Oblivion
             AIPackageSchedule_CopyMask copyMask = null,
             AIPackageSchedule def = null)
         {
-            AIPackageScheduleSetterCopyCommon.CopyFieldsFrom(
+            ((AIPackageScheduleSetterCopyCommon)((IAIPackageScheduleGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -589,6 +542,198 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
         }
+
+        #region Xml Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this IAIPackageSchedule item,
+            XElement node,
+            MissingCreate missing = MissingCreate.New,
+            AIPackageSchedule_TranslationMask translationMask = null)
+        {
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: null,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this IAIPackageSchedule item,
+            XElement node,
+            out AIPackageSchedule_ErrorMask errorMask,
+            bool doMasks = true,
+            AIPackageSchedule_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask.GetCrystal());
+            errorMask = AIPackageSchedule_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyInFromXml(
+            this IAIPackageSchedule item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ((AIPackageScheduleSetterCommon)((IAIPackageScheduleGetter)item).CommonSetterInstance()).CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        public static void CopyInFromXml(
+            this IAIPackageSchedule item,
+            string path,
+            MissingCreate missing = MissingCreate.New,
+            AIPackageSchedule_TranslationMask translationMask = null)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IAIPackageSchedule item,
+            string path,
+            out AIPackageSchedule_ErrorMask errorMask,
+            AIPackageSchedule_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IAIPackageSchedule item,
+            string path,
+            ErrorMaskBuilder errorMask,
+            AIPackageSchedule_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        public static void CopyInFromXml(
+            this IAIPackageSchedule item,
+            Stream stream,
+            MissingCreate missing = MissingCreate.New,
+            AIPackageSchedule_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IAIPackageSchedule item,
+            Stream stream,
+            out AIPackageSchedule_ErrorMask errorMask,
+            AIPackageSchedule_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IAIPackageSchedule item,
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            AIPackageSchedule_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        #endregion
+
+        #region Binary Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this IAIPackageSchedule item,
+            MutagenFrame frame,
+            MasterReferences masterReferences)
+        {
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: null);
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this IAIPackageSchedule item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            out AIPackageSchedule_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: errorMaskBuilder);
+            errorMask = AIPackageSchedule_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyInFromBinary(
+            this IAIPackageSchedule item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((AIPackageScheduleSetterCommon)((IAIPackageScheduleGetter)item).CommonSetterInstance()).CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+        #endregion
 
     }
     #endregion
@@ -861,6 +1006,89 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
         
+        #region Xml Translation
+        public void CopyInFromXml(
+            IAIPackageSchedule item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    AIPackageScheduleXmlCreateTranslation.FillPublicElementXml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+        
+        #endregion
+        
+        #region Binary Translation
+        protected static void FillBinaryStructs(
+            IAIPackageSchedule item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            if (EnumBinaryTranslation<Month>.Instance.Parse(
+                frame: frame.SpawnWithLength(1),
+                item: out Month MonthParse))
+            {
+                item.Month = MonthParse;
+            }
+            else
+            {
+                item.Month = default(Month);
+            }
+            if (EnumBinaryTranslation<Weekday>.Instance.Parse(
+                frame: frame.SpawnWithLength(1),
+                item: out Weekday DayOfWeekParse))
+            {
+                item.DayOfWeek = DayOfWeekParse;
+            }
+            else
+            {
+                item.DayOfWeek = default(Weekday);
+            }
+            item.Day = frame.ReadUInt8();
+            item.Time = frame.ReadUInt8();
+            item.Duration = frame.ReadInt32();
+        }
+        
+        public void CopyInFromBinary(
+            IAIPackageSchedule item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
+                frame.Reader,
+                recordTypeConverter.ConvertToCustom(AIPackageSchedule_Registration.PSDT_HEADER)));
+            UtilityTranslation.RecordParse(
+                record: item,
+                frame: frame,
+                setFinal: true,
+                masterReferences: masterReferences,
+                errorMask: errorMask,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: FillBinaryStructs);
+        }
+        
+        #endregion
+        
     }
     public partial class AIPackageScheduleCommon
     {
@@ -1013,7 +1241,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly AIPackageScheduleSetterCopyCommon Instance = new AIPackageScheduleSetterCopyCommon();
 
         #region Copy Fields From
-        public static void CopyFieldsFrom(
+        public void CopyFieldsFrom(
             AIPackageSchedule item,
             AIPackageSchedule rhs,
             AIPackageSchedule def,
@@ -1881,31 +2109,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public AIPackageSchedule_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Month = defaultOn;
-            this.DayOfWeek = defaultOn;
-            this.Day = defaultOn;
-            this.Time = defaultOn;
-            this.Duration = defaultOn;
-        }
-
-        #region Members
-        public bool Month;
-        public bool DayOfWeek;
-        public bool Day;
-        public bool Time;
-        public bool Duration;
-        #endregion
-
-    }
-
-    public class AIPackageSchedule_DeepCopyMask
-    {
-        public AIPackageSchedule_DeepCopyMask()
-        {
-        }
-
-        public AIPackageSchedule_DeepCopyMask(bool defaultOn)
         {
             this.Month = defaultOn;
             this.DayOfWeek = defaultOn;

@@ -638,29 +638,12 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
             }
             var ret = new Weather();
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    FillPrivateElementXml(
-                        item: ret,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    WeatherXmlCreateTranslation.FillPublicElementXml(
-                        item: ret,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
+            ((WeatherSetterCommon)((IWeatherGetter)ret).CommonSetterInstance()).CopyInFromXml(
+                item: ret,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             return ret;
         }
 
@@ -745,35 +728,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #endregion
-
-        protected static void FillPrivateElementXml(
-            Weather item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "HasFNAMDataType":
-                    item.FNAMDataTypeState |= Weather.FNAMDataType.Has;
-                    break;
-                case "HasHNAMDataType":
-                    item.HNAMDataTypeState |= Weather.HNAMDataType.Has;
-                    break;
-                case "HasDATADataType":
-                    item.DATADataTypeState |= Weather.DATADataType.Has;
-                    break;
-                default:
-                    OblivionMajorRecord.FillPrivateElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
 
         #endregion
 
@@ -935,388 +889,16 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new Weather();
-            UtilityTranslation.MajorRecordParse<IWeatherInternal>(
-                record: ret,
-                frame: frame,
-                errorMask: errorMask,
-                recType: Weather_Registration.WTHR_HEADER,
-                recordTypeConverter: recordTypeConverter,
+            ((WeatherSetterCommon)((IWeatherGetter)ret).CommonSetterInstance()).CopyInFromBinary(
+                item: ret,
                 masterReferences: masterReferences,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                frame: frame,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
             return ret;
         }
 
         #endregion
-
-        protected static void FillBinaryStructs(
-            IWeatherInternal item,
-            MutagenFrame frame,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            OblivionMajorRecord.FillBinaryStructs(
-                item: item,
-                frame: frame,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
-        }
-
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IWeatherInternal item,
-            MutagenFrame frame,
-            RecordType nextRecordType,
-            int contentLength,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask,
-            RecordTypeConverter recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x4D414E43: // CNAM
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String TextureLowerLayerParse))
-                    {
-                        item.TextureLowerLayer = TextureLowerLayerParse;
-                    }
-                    else
-                    {
-                        item.TextureLowerLayer = default(String);
-                    }
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.TextureLowerLayer);
-                }
-                case 0x4D414E44: // DNAM
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String TextureUpperLayerParse))
-                    {
-                        item.TextureUpperLayer = TextureUpperLayerParse;
-                    }
-                    else
-                    {
-                        item.TextureUpperLayer = default(String);
-                    }
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.TextureUpperLayer);
-                }
-                case 0x4C444F4D: // MODL
-                {
-                    try
-                    {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.Model);
-                        item.Model = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null,
-                            masterReferences: masterReferences,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.Model);
-                }
-                case 0x304D414E: // NAM0
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<WeatherType>.Instance.ParseRepeatedItem(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: item.WeatherTypes,
-                        fieldIndex: (int)Weather_FieldIndex.WeatherTypes,
-                        errorMask: errorMask,
-                        transl: (MutagenFrame r, out WeatherType listSubItem, ErrorMaskBuilder listErrMask) =>
-                        {
-                            return LoquiBinaryTranslation<WeatherType>.Instance.Parse(
-                                frame: r,
-                                item: out listSubItem,
-                                errorMask: listErrMask,
-                                masterReferences: masterReferences);
-                        });
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.WeatherTypes);
-                }
-                case 0x4D414E46: // FNAM
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    var dataFrame = frame.SpawnWithLength(contentLength);
-                    if (!dataFrame.Complete)
-                    {
-                        item.FNAMDataTypeState = FNAMDataType.Has;
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single FogDayNearParse))
-                    {
-                        item.FogDayNear = FogDayNearParse;
-                    }
-                    else
-                    {
-                        item.FogDayNear = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single FogDayFarParse))
-                    {
-                        item.FogDayFar = FogDayFarParse;
-                    }
-                    else
-                    {
-                        item.FogDayFar = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single FogNightNearParse))
-                    {
-                        item.FogNightNear = FogNightNearParse;
-                    }
-                    else
-                    {
-                        item.FogNightNear = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single FogNightFarParse))
-                    {
-                        item.FogNightFar = FogNightFarParse;
-                    }
-                    else
-                    {
-                        item.FogNightFar = default(Single);
-                    }
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.FogNightFar);
-                }
-                case 0x4D414E48: // HNAM
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    var dataFrame = frame.SpawnWithLength(contentLength);
-                    if (!dataFrame.Complete)
-                    {
-                        item.HNAMDataTypeState = HNAMDataType.Has;
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single HdrEyeAdaptSpeedParse))
-                    {
-                        item.HdrEyeAdaptSpeed = HdrEyeAdaptSpeedParse;
-                    }
-                    else
-                    {
-                        item.HdrEyeAdaptSpeed = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single HdrBlurRadiusParse))
-                    {
-                        item.HdrBlurRadius = HdrBlurRadiusParse;
-                    }
-                    else
-                    {
-                        item.HdrBlurRadius = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single HdrBlurPassesParse))
-                    {
-                        item.HdrBlurPasses = HdrBlurPassesParse;
-                    }
-                    else
-                    {
-                        item.HdrBlurPasses = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single HdrEmissiveMultParse))
-                    {
-                        item.HdrEmissiveMult = HdrEmissiveMultParse;
-                    }
-                    else
-                    {
-                        item.HdrEmissiveMult = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single HdrTargetLumParse))
-                    {
-                        item.HdrTargetLum = HdrTargetLumParse;
-                    }
-                    else
-                    {
-                        item.HdrTargetLum = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single HdrUpperLumClampParse))
-                    {
-                        item.HdrUpperLumClamp = HdrUpperLumClampParse;
-                    }
-                    else
-                    {
-                        item.HdrUpperLumClamp = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single HdrBrightScaleParse))
-                    {
-                        item.HdrBrightScale = HdrBrightScaleParse;
-                    }
-                    else
-                    {
-                        item.HdrBrightScale = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single HdrBrightClampParse))
-                    {
-                        item.HdrBrightClamp = HdrBrightClampParse;
-                    }
-                    else
-                    {
-                        item.HdrBrightClamp = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single HdrLumRampNoTexParse))
-                    {
-                        item.HdrLumRampNoTex = HdrLumRampNoTexParse;
-                    }
-                    else
-                    {
-                        item.HdrLumRampNoTex = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single HdrLumRampMinParse))
-                    {
-                        item.HdrLumRampMin = HdrLumRampMinParse;
-                    }
-                    else
-                    {
-                        item.HdrLumRampMin = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single HdrLumRampMaxParse))
-                    {
-                        item.HdrLumRampMax = HdrLumRampMaxParse;
-                    }
-                    else
-                    {
-                        item.HdrLumRampMax = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single HdrSunlightDimmerParse))
-                    {
-                        item.HdrSunlightDimmer = HdrSunlightDimmerParse;
-                    }
-                    else
-                    {
-                        item.HdrSunlightDimmer = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single HdrGrassDimmerParse))
-                    {
-                        item.HdrGrassDimmer = HdrGrassDimmerParse;
-                    }
-                    else
-                    {
-                        item.HdrGrassDimmer = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single HdrTreeDimmerParse))
-                    {
-                        item.HdrTreeDimmer = HdrTreeDimmerParse;
-                    }
-                    else
-                    {
-                        item.HdrTreeDimmer = default(Single);
-                    }
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.HdrTreeDimmer);
-                }
-                case 0x41544144: // DATA
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    var dataFrame = frame.SpawnWithLength(contentLength);
-                    if (!dataFrame.Complete)
-                    {
-                        item.DATADataTypeState = DATADataType.Has;
-                    }
-                    item.WindSpeed = dataFrame.ReadUInt8();
-                    item.CloudSpeedLower = dataFrame.ReadUInt8();
-                    item.CloudSpeedUpper = dataFrame.ReadUInt8();
-                    item.TransDelta = dataFrame.ReadUInt8();
-                    item.SunGlare = dataFrame.ReadUInt8();
-                    item.SunDamage = dataFrame.ReadUInt8();
-                    item.PrecipitationBeginFadeIn = dataFrame.ReadUInt8();
-                    item.PrecipitationEndFadeOut = dataFrame.ReadUInt8();
-                    item.ThunderLightningBeginFadeIn = dataFrame.ReadUInt8();
-                    item.ThunderLightningEndFadeOut = dataFrame.ReadUInt8();
-                    item.ThunderLightningFrequency = dataFrame.ReadUInt8();
-                    if (EnumBinaryTranslation<Weather.WeatherClassification>.Instance.Parse(
-                        frame: dataFrame.SpawnWithLength(1),
-                        item: out Weather.WeatherClassification ClassificationParse))
-                    {
-                        item.Classification = ClassificationParse;
-                    }
-                    else
-                    {
-                        item.Classification = default(Weather.WeatherClassification);
-                    }
-                    if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Color LightningColorParse))
-                    {
-                        item.LightningColor = LightningColorParse;
-                    }
-                    else
-                    {
-                        item.LightningColor = default(Color);
-                    }
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.LightningColor);
-                }
-                case 0x4D414E53: // SNAM
-                {
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<WeatherSound>.Instance.ParseRepeatedItem(
-                        frame: frame,
-                        triggeringRecord: Weather_Registration.SNAM_HEADER,
-                        item: item.Sounds,
-                        fieldIndex: (int)Weather_FieldIndex.Sounds,
-                        lengthLength: frame.MetaData.SubConstants.LengthLength,
-                        errorMask: errorMask,
-                        transl: (MutagenFrame r, out WeatherSound listSubItem, ErrorMaskBuilder listErrMask) =>
-                        {
-                            return LoquiBinaryTranslation<WeatherSound>.Instance.Parse(
-                                frame: r,
-                                item: out listSubItem,
-                                errorMask: listErrMask,
-                                masterReferences: masterReferences);
-                        });
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.Sounds);
-                }
-                default:
-                    return OblivionMajorRecord.FillBinaryRecordTypes(
-                        item: item,
-                        frame: frame,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength,
-                        recordTypeConverter: recordTypeConverter,
-                        masterReferences: masterReferences,
-                        errorMask: errorMask);
-            }
-        }
 
         #endregion
 
@@ -1689,8 +1271,8 @@ namespace Mutagen.Bethesda.Oblivion
             Weather def = null,
             bool doMasks = true)
         {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            WeatherSetterCopyCommon.CopyFieldsFrom(
+            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((WeatherSetterCopyCommon)((IWeatherGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -1706,13 +1288,205 @@ namespace Mutagen.Bethesda.Oblivion
             Weather_CopyMask copyMask = null,
             Weather def = null)
         {
-            WeatherSetterCopyCommon.CopyFieldsFrom(
+            ((WeatherSetterCopyCommon)((IWeatherGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
+
+        #region Xml Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this IWeatherInternal item,
+            XElement node,
+            MissingCreate missing = MissingCreate.New,
+            Weather_TranslationMask translationMask = null)
+        {
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: null,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this IWeatherInternal item,
+            XElement node,
+            out Weather_ErrorMask errorMask,
+            bool doMasks = true,
+            Weather_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask.GetCrystal());
+            errorMask = Weather_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public new static void CopyInFromXml(
+            this IWeatherInternal item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ((WeatherSetterCommon)((IWeatherGetter)item).CommonSetterInstance()).CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        public static void CopyInFromXml(
+            this IWeatherInternal item,
+            string path,
+            MissingCreate missing = MissingCreate.New,
+            Weather_TranslationMask translationMask = null)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IWeatherInternal item,
+            string path,
+            out Weather_ErrorMask errorMask,
+            Weather_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IWeatherInternal item,
+            string path,
+            ErrorMaskBuilder errorMask,
+            Weather_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        public static void CopyInFromXml(
+            this IWeatherInternal item,
+            Stream stream,
+            MissingCreate missing = MissingCreate.New,
+            Weather_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IWeatherInternal item,
+            Stream stream,
+            out Weather_ErrorMask errorMask,
+            Weather_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IWeatherInternal item,
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            Weather_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        #endregion
+
+        #region Binary Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this IWeatherInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences)
+        {
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: null);
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this IWeatherInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            out Weather_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: errorMaskBuilder);
+            errorMask = Weather_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public new static void CopyInFromBinary(
+            this IWeatherInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((WeatherSetterCommon)((IWeatherGetter)item).CommonSetterInstance()).CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+        #endregion
 
     }
     #endregion
@@ -2435,6 +2209,461 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IWeatherInternal)item);
         }
         
+        #region Xml Translation
+        protected static void FillPrivateElementXml(
+            IWeatherInternal item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "HasFNAMDataType":
+                    item.FNAMDataTypeState |= Weather.FNAMDataType.Has;
+                    break;
+                case "HasHNAMDataType":
+                    item.HNAMDataTypeState |= Weather.HNAMDataType.Has;
+                    break;
+                case "HasDATADataType":
+                    item.DATADataTypeState |= Weather.DATADataType.Has;
+                    break;
+                default:
+                    OblivionMajorRecordSetterCommon.FillPrivateElementXml(
+                        item: item,
+                        node: node,
+                        name: name,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    break;
+            }
+        }
+        
+        public new void CopyInFromXml(
+            IWeatherInternal item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    FillPrivateElementXml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    WeatherXmlCreateTranslation.FillPublicElementXml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+        
+        #endregion
+        
+        #region Binary Translation
+        public override RecordType RecordType => Weather_Registration.WTHR_HEADER;
+        protected static void FillBinaryStructs(
+            IWeatherInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            OblivionMajorRecordSetterCommon.FillBinaryStructs(
+                item: item,
+                frame: frame,
+                masterReferences: masterReferences,
+                errorMask: errorMask);
+        }
+        
+        protected static TryGet<int?> FillBinaryRecordTypes(
+            IWeatherInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x4D414E43: // CNAM
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String TextureLowerLayerParse))
+                    {
+                        item.TextureLowerLayer = TextureLowerLayerParse;
+                    }
+                    else
+                    {
+                        item.TextureLowerLayer = default(String);
+                    }
+                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.TextureLowerLayer);
+                }
+                case 0x4D414E44: // DNAM
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String TextureUpperLayerParse))
+                    {
+                        item.TextureUpperLayer = TextureUpperLayerParse;
+                    }
+                    else
+                    {
+                        item.TextureUpperLayer = default(String);
+                    }
+                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.TextureUpperLayer);
+                }
+                case 0x4C444F4D: // MODL
+                {
+                    try
+                    {
+                        errorMask?.PushIndex((int)Weather_FieldIndex.Model);
+                        item.Model = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null,
+                            masterReferences: masterReferences,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.Model);
+                }
+                case 0x304D414E: // NAM0
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<WeatherType>.Instance.ParseRepeatedItem(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: item.WeatherTypes,
+                        fieldIndex: (int)Weather_FieldIndex.WeatherTypes,
+                        errorMask: errorMask,
+                        transl: (MutagenFrame r, out WeatherType listSubItem, ErrorMaskBuilder listErrMask) =>
+                        {
+                            return LoquiBinaryTranslation<WeatherType>.Instance.Parse(
+                                frame: r,
+                                item: out listSubItem,
+                                errorMask: listErrMask,
+                                masterReferences: masterReferences);
+                        });
+                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.WeatherTypes);
+                }
+                case 0x4D414E46: // FNAM
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (!dataFrame.Complete)
+                    {
+                        item.FNAMDataTypeState = Weather.FNAMDataType.Has;
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single FogDayNearParse))
+                    {
+                        item.FogDayNear = FogDayNearParse;
+                    }
+                    else
+                    {
+                        item.FogDayNear = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single FogDayFarParse))
+                    {
+                        item.FogDayFar = FogDayFarParse;
+                    }
+                    else
+                    {
+                        item.FogDayFar = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single FogNightNearParse))
+                    {
+                        item.FogNightNear = FogNightNearParse;
+                    }
+                    else
+                    {
+                        item.FogNightNear = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single FogNightFarParse))
+                    {
+                        item.FogNightFar = FogNightFarParse;
+                    }
+                    else
+                    {
+                        item.FogNightFar = default(Single);
+                    }
+                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.FogNightFar);
+                }
+                case 0x4D414E48: // HNAM
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (!dataFrame.Complete)
+                    {
+                        item.HNAMDataTypeState = Weather.HNAMDataType.Has;
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single HdrEyeAdaptSpeedParse))
+                    {
+                        item.HdrEyeAdaptSpeed = HdrEyeAdaptSpeedParse;
+                    }
+                    else
+                    {
+                        item.HdrEyeAdaptSpeed = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single HdrBlurRadiusParse))
+                    {
+                        item.HdrBlurRadius = HdrBlurRadiusParse;
+                    }
+                    else
+                    {
+                        item.HdrBlurRadius = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single HdrBlurPassesParse))
+                    {
+                        item.HdrBlurPasses = HdrBlurPassesParse;
+                    }
+                    else
+                    {
+                        item.HdrBlurPasses = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single HdrEmissiveMultParse))
+                    {
+                        item.HdrEmissiveMult = HdrEmissiveMultParse;
+                    }
+                    else
+                    {
+                        item.HdrEmissiveMult = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single HdrTargetLumParse))
+                    {
+                        item.HdrTargetLum = HdrTargetLumParse;
+                    }
+                    else
+                    {
+                        item.HdrTargetLum = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single HdrUpperLumClampParse))
+                    {
+                        item.HdrUpperLumClamp = HdrUpperLumClampParse;
+                    }
+                    else
+                    {
+                        item.HdrUpperLumClamp = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single HdrBrightScaleParse))
+                    {
+                        item.HdrBrightScale = HdrBrightScaleParse;
+                    }
+                    else
+                    {
+                        item.HdrBrightScale = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single HdrBrightClampParse))
+                    {
+                        item.HdrBrightClamp = HdrBrightClampParse;
+                    }
+                    else
+                    {
+                        item.HdrBrightClamp = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single HdrLumRampNoTexParse))
+                    {
+                        item.HdrLumRampNoTex = HdrLumRampNoTexParse;
+                    }
+                    else
+                    {
+                        item.HdrLumRampNoTex = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single HdrLumRampMinParse))
+                    {
+                        item.HdrLumRampMin = HdrLumRampMinParse;
+                    }
+                    else
+                    {
+                        item.HdrLumRampMin = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single HdrLumRampMaxParse))
+                    {
+                        item.HdrLumRampMax = HdrLumRampMaxParse;
+                    }
+                    else
+                    {
+                        item.HdrLumRampMax = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single HdrSunlightDimmerParse))
+                    {
+                        item.HdrSunlightDimmer = HdrSunlightDimmerParse;
+                    }
+                    else
+                    {
+                        item.HdrSunlightDimmer = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single HdrGrassDimmerParse))
+                    {
+                        item.HdrGrassDimmer = HdrGrassDimmerParse;
+                    }
+                    else
+                    {
+                        item.HdrGrassDimmer = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single HdrTreeDimmerParse))
+                    {
+                        item.HdrTreeDimmer = HdrTreeDimmerParse;
+                    }
+                    else
+                    {
+                        item.HdrTreeDimmer = default(Single);
+                    }
+                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.HdrTreeDimmer);
+                }
+                case 0x41544144: // DATA
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (!dataFrame.Complete)
+                    {
+                        item.DATADataTypeState = Weather.DATADataType.Has;
+                    }
+                    item.WindSpeed = dataFrame.ReadUInt8();
+                    item.CloudSpeedLower = dataFrame.ReadUInt8();
+                    item.CloudSpeedUpper = dataFrame.ReadUInt8();
+                    item.TransDelta = dataFrame.ReadUInt8();
+                    item.SunGlare = dataFrame.ReadUInt8();
+                    item.SunDamage = dataFrame.ReadUInt8();
+                    item.PrecipitationBeginFadeIn = dataFrame.ReadUInt8();
+                    item.PrecipitationEndFadeOut = dataFrame.ReadUInt8();
+                    item.ThunderLightningBeginFadeIn = dataFrame.ReadUInt8();
+                    item.ThunderLightningEndFadeOut = dataFrame.ReadUInt8();
+                    item.ThunderLightningFrequency = dataFrame.ReadUInt8();
+                    if (EnumBinaryTranslation<Weather.WeatherClassification>.Instance.Parse(
+                        frame: dataFrame.SpawnWithLength(1),
+                        item: out Weather.WeatherClassification ClassificationParse))
+                    {
+                        item.Classification = ClassificationParse;
+                    }
+                    else
+                    {
+                        item.Classification = default(Weather.WeatherClassification);
+                    }
+                    if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Color LightningColorParse))
+                    {
+                        item.LightningColor = LightningColorParse;
+                    }
+                    else
+                    {
+                        item.LightningColor = default(Color);
+                    }
+                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.LightningColor);
+                }
+                case 0x4D414E53: // SNAM
+                {
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<WeatherSound>.Instance.ParseRepeatedItem(
+                        frame: frame,
+                        triggeringRecord: Weather_Registration.SNAM_HEADER,
+                        item: item.Sounds,
+                        fieldIndex: (int)Weather_FieldIndex.Sounds,
+                        lengthLength: frame.MetaData.SubConstants.LengthLength,
+                        errorMask: errorMask,
+                        transl: (MutagenFrame r, out WeatherSound listSubItem, ErrorMaskBuilder listErrMask) =>
+                        {
+                            return LoquiBinaryTranslation<WeatherSound>.Instance.Parse(
+                                frame: r,
+                                item: out listSubItem,
+                                errorMask: listErrMask,
+                                masterReferences: masterReferences);
+                        });
+                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.Sounds);
+                }
+                default:
+                    return OblivionMajorRecordSetterCommon.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter,
+                        masterReferences: masterReferences,
+                        errorMask: errorMask);
+            }
+        }
+        
+        public new void CopyInFromBinary(
+            IWeatherInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            UtilityTranslation.MajorRecordParse<IWeatherInternal>(
+                record: item,
+                frame: frame,
+                errorMask: errorMask,
+                recType: RecordType,
+                recordTypeConverter: recordTypeConverter,
+                masterReferences: masterReferences,
+                fillStructs: FillBinaryStructs,
+                fillTyped: FillBinaryRecordTypes);
+        }
+        
+        #endregion
+        
     }
     public partial class WeatherCommon : OblivionMajorRecordCommon
     {
@@ -3030,14 +3259,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public new static readonly WeatherSetterCopyCommon Instance = new WeatherSetterCopyCommon();
 
         #region Copy Fields From
-        public static void CopyFieldsFrom(
+        public void CopyFieldsFrom(
             Weather item,
             Weather rhs,
             Weather def,
             ErrorMaskBuilder errorMask,
             Weather_CopyMask copyMask)
         {
-            OblivionMajorRecordSetterCopyCommon.CopyFieldsFrom(
+            ((OblivionMajorRecordSetterCopyCommon)((IOblivionMajorRecordGetter)item).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -3121,7 +3350,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             case CopyOption.Reference:
                                 throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
-                                ModelSetterCopyCommon.CopyFieldsFrom(
+                                ((ModelSetterCopyCommon)((IModelGetter)item.Model).CommonSetterCopyInstance()).CopyFieldsFrom(
                                     item: item.Model,
                                     rhs: rhs.Model,
                                     def: def?.Model,
@@ -6388,99 +6617,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Classification;
         public bool LightningColor;
         public MaskItem<CopyOption, WeatherSound_CopyMask> Sounds;
-        public bool FNAMDataTypeState;
-        public bool HNAMDataTypeState;
-        public bool DATADataTypeState;
-        #endregion
-
-    }
-
-    public class Weather_DeepCopyMask : OblivionMajorRecord_DeepCopyMask
-    {
-        public Weather_DeepCopyMask()
-        {
-        }
-
-        public Weather_DeepCopyMask(bool defaultOn)
-        {
-            this.TextureLowerLayer = defaultOn;
-            this.TextureUpperLayer = defaultOn;
-            this.Model = new MaskItem<bool, Model_DeepCopyMask>(defaultOn, default);
-            this.WeatherTypes = new MaskItem<bool, WeatherType_DeepCopyMask>(defaultOn, default);
-            this.FogDayNear = defaultOn;
-            this.FogDayFar = defaultOn;
-            this.FogNightNear = defaultOn;
-            this.FogNightFar = defaultOn;
-            this.HdrEyeAdaptSpeed = defaultOn;
-            this.HdrBlurRadius = defaultOn;
-            this.HdrBlurPasses = defaultOn;
-            this.HdrEmissiveMult = defaultOn;
-            this.HdrTargetLum = defaultOn;
-            this.HdrUpperLumClamp = defaultOn;
-            this.HdrBrightScale = defaultOn;
-            this.HdrBrightClamp = defaultOn;
-            this.HdrLumRampNoTex = defaultOn;
-            this.HdrLumRampMin = defaultOn;
-            this.HdrLumRampMax = defaultOn;
-            this.HdrSunlightDimmer = defaultOn;
-            this.HdrGrassDimmer = defaultOn;
-            this.HdrTreeDimmer = defaultOn;
-            this.WindSpeed = defaultOn;
-            this.CloudSpeedLower = defaultOn;
-            this.CloudSpeedUpper = defaultOn;
-            this.TransDelta = defaultOn;
-            this.SunGlare = defaultOn;
-            this.SunDamage = defaultOn;
-            this.PrecipitationBeginFadeIn = defaultOn;
-            this.PrecipitationEndFadeOut = defaultOn;
-            this.ThunderLightningBeginFadeIn = defaultOn;
-            this.ThunderLightningEndFadeOut = defaultOn;
-            this.ThunderLightningFrequency = defaultOn;
-            this.Classification = defaultOn;
-            this.LightningColor = defaultOn;
-            this.Sounds = new MaskItem<bool, WeatherSound_DeepCopyMask>(defaultOn, default);
-            this.FNAMDataTypeState = defaultOn;
-            this.HNAMDataTypeState = defaultOn;
-            this.DATADataTypeState = defaultOn;
-        }
-
-        #region Members
-        public bool TextureLowerLayer;
-        public bool TextureUpperLayer;
-        public MaskItem<bool, Model_DeepCopyMask> Model;
-        public MaskItem<bool, WeatherType_DeepCopyMask> WeatherTypes;
-        public bool FogDayNear;
-        public bool FogDayFar;
-        public bool FogNightNear;
-        public bool FogNightFar;
-        public bool HdrEyeAdaptSpeed;
-        public bool HdrBlurRadius;
-        public bool HdrBlurPasses;
-        public bool HdrEmissiveMult;
-        public bool HdrTargetLum;
-        public bool HdrUpperLumClamp;
-        public bool HdrBrightScale;
-        public bool HdrBrightClamp;
-        public bool HdrLumRampNoTex;
-        public bool HdrLumRampMin;
-        public bool HdrLumRampMax;
-        public bool HdrSunlightDimmer;
-        public bool HdrGrassDimmer;
-        public bool HdrTreeDimmer;
-        public bool WindSpeed;
-        public bool CloudSpeedLower;
-        public bool CloudSpeedUpper;
-        public bool TransDelta;
-        public bool SunGlare;
-        public bool SunDamage;
-        public bool PrecipitationBeginFadeIn;
-        public bool PrecipitationEndFadeOut;
-        public bool ThunderLightningBeginFadeIn;
-        public bool ThunderLightningEndFadeOut;
-        public bool ThunderLightningFrequency;
-        public bool Classification;
-        public bool LightningColor;
-        public MaskItem<bool, WeatherSound_DeepCopyMask> Sounds;
         public bool FNAMDataTypeState;
         public bool HNAMDataTypeState;
         public bool DATADataTypeState;

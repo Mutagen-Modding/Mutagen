@@ -598,29 +598,12 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
             }
             var ret = new Race();
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    FillPrivateElementXml(
-                        item: ret,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    RaceXmlCreateTranslation.FillPublicElementXml(
-                        item: ret,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
+            ((RaceSetterCommon)((IRaceGetter)ret).CommonSetterInstance()).CopyInFromXml(
+                item: ret,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             return ret;
         }
 
@@ -705,29 +688,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #endregion
-
-        protected static void FillPrivateElementXml(
-            Race item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "HasDATADataType":
-                    item.DATADataTypeState |= Race.DATADataType.Has;
-                    break;
-                default:
-                    OblivionMajorRecord.FillPrivateElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
 
         #endregion
 
@@ -913,388 +873,16 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new Race();
-            UtilityTranslation.MajorRecordParse<IRaceInternal>(
-                record: ret,
-                frame: frame,
-                errorMask: errorMask,
-                recType: Race_Registration.RACE_HEADER,
-                recordTypeConverter: recordTypeConverter,
+            ((RaceSetterCommon)((IRaceGetter)ret).CommonSetterInstance()).CopyInFromBinary(
+                item: ret,
                 masterReferences: masterReferences,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                frame: frame,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
             return ret;
         }
 
         #endregion
-
-        protected static void FillBinaryStructs(
-            IRaceInternal item,
-            MutagenFrame frame,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            OblivionMajorRecord.FillBinaryStructs(
-                item: item,
-                frame: frame,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
-        }
-
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IRaceInternal item,
-            MutagenFrame frame,
-            RecordType nextRecordType,
-            int contentLength,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask,
-            RecordTypeConverter recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x4C4C5546: // FULL
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String NameParse))
-                    {
-                        item.Name = NameParse;
-                    }
-                    else
-                    {
-                        item.Name = default(String);
-                    }
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.Name);
-                }
-                case 0x43534544: // DESC
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String DescriptionParse))
-                    {
-                        item.Description = DescriptionParse;
-                    }
-                    else
-                    {
-                        item.Description = default(String);
-                    }
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.Description);
-                }
-                case 0x4F4C5053: // SPLO
-                {
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDLink<Spell>>.Instance.ParseRepeatedItem(
-                        frame: frame,
-                        triggeringRecord: Race_Registration.SPLO_HEADER,
-                        masterReferences: masterReferences,
-                        item: item.Spells,
-                        lengthLength: frame.MetaData.SubConstants.LengthLength,
-                        transl: FormLinkBinaryTranslation.Instance.Parse);
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.Spells);
-                }
-                case 0x4D414E58: // XNAM
-                {
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<RaceRelation>.Instance.ParseRepeatedItem(
-                        frame: frame,
-                        triggeringRecord: Race_Registration.XNAM_HEADER,
-                        item: item.Relations,
-                        fieldIndex: (int)Race_FieldIndex.Relations,
-                        lengthLength: frame.MetaData.SubConstants.LengthLength,
-                        errorMask: errorMask,
-                        transl: (MutagenFrame r, out RaceRelation listSubItem, ErrorMaskBuilder listErrMask) =>
-                        {
-                            return LoquiBinaryTranslation<RaceRelation>.Instance.Parse(
-                                frame: r,
-                                item: out listSubItem,
-                                errorMask: listErrMask,
-                                masterReferences: masterReferences);
-                        });
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.Relations);
-                }
-                case 0x41544144: // DATA
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    var dataFrame = frame.SpawnWithLength(contentLength);
-                    if (!dataFrame.Complete)
-                    {
-                        item.DATADataTypeState = DATADataType.Has;
-                    }
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<SkillBoost>.Instance.ParseRepeatedItem(
-                        frame: frame,
-                        amount: 7,
-                        item: item.SkillBoosts,
-                        fieldIndex: (int)Race_FieldIndex.SkillBoosts,
-                        errorMask: errorMask,
-                        transl: (MutagenFrame r, out SkillBoost listSubItem, ErrorMaskBuilder listErrMask) =>
-                        {
-                            return LoquiBinaryTranslation<SkillBoost>.Instance.Parse(
-                                frame: r,
-                                item: out listSubItem,
-                                errorMask: listErrMask,
-                                masterReferences: masterReferences);
-                        });
-                    if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                        frame: dataFrame.SpawnWithLength(4),
-                        item: out Byte[] FluffParse))
-                    {
-                        item.Fluff = FluffParse;
-                    }
-                    else
-                    {
-                        item.Fluff = default(Byte[]);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single MaleHeightParse))
-                    {
-                        item.MaleHeight = MaleHeightParse;
-                    }
-                    else
-                    {
-                        item.MaleHeight = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single FemaleHeightParse))
-                    {
-                        item.FemaleHeight = FemaleHeightParse;
-                    }
-                    else
-                    {
-                        item.FemaleHeight = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single MaleWeightParse))
-                    {
-                        item.MaleWeight = MaleWeightParse;
-                    }
-                    else
-                    {
-                        item.MaleWeight = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single FemaleWeightParse))
-                    {
-                        item.FemaleWeight = FemaleWeightParse;
-                    }
-                    else
-                    {
-                        item.FemaleWeight = default(Single);
-                    }
-                    if (EnumBinaryTranslation<Race.Flag>.Instance.Parse(
-                        frame: dataFrame.SpawnWithLength(2),
-                        item: out Race.Flag FlagsParse))
-                    {
-                        item.Flags = FlagsParse;
-                    }
-                    else
-                    {
-                        item.Flags = default(Race.Flag);
-                    }
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.Flags);
-                }
-                case 0x4D414E56: // VNAM
-                {
-                    try
-                    {
-                        errorMask?.PushIndex((int)Race_FieldIndex.Voices);
-                        item.Voices = Mutagen.Bethesda.Oblivion.RaceVoices.CreateFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null,
-                            masterReferences: masterReferences,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.Voices);
-                }
-                case 0x4D414E44: // DNAM
-                {
-                    try
-                    {
-                        errorMask?.PushIndex((int)Race_FieldIndex.DefaultHair);
-                        item.DefaultHair = Mutagen.Bethesda.Oblivion.RaceHair.CreateFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null,
-                            masterReferences: masterReferences,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.DefaultHair);
-                }
-                case 0x4D414E43: // CNAM
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.DefaultHairColor = frame.ReadUInt8();
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.DefaultHairColor);
-                }
-                case 0x4D414E50: // PNAM
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.FaceGenMainClamp = frame.ReadInt32();
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.FaceGenMainClamp);
-                }
-                case 0x4D414E55: // UNAM
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.FaceGenFaceClamp = frame.ReadInt32();
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.FaceGenFaceClamp);
-                }
-                case 0x52545441: // ATTR
-                {
-                    try
-                    {
-                        errorMask?.PushIndex((int)Race_FieldIndex.RaceStats);
-                        item.RaceStats = Mutagen.Bethesda.Oblivion.RaceStatsGendered.CreateFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null,
-                            masterReferences: masterReferences,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.RaceStats);
-                }
-                case 0x304D414E: // NAM0
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength + contentLength; // Skip marker
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<FacePart>.Instance.ParseRepeatedItem(
-                        frame: frame,
-                        triggeringRecord: FacePart_Registration.TriggeringRecordTypes,
-                        item: item.FaceData,
-                        fieldIndex: (int)Race_FieldIndex.FaceData,
-                        lengthLength: frame.MetaData.SubConstants.LengthLength,
-                        errorMask: errorMask,
-                        transl: (MutagenFrame r, out FacePart listSubItem, ErrorMaskBuilder listErrMask) =>
-                        {
-                            return LoquiBinaryTranslation<FacePart>.Instance.Parse(
-                                frame: r,
-                                item: out listSubItem,
-                                errorMask: listErrMask,
-                                masterReferences: masterReferences);
-                        });
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.FaceData);
-                }
-                case 0x314D414E: // NAM1
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength + contentLength; // Skip marker
-                    try
-                    {
-                        errorMask?.PushIndex((int)Race_FieldIndex.BodyData);
-                        item.BodyData = Mutagen.Bethesda.Oblivion.GenderedBodyData.CreateFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null,
-                            masterReferences: masterReferences,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.BodyData);
-                }
-                case 0x4D414E48: // HNAM
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDLink<Hair>>.Instance.ParseRepeatedItem(
-                        frame: frame.SpawnWithLength(contentLength),
-                        masterReferences: masterReferences,
-                        item: item.Hairs,
-                        transl: FormLinkBinaryTranslation.Instance.Parse);
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.Hairs);
-                }
-                case 0x4D414E45: // ENAM
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDLink<Eye>>.Instance.ParseRepeatedItem(
-                        frame: frame.SpawnWithLength(contentLength),
-                        masterReferences: masterReferences,
-                        item: item.Eyes,
-                        transl: FormLinkBinaryTranslation.Instance.Parse);
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.Eyes);
-                }
-                case 0x53474746: // FGGS
-                case 0x41474746: // FGGA
-                case 0x53544746: // FGTS
-                {
-                    try
-                    {
-                        errorMask?.PushIndex((int)Race_FieldIndex.FaceGenData);
-                        item.FaceGenData = Mutagen.Bethesda.Oblivion.FaceGenData.CreateFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null,
-                            masterReferences: masterReferences,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.FaceGenData);
-                }
-                case 0x4D414E53: // SNAM
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out Byte[] UnknownParse))
-                    {
-                        item.Unknown = UnknownParse;
-                    }
-                    else
-                    {
-                        item.Unknown = default(Byte[]);
-                    }
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.Unknown);
-                }
-                default:
-                    return OblivionMajorRecord.FillBinaryRecordTypes(
-                        item: item,
-                        frame: frame,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength,
-                        recordTypeConverter: recordTypeConverter,
-                        masterReferences: masterReferences,
-                        errorMask: errorMask);
-            }
-        }
 
         #endregion
 
@@ -1601,8 +1189,8 @@ namespace Mutagen.Bethesda.Oblivion
             Race def = null,
             bool doMasks = true)
         {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            RaceSetterCopyCommon.CopyFieldsFrom(
+            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((RaceSetterCopyCommon)((IRaceGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -1618,13 +1206,205 @@ namespace Mutagen.Bethesda.Oblivion
             Race_CopyMask copyMask = null,
             Race def = null)
         {
-            RaceSetterCopyCommon.CopyFieldsFrom(
+            ((RaceSetterCopyCommon)((IRaceGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
+
+        #region Xml Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this IRaceInternal item,
+            XElement node,
+            MissingCreate missing = MissingCreate.New,
+            Race_TranslationMask translationMask = null)
+        {
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: null,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this IRaceInternal item,
+            XElement node,
+            out Race_ErrorMask errorMask,
+            bool doMasks = true,
+            Race_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask.GetCrystal());
+            errorMask = Race_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public new static void CopyInFromXml(
+            this IRaceInternal item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ((RaceSetterCommon)((IRaceGetter)item).CommonSetterInstance()).CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        public static void CopyInFromXml(
+            this IRaceInternal item,
+            string path,
+            MissingCreate missing = MissingCreate.New,
+            Race_TranslationMask translationMask = null)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IRaceInternal item,
+            string path,
+            out Race_ErrorMask errorMask,
+            Race_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IRaceInternal item,
+            string path,
+            ErrorMaskBuilder errorMask,
+            Race_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        public static void CopyInFromXml(
+            this IRaceInternal item,
+            Stream stream,
+            MissingCreate missing = MissingCreate.New,
+            Race_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IRaceInternal item,
+            Stream stream,
+            out Race_ErrorMask errorMask,
+            Race_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IRaceInternal item,
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            Race_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        #endregion
+
+        #region Binary Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this IRaceInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences)
+        {
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: null);
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this IRaceInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            out Race_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: errorMaskBuilder);
+            errorMask = Race_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public new static void CopyInFromBinary(
+            this IRaceInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((RaceSetterCommon)((IRaceGetter)item).CommonSetterInstance()).CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+        #endregion
 
     }
     #endregion
@@ -2165,6 +1945,455 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Clear(item: (IRaceInternal)item);
         }
+        
+        #region Xml Translation
+        protected static void FillPrivateElementXml(
+            IRaceInternal item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "HasDATADataType":
+                    item.DATADataTypeState |= Race.DATADataType.Has;
+                    break;
+                default:
+                    OblivionMajorRecordSetterCommon.FillPrivateElementXml(
+                        item: item,
+                        node: node,
+                        name: name,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    break;
+            }
+        }
+        
+        public new void CopyInFromXml(
+            IRaceInternal item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    FillPrivateElementXml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    RaceXmlCreateTranslation.FillPublicElementXml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+        
+        #endregion
+        
+        #region Binary Translation
+        public override RecordType RecordType => Race_Registration.RACE_HEADER;
+        protected static void FillBinaryStructs(
+            IRaceInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            OblivionMajorRecordSetterCommon.FillBinaryStructs(
+                item: item,
+                frame: frame,
+                masterReferences: masterReferences,
+                errorMask: errorMask);
+        }
+        
+        protected static TryGet<int?> FillBinaryRecordTypes(
+            IRaceInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x4C4C5546: // FULL
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String NameParse))
+                    {
+                        item.Name = NameParse;
+                    }
+                    else
+                    {
+                        item.Name = default(String);
+                    }
+                    return TryGet<int?>.Succeed((int)Race_FieldIndex.Name);
+                }
+                case 0x43534544: // DESC
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String DescriptionParse))
+                    {
+                        item.Description = DescriptionParse;
+                    }
+                    else
+                    {
+                        item.Description = default(String);
+                    }
+                    return TryGet<int?>.Succeed((int)Race_FieldIndex.Description);
+                }
+                case 0x4F4C5053: // SPLO
+                {
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDLink<Spell>>.Instance.ParseRepeatedItem(
+                        frame: frame,
+                        triggeringRecord: Race_Registration.SPLO_HEADER,
+                        masterReferences: masterReferences,
+                        item: item.Spells,
+                        lengthLength: frame.MetaData.SubConstants.LengthLength,
+                        transl: FormLinkBinaryTranslation.Instance.Parse);
+                    return TryGet<int?>.Succeed((int)Race_FieldIndex.Spells);
+                }
+                case 0x4D414E58: // XNAM
+                {
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<RaceRelation>.Instance.ParseRepeatedItem(
+                        frame: frame,
+                        triggeringRecord: Race_Registration.XNAM_HEADER,
+                        item: item.Relations,
+                        fieldIndex: (int)Race_FieldIndex.Relations,
+                        lengthLength: frame.MetaData.SubConstants.LengthLength,
+                        errorMask: errorMask,
+                        transl: (MutagenFrame r, out RaceRelation listSubItem, ErrorMaskBuilder listErrMask) =>
+                        {
+                            return LoquiBinaryTranslation<RaceRelation>.Instance.Parse(
+                                frame: r,
+                                item: out listSubItem,
+                                errorMask: listErrMask,
+                                masterReferences: masterReferences);
+                        });
+                    return TryGet<int?>.Succeed((int)Race_FieldIndex.Relations);
+                }
+                case 0x41544144: // DATA
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (!dataFrame.Complete)
+                    {
+                        item.DATADataTypeState = Race.DATADataType.Has;
+                    }
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<SkillBoost>.Instance.ParseRepeatedItem(
+                        frame: frame,
+                        amount: 7,
+                        item: item.SkillBoosts,
+                        fieldIndex: (int)Race_FieldIndex.SkillBoosts,
+                        errorMask: errorMask,
+                        transl: (MutagenFrame r, out SkillBoost listSubItem, ErrorMaskBuilder listErrMask) =>
+                        {
+                            return LoquiBinaryTranslation<SkillBoost>.Instance.Parse(
+                                frame: r,
+                                item: out listSubItem,
+                                errorMask: listErrMask,
+                                masterReferences: masterReferences);
+                        });
+                    if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                        frame: dataFrame.SpawnWithLength(4),
+                        item: out Byte[] FluffParse))
+                    {
+                        item.Fluff = FluffParse;
+                    }
+                    else
+                    {
+                        item.Fluff = default(Byte[]);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single MaleHeightParse))
+                    {
+                        item.MaleHeight = MaleHeightParse;
+                    }
+                    else
+                    {
+                        item.MaleHeight = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single FemaleHeightParse))
+                    {
+                        item.FemaleHeight = FemaleHeightParse;
+                    }
+                    else
+                    {
+                        item.FemaleHeight = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single MaleWeightParse))
+                    {
+                        item.MaleWeight = MaleWeightParse;
+                    }
+                    else
+                    {
+                        item.MaleWeight = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single FemaleWeightParse))
+                    {
+                        item.FemaleWeight = FemaleWeightParse;
+                    }
+                    else
+                    {
+                        item.FemaleWeight = default(Single);
+                    }
+                    if (EnumBinaryTranslation<Race.Flag>.Instance.Parse(
+                        frame: dataFrame.SpawnWithLength(2),
+                        item: out Race.Flag FlagsParse))
+                    {
+                        item.Flags = FlagsParse;
+                    }
+                    else
+                    {
+                        item.Flags = default(Race.Flag);
+                    }
+                    return TryGet<int?>.Succeed((int)Race_FieldIndex.Flags);
+                }
+                case 0x4D414E56: // VNAM
+                {
+                    try
+                    {
+                        errorMask?.PushIndex((int)Race_FieldIndex.Voices);
+                        item.Voices = Mutagen.Bethesda.Oblivion.RaceVoices.CreateFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null,
+                            masterReferences: masterReferences,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    return TryGet<int?>.Succeed((int)Race_FieldIndex.Voices);
+                }
+                case 0x4D414E44: // DNAM
+                {
+                    try
+                    {
+                        errorMask?.PushIndex((int)Race_FieldIndex.DefaultHair);
+                        item.DefaultHair = Mutagen.Bethesda.Oblivion.RaceHair.CreateFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null,
+                            masterReferences: masterReferences,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    return TryGet<int?>.Succeed((int)Race_FieldIndex.DefaultHair);
+                }
+                case 0x4D414E43: // CNAM
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    item.DefaultHairColor = frame.ReadUInt8();
+                    return TryGet<int?>.Succeed((int)Race_FieldIndex.DefaultHairColor);
+                }
+                case 0x4D414E50: // PNAM
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    item.FaceGenMainClamp = frame.ReadInt32();
+                    return TryGet<int?>.Succeed((int)Race_FieldIndex.FaceGenMainClamp);
+                }
+                case 0x4D414E55: // UNAM
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    item.FaceGenFaceClamp = frame.ReadInt32();
+                    return TryGet<int?>.Succeed((int)Race_FieldIndex.FaceGenFaceClamp);
+                }
+                case 0x52545441: // ATTR
+                {
+                    try
+                    {
+                        errorMask?.PushIndex((int)Race_FieldIndex.RaceStats);
+                        item.RaceStats = Mutagen.Bethesda.Oblivion.RaceStatsGendered.CreateFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null,
+                            masterReferences: masterReferences,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    return TryGet<int?>.Succeed((int)Race_FieldIndex.RaceStats);
+                }
+                case 0x304D414E: // NAM0
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength + contentLength; // Skip marker
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<FacePart>.Instance.ParseRepeatedItem(
+                        frame: frame,
+                        triggeringRecord: FacePart_Registration.TriggeringRecordTypes,
+                        item: item.FaceData,
+                        fieldIndex: (int)Race_FieldIndex.FaceData,
+                        lengthLength: frame.MetaData.SubConstants.LengthLength,
+                        errorMask: errorMask,
+                        transl: (MutagenFrame r, out FacePart listSubItem, ErrorMaskBuilder listErrMask) =>
+                        {
+                            return LoquiBinaryTranslation<FacePart>.Instance.Parse(
+                                frame: r,
+                                item: out listSubItem,
+                                errorMask: listErrMask,
+                                masterReferences: masterReferences);
+                        });
+                    return TryGet<int?>.Succeed((int)Race_FieldIndex.FaceData);
+                }
+                case 0x314D414E: // NAM1
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength + contentLength; // Skip marker
+                    try
+                    {
+                        errorMask?.PushIndex((int)Race_FieldIndex.BodyData);
+                        item.BodyData = Mutagen.Bethesda.Oblivion.GenderedBodyData.CreateFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null,
+                            masterReferences: masterReferences,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    return TryGet<int?>.Succeed((int)Race_FieldIndex.BodyData);
+                }
+                case 0x4D414E48: // HNAM
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDLink<Hair>>.Instance.ParseRepeatedItem(
+                        frame: frame.SpawnWithLength(contentLength),
+                        masterReferences: masterReferences,
+                        item: item.Hairs,
+                        transl: FormLinkBinaryTranslation.Instance.Parse);
+                    return TryGet<int?>.Succeed((int)Race_FieldIndex.Hairs);
+                }
+                case 0x4D414E45: // ENAM
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDLink<Eye>>.Instance.ParseRepeatedItem(
+                        frame: frame.SpawnWithLength(contentLength),
+                        masterReferences: masterReferences,
+                        item: item.Eyes,
+                        transl: FormLinkBinaryTranslation.Instance.Parse);
+                    return TryGet<int?>.Succeed((int)Race_FieldIndex.Eyes);
+                }
+                case 0x53474746: // FGGS
+                case 0x41474746: // FGGA
+                case 0x53544746: // FGTS
+                {
+                    try
+                    {
+                        errorMask?.PushIndex((int)Race_FieldIndex.FaceGenData);
+                        item.FaceGenData = Mutagen.Bethesda.Oblivion.FaceGenData.CreateFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null,
+                            masterReferences: masterReferences,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    return TryGet<int?>.Succeed((int)Race_FieldIndex.FaceGenData);
+                }
+                case 0x4D414E53: // SNAM
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: out Byte[] UnknownParse))
+                    {
+                        item.Unknown = UnknownParse;
+                    }
+                    else
+                    {
+                        item.Unknown = default(Byte[]);
+                    }
+                    return TryGet<int?>.Succeed((int)Race_FieldIndex.Unknown);
+                }
+                default:
+                    return OblivionMajorRecordSetterCommon.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter,
+                        masterReferences: masterReferences,
+                        errorMask: errorMask);
+            }
+        }
+        
+        public new void CopyInFromBinary(
+            IRaceInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            UtilityTranslation.MajorRecordParse<IRaceInternal>(
+                record: item,
+                frame: frame,
+                errorMask: errorMask,
+                recType: RecordType,
+                recordTypeConverter: recordTypeConverter,
+                masterReferences: masterReferences,
+                fillStructs: FillBinaryStructs,
+                fillTyped: FillBinaryRecordTypes);
+        }
+        
+        #endregion
         
     }
     public partial class RaceCommon : OblivionMajorRecordCommon
@@ -2825,14 +3054,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public new static readonly RaceSetterCopyCommon Instance = new RaceSetterCopyCommon();
 
         #region Copy Fields From
-        public static void CopyFieldsFrom(
+        public void CopyFieldsFrom(
             Race item,
             Race rhs,
             Race def,
             ErrorMaskBuilder errorMask,
             Race_CopyMask copyMask)
         {
-            OblivionMajorRecordSetterCopyCommon.CopyFieldsFrom(
+            ((OblivionMajorRecordSetterCopyCommon)((IOblivionMajorRecordGetter)item).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -3026,7 +3255,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             case CopyOption.Reference:
                                 throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
-                                RaceVoicesSetterCopyCommon.CopyFieldsFrom(
+                                ((RaceVoicesSetterCopyCommon)((IRaceVoicesGetter)item.Voices).CommonSetterCopyInstance()).CopyFieldsFrom(
                                     item: item.Voices,
                                     rhs: rhs.Voices,
                                     def: def?.Voices,
@@ -3077,7 +3306,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             case CopyOption.Reference:
                                 throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
-                                RaceHairSetterCopyCommon.CopyFieldsFrom(
+                                ((RaceHairSetterCopyCommon)((IRaceHairGetter)item.DefaultHair).CommonSetterCopyInstance()).CopyFieldsFrom(
                                     item: item.DefaultHair,
                                     rhs: rhs.DefaultHair,
                                     def: def?.DefaultHair,
@@ -3218,7 +3447,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             case CopyOption.Reference:
                                 throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
-                                RaceStatsGenderedSetterCopyCommon.CopyFieldsFrom(
+                                ((RaceStatsGenderedSetterCopyCommon)((IRaceStatsGenderedGetter)item.RaceStats).CommonSetterCopyInstance()).CopyFieldsFrom(
                                     item: item.RaceStats,
                                     rhs: rhs.RaceStats,
                                     def: def?.RaceStats,
@@ -3302,7 +3531,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             case CopyOption.Reference:
                                 throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
-                                GenderedBodyDataSetterCopyCommon.CopyFieldsFrom(
+                                ((GenderedBodyDataSetterCopyCommon)((IGenderedBodyDataGetter)item.BodyData).CommonSetterCopyInstance()).CopyFieldsFrom(
                                     item: item.BodyData,
                                     rhs: rhs.BodyData,
                                     def: def?.BodyData,
@@ -3391,7 +3620,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             case CopyOption.Reference:
                                 throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
-                                FaceGenDataSetterCopyCommon.CopyFieldsFrom(
+                                ((FaceGenDataSetterCopyCommon)((IFaceGenDataGetter)item.FaceGenData).CommonSetterCopyInstance()).CopyFieldsFrom(
                                     item: item.FaceGenData,
                                     rhs: rhs.FaceGenData,
                                     def: def?.FaceGenData,
@@ -5934,69 +6163,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public CopyOption Hairs;
         public CopyOption Eyes;
         public MaskItem<CopyOption, FaceGenData_CopyMask> FaceGenData;
-        public bool Unknown;
-        public bool DATADataTypeState;
-        #endregion
-
-    }
-
-    public class Race_DeepCopyMask : OblivionMajorRecord_DeepCopyMask
-    {
-        public Race_DeepCopyMask()
-        {
-        }
-
-        public Race_DeepCopyMask(bool defaultOn)
-        {
-            this.Name = defaultOn;
-            this.Description = defaultOn;
-            this.Spells = defaultOn;
-            this.Relations = new MaskItem<bool, RaceRelation_DeepCopyMask>(defaultOn, default);
-            this.SkillBoosts = new MaskItem<bool, SkillBoost_DeepCopyMask>(defaultOn, default);
-            this.Fluff = defaultOn;
-            this.MaleHeight = defaultOn;
-            this.FemaleHeight = defaultOn;
-            this.MaleWeight = defaultOn;
-            this.FemaleWeight = defaultOn;
-            this.Flags = defaultOn;
-            this.Voices = new MaskItem<bool, RaceVoices_DeepCopyMask>(defaultOn, default);
-            this.DefaultHair = new MaskItem<bool, RaceHair_DeepCopyMask>(defaultOn, default);
-            this.DefaultHairColor = defaultOn;
-            this.FaceGenMainClamp = defaultOn;
-            this.FaceGenFaceClamp = defaultOn;
-            this.RaceStats = new MaskItem<bool, RaceStatsGendered_DeepCopyMask>(defaultOn, default);
-            this.FaceData = new MaskItem<bool, FacePart_DeepCopyMask>(defaultOn, default);
-            this.BodyData = new MaskItem<bool, GenderedBodyData_DeepCopyMask>(defaultOn, default);
-            this.Hairs = defaultOn;
-            this.Eyes = defaultOn;
-            this.FaceGenData = new MaskItem<bool, FaceGenData_DeepCopyMask>(defaultOn, default);
-            this.Unknown = defaultOn;
-            this.DATADataTypeState = defaultOn;
-        }
-
-        #region Members
-        public bool Name;
-        public bool Description;
-        public bool Spells;
-        public MaskItem<bool, RaceRelation_DeepCopyMask> Relations;
-        public MaskItem<bool, SkillBoost_DeepCopyMask> SkillBoosts;
-        public bool Fluff;
-        public bool MaleHeight;
-        public bool FemaleHeight;
-        public bool MaleWeight;
-        public bool FemaleWeight;
-        public bool Flags;
-        public MaskItem<bool, RaceVoices_DeepCopyMask> Voices;
-        public MaskItem<bool, RaceHair_DeepCopyMask> DefaultHair;
-        public bool DefaultHairColor;
-        public bool FaceGenMainClamp;
-        public bool FaceGenFaceClamp;
-        public MaskItem<bool, RaceStatsGendered_DeepCopyMask> RaceStats;
-        public MaskItem<bool, FacePart_DeepCopyMask> FaceData;
-        public MaskItem<bool, GenderedBodyData_DeepCopyMask> BodyData;
-        public bool Hairs;
-        public bool Eyes;
-        public MaskItem<bool, FaceGenData_DeepCopyMask> FaceGenData;
         public bool Unknown;
         public bool DATADataTypeState;
         #endregion

@@ -331,29 +331,12 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
             }
             var ret = new Climate();
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    FillPrivateElementXml(
-                        item: ret,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    ClimateXmlCreateTranslation.FillPublicElementXml(
-                        item: ret,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
+            ((ClimateSetterCommon)((IClimateGetter)ret).CommonSetterInstance()).CopyInFromXml(
+                item: ret,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             return ret;
         }
 
@@ -438,29 +421,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #endregion
-
-        protected static void FillPrivateElementXml(
-            Climate item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "HasTNAMDataType":
-                    item.TNAMDataTypeState |= Climate.TNAMDataType.Has;
-                    break;
-                default:
-                    OblivionMajorRecord.FillPrivateElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
 
         #endregion
 
@@ -584,169 +544,16 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new Climate();
-            UtilityTranslation.MajorRecordParse<IClimateInternal>(
-                record: ret,
-                frame: frame,
-                errorMask: errorMask,
-                recType: Climate_Registration.CLMT_HEADER,
-                recordTypeConverter: recordTypeConverter,
+            ((ClimateSetterCommon)((IClimateGetter)ret).CommonSetterInstance()).CopyInFromBinary(
+                item: ret,
                 masterReferences: masterReferences,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                frame: frame,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
             return ret;
         }
 
         #endregion
-
-        protected static void FillBinaryStructs(
-            IClimateInternal item,
-            MutagenFrame frame,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            OblivionMajorRecord.FillBinaryStructs(
-                item: item,
-                frame: frame,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
-        }
-
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IClimateInternal item,
-            MutagenFrame frame,
-            RecordType nextRecordType,
-            int contentLength,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask,
-            RecordTypeConverter recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x54534C57: // WLST
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<WeatherChance>.Instance.ParseRepeatedItem(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: item.Weathers,
-                        fieldIndex: (int)Climate_FieldIndex.Weathers,
-                        errorMask: errorMask,
-                        transl: (MutagenFrame r, out WeatherChance listSubItem, ErrorMaskBuilder listErrMask) =>
-                        {
-                            return LoquiBinaryTranslation<WeatherChance>.Instance.Parse(
-                                frame: r,
-                                item: out listSubItem,
-                                errorMask: listErrMask,
-                                masterReferences: masterReferences);
-                        });
-                    return TryGet<int?>.Succeed((int)Climate_FieldIndex.Weathers);
-                }
-                case 0x4D414E46: // FNAM
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String SunTextureParse))
-                    {
-                        item.SunTexture = SunTextureParse;
-                    }
-                    else
-                    {
-                        item.SunTexture = default(String);
-                    }
-                    return TryGet<int?>.Succeed((int)Climate_FieldIndex.SunTexture);
-                }
-                case 0x4D414E47: // GNAM
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String SunGlareTextureParse))
-                    {
-                        item.SunGlareTexture = SunGlareTextureParse;
-                    }
-                    else
-                    {
-                        item.SunGlareTexture = default(String);
-                    }
-                    return TryGet<int?>.Succeed((int)Climate_FieldIndex.SunGlareTexture);
-                }
-                case 0x4C444F4D: // MODL
-                {
-                    try
-                    {
-                        errorMask?.PushIndex((int)Climate_FieldIndex.Model);
-                        item.Model = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null,
-                            masterReferences: masterReferences,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    return TryGet<int?>.Succeed((int)Climate_FieldIndex.Model);
-                }
-                case 0x4D414E54: // TNAM
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    var dataFrame = frame.SpawnWithLength(contentLength);
-                    if (!dataFrame.Complete)
-                    {
-                        item.TNAMDataTypeState = TNAMDataType.Has;
-                    }
-                    ClimateBinaryCreateTranslation.FillBinarySunriseBeginCustomPublic(
-                        frame: dataFrame,
-                        item: item,
-                        masterReferences: masterReferences,
-                        errorMask: errorMask);
-                    ClimateBinaryCreateTranslation.FillBinarySunriseEndCustomPublic(
-                        frame: dataFrame,
-                        item: item,
-                        masterReferences: masterReferences,
-                        errorMask: errorMask);
-                    ClimateBinaryCreateTranslation.FillBinarySunsetBeginCustomPublic(
-                        frame: dataFrame,
-                        item: item,
-                        masterReferences: masterReferences,
-                        errorMask: errorMask);
-                    ClimateBinaryCreateTranslation.FillBinarySunsetEndCustomPublic(
-                        frame: dataFrame,
-                        item: item,
-                        masterReferences: masterReferences,
-                        errorMask: errorMask);
-                    item.Volatility = dataFrame.ReadUInt8();
-                    ClimateBinaryCreateTranslation.FillBinaryPhaseCustomPublic(
-                        frame: dataFrame,
-                        item: item,
-                        masterReferences: masterReferences,
-                        errorMask: errorMask);
-                    ClimateBinaryCreateTranslation.FillBinaryPhaseLengthCustomPublic(
-                        frame: dataFrame,
-                        item: item,
-                        masterReferences: masterReferences,
-                        errorMask: errorMask);
-                    return TryGet<int?>.Succeed((int)Climate_FieldIndex.PhaseLength);
-                }
-                default:
-                    return OblivionMajorRecord.FillBinaryRecordTypes(
-                        item: item,
-                        frame: frame,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength,
-                        recordTypeConverter: recordTypeConverter,
-                        masterReferences: masterReferences,
-                        errorMask: errorMask);
-            }
-        }
 
         #endregion
 
@@ -959,8 +766,8 @@ namespace Mutagen.Bethesda.Oblivion
             Climate def = null,
             bool doMasks = true)
         {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            ClimateSetterCopyCommon.CopyFieldsFrom(
+            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((ClimateSetterCopyCommon)((IClimateGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -976,13 +783,205 @@ namespace Mutagen.Bethesda.Oblivion
             Climate_CopyMask copyMask = null,
             Climate def = null)
         {
-            ClimateSetterCopyCommon.CopyFieldsFrom(
+            ((ClimateSetterCopyCommon)((IClimateGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
+
+        #region Xml Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this IClimateInternal item,
+            XElement node,
+            MissingCreate missing = MissingCreate.New,
+            Climate_TranslationMask translationMask = null)
+        {
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: null,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this IClimateInternal item,
+            XElement node,
+            out Climate_ErrorMask errorMask,
+            bool doMasks = true,
+            Climate_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask.GetCrystal());
+            errorMask = Climate_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public new static void CopyInFromXml(
+            this IClimateInternal item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ((ClimateSetterCommon)((IClimateGetter)item).CommonSetterInstance()).CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        public static void CopyInFromXml(
+            this IClimateInternal item,
+            string path,
+            MissingCreate missing = MissingCreate.New,
+            Climate_TranslationMask translationMask = null)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IClimateInternal item,
+            string path,
+            out Climate_ErrorMask errorMask,
+            Climate_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IClimateInternal item,
+            string path,
+            ErrorMaskBuilder errorMask,
+            Climate_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        public static void CopyInFromXml(
+            this IClimateInternal item,
+            Stream stream,
+            MissingCreate missing = MissingCreate.New,
+            Climate_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IClimateInternal item,
+            Stream stream,
+            out Climate_ErrorMask errorMask,
+            Climate_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IClimateInternal item,
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            Climate_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        #endregion
+
+        #region Binary Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this IClimateInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences)
+        {
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: null);
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this IClimateInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            out Climate_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: errorMaskBuilder);
+            errorMask = Climate_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public new static void CopyInFromBinary(
+            this IClimateInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((ClimateSetterCommon)((IClimateGetter)item).CommonSetterInstance()).CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+        #endregion
 
     }
     #endregion
@@ -1351,6 +1350,236 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IClimateInternal)item);
         }
         
+        #region Xml Translation
+        protected static void FillPrivateElementXml(
+            IClimateInternal item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "HasTNAMDataType":
+                    item.TNAMDataTypeState |= Climate.TNAMDataType.Has;
+                    break;
+                default:
+                    OblivionMajorRecordSetterCommon.FillPrivateElementXml(
+                        item: item,
+                        node: node,
+                        name: name,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    break;
+            }
+        }
+        
+        public new void CopyInFromXml(
+            IClimateInternal item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    FillPrivateElementXml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    ClimateXmlCreateTranslation.FillPublicElementXml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+        
+        #endregion
+        
+        #region Binary Translation
+        public override RecordType RecordType => Climate_Registration.CLMT_HEADER;
+        protected static void FillBinaryStructs(
+            IClimateInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            OblivionMajorRecordSetterCommon.FillBinaryStructs(
+                item: item,
+                frame: frame,
+                masterReferences: masterReferences,
+                errorMask: errorMask);
+        }
+        
+        protected static TryGet<int?> FillBinaryRecordTypes(
+            IClimateInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x54534C57: // WLST
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<WeatherChance>.Instance.ParseRepeatedItem(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: item.Weathers,
+                        fieldIndex: (int)Climate_FieldIndex.Weathers,
+                        errorMask: errorMask,
+                        transl: (MutagenFrame r, out WeatherChance listSubItem, ErrorMaskBuilder listErrMask) =>
+                        {
+                            return LoquiBinaryTranslation<WeatherChance>.Instance.Parse(
+                                frame: r,
+                                item: out listSubItem,
+                                errorMask: listErrMask,
+                                masterReferences: masterReferences);
+                        });
+                    return TryGet<int?>.Succeed((int)Climate_FieldIndex.Weathers);
+                }
+                case 0x4D414E46: // FNAM
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String SunTextureParse))
+                    {
+                        item.SunTexture = SunTextureParse;
+                    }
+                    else
+                    {
+                        item.SunTexture = default(String);
+                    }
+                    return TryGet<int?>.Succeed((int)Climate_FieldIndex.SunTexture);
+                }
+                case 0x4D414E47: // GNAM
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String SunGlareTextureParse))
+                    {
+                        item.SunGlareTexture = SunGlareTextureParse;
+                    }
+                    else
+                    {
+                        item.SunGlareTexture = default(String);
+                    }
+                    return TryGet<int?>.Succeed((int)Climate_FieldIndex.SunGlareTexture);
+                }
+                case 0x4C444F4D: // MODL
+                {
+                    try
+                    {
+                        errorMask?.PushIndex((int)Climate_FieldIndex.Model);
+                        item.Model = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null,
+                            masterReferences: masterReferences,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    return TryGet<int?>.Succeed((int)Climate_FieldIndex.Model);
+                }
+                case 0x4D414E54: // TNAM
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (!dataFrame.Complete)
+                    {
+                        item.TNAMDataTypeState = Climate.TNAMDataType.Has;
+                    }
+                    ClimateBinaryCreateTranslation.FillBinarySunriseBeginCustomPublic(
+                        frame: dataFrame,
+                        item: item,
+                        masterReferences: masterReferences,
+                        errorMask: errorMask);
+                    ClimateBinaryCreateTranslation.FillBinarySunriseEndCustomPublic(
+                        frame: dataFrame,
+                        item: item,
+                        masterReferences: masterReferences,
+                        errorMask: errorMask);
+                    ClimateBinaryCreateTranslation.FillBinarySunsetBeginCustomPublic(
+                        frame: dataFrame,
+                        item: item,
+                        masterReferences: masterReferences,
+                        errorMask: errorMask);
+                    ClimateBinaryCreateTranslation.FillBinarySunsetEndCustomPublic(
+                        frame: dataFrame,
+                        item: item,
+                        masterReferences: masterReferences,
+                        errorMask: errorMask);
+                    item.Volatility = dataFrame.ReadUInt8();
+                    ClimateBinaryCreateTranslation.FillBinaryPhaseCustomPublic(
+                        frame: dataFrame,
+                        item: item,
+                        masterReferences: masterReferences,
+                        errorMask: errorMask);
+                    ClimateBinaryCreateTranslation.FillBinaryPhaseLengthCustomPublic(
+                        frame: dataFrame,
+                        item: item,
+                        masterReferences: masterReferences,
+                        errorMask: errorMask);
+                    return TryGet<int?>.Succeed((int)Climate_FieldIndex.PhaseLength);
+                }
+                default:
+                    return OblivionMajorRecordSetterCommon.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter,
+                        masterReferences: masterReferences,
+                        errorMask: errorMask);
+            }
+        }
+        
+        public new void CopyInFromBinary(
+            IClimateInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            UtilityTranslation.MajorRecordParse<IClimateInternal>(
+                record: item,
+                frame: frame,
+                errorMask: errorMask,
+                recType: RecordType,
+                recordTypeConverter: recordTypeConverter,
+                masterReferences: masterReferences,
+                fillStructs: FillBinaryStructs,
+                fillTyped: FillBinaryRecordTypes);
+        }
+        
+        #endregion
+        
     }
     public partial class ClimateCommon : OblivionMajorRecordCommon
     {
@@ -1705,14 +1934,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public new static readonly ClimateSetterCopyCommon Instance = new ClimateSetterCopyCommon();
 
         #region Copy Fields From
-        public static void CopyFieldsFrom(
+        public void CopyFieldsFrom(
             Climate item,
             Climate rhs,
             Climate def,
             ErrorMaskBuilder errorMask,
             Climate_CopyMask copyMask)
         {
-            OblivionMajorRecordSetterCopyCommon.CopyFieldsFrom(
+            ((OblivionMajorRecordSetterCopyCommon)((IOblivionMajorRecordGetter)item).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1829,7 +2058,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             case CopyOption.Reference:
                                 throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
-                                ModelSetterCopyCommon.CopyFieldsFrom(
+                                ((ModelSetterCopyCommon)((IModelGetter)item.Model).CommonSetterCopyInstance()).CopyFieldsFrom(
                                     item: item.Model,
                                     rhs: rhs.Model,
                                     def: def?.Model,
@@ -3176,45 +3405,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool SunTexture;
         public bool SunGlareTexture;
         public MaskItem<CopyOption, Model_CopyMask> Model;
-        public bool SunriseBegin;
-        public bool SunriseEnd;
-        public bool SunsetBegin;
-        public bool SunsetEnd;
-        public bool Volatility;
-        public bool Phase;
-        public bool PhaseLength;
-        public bool TNAMDataTypeState;
-        #endregion
-
-    }
-
-    public class Climate_DeepCopyMask : OblivionMajorRecord_DeepCopyMask
-    {
-        public Climate_DeepCopyMask()
-        {
-        }
-
-        public Climate_DeepCopyMask(bool defaultOn)
-        {
-            this.Weathers = new MaskItem<bool, WeatherChance_DeepCopyMask>(defaultOn, default);
-            this.SunTexture = defaultOn;
-            this.SunGlareTexture = defaultOn;
-            this.Model = new MaskItem<bool, Model_DeepCopyMask>(defaultOn, default);
-            this.SunriseBegin = defaultOn;
-            this.SunriseEnd = defaultOn;
-            this.SunsetBegin = defaultOn;
-            this.SunsetEnd = defaultOn;
-            this.Volatility = defaultOn;
-            this.Phase = defaultOn;
-            this.PhaseLength = defaultOn;
-            this.TNAMDataTypeState = defaultOn;
-        }
-
-        #region Members
-        public MaskItem<bool, WeatherChance_DeepCopyMask> Weathers;
-        public bool SunTexture;
-        public bool SunGlareTexture;
-        public MaskItem<bool, Model_DeepCopyMask> Model;
         public bool SunriseBegin;
         public bool SunriseEnd;
         public bool SunsetBegin;

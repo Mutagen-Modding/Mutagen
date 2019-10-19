@@ -178,23 +178,12 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
             }
             var ret = new WorldspaceBlock();
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    WorldspaceBlockXmlCreateTranslation.FillPublicElementXml(
-                        item: ret,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
+            ((WorldspaceBlockSetterCommon)((IWorldspaceBlockGetter)ret).CommonSetterInstance()).CopyInFromXml(
+                item: ret,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             return ret;
         }
 
@@ -375,86 +364,16 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new WorldspaceBlock();
-            await UtilityAsyncTranslation.GroupParse(
-                record: ret,
-                frame: frame,
+            await ((WorldspaceBlockSetterCommon)((IWorldspaceBlockGetter)ret).CommonSetterInstance()).CopyInFromBinary(
+                item: ret,
                 masterReferences: masterReferences,
-                errorMask: errorMask,
+                frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes).ConfigureAwait(false);
+                errorMask: errorMask);
             return ret;
         }
 
         #endregion
-
-        protected static void FillBinaryStructs(
-            IWorldspaceBlock item,
-            MutagenFrame frame,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            item.BlockNumberY = frame.ReadInt16();
-            item.BlockNumberX = frame.ReadInt16();
-            if (EnumBinaryTranslation<GroupTypeEnum>.Instance.Parse(
-                frame: frame.SpawnWithLength(4),
-                item: out GroupTypeEnum GroupTypeParse))
-            {
-                item.GroupType = GroupTypeParse;
-            }
-            else
-            {
-                item.GroupType = default(GroupTypeEnum);
-            }
-            if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                frame: frame.SpawnWithLength(4),
-                item: out Byte[] LastModifiedParse))
-            {
-                item.LastModified = LastModifiedParse;
-            }
-            else
-            {
-                item.LastModified = default(Byte[]);
-            }
-        }
-
-        protected static async Task<TryGet<int?>> FillBinaryRecordTypes(
-            IWorldspaceBlock item,
-            MutagenFrame frame,
-            RecordType nextRecordType,
-            int contentLength,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask,
-            RecordTypeConverter recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x50555247: // GRUP
-                {
-                    await Mutagen.Bethesda.Binary.ListAsyncBinaryTranslation<WorldspaceSubBlock>.Instance.ParseRepeatedItem(
-                        frame: frame,
-                        triggeringRecord: WorldspaceBlock_Registration.GRUP_HEADER,
-                        thread: true,
-                        item: item.Items,
-                        fieldIndex: (int)WorldspaceBlock_FieldIndex.Items,
-                        lengthLength: frame.MetaData.GroupConstants.LengthLength,
-                        errorMask: errorMask,
-                        transl: async (MutagenFrame r, ErrorMaskBuilder listErrMask) =>
-                        {
-                            return await LoquiBinaryAsyncTranslation<WorldspaceSubBlock>.Instance.Parse(
-                                frame: r,
-                                errorMask: listErrMask,
-                                masterReferences: masterReferences).ConfigureAwait(false);
-                        }).ConfigureAwait(false);
-                    return TryGet<int?>.Succeed((int)WorldspaceBlock_FieldIndex.Items);
-                }
-                default:
-                    errorMask?.ReportWarning($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
-                    frame.Position += contentLength + frame.MetaData.MajorConstants.HeaderLength;
-                    return TryGet<int?>.Succeed(null);
-            }
-        }
 
         #endregion
 
@@ -626,8 +545,8 @@ namespace Mutagen.Bethesda.Oblivion
             WorldspaceBlock def = null,
             bool doMasks = true)
         {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            WorldspaceBlockSetterCopyCommon.CopyFieldsFrom(
+            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((WorldspaceBlockSetterCopyCommon)((IWorldspaceBlockGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -643,7 +562,7 @@ namespace Mutagen.Bethesda.Oblivion
             WorldspaceBlock_CopyMask copyMask = null,
             WorldspaceBlock def = null)
         {
-            WorldspaceBlockSetterCopyCommon.CopyFieldsFrom(
+            ((WorldspaceBlockSetterCopyCommon)((IWorldspaceBlockGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -662,6 +581,149 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def);
         }
 
+        #region Xml Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this IWorldspaceBlock item,
+            XElement node,
+            MissingCreate missing = MissingCreate.New,
+            WorldspaceBlock_TranslationMask translationMask = null)
+        {
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: null,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this IWorldspaceBlock item,
+            XElement node,
+            out WorldspaceBlock_ErrorMask errorMask,
+            bool doMasks = true,
+            WorldspaceBlock_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask.GetCrystal());
+            errorMask = WorldspaceBlock_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyInFromXml(
+            this IWorldspaceBlock item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ((WorldspaceBlockSetterCommon)((IWorldspaceBlockGetter)item).CommonSetterInstance()).CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        public static void CopyInFromXml(
+            this IWorldspaceBlock item,
+            string path,
+            MissingCreate missing = MissingCreate.New,
+            WorldspaceBlock_TranslationMask translationMask = null)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IWorldspaceBlock item,
+            string path,
+            out WorldspaceBlock_ErrorMask errorMask,
+            WorldspaceBlock_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IWorldspaceBlock item,
+            string path,
+            ErrorMaskBuilder errorMask,
+            WorldspaceBlock_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        public static void CopyInFromXml(
+            this IWorldspaceBlock item,
+            Stream stream,
+            MissingCreate missing = MissingCreate.New,
+            WorldspaceBlock_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IWorldspaceBlock item,
+            Stream stream,
+            out WorldspaceBlock_ErrorMask errorMask,
+            WorldspaceBlock_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IWorldspaceBlock item,
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            WorldspaceBlock_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        #endregion
+
         #region Mutagen
         public static IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(this IWorldspaceBlockGetter obj)
         {
@@ -673,6 +735,54 @@ namespace Mutagen.Bethesda.Oblivion
             return ((WorldspaceBlockSetterCommon)((IWorldspaceBlockGetter)obj).CommonSetterInstance()).EnumerateMajorRecords(obj: obj);
         }
 
+        #endregion
+
+        #region Binary Translation
+        [DebuggerStepThrough]
+        public static async Task CopyInFromBinary(
+            this IWorldspaceBlock item,
+            MutagenFrame frame,
+            MasterReferences masterReferences)
+        {
+            await CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: null).ConfigureAwait(false);
+        }
+
+        [DebuggerStepThrough]
+        public static async Task<WorldspaceBlock_ErrorMask> CopyInFromBinaryWithErrorMask(
+            this IWorldspaceBlock item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            await CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: errorMaskBuilder).ConfigureAwait(false);
+            return WorldspaceBlock_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static async Task CopyInFromBinary(
+            this IWorldspaceBlock item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            await ((WorldspaceBlockSetterCommon)((IWorldspaceBlockGetter)item).CommonSetterInstance()).CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
         #endregion
 
     }
@@ -948,6 +1058,35 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
         
+        #region Xml Translation
+        public void CopyInFromXml(
+            IWorldspaceBlock item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    WorldspaceBlockXmlCreateTranslation.FillPublicElementXml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+        
+        #endregion
+        
         #region Mutagen
         public IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(IWorldspaceBlock obj)
         {
@@ -959,6 +1098,94 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
         }
+        #endregion
+        
+        #region Binary Translation
+        protected static void FillBinaryStructs(
+            IWorldspaceBlock item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            item.BlockNumberY = frame.ReadInt16();
+            item.BlockNumberX = frame.ReadInt16();
+            if (EnumBinaryTranslation<GroupTypeEnum>.Instance.Parse(
+                frame: frame.SpawnWithLength(4),
+                item: out GroupTypeEnum GroupTypeParse))
+            {
+                item.GroupType = GroupTypeParse;
+            }
+            else
+            {
+                item.GroupType = default(GroupTypeEnum);
+            }
+            if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                frame: frame.SpawnWithLength(4),
+                item: out Byte[] LastModifiedParse))
+            {
+                item.LastModified = LastModifiedParse;
+            }
+            else
+            {
+                item.LastModified = default(Byte[]);
+            }
+        }
+        
+        protected static async Task<TryGet<int?>> FillBinaryRecordTypes(
+            IWorldspaceBlock item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x50555247: // GRUP
+                {
+                    await Mutagen.Bethesda.Binary.ListAsyncBinaryTranslation<WorldspaceSubBlock>.Instance.ParseRepeatedItem(
+                        frame: frame,
+                        triggeringRecord: WorldspaceBlock_Registration.GRUP_HEADER,
+                        thread: true,
+                        item: item.Items,
+                        fieldIndex: (int)WorldspaceBlock_FieldIndex.Items,
+                        lengthLength: frame.MetaData.GroupConstants.LengthLength,
+                        errorMask: errorMask,
+                        transl: async (MutagenFrame r, ErrorMaskBuilder listErrMask) =>
+                        {
+                            return await LoquiBinaryAsyncTranslation<WorldspaceSubBlock>.Instance.Parse(
+                                frame: r,
+                                errorMask: listErrMask,
+                                masterReferences: masterReferences).ConfigureAwait(false);
+                        }).ConfigureAwait(false);
+                    return TryGet<int?>.Succeed((int)WorldspaceBlock_FieldIndex.Items);
+                }
+                default:
+                    errorMask?.ReportWarning($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
+                    frame.Position += contentLength + frame.MetaData.MajorConstants.HeaderLength;
+                    return TryGet<int?>.Succeed(null);
+            }
+        }
+        
+        public async Task CopyInFromBinary(
+            IWorldspaceBlock item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            await UtilityAsyncTranslation.GroupParse(
+                record: item,
+                frame: frame,
+                masterReferences: masterReferences,
+                errorMask: errorMask,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: FillBinaryStructs,
+                fillTyped: FillBinaryRecordTypes).ConfigureAwait(false);
+        }
+        
         #endregion
         
     }
@@ -1151,7 +1378,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly WorldspaceBlockSetterCopyCommon Instance = new WorldspaceBlockSetterCopyCommon();
 
         #region Copy Fields From
-        public static void CopyFieldsFrom(
+        public void CopyFieldsFrom(
             WorldspaceBlock item,
             WorldspaceBlock rhs,
             WorldspaceBlock def,
@@ -2152,31 +2379,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool GroupType;
         public bool LastModified;
         public MaskItem<CopyOption, WorldspaceSubBlock_CopyMask> Items;
-        #endregion
-
-    }
-
-    public class WorldspaceBlock_DeepCopyMask
-    {
-        public WorldspaceBlock_DeepCopyMask()
-        {
-        }
-
-        public WorldspaceBlock_DeepCopyMask(bool defaultOn)
-        {
-            this.BlockNumberY = defaultOn;
-            this.BlockNumberX = defaultOn;
-            this.GroupType = defaultOn;
-            this.LastModified = defaultOn;
-            this.Items = new MaskItem<bool, WorldspaceSubBlock_DeepCopyMask>(defaultOn, default);
-        }
-
-        #region Members
-        public bool BlockNumberY;
-        public bool BlockNumberX;
-        public bool GroupType;
-        public bool LastModified;
-        public MaskItem<bool, WorldspaceSubBlock_DeepCopyMask> Items;
         #endregion
 
     }

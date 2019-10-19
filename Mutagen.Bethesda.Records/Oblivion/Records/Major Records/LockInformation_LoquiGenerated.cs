@@ -169,23 +169,12 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
             }
             var ret = new LockInformation();
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    LockInformationXmlCreateTranslation.FillPublicElementXml(
-                        item: ret,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
+            ((LockInformationSetterCommon)((ILockInformationGetter)ret).CommonSetterInstance()).CopyInFromXml(
+                item: ret,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             return ret;
         }
 
@@ -358,54 +347,16 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new LockInformation();
-            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
-                frame.Reader,
-                recordTypeConverter.ConvertToCustom(LockInformation_Registration.XLOC_HEADER)));
-            UtilityTranslation.RecordParse(
-                record: ret,
-                frame: frame,
-                setFinal: true,
+            ((LockInformationSetterCommon)((ILockInformationGetter)ret).CommonSetterInstance()).CopyInFromBinary(
+                item: ret,
                 masterReferences: masterReferences,
-                errorMask: errorMask,
+                frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                errorMask: errorMask);
             return ret;
         }
 
         #endregion
-
-        protected static void FillBinaryStructs(
-            ILockInformation item,
-            MutagenFrame frame,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            item.LockLevel = frame.ReadUInt8();
-            if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                frame: frame.SpawnWithLength(3),
-                item: out Byte[] FluffParse))
-            {
-                item.Fluff = FluffParse;
-            }
-            else
-            {
-                item.Fluff = default(Byte[]);
-            }
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
-                frame: frame,
-                masterReferences: masterReferences,
-                item: item.Key_Property);
-            if (EnumBinaryTranslation<LockInformation.Flag>.Instance.Parse(
-                frame: frame.SpawnWithLength(4),
-                item: out LockInformation.Flag FlagsParse))
-            {
-                item.Flags = FlagsParse;
-            }
-            else
-            {
-                item.Flags = default(LockInformation.Flag);
-            }
-        }
 
         #endregion
 
@@ -572,8 +523,8 @@ namespace Mutagen.Bethesda.Oblivion
             LockInformation def = null,
             bool doMasks = true)
         {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            LockInformationSetterCopyCommon.CopyFieldsFrom(
+            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((LockInformationSetterCopyCommon)((ILockInformationGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -589,7 +540,7 @@ namespace Mutagen.Bethesda.Oblivion
             LockInformation_CopyMask copyMask = null,
             LockInformation def = null)
         {
-            LockInformationSetterCopyCommon.CopyFieldsFrom(
+            ((LockInformationSetterCopyCommon)((ILockInformationGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -607,6 +558,198 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
         }
+
+        #region Xml Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this ILockInformation item,
+            XElement node,
+            MissingCreate missing = MissingCreate.New,
+            LockInformation_TranslationMask translationMask = null)
+        {
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: null,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this ILockInformation item,
+            XElement node,
+            out LockInformation_ErrorMask errorMask,
+            bool doMasks = true,
+            LockInformation_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask.GetCrystal());
+            errorMask = LockInformation_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyInFromXml(
+            this ILockInformation item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ((LockInformationSetterCommon)((ILockInformationGetter)item).CommonSetterInstance()).CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        public static void CopyInFromXml(
+            this ILockInformation item,
+            string path,
+            MissingCreate missing = MissingCreate.New,
+            LockInformation_TranslationMask translationMask = null)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this ILockInformation item,
+            string path,
+            out LockInformation_ErrorMask errorMask,
+            LockInformation_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this ILockInformation item,
+            string path,
+            ErrorMaskBuilder errorMask,
+            LockInformation_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        public static void CopyInFromXml(
+            this ILockInformation item,
+            Stream stream,
+            MissingCreate missing = MissingCreate.New,
+            LockInformation_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this ILockInformation item,
+            Stream stream,
+            out LockInformation_ErrorMask errorMask,
+            LockInformation_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this ILockInformation item,
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            LockInformation_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        #endregion
+
+        #region Binary Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this ILockInformation item,
+            MutagenFrame frame,
+            MasterReferences masterReferences)
+        {
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: null);
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this ILockInformation item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            out LockInformation_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: errorMaskBuilder);
+            errorMask = LockInformation_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyInFromBinary(
+            this ILockInformation item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((LockInformationSetterCommon)((ILockInformationGetter)item).CommonSetterInstance()).CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+        #endregion
 
     }
     #endregion
@@ -866,6 +1009,91 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
         
+        #region Xml Translation
+        public void CopyInFromXml(
+            ILockInformation item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    LockInformationXmlCreateTranslation.FillPublicElementXml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+        
+        #endregion
+        
+        #region Binary Translation
+        protected static void FillBinaryStructs(
+            ILockInformation item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            item.LockLevel = frame.ReadUInt8();
+            if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                frame: frame.SpawnWithLength(3),
+                item: out Byte[] FluffParse))
+            {
+                item.Fluff = FluffParse;
+            }
+            else
+            {
+                item.Fluff = default(Byte[]);
+            }
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
+                frame: frame,
+                masterReferences: masterReferences,
+                item: item.Key_Property);
+            if (EnumBinaryTranslation<LockInformation.Flag>.Instance.Parse(
+                frame: frame.SpawnWithLength(4),
+                item: out LockInformation.Flag FlagsParse))
+            {
+                item.Flags = FlagsParse;
+            }
+            else
+            {
+                item.Flags = default(LockInformation.Flag);
+            }
+        }
+        
+        public void CopyInFromBinary(
+            ILockInformation item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
+                frame.Reader,
+                recordTypeConverter.ConvertToCustom(LockInformation_Registration.XLOC_HEADER)));
+            UtilityTranslation.RecordParse(
+                record: item,
+                frame: frame,
+                setFinal: true,
+                masterReferences: masterReferences,
+                errorMask: errorMask,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: FillBinaryStructs);
+        }
+        
+        #endregion
+        
     }
     public partial class LockInformationCommon
     {
@@ -1010,7 +1238,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly LockInformationSetterCopyCommon Instance = new LockInformationSetterCopyCommon();
 
         #region Copy Fields From
-        public static void CopyFieldsFrom(
+        public void CopyFieldsFrom(
             LockInformation item,
             LockInformation rhs,
             LockInformation def,
@@ -1796,29 +2024,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public LockInformation_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.LockLevel = defaultOn;
-            this.Fluff = defaultOn;
-            this.Key = defaultOn;
-            this.Flags = defaultOn;
-        }
-
-        #region Members
-        public bool LockLevel;
-        public bool Fluff;
-        public bool Key;
-        public bool Flags;
-        #endregion
-
-    }
-
-    public class LockInformation_DeepCopyMask
-    {
-        public LockInformation_DeepCopyMask()
-        {
-        }
-
-        public LockInformation_DeepCopyMask(bool defaultOn)
         {
             this.LockLevel = defaultOn;
             this.Fluff = defaultOn;

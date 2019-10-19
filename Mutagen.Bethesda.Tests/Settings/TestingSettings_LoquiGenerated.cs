@@ -180,23 +180,12 @@ namespace Mutagen.Bethesda.Tests
                     break;
             }
             var ret = new TestingSettings();
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    TestingSettingsXmlCreateTranslation.FillPublicElementXml(
-                        item: ret,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
+            ((TestingSettingsSetterCommon)((ITestingSettingsGetter)ret).CommonSetterInstance()).CopyInFromXml(
+                item: ret,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             return ret;
         }
 
@@ -278,102 +267,6 @@ namespace Mutagen.Bethesda.Tests
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
-        #region Xml Copy In
-        public void CopyInXml(
-            XElement node,
-            MissingCreate missing = MissingCreate.New)
-        {
-            CopyInXmlInternal(
-                missing: missing,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-        }
-
-        public virtual void CopyInXml(
-            XElement node,
-            out TestingSettings_ErrorMask errorMask,
-            TestingSettings_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            CopyInXmlInternal(
-                missing: missing,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = TestingSettings_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        protected void CopyInXmlInternal(
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
-        {
-            var obj = TestingSettings.CreateFromXml(
-                missing: missing,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            this.CopyFieldsFrom(obj);
-        }
-
-        public void CopyInXml(
-            string path,
-            MissingCreate missing = MissingCreate.New)
-        {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            this.CopyInXml(
-                missing: missing,
-                node: node);
-        }
-
-        public void CopyInXml(
-            string path,
-            out TestingSettings_ErrorMask errorMask,
-            TestingSettings_TranslationMask translationMask,
-            MissingCreate missing = MissingCreate.New,
-            bool doMasks = true)
-        {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
-            this.CopyInXml(
-                missing: missing,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask,
-                doMasks: doMasks);
-        }
-
-        public void CopyInXml(
-            Stream stream,
-            MissingCreate missing = MissingCreate.New)
-        {
-            var node = XDocument.Load(stream).Root;
-            this.CopyInXml(
-                missing: missing,
-                node: node);
-        }
-
-        public void CopyInXml(
-            Stream stream,
-            out TestingSettings_ErrorMask errorMask,
-            TestingSettings_TranslationMask translationMask,
-            MissingCreate missing = MissingCreate.New,
-            bool doMasks = true)
-        {
-            var node = XDocument.Load(stream).Root;
-            this.CopyInXml(
-                missing: missing,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask,
-                doMasks: doMasks);
         }
 
         #endregion
@@ -580,8 +473,8 @@ namespace Mutagen.Bethesda.Tests
             TestingSettings def = null,
             bool doMasks = true)
         {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            TestingSettingsSetterCopyCommon.CopyFieldsFrom(
+            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((TestingSettingsSetterCopyCommon)((ITestingSettingsGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -597,7 +490,7 @@ namespace Mutagen.Bethesda.Tests
             TestingSettings_CopyMask copyMask = null,
             TestingSettings def = null)
         {
-            TestingSettingsSetterCopyCommon.CopyFieldsFrom(
+            ((TestingSettingsSetterCopyCommon)((ITestingSettingsGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -615,6 +508,149 @@ namespace Mutagen.Bethesda.Tests
                 copyMask: copyMask,
                 def: def);
         }
+
+        #region Xml Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this ITestingSettings item,
+            XElement node,
+            MissingCreate missing = MissingCreate.New,
+            TestingSettings_TranslationMask translationMask = null)
+        {
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: null,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this ITestingSettings item,
+            XElement node,
+            out TestingSettings_ErrorMask errorMask,
+            bool doMasks = true,
+            TestingSettings_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask.GetCrystal());
+            errorMask = TestingSettings_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyInFromXml(
+            this ITestingSettings item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ((TestingSettingsSetterCommon)((ITestingSettingsGetter)item).CommonSetterInstance()).CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        public static void CopyInFromXml(
+            this ITestingSettings item,
+            string path,
+            MissingCreate missing = MissingCreate.New,
+            TestingSettings_TranslationMask translationMask = null)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this ITestingSettings item,
+            string path,
+            out TestingSettings_ErrorMask errorMask,
+            TestingSettings_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this ITestingSettings item,
+            string path,
+            ErrorMaskBuilder errorMask,
+            TestingSettings_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        public static void CopyInFromXml(
+            this ITestingSettings item,
+            Stream stream,
+            MissingCreate missing = MissingCreate.New,
+            TestingSettings_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this ITestingSettings item,
+            Stream stream,
+            out TestingSettings_ErrorMask errorMask,
+            TestingSettings_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this ITestingSettings item,
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            TestingSettings_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        #endregion
 
     }
     #endregion
@@ -923,6 +959,35 @@ namespace Mutagen.Bethesda.Tests.Internals
             return ret;
         }
         
+        #region Xml Translation
+        public void CopyInFromXml(
+            ITestingSettings item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    TestingSettingsXmlCreateTranslation.FillPublicElementXml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+        
+        #endregion
+        
     }
     public partial class TestingSettingsCommon
     {
@@ -1116,7 +1181,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         public static readonly TestingSettingsSetterCopyCommon Instance = new TestingSettingsSetterCopyCommon();
 
         #region Copy Fields From
-        public static void CopyFieldsFrom(
+        public void CopyFieldsFrom(
             TestingSettings item,
             TestingSettings rhs,
             TestingSettings def,
@@ -1164,7 +1229,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                             item.DataFolderLocations = Utility.GetGetterInterfaceReference<DataFolderLocations>(rhs.DataFolderLocations);
                             break;
                         case CopyOption.CopyIn:
-                            DataFolderLocationsSetterCopyCommon.CopyFieldsFrom(
+                            ((DataFolderLocationsSetterCopyCommon)((IDataFolderLocationsGetter)item.DataFolderLocations).CommonSetterCopyInstance()).CopyFieldsFrom(
                                 item: item.DataFolderLocations,
                                 rhs: rhs.DataFolderLocations,
                                 def: def?.DataFolderLocations,
@@ -1208,7 +1273,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                             item.PassthroughSettings = Utility.GetGetterInterfaceReference<PassthroughSettings>(rhs.PassthroughSettings);
                             break;
                         case CopyOption.CopyIn:
-                            PassthroughSettingsSetterCopyCommon.CopyFieldsFrom(
+                            ((PassthroughSettingsSetterCopyCommon)((IPassthroughSettingsGetter)item.PassthroughSettings).CommonSetterCopyInstance()).CopyFieldsFrom(
                                 item: item.PassthroughSettings,
                                 rhs: rhs.PassthroughSettings,
                                 def: def?.PassthroughSettings,
@@ -2441,37 +2506,6 @@ namespace Mutagen.Bethesda.Tests.Internals
         public MaskItem<CopyOption, DataFolderLocations_CopyMask> DataFolderLocations;
         public MaskItem<CopyOption, PassthroughSettings_CopyMask> PassthroughSettings;
         public MaskItem<CopyOption, TargetGroup_CopyMask> TargetGroups;
-        #endregion
-
-    }
-
-    public class TestingSettings_DeepCopyMask
-    {
-        public TestingSettings_DeepCopyMask()
-        {
-        }
-
-        public TestingSettings_DeepCopyMask(bool defaultOn)
-        {
-            this.TestGroupMasks = defaultOn;
-            this.TestModList = defaultOn;
-            this.TestFlattenedMod = defaultOn;
-            this.TestBenchmarks = defaultOn;
-            this.TestLocators = defaultOn;
-            this.DataFolderLocations = new MaskItem<bool, DataFolderLocations_DeepCopyMask>(defaultOn, default);
-            this.PassthroughSettings = new MaskItem<bool, PassthroughSettings_DeepCopyMask>(defaultOn, default);
-            this.TargetGroups = new MaskItem<bool, TargetGroup_DeepCopyMask>(defaultOn, default);
-        }
-
-        #region Members
-        public bool TestGroupMasks;
-        public bool TestModList;
-        public bool TestFlattenedMod;
-        public bool TestBenchmarks;
-        public bool TestLocators;
-        public MaskItem<bool, DataFolderLocations_DeepCopyMask> DataFolderLocations;
-        public MaskItem<bool, PassthroughSettings_DeepCopyMask> PassthroughSettings;
-        public MaskItem<bool, TargetGroup_DeepCopyMask> TargetGroups;
         #endregion
 
     }

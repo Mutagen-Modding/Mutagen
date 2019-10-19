@@ -58,7 +58,7 @@ namespace Mutagen.Bethesda.Generation
         {
             var data = typeGen.GetFieldData();
             using (var args = new ArgsWrapper(fg,
-                $"{objGen.ObjectName}.SpecialWrite_{typeGen.Name}_Internal"))
+                $"{objGen.CommonClass(LoquiInterfaceType.ISetter, CommonGenerics.Class)}.SpecialWrite_{typeGen.Name}_Internal"))
             {
                 args.Add("item: item");
                 args.Add("writer: writer");

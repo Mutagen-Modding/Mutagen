@@ -34,7 +34,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 DictType dict = field as DictType;
                 LoquiType loqui = dict.ValueTypeGen as LoquiType;
-                data.TriggeringRecordAccessors.Add($"T_RecordType");
+                data.TriggeringRecordAccessors.Add($"Group<T>.T_RecordType");
             }
             return base.PostFieldLoad(obj, field, node);
         }
@@ -267,7 +267,7 @@ namespace Mutagen.Bethesda.Generation
                 }
                 else if (loqui.GenericDef != null)
                 {
-                    data.TriggeringRecordAccessors.Add($"{loqui.GenericDef.Name}_RecordType");
+                    data.TriggeringRecordAccessors.Add($"{loqui.ObjectGen.ObjectName}.{loqui.GenericDef.Name}_RecordType");
                     await AddLoquiSubTypes(loqui);
                 }
                 else if (loqui.RefType == LoquiType.LoquiRefType.Interface)
@@ -286,7 +286,7 @@ namespace Mutagen.Bethesda.Generation
                 {
                     if (subListLoqui.GenericDef != null)
                     {
-                        data.TriggeringRecordAccessors.Add($"{subListLoqui.GenericDef.Name}_RecordType");
+                        data.TriggeringRecordAccessors.Add($"{subListLoqui.ObjectGen.ObjectName}.{subListLoqui.GenericDef.Name}_RecordType");
                     }
                     else
                     {
@@ -318,7 +318,7 @@ namespace Mutagen.Bethesda.Generation
                 {
                     if (subDictLoqui.GenericDef != null)
                     {
-                        data.TriggeringRecordAccessors.Add($"{subDictLoqui.GenericDef.Name}_RecordType");
+                        data.TriggeringRecordAccessors.Add($"{subDictLoqui.ObjectGen.ObjectName}.{subDictLoqui.GenericDef.Name}_RecordType");
                     }
                     else
                     {

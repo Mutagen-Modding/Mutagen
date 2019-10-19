@@ -256,23 +256,12 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
             }
             var ret = new DialogResponse();
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    DialogResponseXmlCreateTranslation.FillPublicElementXml(
-                        item: ret,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
+            ((DialogResponseSetterCommon)((IDialogResponseGetter)ret).CommonSetterInstance()).CopyInFromXml(
+                item: ret,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             return ret;
         }
 
@@ -442,120 +431,16 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new DialogResponse();
-            UtilityTranslation.TypelessRecordParse(
-                record: ret,
-                frame: frame,
-                setFinal: false,
+            ((DialogResponseSetterCommon)((IDialogResponseGetter)ret).CommonSetterInstance()).CopyInFromBinary(
+                item: ret,
                 masterReferences: masterReferences,
-                errorMask: errorMask,
+                frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                errorMask: errorMask);
             return ret;
         }
 
         #endregion
-
-        protected static void FillBinaryStructs(
-            IDialogResponse item,
-            MutagenFrame frame,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-        }
-
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IDialogResponse item,
-            MutagenFrame frame,
-            int? lastParsed,
-            RecordType nextRecordType,
-            int contentLength,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask,
-            RecordTypeConverter recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x54445254: // TRDT
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponse_FieldIndex.Fluff2) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    var dataFrame = frame.SpawnWithLength(contentLength);
-                    if (!dataFrame.Complete)
-                    {
-                        item.TRDTDataTypeState = TRDTDataType.Has;
-                    }
-                    if (EnumBinaryTranslation<EmotionType>.Instance.Parse(
-                        frame: dataFrame.SpawnWithLength(4),
-                        item: out EmotionType EmotionParse))
-                    {
-                        item.Emotion = EmotionParse;
-                    }
-                    else
-                    {
-                        item.Emotion = default(EmotionType);
-                    }
-                    item.EmotionValue = dataFrame.ReadInt32();
-                    if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                        frame: dataFrame.SpawnWithLength(4),
-                        item: out Byte[] Fluff1Parse))
-                    {
-                        item.Fluff1 = Fluff1Parse;
-                    }
-                    else
-                    {
-                        item.Fluff1 = default(Byte[]);
-                    }
-                    item.ResponseNumber = dataFrame.ReadUInt8();
-                    if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                        frame: dataFrame.SpawnWithLength(3),
-                        item: out Byte[] Fluff2Parse))
-                    {
-                        item.Fluff2 = Fluff2Parse;
-                    }
-                    else
-                    {
-                        item.Fluff2 = default(Byte[]);
-                    }
-                    return TryGet<int?>.Succeed((int)DialogResponse_FieldIndex.Fluff2);
-                }
-                case 0x314D414E: // NAM1
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String ResponseTextParse))
-                    {
-                        item.ResponseText = ResponseTextParse;
-                    }
-                    else
-                    {
-                        item.ResponseText = default(String);
-                    }
-                    return TryGet<int?>.Succeed((int)DialogResponse_FieldIndex.ResponseText);
-                }
-                case 0x324D414E: // NAM2
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String ActorNotesParse))
-                    {
-                        item.ActorNotes = ActorNotesParse;
-                    }
-                    else
-                    {
-                        item.ActorNotes = default(String);
-                    }
-                    return TryGet<int?>.Succeed((int)DialogResponse_FieldIndex.ActorNotes);
-                }
-                default:
-                    return TryGet<int?>.Failure;
-            }
-        }
 
         #endregion
 
@@ -753,8 +638,8 @@ namespace Mutagen.Bethesda.Oblivion
             DialogResponse def = null,
             bool doMasks = true)
         {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            DialogResponseSetterCopyCommon.CopyFieldsFrom(
+            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((DialogResponseSetterCopyCommon)((IDialogResponseGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -770,7 +655,7 @@ namespace Mutagen.Bethesda.Oblivion
             DialogResponse_CopyMask copyMask = null,
             DialogResponse def = null)
         {
-            DialogResponseSetterCopyCommon.CopyFieldsFrom(
+            ((DialogResponseSetterCopyCommon)((IDialogResponseGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -788,6 +673,198 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
         }
+
+        #region Xml Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this IDialogResponse item,
+            XElement node,
+            MissingCreate missing = MissingCreate.New,
+            DialogResponse_TranslationMask translationMask = null)
+        {
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: null,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this IDialogResponse item,
+            XElement node,
+            out DialogResponse_ErrorMask errorMask,
+            bool doMasks = true,
+            DialogResponse_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask.GetCrystal());
+            errorMask = DialogResponse_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyInFromXml(
+            this IDialogResponse item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ((DialogResponseSetterCommon)((IDialogResponseGetter)item).CommonSetterInstance()).CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        public static void CopyInFromXml(
+            this IDialogResponse item,
+            string path,
+            MissingCreate missing = MissingCreate.New,
+            DialogResponse_TranslationMask translationMask = null)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IDialogResponse item,
+            string path,
+            out DialogResponse_ErrorMask errorMask,
+            DialogResponse_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IDialogResponse item,
+            string path,
+            ErrorMaskBuilder errorMask,
+            DialogResponse_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        public static void CopyInFromXml(
+            this IDialogResponse item,
+            Stream stream,
+            MissingCreate missing = MissingCreate.New,
+            DialogResponse_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IDialogResponse item,
+            Stream stream,
+            out DialogResponse_ErrorMask errorMask,
+            DialogResponse_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IDialogResponse item,
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            DialogResponse_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        #endregion
+
+        #region Binary Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this IDialogResponse item,
+            MutagenFrame frame,
+            MasterReferences masterReferences)
+        {
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: null);
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this IDialogResponse item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            out DialogResponse_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: errorMaskBuilder);
+            errorMask = DialogResponse_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyInFromBinary(
+            this IDialogResponse item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((DialogResponseSetterCommon)((IDialogResponseGetter)item).CommonSetterInstance()).CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+        #endregion
 
     }
     #endregion
@@ -1101,6 +1178,157 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
         
+        #region Xml Translation
+        public void CopyInFromXml(
+            IDialogResponse item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    DialogResponseXmlCreateTranslation.FillPublicElementXml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+        
+        #endregion
+        
+        #region Binary Translation
+        protected static void FillBinaryStructs(
+            IDialogResponse item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+        }
+        
+        protected static TryGet<int?> FillBinaryRecordTypes(
+            IDialogResponse item,
+            MutagenFrame frame,
+            int? lastParsed,
+            RecordType nextRecordType,
+            int contentLength,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x54445254: // TRDT
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponse_FieldIndex.Fluff2) return TryGet<int?>.Failure;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (!dataFrame.Complete)
+                    {
+                        item.TRDTDataTypeState = DialogResponse.TRDTDataType.Has;
+                    }
+                    if (EnumBinaryTranslation<EmotionType>.Instance.Parse(
+                        frame: dataFrame.SpawnWithLength(4),
+                        item: out EmotionType EmotionParse))
+                    {
+                        item.Emotion = EmotionParse;
+                    }
+                    else
+                    {
+                        item.Emotion = default(EmotionType);
+                    }
+                    item.EmotionValue = dataFrame.ReadInt32();
+                    if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                        frame: dataFrame.SpawnWithLength(4),
+                        item: out Byte[] Fluff1Parse))
+                    {
+                        item.Fluff1 = Fluff1Parse;
+                    }
+                    else
+                    {
+                        item.Fluff1 = default(Byte[]);
+                    }
+                    item.ResponseNumber = dataFrame.ReadUInt8();
+                    if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                        frame: dataFrame.SpawnWithLength(3),
+                        item: out Byte[] Fluff2Parse))
+                    {
+                        item.Fluff2 = Fluff2Parse;
+                    }
+                    else
+                    {
+                        item.Fluff2 = default(Byte[]);
+                    }
+                    return TryGet<int?>.Succeed((int)DialogResponse_FieldIndex.Fluff2);
+                }
+                case 0x314D414E: // NAM1
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String ResponseTextParse))
+                    {
+                        item.ResponseText = ResponseTextParse;
+                    }
+                    else
+                    {
+                        item.ResponseText = default(String);
+                    }
+                    return TryGet<int?>.Succeed((int)DialogResponse_FieldIndex.ResponseText);
+                }
+                case 0x324D414E: // NAM2
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String ActorNotesParse))
+                    {
+                        item.ActorNotes = ActorNotesParse;
+                    }
+                    else
+                    {
+                        item.ActorNotes = default(String);
+                    }
+                    return TryGet<int?>.Succeed((int)DialogResponse_FieldIndex.ActorNotes);
+                }
+                default:
+                    return TryGet<int?>.Failure;
+            }
+        }
+        
+        public void CopyInFromBinary(
+            IDialogResponse item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            UtilityTranslation.TypelessRecordParse(
+                record: item,
+                frame: frame,
+                setFinal: false,
+                masterReferences: masterReferences,
+                errorMask: errorMask,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: FillBinaryStructs,
+                fillTyped: FillBinaryRecordTypes);
+        }
+        
+        #endregion
+        
     }
     public partial class DialogResponseCommon
     {
@@ -1293,7 +1521,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly DialogResponseSetterCopyCommon Instance = new DialogResponseSetterCopyCommon();
 
         #region Copy Fields From
-        public static void CopyFieldsFrom(
+        public void CopyFieldsFrom(
             DialogResponse item,
             DialogResponse rhs,
             DialogResponse def,
@@ -2404,37 +2632,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public DialogResponse_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Emotion = defaultOn;
-            this.EmotionValue = defaultOn;
-            this.Fluff1 = defaultOn;
-            this.ResponseNumber = defaultOn;
-            this.Fluff2 = defaultOn;
-            this.ResponseText = defaultOn;
-            this.ActorNotes = defaultOn;
-            this.TRDTDataTypeState = defaultOn;
-        }
-
-        #region Members
-        public bool Emotion;
-        public bool EmotionValue;
-        public bool Fluff1;
-        public bool ResponseNumber;
-        public bool Fluff2;
-        public bool ResponseText;
-        public bool ActorNotes;
-        public bool TRDTDataTypeState;
-        #endregion
-
-    }
-
-    public class DialogResponse_DeepCopyMask
-    {
-        public DialogResponse_DeepCopyMask()
-        {
-        }
-
-        public DialogResponse_DeepCopyMask(bool defaultOn)
         {
             this.Emotion = defaultOn;
             this.EmotionValue = defaultOn;

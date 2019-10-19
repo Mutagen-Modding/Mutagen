@@ -341,29 +341,12 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
             }
             var ret = new Tree();
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    FillPrivateElementXml(
-                        item: ret,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    TreeXmlCreateTranslation.FillPublicElementXml(
-                        item: ret,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
+            ((TreeSetterCommon)((ITreeGetter)ret).CommonSetterInstance()).CopyInFromXml(
+                item: ret,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             return ret;
         }
 
@@ -448,32 +431,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #endregion
-
-        protected static void FillPrivateElementXml(
-            Tree item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "HasCNAMDataType":
-                    item.CNAMDataTypeState |= Tree.CNAMDataType.Has;
-                    break;
-                case "HasBNAMDataType":
-                    item.BNAMDataTypeState |= Tree.BNAMDataType.Has;
-                    break;
-                default:
-                    OblivionMajorRecord.FillPrivateElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
 
         #endregion
 
@@ -581,214 +538,16 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new Tree();
-            UtilityTranslation.MajorRecordParse<ITreeInternal>(
-                record: ret,
-                frame: frame,
-                errorMask: errorMask,
-                recType: Tree_Registration.TREE_HEADER,
-                recordTypeConverter: recordTypeConverter,
+            ((TreeSetterCommon)((ITreeGetter)ret).CommonSetterInstance()).CopyInFromBinary(
+                item: ret,
                 masterReferences: masterReferences,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                frame: frame,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
             return ret;
         }
 
         #endregion
-
-        protected static void FillBinaryStructs(
-            ITreeInternal item,
-            MutagenFrame frame,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            OblivionMajorRecord.FillBinaryStructs(
-                item: item,
-                frame: frame,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
-        }
-
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            ITreeInternal item,
-            MutagenFrame frame,
-            RecordType nextRecordType,
-            int contentLength,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask,
-            RecordTypeConverter recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x4C444F4D: // MODL
-                {
-                    try
-                    {
-                        errorMask?.PushIndex((int)Tree_FieldIndex.Model);
-                        item.Model = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null,
-                            masterReferences: masterReferences,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.Model);
-                }
-                case 0x4E4F4349: // ICON
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String IconParse))
-                    {
-                        item.Icon = IconParse;
-                    }
-                    else
-                    {
-                        item.Icon = default(String);
-                    }
-                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.Icon);
-                }
-                case 0x4D414E53: // SNAM
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<UInt32>.Instance.ParseRepeatedItem(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: item.SpeedTreeSeeds,
-                        transl: UInt32BinaryTranslation.Instance.Parse);
-                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.SpeedTreeSeeds);
-                }
-                case 0x4D414E43: // CNAM
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    var dataFrame = frame.SpawnWithLength(contentLength);
-                    if (!dataFrame.Complete)
-                    {
-                        item.CNAMDataTypeState = CNAMDataType.Has;
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single LeafCurvatureParse))
-                    {
-                        item.LeafCurvature = LeafCurvatureParse;
-                    }
-                    else
-                    {
-                        item.LeafCurvature = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single MinimumLeafAngleParse))
-                    {
-                        item.MinimumLeafAngle = MinimumLeafAngleParse;
-                    }
-                    else
-                    {
-                        item.MinimumLeafAngle = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single MaximumLeafAngleParse))
-                    {
-                        item.MaximumLeafAngle = MaximumLeafAngleParse;
-                    }
-                    else
-                    {
-                        item.MaximumLeafAngle = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single BranchDimmingValueParse))
-                    {
-                        item.BranchDimmingValue = BranchDimmingValueParse;
-                    }
-                    else
-                    {
-                        item.BranchDimmingValue = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single LeafDimmingValueParse))
-                    {
-                        item.LeafDimmingValue = LeafDimmingValueParse;
-                    }
-                    else
-                    {
-                        item.LeafDimmingValue = default(Single);
-                    }
-                    item.ShadowRadius = dataFrame.ReadInt32();
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single RockingSpeedParse))
-                    {
-                        item.RockingSpeed = RockingSpeedParse;
-                    }
-                    else
-                    {
-                        item.RockingSpeed = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single RustleSpeedParse))
-                    {
-                        item.RustleSpeed = RustleSpeedParse;
-                    }
-                    else
-                    {
-                        item.RustleSpeed = default(Single);
-                    }
-                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.RustleSpeed);
-                }
-                case 0x4D414E42: // BNAM
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    var dataFrame = frame.SpawnWithLength(contentLength);
-                    if (!dataFrame.Complete)
-                    {
-                        item.BNAMDataTypeState = BNAMDataType.Has;
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single BillboardWidthParse))
-                    {
-                        item.BillboardWidth = BillboardWidthParse;
-                    }
-                    else
-                    {
-                        item.BillboardWidth = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single BillboardHeightParse))
-                    {
-                        item.BillboardHeight = BillboardHeightParse;
-                    }
-                    else
-                    {
-                        item.BillboardHeight = default(Single);
-                    }
-                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.BillboardHeight);
-                }
-                default:
-                    return OblivionMajorRecord.FillBinaryRecordTypes(
-                        item: item,
-                        frame: frame,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength,
-                        recordTypeConverter: recordTypeConverter,
-                        masterReferences: masterReferences,
-                        errorMask: errorMask);
-            }
-        }
 
         #endregion
 
@@ -1015,8 +774,8 @@ namespace Mutagen.Bethesda.Oblivion
             Tree def = null,
             bool doMasks = true)
         {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            TreeSetterCopyCommon.CopyFieldsFrom(
+            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((TreeSetterCopyCommon)((ITreeGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -1032,13 +791,205 @@ namespace Mutagen.Bethesda.Oblivion
             Tree_CopyMask copyMask = null,
             Tree def = null)
         {
-            TreeSetterCopyCommon.CopyFieldsFrom(
+            ((TreeSetterCopyCommon)((ITreeGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
+
+        #region Xml Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this ITreeInternal item,
+            XElement node,
+            MissingCreate missing = MissingCreate.New,
+            Tree_TranslationMask translationMask = null)
+        {
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: null,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this ITreeInternal item,
+            XElement node,
+            out Tree_ErrorMask errorMask,
+            bool doMasks = true,
+            Tree_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask.GetCrystal());
+            errorMask = Tree_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public new static void CopyInFromXml(
+            this ITreeInternal item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ((TreeSetterCommon)((ITreeGetter)item).CommonSetterInstance()).CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        public static void CopyInFromXml(
+            this ITreeInternal item,
+            string path,
+            MissingCreate missing = MissingCreate.New,
+            Tree_TranslationMask translationMask = null)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this ITreeInternal item,
+            string path,
+            out Tree_ErrorMask errorMask,
+            Tree_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this ITreeInternal item,
+            string path,
+            ErrorMaskBuilder errorMask,
+            Tree_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        public static void CopyInFromXml(
+            this ITreeInternal item,
+            Stream stream,
+            MissingCreate missing = MissingCreate.New,
+            Tree_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this ITreeInternal item,
+            Stream stream,
+            out Tree_ErrorMask errorMask,
+            Tree_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this ITreeInternal item,
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            Tree_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        #endregion
+
+        #region Binary Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this ITreeInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences)
+        {
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: null);
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this ITreeInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            out Tree_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: errorMaskBuilder);
+            errorMask = Tree_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public new static void CopyInFromBinary(
+            this ITreeInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((TreeSetterCommon)((ITreeGetter)item).CommonSetterInstance()).CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+        #endregion
 
     }
     #endregion
@@ -1446,6 +1397,284 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ITreeInternal)item);
         }
         
+        #region Xml Translation
+        protected static void FillPrivateElementXml(
+            ITreeInternal item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "HasCNAMDataType":
+                    item.CNAMDataTypeState |= Tree.CNAMDataType.Has;
+                    break;
+                case "HasBNAMDataType":
+                    item.BNAMDataTypeState |= Tree.BNAMDataType.Has;
+                    break;
+                default:
+                    OblivionMajorRecordSetterCommon.FillPrivateElementXml(
+                        item: item,
+                        node: node,
+                        name: name,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    break;
+            }
+        }
+        
+        public new void CopyInFromXml(
+            ITreeInternal item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    FillPrivateElementXml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    TreeXmlCreateTranslation.FillPublicElementXml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+        
+        #endregion
+        
+        #region Binary Translation
+        public override RecordType RecordType => Tree_Registration.TREE_HEADER;
+        protected static void FillBinaryStructs(
+            ITreeInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            OblivionMajorRecordSetterCommon.FillBinaryStructs(
+                item: item,
+                frame: frame,
+                masterReferences: masterReferences,
+                errorMask: errorMask);
+        }
+        
+        protected static TryGet<int?> FillBinaryRecordTypes(
+            ITreeInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x4C444F4D: // MODL
+                {
+                    try
+                    {
+                        errorMask?.PushIndex((int)Tree_FieldIndex.Model);
+                        item.Model = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null,
+                            masterReferences: masterReferences,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.Model);
+                }
+                case 0x4E4F4349: // ICON
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String IconParse))
+                    {
+                        item.Icon = IconParse;
+                    }
+                    else
+                    {
+                        item.Icon = default(String);
+                    }
+                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.Icon);
+                }
+                case 0x4D414E53: // SNAM
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<UInt32>.Instance.ParseRepeatedItem(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: item.SpeedTreeSeeds,
+                        transl: UInt32BinaryTranslation.Instance.Parse);
+                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.SpeedTreeSeeds);
+                }
+                case 0x4D414E43: // CNAM
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (!dataFrame.Complete)
+                    {
+                        item.CNAMDataTypeState = Tree.CNAMDataType.Has;
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single LeafCurvatureParse))
+                    {
+                        item.LeafCurvature = LeafCurvatureParse;
+                    }
+                    else
+                    {
+                        item.LeafCurvature = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single MinimumLeafAngleParse))
+                    {
+                        item.MinimumLeafAngle = MinimumLeafAngleParse;
+                    }
+                    else
+                    {
+                        item.MinimumLeafAngle = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single MaximumLeafAngleParse))
+                    {
+                        item.MaximumLeafAngle = MaximumLeafAngleParse;
+                    }
+                    else
+                    {
+                        item.MaximumLeafAngle = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single BranchDimmingValueParse))
+                    {
+                        item.BranchDimmingValue = BranchDimmingValueParse;
+                    }
+                    else
+                    {
+                        item.BranchDimmingValue = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single LeafDimmingValueParse))
+                    {
+                        item.LeafDimmingValue = LeafDimmingValueParse;
+                    }
+                    else
+                    {
+                        item.LeafDimmingValue = default(Single);
+                    }
+                    item.ShadowRadius = dataFrame.ReadInt32();
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single RockingSpeedParse))
+                    {
+                        item.RockingSpeed = RockingSpeedParse;
+                    }
+                    else
+                    {
+                        item.RockingSpeed = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single RustleSpeedParse))
+                    {
+                        item.RustleSpeed = RustleSpeedParse;
+                    }
+                    else
+                    {
+                        item.RustleSpeed = default(Single);
+                    }
+                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.RustleSpeed);
+                }
+                case 0x4D414E42: // BNAM
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (!dataFrame.Complete)
+                    {
+                        item.BNAMDataTypeState = Tree.BNAMDataType.Has;
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single BillboardWidthParse))
+                    {
+                        item.BillboardWidth = BillboardWidthParse;
+                    }
+                    else
+                    {
+                        item.BillboardWidth = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single BillboardHeightParse))
+                    {
+                        item.BillboardHeight = BillboardHeightParse;
+                    }
+                    else
+                    {
+                        item.BillboardHeight = default(Single);
+                    }
+                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.BillboardHeight);
+                }
+                default:
+                    return OblivionMajorRecordSetterCommon.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter,
+                        masterReferences: masterReferences,
+                        errorMask: errorMask);
+            }
+        }
+        
+        public new void CopyInFromBinary(
+            ITreeInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            UtilityTranslation.MajorRecordParse<ITreeInternal>(
+                record: item,
+                frame: frame,
+                errorMask: errorMask,
+                recType: RecordType,
+                recordTypeConverter: recordTypeConverter,
+                masterReferences: masterReferences,
+                fillStructs: FillBinaryStructs,
+                fillTyped: FillBinaryRecordTypes);
+        }
+        
+        #endregion
+        
     }
     public partial class TreeCommon : OblivionMajorRecordCommon
     {
@@ -1816,14 +2045,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public new static readonly TreeSetterCopyCommon Instance = new TreeSetterCopyCommon();
 
         #region Copy Fields From
-        public static void CopyFieldsFrom(
+        public void CopyFieldsFrom(
             Tree item,
             Tree rhs,
             Tree def,
             ErrorMaskBuilder errorMask,
             Tree_CopyMask copyMask)
         {
-            OblivionMajorRecordSetterCopyCommon.CopyFieldsFrom(
+            ((OblivionMajorRecordSetterCopyCommon)((IOblivionMajorRecordGetter)item).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1847,7 +2076,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             case CopyOption.Reference:
                                 throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
-                                ModelSetterCopyCommon.CopyFieldsFrom(
+                                ((ModelSetterCopyCommon)((IModelGetter)item.Model).CommonSetterCopyInstance()).CopyFieldsFrom(
                                     item: item.Model,
                                     rhs: rhs.Model,
                                     def: def?.Model,
@@ -3432,51 +3661,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<CopyOption, Model_CopyMask> Model;
         public bool Icon;
         public CopyOption SpeedTreeSeeds;
-        public bool LeafCurvature;
-        public bool MinimumLeafAngle;
-        public bool MaximumLeafAngle;
-        public bool BranchDimmingValue;
-        public bool LeafDimmingValue;
-        public bool ShadowRadius;
-        public bool RockingSpeed;
-        public bool RustleSpeed;
-        public bool BillboardWidth;
-        public bool BillboardHeight;
-        public bool CNAMDataTypeState;
-        public bool BNAMDataTypeState;
-        #endregion
-
-    }
-
-    public class Tree_DeepCopyMask : OblivionMajorRecord_DeepCopyMask
-    {
-        public Tree_DeepCopyMask()
-        {
-        }
-
-        public Tree_DeepCopyMask(bool defaultOn)
-        {
-            this.Model = new MaskItem<bool, Model_DeepCopyMask>(defaultOn, default);
-            this.Icon = defaultOn;
-            this.SpeedTreeSeeds = defaultOn;
-            this.LeafCurvature = defaultOn;
-            this.MinimumLeafAngle = defaultOn;
-            this.MaximumLeafAngle = defaultOn;
-            this.BranchDimmingValue = defaultOn;
-            this.LeafDimmingValue = defaultOn;
-            this.ShadowRadius = defaultOn;
-            this.RockingSpeed = defaultOn;
-            this.RustleSpeed = defaultOn;
-            this.BillboardWidth = defaultOn;
-            this.BillboardHeight = defaultOn;
-            this.CNAMDataTypeState = defaultOn;
-            this.BNAMDataTypeState = defaultOn;
-        }
-
-        #region Members
-        public MaskItem<bool, Model_DeepCopyMask> Model;
-        public bool Icon;
-        public bool SpeedTreeSeeds;
         public bool LeafCurvature;
         public bool MinimumLeafAngle;
         public bool MaximumLeafAngle;

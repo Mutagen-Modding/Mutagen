@@ -174,23 +174,12 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
             }
             var ret = new CellLighting();
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    CellLightingXmlCreateTranslation.FillPublicElementXml(
-                        item: ret,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
+            ((CellLightingSetterCommon)((ICellLightingGetter)ret).CommonSetterInstance()).CopyInFromXml(
+                item: ret,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             return ret;
         }
 
@@ -355,104 +344,16 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new CellLighting();
-            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
-                frame.Reader,
-                recordTypeConverter.ConvertToCustom(CellLighting_Registration.XCLL_HEADER)));
-            UtilityTranslation.RecordParse(
-                record: ret,
-                frame: frame,
-                setFinal: true,
+            ((CellLightingSetterCommon)((ICellLightingGetter)ret).CommonSetterInstance()).CopyInFromBinary(
+                item: ret,
                 masterReferences: masterReferences,
-                errorMask: errorMask,
+                frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                errorMask: errorMask);
             return ret;
         }
 
         #endregion
-
-        protected static void FillBinaryStructs(
-            ICellLighting item,
-            MutagenFrame frame,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                frame: frame,
-                extraByte: true,
-                item: out Color AmbientColorParse))
-            {
-                item.AmbientColor = AmbientColorParse;
-            }
-            else
-            {
-                item.AmbientColor = default(Color);
-            }
-            if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                frame: frame,
-                extraByte: true,
-                item: out Color DirectionalColorParse))
-            {
-                item.DirectionalColor = DirectionalColorParse;
-            }
-            else
-            {
-                item.DirectionalColor = default(Color);
-            }
-            if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                frame: frame,
-                extraByte: true,
-                item: out Color FogColorParse))
-            {
-                item.FogColor = FogColorParse;
-            }
-            else
-            {
-                item.FogColor = default(Color);
-            }
-            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Single FogNearParse))
-            {
-                item.FogNear = FogNearParse;
-            }
-            else
-            {
-                item.FogNear = default(Single);
-            }
-            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Single FogFarParse))
-            {
-                item.FogFar = FogFarParse;
-            }
-            else
-            {
-                item.FogFar = default(Single);
-            }
-            item.DirectionalRotationXY = frame.ReadInt32();
-            item.DirectionalRotationZ = frame.ReadInt32();
-            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Single DirectionalFadeParse))
-            {
-                item.DirectionalFade = DirectionalFadeParse;
-            }
-            else
-            {
-                item.DirectionalFade = default(Single);
-            }
-            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Single FogClipDistanceParse))
-            {
-                item.FogClipDistance = FogClipDistanceParse;
-            }
-            else
-            {
-                item.FogClipDistance = default(Single);
-            }
-        }
 
         #endregion
 
@@ -648,8 +549,8 @@ namespace Mutagen.Bethesda.Oblivion
             CellLighting def = null,
             bool doMasks = true)
         {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            CellLightingSetterCopyCommon.CopyFieldsFrom(
+            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((CellLightingSetterCopyCommon)((ICellLightingGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -665,7 +566,7 @@ namespace Mutagen.Bethesda.Oblivion
             CellLighting_CopyMask copyMask = null,
             CellLighting def = null)
         {
-            CellLightingSetterCopyCommon.CopyFieldsFrom(
+            ((CellLightingSetterCopyCommon)((ICellLightingGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -683,6 +584,198 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
         }
+
+        #region Xml Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this ICellLighting item,
+            XElement node,
+            MissingCreate missing = MissingCreate.New,
+            CellLighting_TranslationMask translationMask = null)
+        {
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: null,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this ICellLighting item,
+            XElement node,
+            out CellLighting_ErrorMask errorMask,
+            bool doMasks = true,
+            CellLighting_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask.GetCrystal());
+            errorMask = CellLighting_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyInFromXml(
+            this ICellLighting item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ((CellLightingSetterCommon)((ICellLightingGetter)item).CommonSetterInstance()).CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        public static void CopyInFromXml(
+            this ICellLighting item,
+            string path,
+            MissingCreate missing = MissingCreate.New,
+            CellLighting_TranslationMask translationMask = null)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this ICellLighting item,
+            string path,
+            out CellLighting_ErrorMask errorMask,
+            CellLighting_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this ICellLighting item,
+            string path,
+            ErrorMaskBuilder errorMask,
+            CellLighting_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        public static void CopyInFromXml(
+            this ICellLighting item,
+            Stream stream,
+            MissingCreate missing = MissingCreate.New,
+            CellLighting_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this ICellLighting item,
+            Stream stream,
+            out CellLighting_ErrorMask errorMask,
+            CellLighting_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this ICellLighting item,
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            CellLighting_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        #endregion
+
+        #region Binary Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this ICellLighting item,
+            MutagenFrame frame,
+            MasterReferences masterReferences)
+        {
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: null);
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this ICellLighting item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            out CellLighting_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: errorMaskBuilder);
+            errorMask = CellLighting_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyInFromBinary(
+            this ICellLighting item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((CellLightingSetterCommon)((ICellLightingGetter)item).CommonSetterInstance()).CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+        #endregion
 
     }
     #endregion
@@ -1007,6 +1100,141 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
         
+        #region Xml Translation
+        public void CopyInFromXml(
+            ICellLighting item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    CellLightingXmlCreateTranslation.FillPublicElementXml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+        
+        #endregion
+        
+        #region Binary Translation
+        protected static void FillBinaryStructs(
+            ICellLighting item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
+                frame: frame,
+                extraByte: true,
+                item: out Color AmbientColorParse))
+            {
+                item.AmbientColor = AmbientColorParse;
+            }
+            else
+            {
+                item.AmbientColor = default(Color);
+            }
+            if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
+                frame: frame,
+                extraByte: true,
+                item: out Color DirectionalColorParse))
+            {
+                item.DirectionalColor = DirectionalColorParse;
+            }
+            else
+            {
+                item.DirectionalColor = default(Color);
+            }
+            if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
+                frame: frame,
+                extraByte: true,
+                item: out Color FogColorParse))
+            {
+                item.FogColor = FogColorParse;
+            }
+            else
+            {
+                item.FogColor = default(Color);
+            }
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single FogNearParse))
+            {
+                item.FogNear = FogNearParse;
+            }
+            else
+            {
+                item.FogNear = default(Single);
+            }
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single FogFarParse))
+            {
+                item.FogFar = FogFarParse;
+            }
+            else
+            {
+                item.FogFar = default(Single);
+            }
+            item.DirectionalRotationXY = frame.ReadInt32();
+            item.DirectionalRotationZ = frame.ReadInt32();
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single DirectionalFadeParse))
+            {
+                item.DirectionalFade = DirectionalFadeParse;
+            }
+            else
+            {
+                item.DirectionalFade = default(Single);
+            }
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single FogClipDistanceParse))
+            {
+                item.FogClipDistance = FogClipDistanceParse;
+            }
+            else
+            {
+                item.FogClipDistance = default(Single);
+            }
+        }
+        
+        public void CopyInFromBinary(
+            ICellLighting item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
+                frame.Reader,
+                recordTypeConverter.ConvertToCustom(CellLighting_Registration.XCLL_HEADER)));
+            UtilityTranslation.RecordParse(
+                record: item,
+                frame: frame,
+                setFinal: true,
+                masterReferences: masterReferences,
+                errorMask: errorMask,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: FillBinaryStructs);
+        }
+        
+        #endregion
+        
     }
     public partial class CellLightingCommon
     {
@@ -1191,7 +1419,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly CellLightingSetterCopyCommon Instance = new CellLightingSetterCopyCommon();
 
         #region Copy Fields From
-        public static void CopyFieldsFrom(
+        public void CopyFieldsFrom(
             CellLighting item,
             CellLighting rhs,
             CellLighting def,
@@ -2311,39 +2539,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public CellLighting_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.AmbientColor = defaultOn;
-            this.DirectionalColor = defaultOn;
-            this.FogColor = defaultOn;
-            this.FogNear = defaultOn;
-            this.FogFar = defaultOn;
-            this.DirectionalRotationXY = defaultOn;
-            this.DirectionalRotationZ = defaultOn;
-            this.DirectionalFade = defaultOn;
-            this.FogClipDistance = defaultOn;
-        }
-
-        #region Members
-        public bool AmbientColor;
-        public bool DirectionalColor;
-        public bool FogColor;
-        public bool FogNear;
-        public bool FogFar;
-        public bool DirectionalRotationXY;
-        public bool DirectionalRotationZ;
-        public bool DirectionalFade;
-        public bool FogClipDistance;
-        #endregion
-
-    }
-
-    public class CellLighting_DeepCopyMask
-    {
-        public CellLighting_DeepCopyMask()
-        {
-        }
-
-        public CellLighting_DeepCopyMask(bool defaultOn)
         {
             this.AmbientColor = defaultOn;
             this.DirectionalColor = defaultOn;

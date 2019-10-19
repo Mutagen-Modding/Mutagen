@@ -361,23 +361,12 @@ namespace Mutagen.Bethesda.Skyrim
                     break;
             }
             var ret = new Textures();
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    TexturesXmlCreateTranslation.FillPublicElementXml(
-                        item: ret,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
+            ((TexturesSetterCommon)((ITexturesGetter)ret).CommonSetterInstance()).CopyInFromXml(
+                item: ret,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             return ret;
         }
 
@@ -537,181 +526,16 @@ namespace Mutagen.Bethesda.Skyrim
             ErrorMaskBuilder errorMask)
         {
             var ret = new Textures();
-            UtilityTranslation.TypelessRecordParse(
-                record: ret,
-                frame: frame,
-                setFinal: false,
+            ((TexturesSetterCommon)((ITexturesGetter)ret).CommonSetterInstance()).CopyInFromBinary(
+                item: ret,
                 masterReferences: masterReferences,
-                errorMask: errorMask,
+                frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                errorMask: errorMask);
             return ret;
         }
 
         #endregion
-
-        protected static void FillBinaryStructs(
-            ITextures item,
-            MutagenFrame frame,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-        }
-
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            ITextures item,
-            MutagenFrame frame,
-            int? lastParsed,
-            RecordType nextRecordType,
-            int contentLength,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask,
-            RecordTypeConverter recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x30305854: // TX00
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Textures_FieldIndex.Diffuse) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String DiffuseParse))
-                    {
-                        item.Diffuse = DiffuseParse;
-                    }
-                    else
-                    {
-                        item.Diffuse = default(String);
-                    }
-                    return TryGet<int?>.Succeed((int)Textures_FieldIndex.Diffuse);
-                }
-                case 0x31305854: // TX01
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Textures_FieldIndex.NormalOrGloss) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String NormalOrGlossParse))
-                    {
-                        item.NormalOrGloss = NormalOrGlossParse;
-                    }
-                    else
-                    {
-                        item.NormalOrGloss = default(String);
-                    }
-                    return TryGet<int?>.Succeed((int)Textures_FieldIndex.NormalOrGloss);
-                }
-                case 0x32305854: // TX02
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Textures_FieldIndex.EnvironmentMaskOrSubsurfaceTint) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String EnvironmentMaskOrSubsurfaceTintParse))
-                    {
-                        item.EnvironmentMaskOrSubsurfaceTint = EnvironmentMaskOrSubsurfaceTintParse;
-                    }
-                    else
-                    {
-                        item.EnvironmentMaskOrSubsurfaceTint = default(String);
-                    }
-                    return TryGet<int?>.Succeed((int)Textures_FieldIndex.EnvironmentMaskOrSubsurfaceTint);
-                }
-                case 0x33305854: // TX03
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Textures_FieldIndex.GlowOrDetailMap) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String GlowOrDetailMapParse))
-                    {
-                        item.GlowOrDetailMap = GlowOrDetailMapParse;
-                    }
-                    else
-                    {
-                        item.GlowOrDetailMap = default(String);
-                    }
-                    return TryGet<int?>.Succeed((int)Textures_FieldIndex.GlowOrDetailMap);
-                }
-                case 0x34305854: // TX04
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Textures_FieldIndex.Height) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String HeightParse))
-                    {
-                        item.Height = HeightParse;
-                    }
-                    else
-                    {
-                        item.Height = default(String);
-                    }
-                    return TryGet<int?>.Succeed((int)Textures_FieldIndex.Height);
-                }
-                case 0x35305854: // TX05
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Textures_FieldIndex.Environment) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String EnvironmentParse))
-                    {
-                        item.Environment = EnvironmentParse;
-                    }
-                    else
-                    {
-                        item.Environment = default(String);
-                    }
-                    return TryGet<int?>.Succeed((int)Textures_FieldIndex.Environment);
-                }
-                case 0x36305854: // TX06
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Textures_FieldIndex.Multilayer) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String MultilayerParse))
-                    {
-                        item.Multilayer = MultilayerParse;
-                    }
-                    else
-                    {
-                        item.Multilayer = default(String);
-                    }
-                    return TryGet<int?>.Succeed((int)Textures_FieldIndex.Multilayer);
-                }
-                case 0x37305854: // TX07
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Textures_FieldIndex.BacklightMaskOrSpecular) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String BacklightMaskOrSpecularParse))
-                    {
-                        item.BacklightMaskOrSpecular = BacklightMaskOrSpecularParse;
-                    }
-                    else
-                    {
-                        item.BacklightMaskOrSpecular = default(String);
-                    }
-                    return TryGet<int?>.Succeed((int)Textures_FieldIndex.BacklightMaskOrSpecular);
-                }
-                default:
-                    return TryGet<int?>.Failure;
-            }
-        }
 
         #endregion
 
@@ -933,8 +757,8 @@ namespace Mutagen.Bethesda.Skyrim
             Textures def = null,
             bool doMasks = true)
         {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            TexturesSetterCopyCommon.CopyFieldsFrom(
+            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((TexturesSetterCopyCommon)((ITexturesGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -950,7 +774,7 @@ namespace Mutagen.Bethesda.Skyrim
             Textures_CopyMask copyMask = null,
             Textures def = null)
         {
-            TexturesSetterCopyCommon.CopyFieldsFrom(
+            ((TexturesSetterCopyCommon)((ITexturesGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -968,6 +792,198 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask,
                 def: def);
         }
+
+        #region Xml Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this ITextures item,
+            XElement node,
+            MissingCreate missing = MissingCreate.New,
+            Textures_TranslationMask translationMask = null)
+        {
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: null,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this ITextures item,
+            XElement node,
+            out Textures_ErrorMask errorMask,
+            bool doMasks = true,
+            Textures_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask.GetCrystal());
+            errorMask = Textures_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyInFromXml(
+            this ITextures item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ((TexturesSetterCommon)((ITexturesGetter)item).CommonSetterInstance()).CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        public static void CopyInFromXml(
+            this ITextures item,
+            string path,
+            MissingCreate missing = MissingCreate.New,
+            Textures_TranslationMask translationMask = null)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this ITextures item,
+            string path,
+            out Textures_ErrorMask errorMask,
+            Textures_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this ITextures item,
+            string path,
+            ErrorMaskBuilder errorMask,
+            Textures_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        public static void CopyInFromXml(
+            this ITextures item,
+            Stream stream,
+            MissingCreate missing = MissingCreate.New,
+            Textures_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this ITextures item,
+            Stream stream,
+            out Textures_ErrorMask errorMask,
+            Textures_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this ITextures item,
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            Textures_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        #endregion
+
+        #region Binary Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this ITextures item,
+            MutagenFrame frame,
+            MasterReferences masterReferences)
+        {
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: null);
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this ITextures item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            out Textures_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: errorMaskBuilder);
+            errorMask = Textures_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyInFromBinary(
+            this ITextures item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((TexturesSetterCommon)((ITexturesGetter)item).CommonSetterInstance()).CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+        #endregion
 
     }
     #endregion
@@ -1303,6 +1319,218 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
         
+        #region Xml Translation
+        public void CopyInFromXml(
+            ITextures item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    TexturesXmlCreateTranslation.FillPublicElementXml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+        
+        #endregion
+        
+        #region Binary Translation
+        protected static void FillBinaryStructs(
+            ITextures item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+        }
+        
+        protected static TryGet<int?> FillBinaryRecordTypes(
+            ITextures item,
+            MutagenFrame frame,
+            int? lastParsed,
+            RecordType nextRecordType,
+            int contentLength,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x30305854: // TX00
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Textures_FieldIndex.Diffuse) return TryGet<int?>.Failure;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String DiffuseParse))
+                    {
+                        item.Diffuse = DiffuseParse;
+                    }
+                    else
+                    {
+                        item.Diffuse = default(String);
+                    }
+                    return TryGet<int?>.Succeed((int)Textures_FieldIndex.Diffuse);
+                }
+                case 0x31305854: // TX01
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Textures_FieldIndex.NormalOrGloss) return TryGet<int?>.Failure;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String NormalOrGlossParse))
+                    {
+                        item.NormalOrGloss = NormalOrGlossParse;
+                    }
+                    else
+                    {
+                        item.NormalOrGloss = default(String);
+                    }
+                    return TryGet<int?>.Succeed((int)Textures_FieldIndex.NormalOrGloss);
+                }
+                case 0x32305854: // TX02
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Textures_FieldIndex.EnvironmentMaskOrSubsurfaceTint) return TryGet<int?>.Failure;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String EnvironmentMaskOrSubsurfaceTintParse))
+                    {
+                        item.EnvironmentMaskOrSubsurfaceTint = EnvironmentMaskOrSubsurfaceTintParse;
+                    }
+                    else
+                    {
+                        item.EnvironmentMaskOrSubsurfaceTint = default(String);
+                    }
+                    return TryGet<int?>.Succeed((int)Textures_FieldIndex.EnvironmentMaskOrSubsurfaceTint);
+                }
+                case 0x33305854: // TX03
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Textures_FieldIndex.GlowOrDetailMap) return TryGet<int?>.Failure;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String GlowOrDetailMapParse))
+                    {
+                        item.GlowOrDetailMap = GlowOrDetailMapParse;
+                    }
+                    else
+                    {
+                        item.GlowOrDetailMap = default(String);
+                    }
+                    return TryGet<int?>.Succeed((int)Textures_FieldIndex.GlowOrDetailMap);
+                }
+                case 0x34305854: // TX04
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Textures_FieldIndex.Height) return TryGet<int?>.Failure;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String HeightParse))
+                    {
+                        item.Height = HeightParse;
+                    }
+                    else
+                    {
+                        item.Height = default(String);
+                    }
+                    return TryGet<int?>.Succeed((int)Textures_FieldIndex.Height);
+                }
+                case 0x35305854: // TX05
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Textures_FieldIndex.Environment) return TryGet<int?>.Failure;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String EnvironmentParse))
+                    {
+                        item.Environment = EnvironmentParse;
+                    }
+                    else
+                    {
+                        item.Environment = default(String);
+                    }
+                    return TryGet<int?>.Succeed((int)Textures_FieldIndex.Environment);
+                }
+                case 0x36305854: // TX06
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Textures_FieldIndex.Multilayer) return TryGet<int?>.Failure;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String MultilayerParse))
+                    {
+                        item.Multilayer = MultilayerParse;
+                    }
+                    else
+                    {
+                        item.Multilayer = default(String);
+                    }
+                    return TryGet<int?>.Succeed((int)Textures_FieldIndex.Multilayer);
+                }
+                case 0x37305854: // TX07
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Textures_FieldIndex.BacklightMaskOrSpecular) return TryGet<int?>.Failure;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String BacklightMaskOrSpecularParse))
+                    {
+                        item.BacklightMaskOrSpecular = BacklightMaskOrSpecularParse;
+                    }
+                    else
+                    {
+                        item.BacklightMaskOrSpecular = default(String);
+                    }
+                    return TryGet<int?>.Succeed((int)Textures_FieldIndex.BacklightMaskOrSpecular);
+                }
+                default:
+                    return TryGet<int?>.Failure;
+            }
+        }
+        
+        public void CopyInFromBinary(
+            ITextures item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            UtilityTranslation.TypelessRecordParse(
+                record: item,
+                frame: frame,
+                setFinal: false,
+                masterReferences: masterReferences,
+                errorMask: errorMask,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: FillBinaryStructs,
+                fillTyped: FillBinaryRecordTypes);
+        }
+        
+        #endregion
+        
     }
     public partial class TexturesCommon
     {
@@ -1543,7 +1771,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly TexturesSetterCopyCommon Instance = new TexturesSetterCopyCommon();
 
         #region Copy Fields From
-        public static void CopyFieldsFrom(
+        public void CopyFieldsFrom(
             Textures item,
             Textures rhs,
             Textures def,
@@ -2800,37 +3028,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public Textures_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Diffuse = defaultOn;
-            this.NormalOrGloss = defaultOn;
-            this.EnvironmentMaskOrSubsurfaceTint = defaultOn;
-            this.GlowOrDetailMap = defaultOn;
-            this.Height = defaultOn;
-            this.Environment = defaultOn;
-            this.Multilayer = defaultOn;
-            this.BacklightMaskOrSpecular = defaultOn;
-        }
-
-        #region Members
-        public bool Diffuse;
-        public bool NormalOrGloss;
-        public bool EnvironmentMaskOrSubsurfaceTint;
-        public bool GlowOrDetailMap;
-        public bool Height;
-        public bool Environment;
-        public bool Multilayer;
-        public bool BacklightMaskOrSpecular;
-        #endregion
-
-    }
-
-    public class Textures_DeepCopyMask
-    {
-        public Textures_DeepCopyMask()
-        {
-        }
-
-        public Textures_DeepCopyMask(bool defaultOn)
         {
             this.Diffuse = defaultOn;
             this.NormalOrGloss = defaultOn;

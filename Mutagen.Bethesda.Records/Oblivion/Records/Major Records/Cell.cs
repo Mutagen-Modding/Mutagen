@@ -56,12 +56,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         public partial class CellBinaryCreateTranslation
         {
-            public static async Task CustomBinaryEndImport(MutagenFrame frame, Cell obj, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            public static async Task CustomBinaryEndImport(MutagenFrame frame, ICellInternal obj, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
                 CustomBinaryEnd(frame, obj, masterReferences, errorMask);
             }
 
-            private static void CustomBinaryEnd(MutagenFrame frame, Cell obj, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            private static void CustomBinaryEnd(MutagenFrame frame, ICellInternal obj, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
                 if (frame.Reader.Complete) return;
                 var groupMeta = frame.MetaData.GetGroup(frame);
@@ -127,7 +127,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             static void ParseTypical(
                 MutagenFrame frame,
-                Cell obj,
+                ICellInternal obj,
                 int fieldIndex,
                 MasterReferences masterReferences,
                 ISetList<IPlaced> coll,
@@ -200,7 +200,7 @@ namespace Mutagen.Bethesda.Oblivion
                     );
             }
 
-            static bool ParseTemporaryOutliers(MutagenFrame frame, Cell obj, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static bool ParseTemporaryOutliers(MutagenFrame frame, ICellInternal obj, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
                 var majorMeta = frame.MetaData.GetMajorRecord(frame);
                 var nextHeader = majorMeta.RecordType;
@@ -231,7 +231,7 @@ namespace Mutagen.Bethesda.Oblivion
                 return false;
             }
 
-            static void ParseTemporary(MutagenFrame frame, Cell obj, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static void ParseTemporary(MutagenFrame frame, ICellInternal obj, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
                 var groupMeta = frame.MetaData.ReadGroup(frame);
                 var formKey = FormKey.Factory(masterReferences, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeSpan));

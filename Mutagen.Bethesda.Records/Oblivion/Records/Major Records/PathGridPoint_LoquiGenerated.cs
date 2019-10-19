@@ -174,23 +174,12 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
             }
             var ret = new PathGridPoint();
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    PathGridPointXmlCreateTranslation.FillPublicElementXml(
-                        item: ret,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
+            ((PathGridPointSetterCommon)((IPathGridPointGetter)ret).CommonSetterInstance()).CopyInFromXml(
+                item: ret,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             return ret;
         }
 
@@ -346,47 +335,16 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new PathGridPoint();
-            UtilityTranslation.TypelessRecordParse(
-                record: ret,
-                frame: frame,
-                setFinal: false,
+            ((PathGridPointSetterCommon)((IPathGridPointGetter)ret).CommonSetterInstance()).CopyInFromBinary(
+                item: ret,
                 masterReferences: masterReferences,
-                errorMask: errorMask,
+                frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                errorMask: errorMask);
             return ret;
         }
 
         #endregion
-
-        protected static void FillBinaryStructs(
-            IPathGridPoint item,
-            MutagenFrame frame,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            if (Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out P3Float PointParse))
-            {
-                item.Point = PointParse;
-            }
-            else
-            {
-                item.Point = default(P3Float);
-            }
-            item.NumConnections = frame.ReadUInt8();
-            if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                frame: frame.SpawnWithLength(3),
-                item: out Byte[] FluffBytesParse))
-            {
-                item.FluffBytes = FluffBytesParse;
-            }
-            else
-            {
-                item.FluffBytes = default(Byte[]);
-            }
-        }
 
         #endregion
 
@@ -550,8 +508,8 @@ namespace Mutagen.Bethesda.Oblivion
             PathGridPoint def = null,
             bool doMasks = true)
         {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            PathGridPointSetterCopyCommon.CopyFieldsFrom(
+            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((PathGridPointSetterCopyCommon)((IPathGridPointGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -567,7 +525,7 @@ namespace Mutagen.Bethesda.Oblivion
             PathGridPoint_CopyMask copyMask = null,
             PathGridPoint def = null)
         {
-            PathGridPointSetterCopyCommon.CopyFieldsFrom(
+            ((PathGridPointSetterCopyCommon)((IPathGridPointGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -585,6 +543,198 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
         }
+
+        #region Xml Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this IPathGridPoint item,
+            XElement node,
+            MissingCreate missing = MissingCreate.New,
+            PathGridPoint_TranslationMask translationMask = null)
+        {
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: null,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this IPathGridPoint item,
+            XElement node,
+            out PathGridPoint_ErrorMask errorMask,
+            bool doMasks = true,
+            PathGridPoint_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask.GetCrystal());
+            errorMask = PathGridPoint_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyInFromXml(
+            this IPathGridPoint item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ((PathGridPointSetterCommon)((IPathGridPointGetter)item).CommonSetterInstance()).CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        public static void CopyInFromXml(
+            this IPathGridPoint item,
+            string path,
+            MissingCreate missing = MissingCreate.New,
+            PathGridPoint_TranslationMask translationMask = null)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IPathGridPoint item,
+            string path,
+            out PathGridPoint_ErrorMask errorMask,
+            PathGridPoint_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IPathGridPoint item,
+            string path,
+            ErrorMaskBuilder errorMask,
+            PathGridPoint_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        public static void CopyInFromXml(
+            this IPathGridPoint item,
+            Stream stream,
+            MissingCreate missing = MissingCreate.New,
+            PathGridPoint_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IPathGridPoint item,
+            Stream stream,
+            out PathGridPoint_ErrorMask errorMask,
+            PathGridPoint_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IPathGridPoint item,
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            PathGridPoint_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        #endregion
+
+        #region Binary Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this IPathGridPoint item,
+            MutagenFrame frame,
+            MasterReferences masterReferences)
+        {
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: null);
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this IPathGridPoint item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            out PathGridPoint_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: errorMaskBuilder);
+            errorMask = PathGridPoint_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyInFromBinary(
+            this IPathGridPoint item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((PathGridPointSetterCommon)((IPathGridPointGetter)item).CommonSetterInstance()).CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+        #endregion
 
     }
     #endregion
@@ -843,6 +993,84 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
         
+        #region Xml Translation
+        public void CopyInFromXml(
+            IPathGridPoint item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    PathGridPointXmlCreateTranslation.FillPublicElementXml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+        
+        #endregion
+        
+        #region Binary Translation
+        protected static void FillBinaryStructs(
+            IPathGridPoint item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            if (Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out P3Float PointParse))
+            {
+                item.Point = PointParse;
+            }
+            else
+            {
+                item.Point = default(P3Float);
+            }
+            item.NumConnections = frame.ReadUInt8();
+            if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                frame: frame.SpawnWithLength(3),
+                item: out Byte[] FluffBytesParse))
+            {
+                item.FluffBytes = FluffBytesParse;
+            }
+            else
+            {
+                item.FluffBytes = default(Byte[]);
+            }
+        }
+        
+        public void CopyInFromBinary(
+            IPathGridPoint item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            UtilityTranslation.TypelessRecordParse(
+                record: item,
+                frame: frame,
+                setFinal: false,
+                masterReferences: masterReferences,
+                errorMask: errorMask,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: FillBinaryStructs);
+        }
+        
+        #endregion
+        
     }
     public partial class PathGridPointCommon
     {
@@ -1004,7 +1232,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly PathGridPointSetterCopyCommon Instance = new PathGridPointSetterCopyCommon();
 
         #region Copy Fields From
-        public static void CopyFieldsFrom(
+        public void CopyFieldsFrom(
             PathGridPoint item,
             PathGridPoint rhs,
             PathGridPoint def,
@@ -1914,29 +2142,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool NumConnections;
         public bool FluffBytes;
         public CopyOption Connections;
-        #endregion
-
-    }
-
-    public class PathGridPoint_DeepCopyMask
-    {
-        public PathGridPoint_DeepCopyMask()
-        {
-        }
-
-        public PathGridPoint_DeepCopyMask(bool defaultOn)
-        {
-            this.Point = defaultOn;
-            this.NumConnections = defaultOn;
-            this.FluffBytes = defaultOn;
-            this.Connections = defaultOn;
-        }
-
-        #region Members
-        public bool Point;
-        public bool NumConnections;
-        public bool FluffBytes;
-        public bool Connections;
         #endregion
 
     }

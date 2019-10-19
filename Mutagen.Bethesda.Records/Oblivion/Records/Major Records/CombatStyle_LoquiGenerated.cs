@@ -643,34 +643,12 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
             }
             var ret = new CombatStyle();
-            try
-            {
-                ret.CSTDDataTypeState |= CombatStyle.CSTDDataType.Break0;
-                ret.CSTDDataTypeState |= CombatStyle.CSTDDataType.Break1;
-                ret.CSTDDataTypeState |= CombatStyle.CSTDDataType.Break2;
-                ret.CSTDDataTypeState |= CombatStyle.CSTDDataType.Break3;
-                ret.CSTDDataTypeState |= CombatStyle.CSTDDataType.Break4;
-                foreach (var elem in node.Elements())
-                {
-                    FillPrivateElementXml(
-                        item: ret,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    CombatStyleXmlCreateTranslation.FillPublicElementXml(
-                        item: ret,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
+            ((CombatStyleSetterCommon)((ICombatStyleGetter)ret).CommonSetterInstance()).CopyInFromXml(
+                item: ret,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             return ret;
         }
 
@@ -755,29 +733,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #endregion
-
-        protected static void FillPrivateElementXml(
-            CombatStyle item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "HasCSTDDataType":
-                    item.CSTDDataTypeState |= CombatStyle.CSTDDataType.Has;
-                    break;
-                default:
-                    OblivionMajorRecord.FillPrivateElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
 
         #endregion
 
@@ -907,376 +862,16 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new CombatStyle();
-            UtilityTranslation.MajorRecordParse<ICombatStyleInternal>(
-                record: ret,
-                frame: frame,
-                errorMask: errorMask,
-                recType: CombatStyle_Registration.CSTY_HEADER,
-                recordTypeConverter: recordTypeConverter,
+            ((CombatStyleSetterCommon)((ICombatStyleGetter)ret).CommonSetterInstance()).CopyInFromBinary(
+                item: ret,
                 masterReferences: masterReferences,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                frame: frame,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
             return ret;
         }
 
         #endregion
-
-        protected static void FillBinaryStructs(
-            ICombatStyleInternal item,
-            MutagenFrame frame,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            OblivionMajorRecord.FillBinaryStructs(
-                item: item,
-                frame: frame,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
-        }
-
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            ICombatStyleInternal item,
-            MutagenFrame frame,
-            RecordType nextRecordType,
-            int contentLength,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask,
-            RecordTypeConverter recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x44545343: // CSTD
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    var dataFrame = frame.SpawnWithLength(contentLength);
-                    if (!dataFrame.Complete)
-                    {
-                        item.CSTDDataTypeState = CSTDDataType.Has;
-                    }
-                    item.DodgePercentChance = dataFrame.ReadUInt8();
-                    item.LeftRightPercentChance = dataFrame.ReadUInt8();
-                    dataFrame.SetPosition(dataFrame.Position + 2);
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single DodgeLeftRightTimerMinParse))
-                    {
-                        item.DodgeLeftRightTimerMin = DodgeLeftRightTimerMinParse;
-                    }
-                    else
-                    {
-                        item.DodgeLeftRightTimerMin = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single DodgeLeftRightTimerMaxParse))
-                    {
-                        item.DodgeLeftRightTimerMax = DodgeLeftRightTimerMaxParse;
-                    }
-                    else
-                    {
-                        item.DodgeLeftRightTimerMax = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single DodgeForwardTimerMinParse))
-                    {
-                        item.DodgeForwardTimerMin = DodgeForwardTimerMinParse;
-                    }
-                    else
-                    {
-                        item.DodgeForwardTimerMin = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single DodgeForwardTimerMaxParse))
-                    {
-                        item.DodgeForwardTimerMax = DodgeForwardTimerMaxParse;
-                    }
-                    else
-                    {
-                        item.DodgeForwardTimerMax = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single DodgeBackTimerMinParse))
-                    {
-                        item.DodgeBackTimerMin = DodgeBackTimerMinParse;
-                    }
-                    else
-                    {
-                        item.DodgeBackTimerMin = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single DodgeBackTimerMaxParse))
-                    {
-                        item.DodgeBackTimerMax = DodgeBackTimerMaxParse;
-                    }
-                    else
-                    {
-                        item.DodgeBackTimerMax = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single IdleTimerMinParse))
-                    {
-                        item.IdleTimerMin = IdleTimerMinParse;
-                    }
-                    else
-                    {
-                        item.IdleTimerMin = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single IdleTimerMaxParse))
-                    {
-                        item.IdleTimerMax = IdleTimerMaxParse;
-                    }
-                    else
-                    {
-                        item.IdleTimerMax = default(Single);
-                    }
-                    item.BlockPercentChance = dataFrame.ReadUInt8();
-                    item.AttackPercentChance = dataFrame.ReadUInt8();
-                    dataFrame.SetPosition(dataFrame.Position + 2);
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single RecoilStaggerBonusToAttackParse))
-                    {
-                        item.RecoilStaggerBonusToAttack = RecoilStaggerBonusToAttackParse;
-                    }
-                    else
-                    {
-                        item.RecoilStaggerBonusToAttack = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single UnconsciousBonusToAttackParse))
-                    {
-                        item.UnconsciousBonusToAttack = UnconsciousBonusToAttackParse;
-                    }
-                    else
-                    {
-                        item.UnconsciousBonusToAttack = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single HandToHandBonusToAttackParse))
-                    {
-                        item.HandToHandBonusToAttack = HandToHandBonusToAttackParse;
-                    }
-                    else
-                    {
-                        item.HandToHandBonusToAttack = default(Single);
-                    }
-                    item.PowerAttackPercentChance = dataFrame.ReadUInt8();
-                    dataFrame.SetPosition(dataFrame.Position + 3);
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single RecoilStaggerBonusToPowerAttackParse))
-                    {
-                        item.RecoilStaggerBonusToPowerAttack = RecoilStaggerBonusToPowerAttackParse;
-                    }
-                    else
-                    {
-                        item.RecoilStaggerBonusToPowerAttack = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single UnconsciousBonusToPowerAttackParse))
-                    {
-                        item.UnconsciousBonusToPowerAttack = UnconsciousBonusToPowerAttackParse;
-                    }
-                    else
-                    {
-                        item.UnconsciousBonusToPowerAttack = default(Single);
-                    }
-                    item.PowerAttackNormal = dataFrame.ReadUInt8();
-                    item.PowerAttackForward = dataFrame.ReadUInt8();
-                    item.PowerAttackBack = dataFrame.ReadUInt8();
-                    item.PowerAttackLeft = dataFrame.ReadUInt8();
-                    item.PowerAttackRight = dataFrame.ReadUInt8();
-                    dataFrame.SetPosition(dataFrame.Position + 3);
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single HoldTimerMinParse))
-                    {
-                        item.HoldTimerMin = HoldTimerMinParse;
-                    }
-                    else
-                    {
-                        item.HoldTimerMin = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single HoldTimerMaxParse))
-                    {
-                        item.HoldTimerMax = HoldTimerMaxParse;
-                    }
-                    else
-                    {
-                        item.HoldTimerMax = default(Single);
-                    }
-                    if (EnumBinaryTranslation<CombatStyle.Flag>.Instance.Parse(
-                        frame: dataFrame.SpawnWithLength(1),
-                        item: out CombatStyle.Flag FlagsParse))
-                    {
-                        item.Flags = FlagsParse;
-                    }
-                    else
-                    {
-                        item.Flags = default(CombatStyle.Flag);
-                    }
-                    item.AcrobaticDodgePercentChance = dataFrame.ReadUInt8();
-                    dataFrame.SetPosition(dataFrame.Position + 2);
-                    if (dataFrame.Complete)
-                    {
-                        item.CSTDDataTypeState |= CSTDDataType.Break0;
-                        return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.AcrobaticDodgePercentChance);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single RangeMultOptimalParse))
-                    {
-                        item.RangeMultOptimal = RangeMultOptimalParse;
-                    }
-                    else
-                    {
-                        item.RangeMultOptimal = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single RangeMultMaxParse))
-                    {
-                        item.RangeMultMax = RangeMultMaxParse;
-                    }
-                    else
-                    {
-                        item.RangeMultMax = default(Single);
-                    }
-                    if (dataFrame.Complete)
-                    {
-                        item.CSTDDataTypeState |= CSTDDataType.Break1;
-                        return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.RangeMultMax);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single SwitchDistanceMeleeParse))
-                    {
-                        item.SwitchDistanceMelee = SwitchDistanceMeleeParse;
-                    }
-                    else
-                    {
-                        item.SwitchDistanceMelee = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single SwitchDistanceRangedParse))
-                    {
-                        item.SwitchDistanceRanged = SwitchDistanceRangedParse;
-                    }
-                    else
-                    {
-                        item.SwitchDistanceRanged = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single BuffStandoffDistanceParse))
-                    {
-                        item.BuffStandoffDistance = BuffStandoffDistanceParse;
-                    }
-                    else
-                    {
-                        item.BuffStandoffDistance = default(Single);
-                    }
-                    if (dataFrame.Complete)
-                    {
-                        item.CSTDDataTypeState |= CSTDDataType.Break2;
-                        return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.BuffStandoffDistance);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single RangedStandoffDistanceParse))
-                    {
-                        item.RangedStandoffDistance = RangedStandoffDistanceParse;
-                    }
-                    else
-                    {
-                        item.RangedStandoffDistance = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single GroupStandoffDistanceParse))
-                    {
-                        item.GroupStandoffDistance = GroupStandoffDistanceParse;
-                    }
-                    else
-                    {
-                        item.GroupStandoffDistance = default(Single);
-                    }
-                    if (dataFrame.Complete)
-                    {
-                        item.CSTDDataTypeState |= CSTDDataType.Break3;
-                        return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.GroupStandoffDistance);
-                    }
-                    item.RushingAttackPercentChance = dataFrame.ReadUInt8();
-                    dataFrame.SetPosition(dataFrame.Position + 3);
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single RushingAttackDistanceMultParse))
-                    {
-                        item.RushingAttackDistanceMult = RushingAttackDistanceMultParse;
-                    }
-                    else
-                    {
-                        item.RushingAttackDistanceMult = default(Single);
-                    }
-                    if (dataFrame.Complete)
-                    {
-                        item.CSTDDataTypeState |= CSTDDataType.Break4;
-                        return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.RushingAttackDistanceMult);
-                    }
-                    CombatStyleBinaryCreateTranslation.FillBinarySecondaryFlagsCustomPublic(
-                        frame: dataFrame,
-                        item: item,
-                        masterReferences: masterReferences,
-                        errorMask: errorMask);
-                    return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.RushingAttackDistanceMult);
-                }
-                case 0x44415343: // CSAD
-                {
-                    try
-                    {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.Advanced);
-                        item.Advanced = Mutagen.Bethesda.Oblivion.CombatStyleAdvanced.CreateFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null,
-                            masterReferences: masterReferences,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.Advanced);
-                }
-                default:
-                    return OblivionMajorRecord.FillBinaryRecordTypes(
-                        item: item,
-                        frame: frame,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength,
-                        recordTypeConverter: recordTypeConverter,
-                        masterReferences: masterReferences,
-                        errorMask: errorMask);
-            }
-        }
 
         #endregion
 
@@ -1639,8 +1234,8 @@ namespace Mutagen.Bethesda.Oblivion
             CombatStyle def = null,
             bool doMasks = true)
         {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            CombatStyleSetterCopyCommon.CopyFieldsFrom(
+            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((CombatStyleSetterCopyCommon)((ICombatStyleGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -1656,13 +1251,205 @@ namespace Mutagen.Bethesda.Oblivion
             CombatStyle_CopyMask copyMask = null,
             CombatStyle def = null)
         {
-            CombatStyleSetterCopyCommon.CopyFieldsFrom(
+            ((CombatStyleSetterCopyCommon)((ICombatStyleGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
+
+        #region Xml Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this ICombatStyleInternal item,
+            XElement node,
+            MissingCreate missing = MissingCreate.New,
+            CombatStyle_TranslationMask translationMask = null)
+        {
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: null,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this ICombatStyleInternal item,
+            XElement node,
+            out CombatStyle_ErrorMask errorMask,
+            bool doMasks = true,
+            CombatStyle_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask.GetCrystal());
+            errorMask = CombatStyle_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public new static void CopyInFromXml(
+            this ICombatStyleInternal item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ((CombatStyleSetterCommon)((ICombatStyleGetter)item).CommonSetterInstance()).CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        public static void CopyInFromXml(
+            this ICombatStyleInternal item,
+            string path,
+            MissingCreate missing = MissingCreate.New,
+            CombatStyle_TranslationMask translationMask = null)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this ICombatStyleInternal item,
+            string path,
+            out CombatStyle_ErrorMask errorMask,
+            CombatStyle_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this ICombatStyleInternal item,
+            string path,
+            ErrorMaskBuilder errorMask,
+            CombatStyle_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        public static void CopyInFromXml(
+            this ICombatStyleInternal item,
+            Stream stream,
+            MissingCreate missing = MissingCreate.New,
+            CombatStyle_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this ICombatStyleInternal item,
+            Stream stream,
+            out CombatStyle_ErrorMask errorMask,
+            CombatStyle_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this ICombatStyleInternal item,
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            CombatStyle_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        #endregion
+
+        #region Binary Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this ICombatStyleInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences)
+        {
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: null);
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this ICombatStyleInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            out CombatStyle_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: errorMaskBuilder);
+            errorMask = CombatStyle_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public new static void CopyInFromBinary(
+            this ICombatStyleInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((CombatStyleSetterCommon)((ICombatStyleGetter)item).CommonSetterInstance()).CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+        #endregion
 
     }
     #endregion
@@ -2365,6 +2152,448 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ICombatStyleInternal)item);
         }
         
+        #region Xml Translation
+        protected static void FillPrivateElementXml(
+            ICombatStyleInternal item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "HasCSTDDataType":
+                    item.CSTDDataTypeState |= CombatStyle.CSTDDataType.Has;
+                    break;
+                default:
+                    OblivionMajorRecordSetterCommon.FillPrivateElementXml(
+                        item: item,
+                        node: node,
+                        name: name,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    break;
+            }
+        }
+        
+        public new void CopyInFromXml(
+            ICombatStyleInternal item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            try
+            {
+                item.CSTDDataTypeState |= CombatStyle.CSTDDataType.Break0;
+                item.CSTDDataTypeState |= CombatStyle.CSTDDataType.Break1;
+                item.CSTDDataTypeState |= CombatStyle.CSTDDataType.Break2;
+                item.CSTDDataTypeState |= CombatStyle.CSTDDataType.Break3;
+                item.CSTDDataTypeState |= CombatStyle.CSTDDataType.Break4;
+                foreach (var elem in node.Elements())
+                {
+                    FillPrivateElementXml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    CombatStyleXmlCreateTranslation.FillPublicElementXml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+        
+        #endregion
+        
+        #region Binary Translation
+        public override RecordType RecordType => CombatStyle_Registration.CSTY_HEADER;
+        protected static void FillBinaryStructs(
+            ICombatStyleInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            OblivionMajorRecordSetterCommon.FillBinaryStructs(
+                item: item,
+                frame: frame,
+                masterReferences: masterReferences,
+                errorMask: errorMask);
+        }
+        
+        protected static TryGet<int?> FillBinaryRecordTypes(
+            ICombatStyleInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x44545343: // CSTD
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (!dataFrame.Complete)
+                    {
+                        item.CSTDDataTypeState = CombatStyle.CSTDDataType.Has;
+                    }
+                    item.DodgePercentChance = dataFrame.ReadUInt8();
+                    item.LeftRightPercentChance = dataFrame.ReadUInt8();
+                    dataFrame.SetPosition(dataFrame.Position + 2);
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single DodgeLeftRightTimerMinParse))
+                    {
+                        item.DodgeLeftRightTimerMin = DodgeLeftRightTimerMinParse;
+                    }
+                    else
+                    {
+                        item.DodgeLeftRightTimerMin = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single DodgeLeftRightTimerMaxParse))
+                    {
+                        item.DodgeLeftRightTimerMax = DodgeLeftRightTimerMaxParse;
+                    }
+                    else
+                    {
+                        item.DodgeLeftRightTimerMax = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single DodgeForwardTimerMinParse))
+                    {
+                        item.DodgeForwardTimerMin = DodgeForwardTimerMinParse;
+                    }
+                    else
+                    {
+                        item.DodgeForwardTimerMin = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single DodgeForwardTimerMaxParse))
+                    {
+                        item.DodgeForwardTimerMax = DodgeForwardTimerMaxParse;
+                    }
+                    else
+                    {
+                        item.DodgeForwardTimerMax = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single DodgeBackTimerMinParse))
+                    {
+                        item.DodgeBackTimerMin = DodgeBackTimerMinParse;
+                    }
+                    else
+                    {
+                        item.DodgeBackTimerMin = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single DodgeBackTimerMaxParse))
+                    {
+                        item.DodgeBackTimerMax = DodgeBackTimerMaxParse;
+                    }
+                    else
+                    {
+                        item.DodgeBackTimerMax = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single IdleTimerMinParse))
+                    {
+                        item.IdleTimerMin = IdleTimerMinParse;
+                    }
+                    else
+                    {
+                        item.IdleTimerMin = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single IdleTimerMaxParse))
+                    {
+                        item.IdleTimerMax = IdleTimerMaxParse;
+                    }
+                    else
+                    {
+                        item.IdleTimerMax = default(Single);
+                    }
+                    item.BlockPercentChance = dataFrame.ReadUInt8();
+                    item.AttackPercentChance = dataFrame.ReadUInt8();
+                    dataFrame.SetPosition(dataFrame.Position + 2);
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single RecoilStaggerBonusToAttackParse))
+                    {
+                        item.RecoilStaggerBonusToAttack = RecoilStaggerBonusToAttackParse;
+                    }
+                    else
+                    {
+                        item.RecoilStaggerBonusToAttack = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single UnconsciousBonusToAttackParse))
+                    {
+                        item.UnconsciousBonusToAttack = UnconsciousBonusToAttackParse;
+                    }
+                    else
+                    {
+                        item.UnconsciousBonusToAttack = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single HandToHandBonusToAttackParse))
+                    {
+                        item.HandToHandBonusToAttack = HandToHandBonusToAttackParse;
+                    }
+                    else
+                    {
+                        item.HandToHandBonusToAttack = default(Single);
+                    }
+                    item.PowerAttackPercentChance = dataFrame.ReadUInt8();
+                    dataFrame.SetPosition(dataFrame.Position + 3);
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single RecoilStaggerBonusToPowerAttackParse))
+                    {
+                        item.RecoilStaggerBonusToPowerAttack = RecoilStaggerBonusToPowerAttackParse;
+                    }
+                    else
+                    {
+                        item.RecoilStaggerBonusToPowerAttack = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single UnconsciousBonusToPowerAttackParse))
+                    {
+                        item.UnconsciousBonusToPowerAttack = UnconsciousBonusToPowerAttackParse;
+                    }
+                    else
+                    {
+                        item.UnconsciousBonusToPowerAttack = default(Single);
+                    }
+                    item.PowerAttackNormal = dataFrame.ReadUInt8();
+                    item.PowerAttackForward = dataFrame.ReadUInt8();
+                    item.PowerAttackBack = dataFrame.ReadUInt8();
+                    item.PowerAttackLeft = dataFrame.ReadUInt8();
+                    item.PowerAttackRight = dataFrame.ReadUInt8();
+                    dataFrame.SetPosition(dataFrame.Position + 3);
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single HoldTimerMinParse))
+                    {
+                        item.HoldTimerMin = HoldTimerMinParse;
+                    }
+                    else
+                    {
+                        item.HoldTimerMin = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single HoldTimerMaxParse))
+                    {
+                        item.HoldTimerMax = HoldTimerMaxParse;
+                    }
+                    else
+                    {
+                        item.HoldTimerMax = default(Single);
+                    }
+                    if (EnumBinaryTranslation<CombatStyle.Flag>.Instance.Parse(
+                        frame: dataFrame.SpawnWithLength(1),
+                        item: out CombatStyle.Flag FlagsParse))
+                    {
+                        item.Flags = FlagsParse;
+                    }
+                    else
+                    {
+                        item.Flags = default(CombatStyle.Flag);
+                    }
+                    item.AcrobaticDodgePercentChance = dataFrame.ReadUInt8();
+                    dataFrame.SetPosition(dataFrame.Position + 2);
+                    if (dataFrame.Complete)
+                    {
+                        item.CSTDDataTypeState |= CombatStyle.CSTDDataType.Break0;
+                        return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.AcrobaticDodgePercentChance);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single RangeMultOptimalParse))
+                    {
+                        item.RangeMultOptimal = RangeMultOptimalParse;
+                    }
+                    else
+                    {
+                        item.RangeMultOptimal = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single RangeMultMaxParse))
+                    {
+                        item.RangeMultMax = RangeMultMaxParse;
+                    }
+                    else
+                    {
+                        item.RangeMultMax = default(Single);
+                    }
+                    if (dataFrame.Complete)
+                    {
+                        item.CSTDDataTypeState |= CombatStyle.CSTDDataType.Break1;
+                        return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.RangeMultMax);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single SwitchDistanceMeleeParse))
+                    {
+                        item.SwitchDistanceMelee = SwitchDistanceMeleeParse;
+                    }
+                    else
+                    {
+                        item.SwitchDistanceMelee = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single SwitchDistanceRangedParse))
+                    {
+                        item.SwitchDistanceRanged = SwitchDistanceRangedParse;
+                    }
+                    else
+                    {
+                        item.SwitchDistanceRanged = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single BuffStandoffDistanceParse))
+                    {
+                        item.BuffStandoffDistance = BuffStandoffDistanceParse;
+                    }
+                    else
+                    {
+                        item.BuffStandoffDistance = default(Single);
+                    }
+                    if (dataFrame.Complete)
+                    {
+                        item.CSTDDataTypeState |= CombatStyle.CSTDDataType.Break2;
+                        return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.BuffStandoffDistance);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single RangedStandoffDistanceParse))
+                    {
+                        item.RangedStandoffDistance = RangedStandoffDistanceParse;
+                    }
+                    else
+                    {
+                        item.RangedStandoffDistance = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single GroupStandoffDistanceParse))
+                    {
+                        item.GroupStandoffDistance = GroupStandoffDistanceParse;
+                    }
+                    else
+                    {
+                        item.GroupStandoffDistance = default(Single);
+                    }
+                    if (dataFrame.Complete)
+                    {
+                        item.CSTDDataTypeState |= CombatStyle.CSTDDataType.Break3;
+                        return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.GroupStandoffDistance);
+                    }
+                    item.RushingAttackPercentChance = dataFrame.ReadUInt8();
+                    dataFrame.SetPosition(dataFrame.Position + 3);
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single RushingAttackDistanceMultParse))
+                    {
+                        item.RushingAttackDistanceMult = RushingAttackDistanceMultParse;
+                    }
+                    else
+                    {
+                        item.RushingAttackDistanceMult = default(Single);
+                    }
+                    if (dataFrame.Complete)
+                    {
+                        item.CSTDDataTypeState |= CombatStyle.CSTDDataType.Break4;
+                        return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.RushingAttackDistanceMult);
+                    }
+                    CombatStyleBinaryCreateTranslation.FillBinarySecondaryFlagsCustomPublic(
+                        frame: dataFrame,
+                        item: item,
+                        masterReferences: masterReferences,
+                        errorMask: errorMask);
+                    return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.RushingAttackDistanceMult);
+                }
+                case 0x44415343: // CSAD
+                {
+                    try
+                    {
+                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.Advanced);
+                        item.Advanced = Mutagen.Bethesda.Oblivion.CombatStyleAdvanced.CreateFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null,
+                            masterReferences: masterReferences,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.Advanced);
+                }
+                default:
+                    return OblivionMajorRecordSetterCommon.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter,
+                        masterReferences: masterReferences,
+                        errorMask: errorMask);
+            }
+        }
+        
+        public new void CopyInFromBinary(
+            ICombatStyleInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            UtilityTranslation.MajorRecordParse<ICombatStyleInternal>(
+                record: item,
+                frame: frame,
+                errorMask: errorMask,
+                recType: RecordType,
+                recordTypeConverter: recordTypeConverter,
+                masterReferences: masterReferences,
+                fillStructs: FillBinaryStructs,
+                fillTyped: FillBinaryRecordTypes);
+        }
+        
+        #endregion
+        
     }
     public partial class CombatStyleCommon : OblivionMajorRecordCommon
     {
@@ -2886,14 +3115,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public new static readonly CombatStyleSetterCopyCommon Instance = new CombatStyleSetterCopyCommon();
 
         #region Copy Fields From
-        public static void CopyFieldsFrom(
+        public void CopyFieldsFrom(
             CombatStyle item,
             CombatStyle rhs,
             CombatStyle def,
             ErrorMaskBuilder errorMask,
             CombatStyle_CopyMask copyMask)
         {
-            OblivionMajorRecordSetterCopyCommon.CopyFieldsFrom(
+            ((OblivionMajorRecordSetterCopyCommon)((IOblivionMajorRecordGetter)item).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -3133,7 +3362,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             case CopyOption.Reference:
                                 throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
-                                CombatStyleAdvancedSetterCopyCommon.CopyFieldsFrom(
+                                ((CombatStyleAdvancedSetterCopyCommon)((ICombatStyleAdvancedGetter)item.Advanced).CommonSetterCopyInstance()).CopyFieldsFrom(
                                     item: item.Advanced,
                                     rhs: rhs.Advanced,
                                     def: def?.Advanced,
@@ -5905,97 +6134,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool RushingAttackPercentChance;
         public bool RushingAttackDistanceMult;
         public MaskItem<CopyOption, CombatStyleAdvanced_CopyMask> Advanced;
-        public bool CSTDDataTypeState;
-        #endregion
-
-    }
-
-    public class CombatStyle_DeepCopyMask : OblivionMajorRecord_DeepCopyMask
-    {
-        public CombatStyle_DeepCopyMask()
-        {
-        }
-
-        public CombatStyle_DeepCopyMask(bool defaultOn)
-        {
-            this.DodgePercentChance = defaultOn;
-            this.LeftRightPercentChance = defaultOn;
-            this.DodgeLeftRightTimerMin = defaultOn;
-            this.DodgeLeftRightTimerMax = defaultOn;
-            this.DodgeForwardTimerMin = defaultOn;
-            this.DodgeForwardTimerMax = defaultOn;
-            this.DodgeBackTimerMin = defaultOn;
-            this.DodgeBackTimerMax = defaultOn;
-            this.IdleTimerMin = defaultOn;
-            this.IdleTimerMax = defaultOn;
-            this.BlockPercentChance = defaultOn;
-            this.AttackPercentChance = defaultOn;
-            this.RecoilStaggerBonusToAttack = defaultOn;
-            this.UnconsciousBonusToAttack = defaultOn;
-            this.HandToHandBonusToAttack = defaultOn;
-            this.PowerAttackPercentChance = defaultOn;
-            this.RecoilStaggerBonusToPowerAttack = defaultOn;
-            this.UnconsciousBonusToPowerAttack = defaultOn;
-            this.PowerAttackNormal = defaultOn;
-            this.PowerAttackForward = defaultOn;
-            this.PowerAttackBack = defaultOn;
-            this.PowerAttackLeft = defaultOn;
-            this.PowerAttackRight = defaultOn;
-            this.HoldTimerMin = defaultOn;
-            this.HoldTimerMax = defaultOn;
-            this.Flags = defaultOn;
-            this.AcrobaticDodgePercentChance = defaultOn;
-            this.RangeMultOptimal = defaultOn;
-            this.RangeMultMax = defaultOn;
-            this.SwitchDistanceMelee = defaultOn;
-            this.SwitchDistanceRanged = defaultOn;
-            this.BuffStandoffDistance = defaultOn;
-            this.RangedStandoffDistance = defaultOn;
-            this.GroupStandoffDistance = defaultOn;
-            this.RushingAttackPercentChance = defaultOn;
-            this.RushingAttackDistanceMult = defaultOn;
-            this.Advanced = new MaskItem<bool, CombatStyleAdvanced_DeepCopyMask>(defaultOn, default);
-            this.CSTDDataTypeState = defaultOn;
-        }
-
-        #region Members
-        public bool DodgePercentChance;
-        public bool LeftRightPercentChance;
-        public bool DodgeLeftRightTimerMin;
-        public bool DodgeLeftRightTimerMax;
-        public bool DodgeForwardTimerMin;
-        public bool DodgeForwardTimerMax;
-        public bool DodgeBackTimerMin;
-        public bool DodgeBackTimerMax;
-        public bool IdleTimerMin;
-        public bool IdleTimerMax;
-        public bool BlockPercentChance;
-        public bool AttackPercentChance;
-        public bool RecoilStaggerBonusToAttack;
-        public bool UnconsciousBonusToAttack;
-        public bool HandToHandBonusToAttack;
-        public bool PowerAttackPercentChance;
-        public bool RecoilStaggerBonusToPowerAttack;
-        public bool UnconsciousBonusToPowerAttack;
-        public bool PowerAttackNormal;
-        public bool PowerAttackForward;
-        public bool PowerAttackBack;
-        public bool PowerAttackLeft;
-        public bool PowerAttackRight;
-        public bool HoldTimerMin;
-        public bool HoldTimerMax;
-        public bool Flags;
-        public bool AcrobaticDodgePercentChance;
-        public bool RangeMultOptimal;
-        public bool RangeMultMax;
-        public bool SwitchDistanceMelee;
-        public bool SwitchDistanceRanged;
-        public bool BuffStandoffDistance;
-        public bool RangedStandoffDistance;
-        public bool GroupStandoffDistance;
-        public bool RushingAttackPercentChance;
-        public bool RushingAttackDistanceMult;
-        public MaskItem<bool, CombatStyleAdvanced_DeepCopyMask> Advanced;
         public bool CSTDDataTypeState;
         #endregion
 

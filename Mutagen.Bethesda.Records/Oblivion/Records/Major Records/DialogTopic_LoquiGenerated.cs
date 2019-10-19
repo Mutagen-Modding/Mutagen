@@ -237,29 +237,12 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
             }
             var ret = new DialogTopic();
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    FillPrivateElementXml(
-                        item: ret,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    DialogTopicXmlCreateTranslation.FillPublicElementXml(
-                        item: ret,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
+            ((DialogTopicSetterCommon)((IDialogTopicGetter)ret).CommonSetterInstance()).CopyInFromXml(
+                item: ret,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             return ret;
         }
 
@@ -344,26 +327,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #endregion
-
-        protected static void FillPrivateElementXml(
-            DialogTopic item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                default:
-                    OblivionMajorRecord.FillPrivateElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
 
         #endregion
 
@@ -486,111 +449,16 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new DialogTopic();
-            UtilityTranslation.MajorRecordParse<IDialogTopicInternal>(
-                record: ret,
-                frame: frame,
-                errorMask: errorMask,
-                recType: DialogTopic_Registration.DIAL_HEADER,
-                recordTypeConverter: recordTypeConverter,
+            ((DialogTopicSetterCommon)((IDialogTopicGetter)ret).CommonSetterInstance()).CopyInFromBinary(
+                item: ret,
                 masterReferences: masterReferences,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
-            try
-            {
-                DialogTopicBinaryCreateTranslation.CustomBinaryEndImportPublic(
-                    frame: frame,
-                    obj: ret,
-                    masterReferences: masterReferences,
-                    errorMask: errorMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
+                frame: frame,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
             return ret;
         }
 
         #endregion
-
-        protected static void FillBinaryStructs(
-            IDialogTopicInternal item,
-            MutagenFrame frame,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            OblivionMajorRecord.FillBinaryStructs(
-                item: item,
-                frame: frame,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
-        }
-
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IDialogTopicInternal item,
-            MutagenFrame frame,
-            RecordType nextRecordType,
-            int contentLength,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask,
-            RecordTypeConverter recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x49545351: // QSTI
-                {
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDLink<Quest>>.Instance.ParseRepeatedItem(
-                        frame: frame,
-                        triggeringRecord: DialogTopic_Registration.QSTI_HEADER,
-                        masterReferences: masterReferences,
-                        item: item.Quests,
-                        lengthLength: frame.MetaData.SubConstants.LengthLength,
-                        transl: FormLinkBinaryTranslation.Instance.Parse);
-                    return TryGet<int?>.Succeed((int)DialogTopic_FieldIndex.Quests);
-                }
-                case 0x4C4C5546: // FULL
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String NameParse))
-                    {
-                        item.Name = NameParse;
-                    }
-                    else
-                    {
-                        item.Name = default(String);
-                    }
-                    return TryGet<int?>.Succeed((int)DialogTopic_FieldIndex.Name);
-                }
-                case 0x41544144: // DATA
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (EnumBinaryTranslation<DialogType>.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out DialogType DialogTypeParse))
-                    {
-                        item.DialogType = DialogTypeParse;
-                    }
-                    else
-                    {
-                        item.DialogType = default(DialogType);
-                    }
-                    return TryGet<int?>.Succeed((int)DialogTopic_FieldIndex.DialogType);
-                }
-                default:
-                    return OblivionMajorRecord.FillBinaryRecordTypes(
-                        item: item,
-                        frame: frame,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength,
-                        recordTypeConverter: recordTypeConverter,
-                        masterReferences: masterReferences,
-                        errorMask: errorMask);
-            }
-        }
 
         #endregion
 
@@ -757,8 +625,8 @@ namespace Mutagen.Bethesda.Oblivion
             DialogTopic def = null,
             bool doMasks = true)
         {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            DialogTopicSetterCopyCommon.CopyFieldsFrom(
+            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((DialogTopicSetterCopyCommon)((IDialogTopicGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -774,13 +642,156 @@ namespace Mutagen.Bethesda.Oblivion
             DialogTopic_CopyMask copyMask = null,
             DialogTopic def = null)
         {
-            DialogTopicSetterCopyCommon.CopyFieldsFrom(
+            ((DialogTopicSetterCopyCommon)((IDialogTopicGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
+
+        #region Xml Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this IDialogTopicInternal item,
+            XElement node,
+            MissingCreate missing = MissingCreate.New,
+            DialogTopic_TranslationMask translationMask = null)
+        {
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: null,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this IDialogTopicInternal item,
+            XElement node,
+            out DialogTopic_ErrorMask errorMask,
+            bool doMasks = true,
+            DialogTopic_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask.GetCrystal());
+            errorMask = DialogTopic_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public new static void CopyInFromXml(
+            this IDialogTopicInternal item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ((DialogTopicSetterCommon)((IDialogTopicGetter)item).CommonSetterInstance()).CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        public static void CopyInFromXml(
+            this IDialogTopicInternal item,
+            string path,
+            MissingCreate missing = MissingCreate.New,
+            DialogTopic_TranslationMask translationMask = null)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IDialogTopicInternal item,
+            string path,
+            out DialogTopic_ErrorMask errorMask,
+            DialogTopic_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IDialogTopicInternal item,
+            string path,
+            ErrorMaskBuilder errorMask,
+            DialogTopic_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        public static void CopyInFromXml(
+            this IDialogTopicInternal item,
+            Stream stream,
+            MissingCreate missing = MissingCreate.New,
+            DialogTopic_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IDialogTopicInternal item,
+            Stream stream,
+            out DialogTopic_ErrorMask errorMask,
+            DialogTopic_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IDialogTopicInternal item,
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            DialogTopic_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        #endregion
 
         #region Mutagen
         public static IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(this IDialogTopicGetter obj)
@@ -793,6 +804,55 @@ namespace Mutagen.Bethesda.Oblivion
             return ((DialogTopicSetterCommon)((IDialogTopicGetter)obj).CommonSetterInstance()).EnumerateMajorRecords(obj: obj);
         }
 
+        #endregion
+
+        #region Binary Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this IDialogTopicInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences)
+        {
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: null);
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this IDialogTopicInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            out DialogTopic_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: errorMaskBuilder);
+            errorMask = DialogTopic_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public new static void CopyInFromBinary(
+            this IDialogTopicInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((DialogTopicSetterCommon)((IDialogTopicGetter)item).CommonSetterInstance()).CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
         #endregion
 
     }
@@ -1070,6 +1130,61 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IDialogTopicInternal)item);
         }
         
+        #region Xml Translation
+        protected static void FillPrivateElementXml(
+            IDialogTopicInternal item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                default:
+                    OblivionMajorRecordSetterCommon.FillPrivateElementXml(
+                        item: item,
+                        node: node,
+                        name: name,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    break;
+            }
+        }
+        
+        public new void CopyInFromXml(
+            IDialogTopicInternal item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    FillPrivateElementXml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    DialogTopicXmlCreateTranslation.FillPublicElementXml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+        
+        #endregion
+        
         #region Mutagen
         public IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(IDialogTopicInternal obj)
         {
@@ -1082,6 +1197,120 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
         }
+        #endregion
+        
+        #region Binary Translation
+        public override RecordType RecordType => DialogTopic_Registration.DIAL_HEADER;
+        protected static void FillBinaryStructs(
+            IDialogTopicInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            OblivionMajorRecordSetterCommon.FillBinaryStructs(
+                item: item,
+                frame: frame,
+                masterReferences: masterReferences,
+                errorMask: errorMask);
+        }
+        
+        protected static TryGet<int?> FillBinaryRecordTypes(
+            IDialogTopicInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x49545351: // QSTI
+                {
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDLink<Quest>>.Instance.ParseRepeatedItem(
+                        frame: frame,
+                        triggeringRecord: DialogTopic_Registration.QSTI_HEADER,
+                        masterReferences: masterReferences,
+                        item: item.Quests,
+                        lengthLength: frame.MetaData.SubConstants.LengthLength,
+                        transl: FormLinkBinaryTranslation.Instance.Parse);
+                    return TryGet<int?>.Succeed((int)DialogTopic_FieldIndex.Quests);
+                }
+                case 0x4C4C5546: // FULL
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String NameParse))
+                    {
+                        item.Name = NameParse;
+                    }
+                    else
+                    {
+                        item.Name = default(String);
+                    }
+                    return TryGet<int?>.Succeed((int)DialogTopic_FieldIndex.Name);
+                }
+                case 0x41544144: // DATA
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    if (EnumBinaryTranslation<DialogType>.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: out DialogType DialogTypeParse))
+                    {
+                        item.DialogType = DialogTypeParse;
+                    }
+                    else
+                    {
+                        item.DialogType = default(DialogType);
+                    }
+                    return TryGet<int?>.Succeed((int)DialogTopic_FieldIndex.DialogType);
+                }
+                default:
+                    return OblivionMajorRecordSetterCommon.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter,
+                        masterReferences: masterReferences,
+                        errorMask: errorMask);
+            }
+        }
+        
+        public new void CopyInFromBinary(
+            IDialogTopicInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            UtilityTranslation.MajorRecordParse<IDialogTopicInternal>(
+                record: item,
+                frame: frame,
+                errorMask: errorMask,
+                recType: RecordType,
+                recordTypeConverter: recordTypeConverter,
+                masterReferences: masterReferences,
+                fillStructs: FillBinaryStructs,
+                fillTyped: FillBinaryRecordTypes);
+            try
+            {
+                DialogTopicBinaryCreateTranslation.CustomBinaryEndImportPublic(
+                    frame: frame,
+                    obj: item,
+                    masterReferences: masterReferences,
+                    errorMask: errorMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+        
         #endregion
         
     }
@@ -1403,14 +1632,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public new static readonly DialogTopicSetterCopyCommon Instance = new DialogTopicSetterCopyCommon();
 
         #region Copy Fields From
-        public static void CopyFieldsFrom(
+        public void CopyFieldsFrom(
             DialogTopic item,
             DialogTopic rhs,
             DialogTopic def,
             ErrorMaskBuilder errorMask,
             DialogTopic_CopyMask copyMask)
         {
-            OblivionMajorRecordSetterCopyCommon.CopyFieldsFrom(
+            ((OblivionMajorRecordSetterCopyCommon)((IOblivionMajorRecordGetter)item).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -2463,31 +2692,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class DialogTopic_DeepCopyMask : OblivionMajorRecord_DeepCopyMask
-    {
-        public DialogTopic_DeepCopyMask()
-        {
-        }
-
-        public DialogTopic_DeepCopyMask(bool defaultOn)
-        {
-            this.Quests = defaultOn;
-            this.Name = defaultOn;
-            this.DialogType = defaultOn;
-            this.Timestamp = defaultOn;
-            this.Items = new MaskItem<bool, DialogItem_DeepCopyMask>(defaultOn, default);
-        }
-
-        #region Members
-        public bool Quests;
-        public bool Name;
-        public bool DialogType;
-        public bool Timestamp;
-        public MaskItem<bool, DialogItem_DeepCopyMask> Items;
-        #endregion
-
-    }
-
     public class DialogTopic_TranslationMask : OblivionMajorRecord_TranslationMask
     {
         #region Members
@@ -2699,12 +2903,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         static partial void CustomBinaryEndImport(
             MutagenFrame frame,
-            DialogTopic obj,
+            IDialogTopicInternal obj,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
         public static void CustomBinaryEndImportPublic(
             MutagenFrame frame,
-            DialogTopic obj,
+            IDialogTopicInternal obj,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {

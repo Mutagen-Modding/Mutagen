@@ -154,23 +154,12 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
             }
             var ret = new RaceStatsGendered();
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    RaceStatsGenderedXmlCreateTranslation.FillPublicElementXml(
-                        item: ret,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
+            ((RaceStatsGenderedSetterCommon)((IRaceStatsGenderedGetter)ret).CommonSetterInstance()).CopyInFromXml(
+                item: ret,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             return ret;
         }
 
@@ -328,65 +317,16 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new RaceStatsGendered();
-            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
-                frame.Reader,
-                recordTypeConverter.ConvertToCustom(RaceStatsGendered_Registration.ATTR_HEADER)));
-            UtilityTranslation.RecordParse(
-                record: ret,
-                frame: frame,
-                setFinal: true,
+            ((RaceStatsGenderedSetterCommon)((IRaceStatsGenderedGetter)ret).CommonSetterInstance()).CopyInFromBinary(
+                item: ret,
                 masterReferences: masterReferences,
-                errorMask: errorMask,
+                frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                errorMask: errorMask);
             return ret;
         }
 
         #endregion
-
-        protected static void FillBinaryStructs(
-            IRaceStatsGendered item,
-            MutagenFrame frame,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            try
-            {
-                errorMask?.PushIndex((int)RaceStatsGendered_FieldIndex.Male);
-                item.Male = Mutagen.Bethesda.Oblivion.RaceStats.CreateFromBinary(
-                    frame: frame,
-                    recordTypeConverter: null,
-                    masterReferences: masterReferences,
-                    errorMask: errorMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-            try
-            {
-                errorMask?.PushIndex((int)RaceStatsGendered_FieldIndex.Female);
-                item.Female = Mutagen.Bethesda.Oblivion.RaceStats.CreateFromBinary(
-                    frame: frame,
-                    recordTypeConverter: null,
-                    masterReferences: masterReferences,
-                    errorMask: errorMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-        }
 
         #endregion
 
@@ -538,8 +478,8 @@ namespace Mutagen.Bethesda.Oblivion
             RaceStatsGendered def = null,
             bool doMasks = true)
         {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            RaceStatsGenderedSetterCopyCommon.CopyFieldsFrom(
+            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((RaceStatsGenderedSetterCopyCommon)((IRaceStatsGenderedGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -555,7 +495,7 @@ namespace Mutagen.Bethesda.Oblivion
             RaceStatsGendered_CopyMask copyMask = null,
             RaceStatsGendered def = null)
         {
-            RaceStatsGenderedSetterCopyCommon.CopyFieldsFrom(
+            ((RaceStatsGenderedSetterCopyCommon)((IRaceStatsGenderedGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -573,6 +513,198 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
         }
+
+        #region Xml Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this IRaceStatsGendered item,
+            XElement node,
+            MissingCreate missing = MissingCreate.New,
+            RaceStatsGendered_TranslationMask translationMask = null)
+        {
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: null,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this IRaceStatsGendered item,
+            XElement node,
+            out RaceStatsGendered_ErrorMask errorMask,
+            bool doMasks = true,
+            RaceStatsGendered_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask.GetCrystal());
+            errorMask = RaceStatsGendered_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyInFromXml(
+            this IRaceStatsGendered item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ((RaceStatsGenderedSetterCommon)((IRaceStatsGenderedGetter)item).CommonSetterInstance()).CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        public static void CopyInFromXml(
+            this IRaceStatsGendered item,
+            string path,
+            MissingCreate missing = MissingCreate.New,
+            RaceStatsGendered_TranslationMask translationMask = null)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IRaceStatsGendered item,
+            string path,
+            out RaceStatsGendered_ErrorMask errorMask,
+            RaceStatsGendered_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IRaceStatsGendered item,
+            string path,
+            ErrorMaskBuilder errorMask,
+            RaceStatsGendered_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        public static void CopyInFromXml(
+            this IRaceStatsGendered item,
+            Stream stream,
+            MissingCreate missing = MissingCreate.New,
+            RaceStatsGendered_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IRaceStatsGendered item,
+            Stream stream,
+            out RaceStatsGendered_ErrorMask errorMask,
+            RaceStatsGendered_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IRaceStatsGendered item,
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            RaceStatsGendered_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        #endregion
+
+        #region Binary Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this IRaceStatsGendered item,
+            MutagenFrame frame,
+            MasterReferences masterReferences)
+        {
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: null);
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this IRaceStatsGendered item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            out RaceStatsGendered_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: errorMaskBuilder);
+            errorMask = RaceStatsGendered_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyInFromBinary(
+            this IRaceStatsGendered item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((RaceStatsGenderedSetterCommon)((IRaceStatsGenderedGetter)item).CommonSetterInstance()).CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+        #endregion
 
     }
     #endregion
@@ -806,6 +938,102 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
         
+        #region Xml Translation
+        public void CopyInFromXml(
+            IRaceStatsGendered item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    RaceStatsGenderedXmlCreateTranslation.FillPublicElementXml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+        
+        #endregion
+        
+        #region Binary Translation
+        protected static void FillBinaryStructs(
+            IRaceStatsGendered item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            try
+            {
+                errorMask?.PushIndex((int)RaceStatsGendered_FieldIndex.Male);
+                item.Male = Mutagen.Bethesda.Oblivion.RaceStats.CreateFromBinary(
+                    frame: frame,
+                    recordTypeConverter: null,
+                    masterReferences: masterReferences,
+                    errorMask: errorMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
+            try
+            {
+                errorMask?.PushIndex((int)RaceStatsGendered_FieldIndex.Female);
+                item.Female = Mutagen.Bethesda.Oblivion.RaceStats.CreateFromBinary(
+                    frame: frame,
+                    recordTypeConverter: null,
+                    masterReferences: masterReferences,
+                    errorMask: errorMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
+        }
+        
+        public void CopyInFromBinary(
+            IRaceStatsGendered item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
+                frame.Reader,
+                recordTypeConverter.ConvertToCustom(RaceStatsGendered_Registration.ATTR_HEADER)));
+            UtilityTranslation.RecordParse(
+                record: item,
+                frame: frame,
+                setFinal: true,
+                masterReferences: masterReferences,
+                errorMask: errorMask,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: FillBinaryStructs);
+        }
+        
+        #endregion
+        
     }
     public partial class RaceStatsGenderedCommon
     {
@@ -934,7 +1162,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RaceStatsGenderedSetterCopyCommon Instance = new RaceStatsGenderedSetterCopyCommon();
 
         #region Copy Fields From
-        public static void CopyFieldsFrom(
+        public void CopyFieldsFrom(
             RaceStatsGendered item,
             RaceStatsGendered rhs,
             RaceStatsGendered def,
@@ -952,7 +1180,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             item.Male = Utility.GetGetterInterfaceReference<RaceStats>(rhs.Male);
                             break;
                         case CopyOption.CopyIn:
-                            RaceStatsSetterCopyCommon.CopyFieldsFrom(
+                            ((RaceStatsSetterCopyCommon)((IRaceStatsGetter)item.Male).CommonSetterCopyInstance()).CopyFieldsFrom(
                                 item: item.Male,
                                 rhs: rhs.Male,
                                 def: def?.Male,
@@ -996,7 +1224,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             item.Female = Utility.GetGetterInterfaceReference<RaceStats>(rhs.Female);
                             break;
                         case CopyOption.CopyIn:
-                            RaceStatsSetterCopyCommon.CopyFieldsFrom(
+                            ((RaceStatsSetterCopyCommon)((IRaceStatsGetter)item.Female).CommonSetterCopyInstance()).CopyFieldsFrom(
                                 item: item.Female,
                                 rhs: rhs.Female,
                                 def: def?.Female,
@@ -1727,25 +1955,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Members
         public MaskItem<CopyOption, RaceStats_CopyMask> Male;
         public MaskItem<CopyOption, RaceStats_CopyMask> Female;
-        #endregion
-
-    }
-
-    public class RaceStatsGendered_DeepCopyMask
-    {
-        public RaceStatsGendered_DeepCopyMask()
-        {
-        }
-
-        public RaceStatsGendered_DeepCopyMask(bool defaultOn)
-        {
-            this.Male = new MaskItem<bool, RaceStats_DeepCopyMask>(defaultOn, default);
-            this.Female = new MaskItem<bool, RaceStats_DeepCopyMask>(defaultOn, default);
-        }
-
-        #region Members
-        public MaskItem<bool, RaceStats_DeepCopyMask> Male;
-        public MaskItem<bool, RaceStats_DeepCopyMask> Female;
         #endregion
 
     }

@@ -909,30 +909,12 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
             }
             var ret = new EffectShader();
-            try
-            {
-                ret.DATADataTypeState |= EffectShader.DATADataType.Break0;
-                foreach (var elem in node.Elements())
-                {
-                    FillPrivateElementXml(
-                        item: ret,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    EffectShaderXmlCreateTranslation.FillPublicElementXml(
-                        item: ret,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
+            ((EffectShaderSetterCommon)((IEffectShaderGetter)ret).CommonSetterInstance()).CopyInFromXml(
+                item: ret,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             return ret;
         }
 
@@ -1017,29 +999,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #endregion
-
-        protected static void FillPrivateElementXml(
-            EffectShader item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "HasDATADataType":
-                    item.DATADataTypeState |= EffectShader.DATADataType.Has;
-                    break;
-                default:
-                    OblivionMajorRecord.FillPrivateElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
 
         #endregion
 
@@ -1186,668 +1145,16 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new EffectShader();
-            UtilityTranslation.MajorRecordParse<IEffectShaderInternal>(
-                record: ret,
-                frame: frame,
-                errorMask: errorMask,
-                recType: EffectShader_Registration.EFSH_HEADER,
-                recordTypeConverter: recordTypeConverter,
+            ((EffectShaderSetterCommon)((IEffectShaderGetter)ret).CommonSetterInstance()).CopyInFromBinary(
+                item: ret,
                 masterReferences: masterReferences,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                frame: frame,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
             return ret;
         }
 
         #endregion
-
-        protected static void FillBinaryStructs(
-            IEffectShaderInternal item,
-            MutagenFrame frame,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            OblivionMajorRecord.FillBinaryStructs(
-                item: item,
-                frame: frame,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
-        }
-
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IEffectShaderInternal item,
-            MutagenFrame frame,
-            RecordType nextRecordType,
-            int contentLength,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask,
-            RecordTypeConverter recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x4E4F4349: // ICON
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String FillTextureParse))
-                    {
-                        item.FillTexture = FillTextureParse;
-                    }
-                    else
-                    {
-                        item.FillTexture = default(String);
-                    }
-                    return TryGet<int?>.Succeed((int)EffectShader_FieldIndex.FillTexture);
-                }
-                case 0x324F4349: // ICO2
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String ParticleShaderTextureParse))
-                    {
-                        item.ParticleShaderTexture = ParticleShaderTextureParse;
-                    }
-                    else
-                    {
-                        item.ParticleShaderTexture = default(String);
-                    }
-                    return TryGet<int?>.Succeed((int)EffectShader_FieldIndex.ParticleShaderTexture);
-                }
-                case 0x41544144: // DATA
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    var dataFrame = frame.SpawnWithLength(contentLength);
-                    if (!dataFrame.Complete)
-                    {
-                        item.DATADataTypeState = DATADataType.Has;
-                    }
-                    if (EnumBinaryTranslation<EffectShader.Flag>.Instance.Parse(
-                        frame: dataFrame.SpawnWithLength(4),
-                        item: out EffectShader.Flag FlagsParse))
-                    {
-                        item.Flags = FlagsParse;
-                    }
-                    else
-                    {
-                        item.Flags = default(EffectShader.Flag);
-                    }
-                    if (EnumBinaryTranslation<EffectShader.SourceBlendMode>.Instance.Parse(
-                        frame: dataFrame.SpawnWithLength(4),
-                        item: out EffectShader.SourceBlendMode MembraneShaderSourceBlendModeParse))
-                    {
-                        item.MembraneShaderSourceBlendMode = MembraneShaderSourceBlendModeParse;
-                    }
-                    else
-                    {
-                        item.MembraneShaderSourceBlendMode = default(EffectShader.SourceBlendMode);
-                    }
-                    if (EnumBinaryTranslation<EffectShader.BlendOperation>.Instance.Parse(
-                        frame: dataFrame.SpawnWithLength(4),
-                        item: out EffectShader.BlendOperation MembraneShaderBlendOperationParse))
-                    {
-                        item.MembraneShaderBlendOperation = MembraneShaderBlendOperationParse;
-                    }
-                    else
-                    {
-                        item.MembraneShaderBlendOperation = default(EffectShader.BlendOperation);
-                    }
-                    if (EnumBinaryTranslation<EffectShader.ZTestFunction>.Instance.Parse(
-                        frame: dataFrame.SpawnWithLength(4),
-                        item: out EffectShader.ZTestFunction MembraneShaderZTestFunctionParse))
-                    {
-                        item.MembraneShaderZTestFunction = MembraneShaderZTestFunctionParse;
-                    }
-                    else
-                    {
-                        item.MembraneShaderZTestFunction = default(EffectShader.ZTestFunction);
-                    }
-                    if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        extraByte: true,
-                        item: out Color FillTextureEffectColorParse))
-                    {
-                        item.FillTextureEffectColor = FillTextureEffectColorParse;
-                    }
-                    else
-                    {
-                        item.FillTextureEffectColor = default(Color);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single FillTextureEffectAlphaFadeInTimeParse))
-                    {
-                        item.FillTextureEffectAlphaFadeInTime = FillTextureEffectAlphaFadeInTimeParse;
-                    }
-                    else
-                    {
-                        item.FillTextureEffectAlphaFadeInTime = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single FillTextureEffectFullAlphaTimeParse))
-                    {
-                        item.FillTextureEffectFullAlphaTime = FillTextureEffectFullAlphaTimeParse;
-                    }
-                    else
-                    {
-                        item.FillTextureEffectFullAlphaTime = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single FillTextureEffectAlphaFadeOutTimeParse))
-                    {
-                        item.FillTextureEffectAlphaFadeOutTime = FillTextureEffectAlphaFadeOutTimeParse;
-                    }
-                    else
-                    {
-                        item.FillTextureEffectAlphaFadeOutTime = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single FillTextureEffectPersistentAlphaRatioParse))
-                    {
-                        item.FillTextureEffectPersistentAlphaRatio = FillTextureEffectPersistentAlphaRatioParse;
-                    }
-                    else
-                    {
-                        item.FillTextureEffectPersistentAlphaRatio = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single FillTextureEffectAlphaPulseAmplitudeParse))
-                    {
-                        item.FillTextureEffectAlphaPulseAmplitude = FillTextureEffectAlphaPulseAmplitudeParse;
-                    }
-                    else
-                    {
-                        item.FillTextureEffectAlphaPulseAmplitude = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single FillTextureEffectAlphaPulseFrequencyParse))
-                    {
-                        item.FillTextureEffectAlphaPulseFrequency = FillTextureEffectAlphaPulseFrequencyParse;
-                    }
-                    else
-                    {
-                        item.FillTextureEffectAlphaPulseFrequency = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single FillTextureEffectTextureAnimationSpeedUParse))
-                    {
-                        item.FillTextureEffectTextureAnimationSpeedU = FillTextureEffectTextureAnimationSpeedUParse;
-                    }
-                    else
-                    {
-                        item.FillTextureEffectTextureAnimationSpeedU = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single FillTextureEffectTextureAnimationSpeedVParse))
-                    {
-                        item.FillTextureEffectTextureAnimationSpeedV = FillTextureEffectTextureAnimationSpeedVParse;
-                    }
-                    else
-                    {
-                        item.FillTextureEffectTextureAnimationSpeedV = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single EdgeEffectFallOffParse))
-                    {
-                        item.EdgeEffectFallOff = EdgeEffectFallOffParse;
-                    }
-                    else
-                    {
-                        item.EdgeEffectFallOff = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        extraByte: true,
-                        item: out Color EdgeEffectColorParse))
-                    {
-                        item.EdgeEffectColor = EdgeEffectColorParse;
-                    }
-                    else
-                    {
-                        item.EdgeEffectColor = default(Color);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single EdgeEffectAlphaFadeInTimeParse))
-                    {
-                        item.EdgeEffectAlphaFadeInTime = EdgeEffectAlphaFadeInTimeParse;
-                    }
-                    else
-                    {
-                        item.EdgeEffectAlphaFadeInTime = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single EdgeEffectFullAlphaTimeParse))
-                    {
-                        item.EdgeEffectFullAlphaTime = EdgeEffectFullAlphaTimeParse;
-                    }
-                    else
-                    {
-                        item.EdgeEffectFullAlphaTime = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single EdgeEffectAlphaFadeOutTimeParse))
-                    {
-                        item.EdgeEffectAlphaFadeOutTime = EdgeEffectAlphaFadeOutTimeParse;
-                    }
-                    else
-                    {
-                        item.EdgeEffectAlphaFadeOutTime = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single EdgeEffectPersistentAlphaRatioParse))
-                    {
-                        item.EdgeEffectPersistentAlphaRatio = EdgeEffectPersistentAlphaRatioParse;
-                    }
-                    else
-                    {
-                        item.EdgeEffectPersistentAlphaRatio = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single EdgeEffectAlphaPulseAmplitudeParse))
-                    {
-                        item.EdgeEffectAlphaPulseAmplitude = EdgeEffectAlphaPulseAmplitudeParse;
-                    }
-                    else
-                    {
-                        item.EdgeEffectAlphaPulseAmplitude = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single EdgeEffectAlphaPulseFrequencyParse))
-                    {
-                        item.EdgeEffectAlphaPulseFrequency = EdgeEffectAlphaPulseFrequencyParse;
-                    }
-                    else
-                    {
-                        item.EdgeEffectAlphaPulseFrequency = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single FillTextureEffectFullAlphaRatioParse))
-                    {
-                        item.FillTextureEffectFullAlphaRatio = FillTextureEffectFullAlphaRatioParse;
-                    }
-                    else
-                    {
-                        item.FillTextureEffectFullAlphaRatio = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single EdgeEffectFullAlphaRatioParse))
-                    {
-                        item.EdgeEffectFullAlphaRatio = EdgeEffectFullAlphaRatioParse;
-                    }
-                    else
-                    {
-                        item.EdgeEffectFullAlphaRatio = default(Single);
-                    }
-                    if (EnumBinaryTranslation<EffectShader.SourceBlendMode>.Instance.Parse(
-                        frame: dataFrame.SpawnWithLength(4),
-                        item: out EffectShader.SourceBlendMode MembraneShaderDestBlendModeParse))
-                    {
-                        item.MembraneShaderDestBlendMode = MembraneShaderDestBlendModeParse;
-                    }
-                    else
-                    {
-                        item.MembraneShaderDestBlendMode = default(EffectShader.SourceBlendMode);
-                    }
-                    if (dataFrame.Complete)
-                    {
-                        item.DATADataTypeState |= DATADataType.Break0;
-                        return TryGet<int?>.Succeed((int)EffectShader_FieldIndex.MembraneShaderDestBlendMode);
-                    }
-                    if (EnumBinaryTranslation<EffectShader.SourceBlendMode>.Instance.Parse(
-                        frame: dataFrame.SpawnWithLength(4),
-                        item: out EffectShader.SourceBlendMode ParticleShaderSourceBlendModeParse))
-                    {
-                        item.ParticleShaderSourceBlendMode = ParticleShaderSourceBlendModeParse;
-                    }
-                    else
-                    {
-                        item.ParticleShaderSourceBlendMode = default(EffectShader.SourceBlendMode);
-                    }
-                    if (EnumBinaryTranslation<EffectShader.BlendOperation>.Instance.Parse(
-                        frame: dataFrame.SpawnWithLength(4),
-                        item: out EffectShader.BlendOperation ParticleShaderBlendOperationParse))
-                    {
-                        item.ParticleShaderBlendOperation = ParticleShaderBlendOperationParse;
-                    }
-                    else
-                    {
-                        item.ParticleShaderBlendOperation = default(EffectShader.BlendOperation);
-                    }
-                    if (EnumBinaryTranslation<EffectShader.ZTestFunction>.Instance.Parse(
-                        frame: dataFrame.SpawnWithLength(4),
-                        item: out EffectShader.ZTestFunction ParticleShaderZTestFunctionParse))
-                    {
-                        item.ParticleShaderZTestFunction = ParticleShaderZTestFunctionParse;
-                    }
-                    else
-                    {
-                        item.ParticleShaderZTestFunction = default(EffectShader.ZTestFunction);
-                    }
-                    if (EnumBinaryTranslation<EffectShader.SourceBlendMode>.Instance.Parse(
-                        frame: dataFrame.SpawnWithLength(4),
-                        item: out EffectShader.SourceBlendMode ParticleShaderDestBlendModeParse))
-                    {
-                        item.ParticleShaderDestBlendMode = ParticleShaderDestBlendModeParse;
-                    }
-                    else
-                    {
-                        item.ParticleShaderDestBlendMode = default(EffectShader.SourceBlendMode);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single ParticleShaderParticleBirthRampUpTimeParse))
-                    {
-                        item.ParticleShaderParticleBirthRampUpTime = ParticleShaderParticleBirthRampUpTimeParse;
-                    }
-                    else
-                    {
-                        item.ParticleShaderParticleBirthRampUpTime = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single ParticleShaderFullParticleBirthTimeParse))
-                    {
-                        item.ParticleShaderFullParticleBirthTime = ParticleShaderFullParticleBirthTimeParse;
-                    }
-                    else
-                    {
-                        item.ParticleShaderFullParticleBirthTime = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single ParticleShaderParticleBirthRampDownTimeParse))
-                    {
-                        item.ParticleShaderParticleBirthRampDownTime = ParticleShaderParticleBirthRampDownTimeParse;
-                    }
-                    else
-                    {
-                        item.ParticleShaderParticleBirthRampDownTime = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single ParticleShaderFullParticleBirthRatioParse))
-                    {
-                        item.ParticleShaderFullParticleBirthRatio = ParticleShaderFullParticleBirthRatioParse;
-                    }
-                    else
-                    {
-                        item.ParticleShaderFullParticleBirthRatio = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single ParticleShaderPersistentParticleBirthRatioParse))
-                    {
-                        item.ParticleShaderPersistentParticleBirthRatio = ParticleShaderPersistentParticleBirthRatioParse;
-                    }
-                    else
-                    {
-                        item.ParticleShaderPersistentParticleBirthRatio = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single ParticleShaderParticleLifetimeParse))
-                    {
-                        item.ParticleShaderParticleLifetime = ParticleShaderParticleLifetimeParse;
-                    }
-                    else
-                    {
-                        item.ParticleShaderParticleLifetime = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single ParticleShaderParticleLifetimePlusMinusParse))
-                    {
-                        item.ParticleShaderParticleLifetimePlusMinus = ParticleShaderParticleLifetimePlusMinusParse;
-                    }
-                    else
-                    {
-                        item.ParticleShaderParticleLifetimePlusMinus = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single ParticleShaderInitialSpeedAlongNormalParse))
-                    {
-                        item.ParticleShaderInitialSpeedAlongNormal = ParticleShaderInitialSpeedAlongNormalParse;
-                    }
-                    else
-                    {
-                        item.ParticleShaderInitialSpeedAlongNormal = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single ParticleShaderAccelerationAlongNormalParse))
-                    {
-                        item.ParticleShaderAccelerationAlongNormal = ParticleShaderAccelerationAlongNormalParse;
-                    }
-                    else
-                    {
-                        item.ParticleShaderAccelerationAlongNormal = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single ParticleShaderInitialVelocity1Parse))
-                    {
-                        item.ParticleShaderInitialVelocity1 = ParticleShaderInitialVelocity1Parse;
-                    }
-                    else
-                    {
-                        item.ParticleShaderInitialVelocity1 = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single ParticleShaderInitialVelocity2Parse))
-                    {
-                        item.ParticleShaderInitialVelocity2 = ParticleShaderInitialVelocity2Parse;
-                    }
-                    else
-                    {
-                        item.ParticleShaderInitialVelocity2 = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single ParticleShaderInitialVelocity3Parse))
-                    {
-                        item.ParticleShaderInitialVelocity3 = ParticleShaderInitialVelocity3Parse;
-                    }
-                    else
-                    {
-                        item.ParticleShaderInitialVelocity3 = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single ParticleShaderAcceleration1Parse))
-                    {
-                        item.ParticleShaderAcceleration1 = ParticleShaderAcceleration1Parse;
-                    }
-                    else
-                    {
-                        item.ParticleShaderAcceleration1 = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single ParticleShaderAcceleration2Parse))
-                    {
-                        item.ParticleShaderAcceleration2 = ParticleShaderAcceleration2Parse;
-                    }
-                    else
-                    {
-                        item.ParticleShaderAcceleration2 = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single ParticleShaderAcceleration3Parse))
-                    {
-                        item.ParticleShaderAcceleration3 = ParticleShaderAcceleration3Parse;
-                    }
-                    else
-                    {
-                        item.ParticleShaderAcceleration3 = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single ParticleShaderScaleKey1Parse))
-                    {
-                        item.ParticleShaderScaleKey1 = ParticleShaderScaleKey1Parse;
-                    }
-                    else
-                    {
-                        item.ParticleShaderScaleKey1 = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single ParticleShaderScaleKey2Parse))
-                    {
-                        item.ParticleShaderScaleKey2 = ParticleShaderScaleKey2Parse;
-                    }
-                    else
-                    {
-                        item.ParticleShaderScaleKey2 = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single ParticleShaderScaleKey1TimeParse))
-                    {
-                        item.ParticleShaderScaleKey1Time = ParticleShaderScaleKey1TimeParse;
-                    }
-                    else
-                    {
-                        item.ParticleShaderScaleKey1Time = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single ParticleShaderScaleKey2TimeParse))
-                    {
-                        item.ParticleShaderScaleKey2Time = ParticleShaderScaleKey2TimeParse;
-                    }
-                    else
-                    {
-                        item.ParticleShaderScaleKey2Time = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        extraByte: true,
-                        item: out Color ColorKey1ColorParse))
-                    {
-                        item.ColorKey1Color = ColorKey1ColorParse;
-                    }
-                    else
-                    {
-                        item.ColorKey1Color = default(Color);
-                    }
-                    if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        extraByte: true,
-                        item: out Color ColorKey2ColorParse))
-                    {
-                        item.ColorKey2Color = ColorKey2ColorParse;
-                    }
-                    else
-                    {
-                        item.ColorKey2Color = default(Color);
-                    }
-                    if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        extraByte: true,
-                        item: out Color ColorKey3ColorParse))
-                    {
-                        item.ColorKey3Color = ColorKey3ColorParse;
-                    }
-                    else
-                    {
-                        item.ColorKey3Color = default(Color);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single ColorKey1ColorAlphaParse))
-                    {
-                        item.ColorKey1ColorAlpha = ColorKey1ColorAlphaParse;
-                    }
-                    else
-                    {
-                        item.ColorKey1ColorAlpha = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single ColorKey2ColorAlphaParse))
-                    {
-                        item.ColorKey2ColorAlpha = ColorKey2ColorAlphaParse;
-                    }
-                    else
-                    {
-                        item.ColorKey2ColorAlpha = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single ColorKey3ColorAlphaParse))
-                    {
-                        item.ColorKey3ColorAlpha = ColorKey3ColorAlphaParse;
-                    }
-                    else
-                    {
-                        item.ColorKey3ColorAlpha = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single ColorKey1ColorKeyTimeParse))
-                    {
-                        item.ColorKey1ColorKeyTime = ColorKey1ColorKeyTimeParse;
-                    }
-                    else
-                    {
-                        item.ColorKey1ColorKeyTime = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single ColorKey2ColorKeyTimeParse))
-                    {
-                        item.ColorKey2ColorKeyTime = ColorKey2ColorKeyTimeParse;
-                    }
-                    else
-                    {
-                        item.ColorKey2ColorKeyTime = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single ColorKey3ColorKeyTimeParse))
-                    {
-                        item.ColorKey3ColorKeyTime = ColorKey3ColorKeyTimeParse;
-                    }
-                    else
-                    {
-                        item.ColorKey3ColorKeyTime = default(Single);
-                    }
-                    return TryGet<int?>.Succeed((int)EffectShader_FieldIndex.ColorKey3ColorKeyTime);
-                }
-                default:
-                    return OblivionMajorRecord.FillBinaryRecordTypes(
-                        item: item,
-                        frame: frame,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength,
-                        recordTypeConverter: recordTypeConverter,
-                        masterReferences: masterReferences,
-                        errorMask: errorMask);
-            }
-        }
 
         #endregion
 
@@ -2340,8 +1647,8 @@ namespace Mutagen.Bethesda.Oblivion
             EffectShader def = null,
             bool doMasks = true)
         {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            EffectShaderSetterCopyCommon.CopyFieldsFrom(
+            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((EffectShaderSetterCopyCommon)((IEffectShaderGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -2357,13 +1664,205 @@ namespace Mutagen.Bethesda.Oblivion
             EffectShader_CopyMask copyMask = null,
             EffectShader def = null)
         {
-            EffectShaderSetterCopyCommon.CopyFieldsFrom(
+            ((EffectShaderSetterCopyCommon)((IEffectShaderGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
+
+        #region Xml Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this IEffectShaderInternal item,
+            XElement node,
+            MissingCreate missing = MissingCreate.New,
+            EffectShader_TranslationMask translationMask = null)
+        {
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: null,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this IEffectShaderInternal item,
+            XElement node,
+            out EffectShader_ErrorMask errorMask,
+            bool doMasks = true,
+            EffectShader_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask.GetCrystal());
+            errorMask = EffectShader_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public new static void CopyInFromXml(
+            this IEffectShaderInternal item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ((EffectShaderSetterCommon)((IEffectShaderGetter)item).CommonSetterInstance()).CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        public static void CopyInFromXml(
+            this IEffectShaderInternal item,
+            string path,
+            MissingCreate missing = MissingCreate.New,
+            EffectShader_TranslationMask translationMask = null)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IEffectShaderInternal item,
+            string path,
+            out EffectShader_ErrorMask errorMask,
+            EffectShader_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IEffectShaderInternal item,
+            string path,
+            ErrorMaskBuilder errorMask,
+            EffectShader_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        public static void CopyInFromXml(
+            this IEffectShaderInternal item,
+            Stream stream,
+            MissingCreate missing = MissingCreate.New,
+            EffectShader_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IEffectShaderInternal item,
+            Stream stream,
+            out EffectShader_ErrorMask errorMask,
+            EffectShader_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IEffectShaderInternal item,
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            EffectShader_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        #endregion
+
+        #region Binary Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this IEffectShaderInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences)
+        {
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: null);
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this IEffectShaderInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            out EffectShader_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: errorMaskBuilder);
+            errorMask = EffectShader_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public new static void CopyInFromBinary(
+            this IEffectShaderInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((EffectShaderSetterCommon)((IEffectShaderGetter)item).CommonSetterInstance()).CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+        #endregion
 
     }
     #endregion
@@ -3339,6 +2838,736 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IEffectShaderInternal)item);
         }
         
+        #region Xml Translation
+        protected static void FillPrivateElementXml(
+            IEffectShaderInternal item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "HasDATADataType":
+                    item.DATADataTypeState |= EffectShader.DATADataType.Has;
+                    break;
+                default:
+                    OblivionMajorRecordSetterCommon.FillPrivateElementXml(
+                        item: item,
+                        node: node,
+                        name: name,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    break;
+            }
+        }
+        
+        public new void CopyInFromXml(
+            IEffectShaderInternal item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            try
+            {
+                item.DATADataTypeState |= EffectShader.DATADataType.Break0;
+                foreach (var elem in node.Elements())
+                {
+                    FillPrivateElementXml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    EffectShaderXmlCreateTranslation.FillPublicElementXml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+        
+        #endregion
+        
+        #region Binary Translation
+        public override RecordType RecordType => EffectShader_Registration.EFSH_HEADER;
+        protected static void FillBinaryStructs(
+            IEffectShaderInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            OblivionMajorRecordSetterCommon.FillBinaryStructs(
+                item: item,
+                frame: frame,
+                masterReferences: masterReferences,
+                errorMask: errorMask);
+        }
+        
+        protected static TryGet<int?> FillBinaryRecordTypes(
+            IEffectShaderInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x4E4F4349: // ICON
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String FillTextureParse))
+                    {
+                        item.FillTexture = FillTextureParse;
+                    }
+                    else
+                    {
+                        item.FillTexture = default(String);
+                    }
+                    return TryGet<int?>.Succeed((int)EffectShader_FieldIndex.FillTexture);
+                }
+                case 0x324F4349: // ICO2
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String ParticleShaderTextureParse))
+                    {
+                        item.ParticleShaderTexture = ParticleShaderTextureParse;
+                    }
+                    else
+                    {
+                        item.ParticleShaderTexture = default(String);
+                    }
+                    return TryGet<int?>.Succeed((int)EffectShader_FieldIndex.ParticleShaderTexture);
+                }
+                case 0x41544144: // DATA
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (!dataFrame.Complete)
+                    {
+                        item.DATADataTypeState = EffectShader.DATADataType.Has;
+                    }
+                    if (EnumBinaryTranslation<EffectShader.Flag>.Instance.Parse(
+                        frame: dataFrame.SpawnWithLength(4),
+                        item: out EffectShader.Flag FlagsParse))
+                    {
+                        item.Flags = FlagsParse;
+                    }
+                    else
+                    {
+                        item.Flags = default(EffectShader.Flag);
+                    }
+                    if (EnumBinaryTranslation<EffectShader.SourceBlendMode>.Instance.Parse(
+                        frame: dataFrame.SpawnWithLength(4),
+                        item: out EffectShader.SourceBlendMode MembraneShaderSourceBlendModeParse))
+                    {
+                        item.MembraneShaderSourceBlendMode = MembraneShaderSourceBlendModeParse;
+                    }
+                    else
+                    {
+                        item.MembraneShaderSourceBlendMode = default(EffectShader.SourceBlendMode);
+                    }
+                    if (EnumBinaryTranslation<EffectShader.BlendOperation>.Instance.Parse(
+                        frame: dataFrame.SpawnWithLength(4),
+                        item: out EffectShader.BlendOperation MembraneShaderBlendOperationParse))
+                    {
+                        item.MembraneShaderBlendOperation = MembraneShaderBlendOperationParse;
+                    }
+                    else
+                    {
+                        item.MembraneShaderBlendOperation = default(EffectShader.BlendOperation);
+                    }
+                    if (EnumBinaryTranslation<EffectShader.ZTestFunction>.Instance.Parse(
+                        frame: dataFrame.SpawnWithLength(4),
+                        item: out EffectShader.ZTestFunction MembraneShaderZTestFunctionParse))
+                    {
+                        item.MembraneShaderZTestFunction = MembraneShaderZTestFunctionParse;
+                    }
+                    else
+                    {
+                        item.MembraneShaderZTestFunction = default(EffectShader.ZTestFunction);
+                    }
+                    if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        extraByte: true,
+                        item: out Color FillTextureEffectColorParse))
+                    {
+                        item.FillTextureEffectColor = FillTextureEffectColorParse;
+                    }
+                    else
+                    {
+                        item.FillTextureEffectColor = default(Color);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single FillTextureEffectAlphaFadeInTimeParse))
+                    {
+                        item.FillTextureEffectAlphaFadeInTime = FillTextureEffectAlphaFadeInTimeParse;
+                    }
+                    else
+                    {
+                        item.FillTextureEffectAlphaFadeInTime = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single FillTextureEffectFullAlphaTimeParse))
+                    {
+                        item.FillTextureEffectFullAlphaTime = FillTextureEffectFullAlphaTimeParse;
+                    }
+                    else
+                    {
+                        item.FillTextureEffectFullAlphaTime = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single FillTextureEffectAlphaFadeOutTimeParse))
+                    {
+                        item.FillTextureEffectAlphaFadeOutTime = FillTextureEffectAlphaFadeOutTimeParse;
+                    }
+                    else
+                    {
+                        item.FillTextureEffectAlphaFadeOutTime = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single FillTextureEffectPersistentAlphaRatioParse))
+                    {
+                        item.FillTextureEffectPersistentAlphaRatio = FillTextureEffectPersistentAlphaRatioParse;
+                    }
+                    else
+                    {
+                        item.FillTextureEffectPersistentAlphaRatio = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single FillTextureEffectAlphaPulseAmplitudeParse))
+                    {
+                        item.FillTextureEffectAlphaPulseAmplitude = FillTextureEffectAlphaPulseAmplitudeParse;
+                    }
+                    else
+                    {
+                        item.FillTextureEffectAlphaPulseAmplitude = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single FillTextureEffectAlphaPulseFrequencyParse))
+                    {
+                        item.FillTextureEffectAlphaPulseFrequency = FillTextureEffectAlphaPulseFrequencyParse;
+                    }
+                    else
+                    {
+                        item.FillTextureEffectAlphaPulseFrequency = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single FillTextureEffectTextureAnimationSpeedUParse))
+                    {
+                        item.FillTextureEffectTextureAnimationSpeedU = FillTextureEffectTextureAnimationSpeedUParse;
+                    }
+                    else
+                    {
+                        item.FillTextureEffectTextureAnimationSpeedU = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single FillTextureEffectTextureAnimationSpeedVParse))
+                    {
+                        item.FillTextureEffectTextureAnimationSpeedV = FillTextureEffectTextureAnimationSpeedVParse;
+                    }
+                    else
+                    {
+                        item.FillTextureEffectTextureAnimationSpeedV = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single EdgeEffectFallOffParse))
+                    {
+                        item.EdgeEffectFallOff = EdgeEffectFallOffParse;
+                    }
+                    else
+                    {
+                        item.EdgeEffectFallOff = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        extraByte: true,
+                        item: out Color EdgeEffectColorParse))
+                    {
+                        item.EdgeEffectColor = EdgeEffectColorParse;
+                    }
+                    else
+                    {
+                        item.EdgeEffectColor = default(Color);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single EdgeEffectAlphaFadeInTimeParse))
+                    {
+                        item.EdgeEffectAlphaFadeInTime = EdgeEffectAlphaFadeInTimeParse;
+                    }
+                    else
+                    {
+                        item.EdgeEffectAlphaFadeInTime = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single EdgeEffectFullAlphaTimeParse))
+                    {
+                        item.EdgeEffectFullAlphaTime = EdgeEffectFullAlphaTimeParse;
+                    }
+                    else
+                    {
+                        item.EdgeEffectFullAlphaTime = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single EdgeEffectAlphaFadeOutTimeParse))
+                    {
+                        item.EdgeEffectAlphaFadeOutTime = EdgeEffectAlphaFadeOutTimeParse;
+                    }
+                    else
+                    {
+                        item.EdgeEffectAlphaFadeOutTime = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single EdgeEffectPersistentAlphaRatioParse))
+                    {
+                        item.EdgeEffectPersistentAlphaRatio = EdgeEffectPersistentAlphaRatioParse;
+                    }
+                    else
+                    {
+                        item.EdgeEffectPersistentAlphaRatio = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single EdgeEffectAlphaPulseAmplitudeParse))
+                    {
+                        item.EdgeEffectAlphaPulseAmplitude = EdgeEffectAlphaPulseAmplitudeParse;
+                    }
+                    else
+                    {
+                        item.EdgeEffectAlphaPulseAmplitude = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single EdgeEffectAlphaPulseFrequencyParse))
+                    {
+                        item.EdgeEffectAlphaPulseFrequency = EdgeEffectAlphaPulseFrequencyParse;
+                    }
+                    else
+                    {
+                        item.EdgeEffectAlphaPulseFrequency = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single FillTextureEffectFullAlphaRatioParse))
+                    {
+                        item.FillTextureEffectFullAlphaRatio = FillTextureEffectFullAlphaRatioParse;
+                    }
+                    else
+                    {
+                        item.FillTextureEffectFullAlphaRatio = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single EdgeEffectFullAlphaRatioParse))
+                    {
+                        item.EdgeEffectFullAlphaRatio = EdgeEffectFullAlphaRatioParse;
+                    }
+                    else
+                    {
+                        item.EdgeEffectFullAlphaRatio = default(Single);
+                    }
+                    if (EnumBinaryTranslation<EffectShader.SourceBlendMode>.Instance.Parse(
+                        frame: dataFrame.SpawnWithLength(4),
+                        item: out EffectShader.SourceBlendMode MembraneShaderDestBlendModeParse))
+                    {
+                        item.MembraneShaderDestBlendMode = MembraneShaderDestBlendModeParse;
+                    }
+                    else
+                    {
+                        item.MembraneShaderDestBlendMode = default(EffectShader.SourceBlendMode);
+                    }
+                    if (dataFrame.Complete)
+                    {
+                        item.DATADataTypeState |= EffectShader.DATADataType.Break0;
+                        return TryGet<int?>.Succeed((int)EffectShader_FieldIndex.MembraneShaderDestBlendMode);
+                    }
+                    if (EnumBinaryTranslation<EffectShader.SourceBlendMode>.Instance.Parse(
+                        frame: dataFrame.SpawnWithLength(4),
+                        item: out EffectShader.SourceBlendMode ParticleShaderSourceBlendModeParse))
+                    {
+                        item.ParticleShaderSourceBlendMode = ParticleShaderSourceBlendModeParse;
+                    }
+                    else
+                    {
+                        item.ParticleShaderSourceBlendMode = default(EffectShader.SourceBlendMode);
+                    }
+                    if (EnumBinaryTranslation<EffectShader.BlendOperation>.Instance.Parse(
+                        frame: dataFrame.SpawnWithLength(4),
+                        item: out EffectShader.BlendOperation ParticleShaderBlendOperationParse))
+                    {
+                        item.ParticleShaderBlendOperation = ParticleShaderBlendOperationParse;
+                    }
+                    else
+                    {
+                        item.ParticleShaderBlendOperation = default(EffectShader.BlendOperation);
+                    }
+                    if (EnumBinaryTranslation<EffectShader.ZTestFunction>.Instance.Parse(
+                        frame: dataFrame.SpawnWithLength(4),
+                        item: out EffectShader.ZTestFunction ParticleShaderZTestFunctionParse))
+                    {
+                        item.ParticleShaderZTestFunction = ParticleShaderZTestFunctionParse;
+                    }
+                    else
+                    {
+                        item.ParticleShaderZTestFunction = default(EffectShader.ZTestFunction);
+                    }
+                    if (EnumBinaryTranslation<EffectShader.SourceBlendMode>.Instance.Parse(
+                        frame: dataFrame.SpawnWithLength(4),
+                        item: out EffectShader.SourceBlendMode ParticleShaderDestBlendModeParse))
+                    {
+                        item.ParticleShaderDestBlendMode = ParticleShaderDestBlendModeParse;
+                    }
+                    else
+                    {
+                        item.ParticleShaderDestBlendMode = default(EffectShader.SourceBlendMode);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single ParticleShaderParticleBirthRampUpTimeParse))
+                    {
+                        item.ParticleShaderParticleBirthRampUpTime = ParticleShaderParticleBirthRampUpTimeParse;
+                    }
+                    else
+                    {
+                        item.ParticleShaderParticleBirthRampUpTime = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single ParticleShaderFullParticleBirthTimeParse))
+                    {
+                        item.ParticleShaderFullParticleBirthTime = ParticleShaderFullParticleBirthTimeParse;
+                    }
+                    else
+                    {
+                        item.ParticleShaderFullParticleBirthTime = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single ParticleShaderParticleBirthRampDownTimeParse))
+                    {
+                        item.ParticleShaderParticleBirthRampDownTime = ParticleShaderParticleBirthRampDownTimeParse;
+                    }
+                    else
+                    {
+                        item.ParticleShaderParticleBirthRampDownTime = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single ParticleShaderFullParticleBirthRatioParse))
+                    {
+                        item.ParticleShaderFullParticleBirthRatio = ParticleShaderFullParticleBirthRatioParse;
+                    }
+                    else
+                    {
+                        item.ParticleShaderFullParticleBirthRatio = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single ParticleShaderPersistentParticleBirthRatioParse))
+                    {
+                        item.ParticleShaderPersistentParticleBirthRatio = ParticleShaderPersistentParticleBirthRatioParse;
+                    }
+                    else
+                    {
+                        item.ParticleShaderPersistentParticleBirthRatio = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single ParticleShaderParticleLifetimeParse))
+                    {
+                        item.ParticleShaderParticleLifetime = ParticleShaderParticleLifetimeParse;
+                    }
+                    else
+                    {
+                        item.ParticleShaderParticleLifetime = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single ParticleShaderParticleLifetimePlusMinusParse))
+                    {
+                        item.ParticleShaderParticleLifetimePlusMinus = ParticleShaderParticleLifetimePlusMinusParse;
+                    }
+                    else
+                    {
+                        item.ParticleShaderParticleLifetimePlusMinus = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single ParticleShaderInitialSpeedAlongNormalParse))
+                    {
+                        item.ParticleShaderInitialSpeedAlongNormal = ParticleShaderInitialSpeedAlongNormalParse;
+                    }
+                    else
+                    {
+                        item.ParticleShaderInitialSpeedAlongNormal = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single ParticleShaderAccelerationAlongNormalParse))
+                    {
+                        item.ParticleShaderAccelerationAlongNormal = ParticleShaderAccelerationAlongNormalParse;
+                    }
+                    else
+                    {
+                        item.ParticleShaderAccelerationAlongNormal = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single ParticleShaderInitialVelocity1Parse))
+                    {
+                        item.ParticleShaderInitialVelocity1 = ParticleShaderInitialVelocity1Parse;
+                    }
+                    else
+                    {
+                        item.ParticleShaderInitialVelocity1 = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single ParticleShaderInitialVelocity2Parse))
+                    {
+                        item.ParticleShaderInitialVelocity2 = ParticleShaderInitialVelocity2Parse;
+                    }
+                    else
+                    {
+                        item.ParticleShaderInitialVelocity2 = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single ParticleShaderInitialVelocity3Parse))
+                    {
+                        item.ParticleShaderInitialVelocity3 = ParticleShaderInitialVelocity3Parse;
+                    }
+                    else
+                    {
+                        item.ParticleShaderInitialVelocity3 = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single ParticleShaderAcceleration1Parse))
+                    {
+                        item.ParticleShaderAcceleration1 = ParticleShaderAcceleration1Parse;
+                    }
+                    else
+                    {
+                        item.ParticleShaderAcceleration1 = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single ParticleShaderAcceleration2Parse))
+                    {
+                        item.ParticleShaderAcceleration2 = ParticleShaderAcceleration2Parse;
+                    }
+                    else
+                    {
+                        item.ParticleShaderAcceleration2 = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single ParticleShaderAcceleration3Parse))
+                    {
+                        item.ParticleShaderAcceleration3 = ParticleShaderAcceleration3Parse;
+                    }
+                    else
+                    {
+                        item.ParticleShaderAcceleration3 = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single ParticleShaderScaleKey1Parse))
+                    {
+                        item.ParticleShaderScaleKey1 = ParticleShaderScaleKey1Parse;
+                    }
+                    else
+                    {
+                        item.ParticleShaderScaleKey1 = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single ParticleShaderScaleKey2Parse))
+                    {
+                        item.ParticleShaderScaleKey2 = ParticleShaderScaleKey2Parse;
+                    }
+                    else
+                    {
+                        item.ParticleShaderScaleKey2 = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single ParticleShaderScaleKey1TimeParse))
+                    {
+                        item.ParticleShaderScaleKey1Time = ParticleShaderScaleKey1TimeParse;
+                    }
+                    else
+                    {
+                        item.ParticleShaderScaleKey1Time = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single ParticleShaderScaleKey2TimeParse))
+                    {
+                        item.ParticleShaderScaleKey2Time = ParticleShaderScaleKey2TimeParse;
+                    }
+                    else
+                    {
+                        item.ParticleShaderScaleKey2Time = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        extraByte: true,
+                        item: out Color ColorKey1ColorParse))
+                    {
+                        item.ColorKey1Color = ColorKey1ColorParse;
+                    }
+                    else
+                    {
+                        item.ColorKey1Color = default(Color);
+                    }
+                    if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        extraByte: true,
+                        item: out Color ColorKey2ColorParse))
+                    {
+                        item.ColorKey2Color = ColorKey2ColorParse;
+                    }
+                    else
+                    {
+                        item.ColorKey2Color = default(Color);
+                    }
+                    if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        extraByte: true,
+                        item: out Color ColorKey3ColorParse))
+                    {
+                        item.ColorKey3Color = ColorKey3ColorParse;
+                    }
+                    else
+                    {
+                        item.ColorKey3Color = default(Color);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single ColorKey1ColorAlphaParse))
+                    {
+                        item.ColorKey1ColorAlpha = ColorKey1ColorAlphaParse;
+                    }
+                    else
+                    {
+                        item.ColorKey1ColorAlpha = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single ColorKey2ColorAlphaParse))
+                    {
+                        item.ColorKey2ColorAlpha = ColorKey2ColorAlphaParse;
+                    }
+                    else
+                    {
+                        item.ColorKey2ColorAlpha = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single ColorKey3ColorAlphaParse))
+                    {
+                        item.ColorKey3ColorAlpha = ColorKey3ColorAlphaParse;
+                    }
+                    else
+                    {
+                        item.ColorKey3ColorAlpha = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single ColorKey1ColorKeyTimeParse))
+                    {
+                        item.ColorKey1ColorKeyTime = ColorKey1ColorKeyTimeParse;
+                    }
+                    else
+                    {
+                        item.ColorKey1ColorKeyTime = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single ColorKey2ColorKeyTimeParse))
+                    {
+                        item.ColorKey2ColorKeyTime = ColorKey2ColorKeyTimeParse;
+                    }
+                    else
+                    {
+                        item.ColorKey2ColorKeyTime = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single ColorKey3ColorKeyTimeParse))
+                    {
+                        item.ColorKey3ColorKeyTime = ColorKey3ColorKeyTimeParse;
+                    }
+                    else
+                    {
+                        item.ColorKey3ColorKeyTime = default(Single);
+                    }
+                    return TryGet<int?>.Succeed((int)EffectShader_FieldIndex.ColorKey3ColorKeyTime);
+                }
+                default:
+                    return OblivionMajorRecordSetterCommon.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter,
+                        masterReferences: masterReferences,
+                        errorMask: errorMask);
+            }
+        }
+        
+        public new void CopyInFromBinary(
+            IEffectShaderInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            UtilityTranslation.MajorRecordParse<IEffectShaderInternal>(
+                record: item,
+                frame: frame,
+                errorMask: errorMask,
+                recType: RecordType,
+                recordTypeConverter: recordTypeConverter,
+                masterReferences: masterReferences,
+                fillStructs: FillBinaryStructs,
+                fillTyped: FillBinaryRecordTypes);
+        }
+        
+        #endregion
+        
     }
     public partial class EffectShaderCommon : OblivionMajorRecordCommon
     {
@@ -4029,14 +4258,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public new static readonly EffectShaderSetterCopyCommon Instance = new EffectShaderSetterCopyCommon();
 
         #region Copy Fields From
-        public static void CopyFieldsFrom(
+        public void CopyFieldsFrom(
             EffectShader item,
             EffectShader rhs,
             EffectShader def,
             ErrorMaskBuilder errorMask,
             EffectShader_CopyMask copyMask)
         {
-            OblivionMajorRecordSetterCopyCommon.CopyFieldsFrom(
+            ((OblivionMajorRecordSetterCopyCommon)((IOblivionMajorRecordGetter)item).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -8269,139 +8498,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public EffectShader_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.FillTexture = defaultOn;
-            this.ParticleShaderTexture = defaultOn;
-            this.Flags = defaultOn;
-            this.MembraneShaderSourceBlendMode = defaultOn;
-            this.MembraneShaderBlendOperation = defaultOn;
-            this.MembraneShaderZTestFunction = defaultOn;
-            this.FillTextureEffectColor = defaultOn;
-            this.FillTextureEffectAlphaFadeInTime = defaultOn;
-            this.FillTextureEffectFullAlphaTime = defaultOn;
-            this.FillTextureEffectAlphaFadeOutTime = defaultOn;
-            this.FillTextureEffectPersistentAlphaRatio = defaultOn;
-            this.FillTextureEffectAlphaPulseAmplitude = defaultOn;
-            this.FillTextureEffectAlphaPulseFrequency = defaultOn;
-            this.FillTextureEffectTextureAnimationSpeedU = defaultOn;
-            this.FillTextureEffectTextureAnimationSpeedV = defaultOn;
-            this.EdgeEffectFallOff = defaultOn;
-            this.EdgeEffectColor = defaultOn;
-            this.EdgeEffectAlphaFadeInTime = defaultOn;
-            this.EdgeEffectFullAlphaTime = defaultOn;
-            this.EdgeEffectAlphaFadeOutTime = defaultOn;
-            this.EdgeEffectPersistentAlphaRatio = defaultOn;
-            this.EdgeEffectAlphaPulseAmplitude = defaultOn;
-            this.EdgeEffectAlphaPulseFrequency = defaultOn;
-            this.FillTextureEffectFullAlphaRatio = defaultOn;
-            this.EdgeEffectFullAlphaRatio = defaultOn;
-            this.MembraneShaderDestBlendMode = defaultOn;
-            this.ParticleShaderSourceBlendMode = defaultOn;
-            this.ParticleShaderBlendOperation = defaultOn;
-            this.ParticleShaderZTestFunction = defaultOn;
-            this.ParticleShaderDestBlendMode = defaultOn;
-            this.ParticleShaderParticleBirthRampUpTime = defaultOn;
-            this.ParticleShaderFullParticleBirthTime = defaultOn;
-            this.ParticleShaderParticleBirthRampDownTime = defaultOn;
-            this.ParticleShaderFullParticleBirthRatio = defaultOn;
-            this.ParticleShaderPersistentParticleBirthRatio = defaultOn;
-            this.ParticleShaderParticleLifetime = defaultOn;
-            this.ParticleShaderParticleLifetimePlusMinus = defaultOn;
-            this.ParticleShaderInitialSpeedAlongNormal = defaultOn;
-            this.ParticleShaderAccelerationAlongNormal = defaultOn;
-            this.ParticleShaderInitialVelocity1 = defaultOn;
-            this.ParticleShaderInitialVelocity2 = defaultOn;
-            this.ParticleShaderInitialVelocity3 = defaultOn;
-            this.ParticleShaderAcceleration1 = defaultOn;
-            this.ParticleShaderAcceleration2 = defaultOn;
-            this.ParticleShaderAcceleration3 = defaultOn;
-            this.ParticleShaderScaleKey1 = defaultOn;
-            this.ParticleShaderScaleKey2 = defaultOn;
-            this.ParticleShaderScaleKey1Time = defaultOn;
-            this.ParticleShaderScaleKey2Time = defaultOn;
-            this.ColorKey1Color = defaultOn;
-            this.ColorKey2Color = defaultOn;
-            this.ColorKey3Color = defaultOn;
-            this.ColorKey1ColorAlpha = defaultOn;
-            this.ColorKey2ColorAlpha = defaultOn;
-            this.ColorKey3ColorAlpha = defaultOn;
-            this.ColorKey1ColorKeyTime = defaultOn;
-            this.ColorKey2ColorKeyTime = defaultOn;
-            this.ColorKey3ColorKeyTime = defaultOn;
-            this.DATADataTypeState = defaultOn;
-        }
-
-        #region Members
-        public bool FillTexture;
-        public bool ParticleShaderTexture;
-        public bool Flags;
-        public bool MembraneShaderSourceBlendMode;
-        public bool MembraneShaderBlendOperation;
-        public bool MembraneShaderZTestFunction;
-        public bool FillTextureEffectColor;
-        public bool FillTextureEffectAlphaFadeInTime;
-        public bool FillTextureEffectFullAlphaTime;
-        public bool FillTextureEffectAlphaFadeOutTime;
-        public bool FillTextureEffectPersistentAlphaRatio;
-        public bool FillTextureEffectAlphaPulseAmplitude;
-        public bool FillTextureEffectAlphaPulseFrequency;
-        public bool FillTextureEffectTextureAnimationSpeedU;
-        public bool FillTextureEffectTextureAnimationSpeedV;
-        public bool EdgeEffectFallOff;
-        public bool EdgeEffectColor;
-        public bool EdgeEffectAlphaFadeInTime;
-        public bool EdgeEffectFullAlphaTime;
-        public bool EdgeEffectAlphaFadeOutTime;
-        public bool EdgeEffectPersistentAlphaRatio;
-        public bool EdgeEffectAlphaPulseAmplitude;
-        public bool EdgeEffectAlphaPulseFrequency;
-        public bool FillTextureEffectFullAlphaRatio;
-        public bool EdgeEffectFullAlphaRatio;
-        public bool MembraneShaderDestBlendMode;
-        public bool ParticleShaderSourceBlendMode;
-        public bool ParticleShaderBlendOperation;
-        public bool ParticleShaderZTestFunction;
-        public bool ParticleShaderDestBlendMode;
-        public bool ParticleShaderParticleBirthRampUpTime;
-        public bool ParticleShaderFullParticleBirthTime;
-        public bool ParticleShaderParticleBirthRampDownTime;
-        public bool ParticleShaderFullParticleBirthRatio;
-        public bool ParticleShaderPersistentParticleBirthRatio;
-        public bool ParticleShaderParticleLifetime;
-        public bool ParticleShaderParticleLifetimePlusMinus;
-        public bool ParticleShaderInitialSpeedAlongNormal;
-        public bool ParticleShaderAccelerationAlongNormal;
-        public bool ParticleShaderInitialVelocity1;
-        public bool ParticleShaderInitialVelocity2;
-        public bool ParticleShaderInitialVelocity3;
-        public bool ParticleShaderAcceleration1;
-        public bool ParticleShaderAcceleration2;
-        public bool ParticleShaderAcceleration3;
-        public bool ParticleShaderScaleKey1;
-        public bool ParticleShaderScaleKey2;
-        public bool ParticleShaderScaleKey1Time;
-        public bool ParticleShaderScaleKey2Time;
-        public bool ColorKey1Color;
-        public bool ColorKey2Color;
-        public bool ColorKey3Color;
-        public bool ColorKey1ColorAlpha;
-        public bool ColorKey2ColorAlpha;
-        public bool ColorKey3ColorAlpha;
-        public bool ColorKey1ColorKeyTime;
-        public bool ColorKey2ColorKeyTime;
-        public bool ColorKey3ColorKeyTime;
-        public bool DATADataTypeState;
-        #endregion
-
-    }
-
-    public class EffectShader_DeepCopyMask : OblivionMajorRecord_DeepCopyMask
-    {
-        public EffectShader_DeepCopyMask()
-        {
-        }
-
-        public EffectShader_DeepCopyMask(bool defaultOn)
         {
             this.FillTexture = defaultOn;
             this.ParticleShaderTexture = defaultOn;

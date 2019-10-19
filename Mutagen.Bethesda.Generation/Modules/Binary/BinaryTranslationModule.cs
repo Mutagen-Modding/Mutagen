@@ -53,7 +53,6 @@ namespace Mutagen.Bethesda.Generation
             : base(gen)
         {
             this.DoErrorMasks = false;
-            this.ShouldGenerateCopyIn = false;
             this.TranslationMaskParameter = false;
             this._typeGenerations[typeof(LoquiType)] = new LoquiBinaryTranslationGeneration(ModuleNickname);
             this._typeGenerations[typeof(BoolType)] = new PrimitiveBinaryTranslationGeneration<bool>(expectedLen: 1);
@@ -247,7 +246,6 @@ namespace Mutagen.Bethesda.Generation
         public override async Task GenerateInClass(ObjectGeneration obj, FileGeneration fg)
         {
             await base.GenerateInClass(obj, fg);
-            await GenerateCreateExtras(obj, fg);
             await GenerateBinaryWrapperCreates(obj, fg);
         }
 
@@ -363,6 +361,11 @@ namespace Mutagen.Bethesda.Generation
             var data = obj.GetObjectData();
             bool typelessStruct = obj.IsTypelessStruct();
 
+            if (await obj.IsMajorRecord())
+            {
+                fg.AppendLine($"public{obj.FunctionOverride()}RecordType RecordType => {(obj.Abstract ? "throw new ArgumentException()" : obj.GetTriggeringSource())};");
+            }
+
             if ((!obj.Abstract && obj.BaseClassTrail().All((b) => b.Abstract)) || HasEmbeddedFields(obj))
             {
                 var async = HasAsyncStructs(obj, self: true);
@@ -379,7 +382,7 @@ namespace Mutagen.Bethesda.Generation
                     if (obj.HasLoquiBaseObject && obj.BaseClassTrail().Any((b) => HasEmbeddedFields(b)))
                     {
                         using (var args = new ArgsWrapper(fg,
-                            $"{Loqui.Generation.Utility.Await(async)}{obj.BaseClass.Name}.Fill{ModuleNickname}Structs"))
+                            $"{Loqui.Generation.Utility.Await(async)}{obj.BaseClass.CommonClass(LoquiInterfaceType.ISetter, CommonGenerics.Class, MaskType.Normal)}.Fill{ModuleNickname}Structs"))
                         {
                             args.Add("item: item");
                             args.Add("frame: frame");
@@ -533,7 +536,7 @@ namespace Mutagen.Bethesda.Generation
                             if (obj.HasLoquiBaseObject && obj.BaseClassTrail().Any((b) => HasRecordTypeFields(b)))
                             {
                                 using (var args = new ArgsWrapper(fg,
-                                    $"return {Loqui.Generation.Utility.Await(HasAsyncRecords(obj, self: false))}{obj.BaseClass.Name}.Fill{ModuleNickname}RecordTypes"))
+                                    $"return {Loqui.Generation.Utility.Await(HasAsyncRecords(obj, self: false))}{obj.BaseClass.CommonClass(LoquiInterfaceType.ISetter, CommonGenerics.Class, MaskType.Normal)}.Fill{ModuleNickname}RecordTypes"))
                                 {
                                     args.Add("item: item");
                                     args.Add("frame: frame");
@@ -748,7 +751,7 @@ namespace Mutagen.Bethesda.Generation
                     $"static partial void CustomBinaryEndImport"))
                 {
                     args.Add("MutagenFrame frame");
-                    args.Add($"{obj.ObjectName} obj");
+                    args.Add($"{obj.Interface(getter: false, internalInterface: true)} obj");
                     args.Add("MasterReferences masterReferences");
                     args.Add($"ErrorMaskBuilder errorMask");
                 }
@@ -756,7 +759,7 @@ namespace Mutagen.Bethesda.Generation
                     $"public static void CustomBinaryEndImportPublic"))
                 {
                     args.Add("MutagenFrame frame");
-                    args.Add($"{obj.ObjectName} obj");
+                    args.Add($"{obj.Interface(getter: false, internalInterface: true)} obj");
                     args.Add("MasterReferences masterReferences");
                     args.Add($"ErrorMaskBuilder errorMask");
                 }
@@ -774,11 +777,11 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
-        public static void GenerateModLinking(ObjectGeneration obj, FileGeneration fg)
+        public static void GenerateModLinking(ObjectGeneration obj, FileGeneration fg, Accessor accessor)
         {
             if (obj.GetObjectType() != ObjectType.Mod) return;
-            fg.AppendLine($"var package = new LinkingPackage<{obj.Name}>(ret, default);");
-            fg.AppendLine("foreach (var link in ret.Links)");
+            fg.AppendLine($"var package = new LinkingPackage<{obj.Interface(getter: false, internalInterface: true)}>({accessor}, default);");
+            fg.AppendLine($"foreach (var link in {accessor}.Links)");
             using (new BraceWrapper(fg))
             {
                 fg.AppendLine("if (link.Linked) continue;");
@@ -811,7 +814,7 @@ namespace Mutagen.Bethesda.Generation
                 fg.AppendLine($"if (!dataFrame.Complete)");
                 using (new BraceWrapper(fg))
                 {
-                    fg.AppendLine($"item.{set.StateName} = {set.EnumName}.Has;");
+                    fg.AppendLine($"item.{set.StateName} = {obj.ObjectName}.{set.EnumName}.Has;");
                 }
                 bool isInRange = false;
                 foreach (var subField in set.IterateFieldsWithMeta())
@@ -827,7 +830,7 @@ namespace Mutagen.Bethesda.Generation
                         fg.AppendLine($"if (dataFrame.Complete)");
                         using (new BraceWrapper(fg))
                         {
-                            fg.AppendLine($"item.{set.StateName} |= {set.EnumName}.Break{subField.BreakIndex};");
+                            fg.AppendLine($"item.{set.StateName} |= {obj.ObjectName}.{set.EnumName}.Break{subField.BreakIndex};");
                             string enumName = null;
                             for (int i = subField.FieldIndex - 1; i >= 0; i--)
                             {
@@ -971,7 +974,6 @@ namespace Mutagen.Bethesda.Generation
                 if (obj.GetObjectType() == ObjectType.Mod)
                 {
                     fg.AppendLine($"var ret = new {obj.Name}{obj.GetGenericTypes(MaskType.Normal)}(modKey);");
-                    fg.AppendLine("var masterReferences = new MasterReferences(ret.ModHeader.MasterReferences, modKey);");
                 }
                 else
                 {
@@ -980,12 +982,17 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
-        protected override async Task GenerateCreateSnippet(ObjectGeneration obj, FileGeneration fg)
+        protected override async Task GenerateCopyInSnippet(ObjectGeneration obj, FileGeneration fg, Accessor accessor)
         {
             var data = obj.GetObjectData();
 
             bool typelessStruct = obj.IsTypelessStruct();
             ObjectType objType = obj.GetObjectType();
+
+            if (obj.GetObjectType() == ObjectType.Mod)
+            {
+                fg.AppendLine($"var masterReferences = new MasterReferences({accessor}.ModHeader.MasterReferences, modKey);");
+            }
 
             if (await obj.IsMajorRecord())
             {
@@ -993,10 +1000,10 @@ namespace Mutagen.Bethesda.Generation
                 using (var args = new ArgsWrapper(fg,
                     $"{Loqui.Generation.Utility.Await(async)}Utility{(async ? "Async" : null)}Translation.MajorRecordParse<{obj.Interface(getter: false, internalInterface: true)}>"))
                 {
-                    args.Add($"record: ret");
+                    args.Add($"record: {accessor}");
                     args.Add($"frame: frame");
                     args.Add($"errorMask: errorMask");
-                    args.Add($"recType: {obj.GetTriggeringSource()}");
+                    args.Add($"recType: RecordType");
                     args.Add($"recordTypeConverter: recordTypeConverter");
                     args.Add($"masterReferences: masterReferences");
                     args.Add($"fillStructs: FillBinaryStructs");
@@ -1011,7 +1018,7 @@ namespace Mutagen.Bethesda.Generation
                             $"{Loqui.Generation.Utility.Await(data.CustomBinaryEnd == CustomEnd.Async)}{this.TranslationCreateClass(obj)}.CustomBinaryEndImport{(await this.AsyncImport(obj) ? null : "Public")}"))
                         {
                             args.Add("frame: frame");
-                            args.Add("obj: ret");
+                            args.Add($"obj: {accessor}");
                             args.Add("masterReferences: masterReferences");
                             args.Add("errorMask: errorMask");
                         }
@@ -1071,7 +1078,7 @@ namespace Mutagen.Bethesda.Generation
                             $"{utilityTranslation}.{(typelessStruct ? "Typeless" : string.Empty)}RecordParse",
                             suffixLine: Loqui.Generation.Utility.ConfigAwait(async)))
                         {
-                            args.Add("record: ret");
+                            args.Add($"record: {accessor}");
                             args.Add("frame: frame");
                             args.Add($"setFinal: {(obj.TryGetRecordType(out var recType) ? "true" : "false")}");
                             args.Add("masterReferences: masterReferences");
@@ -1089,7 +1096,7 @@ namespace Mutagen.Bethesda.Generation
                             $"{utilityTranslation}.GroupParse",
                             suffixLine: Loqui.Generation.Utility.ConfigAwait(async)))
                         {
-                            args.Add("record: ret");
+                            args.Add($"record: {accessor}");
                             args.Add("frame: frame");
                             args.Add("masterReferences: masterReferences");
                             args.Add("errorMask: errorMask");
@@ -1106,7 +1113,7 @@ namespace Mutagen.Bethesda.Generation
                             $"{utilityTranslation}.ModParse",
                             suffixLine: Loqui.Generation.Utility.ConfigAwait(async)))
                         {
-                            args.Add("record: ret");
+                            args.Add($"record: {accessor}");
                             args.Add("frame: frame");
                             args.Add("importMask: importMask");
                             args.Add("masterReferences: masterReferences");
@@ -1123,20 +1130,19 @@ namespace Mutagen.Bethesda.Generation
                         throw new NotImplementedException();
                 }
                 GenerateStructStateSubscriptions(obj, fg);
-                GenerateModLinking(obj, fg);
+                GenerateModLinking(obj, fg, accessor);
                 if (data.CustomBinaryEnd != CustomEnd.Off)
                 {
                     using (var args = new ArgsWrapper(fg,
                         $"{Loqui.Generation.Utility.Await(data.CustomBinaryEnd == CustomEnd.Async)}CustomBinaryEndImport"))
                     {
                         args.Add("frame: frame");
-                        args.Add("obj: ret");
+                        args.Add($"obj: {accessor}");
                         args.Add("errorMask: errorMask");
                         args.Add("masterReferences: masterReferences");
                     }
                 }
             }
-            fg.AppendLine("return ret;");
         }
 
         protected override void GenerateWriteSnippet(ObjectGeneration obj, FileGeneration fg)
@@ -2107,6 +2113,15 @@ namespace Mutagen.Bethesda.Generation
                 }
             }
             fg.AppendLine();
+        }
+
+        public override async Task GenerateInCommon(ObjectGeneration obj, FileGeneration fg, MaskTypeSet maskTypes)
+        {
+            if (maskTypes.Applicable(LoquiInterfaceType.ISetter, CommonGenerics.Class, MaskType.Normal))
+            {
+                await GenerateCreateExtras(obj, fg);
+            }
+            await base.GenerateInCommon(obj, fg, maskTypes);
         }
     }
 }

@@ -208,35 +208,12 @@ namespace Mutagen.Bethesda.Skyrim
                     break;
             }
             var ret = new SkyrimMod();
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    FillPrivateElementXml(
-                        item: ret,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    SkyrimModXmlCreateTranslation.FillPublicElementXml(
-                        item: ret,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-                var package = new LinkingPackage<SkyrimMod>(ret, default);
-                foreach (var link in ret.Links)
-                {
-                    if (link.Linked) continue;
-                    link.Link(package);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
+            ((SkyrimModSetterCommon)((ISkyrimModGetter)ret).CommonSetterInstance()).CopyInFromXml(
+                item: ret,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             return ret;
         }
 
@@ -321,43 +298,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #endregion
-
-        protected static void FillPrivateElementXml(
-            SkyrimMod item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "ModHeader":
-                    try
-                    {
-                        errorMask?.PushIndex((int)SkyrimMod_FieldIndex.ModHeader);
-                        item.ModHeader.CopyFieldsFrom(
-                            rhs: ModHeader.CreateFromXml(
-                                node: node,
-                                errorMask: errorMask,
-                                translationMask: translationMask),
-                            def: null,
-                            copyMask: null,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
 
         #endregion
 
@@ -591,55 +531,55 @@ namespace Mutagen.Bethesda.Skyrim
             ModKey modKey,
             ErrorMaskBuilder errorMask)
         {
-            var ret = new SkyrimMod(modKey);
+            var item = new SkyrimMod(modKey);
             var tasks = new List<Task>();
-            ret.ModHeader.CopyFieldsFrom(ModHeader.CreateFromXml(
+            item.ModHeader.CopyFieldsFrom(ModHeader.CreateFromXml(
                 path: Path.Combine(dir.Path, "ModHeader.xml"),
                 errorMask: errorMask,
                 translationMask: null));
-            tasks.Add(Task.Run(() => ret.GameSettings.CreateFromXmlFolder<GameSetting>(
+            tasks.Add(Task.Run(() => item.GameSettings.CreateFromXmlFolder<GameSetting>(
                 dir: dir,
                 name: nameof(GameSettings),
                 errorMask: errorMask,
                 index: (int)SkyrimMod_FieldIndex.GameSettings)));
-            tasks.Add(Task.Run(() => ret.Keywords.CreateFromXmlFolder<Keyword>(
+            tasks.Add(Task.Run(() => item.Keywords.CreateFromXmlFolder<Keyword>(
                 dir: dir,
                 name: nameof(Keywords),
                 errorMask: errorMask,
                 index: (int)SkyrimMod_FieldIndex.Keywords)));
-            tasks.Add(Task.Run(() => ret.LocationReferenceTypes.CreateFromXmlFolder<LocationReferenceType>(
+            tasks.Add(Task.Run(() => item.LocationReferenceTypes.CreateFromXmlFolder<LocationReferenceType>(
                 dir: dir,
                 name: nameof(LocationReferenceTypes),
                 errorMask: errorMask,
                 index: (int)SkyrimMod_FieldIndex.LocationReferenceTypes)));
-            tasks.Add(Task.Run(() => ret.Actions.CreateFromXmlFolder<ActionRecord>(
+            tasks.Add(Task.Run(() => item.Actions.CreateFromXmlFolder<ActionRecord>(
                 dir: dir,
                 name: nameof(Actions),
                 errorMask: errorMask,
                 index: (int)SkyrimMod_FieldIndex.Actions)));
-            tasks.Add(Task.Run(() => ret.TextureSets.CreateFromXmlFolder<TextureSet>(
+            tasks.Add(Task.Run(() => item.TextureSets.CreateFromXmlFolder<TextureSet>(
                 dir: dir,
                 name: nameof(TextureSets),
                 errorMask: errorMask,
                 index: (int)SkyrimMod_FieldIndex.TextureSets)));
-            tasks.Add(Task.Run(() => ret.Globals.CreateFromXmlFolder<Global>(
+            tasks.Add(Task.Run(() => item.Globals.CreateFromXmlFolder<Global>(
                 dir: dir,
                 name: nameof(Globals),
                 errorMask: errorMask,
                 index: (int)SkyrimMod_FieldIndex.Globals)));
-            tasks.Add(Task.Run(() => ret.Classes.CreateFromXmlFolder<Class>(
+            tasks.Add(Task.Run(() => item.Classes.CreateFromXmlFolder<Class>(
                 dir: dir,
                 name: nameof(Classes),
                 errorMask: errorMask,
                 index: (int)SkyrimMod_FieldIndex.Classes)));
             await Task.WhenAll(tasks);
-            var package = new LinkingPackage<SkyrimMod>(ret, default);
-            foreach (var link in ret.Links)
+            var package = new LinkingPackage<ISkyrimMod>(item, default);
+            foreach (var link in item.Links)
             {
                 if (link.Linked) continue;
                 link.Link(package);
             }
-            return ret;
+            return item;
         }
 
         public async Task<SkyrimMod_ErrorMask> WriteToXmlFolder(
@@ -739,22 +679,13 @@ namespace Mutagen.Bethesda.Skyrim
             GroupMask importMask = null)
         {
             var ret = new SkyrimMod(modKey);
-            var masterReferences = new MasterReferences(ret.ModHeader.MasterReferences, modKey);
-            await UtilityAsyncTranslation.ModParse(
-                record: ret,
-                frame: frame,
+            await ((SkyrimModSetterCommon)((ISkyrimModGetter)ret).CommonSetterInstance()).CopyInFromBinary(
+                item: ret,
                 importMask: importMask,
-                masterReferences: masterReferences,
-                errorMask: errorMask,
+                modKey: modKey,
+                frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes).ConfigureAwait(false);
-            var package = new LinkingPackage<SkyrimMod>(ret, default);
-            foreach (var link in ret.Links)
-            {
-                if (link.Linked) continue;
-                link.Link(package);
-            }
+                errorMask: errorMask);
             return ret;
         }
 
@@ -858,299 +789,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #endregion
-
-        protected static void FillBinaryStructs(
-            ISkyrimMod item,
-            MutagenFrame frame,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-        }
-
-        protected static async Task<TryGet<int?>> FillBinaryRecordTypes(
-            ISkyrimMod item,
-            MutagenFrame frame,
-            RecordType nextRecordType,
-            int contentLength,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask,
-            GroupMask importMask,
-            RecordTypeConverter recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x34534554: // TES4
-                {
-                    try
-                    {
-                        errorMask?.PushIndex((int)SkyrimMod_FieldIndex.ModHeader);
-                        var tmpModHeader = ModHeader.CreateFromBinary(
-                            frame: frame,
-                            errorMask: errorMask,
-                            recordTypeConverter: null,
-                            masterReferences: masterReferences);
-                        item.ModHeader.CopyFieldsFrom(
-                            rhs: tmpModHeader,
-                            def: null,
-                            copyMask: null,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.ModHeader);
-                }
-                case 0x54534D47: // GMST
-                {
-                    if (importMask?.GameSettings ?? true)
-                    {
-                        try
-                        {
-                            errorMask?.PushIndex((int)SkyrimMod_FieldIndex.GameSettings);
-                            var tmpGameSettings = await Group<GameSetting>.CreateFromBinary(
-                                frame: frame,
-                                errorMask: errorMask,
-                                recordTypeConverter: null,
-                                masterReferences: masterReferences);
-                            item.GameSettings.CopyFieldsFrom<GameSetting, GameSetting_CopyMask>(
-                                rhs: tmpGameSettings,
-                                def: null,
-                                copyMask: null,
-                                errorMask: errorMask);
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.GameSettings);
-                }
-                case 0x4457594B: // KYWD
-                {
-                    if (importMask?.Keywords ?? true)
-                    {
-                        try
-                        {
-                            errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Keywords);
-                            var tmpKeywords = await Group<Keyword>.CreateFromBinary(
-                                frame: frame,
-                                errorMask: errorMask,
-                                recordTypeConverter: null,
-                                masterReferences: masterReferences);
-                            item.Keywords.CopyFieldsFrom<Keyword, Keyword_CopyMask>(
-                                rhs: tmpKeywords,
-                                def: null,
-                                copyMask: null,
-                                errorMask: errorMask);
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Keywords);
-                }
-                case 0x5452434C: // LCRT
-                {
-                    if (importMask?.LocationReferenceTypes ?? true)
-                    {
-                        try
-                        {
-                            errorMask?.PushIndex((int)SkyrimMod_FieldIndex.LocationReferenceTypes);
-                            var tmpLocationReferenceTypes = await Group<LocationReferenceType>.CreateFromBinary(
-                                frame: frame,
-                                errorMask: errorMask,
-                                recordTypeConverter: null,
-                                masterReferences: masterReferences);
-                            item.LocationReferenceTypes.CopyFieldsFrom<LocationReferenceType, LocationReferenceType_CopyMask>(
-                                rhs: tmpLocationReferenceTypes,
-                                def: null,
-                                copyMask: null,
-                                errorMask: errorMask);
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.LocationReferenceTypes);
-                }
-                case 0x54434141: // AACT
-                {
-                    if (importMask?.Actions ?? true)
-                    {
-                        try
-                        {
-                            errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Actions);
-                            var tmpActions = await Group<ActionRecord>.CreateFromBinary(
-                                frame: frame,
-                                errorMask: errorMask,
-                                recordTypeConverter: null,
-                                masterReferences: masterReferences);
-                            item.Actions.CopyFieldsFrom<ActionRecord, ActionRecord_CopyMask>(
-                                rhs: tmpActions,
-                                def: null,
-                                copyMask: null,
-                                errorMask: errorMask);
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Actions);
-                }
-                case 0x54535854: // TXST
-                {
-                    if (importMask?.TextureSets ?? true)
-                    {
-                        try
-                        {
-                            errorMask?.PushIndex((int)SkyrimMod_FieldIndex.TextureSets);
-                            var tmpTextureSets = await Group<TextureSet>.CreateFromBinary(
-                                frame: frame,
-                                errorMask: errorMask,
-                                recordTypeConverter: null,
-                                masterReferences: masterReferences);
-                            item.TextureSets.CopyFieldsFrom<TextureSet, TextureSet_CopyMask>(
-                                rhs: tmpTextureSets,
-                                def: null,
-                                copyMask: null,
-                                errorMask: errorMask);
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.TextureSets);
-                }
-                case 0x424F4C47: // GLOB
-                {
-                    if (importMask?.Globals ?? true)
-                    {
-                        try
-                        {
-                            errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Globals);
-                            var tmpGlobals = await Group<Global>.CreateFromBinary(
-                                frame: frame,
-                                errorMask: errorMask,
-                                recordTypeConverter: null,
-                                masterReferences: masterReferences);
-                            item.Globals.CopyFieldsFrom<Global, Global_CopyMask>(
-                                rhs: tmpGlobals,
-                                def: null,
-                                copyMask: null,
-                                errorMask: errorMask);
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Globals);
-                }
-                case 0x53414C43: // CLAS
-                {
-                    if (importMask?.Classes ?? true)
-                    {
-                        try
-                        {
-                            errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Classes);
-                            var tmpClasses = await Group<Class>.CreateFromBinary(
-                                frame: frame,
-                                errorMask: errorMask,
-                                recordTypeConverter: null,
-                                masterReferences: masterReferences);
-                            item.Classes.CopyFieldsFrom<Class, Class_CopyMask>(
-                                rhs: tmpClasses,
-                                def: null,
-                                copyMask: null,
-                                errorMask: errorMask);
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Classes);
-                }
-                default:
-                    errorMask?.ReportWarning($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
-                    frame.Position += contentLength;
-                    return TryGet<int?>.Succeed(null);
-            }
-        }
 
         public static ISkyrimModGetter CreateFromBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
@@ -1357,8 +995,8 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMod def = null,
             bool doMasks = true)
         {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            SkyrimModSetterCopyCommon.CopyFieldsFrom(
+            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((SkyrimModSetterCopyCommon)((ISkyrimModGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -1374,13 +1012,156 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMod_CopyMask copyMask = null,
             SkyrimMod def = null)
         {
-            SkyrimModSetterCopyCommon.CopyFieldsFrom(
+            ((SkyrimModSetterCopyCommon)((ISkyrimModGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
+
+        #region Xml Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this ISkyrimMod item,
+            XElement node,
+            MissingCreate missing = MissingCreate.New,
+            SkyrimMod_TranslationMask translationMask = null)
+        {
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: null,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this ISkyrimMod item,
+            XElement node,
+            out SkyrimMod_ErrorMask errorMask,
+            bool doMasks = true,
+            SkyrimMod_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask.GetCrystal());
+            errorMask = SkyrimMod_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyInFromXml(
+            this ISkyrimMod item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ((SkyrimModSetterCommon)((ISkyrimModGetter)item).CommonSetterInstance()).CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        public static void CopyInFromXml(
+            this ISkyrimMod item,
+            string path,
+            MissingCreate missing = MissingCreate.New,
+            SkyrimMod_TranslationMask translationMask = null)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this ISkyrimMod item,
+            string path,
+            out SkyrimMod_ErrorMask errorMask,
+            SkyrimMod_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this ISkyrimMod item,
+            string path,
+            ErrorMaskBuilder errorMask,
+            SkyrimMod_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        public static void CopyInFromXml(
+            this ISkyrimMod item,
+            Stream stream,
+            MissingCreate missing = MissingCreate.New,
+            SkyrimMod_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this ISkyrimMod item,
+            Stream stream,
+            out SkyrimMod_ErrorMask errorMask,
+            SkyrimMod_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this ISkyrimMod item,
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            SkyrimMod_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        #endregion
 
         #region Mutagen
         public static IReadOnlyCache<T, FormKey> GetGroupGetter<T>(this ISkyrimModGetter obj)
@@ -1451,6 +1232,171 @@ namespace Mutagen.Bethesda.Skyrim
         public static IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(this ISkyrimMod obj)
         {
             return ((SkyrimModSetterCommon)((ISkyrimModGetter)obj).CommonSetterInstance()).EnumerateMajorRecords(obj: obj);
+        }
+
+        #endregion
+
+        #region Binary Translation
+        [DebuggerStepThrough]
+        public static async Task CopyInFromBinary(
+            this ISkyrimMod item,
+            MutagenFrame frame,
+            ModKey modKey,
+            GroupMask importMask = null)
+        {
+            await CopyInFromBinary(
+                item: item,
+                importMask: importMask,
+                modKey: modKey,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: null).ConfigureAwait(false);
+        }
+
+        [DebuggerStepThrough]
+        public static async Task<SkyrimMod_ErrorMask> CopyInFromBinaryWithErrorMask(
+            this ISkyrimMod item,
+            MutagenFrame frame,
+            ModKey modKey,
+            bool doMasks = true,
+            GroupMask importMask = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            await CopyInFromBinary(
+                item: item,
+                importMask: importMask,
+                modKey: modKey,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: errorMaskBuilder).ConfigureAwait(false);
+            return SkyrimMod_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static async Task CopyInFromBinary(
+            this ISkyrimMod item,
+            MutagenFrame frame,
+            ModKey modKey,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask,
+            GroupMask importMask = null)
+        {
+            await ((SkyrimModSetterCommon)((ISkyrimModGetter)item).CommonSetterInstance()).CopyInFromBinary(
+                item: item,
+                importMask: importMask,
+                modKey: modKey,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+        public static async Task CopyInFromBinary(
+            this ISkyrimMod item,
+            string path,
+            ModKey modKeyOverride = null,
+            GroupMask importMask = null)
+        {
+            using (var reader = new MutagenBinaryReadStream(path, GameMode.Skyrim))
+            {
+                var frame = new MutagenFrame(reader);
+                var modKey = modKeyOverride ?? ModKey.Factory(Path.GetFileName(path));
+                await CopyInFromBinary(
+                    item: item,
+                    importMask: importMask,
+                    modKey: modKey,
+                    frame: frame);
+            }
+        }
+
+        public static async Task<SkyrimMod_ErrorMask> CopyInFromBinaryWithErrorMask(
+            this ISkyrimMod item,
+            string path,
+            ModKey modKeyOverride = null,
+            GroupMask importMask = null)
+        {
+            using (var reader = new MutagenBinaryReadStream(path, GameMode.Skyrim))
+            {
+                var frame = new MutagenFrame(reader);
+                var modKey = modKeyOverride ?? ModKey.Factory(Path.GetFileName(path));
+                return await CopyInFromBinaryWithErrorMask(
+                    item: item,
+                    importMask: importMask,
+                    modKey: modKey,
+                    frame: frame);
+            }
+        }
+
+        public static async Task CopyInFromBinary(
+            this ISkyrimMod item,
+            string path,
+            ErrorMaskBuilder errorMask,
+            ModKey modKeyOverride = null,
+            GroupMask importMask = null)
+        {
+            using (var reader = new MutagenBinaryReadStream(path, GameMode.Skyrim))
+            {
+                var frame = new MutagenFrame(reader);
+                var modKey = modKeyOverride ?? ModKey.Factory(Path.GetFileName(path));
+                await CopyInFromBinary(
+                    item: item,
+                    importMask: importMask,
+                    modKey: modKey,
+                    frame: frame,
+                    recordTypeConverter: null,
+                    errorMask: errorMask);
+            }
+        }
+
+        public static async Task CopyInFromBinary(
+            this ISkyrimMod item,
+            Stream stream,
+            ModKey modKey,
+            GroupMask importMask = null)
+        {
+            using (var reader = new MutagenBinaryReadStream(stream, GameMode.Skyrim))
+            {
+                var frame = new MutagenFrame(reader);
+                await CopyInFromBinary(
+                    item: item,
+                    importMask: importMask,
+                    modKey: modKey,
+                    frame: frame);
+            }
+        }
+
+        public static async Task<SkyrimMod_ErrorMask> CopyInFromBinaryWithErrorMask(
+            this ISkyrimMod item,
+            Stream stream,
+            ModKey modKey,
+            GroupMask importMask = null)
+        {
+            using (var reader = new MutagenBinaryReadStream(stream, GameMode.Skyrim))
+            {
+                var frame = new MutagenFrame(reader);
+                return await CopyInFromBinaryWithErrorMask(
+                    item: item,
+                    importMask: importMask,
+                    modKey: modKey,
+                    frame: frame);
+            }
+        }
+
+        public static async Task CopyInFromBinary(
+            this ISkyrimMod item,
+            Stream stream,
+            ModKey modKey,
+            ErrorMaskBuilder errorMask,
+            GroupMask importMask = null)
+        {
+            using (var reader = new MutagenBinaryReadStream(stream, GameMode.Skyrim))
+            {
+                var frame = new MutagenFrame(reader);
+                await CopyInFromBinary(
+                    item: item,
+                    importMask: importMask,
+                    modKey: modKey,
+                    frame: frame,
+                    recordTypeConverter: null,
+                    errorMask: errorMask);
+            }
         }
 
         #endregion
@@ -1758,6 +1704,80 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ClearPartial();
         }
         
+        #region Xml Translation
+        protected static void FillPrivateElementXml(
+            ISkyrimMod item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "ModHeader":
+                    try
+                    {
+                        errorMask?.PushIndex((int)SkyrimMod_FieldIndex.ModHeader);
+                        item.ModHeader.CopyInFromXml(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+        
+        public void CopyInFromXml(
+            ISkyrimMod item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    FillPrivateElementXml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    SkyrimModXmlCreateTranslation.FillPublicElementXml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+                var package = new LinkingPackage<ISkyrimMod>(item, default);
+                foreach (var link in item.Links)
+                {
+                    if (link.Linked) continue;
+                    link.Link(package);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+        
+        #endregion
+        
         #region Mutagen
         public IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(ISkyrimMod obj)
         {
@@ -1790,6 +1810,288 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 yield return item;
             }
         }
+        #endregion
+        
+        #region Binary Translation
+        protected static void FillBinaryStructs(
+            ISkyrimMod item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+        }
+        
+        protected static async Task<TryGet<int?>> FillBinaryRecordTypes(
+            ISkyrimMod item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask,
+            GroupMask importMask,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x34534554: // TES4
+                {
+                    try
+                    {
+                        errorMask?.PushIndex((int)SkyrimMod_FieldIndex.ModHeader);
+                        item.ModHeader.CopyInFromBinary(
+                            frame: frame,
+                            errorMask: errorMask,
+                            recordTypeConverter: null,
+                            masterReferences: masterReferences);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.ModHeader);
+                }
+                case 0x54534D47: // GMST
+                {
+                    if (importMask?.GameSettings ?? true)
+                    {
+                        try
+                        {
+                            errorMask?.PushIndex((int)SkyrimMod_FieldIndex.GameSettings);
+                            await item.GameSettings.CopyInFromBinary(
+                                frame: frame,
+                                errorMask: errorMask,
+                                recordTypeConverter: null,
+                                masterReferences: masterReferences);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
+                        }
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.GameSettings);
+                }
+                case 0x4457594B: // KYWD
+                {
+                    if (importMask?.Keywords ?? true)
+                    {
+                        try
+                        {
+                            errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Keywords);
+                            await item.Keywords.CopyInFromBinary(
+                                frame: frame,
+                                errorMask: errorMask,
+                                recordTypeConverter: null,
+                                masterReferences: masterReferences);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
+                        }
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Keywords);
+                }
+                case 0x5452434C: // LCRT
+                {
+                    if (importMask?.LocationReferenceTypes ?? true)
+                    {
+                        try
+                        {
+                            errorMask?.PushIndex((int)SkyrimMod_FieldIndex.LocationReferenceTypes);
+                            await item.LocationReferenceTypes.CopyInFromBinary(
+                                frame: frame,
+                                errorMask: errorMask,
+                                recordTypeConverter: null,
+                                masterReferences: masterReferences);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
+                        }
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.LocationReferenceTypes);
+                }
+                case 0x54434141: // AACT
+                {
+                    if (importMask?.Actions ?? true)
+                    {
+                        try
+                        {
+                            errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Actions);
+                            await item.Actions.CopyInFromBinary(
+                                frame: frame,
+                                errorMask: errorMask,
+                                recordTypeConverter: null,
+                                masterReferences: masterReferences);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
+                        }
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Actions);
+                }
+                case 0x54535854: // TXST
+                {
+                    if (importMask?.TextureSets ?? true)
+                    {
+                        try
+                        {
+                            errorMask?.PushIndex((int)SkyrimMod_FieldIndex.TextureSets);
+                            await item.TextureSets.CopyInFromBinary(
+                                frame: frame,
+                                errorMask: errorMask,
+                                recordTypeConverter: null,
+                                masterReferences: masterReferences);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
+                        }
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.TextureSets);
+                }
+                case 0x424F4C47: // GLOB
+                {
+                    if (importMask?.Globals ?? true)
+                    {
+                        try
+                        {
+                            errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Globals);
+                            await item.Globals.CopyInFromBinary(
+                                frame: frame,
+                                errorMask: errorMask,
+                                recordTypeConverter: null,
+                                masterReferences: masterReferences);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
+                        }
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Globals);
+                }
+                case 0x53414C43: // CLAS
+                {
+                    if (importMask?.Classes ?? true)
+                    {
+                        try
+                        {
+                            errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Classes);
+                            await item.Classes.CopyInFromBinary(
+                                frame: frame,
+                                errorMask: errorMask,
+                                recordTypeConverter: null,
+                                masterReferences: masterReferences);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
+                        }
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Classes);
+                }
+                default:
+                    errorMask?.ReportWarning($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
+                    frame.Position += contentLength;
+                    return TryGet<int?>.Succeed(null);
+            }
+        }
+        
+        public async Task CopyInFromBinary(
+            ISkyrimMod item,
+            MutagenFrame frame,
+            ModKey modKey,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask,
+            GroupMask importMask = null)
+        {
+            var masterReferences = new MasterReferences(item.ModHeader.MasterReferences, modKey);
+            await UtilityAsyncTranslation.ModParse(
+                record: item,
+                frame: frame,
+                importMask: importMask,
+                masterReferences: masterReferences,
+                errorMask: errorMask,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: FillBinaryStructs,
+                fillTyped: FillBinaryRecordTypes).ConfigureAwait(false);
+            var package = new LinkingPackage<ISkyrimMod>(item, default);
+            foreach (var link in item.Links)
+            {
+                if (link.Linked) continue;
+                link.Link(package);
+            }
+        }
+        
         #endregion
         
     }
@@ -2178,7 +2480,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly SkyrimModSetterCopyCommon Instance = new SkyrimModSetterCopyCommon();
 
         #region Copy Fields From
-        public static void CopyFieldsFrom(
+        public void CopyFieldsFrom(
             SkyrimMod item,
             SkyrimMod rhs,
             SkyrimMod def,
@@ -2190,7 +2492,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)SkyrimMod_FieldIndex.ModHeader);
                 try
                 {
-                    ModHeaderSetterCopyCommon.CopyFieldsFrom(
+                    ((ModHeaderSetterCopyCommon)((IModHeaderGetter)item.ModHeader).CommonSetterCopyInstance()).CopyFieldsFrom(
                         item: item.ModHeader,
                         rhs: rhs.ModHeader,
                         def: def?.ModHeader,
@@ -2212,7 +2514,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)SkyrimMod_FieldIndex.GameSettings);
                 try
                 {
-                    GroupSetterCopyCommon.CopyFieldsFrom(
+                    ((GroupSetterCopyCommon)((IGroupGetter<IGameSettingGetter>)item.GameSettings).CommonSetterCopyInstance<GameSetting_CopyMask>()).CopyFieldsFrom(
                         item: item.GameSettings,
                         rhs: rhs.GameSettings,
                         def: def?.GameSettings,
@@ -2234,7 +2536,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Keywords);
                 try
                 {
-                    GroupSetterCopyCommon.CopyFieldsFrom(
+                    ((GroupSetterCopyCommon)((IGroupGetter<IKeywordGetter>)item.Keywords).CommonSetterCopyInstance<Keyword_CopyMask>()).CopyFieldsFrom(
                         item: item.Keywords,
                         rhs: rhs.Keywords,
                         def: def?.Keywords,
@@ -2256,7 +2558,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)SkyrimMod_FieldIndex.LocationReferenceTypes);
                 try
                 {
-                    GroupSetterCopyCommon.CopyFieldsFrom(
+                    ((GroupSetterCopyCommon)((IGroupGetter<ILocationReferenceTypeGetter>)item.LocationReferenceTypes).CommonSetterCopyInstance<LocationReferenceType_CopyMask>()).CopyFieldsFrom(
                         item: item.LocationReferenceTypes,
                         rhs: rhs.LocationReferenceTypes,
                         def: def?.LocationReferenceTypes,
@@ -2278,7 +2580,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Actions);
                 try
                 {
-                    GroupSetterCopyCommon.CopyFieldsFrom(
+                    ((GroupSetterCopyCommon)((IGroupGetter<IActionRecordGetter>)item.Actions).CommonSetterCopyInstance<ActionRecord_CopyMask>()).CopyFieldsFrom(
                         item: item.Actions,
                         rhs: rhs.Actions,
                         def: def?.Actions,
@@ -2300,7 +2602,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)SkyrimMod_FieldIndex.TextureSets);
                 try
                 {
-                    GroupSetterCopyCommon.CopyFieldsFrom(
+                    ((GroupSetterCopyCommon)((IGroupGetter<ITextureSetGetter>)item.TextureSets).CommonSetterCopyInstance<TextureSet_CopyMask>()).CopyFieldsFrom(
                         item: item.TextureSets,
                         rhs: rhs.TextureSets,
                         def: def?.TextureSets,
@@ -2322,7 +2624,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Globals);
                 try
                 {
-                    GroupSetterCopyCommon.CopyFieldsFrom(
+                    ((GroupSetterCopyCommon)((IGroupGetter<IGlobalGetter>)item.Globals).CommonSetterCopyInstance<Global_CopyMask>()).CopyFieldsFrom(
                         item: item.Globals,
                         rhs: rhs.Globals,
                         def: def?.Globals,
@@ -2344,7 +2646,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Classes);
                 try
                 {
-                    GroupSetterCopyCommon.CopyFieldsFrom(
+                    ((GroupSetterCopyCommon)((IGroupGetter<IClassGetter>)item.Classes).CommonSetterCopyInstance<Class_CopyMask>()).CopyFieldsFrom(
                         item: item.Classes,
                         rhs: rhs.Classes,
                         def: def?.Classes,
@@ -2621,13 +2923,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)SkyrimMod_FieldIndex.GameSettings);
-                        item.GameSettings.CopyFieldsFrom<GameSetting, GameSetting_CopyMask>(
-                            rhs: Group<GameSetting>.CreateFromXml(
-                                node: node,
-                                errorMask: errorMask,
-                                translationMask: translationMask),
-                            def: null,
-                            copyMask: null,
+                        item.GameSettings.CopyInFromXml<GameSetting>(
+                            node: node,
+                            translationMask: translationMask,
                             errorMask: errorMask);
                     }
                     catch (Exception ex)
@@ -2644,13 +2942,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Keywords);
-                        item.Keywords.CopyFieldsFrom<Keyword, Keyword_CopyMask>(
-                            rhs: Group<Keyword>.CreateFromXml(
-                                node: node,
-                                errorMask: errorMask,
-                                translationMask: translationMask),
-                            def: null,
-                            copyMask: null,
+                        item.Keywords.CopyInFromXml<Keyword>(
+                            node: node,
+                            translationMask: translationMask,
                             errorMask: errorMask);
                     }
                     catch (Exception ex)
@@ -2667,13 +2961,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)SkyrimMod_FieldIndex.LocationReferenceTypes);
-                        item.LocationReferenceTypes.CopyFieldsFrom<LocationReferenceType, LocationReferenceType_CopyMask>(
-                            rhs: Group<LocationReferenceType>.CreateFromXml(
-                                node: node,
-                                errorMask: errorMask,
-                                translationMask: translationMask),
-                            def: null,
-                            copyMask: null,
+                        item.LocationReferenceTypes.CopyInFromXml<LocationReferenceType>(
+                            node: node,
+                            translationMask: translationMask,
                             errorMask: errorMask);
                     }
                     catch (Exception ex)
@@ -2690,13 +2980,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Actions);
-                        item.Actions.CopyFieldsFrom<ActionRecord, ActionRecord_CopyMask>(
-                            rhs: Group<ActionRecord>.CreateFromXml(
-                                node: node,
-                                errorMask: errorMask,
-                                translationMask: translationMask),
-                            def: null,
-                            copyMask: null,
+                        item.Actions.CopyInFromXml<ActionRecord>(
+                            node: node,
+                            translationMask: translationMask,
                             errorMask: errorMask);
                     }
                     catch (Exception ex)
@@ -2713,13 +2999,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)SkyrimMod_FieldIndex.TextureSets);
-                        item.TextureSets.CopyFieldsFrom<TextureSet, TextureSet_CopyMask>(
-                            rhs: Group<TextureSet>.CreateFromXml(
-                                node: node,
-                                errorMask: errorMask,
-                                translationMask: translationMask),
-                            def: null,
-                            copyMask: null,
+                        item.TextureSets.CopyInFromXml<TextureSet>(
+                            node: node,
+                            translationMask: translationMask,
                             errorMask: errorMask);
                     }
                     catch (Exception ex)
@@ -2736,13 +3018,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Globals);
-                        item.Globals.CopyFieldsFrom<Global, Global_CopyMask>(
-                            rhs: Group<Global>.CreateFromXml(
-                                node: node,
-                                errorMask: errorMask,
-                                translationMask: translationMask),
-                            def: null,
-                            copyMask: null,
+                        item.Globals.CopyInFromXml<Global>(
+                            node: node,
+                            translationMask: translationMask,
                             errorMask: errorMask);
                     }
                     catch (Exception ex)
@@ -2759,13 +3037,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Classes);
-                        item.Classes.CopyFieldsFrom<Class, Class_CopyMask>(
-                            rhs: Group<Class>.CreateFromXml(
-                                node: node,
-                                errorMask: errorMask,
-                                translationMask: translationMask),
-                            def: null,
-                            copyMask: null,
+                        item.Classes.CopyInFromXml<Class>(
+                            node: node,
+                            translationMask: translationMask,
                             errorMask: errorMask);
                     }
                     catch (Exception ex)
@@ -3449,37 +3723,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public MaskItem<bool, Group_CopyMask<TextureSet_CopyMask>> TextureSets;
         public MaskItem<bool, Group_CopyMask<Global_CopyMask>> Globals;
         public MaskItem<bool, Group_CopyMask<Class_CopyMask>> Classes;
-        #endregion
-
-    }
-
-    public class SkyrimMod_DeepCopyMask
-    {
-        public SkyrimMod_DeepCopyMask()
-        {
-        }
-
-        public SkyrimMod_DeepCopyMask(bool defaultOn)
-        {
-            this.ModHeader = new MaskItem<bool, ModHeader_DeepCopyMask>(defaultOn, default);
-            this.GameSettings = new MaskItem<bool, Group_DeepCopyMask<GameSetting_DeepCopyMask>>(defaultOn, default);
-            this.Keywords = new MaskItem<bool, Group_DeepCopyMask<Keyword_DeepCopyMask>>(defaultOn, default);
-            this.LocationReferenceTypes = new MaskItem<bool, Group_DeepCopyMask<LocationReferenceType_DeepCopyMask>>(defaultOn, default);
-            this.Actions = new MaskItem<bool, Group_DeepCopyMask<ActionRecord_DeepCopyMask>>(defaultOn, default);
-            this.TextureSets = new MaskItem<bool, Group_DeepCopyMask<TextureSet_DeepCopyMask>>(defaultOn, default);
-            this.Globals = new MaskItem<bool, Group_DeepCopyMask<Global_DeepCopyMask>>(defaultOn, default);
-            this.Classes = new MaskItem<bool, Group_DeepCopyMask<Class_DeepCopyMask>>(defaultOn, default);
-        }
-
-        #region Members
-        public MaskItem<bool, ModHeader_DeepCopyMask> ModHeader;
-        public MaskItem<bool, Group_DeepCopyMask<GameSetting_DeepCopyMask>> GameSettings;
-        public MaskItem<bool, Group_DeepCopyMask<Keyword_DeepCopyMask>> Keywords;
-        public MaskItem<bool, Group_DeepCopyMask<LocationReferenceType_DeepCopyMask>> LocationReferenceTypes;
-        public MaskItem<bool, Group_DeepCopyMask<ActionRecord_DeepCopyMask>> Actions;
-        public MaskItem<bool, Group_DeepCopyMask<TextureSet_DeepCopyMask>> TextureSets;
-        public MaskItem<bool, Group_DeepCopyMask<Global_DeepCopyMask>> Globals;
-        public MaskItem<bool, Group_DeepCopyMask<Class_DeepCopyMask>> Classes;
         #endregion
 
     }

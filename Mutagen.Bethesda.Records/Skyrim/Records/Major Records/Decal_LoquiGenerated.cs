@@ -180,23 +180,12 @@ namespace Mutagen.Bethesda.Skyrim
                     break;
             }
             var ret = new Decal();
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    DecalXmlCreateTranslation.FillPublicElementXml(
-                        item: ret,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
+            ((DecalSetterCommon)((IDecalGetter)ret).CommonSetterInstance()).CopyInFromXml(
+                item: ret,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             return ret;
         }
 
@@ -363,122 +352,16 @@ namespace Mutagen.Bethesda.Skyrim
             ErrorMaskBuilder errorMask)
         {
             var ret = new Decal();
-            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
-                frame.Reader,
-                recordTypeConverter.ConvertToCustom(Decal_Registration.DODT_HEADER)));
-            UtilityTranslation.RecordParse(
-                record: ret,
-                frame: frame,
-                setFinal: true,
+            ((DecalSetterCommon)((IDecalGetter)ret).CommonSetterInstance()).CopyInFromBinary(
+                item: ret,
                 masterReferences: masterReferences,
-                errorMask: errorMask,
+                frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                errorMask: errorMask);
             return ret;
         }
 
         #endregion
-
-        protected static void FillBinaryStructs(
-            IDecal item,
-            MutagenFrame frame,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Single MinWidthParse))
-            {
-                item.MinWidth = MinWidthParse;
-            }
-            else
-            {
-                item.MinWidth = default(Single);
-            }
-            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Single MaxWidthParse))
-            {
-                item.MaxWidth = MaxWidthParse;
-            }
-            else
-            {
-                item.MaxWidth = default(Single);
-            }
-            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Single MinHeightParse))
-            {
-                item.MinHeight = MinHeightParse;
-            }
-            else
-            {
-                item.MinHeight = default(Single);
-            }
-            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Single MaxHeightParse))
-            {
-                item.MaxHeight = MaxHeightParse;
-            }
-            else
-            {
-                item.MaxHeight = default(Single);
-            }
-            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Single DepthParse))
-            {
-                item.Depth = DepthParse;
-            }
-            else
-            {
-                item.Depth = default(Single);
-            }
-            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Single ShininessParse))
-            {
-                item.Shininess = ShininessParse;
-            }
-            else
-            {
-                item.Shininess = default(Single);
-            }
-            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Single ParallaxScaleParse))
-            {
-                item.ParallaxScale = ParallaxScaleParse;
-            }
-            else
-            {
-                item.ParallaxScale = default(Single);
-            }
-            item.ParallaxPasses = frame.ReadUInt8();
-            if (EnumBinaryTranslation<Decal.Flag>.Instance.Parse(
-                frame: frame.SpawnWithLength(1),
-                item: out Decal.Flag FlagsParse))
-            {
-                item.Flags = FlagsParse;
-            }
-            else
-            {
-                item.Flags = default(Decal.Flag);
-            }
-            item.Unknown = frame.ReadUInt16();
-            if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                frame: frame,
-                extraByte: true,
-                item: out Color ColorParse))
-            {
-                item.Color = ColorParse;
-            }
-            else
-            {
-                item.Color = default(Color);
-            }
-        }
 
         #endregion
 
@@ -686,8 +569,8 @@ namespace Mutagen.Bethesda.Skyrim
             Decal def = null,
             bool doMasks = true)
         {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            DecalSetterCopyCommon.CopyFieldsFrom(
+            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((DecalSetterCopyCommon)((IDecalGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -703,7 +586,7 @@ namespace Mutagen.Bethesda.Skyrim
             Decal_CopyMask copyMask = null,
             Decal def = null)
         {
-            DecalSetterCopyCommon.CopyFieldsFrom(
+            ((DecalSetterCopyCommon)((IDecalGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -721,6 +604,198 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask,
                 def: def);
         }
+
+        #region Xml Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this IDecal item,
+            XElement node,
+            MissingCreate missing = MissingCreate.New,
+            Decal_TranslationMask translationMask = null)
+        {
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: null,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this IDecal item,
+            XElement node,
+            out Decal_ErrorMask errorMask,
+            bool doMasks = true,
+            Decal_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask.GetCrystal());
+            errorMask = Decal_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyInFromXml(
+            this IDecal item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ((DecalSetterCommon)((IDecalGetter)item).CommonSetterInstance()).CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        public static void CopyInFromXml(
+            this IDecal item,
+            string path,
+            MissingCreate missing = MissingCreate.New,
+            Decal_TranslationMask translationMask = null)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IDecal item,
+            string path,
+            out Decal_ErrorMask errorMask,
+            Decal_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IDecal item,
+            string path,
+            ErrorMaskBuilder errorMask,
+            Decal_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        public static void CopyInFromXml(
+            this IDecal item,
+            Stream stream,
+            MissingCreate missing = MissingCreate.New,
+            Decal_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IDecal item,
+            Stream stream,
+            out Decal_ErrorMask errorMask,
+            Decal_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IDecal item,
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            Decal_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        #endregion
+
+        #region Binary Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this IDecal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences)
+        {
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: null);
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this IDecal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            out Decal_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: errorMaskBuilder);
+            errorMask = Decal_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyInFromBinary(
+            this IDecal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((DecalSetterCommon)((IDecalGetter)item).CommonSetterInstance()).CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+        #endregion
 
     }
     #endregion
@@ -1071,6 +1146,159 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
         
+        #region Xml Translation
+        public void CopyInFromXml(
+            IDecal item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    DecalXmlCreateTranslation.FillPublicElementXml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+        
+        #endregion
+        
+        #region Binary Translation
+        protected static void FillBinaryStructs(
+            IDecal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single MinWidthParse))
+            {
+                item.MinWidth = MinWidthParse;
+            }
+            else
+            {
+                item.MinWidth = default(Single);
+            }
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single MaxWidthParse))
+            {
+                item.MaxWidth = MaxWidthParse;
+            }
+            else
+            {
+                item.MaxWidth = default(Single);
+            }
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single MinHeightParse))
+            {
+                item.MinHeight = MinHeightParse;
+            }
+            else
+            {
+                item.MinHeight = default(Single);
+            }
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single MaxHeightParse))
+            {
+                item.MaxHeight = MaxHeightParse;
+            }
+            else
+            {
+                item.MaxHeight = default(Single);
+            }
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single DepthParse))
+            {
+                item.Depth = DepthParse;
+            }
+            else
+            {
+                item.Depth = default(Single);
+            }
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single ShininessParse))
+            {
+                item.Shininess = ShininessParse;
+            }
+            else
+            {
+                item.Shininess = default(Single);
+            }
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single ParallaxScaleParse))
+            {
+                item.ParallaxScale = ParallaxScaleParse;
+            }
+            else
+            {
+                item.ParallaxScale = default(Single);
+            }
+            item.ParallaxPasses = frame.ReadUInt8();
+            if (EnumBinaryTranslation<Decal.Flag>.Instance.Parse(
+                frame: frame.SpawnWithLength(1),
+                item: out Decal.Flag FlagsParse))
+            {
+                item.Flags = FlagsParse;
+            }
+            else
+            {
+                item.Flags = default(Decal.Flag);
+            }
+            item.Unknown = frame.ReadUInt16();
+            if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
+                frame: frame,
+                extraByte: true,
+                item: out Color ColorParse))
+            {
+                item.Color = ColorParse;
+            }
+            else
+            {
+                item.Color = default(Color);
+            }
+        }
+        
+        public void CopyInFromBinary(
+            IDecal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
+                frame.Reader,
+                recordTypeConverter.ConvertToCustom(Decal_Registration.DODT_HEADER)));
+            UtilityTranslation.RecordParse(
+                record: item,
+                frame: frame,
+                setFinal: true,
+                masterReferences: masterReferences,
+                errorMask: errorMask,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: FillBinaryStructs);
+        }
+        
+        #endregion
+        
     }
     public partial class DecalCommon
     {
@@ -1271,7 +1499,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly DecalSetterCopyCommon Instance = new DecalSetterCopyCommon();
 
         #region Copy Fields From
-        public static void CopyFieldsFrom(
+        public void CopyFieldsFrom(
             Decal item,
             Decal rhs,
             Decal def,
@@ -2517,43 +2745,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public Decal_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.MinWidth = defaultOn;
-            this.MaxWidth = defaultOn;
-            this.MinHeight = defaultOn;
-            this.MaxHeight = defaultOn;
-            this.Depth = defaultOn;
-            this.Shininess = defaultOn;
-            this.ParallaxScale = defaultOn;
-            this.ParallaxPasses = defaultOn;
-            this.Flags = defaultOn;
-            this.Unknown = defaultOn;
-            this.Color = defaultOn;
-        }
-
-        #region Members
-        public bool MinWidth;
-        public bool MaxWidth;
-        public bool MinHeight;
-        public bool MaxHeight;
-        public bool Depth;
-        public bool Shininess;
-        public bool ParallaxScale;
-        public bool ParallaxPasses;
-        public bool Flags;
-        public bool Unknown;
-        public bool Color;
-        #endregion
-
-    }
-
-    public class Decal_DeepCopyMask
-    {
-        public Decal_DeepCopyMask()
-        {
-        }
-
-        public Decal_DeepCopyMask(bool defaultOn)
         {
             this.MinWidth = defaultOn;
             this.MaxWidth = defaultOn;

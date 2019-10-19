@@ -151,23 +151,12 @@ namespace Mutagen.Bethesda.Skyrim
                     break;
             }
             var ret = new ObjectBounds();
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    ObjectBoundsXmlCreateTranslation.FillPublicElementXml(
-                        item: ret,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
+            ((ObjectBoundsSetterCommon)((IObjectBoundsGetter)ret).CommonSetterInstance()).CopyInFromXml(
+                item: ret,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             return ret;
         }
 
@@ -325,49 +314,16 @@ namespace Mutagen.Bethesda.Skyrim
             ErrorMaskBuilder errorMask)
         {
             var ret = new ObjectBounds();
-            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
-                frame.Reader,
-                recordTypeConverter.ConvertToCustom(ObjectBounds_Registration.OBND_HEADER)));
-            UtilityTranslation.RecordParse(
-                record: ret,
-                frame: frame,
-                setFinal: true,
+            ((ObjectBoundsSetterCommon)((IObjectBoundsGetter)ret).CommonSetterInstance()).CopyInFromBinary(
+                item: ret,
                 masterReferences: masterReferences,
-                errorMask: errorMask,
+                frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                errorMask: errorMask);
             return ret;
         }
 
         #endregion
-
-        protected static void FillBinaryStructs(
-            IObjectBounds item,
-            MutagenFrame frame,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            if (Mutagen.Bethesda.Binary.P3Int16BinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out P3Int16 FirstParse))
-            {
-                item.First = FirstParse;
-            }
-            else
-            {
-                item.First = default(P3Int16);
-            }
-            if (Mutagen.Bethesda.Binary.P3Int16BinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out P3Int16 SecondParse))
-            {
-                item.Second = SecondParse;
-            }
-            else
-            {
-                item.Second = default(P3Int16);
-            }
-        }
 
         #endregion
 
@@ -521,8 +477,8 @@ namespace Mutagen.Bethesda.Skyrim
             ObjectBounds def = null,
             bool doMasks = true)
         {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            ObjectBoundsSetterCopyCommon.CopyFieldsFrom(
+            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((ObjectBoundsSetterCopyCommon)((IObjectBoundsGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -538,7 +494,7 @@ namespace Mutagen.Bethesda.Skyrim
             ObjectBounds_CopyMask copyMask = null,
             ObjectBounds def = null)
         {
-            ObjectBoundsSetterCopyCommon.CopyFieldsFrom(
+            ((ObjectBoundsSetterCopyCommon)((IObjectBoundsGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -556,6 +512,198 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask,
                 def: def);
         }
+
+        #region Xml Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this IObjectBounds item,
+            XElement node,
+            MissingCreate missing = MissingCreate.New,
+            ObjectBounds_TranslationMask translationMask = null)
+        {
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: null,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this IObjectBounds item,
+            XElement node,
+            out ObjectBounds_ErrorMask errorMask,
+            bool doMasks = true,
+            ObjectBounds_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask.GetCrystal());
+            errorMask = ObjectBounds_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyInFromXml(
+            this IObjectBounds item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ((ObjectBoundsSetterCommon)((IObjectBoundsGetter)item).CommonSetterInstance()).CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        public static void CopyInFromXml(
+            this IObjectBounds item,
+            string path,
+            MissingCreate missing = MissingCreate.New,
+            ObjectBounds_TranslationMask translationMask = null)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IObjectBounds item,
+            string path,
+            out ObjectBounds_ErrorMask errorMask,
+            ObjectBounds_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IObjectBounds item,
+            string path,
+            ErrorMaskBuilder errorMask,
+            ObjectBounds_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        public static void CopyInFromXml(
+            this IObjectBounds item,
+            Stream stream,
+            MissingCreate missing = MissingCreate.New,
+            ObjectBounds_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IObjectBounds item,
+            Stream stream,
+            out ObjectBounds_ErrorMask errorMask,
+            ObjectBounds_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IObjectBounds item,
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            ObjectBounds_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        #endregion
+
+        #region Binary Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this IObjectBounds item,
+            MutagenFrame frame,
+            MasterReferences masterReferences)
+        {
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: null);
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this IObjectBounds item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            out ObjectBounds_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: errorMaskBuilder);
+            errorMask = ObjectBounds_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyInFromBinary(
+            this IObjectBounds item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((ObjectBoundsSetterCommon)((IObjectBoundsGetter)item).CommonSetterInstance()).CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+        #endregion
 
     }
     #endregion
@@ -789,6 +937,86 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
         
+        #region Xml Translation
+        public void CopyInFromXml(
+            IObjectBounds item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    ObjectBoundsXmlCreateTranslation.FillPublicElementXml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+        
+        #endregion
+        
+        #region Binary Translation
+        protected static void FillBinaryStructs(
+            IObjectBounds item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            if (Mutagen.Bethesda.Binary.P3Int16BinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out P3Int16 FirstParse))
+            {
+                item.First = FirstParse;
+            }
+            else
+            {
+                item.First = default(P3Int16);
+            }
+            if (Mutagen.Bethesda.Binary.P3Int16BinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out P3Int16 SecondParse))
+            {
+                item.Second = SecondParse;
+            }
+            else
+            {
+                item.Second = default(P3Int16);
+            }
+        }
+        
+        public void CopyInFromBinary(
+            IObjectBounds item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
+                frame.Reader,
+                recordTypeConverter.ConvertToCustom(ObjectBounds_Registration.OBND_HEADER)));
+            UtilityTranslation.RecordParse(
+                record: item,
+                frame: frame,
+                setFinal: true,
+                masterReferences: masterReferences,
+                errorMask: errorMask,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: FillBinaryStructs);
+        }
+        
+        #endregion
+        
     }
     public partial class ObjectBoundsCommon
     {
@@ -917,7 +1145,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly ObjectBoundsSetterCopyCommon Instance = new ObjectBoundsSetterCopyCommon();
 
         #region Copy Fields From
-        public static void CopyFieldsFrom(
+        public void CopyFieldsFrom(
             ObjectBounds item,
             ObjectBounds rhs,
             ObjectBounds def,
@@ -1596,25 +1824,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public ObjectBounds_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.First = defaultOn;
-            this.Second = defaultOn;
-        }
-
-        #region Members
-        public bool First;
-        public bool Second;
-        #endregion
-
-    }
-
-    public class ObjectBounds_DeepCopyMask
-    {
-        public ObjectBounds_DeepCopyMask()
-        {
-        }
-
-        public ObjectBounds_DeepCopyMask(bool defaultOn)
         {
             this.First = defaultOn;
             this.Second = defaultOn;

@@ -212,29 +212,12 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
             }
             var ret = new SpellUnleveled();
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    FillPrivateElementXml(
-                        item: ret,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    SpellUnleveledXmlCreateTranslation.FillPublicElementXml(
-                        item: ret,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
+            ((SpellUnleveledSetterCommon)((ISpellUnleveledGetter)ret).CommonSetterInstance()).CopyInFromXml(
+                item: ret,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             return ret;
         }
 
@@ -319,29 +302,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #endregion
-
-        protected static void FillPrivateElementXml(
-            SpellUnleveled item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "HasSPITDataType":
-                    item.SPITDataTypeState |= SpellUnleveled.SPITDataType.Has;
-                    break;
-                default:
-                    Spell.FillPrivateElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
 
         #endregion
 
@@ -458,116 +418,16 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new SpellUnleveled();
-            UtilityTranslation.MajorRecordParse<ISpellUnleveledInternal>(
-                record: ret,
-                frame: frame,
-                errorMask: errorMask,
-                recType: SpellUnleveled_Registration.SPEL_HEADER,
-                recordTypeConverter: recordTypeConverter,
+            ((SpellUnleveledSetterCommon)((ISpellUnleveledGetter)ret).CommonSetterInstance()).CopyInFromBinary(
+                item: ret,
                 masterReferences: masterReferences,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                frame: frame,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
             return ret;
         }
 
         #endregion
-
-        protected static void FillBinaryStructs(
-            ISpellUnleveledInternal item,
-            MutagenFrame frame,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            Spell.FillBinaryStructs(
-                item: item,
-                frame: frame,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
-        }
-
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            ISpellUnleveledInternal item,
-            MutagenFrame frame,
-            RecordType nextRecordType,
-            int contentLength,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask,
-            RecordTypeConverter recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x54495053: // SPIT
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    var dataFrame = frame.SpawnWithLength(contentLength);
-                    if (!dataFrame.Complete)
-                    {
-                        item.SPITDataTypeState = SPITDataType.Has;
-                    }
-                    if (EnumBinaryTranslation<Spell.SpellType>.Instance.Parse(
-                        frame: dataFrame.SpawnWithLength(4),
-                        item: out Spell.SpellType TypeParse))
-                    {
-                        item.Type = TypeParse;
-                    }
-                    else
-                    {
-                        item.Type = default(Spell.SpellType);
-                    }
-                    item.Cost = dataFrame.ReadUInt32();
-                    if (EnumBinaryTranslation<Spell.SpellLevel>.Instance.Parse(
-                        frame: dataFrame.SpawnWithLength(4),
-                        item: out Spell.SpellLevel LevelParse))
-                    {
-                        item.Level = LevelParse;
-                    }
-                    else
-                    {
-                        item.Level = default(Spell.SpellLevel);
-                    }
-                    if (EnumBinaryTranslation<Spell.SpellFlag>.Instance.Parse(
-                        frame: dataFrame.SpawnWithLength(4),
-                        item: out Spell.SpellFlag FlagParse))
-                    {
-                        item.Flag = FlagParse;
-                    }
-                    else
-                    {
-                        item.Flag = default(Spell.SpellFlag);
-                    }
-                    return TryGet<int?>.Succeed((int)SpellUnleveled_FieldIndex.Flag);
-                }
-                case 0x44494645: // EFID
-                {
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<Effect>.Instance.ParseRepeatedItem(
-                        frame: frame,
-                        triggeringRecord: SpellUnleveled_Registration.EFID_HEADER,
-                        item: item.Effects,
-                        fieldIndex: (int)SpellUnleveled_FieldIndex.Effects,
-                        lengthLength: frame.MetaData.SubConstants.LengthLength,
-                        errorMask: errorMask,
-                        transl: (MutagenFrame r, out Effect listSubItem, ErrorMaskBuilder listErrMask) =>
-                        {
-                            return LoquiBinaryTranslation<Effect>.Instance.Parse(
-                                frame: r,
-                                item: out listSubItem,
-                                errorMask: listErrMask,
-                                masterReferences: masterReferences);
-                        });
-                    return TryGet<int?>.Succeed((int)SpellUnleveled_FieldIndex.Effects);
-                }
-                default:
-                    return Spell.FillBinaryRecordTypes(
-                        item: item,
-                        frame: frame,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength,
-                        recordTypeConverter: recordTypeConverter,
-                        masterReferences: masterReferences,
-                        errorMask: errorMask);
-            }
-        }
 
         #endregion
 
@@ -732,8 +592,8 @@ namespace Mutagen.Bethesda.Oblivion
             SpellUnleveled def = null,
             bool doMasks = true)
         {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            SpellUnleveledSetterCopyCommon.CopyFieldsFrom(
+            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((SpellUnleveledSetterCopyCommon)((ISpellUnleveledGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -749,13 +609,205 @@ namespace Mutagen.Bethesda.Oblivion
             SpellUnleveled_CopyMask copyMask = null,
             SpellUnleveled def = null)
         {
-            SpellUnleveledSetterCopyCommon.CopyFieldsFrom(
+            ((SpellUnleveledSetterCopyCommon)((ISpellUnleveledGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
+
+        #region Xml Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this ISpellUnleveledInternal item,
+            XElement node,
+            MissingCreate missing = MissingCreate.New,
+            SpellUnleveled_TranslationMask translationMask = null)
+        {
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: null,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this ISpellUnleveledInternal item,
+            XElement node,
+            out SpellUnleveled_ErrorMask errorMask,
+            bool doMasks = true,
+            SpellUnleveled_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask.GetCrystal());
+            errorMask = SpellUnleveled_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public new static void CopyInFromXml(
+            this ISpellUnleveledInternal item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ((SpellUnleveledSetterCommon)((ISpellUnleveledGetter)item).CommonSetterInstance()).CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        public static void CopyInFromXml(
+            this ISpellUnleveledInternal item,
+            string path,
+            MissingCreate missing = MissingCreate.New,
+            SpellUnleveled_TranslationMask translationMask = null)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this ISpellUnleveledInternal item,
+            string path,
+            out SpellUnleveled_ErrorMask errorMask,
+            SpellUnleveled_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this ISpellUnleveledInternal item,
+            string path,
+            ErrorMaskBuilder errorMask,
+            SpellUnleveled_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        public static void CopyInFromXml(
+            this ISpellUnleveledInternal item,
+            Stream stream,
+            MissingCreate missing = MissingCreate.New,
+            SpellUnleveled_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this ISpellUnleveledInternal item,
+            Stream stream,
+            out SpellUnleveled_ErrorMask errorMask,
+            SpellUnleveled_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this ISpellUnleveledInternal item,
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            SpellUnleveled_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        #endregion
+
+        #region Binary Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this ISpellUnleveledInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences)
+        {
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: null);
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this ISpellUnleveledInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            out SpellUnleveled_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: errorMaskBuilder);
+            errorMask = SpellUnleveled_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public new static void CopyInFromBinary(
+            this ISpellUnleveledInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((SpellUnleveledSetterCommon)((ISpellUnleveledGetter)item).CommonSetterInstance()).CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+        #endregion
 
     }
     #endregion
@@ -1053,6 +1105,183 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Clear(item: (ISpellUnleveledInternal)item);
         }
+        
+        #region Xml Translation
+        protected static void FillPrivateElementXml(
+            ISpellUnleveledInternal item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "HasSPITDataType":
+                    item.SPITDataTypeState |= SpellUnleveled.SPITDataType.Has;
+                    break;
+                default:
+                    SpellSetterCommon.FillPrivateElementXml(
+                        item: item,
+                        node: node,
+                        name: name,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    break;
+            }
+        }
+        
+        public new void CopyInFromXml(
+            ISpellUnleveledInternal item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    FillPrivateElementXml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    SpellUnleveledXmlCreateTranslation.FillPublicElementXml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+        
+        #endregion
+        
+        #region Binary Translation
+        public override RecordType RecordType => SpellUnleveled_Registration.SPEL_HEADER;
+        protected static void FillBinaryStructs(
+            ISpellUnleveledInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            SpellSetterCommon.FillBinaryStructs(
+                item: item,
+                frame: frame,
+                masterReferences: masterReferences,
+                errorMask: errorMask);
+        }
+        
+        protected static TryGet<int?> FillBinaryRecordTypes(
+            ISpellUnleveledInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x54495053: // SPIT
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (!dataFrame.Complete)
+                    {
+                        item.SPITDataTypeState = SpellUnleveled.SPITDataType.Has;
+                    }
+                    if (EnumBinaryTranslation<Spell.SpellType>.Instance.Parse(
+                        frame: dataFrame.SpawnWithLength(4),
+                        item: out Spell.SpellType TypeParse))
+                    {
+                        item.Type = TypeParse;
+                    }
+                    else
+                    {
+                        item.Type = default(Spell.SpellType);
+                    }
+                    item.Cost = dataFrame.ReadUInt32();
+                    if (EnumBinaryTranslation<Spell.SpellLevel>.Instance.Parse(
+                        frame: dataFrame.SpawnWithLength(4),
+                        item: out Spell.SpellLevel LevelParse))
+                    {
+                        item.Level = LevelParse;
+                    }
+                    else
+                    {
+                        item.Level = default(Spell.SpellLevel);
+                    }
+                    if (EnumBinaryTranslation<Spell.SpellFlag>.Instance.Parse(
+                        frame: dataFrame.SpawnWithLength(4),
+                        item: out Spell.SpellFlag FlagParse))
+                    {
+                        item.Flag = FlagParse;
+                    }
+                    else
+                    {
+                        item.Flag = default(Spell.SpellFlag);
+                    }
+                    return TryGet<int?>.Succeed((int)SpellUnleveled_FieldIndex.Flag);
+                }
+                case 0x44494645: // EFID
+                {
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<Effect>.Instance.ParseRepeatedItem(
+                        frame: frame,
+                        triggeringRecord: SpellUnleveled_Registration.EFID_HEADER,
+                        item: item.Effects,
+                        fieldIndex: (int)SpellUnleveled_FieldIndex.Effects,
+                        lengthLength: frame.MetaData.SubConstants.LengthLength,
+                        errorMask: errorMask,
+                        transl: (MutagenFrame r, out Effect listSubItem, ErrorMaskBuilder listErrMask) =>
+                        {
+                            return LoquiBinaryTranslation<Effect>.Instance.Parse(
+                                frame: r,
+                                item: out listSubItem,
+                                errorMask: listErrMask,
+                                masterReferences: masterReferences);
+                        });
+                    return TryGet<int?>.Succeed((int)SpellUnleveled_FieldIndex.Effects);
+                }
+                default:
+                    return SpellSetterCommon.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter,
+                        masterReferences: masterReferences,
+                        errorMask: errorMask);
+            }
+        }
+        
+        public new void CopyInFromBinary(
+            ISpellUnleveledInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            UtilityTranslation.MajorRecordParse<ISpellUnleveledInternal>(
+                record: item,
+                frame: frame,
+                errorMask: errorMask,
+                recType: RecordType,
+                recordTypeConverter: recordTypeConverter,
+                masterReferences: masterReferences,
+                fillStructs: FillBinaryStructs,
+                fillTyped: FillBinaryRecordTypes);
+        }
+        
+        #endregion
         
     }
     public partial class SpellUnleveledCommon : SpellCommon
@@ -1397,14 +1626,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public new static readonly SpellUnleveledSetterCopyCommon Instance = new SpellUnleveledSetterCopyCommon();
 
         #region Copy Fields From
-        public static void CopyFieldsFrom(
+        public void CopyFieldsFrom(
             SpellUnleveled item,
             SpellUnleveled rhs,
             SpellUnleveled def,
             ErrorMaskBuilder errorMask,
             SpellUnleveled_CopyMask copyMask)
         {
-            SpellSetterCopyCommon.CopyFieldsFrom(
+            ((SpellSetterCopyCommon)((ISpellGetter)item).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -2404,33 +2633,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Level;
         public bool Flag;
         public MaskItem<CopyOption, Effect_CopyMask> Effects;
-        public bool SPITDataTypeState;
-        #endregion
-
-    }
-
-    public class SpellUnleveled_DeepCopyMask : Spell_DeepCopyMask
-    {
-        public SpellUnleveled_DeepCopyMask()
-        {
-        }
-
-        public SpellUnleveled_DeepCopyMask(bool defaultOn)
-        {
-            this.Type = defaultOn;
-            this.Cost = defaultOn;
-            this.Level = defaultOn;
-            this.Flag = defaultOn;
-            this.Effects = new MaskItem<bool, Effect_DeepCopyMask>(defaultOn, default);
-            this.SPITDataTypeState = defaultOn;
-        }
-
-        #region Members
-        public bool Type;
-        public bool Cost;
-        public bool Level;
-        public bool Flag;
-        public MaskItem<bool, Effect_DeepCopyMask> Effects;
         public bool SPITDataTypeState;
         #endregion
 

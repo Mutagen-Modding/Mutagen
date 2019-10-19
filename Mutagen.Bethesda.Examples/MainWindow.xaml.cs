@@ -16,7 +16,7 @@ namespace Mutagen.Bethesda.Examples
             this.WireMainVM(
                 new MainVM(this),
                 System.IO.Path.Combine(Environment.GetEnvironmentVariable("LocalAppData"), $"Mutagen Examples/Settings.xml"),
-                load: (s, vm) => vm.CopyInXml(s),
+                load: (s, vm) => vm.CopyInFromXml(s),
                 save: (s, vm) => vm.WriteToXml(s, "MutagenExamples"));
         }
     }

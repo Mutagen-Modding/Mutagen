@@ -410,11 +410,16 @@ namespace Mutagen.Bethesda.Oblivion
                 default:
                     break;
             }
-            ClothingAbstract ret;
-            if (!LoquiXmlTranslation.Instance.TryCreate(node, out ret, errorMask, translationMask))
+            if (!LoquiXmlTranslation.Instance.TryCreate(node, out ClothingAbstract ret, errorMask, translationMask))
             {
                 throw new ArgumentException($"Unknown ClothingAbstract subclass: {node.Name.LocalName}");
             }
+            ((ClothingAbstractSetterCommon)((IClothingAbstractGetter)ret).CommonSetterInstance()).CopyInFromXml(
+                item: ret,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             return ret;
         }
 
@@ -500,29 +505,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        protected static void FillPrivateElementXml(
-            ClothingAbstract item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "HasBMDTDataType":
-                    item.BMDTDataTypeState |= ClothingAbstract.BMDTDataType.Has;
-                    break;
-                default:
-                    ItemAbstract.FillPrivateElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-
         #endregion
 
         protected override bool GetHasBeenSet(int index)
@@ -605,233 +587,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: null,
                 errorMask: errorMask);
         }
-        protected static void FillBinaryStructs(
-            IClothingAbstractInternal item,
-            MutagenFrame frame,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            ItemAbstract.FillBinaryStructs(
-                item: item,
-                frame: frame,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
-        }
-
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IClothingAbstractInternal item,
-            MutagenFrame frame,
-            RecordType nextRecordType,
-            int contentLength,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask,
-            RecordTypeConverter recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x4C4C5546: // FULL
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String NameParse))
-                    {
-                        item.Name = NameParse;
-                    }
-                    else
-                    {
-                        item.Name = default(String);
-                    }
-                    return TryGet<int?>.Succeed((int)ClothingAbstract_FieldIndex.Name);
-                }
-                case 0x49524353: // SCRI
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
-                        frame: frame.SpawnWithLength(contentLength),
-                        masterReferences: masterReferences,
-                        item: item.Script_Property);
-                    return TryGet<int?>.Succeed((int)ClothingAbstract_FieldIndex.Script);
-                }
-                case 0x4D414E45: // ENAM
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
-                        frame: frame.SpawnWithLength(contentLength),
-                        masterReferences: masterReferences,
-                        item: item.Enchantment_Property);
-                    return TryGet<int?>.Succeed((int)ClothingAbstract_FieldIndex.Enchantment);
-                }
-                case 0x4D414E41: // ANAM
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.EnchantmentPoints = frame.ReadUInt16();
-                    return TryGet<int?>.Succeed((int)ClothingAbstract_FieldIndex.EnchantmentPoints);
-                }
-                case 0x54444D42: // BMDT
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    var dataFrame = frame.SpawnWithLength(contentLength);
-                    if (!dataFrame.Complete)
-                    {
-                        item.BMDTDataTypeState = BMDTDataType.Has;
-                    }
-                    if (EnumBinaryTranslation<BipedFlag>.Instance.Parse(
-                        frame: dataFrame.SpawnWithLength(2),
-                        item: out BipedFlag BipedFlagsParse))
-                    {
-                        item.BipedFlags = BipedFlagsParse;
-                    }
-                    else
-                    {
-                        item.BipedFlags = default(BipedFlag);
-                    }
-                    if (EnumBinaryTranslation<EquipmentFlag>.Instance.Parse(
-                        frame: dataFrame.SpawnWithLength(2),
-                        item: out EquipmentFlag FlagsParse))
-                    {
-                        item.Flags = FlagsParse;
-                    }
-                    else
-                    {
-                        item.Flags = default(EquipmentFlag);
-                    }
-                    return TryGet<int?>.Succeed((int)ClothingAbstract_FieldIndex.Flags);
-                }
-                case 0x4C444F4D: // MODL
-                {
-                    try
-                    {
-                        errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.MaleBipedModel);
-                        item.MaleBipedModel = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null,
-                            masterReferences: masterReferences,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    return TryGet<int?>.Succeed((int)ClothingAbstract_FieldIndex.MaleBipedModel);
-                }
-                case 0x32444F4D: // MOD2
-                {
-                    try
-                    {
-                        errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.MaleWorldModel);
-                        item.MaleWorldModel = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
-                            frame: frame,
-                            recordTypeConverter: ClothingAbstract_Registration.MaleWorldModelConverter,
-                            masterReferences: masterReferences,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    return TryGet<int?>.Succeed((int)ClothingAbstract_FieldIndex.MaleWorldModel);
-                }
-                case 0x4E4F4349: // ICON
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String MaleIconParse))
-                    {
-                        item.MaleIcon = MaleIconParse;
-                    }
-                    else
-                    {
-                        item.MaleIcon = default(String);
-                    }
-                    return TryGet<int?>.Succeed((int)ClothingAbstract_FieldIndex.MaleIcon);
-                }
-                case 0x33444F4D: // MOD3
-                {
-                    try
-                    {
-                        errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.FemaleBipedModel);
-                        item.FemaleBipedModel = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
-                            frame: frame,
-                            recordTypeConverter: ClothingAbstract_Registration.FemaleBipedModelConverter,
-                            masterReferences: masterReferences,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    return TryGet<int?>.Succeed((int)ClothingAbstract_FieldIndex.FemaleBipedModel);
-                }
-                case 0x34444F4D: // MOD4
-                {
-                    try
-                    {
-                        errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.FemaleWorldModel);
-                        item.FemaleWorldModel = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
-                            frame: frame,
-                            recordTypeConverter: ClothingAbstract_Registration.FemaleWorldModelConverter,
-                            masterReferences: masterReferences,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    return TryGet<int?>.Succeed((int)ClothingAbstract_FieldIndex.FemaleWorldModel);
-                }
-                case 0x324F4349: // ICO2
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String FemaleIconParse))
-                    {
-                        item.FemaleIcon = FemaleIconParse;
-                    }
-                    else
-                    {
-                        item.FemaleIcon = default(String);
-                    }
-                    return TryGet<int?>.Succeed((int)ClothingAbstract_FieldIndex.FemaleIcon);
-                }
-                default:
-                    return ItemAbstract.FillBinaryRecordTypes(
-                        item: item,
-                        frame: frame,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength,
-                        recordTypeConverter: recordTypeConverter,
-                        masterReferences: masterReferences,
-                        errorMask: errorMask);
-            }
-        }
-
         #endregion
 
         void IClearable.Clear()
@@ -1073,8 +828,8 @@ namespace Mutagen.Bethesda.Oblivion
             ClothingAbstract def = null,
             bool doMasks = true)
         {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            ClothingAbstractSetterCopyCommon.CopyFieldsFrom(
+            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((ClothingAbstractSetterCopyCommon)((IClothingAbstractGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -1090,13 +845,205 @@ namespace Mutagen.Bethesda.Oblivion
             ClothingAbstract_CopyMask copyMask = null,
             ClothingAbstract def = null)
         {
-            ClothingAbstractSetterCopyCommon.CopyFieldsFrom(
+            ((ClothingAbstractSetterCopyCommon)((IClothingAbstractGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
+
+        #region Xml Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this IClothingAbstractInternal item,
+            XElement node,
+            MissingCreate missing = MissingCreate.New,
+            ClothingAbstract_TranslationMask translationMask = null)
+        {
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: null,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this IClothingAbstractInternal item,
+            XElement node,
+            out ClothingAbstract_ErrorMask errorMask,
+            bool doMasks = true,
+            ClothingAbstract_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask.GetCrystal());
+            errorMask = ClothingAbstract_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public new static void CopyInFromXml(
+            this IClothingAbstractInternal item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ((ClothingAbstractSetterCommon)((IClothingAbstractGetter)item).CommonSetterInstance()).CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        public static void CopyInFromXml(
+            this IClothingAbstractInternal item,
+            string path,
+            MissingCreate missing = MissingCreate.New,
+            ClothingAbstract_TranslationMask translationMask = null)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IClothingAbstractInternal item,
+            string path,
+            out ClothingAbstract_ErrorMask errorMask,
+            ClothingAbstract_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IClothingAbstractInternal item,
+            string path,
+            ErrorMaskBuilder errorMask,
+            ClothingAbstract_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        public static void CopyInFromXml(
+            this IClothingAbstractInternal item,
+            Stream stream,
+            MissingCreate missing = MissingCreate.New,
+            ClothingAbstract_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IClothingAbstractInternal item,
+            Stream stream,
+            out ClothingAbstract_ErrorMask errorMask,
+            ClothingAbstract_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IClothingAbstractInternal item,
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            ClothingAbstract_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        #endregion
+
+        #region Binary Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this IClothingAbstractInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences)
+        {
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: null);
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this IClothingAbstractInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            out ClothingAbstract_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: errorMaskBuilder);
+            errorMask = ClothingAbstract_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public new static void CopyInFromBinary(
+            this IClothingAbstractInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((ClothingAbstractSetterCommon)((IClothingAbstractGetter)item).CommonSetterInstance()).CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+        #endregion
 
     }
     #endregion
@@ -1534,6 +1481,304 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Clear(item: (IClothingAbstractInternal)item);
         }
+        
+        #region Xml Translation
+        protected static void FillPrivateElementXml(
+            IClothingAbstractInternal item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "HasBMDTDataType":
+                    item.BMDTDataTypeState |= ClothingAbstract.BMDTDataType.Has;
+                    break;
+                default:
+                    ItemAbstractSetterCommon.FillPrivateElementXml(
+                        item: item,
+                        node: node,
+                        name: name,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    break;
+            }
+        }
+        
+        public new void CopyInFromXml(
+            IClothingAbstractInternal item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    FillPrivateElementXml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    ClothingAbstractXmlCreateTranslation.FillPublicElementXml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+        
+        #endregion
+        
+        #region Binary Translation
+        public override RecordType RecordType => throw new ArgumentException();
+        protected static void FillBinaryStructs(
+            IClothingAbstractInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            ItemAbstractSetterCommon.FillBinaryStructs(
+                item: item,
+                frame: frame,
+                masterReferences: masterReferences,
+                errorMask: errorMask);
+        }
+        
+        protected static TryGet<int?> FillBinaryRecordTypes(
+            IClothingAbstractInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x4C4C5546: // FULL
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String NameParse))
+                    {
+                        item.Name = NameParse;
+                    }
+                    else
+                    {
+                        item.Name = default(String);
+                    }
+                    return TryGet<int?>.Succeed((int)ClothingAbstract_FieldIndex.Name);
+                }
+                case 0x49524353: // SCRI
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
+                        frame: frame.SpawnWithLength(contentLength),
+                        masterReferences: masterReferences,
+                        item: item.Script_Property);
+                    return TryGet<int?>.Succeed((int)ClothingAbstract_FieldIndex.Script);
+                }
+                case 0x4D414E45: // ENAM
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
+                        frame: frame.SpawnWithLength(contentLength),
+                        masterReferences: masterReferences,
+                        item: item.Enchantment_Property);
+                    return TryGet<int?>.Succeed((int)ClothingAbstract_FieldIndex.Enchantment);
+                }
+                case 0x4D414E41: // ANAM
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    item.EnchantmentPoints = frame.ReadUInt16();
+                    return TryGet<int?>.Succeed((int)ClothingAbstract_FieldIndex.EnchantmentPoints);
+                }
+                case 0x54444D42: // BMDT
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (!dataFrame.Complete)
+                    {
+                        item.BMDTDataTypeState = ClothingAbstract.BMDTDataType.Has;
+                    }
+                    if (EnumBinaryTranslation<BipedFlag>.Instance.Parse(
+                        frame: dataFrame.SpawnWithLength(2),
+                        item: out BipedFlag BipedFlagsParse))
+                    {
+                        item.BipedFlags = BipedFlagsParse;
+                    }
+                    else
+                    {
+                        item.BipedFlags = default(BipedFlag);
+                    }
+                    if (EnumBinaryTranslation<EquipmentFlag>.Instance.Parse(
+                        frame: dataFrame.SpawnWithLength(2),
+                        item: out EquipmentFlag FlagsParse))
+                    {
+                        item.Flags = FlagsParse;
+                    }
+                    else
+                    {
+                        item.Flags = default(EquipmentFlag);
+                    }
+                    return TryGet<int?>.Succeed((int)ClothingAbstract_FieldIndex.Flags);
+                }
+                case 0x4C444F4D: // MODL
+                {
+                    try
+                    {
+                        errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.MaleBipedModel);
+                        item.MaleBipedModel = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null,
+                            masterReferences: masterReferences,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    return TryGet<int?>.Succeed((int)ClothingAbstract_FieldIndex.MaleBipedModel);
+                }
+                case 0x32444F4D: // MOD2
+                {
+                    try
+                    {
+                        errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.MaleWorldModel);
+                        item.MaleWorldModel = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
+                            frame: frame,
+                            recordTypeConverter: ClothingAbstract_Registration.MaleWorldModelConverter,
+                            masterReferences: masterReferences,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    return TryGet<int?>.Succeed((int)ClothingAbstract_FieldIndex.MaleWorldModel);
+                }
+                case 0x4E4F4349: // ICON
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String MaleIconParse))
+                    {
+                        item.MaleIcon = MaleIconParse;
+                    }
+                    else
+                    {
+                        item.MaleIcon = default(String);
+                    }
+                    return TryGet<int?>.Succeed((int)ClothingAbstract_FieldIndex.MaleIcon);
+                }
+                case 0x33444F4D: // MOD3
+                {
+                    try
+                    {
+                        errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.FemaleBipedModel);
+                        item.FemaleBipedModel = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
+                            frame: frame,
+                            recordTypeConverter: ClothingAbstract_Registration.FemaleBipedModelConverter,
+                            masterReferences: masterReferences,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    return TryGet<int?>.Succeed((int)ClothingAbstract_FieldIndex.FemaleBipedModel);
+                }
+                case 0x34444F4D: // MOD4
+                {
+                    try
+                    {
+                        errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.FemaleWorldModel);
+                        item.FemaleWorldModel = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
+                            frame: frame,
+                            recordTypeConverter: ClothingAbstract_Registration.FemaleWorldModelConverter,
+                            masterReferences: masterReferences,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    return TryGet<int?>.Succeed((int)ClothingAbstract_FieldIndex.FemaleWorldModel);
+                }
+                case 0x324F4349: // ICO2
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String FemaleIconParse))
+                    {
+                        item.FemaleIcon = FemaleIconParse;
+                    }
+                    else
+                    {
+                        item.FemaleIcon = default(String);
+                    }
+                    return TryGet<int?>.Succeed((int)ClothingAbstract_FieldIndex.FemaleIcon);
+                }
+                default:
+                    return ItemAbstractSetterCommon.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter,
+                        masterReferences: masterReferences,
+                        errorMask: errorMask);
+            }
+        }
+        
+        public new void CopyInFromBinary(
+            IClothingAbstractInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+        }
+        
+        #endregion
         
     }
     public partial class ClothingAbstractCommon : ItemAbstractCommon
@@ -1978,14 +2223,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public new static readonly ClothingAbstractSetterCopyCommon Instance = new ClothingAbstractSetterCopyCommon();
 
         #region Copy Fields From
-        public static void CopyFieldsFrom(
+        public void CopyFieldsFrom(
             ClothingAbstract item,
             ClothingAbstract rhs,
             ClothingAbstract def,
             ErrorMaskBuilder errorMask,
             ClothingAbstract_CopyMask copyMask)
         {
-            ItemAbstractSetterCopyCommon.CopyFieldsFrom(
+            ((ItemAbstractSetterCopyCommon)((IItemAbstractGetter)item).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -2119,7 +2364,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             case CopyOption.Reference:
                                 throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
-                                ModelSetterCopyCommon.CopyFieldsFrom(
+                                ((ModelSetterCopyCommon)((IModelGetter)item.MaleBipedModel).CommonSetterCopyInstance()).CopyFieldsFrom(
                                     item: item.MaleBipedModel,
                                     rhs: rhs.MaleBipedModel,
                                     def: def?.MaleBipedModel,
@@ -2170,7 +2415,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             case CopyOption.Reference:
                                 throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
-                                ModelSetterCopyCommon.CopyFieldsFrom(
+                                ((ModelSetterCopyCommon)((IModelGetter)item.MaleWorldModel).CommonSetterCopyInstance()).CopyFieldsFrom(
                                     item: item.MaleWorldModel,
                                     rhs: rhs.MaleWorldModel,
                                     def: def?.MaleWorldModel,
@@ -2251,7 +2496,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             case CopyOption.Reference:
                                 throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
-                                ModelSetterCopyCommon.CopyFieldsFrom(
+                                ((ModelSetterCopyCommon)((IModelGetter)item.FemaleBipedModel).CommonSetterCopyInstance()).CopyFieldsFrom(
                                     item: item.FemaleBipedModel,
                                     rhs: rhs.FemaleBipedModel,
                                     def: def?.FemaleBipedModel,
@@ -2302,7 +2547,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             case CopyOption.Reference:
                                 throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
                             case CopyOption.CopyIn:
-                                ModelSetterCopyCommon.CopyFieldsFrom(
+                                ((ModelSetterCopyCommon)((IModelGetter)item.FemaleWorldModel).CommonSetterCopyInstance()).CopyFieldsFrom(
                                     item: item.FemaleWorldModel,
                                     rhs: rhs.FemaleWorldModel,
                                     def: def?.FemaleWorldModel,
@@ -3639,47 +3884,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool MaleIcon;
         public MaskItem<CopyOption, Model_CopyMask> FemaleBipedModel;
         public MaskItem<CopyOption, Model_CopyMask> FemaleWorldModel;
-        public bool FemaleIcon;
-        public bool BMDTDataTypeState;
-        #endregion
-
-    }
-
-    public class ClothingAbstract_DeepCopyMask : ItemAbstract_DeepCopyMask
-    {
-        public ClothingAbstract_DeepCopyMask()
-        {
-        }
-
-        public ClothingAbstract_DeepCopyMask(bool defaultOn)
-        {
-            this.Name = defaultOn;
-            this.Script = defaultOn;
-            this.Enchantment = defaultOn;
-            this.EnchantmentPoints = defaultOn;
-            this.BipedFlags = defaultOn;
-            this.Flags = defaultOn;
-            this.MaleBipedModel = new MaskItem<bool, Model_DeepCopyMask>(defaultOn, default);
-            this.MaleWorldModel = new MaskItem<bool, Model_DeepCopyMask>(defaultOn, default);
-            this.MaleIcon = defaultOn;
-            this.FemaleBipedModel = new MaskItem<bool, Model_DeepCopyMask>(defaultOn, default);
-            this.FemaleWorldModel = new MaskItem<bool, Model_DeepCopyMask>(defaultOn, default);
-            this.FemaleIcon = defaultOn;
-            this.BMDTDataTypeState = defaultOn;
-        }
-
-        #region Members
-        public bool Name;
-        public bool Script;
-        public bool Enchantment;
-        public bool EnchantmentPoints;
-        public bool BipedFlags;
-        public bool Flags;
-        public MaskItem<bool, Model_DeepCopyMask> MaleBipedModel;
-        public MaskItem<bool, Model_DeepCopyMask> MaleWorldModel;
-        public bool MaleIcon;
-        public MaskItem<bool, Model_DeepCopyMask> FemaleBipedModel;
-        public MaskItem<bool, Model_DeepCopyMask> FemaleWorldModel;
         public bool FemaleIcon;
         public bool BMDTDataTypeState;
         #endregion

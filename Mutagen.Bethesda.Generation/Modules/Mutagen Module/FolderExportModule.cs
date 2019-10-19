@@ -96,14 +96,14 @@ namespace Mutagen.Bethesda.Generation
             }
             using (new BraceWrapper(fg))
             {
-                fg.AppendLine($"var ret = new {obj.Name}(modKey);");
+                fg.AppendLine($"var item = new {obj.Name}(modKey);");
                 fg.AppendLine($"var tasks = new List<Task>();");
                 foreach (var field in obj.IterateFields())
                 {
                     if (field.GetFieldData().CustomFolder)
                     {
                         using (var args = new ArgsWrapper(fg,
-                            $"tasks.Add(Task.Run(() => ret.CreateFromXmlFolder{field.Name}",
+                            $"tasks.Add(Task.Run(() => item.CreateFromXmlFolder{field.Name}",
                             suffixLine: "))"))
                         {
                             args.Add("dir: dir");
@@ -121,7 +121,7 @@ namespace Mutagen.Bethesda.Generation
                     {
                         case ObjectType.Record:
                             using (var args = new ArgsWrapper(fg,
-                                $"ret.{field.Name}.CopyFieldsFrom({loqui.TypeName(getter: false)}.CreateFromXml",
+                                $"item.{field.Name}.CopyFieldsFrom({loqui.TypeName(getter: false)}.CreateFromXml",
                                 suffixLine: ");")
                             {
                                 SemiColon = false
@@ -135,7 +135,7 @@ namespace Mutagen.Bethesda.Generation
                         case ObjectType.Group:
                             if (!loqui.TryGetSpecificationAsObject("T", out var subObj)) continue;
                             using (var args = new ArgsWrapper(fg,
-                                $"tasks.Add(Task.Run(() => ret.{field.Name}.CreateFromXmlFolder<{subObj.Name}>",
+                                $"tasks.Add(Task.Run(() => item.{field.Name}.CreateFromXmlFolder<{subObj.Name}>",
                                 suffixLine: "))"))
                             {
                                 args.Add($"dir: dir");
@@ -149,8 +149,8 @@ namespace Mutagen.Bethesda.Generation
                     }
                 }
                 fg.AppendLine("await Task.WhenAll(tasks);");
-                BinaryTranslationModule.GenerateModLinking(obj, fg);
-                fg.AppendLine("return ret;");
+                BinaryTranslationModule.GenerateModLinking(obj, fg, "item");
+                fg.AppendLine("return item;");
             }
             fg.AppendLine();
 

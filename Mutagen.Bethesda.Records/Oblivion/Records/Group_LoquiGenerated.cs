@@ -172,23 +172,12 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
             }
             var ret = new Group<T>();
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    GroupXmlCreateTranslation<T>.FillPublicElementXml(
-                        item: ret,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
+            ((GroupSetterCommon<T>)((IGroupGetter<T>)ret).CommonSetterInstance()).CopyInFromXml(
+                item: ret,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             return ret;
         }
 
@@ -378,79 +367,16 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new Group<T>();
-            await UtilityAsyncTranslation.GroupParse(
-                record: ret,
-                frame: frame,
+            await ((GroupSetterCommon<T>)((IGroupGetter<T>)ret).CommonSetterInstance()).CopyInFromBinary(
+                item: ret,
                 masterReferences: masterReferences,
-                errorMask: errorMask,
+                frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes).ConfigureAwait(false);
+                errorMask: errorMask);
             return ret;
         }
 
         #endregion
-
-        protected static void FillBinaryStructs(
-            IGroup<T> item,
-            MutagenFrame frame,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            GroupBinaryCreateTranslation<T>.FillBinaryContainedRecordTypeParseCustomPublic(
-                frame: frame,
-                item: item,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
-            if (EnumBinaryTranslation<GroupTypeEnum>.Instance.Parse(
-                frame: frame.SpawnWithLength(4),
-                item: out GroupTypeEnum GroupTypeParse))
-            {
-                item.GroupType = GroupTypeParse;
-            }
-            else
-            {
-                item.GroupType = default(GroupTypeEnum);
-            }
-            item.LastModified = frame.ReadInt32();
-        }
-
-        protected static async Task<TryGet<int?>> FillBinaryRecordTypes(
-            IGroup<T> item,
-            MutagenFrame frame,
-            RecordType nextRecordType,
-            int contentLength,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask,
-            RecordTypeConverter recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                default:
-                    if (nextRecordType.Equals(T_RecordType))
-                    {
-                        await Mutagen.Bethesda.Binary.ListAsyncBinaryTranslation<T>.Instance.ParseRepeatedItem(
-                            frame: frame,
-                            triggeringRecord: T_RecordType,
-                            item: item.Items,
-                            fieldIndex: (int)Group_FieldIndex.Items,
-                            lengthLength: 4,
-                            errorMask: errorMask,
-                            transl: (MutagenFrame r, ErrorMaskBuilder dictSubMask) =>
-                            {
-                                return LoquiBinaryAsyncTranslation<T>.Instance.Parse(
-                                    frame: r,
-                                    errorMask: dictSubMask,
-                                    masterReferences: masterReferences);
-                            }).ConfigureAwait(false);
-                        return TryGet<int?>.Failure;
-                    }
-                    errorMask?.ReportWarning($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
-                    frame.Position += contentLength + frame.MetaData.MajorConstants.HeaderLength;
-                    return TryGet<int?>.Succeed(null);
-            }
-        }
 
         #endregion
 
@@ -627,8 +553,8 @@ namespace Mutagen.Bethesda.Oblivion
             where T_ErrMask : OblivionMajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
             where T_CopyMask : OblivionMajorRecord_CopyMask, new()
         {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            GroupSetterCopyCommon.CopyFieldsFrom(
+            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((GroupSetterCopyCommon)((IGroupGetter<T>)lhs).CommonSetterCopyInstance<T_CopyMask>()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -646,13 +572,178 @@ namespace Mutagen.Bethesda.Oblivion
             where T : IOblivionMajorRecordInternal, IXmlItem, IBinaryItem
             where T_CopyMask : OblivionMajorRecord_CopyMask, new()
         {
-            GroupSetterCopyCommon.CopyFieldsFrom(
+            ((GroupSetterCopyCommon)((IGroupGetter<T>)lhs).CommonSetterCopyInstance<T_CopyMask>()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
+
+        #region Xml Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromXml<T, T_TranslMask>(
+            this IGroup<T> item,
+            XElement node,
+            MissingCreate missing = MissingCreate.New,
+            Group_TranslationMask<T_TranslMask> translationMask = null)
+            where T : OblivionMajorRecord, IXmlItem, IBinaryItem
+            where T_TranslMask : OblivionMajorRecord_TranslationMask, ITranslationMask, new()
+        {
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: null,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromXml<T, T_ErrMask, T_TranslMask>(
+            this IGroup<T> item,
+            XElement node,
+            out Group_ErrorMask<T_ErrMask> errorMask,
+            bool doMasks = true,
+            Group_TranslationMask<T_TranslMask> translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+            where T : OblivionMajorRecord, IXmlItem, IBinaryItem
+            where T_ErrMask : OblivionMajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
+            where T_TranslMask : OblivionMajorRecord_TranslationMask, ITranslationMask, new()
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask.GetCrystal());
+            errorMask = Group_ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyInFromXml<T>(
+            this IGroup<T> item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+            where T : IOblivionMajorRecordInternal, IXmlItem, IBinaryItem
+        {
+            ((GroupSetterCommon<T>)((IGroupGetter<T>)item).CommonSetterInstance()).CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        public static void CopyInFromXml<T, T_TranslMask>(
+            this IGroup<T> item,
+            string path,
+            MissingCreate missing = MissingCreate.New,
+            Group_TranslationMask<T_TranslMask> translationMask = null)
+            where T : OblivionMajorRecord, IXmlItem, IBinaryItem
+            where T_TranslMask : OblivionMajorRecord_TranslationMask, ITranslationMask, new()
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml<T, T_ErrMask, T_TranslMask>(
+            this IGroup<T> item,
+            string path,
+            out Group_ErrorMask<T_ErrMask> errorMask,
+            Group_TranslationMask<T_TranslMask> translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+            where T : OblivionMajorRecord, IXmlItem, IBinaryItem
+            where T_ErrMask : OblivionMajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
+            where T_TranslMask : OblivionMajorRecord_TranslationMask, ITranslationMask, new()
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml<T, T_ErrMask, T_TranslMask>(
+            this IGroup<T> item,
+            string path,
+            ErrorMaskBuilder errorMask,
+            Group_TranslationMask<T_TranslMask> translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+            where T : OblivionMajorRecord, IXmlItem, IBinaryItem
+            where T_ErrMask : OblivionMajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
+            where T_TranslMask : OblivionMajorRecord_TranslationMask, ITranslationMask, new()
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        public static void CopyInFromXml<T, T_TranslMask>(
+            this IGroup<T> item,
+            Stream stream,
+            MissingCreate missing = MissingCreate.New,
+            Group_TranslationMask<T_TranslMask> translationMask = null)
+            where T : OblivionMajorRecord, IXmlItem, IBinaryItem
+            where T_TranslMask : OblivionMajorRecord_TranslationMask, ITranslationMask, new()
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml<T, T_ErrMask, T_TranslMask>(
+            this IGroup<T> item,
+            Stream stream,
+            out Group_ErrorMask<T_ErrMask> errorMask,
+            Group_TranslationMask<T_TranslMask> translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+            where T : OblivionMajorRecord, IXmlItem, IBinaryItem
+            where T_ErrMask : OblivionMajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
+            where T_TranslMask : OblivionMajorRecord_TranslationMask, ITranslationMask, new()
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml<T, T_ErrMask, T_TranslMask>(
+            this IGroup<T> item,
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            Group_TranslationMask<T_TranslMask> translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+            where T : OblivionMajorRecord, IXmlItem, IBinaryItem
+            where T_ErrMask : OblivionMajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
+            where T_TranslMask : OblivionMajorRecord_TranslationMask, ITranslationMask, new()
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        #endregion
 
         #region Mutagen
         public static IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords<T>(this IGroupGetter<T> obj)
@@ -667,6 +758,58 @@ namespace Mutagen.Bethesda.Oblivion
             return ((GroupSetterCommon<T>)((IGroupGetter<T>)obj).CommonSetterInstance()).EnumerateMajorRecords(obj: obj);
         }
 
+        #endregion
+
+        #region Binary Translation
+        [DebuggerStepThrough]
+        public static async Task CopyInFromBinary<T>(
+            this IGroup<T> item,
+            MutagenFrame frame,
+            MasterReferences masterReferences)
+            where T : OblivionMajorRecord, IXmlItem, IBinaryItem
+        {
+            await CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: null).ConfigureAwait(false);
+        }
+
+        [DebuggerStepThrough]
+        public static async Task<Group_ErrorMask<T_ErrMask>> CopyInFromBinaryWithErrorMask<T, T_ErrMask>(
+            this IGroup<T> item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            bool doMasks = true)
+            where T : OblivionMajorRecord, IXmlItem, IBinaryItem
+            where T_ErrMask : OblivionMajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            await CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: errorMaskBuilder).ConfigureAwait(false);
+            return Group_ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
+        }
+
+        public static async Task CopyInFromBinary<T>(
+            this IGroup<T> item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+            where T : IOblivionMajorRecordInternal, IXmlItem, IBinaryItem
+        {
+            await ((GroupSetterCommon<T>)((IGroupGetter<T>)item).CommonSetterInstance()).CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
         #endregion
 
     }
@@ -906,6 +1049,35 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Items.Clear();
         }
         
+        #region Xml Translation
+        public void CopyInFromXml(
+            IGroup<T> item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    GroupXmlCreateTranslation<T>.FillPublicElementXml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+        
+        #endregion
+        
         #region Mutagen
         public IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(IGroup<T> obj)
         {
@@ -918,6 +1090,87 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
         }
+        #endregion
+        
+        #region Binary Translation
+        protected static void FillBinaryStructs(
+            IGroup<T> item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            GroupBinaryCreateTranslation<T>.FillBinaryContainedRecordTypeParseCustomPublic(
+                frame: frame,
+                item: item,
+                masterReferences: masterReferences,
+                errorMask: errorMask);
+            if (EnumBinaryTranslation<GroupTypeEnum>.Instance.Parse(
+                frame: frame.SpawnWithLength(4),
+                item: out GroupTypeEnum GroupTypeParse))
+            {
+                item.GroupType = GroupTypeParse;
+            }
+            else
+            {
+                item.GroupType = default(GroupTypeEnum);
+            }
+            item.LastModified = frame.ReadInt32();
+        }
+        
+        protected static async Task<TryGet<int?>> FillBinaryRecordTypes(
+            IGroup<T> item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                default:
+                    if (nextRecordType.Equals(Group<T>.T_RecordType))
+                    {
+                        await Mutagen.Bethesda.Binary.ListAsyncBinaryTranslation<T>.Instance.ParseRepeatedItem(
+                            frame: frame,
+                            triggeringRecord: Group<T>.T_RecordType,
+                            item: item.Items,
+                            fieldIndex: (int)Group_FieldIndex.Items,
+                            lengthLength: 4,
+                            errorMask: errorMask,
+                            transl: (MutagenFrame r, ErrorMaskBuilder dictSubMask) =>
+                            {
+                                return LoquiBinaryAsyncTranslation<T>.Instance.Parse(
+                                    frame: r,
+                                    errorMask: dictSubMask,
+                                    masterReferences: masterReferences);
+                            }).ConfigureAwait(false);
+                        return TryGet<int?>.Failure;
+                    }
+                    errorMask?.ReportWarning($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
+                    frame.Position += contentLength + frame.MetaData.MajorConstants.HeaderLength;
+                    return TryGet<int?>.Succeed(null);
+            }
+        }
+        
+        public async Task CopyInFromBinary(
+            IGroup<T> item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            await UtilityAsyncTranslation.GroupParse(
+                record: item,
+                frame: frame,
+                masterReferences: masterReferences,
+                errorMask: errorMask,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: FillBinaryStructs,
+                fillTyped: FillBinaryRecordTypes).ConfigureAwait(false);
+        }
+        
         #endregion
         
     }
@@ -1089,7 +1342,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly GroupSetterCopyCommon Instance = new GroupSetterCopyCommon();
 
         #region Copy Fields From
-        public static void CopyFieldsFrom<T, T_CopyMask>(
+        public void CopyFieldsFrom<T, T_CopyMask>(
             Group<T> item,
             Group<T> rhs,
             Group<T> def,
@@ -1963,28 +2216,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool GroupType;
         public bool LastModified;
         public MaskItem<CopyOption, T_CopyMask> Items;
-        #endregion
-
-    }
-
-    public class Group_DeepCopyMask<T_DeepCopyMask>
-        where T_DeepCopyMask : OblivionMajorRecord_DeepCopyMask, new()
-    {
-        public Group_DeepCopyMask()
-        {
-        }
-
-        public Group_DeepCopyMask(bool defaultOn)
-        {
-            this.GroupType = defaultOn;
-            this.LastModified = defaultOn;
-            this.Items = new MaskItem<bool, T_DeepCopyMask>(defaultOn, default);
-        }
-
-        #region Members
-        public bool GroupType;
-        public bool LastModified;
-        public MaskItem<bool, T_DeepCopyMask> Items;
         #endregion
 
     }

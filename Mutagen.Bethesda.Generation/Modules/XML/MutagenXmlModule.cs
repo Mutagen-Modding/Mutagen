@@ -14,7 +14,6 @@ namespace Mutagen.Bethesda.Generation
         public MutagenXmlModule(LoquiGenerator gen)
             : base(gen)
         {
-            this.ShouldGenerateCopyIn = false;
         }
 
         public override void GenerateWriteToNode(ObjectGeneration obj, FileGeneration fg)
@@ -177,14 +176,14 @@ namespace Mutagen.Bethesda.Generation
                 if (!(field is DataType set)) continue;
                 for (int i = 0; i < set.BreakIndices.Count; i++)
                 {
-                    fg.AppendLine($"ret.{set.StateName} |= {obj.Name}.{set.EnumName}.Break{i};");
+                    fg.AppendLine($"item.{set.StateName} |= {obj.Name}.{set.EnumName}.Break{i};");
                 }
             }
         }
 
         protected override async Task PostCreateLoop(ObjectGeneration obj, FileGeneration fg)
         {
-            BinaryTranslationModule.GenerateModLinking(obj, fg);
+            BinaryTranslationModule.GenerateModLinking(obj, fg, "item");
         }
 
         protected override void FillPrivateElement(ObjectGeneration obj, FileGeneration fg)
@@ -194,7 +193,7 @@ namespace Mutagen.Bethesda.Generation
                 using (var args = new FunctionWrapper(fg,
                     $"protected static void FillPrivateElement{ModuleNickname}"))
                 {
-                    args.Add($"{obj.ObjectName} item");
+                    args.Add($"{obj.Interface(getter: false, internalInterface: true)} item");
                     args.Add($"XElement {XmlTranslationModule.XElementLine.GetParameterName(obj)}");
                     args.Add("string name");
                     args.Add($"ErrorMaskBuilder errorMask");
@@ -278,7 +277,7 @@ namespace Mutagen.Bethesda.Generation
                             if (obj.HasLoquiBaseObject)
                             {
                                 using (var args = new ArgsWrapper(fg,
-                                    $"{obj.BaseClassName}.FillPrivateElement{ModuleNickname}{obj.GetBaseMask_GenericTypes(MaskType.Error)}"))
+                                    $"{obj.BaseClass.CommonClass(LoquiInterfaceType.ISetter, CommonGenerics.Class, MaskType.Normal)}.FillPrivateElement{ModuleNickname}{obj.GetBaseMask_GenericTypes(MaskType.Error)}"))
                                 {
                                     args.Add("item: item");
                                     args.Add($"{XmlTranslationModule.XElementLine.GetParameterName(obj)}: {XmlTranslationModule.XElementLine.GetParameterName(obj)}");

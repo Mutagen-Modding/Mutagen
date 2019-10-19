@@ -11,8 +11,9 @@ namespace Mutagen.Bethesda.Generation
 {
     public class SpecialParseModule : GenerationModule
     {
-        public override Task GenerateInClass(ObjectGeneration obj, FileGeneration fg)
+        public override async Task GenerateInCommon(ObjectGeneration obj, FileGeneration fg, MaskTypeSet maskTypes)
         {
+            if (!maskTypes.Applicable(LoquiInterfaceType.ISetter, CommonGenerics.Class)) return;
             foreach (var field in obj.IterateFields(nonIntegrated: true, expandSets: SetMarkerType.ExpandSets.True))
             {
                 if (!(field is SpecialParseType special)) continue;
@@ -48,7 +49,7 @@ namespace Mutagen.Bethesda.Generation
                     }
                 }
             }
-            return base.GenerateInClass(obj, fg);
+            await base.GenerateInClass(obj, fg);
         }
     }
 }

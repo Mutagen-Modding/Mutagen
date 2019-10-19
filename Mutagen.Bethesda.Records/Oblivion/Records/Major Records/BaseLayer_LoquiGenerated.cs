@@ -186,29 +186,12 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
             }
             var ret = new BaseLayer();
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    FillPrivateElementXml(
-                        item: ret,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    BaseLayerXmlCreateTranslation.FillPublicElementXml(
-                        item: ret,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
+            ((BaseLayerSetterCommon)((IBaseLayerGetter)ret).CommonSetterInstance()).CopyInFromXml(
+                item: ret,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             return ret;
         }
 
@@ -293,49 +276,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #endregion
-
-        protected static void FillPrivateElementXml(
-            BaseLayer item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "HasBTXTDataType":
-                    item.BTXTDataTypeState |= BaseLayer.BTXTDataType.Has;
-                    break;
-                case "LayerNumber":
-                    try
-                    {
-                        errorMask?.PushIndex((int)BaseLayer_FieldIndex.LayerNumber);
-                        if (UInt16XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out UInt16 LayerNumberParse,
-                            errorMask: errorMask))
-                        {
-                            item.LayerNumber = LayerNumberParse;
-                        }
-                        else
-                        {
-                            item.LayerNumber = default(UInt16);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
 
         #endregion
 
@@ -428,71 +368,16 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new BaseLayer();
-            UtilityTranslation.TypelessRecordParse(
-                record: ret,
-                frame: frame,
-                setFinal: false,
+            ((BaseLayerSetterCommon)((IBaseLayerGetter)ret).CommonSetterInstance()).CopyInFromBinary(
+                item: ret,
                 masterReferences: masterReferences,
-                errorMask: errorMask,
+                frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                errorMask: errorMask);
             return ret;
         }
 
         #endregion
-
-        protected static void FillBinaryStructs(
-            IBaseLayerInternal item,
-            MutagenFrame frame,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-        }
-
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IBaseLayerInternal item,
-            MutagenFrame frame,
-            int? lastParsed,
-            RecordType nextRecordType,
-            int contentLength,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask,
-            RecordTypeConverter recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x54585442: // BTXT
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)BaseLayer_FieldIndex.LayerNumber) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    var dataFrame = frame.SpawnWithLength(contentLength);
-                    if (!dataFrame.Complete)
-                    {
-                        item.BTXTDataTypeState = BTXTDataType.Has;
-                    }
-                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
-                        frame: dataFrame,
-                        masterReferences: masterReferences,
-                        item: item.Texture_Property);
-                    if (EnumBinaryTranslation<AlphaLayer.QuadrantEnum>.Instance.Parse(
-                        frame: dataFrame.SpawnWithLength(2),
-                        item: out AlphaLayer.QuadrantEnum QuadrantParse))
-                    {
-                        item.Quadrant = QuadrantParse;
-                    }
-                    else
-                    {
-                        item.Quadrant = default(AlphaLayer.QuadrantEnum);
-                    }
-                    item.LayerNumber = dataFrame.ReadUInt16();
-                    return TryGet<int?>.Succeed((int)BaseLayer_FieldIndex.LayerNumber);
-                }
-                default:
-                    return TryGet<int?>.Failure;
-            }
-        }
 
         #endregion
 
@@ -665,8 +550,8 @@ namespace Mutagen.Bethesda.Oblivion
             BaseLayer def = null,
             bool doMasks = true)
         {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            BaseLayerSetterCopyCommon.CopyFieldsFrom(
+            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((BaseLayerSetterCopyCommon)((IBaseLayerGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -682,7 +567,7 @@ namespace Mutagen.Bethesda.Oblivion
             BaseLayer_CopyMask copyMask = null,
             BaseLayer def = null)
         {
-            BaseLayerSetterCopyCommon.CopyFieldsFrom(
+            ((BaseLayerSetterCopyCommon)((IBaseLayerGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -700,6 +585,198 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
         }
+
+        #region Xml Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this IBaseLayerInternal item,
+            XElement node,
+            MissingCreate missing = MissingCreate.New,
+            BaseLayer_TranslationMask translationMask = null)
+        {
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: null,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this IBaseLayerInternal item,
+            XElement node,
+            out BaseLayer_ErrorMask errorMask,
+            bool doMasks = true,
+            BaseLayer_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask.GetCrystal());
+            errorMask = BaseLayer_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyInFromXml(
+            this IBaseLayerInternal item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ((BaseLayerSetterCommon)((IBaseLayerGetter)item).CommonSetterInstance()).CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        public static void CopyInFromXml(
+            this IBaseLayerInternal item,
+            string path,
+            MissingCreate missing = MissingCreate.New,
+            BaseLayer_TranslationMask translationMask = null)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IBaseLayerInternal item,
+            string path,
+            out BaseLayer_ErrorMask errorMask,
+            BaseLayer_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IBaseLayerInternal item,
+            string path,
+            ErrorMaskBuilder errorMask,
+            BaseLayer_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        public static void CopyInFromXml(
+            this IBaseLayerInternal item,
+            Stream stream,
+            MissingCreate missing = MissingCreate.New,
+            BaseLayer_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IBaseLayerInternal item,
+            Stream stream,
+            out BaseLayer_ErrorMask errorMask,
+            BaseLayer_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IBaseLayerInternal item,
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            BaseLayer_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        #endregion
+
+        #region Binary Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this IBaseLayerInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences)
+        {
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: null);
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this IBaseLayerInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            out BaseLayer_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: errorMaskBuilder);
+            errorMask = BaseLayer_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyInFromBinary(
+            this IBaseLayerInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((BaseLayerSetterCommon)((IBaseLayerGetter)item).CommonSetterInstance()).CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+        #endregion
 
     }
     #endregion
@@ -971,6 +1048,157 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
         
+        #region Xml Translation
+        protected static void FillPrivateElementXml(
+            IBaseLayerInternal item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "HasBTXTDataType":
+                    item.BTXTDataTypeState |= BaseLayer.BTXTDataType.Has;
+                    break;
+                case "LayerNumber":
+                    try
+                    {
+                        errorMask?.PushIndex((int)BaseLayer_FieldIndex.LayerNumber);
+                        if (UInt16XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out UInt16 LayerNumberParse,
+                            errorMask: errorMask))
+                        {
+                            item.LayerNumber = LayerNumberParse;
+                        }
+                        else
+                        {
+                            item.LayerNumber = default(UInt16);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+        
+        public void CopyInFromXml(
+            IBaseLayerInternal item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    FillPrivateElementXml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    BaseLayerXmlCreateTranslation.FillPublicElementXml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+        
+        #endregion
+        
+        #region Binary Translation
+        protected static void FillBinaryStructs(
+            IBaseLayerInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+        }
+        
+        protected static TryGet<int?> FillBinaryRecordTypes(
+            IBaseLayerInternal item,
+            MutagenFrame frame,
+            int? lastParsed,
+            RecordType nextRecordType,
+            int contentLength,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x54585442: // BTXT
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)BaseLayer_FieldIndex.LayerNumber) return TryGet<int?>.Failure;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (!dataFrame.Complete)
+                    {
+                        item.BTXTDataTypeState = BaseLayer.BTXTDataType.Has;
+                    }
+                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
+                        frame: dataFrame,
+                        masterReferences: masterReferences,
+                        item: item.Texture_Property);
+                    if (EnumBinaryTranslation<AlphaLayer.QuadrantEnum>.Instance.Parse(
+                        frame: dataFrame.SpawnWithLength(2),
+                        item: out AlphaLayer.QuadrantEnum QuadrantParse))
+                    {
+                        item.Quadrant = QuadrantParse;
+                    }
+                    else
+                    {
+                        item.Quadrant = default(AlphaLayer.QuadrantEnum);
+                    }
+                    item.LayerNumber = dataFrame.ReadUInt16();
+                    return TryGet<int?>.Succeed((int)BaseLayer_FieldIndex.LayerNumber);
+                }
+                default:
+                    return TryGet<int?>.Failure;
+            }
+        }
+        
+        public void CopyInFromBinary(
+            IBaseLayerInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            UtilityTranslation.TypelessRecordParse(
+                record: item,
+                frame: frame,
+                setFinal: false,
+                masterReferences: masterReferences,
+                errorMask: errorMask,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: FillBinaryStructs,
+                fillTyped: FillBinaryRecordTypes);
+        }
+        
+        #endregion
+        
     }
     public partial class BaseLayerCommon
     {
@@ -1115,7 +1343,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly BaseLayerSetterCopyCommon Instance = new BaseLayerSetterCopyCommon();
 
         #region Copy Fields From
-        public static void CopyFieldsFrom(
+        public void CopyFieldsFrom(
             BaseLayer item,
             BaseLayer rhs,
             BaseLayer def,
@@ -1873,29 +2101,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public BaseLayer_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Texture = defaultOn;
-            this.Quadrant = defaultOn;
-            this.LayerNumber = defaultOn;
-            this.BTXTDataTypeState = defaultOn;
-        }
-
-        #region Members
-        public bool Texture;
-        public bool Quadrant;
-        public bool LayerNumber;
-        public bool BTXTDataTypeState;
-        #endregion
-
-    }
-
-    public class BaseLayer_DeepCopyMask
-    {
-        public BaseLayer_DeepCopyMask()
-        {
-        }
-
-        public BaseLayer_DeepCopyMask(bool defaultOn)
         {
             this.Texture = defaultOn;
             this.Quadrant = defaultOn;

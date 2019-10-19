@@ -144,20 +144,12 @@ namespace Mutagen.Bethesda.Generation
                         if (loquiGen.SingletonType == SingletonLevel.Singleton)
                         {
                             using (var args = new ArgsWrapper(fg,
-                                $"var tmp{typeGen.Name} = {Loqui.Generation.Utility.Await(this.IsAsync(typeGen, read: true))}{loquiGen.TypeName(getter: false)}.{this.Module.CreateFromPrefix}{ModNickname}"))
+                                $"{Loqui.Generation.Utility.Await(this.IsAsync(typeGen, read: true))}{itemAccessor.DirectAccess}.{this.Module.CopyInFromPrefix}{ModNickname}"))
                             {
                                 args.Add($"frame: {frameAccessor}");
                                 args.Add($"errorMask: {errorMaskAccessor}");
                                 args.Add($"recordTypeConverter: null");
                                 args.Add($"masterReferences: masterReferences");
-                            }
-                            using (var args = new ArgsWrapper(fg,
-                                $"{itemAccessor.DirectAccess}.CopyFieldsFrom{loquiGen.GetGenericTypes(getter: true, typeOverride: LoquiInterfaceType.Direct, additionalMasks: new MaskType[] { MaskType.Normal, MaskType.Copy })}"))
-                            {
-                                args.Add($"rhs: tmp{typeGen.Name}");
-                                args.Add("def: null");
-                                args.Add("copyMask: null");
-                                args.Add($"errorMask: {errorMaskAccessor}");
                             }
                         }
                         else

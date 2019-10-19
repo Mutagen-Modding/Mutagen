@@ -364,23 +364,12 @@ namespace Mutagen.Bethesda.Skyrim
                     break;
             }
             var ret = new ModHeader();
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    ModHeaderXmlCreateTranslation.FillPublicElementXml(
-                        item: ret,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
+            ((ModHeaderSetterCommon)((IModHeaderGetter)ret).CommonSetterInstance()).CopyInFromXml(
+                item: ret,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             return ret;
         }
 
@@ -583,188 +572,16 @@ namespace Mutagen.Bethesda.Skyrim
             ErrorMaskBuilder errorMask)
         {
             var ret = new ModHeader();
-            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseRecord(
-                frame.Reader,
-                recordTypeConverter.ConvertToCustom(ModHeader_Registration.TES4_HEADER)));
-            UtilityTranslation.RecordParse(
-                record: ret,
-                frame: frame,
-                setFinal: true,
+            ((ModHeaderSetterCommon)((IModHeaderGetter)ret).CommonSetterInstance()).CopyInFromBinary(
+                item: ret,
                 masterReferences: masterReferences,
-                errorMask: errorMask,
+                frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                errorMask: errorMask);
             return ret;
         }
 
         #endregion
-
-        protected static void FillBinaryStructs(
-            IModHeader item,
-            MutagenFrame frame,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            if (EnumBinaryTranslation<ModHeader.HeaderFlag>.Instance.Parse(
-                frame: frame.SpawnWithLength(4),
-                item: out ModHeader.HeaderFlag FlagsParse))
-            {
-                item.Flags = FlagsParse;
-            }
-            else
-            {
-                item.Flags = default(ModHeader.HeaderFlag);
-            }
-            item.FormID = frame.ReadUInt32();
-            item.Version = frame.ReadInt32();
-            item.FormVersion = frame.ReadUInt16();
-            item.Version2 = frame.ReadUInt16();
-        }
-
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IModHeader item,
-            MutagenFrame frame,
-            RecordType nextRecordType,
-            int contentLength,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask,
-            RecordTypeConverter recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x52444548: // HEDR
-                {
-                    try
-                    {
-                        errorMask?.PushIndex((int)ModHeader_FieldIndex.Stats);
-                        item.Stats = Mutagen.Bethesda.Skyrim.ModStats.CreateFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null,
-                            masterReferences: masterReferences,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Stats);
-                }
-                case 0x5453464F: // OFST
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out Byte[] TypeOffsetsParse))
-                    {
-                        item.TypeOffsets = TypeOffsetsParse;
-                    }
-                    else
-                    {
-                        item.TypeOffsets = default(Byte[]);
-                    }
-                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.TypeOffsets);
-                }
-                case 0x454C4544: // DELE
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out Byte[] DeletedParse))
-                    {
-                        item.Deleted = DeletedParse;
-                    }
-                    else
-                    {
-                        item.Deleted = default(Byte[]);
-                    }
-                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Deleted);
-                }
-                case 0x4D414E43: // CNAM
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String AuthorParse))
-                    {
-                        item.Author = AuthorParse;
-                    }
-                    else
-                    {
-                        item.Author = default(String);
-                    }
-                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Author);
-                }
-                case 0x4D414E53: // SNAM
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String DescriptionParse))
-                    {
-                        item.Description = DescriptionParse;
-                    }
-                    else
-                    {
-                        item.Description = default(String);
-                    }
-                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Description);
-                }
-                case 0x5453414D: // MAST
-                {
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<MasterReference>.Instance.ParseRepeatedItem(
-                        frame: frame,
-                        triggeringRecord: ModHeader_Registration.MAST_HEADER,
-                        item: item.MasterReferences,
-                        fieldIndex: (int)ModHeader_FieldIndex.MasterReferences,
-                        lengthLength: frame.MetaData.SubConstants.LengthLength,
-                        errorMask: errorMask,
-                        transl: (MutagenFrame r, out MasterReference listSubItem, ErrorMaskBuilder listErrMask) =>
-                        {
-                            return LoquiBinaryTranslation<MasterReference>.Instance.Parse(
-                                frame: r,
-                                item: out listSubItem,
-                                errorMask: listErrMask,
-                                masterReferences: masterReferences);
-                        });
-                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.MasterReferences);
-                }
-                case 0x4D414E4F: // ONAM
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDLink<SkyrimMajorRecord>>.Instance.ParseRepeatedItem(
-                        frame: frame.SpawnWithLength(contentLength),
-                        masterReferences: masterReferences,
-                        item: item.OverriddenForms,
-                        transl: FormLinkBinaryTranslation.Instance.Parse);
-                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.OverriddenForms);
-                }
-                case 0x56544E49: // INTV
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.INTV = frame.ReadInt32();
-                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.INTV);
-                }
-                case 0x43434E49: // INCC
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.INCC = frame.ReadInt32();
-                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.INCC);
-                }
-                default:
-                    errorMask?.ReportWarning($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
-                    frame.Position += contentLength + frame.MetaData.SubConstants.HeaderLength;
-                    return TryGet<int?>.Succeed(null);
-            }
-        }
 
         #endregion
 
@@ -1009,8 +826,8 @@ namespace Mutagen.Bethesda.Skyrim
             ModHeader def = null,
             bool doMasks = true)
         {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            ModHeaderSetterCopyCommon.CopyFieldsFrom(
+            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((ModHeaderSetterCopyCommon)((IModHeaderGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -1026,7 +843,7 @@ namespace Mutagen.Bethesda.Skyrim
             ModHeader_CopyMask copyMask = null,
             ModHeader def = null)
         {
-            ModHeaderSetterCopyCommon.CopyFieldsFrom(
+            ((ModHeaderSetterCopyCommon)((IModHeaderGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -1044,6 +861,198 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask,
                 def: def);
         }
+
+        #region Xml Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this IModHeader item,
+            XElement node,
+            MissingCreate missing = MissingCreate.New,
+            ModHeader_TranslationMask translationMask = null)
+        {
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: null,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this IModHeader item,
+            XElement node,
+            out ModHeader_ErrorMask errorMask,
+            bool doMasks = true,
+            ModHeader_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask.GetCrystal());
+            errorMask = ModHeader_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyInFromXml(
+            this IModHeader item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ((ModHeaderSetterCommon)((IModHeaderGetter)item).CommonSetterInstance()).CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        public static void CopyInFromXml(
+            this IModHeader item,
+            string path,
+            MissingCreate missing = MissingCreate.New,
+            ModHeader_TranslationMask translationMask = null)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IModHeader item,
+            string path,
+            out ModHeader_ErrorMask errorMask,
+            ModHeader_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IModHeader item,
+            string path,
+            ErrorMaskBuilder errorMask,
+            ModHeader_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        public static void CopyInFromXml(
+            this IModHeader item,
+            Stream stream,
+            MissingCreate missing = MissingCreate.New,
+            ModHeader_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IModHeader item,
+            Stream stream,
+            out ModHeader_ErrorMask errorMask,
+            ModHeader_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IModHeader item,
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            ModHeader_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        #endregion
+
+        #region Binary Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this IModHeader item,
+            MutagenFrame frame,
+            MasterReferences masterReferences)
+        {
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: null);
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this IModHeader item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            out ModHeader_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: errorMaskBuilder);
+            errorMask = ModHeader_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyInFromBinary(
+            this IModHeader item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((ModHeaderSetterCommon)((IModHeaderGetter)item).CommonSetterInstance()).CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+        #endregion
 
     }
     #endregion
@@ -1444,6 +1453,225 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
         
+        #region Xml Translation
+        public void CopyInFromXml(
+            IModHeader item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    ModHeaderXmlCreateTranslation.FillPublicElementXml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+        
+        #endregion
+        
+        #region Binary Translation
+        protected static void FillBinaryStructs(
+            IModHeader item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            if (EnumBinaryTranslation<ModHeader.HeaderFlag>.Instance.Parse(
+                frame: frame.SpawnWithLength(4),
+                item: out ModHeader.HeaderFlag FlagsParse))
+            {
+                item.Flags = FlagsParse;
+            }
+            else
+            {
+                item.Flags = default(ModHeader.HeaderFlag);
+            }
+            item.FormID = frame.ReadUInt32();
+            item.Version = frame.ReadInt32();
+            item.FormVersion = frame.ReadUInt16();
+            item.Version2 = frame.ReadUInt16();
+        }
+        
+        protected static TryGet<int?> FillBinaryRecordTypes(
+            IModHeader item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x52444548: // HEDR
+                {
+                    try
+                    {
+                        errorMask?.PushIndex((int)ModHeader_FieldIndex.Stats);
+                        item.Stats = Mutagen.Bethesda.Skyrim.ModStats.CreateFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null,
+                            masterReferences: masterReferences,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Stats);
+                }
+                case 0x5453464F: // OFST
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: out Byte[] TypeOffsetsParse))
+                    {
+                        item.TypeOffsets = TypeOffsetsParse;
+                    }
+                    else
+                    {
+                        item.TypeOffsets = default(Byte[]);
+                    }
+                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.TypeOffsets);
+                }
+                case 0x454C4544: // DELE
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: out Byte[] DeletedParse))
+                    {
+                        item.Deleted = DeletedParse;
+                    }
+                    else
+                    {
+                        item.Deleted = default(Byte[]);
+                    }
+                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Deleted);
+                }
+                case 0x4D414E43: // CNAM
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String AuthorParse))
+                    {
+                        item.Author = AuthorParse;
+                    }
+                    else
+                    {
+                        item.Author = default(String);
+                    }
+                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Author);
+                }
+                case 0x4D414E53: // SNAM
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String DescriptionParse))
+                    {
+                        item.Description = DescriptionParse;
+                    }
+                    else
+                    {
+                        item.Description = default(String);
+                    }
+                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Description);
+                }
+                case 0x5453414D: // MAST
+                {
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<MasterReference>.Instance.ParseRepeatedItem(
+                        frame: frame,
+                        triggeringRecord: ModHeader_Registration.MAST_HEADER,
+                        item: item.MasterReferences,
+                        fieldIndex: (int)ModHeader_FieldIndex.MasterReferences,
+                        lengthLength: frame.MetaData.SubConstants.LengthLength,
+                        errorMask: errorMask,
+                        transl: (MutagenFrame r, out MasterReference listSubItem, ErrorMaskBuilder listErrMask) =>
+                        {
+                            return LoquiBinaryTranslation<MasterReference>.Instance.Parse(
+                                frame: r,
+                                item: out listSubItem,
+                                errorMask: listErrMask,
+                                masterReferences: masterReferences);
+                        });
+                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.MasterReferences);
+                }
+                case 0x4D414E4F: // ONAM
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDLink<SkyrimMajorRecord>>.Instance.ParseRepeatedItem(
+                        frame: frame.SpawnWithLength(contentLength),
+                        masterReferences: masterReferences,
+                        item: item.OverriddenForms,
+                        transl: FormLinkBinaryTranslation.Instance.Parse);
+                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.OverriddenForms);
+                }
+                case 0x56544E49: // INTV
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    item.INTV = frame.ReadInt32();
+                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.INTV);
+                }
+                case 0x43434E49: // INCC
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    item.INCC = frame.ReadInt32();
+                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.INCC);
+                }
+                default:
+                    errorMask?.ReportWarning($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
+                    frame.Position += contentLength + frame.MetaData.SubConstants.HeaderLength;
+                    return TryGet<int?>.Succeed(null);
+            }
+        }
+        
+        public void CopyInFromBinary(
+            IModHeader item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseRecord(
+                frame.Reader,
+                recordTypeConverter.ConvertToCustom(ModHeader_Registration.TES4_HEADER)));
+            UtilityTranslation.RecordParse(
+                record: item,
+                frame: frame,
+                setFinal: true,
+                masterReferences: masterReferences,
+                errorMask: errorMask,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: FillBinaryStructs,
+                fillTyped: FillBinaryRecordTypes);
+        }
+        
+        #endregion
+        
     }
     public partial class ModHeaderCommon
     {
@@ -1758,7 +1986,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly ModHeaderSetterCopyCommon Instance = new ModHeaderSetterCopyCommon();
 
         #region Copy Fields From
-        public static void CopyFieldsFrom(
+        public void CopyFieldsFrom(
             ModHeader item,
             ModHeader rhs,
             ModHeader def,
@@ -1806,7 +2034,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             item.Stats = Utility.GetGetterInterfaceReference<ModStats>(rhs.Stats);
                             break;
                         case CopyOption.CopyIn:
-                            ModStatsSetterCopyCommon.CopyFieldsFrom(
+                            ((ModStatsSetterCopyCommon)((IModStatsGetter)item.Stats).CommonSetterCopyInstance()).CopyFieldsFrom(
                                 item: item.Stats,
                                 rhs: rhs.Stats,
                                 def: def?.Stats,
@@ -3638,49 +3866,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public bool Description;
         public MaskItem<CopyOption, MasterReference_CopyMask> MasterReferences;
         public CopyOption OverriddenForms;
-        public bool INTV;
-        public bool INCC;
-        #endregion
-
-    }
-
-    public class ModHeader_DeepCopyMask
-    {
-        public ModHeader_DeepCopyMask()
-        {
-        }
-
-        public ModHeader_DeepCopyMask(bool defaultOn)
-        {
-            this.Flags = defaultOn;
-            this.FormID = defaultOn;
-            this.Version = defaultOn;
-            this.FormVersion = defaultOn;
-            this.Version2 = defaultOn;
-            this.Stats = new MaskItem<bool, ModStats_DeepCopyMask>(defaultOn, default);
-            this.TypeOffsets = defaultOn;
-            this.Deleted = defaultOn;
-            this.Author = defaultOn;
-            this.Description = defaultOn;
-            this.MasterReferences = new MaskItem<bool, MasterReference_DeepCopyMask>(defaultOn, default);
-            this.OverriddenForms = defaultOn;
-            this.INTV = defaultOn;
-            this.INCC = defaultOn;
-        }
-
-        #region Members
-        public bool Flags;
-        public bool FormID;
-        public bool Version;
-        public bool FormVersion;
-        public bool Version2;
-        public MaskItem<bool, ModStats_DeepCopyMask> Stats;
-        public bool TypeOffsets;
-        public bool Deleted;
-        public bool Author;
-        public bool Description;
-        public MaskItem<bool, MasterReference_DeepCopyMask> MasterReferences;
-        public bool OverriddenForms;
         public bool INTV;
         public bool INCC;
         #endregion

@@ -175,23 +175,12 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
             }
             var ret = new Condition();
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    ConditionXmlCreateTranslation.FillPublicElementXml(
-                        item: ret,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
+            ((ConditionSetterCommon)((IConditionGetter)ret).CommonSetterInstance()).CopyInFromXml(
+                item: ret,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             return ret;
         }
 
@@ -367,67 +356,16 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
             }
             var ret = new Condition();
-            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
-                frame.Reader,
-                recordTypeConverter.ConvertToCustom(Condition_Registration.CTDA_HEADER)));
-            UtilityTranslation.RecordParse(
-                record: ret,
-                frame: frame,
-                setFinal: true,
+            ((ConditionSetterCommon)((IConditionGetter)ret).CommonSetterInstance()).CopyInFromBinary(
+                item: ret,
                 masterReferences: masterReferences,
-                errorMask: errorMask,
+                frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                errorMask: errorMask);
             return ret;
         }
 
         #endregion
-
-        protected static void FillBinaryStructs(
-            ICondition item,
-            MutagenFrame frame,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            ConditionBinaryCreateTranslation.FillBinaryInitialParserCustomPublic(
-                frame: frame,
-                item: item,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
-            if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                frame: frame.SpawnWithLength(3),
-                item: out Byte[] FluffParse))
-            {
-                item.Fluff = FluffParse;
-            }
-            else
-            {
-                item.Fluff = default(Byte[]);
-            }
-            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Single ComparisonValueParse))
-            {
-                item.ComparisonValue = ComparisonValueParse;
-            }
-            else
-            {
-                item.ComparisonValue = default(Single);
-            }
-            if (EnumBinaryTranslation<Function>.Instance.Parse(
-                frame: frame.SpawnWithLength(4),
-                item: out Function FunctionParse))
-            {
-                item.Function = FunctionParse;
-            }
-            else
-            {
-                item.Function = default(Function);
-            }
-            item.FirstParameter = frame.ReadInt32();
-            item.SecondParameter = frame.ReadInt32();
-            item.ThirdParameter = frame.ReadInt32();
-        }
 
         #endregion
 
@@ -617,8 +555,8 @@ namespace Mutagen.Bethesda.Oblivion
             Condition def = null,
             bool doMasks = true)
         {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            ConditionSetterCopyCommon.CopyFieldsFrom(
+            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((ConditionSetterCopyCommon)((IConditionGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -634,7 +572,7 @@ namespace Mutagen.Bethesda.Oblivion
             Condition_CopyMask copyMask = null,
             Condition def = null)
         {
-            ConditionSetterCopyCommon.CopyFieldsFrom(
+            ((ConditionSetterCopyCommon)((IConditionGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -652,6 +590,198 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
         }
+
+        #region Xml Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this ICondition item,
+            XElement node,
+            MissingCreate missing = MissingCreate.New,
+            Condition_TranslationMask translationMask = null)
+        {
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: null,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this ICondition item,
+            XElement node,
+            out Condition_ErrorMask errorMask,
+            bool doMasks = true,
+            Condition_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask.GetCrystal());
+            errorMask = Condition_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyInFromXml(
+            this ICondition item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ((ConditionSetterCommon)((IConditionGetter)item).CommonSetterInstance()).CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        public static void CopyInFromXml(
+            this ICondition item,
+            string path,
+            MissingCreate missing = MissingCreate.New,
+            Condition_TranslationMask translationMask = null)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this ICondition item,
+            string path,
+            out Condition_ErrorMask errorMask,
+            Condition_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this ICondition item,
+            string path,
+            ErrorMaskBuilder errorMask,
+            Condition_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        public static void CopyInFromXml(
+            this ICondition item,
+            Stream stream,
+            MissingCreate missing = MissingCreate.New,
+            Condition_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this ICondition item,
+            Stream stream,
+            out Condition_ErrorMask errorMask,
+            Condition_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this ICondition item,
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            Condition_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        #endregion
+
+        #region Binary Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this ICondition item,
+            MutagenFrame frame,
+            MasterReferences masterReferences)
+        {
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: null);
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this ICondition item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            out Condition_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: errorMaskBuilder);
+            errorMask = Condition_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyInFromBinary(
+            this ICondition item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((ConditionSetterCommon)((IConditionGetter)item).CommonSetterInstance()).CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+        #endregion
 
     }
     #endregion
@@ -975,6 +1105,104 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
         
+        #region Xml Translation
+        public void CopyInFromXml(
+            ICondition item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    ConditionXmlCreateTranslation.FillPublicElementXml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+        
+        #endregion
+        
+        #region Binary Translation
+        protected static void FillBinaryStructs(
+            ICondition item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            ConditionBinaryCreateTranslation.FillBinaryInitialParserCustomPublic(
+                frame: frame,
+                item: item,
+                masterReferences: masterReferences,
+                errorMask: errorMask);
+            if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                frame: frame.SpawnWithLength(3),
+                item: out Byte[] FluffParse))
+            {
+                item.Fluff = FluffParse;
+            }
+            else
+            {
+                item.Fluff = default(Byte[]);
+            }
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single ComparisonValueParse))
+            {
+                item.ComparisonValue = ComparisonValueParse;
+            }
+            else
+            {
+                item.ComparisonValue = default(Single);
+            }
+            if (EnumBinaryTranslation<Function>.Instance.Parse(
+                frame: frame.SpawnWithLength(4),
+                item: out Function FunctionParse))
+            {
+                item.Function = FunctionParse;
+            }
+            else
+            {
+                item.Function = default(Function);
+            }
+            item.FirstParameter = frame.ReadInt32();
+            item.SecondParameter = frame.ReadInt32();
+            item.ThirdParameter = frame.ReadInt32();
+        }
+        
+        public void CopyInFromBinary(
+            ICondition item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
+                frame.Reader,
+                recordTypeConverter.ConvertToCustom(Condition_Registration.CTDA_HEADER)));
+            UtilityTranslation.RecordParse(
+                record: item,
+                frame: frame,
+                setFinal: true,
+                masterReferences: masterReferences,
+                errorMask: errorMask,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: FillBinaryStructs);
+        }
+        
+        #endregion
+        
     }
     public partial class ConditionCommon
     {
@@ -1151,7 +1379,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly ConditionSetterCopyCommon Instance = new ConditionSetterCopyCommon();
 
         #region Copy Fields From
-        public static void CopyFieldsFrom(
+        public void CopyFieldsFrom(
             Condition item,
             Condition rhs,
             Condition def,
@@ -2208,37 +2436,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public Condition_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.CompareOperator = defaultOn;
-            this.Flags = defaultOn;
-            this.Fluff = defaultOn;
-            this.ComparisonValue = defaultOn;
-            this.Function = defaultOn;
-            this.FirstParameter = defaultOn;
-            this.SecondParameter = defaultOn;
-            this.ThirdParameter = defaultOn;
-        }
-
-        #region Members
-        public bool CompareOperator;
-        public bool Flags;
-        public bool Fluff;
-        public bool ComparisonValue;
-        public bool Function;
-        public bool FirstParameter;
-        public bool SecondParameter;
-        public bool ThirdParameter;
-        #endregion
-
-    }
-
-    public class Condition_DeepCopyMask
-    {
-        public Condition_DeepCopyMask()
-        {
-        }
-
-        public Condition_DeepCopyMask(bool defaultOn)
         {
             this.CompareOperator = defaultOn;
             this.Flags = defaultOn;

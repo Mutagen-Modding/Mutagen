@@ -398,29 +398,12 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
             }
             var ret = new SkillRecord();
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    FillPrivateElementXml(
-                        item: ret,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    SkillRecordXmlCreateTranslation.FillPublicElementXml(
-                        item: ret,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
+            ((SkillRecordSetterCommon)((ISkillRecordGetter)ret).CommonSetterInstance()).CopyInFromXml(
+                item: ret,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             return ret;
         }
 
@@ -505,29 +488,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #endregion
-
-        protected static void FillPrivateElementXml(
-            SkillRecord item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "HasDATADataType":
-                    item.DATADataTypeState |= SkillRecord.DATADataType.Has;
-                    break;
-                default:
-                    OblivionMajorRecord.FillPrivateElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
 
         #endregion
 
@@ -627,227 +587,16 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new SkillRecord();
-            UtilityTranslation.MajorRecordParse<ISkillRecordInternal>(
-                record: ret,
-                frame: frame,
-                errorMask: errorMask,
-                recType: SkillRecord_Registration.SKIL_HEADER,
-                recordTypeConverter: recordTypeConverter,
+            ((SkillRecordSetterCommon)((ISkillRecordGetter)ret).CommonSetterInstance()).CopyInFromBinary(
+                item: ret,
                 masterReferences: masterReferences,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                frame: frame,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
             return ret;
         }
 
         #endregion
-
-        protected static void FillBinaryStructs(
-            ISkillRecordInternal item,
-            MutagenFrame frame,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            OblivionMajorRecord.FillBinaryStructs(
-                item: item,
-                frame: frame,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
-        }
-
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            ISkillRecordInternal item,
-            MutagenFrame frame,
-            RecordType nextRecordType,
-            int contentLength,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask,
-            RecordTypeConverter recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x58444E49: // INDX
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (EnumBinaryTranslation<ActorValue>.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out ActorValue SkillParse))
-                    {
-                        item.Skill = SkillParse;
-                    }
-                    else
-                    {
-                        item.Skill = default(ActorValue);
-                    }
-                    return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.Skill);
-                }
-                case 0x43534544: // DESC
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String DescriptionParse))
-                    {
-                        item.Description = DescriptionParse;
-                    }
-                    else
-                    {
-                        item.Description = default(String);
-                    }
-                    return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.Description);
-                }
-                case 0x4E4F4349: // ICON
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String IconParse))
-                    {
-                        item.Icon = IconParse;
-                    }
-                    else
-                    {
-                        item.Icon = default(String);
-                    }
-                    return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.Icon);
-                }
-                case 0x41544144: // DATA
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    var dataFrame = frame.SpawnWithLength(contentLength);
-                    if (!dataFrame.Complete)
-                    {
-                        item.DATADataTypeState = DATADataType.Has;
-                    }
-                    if (EnumBinaryTranslation<ActorValue>.Instance.Parse(
-                        frame: dataFrame.SpawnWithLength(4),
-                        item: out ActorValue ActionParse))
-                    {
-                        item.Action = ActionParse;
-                    }
-                    else
-                    {
-                        item.Action = default(ActorValue);
-                    }
-                    if (EnumBinaryTranslation<ActorValue>.Instance.Parse(
-                        frame: dataFrame.SpawnWithLength(4),
-                        item: out ActorValue AttributeParse))
-                    {
-                        item.Attribute = AttributeParse;
-                    }
-                    else
-                    {
-                        item.Attribute = default(ActorValue);
-                    }
-                    if (EnumBinaryTranslation<Specialization>.Instance.Parse(
-                        frame: dataFrame.SpawnWithLength(4),
-                        item: out Specialization SpecializationParse))
-                    {
-                        item.Specialization = SpecializationParse;
-                    }
-                    else
-                    {
-                        item.Specialization = default(Specialization);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single UseValueFirstParse))
-                    {
-                        item.UseValueFirst = UseValueFirstParse;
-                    }
-                    else
-                    {
-                        item.UseValueFirst = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single UseValueSecondParse))
-                    {
-                        item.UseValueSecond = UseValueSecondParse;
-                    }
-                    else
-                    {
-                        item.UseValueSecond = default(Single);
-                    }
-                    return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.UseValueSecond);
-                }
-                case 0x4D414E41: // ANAM
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String ApprenticeTextParse))
-                    {
-                        item.ApprenticeText = ApprenticeTextParse;
-                    }
-                    else
-                    {
-                        item.ApprenticeText = default(String);
-                    }
-                    return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.ApprenticeText);
-                }
-                case 0x4D414E4A: // JNAM
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String JourneymanTextParse))
-                    {
-                        item.JourneymanText = JourneymanTextParse;
-                    }
-                    else
-                    {
-                        item.JourneymanText = default(String);
-                    }
-                    return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.JourneymanText);
-                }
-                case 0x4D414E45: // ENAM
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String ExpertTextParse))
-                    {
-                        item.ExpertText = ExpertTextParse;
-                    }
-                    else
-                    {
-                        item.ExpertText = default(String);
-                    }
-                    return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.ExpertText);
-                }
-                case 0x4D414E4D: // MNAM
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String MasterTextParse))
-                    {
-                        item.MasterText = MasterTextParse;
-                    }
-                    else
-                    {
-                        item.MasterText = default(String);
-                    }
-                    return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.MasterText);
-                }
-                default:
-                    return OblivionMajorRecord.FillBinaryRecordTypes(
-                        item: item,
-                        frame: frame,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength,
-                        recordTypeConverter: recordTypeConverter,
-                        masterReferences: masterReferences,
-                        errorMask: errorMask);
-            }
-        }
 
         #endregion
 
@@ -1084,8 +833,8 @@ namespace Mutagen.Bethesda.Oblivion
             SkillRecord def = null,
             bool doMasks = true)
         {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            SkillRecordSetterCopyCommon.CopyFieldsFrom(
+            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((SkillRecordSetterCopyCommon)((ISkillRecordGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -1101,13 +850,205 @@ namespace Mutagen.Bethesda.Oblivion
             SkillRecord_CopyMask copyMask = null,
             SkillRecord def = null)
         {
-            SkillRecordSetterCopyCommon.CopyFieldsFrom(
+            ((SkillRecordSetterCopyCommon)((ISkillRecordGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
+
+        #region Xml Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this ISkillRecordInternal item,
+            XElement node,
+            MissingCreate missing = MissingCreate.New,
+            SkillRecord_TranslationMask translationMask = null)
+        {
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: null,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this ISkillRecordInternal item,
+            XElement node,
+            out SkillRecord_ErrorMask errorMask,
+            bool doMasks = true,
+            SkillRecord_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask.GetCrystal());
+            errorMask = SkillRecord_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public new static void CopyInFromXml(
+            this ISkillRecordInternal item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ((SkillRecordSetterCommon)((ISkillRecordGetter)item).CommonSetterInstance()).CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        public static void CopyInFromXml(
+            this ISkillRecordInternal item,
+            string path,
+            MissingCreate missing = MissingCreate.New,
+            SkillRecord_TranslationMask translationMask = null)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this ISkillRecordInternal item,
+            string path,
+            out SkillRecord_ErrorMask errorMask,
+            SkillRecord_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this ISkillRecordInternal item,
+            string path,
+            ErrorMaskBuilder errorMask,
+            SkillRecord_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        public static void CopyInFromXml(
+            this ISkillRecordInternal item,
+            Stream stream,
+            MissingCreate missing = MissingCreate.New,
+            SkillRecord_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this ISkillRecordInternal item,
+            Stream stream,
+            out SkillRecord_ErrorMask errorMask,
+            SkillRecord_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this ISkillRecordInternal item,
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            SkillRecord_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        #endregion
+
+        #region Binary Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this ISkillRecordInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences)
+        {
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: null);
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this ISkillRecordInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            out SkillRecord_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: errorMaskBuilder);
+            errorMask = SkillRecord_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public new static void CopyInFromBinary(
+            this ISkillRecordInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((SkillRecordSetterCommon)((ISkillRecordGetter)item).CommonSetterInstance()).CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+        #endregion
 
     }
     #endregion
@@ -1490,6 +1431,294 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ISkillRecordInternal)item);
         }
         
+        #region Xml Translation
+        protected static void FillPrivateElementXml(
+            ISkillRecordInternal item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "HasDATADataType":
+                    item.DATADataTypeState |= SkillRecord.DATADataType.Has;
+                    break;
+                default:
+                    OblivionMajorRecordSetterCommon.FillPrivateElementXml(
+                        item: item,
+                        node: node,
+                        name: name,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    break;
+            }
+        }
+        
+        public new void CopyInFromXml(
+            ISkillRecordInternal item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    FillPrivateElementXml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    SkillRecordXmlCreateTranslation.FillPublicElementXml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+        
+        #endregion
+        
+        #region Binary Translation
+        public override RecordType RecordType => SkillRecord_Registration.SKIL_HEADER;
+        protected static void FillBinaryStructs(
+            ISkillRecordInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            OblivionMajorRecordSetterCommon.FillBinaryStructs(
+                item: item,
+                frame: frame,
+                masterReferences: masterReferences,
+                errorMask: errorMask);
+        }
+        
+        protected static TryGet<int?> FillBinaryRecordTypes(
+            ISkillRecordInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x58444E49: // INDX
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    if (EnumBinaryTranslation<ActorValue>.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: out ActorValue SkillParse))
+                    {
+                        item.Skill = SkillParse;
+                    }
+                    else
+                    {
+                        item.Skill = default(ActorValue);
+                    }
+                    return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.Skill);
+                }
+                case 0x43534544: // DESC
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String DescriptionParse))
+                    {
+                        item.Description = DescriptionParse;
+                    }
+                    else
+                    {
+                        item.Description = default(String);
+                    }
+                    return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.Description);
+                }
+                case 0x4E4F4349: // ICON
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String IconParse))
+                    {
+                        item.Icon = IconParse;
+                    }
+                    else
+                    {
+                        item.Icon = default(String);
+                    }
+                    return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.Icon);
+                }
+                case 0x41544144: // DATA
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (!dataFrame.Complete)
+                    {
+                        item.DATADataTypeState = SkillRecord.DATADataType.Has;
+                    }
+                    if (EnumBinaryTranslation<ActorValue>.Instance.Parse(
+                        frame: dataFrame.SpawnWithLength(4),
+                        item: out ActorValue ActionParse))
+                    {
+                        item.Action = ActionParse;
+                    }
+                    else
+                    {
+                        item.Action = default(ActorValue);
+                    }
+                    if (EnumBinaryTranslation<ActorValue>.Instance.Parse(
+                        frame: dataFrame.SpawnWithLength(4),
+                        item: out ActorValue AttributeParse))
+                    {
+                        item.Attribute = AttributeParse;
+                    }
+                    else
+                    {
+                        item.Attribute = default(ActorValue);
+                    }
+                    if (EnumBinaryTranslation<Specialization>.Instance.Parse(
+                        frame: dataFrame.SpawnWithLength(4),
+                        item: out Specialization SpecializationParse))
+                    {
+                        item.Specialization = SpecializationParse;
+                    }
+                    else
+                    {
+                        item.Specialization = default(Specialization);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single UseValueFirstParse))
+                    {
+                        item.UseValueFirst = UseValueFirstParse;
+                    }
+                    else
+                    {
+                        item.UseValueFirst = default(Single);
+                    }
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single UseValueSecondParse))
+                    {
+                        item.UseValueSecond = UseValueSecondParse;
+                    }
+                    else
+                    {
+                        item.UseValueSecond = default(Single);
+                    }
+                    return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.UseValueSecond);
+                }
+                case 0x4D414E41: // ANAM
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String ApprenticeTextParse))
+                    {
+                        item.ApprenticeText = ApprenticeTextParse;
+                    }
+                    else
+                    {
+                        item.ApprenticeText = default(String);
+                    }
+                    return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.ApprenticeText);
+                }
+                case 0x4D414E4A: // JNAM
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String JourneymanTextParse))
+                    {
+                        item.JourneymanText = JourneymanTextParse;
+                    }
+                    else
+                    {
+                        item.JourneymanText = default(String);
+                    }
+                    return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.JourneymanText);
+                }
+                case 0x4D414E45: // ENAM
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String ExpertTextParse))
+                    {
+                        item.ExpertText = ExpertTextParse;
+                    }
+                    else
+                    {
+                        item.ExpertText = default(String);
+                    }
+                    return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.ExpertText);
+                }
+                case 0x4D414E4D: // MNAM
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String MasterTextParse))
+                    {
+                        item.MasterText = MasterTextParse;
+                    }
+                    else
+                    {
+                        item.MasterText = default(String);
+                    }
+                    return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.MasterText);
+                }
+                default:
+                    return OblivionMajorRecordSetterCommon.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter,
+                        masterReferences: masterReferences,
+                        errorMask: errorMask);
+            }
+        }
+        
+        public new void CopyInFromBinary(
+            ISkillRecordInternal item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            UtilityTranslation.MajorRecordParse<ISkillRecordInternal>(
+                record: item,
+                frame: frame,
+                errorMask: errorMask,
+                recType: RecordType,
+                recordTypeConverter: recordTypeConverter,
+                masterReferences: masterReferences,
+                fillStructs: FillBinaryStructs,
+                fillTyped: FillBinaryRecordTypes);
+        }
+        
+        #endregion
+        
     }
     public partial class SkillRecordCommon : OblivionMajorRecordCommon
     {
@@ -1852,14 +2081,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public new static readonly SkillRecordSetterCopyCommon Instance = new SkillRecordSetterCopyCommon();
 
         #region Copy Fields From
-        public static void CopyFieldsFrom(
+        public void CopyFieldsFrom(
             SkillRecord item,
             SkillRecord rhs,
             SkillRecord def,
             ErrorMaskBuilder errorMask,
             SkillRecord_CopyMask copyMask)
         {
-            OblivionMajorRecordSetterCopyCommon.CopyFieldsFrom(
+            ((OblivionMajorRecordSetterCopyCommon)((IOblivionMajorRecordGetter)item).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -3311,47 +3540,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public SkillRecord_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Skill = defaultOn;
-            this.Description = defaultOn;
-            this.Icon = defaultOn;
-            this.Action = defaultOn;
-            this.Attribute = defaultOn;
-            this.Specialization = defaultOn;
-            this.UseValueFirst = defaultOn;
-            this.UseValueSecond = defaultOn;
-            this.ApprenticeText = defaultOn;
-            this.JourneymanText = defaultOn;
-            this.ExpertText = defaultOn;
-            this.MasterText = defaultOn;
-            this.DATADataTypeState = defaultOn;
-        }
-
-        #region Members
-        public bool Skill;
-        public bool Description;
-        public bool Icon;
-        public bool Action;
-        public bool Attribute;
-        public bool Specialization;
-        public bool UseValueFirst;
-        public bool UseValueSecond;
-        public bool ApprenticeText;
-        public bool JourneymanText;
-        public bool ExpertText;
-        public bool MasterText;
-        public bool DATADataTypeState;
-        #endregion
-
-    }
-
-    public class SkillRecord_DeepCopyMask : OblivionMajorRecord_DeepCopyMask
-    {
-        public SkillRecord_DeepCopyMask()
-        {
-        }
-
-        public SkillRecord_DeepCopyMask(bool defaultOn)
         {
             this.Skill = defaultOn;
             this.Description = defaultOn;

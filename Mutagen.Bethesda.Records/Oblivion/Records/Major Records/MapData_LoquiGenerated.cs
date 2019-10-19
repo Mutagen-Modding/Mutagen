@@ -154,23 +154,12 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
             }
             var ret = new MapData();
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    MapDataXmlCreateTranslation.FillPublicElementXml(
-                        item: ret,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
+            ((MapDataSetterCommon)((IMapDataGetter)ret).CommonSetterInstance()).CopyInFromXml(
+                item: ret,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             return ret;
         }
 
@@ -329,59 +318,16 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new MapData();
-            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
-                frame.Reader,
-                recordTypeConverter.ConvertToCustom(MapData_Registration.MNAM_HEADER)));
-            UtilityTranslation.RecordParse(
-                record: ret,
-                frame: frame,
-                setFinal: true,
+            ((MapDataSetterCommon)((IMapDataGetter)ret).CommonSetterInstance()).CopyInFromBinary(
+                item: ret,
                 masterReferences: masterReferences,
-                errorMask: errorMask,
+                frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                errorMask: errorMask);
             return ret;
         }
 
         #endregion
-
-        protected static void FillBinaryStructs(
-            IMapData item,
-            MutagenFrame frame,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            if (Mutagen.Bethesda.Binary.P2IntBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out P2Int UsableDimensionsParse))
-            {
-                item.UsableDimensions = UsableDimensionsParse;
-            }
-            else
-            {
-                item.UsableDimensions = default(P2Int);
-            }
-            if (Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out P2Int16 CellCoordinatesNWCellParse))
-            {
-                item.CellCoordinatesNWCell = CellCoordinatesNWCellParse;
-            }
-            else
-            {
-                item.CellCoordinatesNWCell = default(P2Int16);
-            }
-            if (Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out P2Int16 CellCoordinatesSECellParse))
-            {
-                item.CellCoordinatesSECell = CellCoordinatesSECellParse;
-            }
-            else
-            {
-                item.CellCoordinatesSECell = default(P2Int16);
-            }
-        }
 
         #endregion
 
@@ -541,8 +487,8 @@ namespace Mutagen.Bethesda.Oblivion
             MapData def = null,
             bool doMasks = true)
         {
-            var errorMaskBuilder = new ErrorMaskBuilder();
-            MapDataSetterCopyCommon.CopyFieldsFrom(
+            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ((MapDataSetterCopyCommon)((IMapDataGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -558,7 +504,7 @@ namespace Mutagen.Bethesda.Oblivion
             MapData_CopyMask copyMask = null,
             MapData def = null)
         {
-            MapDataSetterCopyCommon.CopyFieldsFrom(
+            ((MapDataSetterCopyCommon)((IMapDataGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -576,6 +522,198 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
         }
+
+        #region Xml Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this IMapData item,
+            XElement node,
+            MissingCreate missing = MissingCreate.New,
+            MapData_TranslationMask translationMask = null)
+        {
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: null,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromXml(
+            this IMapData item,
+            XElement node,
+            out MapData_ErrorMask errorMask,
+            bool doMasks = true,
+            MapData_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask.GetCrystal());
+            errorMask = MapData_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyInFromXml(
+            this IMapData item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            ((MapDataSetterCommon)((IMapDataGetter)item).CommonSetterInstance()).CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        public static void CopyInFromXml(
+            this IMapData item,
+            string path,
+            MissingCreate missing = MissingCreate.New,
+            MapData_TranslationMask translationMask = null)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IMapData item,
+            string path,
+            out MapData_ErrorMask errorMask,
+            MapData_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IMapData item,
+            string path,
+            ErrorMaskBuilder errorMask,
+            MapData_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        public static void CopyInFromXml(
+            this IMapData item,
+            Stream stream,
+            MissingCreate missing = MissingCreate.New,
+            MapData_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IMapData item,
+            Stream stream,
+            out MapData_ErrorMask errorMask,
+            MapData_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static void CopyInFromXml(
+            this IMapData item,
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            MapData_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
+        {
+            var node = XDocument.Load(stream).Root;
+            CopyInFromXml(
+                item: item,
+                missing: missing,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        #endregion
+
+        #region Binary Translation
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this IMapData item,
+            MutagenFrame frame,
+            MasterReferences masterReferences)
+        {
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: null);
+        }
+
+        [DebuggerStepThrough]
+        public static void CopyInFromBinary(
+            this IMapData item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            out MapData_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: null,
+                errorMask: errorMaskBuilder);
+            errorMask = MapData_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public static void CopyInFromBinary(
+            this IMapData item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            ((MapDataSetterCommon)((IMapDataGetter)item).CommonSetterInstance()).CopyInFromBinary(
+                item: item,
+                masterReferences: masterReferences,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+        #endregion
 
     }
     #endregion
@@ -822,6 +960,96 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
         
+        #region Xml Translation
+        public void CopyInFromXml(
+            IMapData item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    MapDataXmlCreateTranslation.FillPublicElementXml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+        
+        #endregion
+        
+        #region Binary Translation
+        protected static void FillBinaryStructs(
+            IMapData item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            if (Mutagen.Bethesda.Binary.P2IntBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out P2Int UsableDimensionsParse))
+            {
+                item.UsableDimensions = UsableDimensionsParse;
+            }
+            else
+            {
+                item.UsableDimensions = default(P2Int);
+            }
+            if (Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out P2Int16 CellCoordinatesNWCellParse))
+            {
+                item.CellCoordinatesNWCell = CellCoordinatesNWCellParse;
+            }
+            else
+            {
+                item.CellCoordinatesNWCell = default(P2Int16);
+            }
+            if (Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out P2Int16 CellCoordinatesSECellParse))
+            {
+                item.CellCoordinatesSECell = CellCoordinatesSECellParse;
+            }
+            else
+            {
+                item.CellCoordinatesSECell = default(P2Int16);
+            }
+        }
+        
+        public void CopyInFromBinary(
+            IMapData item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
+                frame.Reader,
+                recordTypeConverter.ConvertToCustom(MapData_Registration.MNAM_HEADER)));
+            UtilityTranslation.RecordParse(
+                record: item,
+                frame: frame,
+                setFinal: true,
+                masterReferences: masterReferences,
+                errorMask: errorMask,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: FillBinaryStructs);
+        }
+        
+        #endregion
+        
     }
     public partial class MapDataCommon
     {
@@ -958,7 +1186,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly MapDataSetterCopyCommon Instance = new MapDataSetterCopyCommon();
 
         #region Copy Fields From
-        public static void CopyFieldsFrom(
+        public void CopyFieldsFrom(
             MapData item,
             MapData rhs,
             MapData def,
@@ -1700,27 +1928,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public MapData_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.UsableDimensions = defaultOn;
-            this.CellCoordinatesNWCell = defaultOn;
-            this.CellCoordinatesSECell = defaultOn;
-        }
-
-        #region Members
-        public bool UsableDimensions;
-        public bool CellCoordinatesNWCell;
-        public bool CellCoordinatesSECell;
-        #endregion
-
-    }
-
-    public class MapData_DeepCopyMask
-    {
-        public MapData_DeepCopyMask()
-        {
-        }
-
-        public MapData_DeepCopyMask(bool defaultOn)
         {
             this.UsableDimensions = defaultOn;
             this.CellCoordinatesNWCell = defaultOn;
