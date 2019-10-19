@@ -19,7 +19,7 @@ namespace Mutagen.Bethesda.Generation
                 using (var args = new ArgsWrapper(fg,
                     $"static partial void SpecialParse_{field.Name}"))
                 {
-                    args.Add($"{obj.ObjectName} item");
+                    args.Add($"{obj.Interface(getter: false, internalInterface: true)} item");
                     args.Add($"{nameof(MutagenFrame)} frame");
                     args.Add($"ErrorMaskBuilder errorMask");
                 }

@@ -634,7 +634,7 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new Light();
-            UtilityTranslation.MajorRecordParse<Light>(
+            UtilityTranslation.MajorRecordParse<ILightInternal>(
                 record: ret,
                 frame: frame,
                 errorMask: errorMask,
@@ -649,7 +649,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected static void FillBinaryStructs(
-            Light item,
+            ILightInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -662,7 +662,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         protected static TryGet<int?> FillBinaryRecordTypes(
-            Light item,
+            ILightInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,

@@ -360,7 +360,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected static void FillBinaryStructs(
-            PathGridPoint item,
+            IPathGridPoint item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)

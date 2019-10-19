@@ -467,7 +467,7 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new Hair();
-            UtilityTranslation.MajorRecordParse<Hair>(
+            UtilityTranslation.MajorRecordParse<IHairInternal>(
                 record: ret,
                 frame: frame,
                 errorMask: errorMask,
@@ -482,7 +482,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected static void FillBinaryStructs(
-            Hair item,
+            IHairInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -495,7 +495,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         protected static TryGet<int?> FillBinaryRecordTypes(
-            Hair item,
+            IHairInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,

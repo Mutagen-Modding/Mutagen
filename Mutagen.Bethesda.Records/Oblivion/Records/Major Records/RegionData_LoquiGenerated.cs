@@ -35,7 +35,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public abstract partial class RegionData :
-        IRegionData,
+        IRegionDataInternal,
         ILoquiObjectSetter<RegionData>,
         ILinkSubContainer,
         IEquatable<RegionData>,
@@ -60,6 +60,11 @@ namespace Mutagen.Bethesda.Oblivion
                 this.RDATDataTypeState |= RDATDataType.Has;
                 this._DataType = value;
             }
+        }
+        RegionData.RegionDataType IRegionDataInternal.DataType
+        {
+            get => this.DataType;
+            set => this.DataType = value;
         }
         #endregion
         #region Flags
@@ -372,7 +377,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
         protected static void FillBinaryStructs(
-            RegionData item,
+            IRegionDataInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -380,7 +385,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         protected static TryGet<int?> FillBinaryRecordTypes(
-            RegionData item,
+            IRegionDataInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,
@@ -441,13 +446,21 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IRegionData :
         IRegionDataGetter,
-        ILoquiObjectSetter<IRegionData>
+        ILoquiObjectSetter<IRegionDataInternal>
     {
         new RegionData.RegionDataFlag Flags { get; set; }
 
         new Byte Priority { get; set; }
 
         new RegionData.RDATDataType RDATDataTypeState { get; set; }
+
+    }
+
+    public partial interface IRegionDataInternal :
+        IRegionData,
+        IRegionDataGetter
+    {
+        new RegionData.RegionDataType DataType { get; set; }
 
     }
 
@@ -487,7 +500,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Common MixIn
     public static class RegionDataMixIn
     {
-        public static void Clear(this IRegionData item)
+        public static void Clear(this IRegionDataInternal item)
         {
             ((RegionDataSetterCommon)((IRegionDataGetter)item).CommonSetterInstance()).Clear(item: item);
         }
@@ -673,7 +686,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type SetterType = typeof(IRegionData);
 
-        public static readonly Type InternalSetterType = null;
+        public static readonly Type InternalSetterType = typeof(IRegionDataInternal);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.RegionData";
 
@@ -858,7 +871,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(IRegionData item)
+        public virtual void Clear(IRegionDataInternal item)
         {
             ClearPartial();
             item.Flags = default(RegionData.RegionDataFlag);
@@ -1221,7 +1234,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static RegionDataXmlCreateTranslation Instance = new RegionDataXmlCreateTranslation();
 
         public static void FillPublicXml(
-            IRegionData item,
+            IRegionDataInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1246,7 +1259,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElementXml(
-            IRegionData item,
+            IRegionDataInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,

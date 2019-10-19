@@ -361,7 +361,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected static void FillBinaryStructs(
-            EnableParent item,
+            IEnableParent item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)

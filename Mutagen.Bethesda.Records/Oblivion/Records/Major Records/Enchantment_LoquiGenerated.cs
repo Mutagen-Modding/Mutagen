@@ -488,7 +488,7 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new Enchantment();
-            UtilityTranslation.MajorRecordParse<Enchantment>(
+            UtilityTranslation.MajorRecordParse<IEnchantmentInternal>(
                 record: ret,
                 frame: frame,
                 errorMask: errorMask,
@@ -503,7 +503,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected static void FillBinaryStructs(
-            Enchantment item,
+            IEnchantmentInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -516,7 +516,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         protected static TryGet<int?> FillBinaryRecordTypes(
-            Enchantment item,
+            IEnchantmentInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,

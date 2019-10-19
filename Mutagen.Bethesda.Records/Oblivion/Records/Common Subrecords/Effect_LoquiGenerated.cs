@@ -471,7 +471,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected static void FillBinaryStructs(
-            Effect item,
+            IEffect item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -479,7 +479,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         protected static TryGet<int?> FillBinaryRecordTypes(
-            Effect item,
+            IEffect item,
             MutagenFrame frame,
             int? lastParsed,
             RecordType nextRecordType,
@@ -2636,13 +2636,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         static partial void FillBinaryEffectInitialCustom(
             MutagenFrame frame,
-            Effect item,
+            IEffect item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
 
         public static void FillBinaryEffectInitialCustomPublic(
             MutagenFrame frame,
-            Effect item,
+            IEffect item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {

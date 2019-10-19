@@ -357,7 +357,7 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new Road();
-            UtilityTranslation.MajorRecordParse<Road>(
+            UtilityTranslation.MajorRecordParse<IRoadInternal>(
                 record: ret,
                 frame: frame,
                 errorMask: errorMask,
@@ -372,7 +372,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected static void FillBinaryStructs(
-            Road item,
+            IRoadInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -385,7 +385,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         protected static TryGet<int?> FillBinaryRecordTypes(
-            Road item,
+            IRoadInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,
@@ -1854,13 +1854,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         static partial void FillBinaryPointsCustom(
             MutagenFrame frame,
-            Road item,
+            IRoadInternal item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
 
         public static void FillBinaryPointsCustomPublic(
             MutagenFrame frame,
-            Road item,
+            IRoadInternal item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {

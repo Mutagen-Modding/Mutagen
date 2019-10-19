@@ -563,7 +563,7 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new SoulGem();
-            UtilityTranslation.MajorRecordParse<SoulGem>(
+            UtilityTranslation.MajorRecordParse<ISoulGemInternal>(
                 record: ret,
                 frame: frame,
                 errorMask: errorMask,
@@ -578,7 +578,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected static void FillBinaryStructs(
-            SoulGem item,
+            ISoulGemInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -591,7 +591,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         protected static TryGet<int?> FillBinaryRecordTypes(
-            SoulGem item,
+            ISoulGemInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,

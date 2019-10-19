@@ -20,7 +20,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType RDSD = new RecordType("RDSD");
         public static readonly RecordType RDMD = new RecordType("RDMD");
 
-        static partial void FillBinaryRegionAreaLogicCustom(MutagenFrame frame, Region item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+        static partial void FillBinaryRegionAreaLogicCustom(MutagenFrame frame, IRegionInternal item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
             var rdat = HeaderTranslation.GetNextSubRecordType(frame.Reader, out var rdatType);
             while (rdat.Equals(Region_Registration.RDAT_HEADER))
@@ -59,7 +59,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return true;
         }
 
-        static void ParseRegionData(MutagenFrame frame, Region item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+        static void ParseRegionData(MutagenFrame frame, IRegionInternal item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
             var rdatFrame = frame.MetaData.GetSubRecordFrame(frame);
             RegionData.RegionDataType dataType = (RegionData.RegionDataType)BinaryPrimitives.ReadUInt32LittleEndian(rdatFrame.ContentSpan);

@@ -601,7 +601,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         protected static void FillBinaryStructs(
-            ModHeader item,
+            IModHeader item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -623,7 +623,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         protected static TryGet<int?> FillBinaryRecordTypes(
-            ModHeader item,
+            IModHeader item,
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,

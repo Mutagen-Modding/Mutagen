@@ -574,7 +574,7 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new Ammo();
-            UtilityTranslation.MajorRecordParse<Ammo>(
+            UtilityTranslation.MajorRecordParse<IAmmoInternal>(
                 record: ret,
                 frame: frame,
                 errorMask: errorMask,
@@ -589,7 +589,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected static void FillBinaryStructs(
-            Ammo item,
+            IAmmoInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -602,7 +602,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         protected static TryGet<int?> FillBinaryRecordTypes(
-            Ammo item,
+            IAmmoInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,

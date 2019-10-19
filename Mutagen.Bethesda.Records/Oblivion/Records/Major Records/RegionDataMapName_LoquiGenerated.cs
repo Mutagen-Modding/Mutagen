@@ -37,7 +37,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class RegionDataMapName :
         RegionData,
-        IRegionDataMapName,
+        IRegionDataMapNameInternal,
         ILoquiObjectSetter<RegionDataMapName>,
         IEquatable<RegionDataMapName>,
         IEqualsMask
@@ -384,7 +384,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected static void FillBinaryStructs(
-            RegionDataMapName item,
+            IRegionDataMapNameInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -397,7 +397,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         protected static TryGet<int?> FillBinaryRecordTypes(
-            RegionDataMapName item,
+            IRegionDataMapNameInternal item,
             MutagenFrame frame,
             int? lastParsed,
             RecordType nextRecordType,
@@ -451,13 +451,20 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IRegionDataMapName :
         IRegionDataMapNameGetter,
         IRegionData,
-        ILoquiObjectSetter<IRegionDataMapName>
+        ILoquiObjectSetter<IRegionDataMapNameInternal>
     {
         new String MapName { get; set; }
         new bool MapName_IsSet { get; set; }
         void MapName_Set(String value, bool hasBeenSet = true);
         void MapName_Unset();
 
+    }
+
+    public partial interface IRegionDataMapNameInternal :
+        IRegionDataInternal,
+        IRegionDataMapName,
+        IRegionDataMapNameGetter
+    {
     }
 
     public partial interface IRegionDataMapNameGetter :
@@ -479,7 +486,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Common MixIn
     public static class RegionDataMapNameMixIn
     {
-        public static void Clear(this IRegionDataMapName item)
+        public static void Clear(this IRegionDataMapNameInternal item)
         {
             ((RegionDataMapNameSetterCommon)((IRegionDataMapNameGetter)item).CommonSetterInstance()).Clear(item: item);
         }
@@ -653,7 +660,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type SetterType = typeof(IRegionDataMapName);
 
-        public static readonly Type InternalSetterType = null;
+        public static readonly Type InternalSetterType = typeof(IRegionDataMapNameInternal);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.RegionDataMapName";
 
@@ -805,16 +812,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(IRegionDataMapName item)
+        public virtual void Clear(IRegionDataMapNameInternal item)
         {
             ClearPartial();
             item.MapName_Unset();
             base.Clear(item);
         }
         
-        public override void Clear(IRegionData item)
+        public override void Clear(IRegionDataInternal item)
         {
-            Clear(item: (IRegionDataMapName)item);
+            Clear(item: (IRegionDataMapNameInternal)item);
         }
         
         public RegionDataMapName GetNew()
@@ -1174,7 +1181,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public new readonly static RegionDataMapNameXmlCreateTranslation Instance = new RegionDataMapNameXmlCreateTranslation();
 
         public static void FillPublicXml(
-            IRegionDataMapName item,
+            IRegionDataMapNameInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1199,7 +1206,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElementXml(
-            IRegionDataMapName item,
+            IRegionDataMapNameInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,

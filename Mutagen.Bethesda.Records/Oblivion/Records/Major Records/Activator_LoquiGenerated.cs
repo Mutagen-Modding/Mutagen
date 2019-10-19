@@ -452,7 +452,7 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new Activator();
-            UtilityTranslation.MajorRecordParse<Activator>(
+            UtilityTranslation.MajorRecordParse<IActivatorInternal>(
                 record: ret,
                 frame: frame,
                 errorMask: errorMask,
@@ -467,7 +467,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected static void FillBinaryStructs(
-            Activator item,
+            IActivatorInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -480,7 +480,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         protected static TryGet<int?> FillBinaryRecordTypes(
-            Activator item,
+            IActivatorInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,

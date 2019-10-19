@@ -383,7 +383,7 @@ namespace Mutagen.Bethesda.Skyrim
             ErrorMaskBuilder errorMask)
         {
             var ret = new LocationReferenceType();
-            UtilityTranslation.MajorRecordParse<LocationReferenceType>(
+            UtilityTranslation.MajorRecordParse<ILocationReferenceTypeInternal>(
                 record: ret,
                 frame: frame,
                 errorMask: errorMask,
@@ -398,7 +398,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         protected static void FillBinaryStructs(
-            LocationReferenceType item,
+            ILocationReferenceTypeInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -411,7 +411,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         protected static TryGet<int?> FillBinaryRecordTypes(
-            LocationReferenceType item,
+            ILocationReferenceTypeInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,

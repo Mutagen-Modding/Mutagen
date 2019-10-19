@@ -375,7 +375,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         protected static void FillBinaryStructs(
-            Group<T> item,
+            IGroup<T> item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -400,7 +400,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         protected static async Task<TryGet<int?>> FillBinaryRecordTypes(
-            Group<T> item,
+            IGroup<T> item,
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,
@@ -2235,13 +2235,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         static partial void FillBinaryContainedRecordTypeParseCustom(
             MutagenFrame frame,
-            Group<T> item,
+            IGroup<T> item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
 
         public static void FillBinaryContainedRecordTypeParseCustomPublic(
             MutagenFrame frame,
-            Group<T> item,
+            IGroup<T> item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {

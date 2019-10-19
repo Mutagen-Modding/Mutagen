@@ -39,7 +39,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class RegionDataWeather :
         RegionData,
-        IRegionDataWeather,
+        IRegionDataWeatherInternal,
         ILoquiObjectSetter<RegionDataWeather>,
         ILinkSubContainer,
         IEquatable<RegionDataWeather>,
@@ -385,7 +385,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected static void FillBinaryStructs(
-            RegionDataWeather item,
+            IRegionDataWeatherInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -398,7 +398,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         protected static TryGet<int?> FillBinaryRecordTypes(
-            RegionDataWeather item,
+            IRegionDataWeatherInternal item,
             MutagenFrame frame,
             int? lastParsed,
             RecordType nextRecordType,
@@ -454,9 +454,16 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IRegionDataWeather :
         IRegionDataWeatherGetter,
         IRegionData,
-        ILoquiObjectSetter<IRegionDataWeather>
+        ILoquiObjectSetter<IRegionDataWeatherInternal>
     {
         new ISetList<WeatherChance> Weathers { get; }
+    }
+
+    public partial interface IRegionDataWeatherInternal :
+        IRegionDataInternal,
+        IRegionDataWeather,
+        IRegionDataWeatherGetter
+    {
     }
 
     public partial interface IRegionDataWeatherGetter :
@@ -476,7 +483,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Common MixIn
     public static class RegionDataWeatherMixIn
     {
-        public static void Clear(this IRegionDataWeather item)
+        public static void Clear(this IRegionDataWeatherInternal item)
         {
             ((RegionDataWeatherSetterCommon)((IRegionDataWeatherGetter)item).CommonSetterInstance()).Clear(item: item);
         }
@@ -650,7 +657,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type SetterType = typeof(IRegionDataWeather);
 
-        public static readonly Type InternalSetterType = null;
+        public static readonly Type InternalSetterType = typeof(IRegionDataWeatherInternal);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.RegionDataWeather";
 
@@ -802,16 +809,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(IRegionDataWeather item)
+        public virtual void Clear(IRegionDataWeatherInternal item)
         {
             ClearPartial();
             item.Weathers.Unset();
             base.Clear(item);
         }
         
-        public override void Clear(IRegionData item)
+        public override void Clear(IRegionDataInternal item)
         {
-            Clear(item: (IRegionDataWeather)item);
+            Clear(item: (IRegionDataWeatherInternal)item);
         }
         
         public RegionDataWeather GetNew()
@@ -1202,7 +1209,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public new readonly static RegionDataWeatherXmlCreateTranslation Instance = new RegionDataWeatherXmlCreateTranslation();
 
         public static void FillPublicXml(
-            IRegionDataWeather item,
+            IRegionDataWeatherInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1227,7 +1234,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElementXml(
-            IRegionDataWeather item,
+            IRegionDataWeatherInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,

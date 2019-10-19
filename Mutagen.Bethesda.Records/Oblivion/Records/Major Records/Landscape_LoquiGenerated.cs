@@ -536,7 +536,7 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new Landscape();
-            UtilityTranslation.MajorRecordParse<Landscape>(
+            UtilityTranslation.MajorRecordParse<ILandscapeInternal>(
                 record: ret,
                 frame: frame,
                 errorMask: errorMask,
@@ -551,7 +551,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected static void FillBinaryStructs(
-            Landscape item,
+            ILandscapeInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -564,7 +564,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         protected static TryGet<int?> FillBinaryRecordTypes(
-            Landscape item,
+            ILandscapeInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,

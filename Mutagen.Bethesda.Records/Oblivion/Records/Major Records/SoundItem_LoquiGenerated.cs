@@ -383,7 +383,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected static void FillBinaryStructs(
-            SoundItem item,
+            ISoundItem item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -391,7 +391,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         protected static TryGet<int?> FillBinaryRecordTypes(
-            SoundItem item,
+            ISoundItem item,
             MutagenFrame frame,
             int? lastParsed,
             RecordType nextRecordType,

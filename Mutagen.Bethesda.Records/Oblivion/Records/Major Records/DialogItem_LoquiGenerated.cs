@@ -576,7 +576,7 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new DialogItem();
-            UtilityTranslation.MajorRecordParse<DialogItem>(
+            UtilityTranslation.MajorRecordParse<IDialogItemInternal>(
                 record: ret,
                 frame: frame,
                 errorMask: errorMask,
@@ -591,7 +591,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected static void FillBinaryStructs(
-            DialogItem item,
+            IDialogItemInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -604,7 +604,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         protected static TryGet<int?> FillBinaryRecordTypes(
-            DialogItem item,
+            IDialogItemInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,

@@ -343,7 +343,7 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new SpellLeveled();
-            UtilityTranslation.MajorRecordParse<SpellLeveled>(
+            UtilityTranslation.MajorRecordParse<ISpellLeveledInternal>(
                 record: ret,
                 frame: frame,
                 errorMask: errorMask,
@@ -358,7 +358,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected static void FillBinaryStructs(
-            SpellLeveled item,
+            ISpellLeveledInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)

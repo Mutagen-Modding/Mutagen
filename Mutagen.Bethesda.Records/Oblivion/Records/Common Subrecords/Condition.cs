@@ -58,7 +58,7 @@ namespace Mutagen.Bethesda.Oblivion
                 return (CompareOperator)((Mask & b) >> 4);
             }
 
-            static partial void FillBinaryInitialParserCustom(MutagenFrame frame, Condition item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void FillBinaryInitialParserCustom(MutagenFrame frame, ICondition item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
                 byte b = frame.ReadUInt8();
                 item.Flags = GetFlag(b);

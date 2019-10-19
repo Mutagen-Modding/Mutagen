@@ -16,7 +16,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType PGRR = new RecordType("PGRR");
         public const int POINT_LEN = 16;
         
-        static partial void FillBinaryPointsCustom(MutagenFrame frame, Road item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+        static partial void FillBinaryPointsCustom(MutagenFrame frame, IRoadInternal item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
             var subMeta = frame.MetaData.ReadSubRecord(frame);
             if (subMeta.RecordType != PGRP)

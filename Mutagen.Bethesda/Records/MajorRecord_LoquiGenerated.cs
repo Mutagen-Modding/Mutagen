@@ -389,7 +389,7 @@ namespace Mutagen.Bethesda
                 errorMask: errorMask);
         }
         protected static void FillBinaryStructs(
-            MajorRecord item,
+            IMajorRecordInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -410,7 +410,7 @@ namespace Mutagen.Bethesda
         }
 
         protected static TryGet<int?> FillBinaryRecordTypes(
-            MajorRecord item,
+            IMajorRecordInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,

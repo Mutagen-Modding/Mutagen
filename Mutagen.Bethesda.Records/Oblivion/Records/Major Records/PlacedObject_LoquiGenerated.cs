@@ -977,7 +977,7 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new PlacedObject();
-            UtilityTranslation.MajorRecordParse<PlacedObject>(
+            UtilityTranslation.MajorRecordParse<IPlacedObjectInternal>(
                 record: ret,
                 frame: frame,
                 errorMask: errorMask,
@@ -992,7 +992,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected static void FillBinaryStructs(
-            PlacedObject item,
+            IPlacedObjectInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -1005,7 +1005,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         protected static TryGet<int?> FillBinaryRecordTypes(
-            PlacedObject item,
+            IPlacedObjectInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,
@@ -6152,13 +6152,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         static partial void FillBinaryOpenByDefaultCustom(
             MutagenFrame frame,
-            PlacedObject item,
+            IPlacedObjectInternal item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
 
         public static void FillBinaryOpenByDefaultCustomPublic(
             MutagenFrame frame,
-            PlacedObject item,
+            IPlacedObjectInternal item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {

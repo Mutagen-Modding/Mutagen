@@ -470,7 +470,7 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new Furnature();
-            UtilityTranslation.MajorRecordParse<Furnature>(
+            UtilityTranslation.MajorRecordParse<IFurnatureInternal>(
                 record: ret,
                 frame: frame,
                 errorMask: errorMask,
@@ -485,7 +485,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected static void FillBinaryStructs(
-            Furnature item,
+            IFurnatureInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -498,7 +498,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         protected static TryGet<int?> FillBinaryRecordTypes(
-            Furnature item,
+            IFurnatureInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,

@@ -457,7 +457,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected static void FillBinaryStructs(
-            DialogResponse item,
+            IDialogResponse item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -465,7 +465,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         protected static TryGet<int?> FillBinaryRecordTypes(
-            DialogResponse item,
+            IDialogResponse item,
             MutagenFrame frame,
             int? lastParsed,
             RecordType nextRecordType,

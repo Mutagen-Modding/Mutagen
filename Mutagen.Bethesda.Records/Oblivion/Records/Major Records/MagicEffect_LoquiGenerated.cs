@@ -649,7 +649,7 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new MagicEffect();
-            UtilityTranslation.MajorRecordParse<MagicEffect>(
+            UtilityTranslation.MajorRecordParse<IMagicEffectInternal>(
                 record: ret,
                 frame: frame,
                 errorMask: errorMask,
@@ -664,7 +664,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected static void FillBinaryStructs(
-            MagicEffect item,
+            IMagicEffectInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -677,7 +677,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         protected static TryGet<int?> FillBinaryRecordTypes(
-            MagicEffect item,
+            IMagicEffectInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,

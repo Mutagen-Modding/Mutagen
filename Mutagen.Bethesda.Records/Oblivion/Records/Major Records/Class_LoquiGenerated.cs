@@ -531,7 +531,7 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new Class();
-            UtilityTranslation.MajorRecordParse<Class>(
+            UtilityTranslation.MajorRecordParse<IClassInternal>(
                 record: ret,
                 frame: frame,
                 errorMask: errorMask,
@@ -546,7 +546,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected static void FillBinaryStructs(
-            Class item,
+            IClassInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -559,7 +559,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         protected static TryGet<int?> FillBinaryRecordTypes(
-            Class item,
+            IClassInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,

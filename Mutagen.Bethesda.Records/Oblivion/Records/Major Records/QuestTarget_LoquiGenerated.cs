@@ -393,7 +393,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected static void FillBinaryStructs(
-            QuestTarget item,
+            IQuestTarget item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -401,7 +401,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         protected static TryGet<int?> FillBinaryRecordTypes(
-            QuestTarget item,
+            IQuestTarget item,
             MutagenFrame frame,
             int? lastParsed,
             RecordType nextRecordType,

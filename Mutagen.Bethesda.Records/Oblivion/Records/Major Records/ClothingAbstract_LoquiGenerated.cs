@@ -606,7 +606,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
         protected static void FillBinaryStructs(
-            ClothingAbstract item,
+            IClothingAbstractInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -619,7 +619,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         protected static TryGet<int?> FillBinaryRecordTypes(
-            ClothingAbstract item,
+            IClothingAbstractInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,

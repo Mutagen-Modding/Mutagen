@@ -625,7 +625,7 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new Weapon();
-            UtilityTranslation.MajorRecordParse<Weapon>(
+            UtilityTranslation.MajorRecordParse<IWeaponInternal>(
                 record: ret,
                 frame: frame,
                 errorMask: errorMask,
@@ -640,7 +640,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected static void FillBinaryStructs(
-            Weapon item,
+            IWeaponInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -653,7 +653,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         protected static TryGet<int?> FillBinaryRecordTypes(
-            Weapon item,
+            IWeaponInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,

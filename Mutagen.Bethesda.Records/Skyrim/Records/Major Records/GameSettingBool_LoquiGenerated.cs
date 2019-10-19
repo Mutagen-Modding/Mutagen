@@ -381,7 +381,7 @@ namespace Mutagen.Bethesda.Skyrim
             ErrorMaskBuilder errorMask)
         {
             var ret = new GameSettingBool();
-            UtilityTranslation.MajorRecordParse<GameSettingBool>(
+            UtilityTranslation.MajorRecordParse<IGameSettingBoolInternal>(
                 record: ret,
                 frame: frame,
                 errorMask: errorMask,
@@ -396,7 +396,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         protected static void FillBinaryStructs(
-            GameSettingBool item,
+            IGameSettingBoolInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -409,7 +409,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         protected static TryGet<int?> FillBinaryRecordTypes(
-            GameSettingBool item,
+            IGameSettingBoolInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,
@@ -1851,13 +1851,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         static partial void FillBinaryDataCustom(
             MutagenFrame frame,
-            GameSettingBool item,
+            IGameSettingBoolInternal item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
 
         public static void FillBinaryDataCustomPublic(
             MutagenFrame frame,
-            GameSettingBool item,
+            IGameSettingBoolInternal item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {

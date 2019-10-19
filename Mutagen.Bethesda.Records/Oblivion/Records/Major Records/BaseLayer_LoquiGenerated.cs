@@ -35,7 +35,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class BaseLayer :
-        IBaseLayer,
+        IBaseLayerInternal,
         ILoquiObjectSetter<BaseLayer>,
         ILinkSubContainer,
         IEquatable<BaseLayer>,
@@ -80,6 +80,11 @@ namespace Mutagen.Bethesda.Oblivion
                 this.BTXTDataTypeState |= BTXTDataType.Has;
                 this._LayerNumber = value;
             }
+        }
+        UInt16 IBaseLayerInternal.LayerNumber
+        {
+            get => this.LayerNumber;
+            set => this.LayerNumber = value;
         }
         #endregion
         #region BTXTDataTypeState
@@ -438,7 +443,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected static void FillBinaryStructs(
-            BaseLayer item,
+            IBaseLayerInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -446,7 +451,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         protected static TryGet<int?> FillBinaryRecordTypes(
-            BaseLayer item,
+            IBaseLayerInternal item,
             MutagenFrame frame,
             int? lastParsed,
             RecordType nextRecordType,
@@ -502,13 +507,21 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IBaseLayer :
         IBaseLayerGetter,
-        ILoquiObjectSetter<IBaseLayer>
+        ILoquiObjectSetter<IBaseLayerInternal>
     {
         new LandTexture Texture { get; set; }
         new IFormIDLink<LandTexture> Texture_Property { get; }
         new AlphaLayer.QuadrantEnum Quadrant { get; set; }
 
         new BaseLayer.BTXTDataType BTXTDataTypeState { get; set; }
+
+    }
+
+    public partial interface IBaseLayerInternal :
+        IBaseLayer,
+        IBaseLayerGetter
+    {
+        new UInt16 LayerNumber { get; set; }
 
     }
 
@@ -549,7 +562,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Common MixIn
     public static class BaseLayerMixIn
     {
-        public static void Clear(this IBaseLayer item)
+        public static void Clear(this IBaseLayerInternal item)
         {
             ((BaseLayerSetterCommon)((IBaseLayerGetter)item).CommonSetterInstance()).Clear(item: item);
         }
@@ -735,7 +748,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type SetterType = typeof(IBaseLayer);
 
-        public static readonly Type InternalSetterType = null;
+        public static readonly Type InternalSetterType = typeof(IBaseLayerInternal);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.BaseLayer";
 
@@ -932,7 +945,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(IBaseLayer item)
+        public virtual void Clear(IBaseLayerInternal item)
         {
             ClearPartial();
             item.Texture = default(LandTexture);
@@ -1300,7 +1313,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static BaseLayerXmlCreateTranslation Instance = new BaseLayerXmlCreateTranslation();
 
         public static void FillPublicXml(
-            IBaseLayer item,
+            IBaseLayerInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1325,7 +1338,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElementXml(
-            IBaseLayer item,
+            IBaseLayerInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,

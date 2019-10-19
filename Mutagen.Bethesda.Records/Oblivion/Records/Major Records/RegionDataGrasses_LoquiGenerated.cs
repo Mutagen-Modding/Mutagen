@@ -39,7 +39,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class RegionDataGrasses :
         RegionData,
-        IRegionDataGrasses,
+        IRegionDataGrassesInternal,
         ILoquiObjectSetter<RegionDataGrasses>,
         ILinkSubContainer,
         IEquatable<RegionDataGrasses>,
@@ -385,7 +385,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected static void FillBinaryStructs(
-            RegionDataGrasses item,
+            IRegionDataGrassesInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -398,7 +398,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         protected static TryGet<int?> FillBinaryRecordTypes(
-            RegionDataGrasses item,
+            IRegionDataGrassesInternal item,
             MutagenFrame frame,
             int? lastParsed,
             RecordType nextRecordType,
@@ -446,9 +446,16 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IRegionDataGrasses :
         IRegionDataGrassesGetter,
         IRegionData,
-        ILoquiObjectSetter<IRegionDataGrasses>
+        ILoquiObjectSetter<IRegionDataGrassesInternal>
     {
         new ISetList<IFormIDLink<Grass>> Grasses { get; }
+    }
+
+    public partial interface IRegionDataGrassesInternal :
+        IRegionDataInternal,
+        IRegionDataGrasses,
+        IRegionDataGrassesGetter
+    {
     }
 
     public partial interface IRegionDataGrassesGetter :
@@ -468,7 +475,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Common MixIn
     public static class RegionDataGrassesMixIn
     {
-        public static void Clear(this IRegionDataGrasses item)
+        public static void Clear(this IRegionDataGrassesInternal item)
         {
             ((RegionDataGrassesSetterCommon)((IRegionDataGrassesGetter)item).CommonSetterInstance()).Clear(item: item);
         }
@@ -642,7 +649,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type SetterType = typeof(IRegionDataGrasses);
 
-        public static readonly Type InternalSetterType = null;
+        public static readonly Type InternalSetterType = typeof(IRegionDataGrassesInternal);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.RegionDataGrasses";
 
@@ -794,16 +801,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(IRegionDataGrasses item)
+        public virtual void Clear(IRegionDataGrassesInternal item)
         {
             ClearPartial();
             item.Grasses.Unset();
             base.Clear(item);
         }
         
-        public override void Clear(IRegionData item)
+        public override void Clear(IRegionDataInternal item)
         {
-            Clear(item: (IRegionDataGrasses)item);
+            Clear(item: (IRegionDataGrassesInternal)item);
         }
         
         public RegionDataGrasses GetNew()
@@ -1178,7 +1185,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public new readonly static RegionDataGrassesXmlCreateTranslation Instance = new RegionDataGrassesXmlCreateTranslation();
 
         public static void FillPublicXml(
-            IRegionDataGrasses item,
+            IRegionDataGrassesInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1203,7 +1210,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElementXml(
-            IRegionDataGrasses item,
+            IRegionDataGrassesInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,

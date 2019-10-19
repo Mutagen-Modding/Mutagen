@@ -75,7 +75,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public partial class CombatStyleBinaryCreateTranslation
         {
-            static partial void FillBinarySecondaryFlagsCustom(MutagenFrame frame, CombatStyle item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void FillBinarySecondaryFlagsCustom(MutagenFrame frame, ICombatStyleInternal item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
                 int flags = frame.ReadInt32();
                 var otherFlag = (CombatStyle.Flag)(flags << 8);

@@ -15,7 +15,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static float GetArmorValue(ushort i) => i / 100f;
 
-        static partial void FillBinaryArmorValueCustom(MutagenFrame frame, Armor item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+        static partial void FillBinaryArmorValueCustom(MutagenFrame frame, IArmorInternal item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
             if (UInt16BinaryTranslation.Instance.Parse(
                 frame,

@@ -452,7 +452,7 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new PathGrid();
-            UtilityTranslation.MajorRecordParse<PathGrid>(
+            UtilityTranslation.MajorRecordParse<IPathGridInternal>(
                 record: ret,
                 frame: frame,
                 errorMask: errorMask,
@@ -467,7 +467,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected static void FillBinaryStructs(
-            PathGrid item,
+            IPathGridInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -480,7 +480,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         protected static TryGet<int?> FillBinaryRecordTypes(
-            PathGrid item,
+            IPathGridInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,
@@ -2646,13 +2646,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         static partial void FillBinaryPointToPointConnectionsCustom(
             MutagenFrame frame,
-            PathGrid item,
+            IPathGridInternal item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
 
         public static void FillBinaryPointToPointConnectionsCustomPublic(
             MutagenFrame frame,
-            PathGrid item,
+            IPathGridInternal item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {

@@ -316,7 +316,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
         protected static void FillBinaryStructs(
-            OblivionMajorRecord item,
+            IOblivionMajorRecordInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)

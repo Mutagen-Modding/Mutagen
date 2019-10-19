@@ -305,7 +305,7 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask);
         }
         protected static void FillBinaryStructs(
-            SkyrimMajorRecord item,
+            ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)

@@ -37,7 +37,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class AlphaLayer :
         BaseLayer,
-        IAlphaLayer,
+        IAlphaLayerInternal,
         ILoquiObjectSetter<AlphaLayer>,
         IEquatable<AlphaLayer>,
         IEqualsMask
@@ -386,7 +386,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected static TryGet<int?> FillBinaryRecordTypes(
-            AlphaLayer item,
+            IAlphaLayerInternal item,
             MutagenFrame frame,
             int? lastParsed,
             RecordType nextRecordType,
@@ -440,13 +440,20 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IAlphaLayer :
         IAlphaLayerGetter,
         IBaseLayer,
-        ILoquiObjectSetter<IAlphaLayer>
+        ILoquiObjectSetter<IAlphaLayerInternal>
     {
         new Byte[] AlphaLayerData { get; set; }
         new bool AlphaLayerData_IsSet { get; set; }
         void AlphaLayerData_Set(Byte[] value, bool hasBeenSet = true);
         void AlphaLayerData_Unset();
 
+    }
+
+    public partial interface IAlphaLayerInternal :
+        IBaseLayerInternal,
+        IAlphaLayer,
+        IAlphaLayerGetter
+    {
     }
 
     public partial interface IAlphaLayerGetter :
@@ -468,7 +475,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Common MixIn
     public static class AlphaLayerMixIn
     {
-        public static void Clear(this IAlphaLayer item)
+        public static void Clear(this IAlphaLayerInternal item)
         {
             ((AlphaLayerSetterCommon)((IAlphaLayerGetter)item).CommonSetterInstance()).Clear(item: item);
         }
@@ -642,7 +649,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type SetterType = typeof(IAlphaLayer);
 
-        public static readonly Type InternalSetterType = null;
+        public static readonly Type InternalSetterType = typeof(IAlphaLayerInternal);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.AlphaLayer";
 
@@ -798,16 +805,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(IAlphaLayer item)
+        public virtual void Clear(IAlphaLayerInternal item)
         {
             ClearPartial();
             item.AlphaLayerData_Unset();
             base.Clear(item);
         }
         
-        public override void Clear(IBaseLayer item)
+        public override void Clear(IBaseLayerInternal item)
         {
-            Clear(item: (IAlphaLayer)item);
+            Clear(item: (IAlphaLayerInternal)item);
         }
         
         public new AlphaLayer GetNew()
@@ -1167,7 +1174,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public new readonly static AlphaLayerXmlCreateTranslation Instance = new AlphaLayerXmlCreateTranslation();
 
         public static void FillPublicXml(
-            IAlphaLayer item,
+            IAlphaLayerInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1192,7 +1199,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElementXml(
-            IAlphaLayer item,
+            IAlphaLayerInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,

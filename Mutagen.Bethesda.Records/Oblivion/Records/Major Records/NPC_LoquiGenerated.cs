@@ -1424,7 +1424,7 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new NPC();
-            UtilityTranslation.MajorRecordParse<NPC>(
+            UtilityTranslation.MajorRecordParse<INPCInternal>(
                 record: ret,
                 frame: frame,
                 errorMask: errorMask,
@@ -1439,7 +1439,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected static void FillBinaryStructs(
-            NPC item,
+            INPCInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -1452,7 +1452,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         protected static TryGet<int?> FillBinaryRecordTypes(
-            NPC item,
+            INPCInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,

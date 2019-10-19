@@ -343,7 +343,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public partial class WorldspaceBinaryCreateTranslation
         {
-            static partial void FillBinaryOffsetLengthCustom(MutagenFrame frame, Worldspace item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void FillBinaryOffsetLengthCustom(MutagenFrame frame, IWorldspaceInternal item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
                 item.UsingOffsetLength = true;
                 var xxxxMeta = frame.MetaData.ReadSubRecord(frame);
@@ -364,7 +364,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item.OffsetData = frame.Reader.ReadBytes(contentLen);
             }
 
-            static partial void FillBinaryOffsetDataCustom(MutagenFrame frame, Worldspace item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void FillBinaryOffsetDataCustom(MutagenFrame frame, IWorldspaceInternal item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
                 if (item.UsingOffsetLength) return;
                 if (!HeaderTranslation.ReadNextSubRecordType(frame.Reader, out var len).Equals(Worldspace_Registration.OFST_HEADER))
@@ -374,7 +374,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item.OffsetData = frame.Reader.ReadBytes(len);
             }
 
-            public static async Task CustomBinaryEndImport(MutagenFrame frame, Worldspace obj, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            public static async Task CustomBinaryEndImport(MutagenFrame frame, IWorldspaceInternal obj, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
                 if (frame.Reader.Complete) return;
                 var next = HeaderTranslation.GetNextType(

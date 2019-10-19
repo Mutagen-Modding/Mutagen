@@ -343,7 +343,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
         protected static TryGet<int?> FillBinaryRecordTypes(
-            Spell item,
+            ISpellInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,

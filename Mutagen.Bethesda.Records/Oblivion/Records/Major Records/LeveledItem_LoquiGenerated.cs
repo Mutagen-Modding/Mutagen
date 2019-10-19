@@ -362,7 +362,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = LeveledItem_Registration.TRIGGERING_RECORD_TYPE;
         static partial void SpecialParse_Vestigial(
-            LeveledItem item,
+            ILeveledItemInternal item,
             MutagenFrame frame,
             ErrorMaskBuilder errorMask);
         static partial void SpecialWrite_Vestigial(
@@ -468,7 +468,7 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new LeveledItem();
-            UtilityTranslation.MajorRecordParse<LeveledItem>(
+            UtilityTranslation.MajorRecordParse<ILeveledItemInternal>(
                 record: ret,
                 frame: frame,
                 errorMask: errorMask,
@@ -483,7 +483,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected static void FillBinaryStructs(
-            LeveledItem item,
+            ILeveledItemInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -496,7 +496,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         protected static TryGet<int?> FillBinaryRecordTypes(
-            LeveledItem item,
+            ILeveledItemInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,

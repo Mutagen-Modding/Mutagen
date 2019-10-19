@@ -645,7 +645,7 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new Region();
-            UtilityTranslation.MajorRecordParse<Region>(
+            UtilityTranslation.MajorRecordParse<IRegionInternal>(
                 record: ret,
                 frame: frame,
                 errorMask: errorMask,
@@ -660,7 +660,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected static void FillBinaryStructs(
-            Region item,
+            IRegionInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -673,7 +673,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         protected static TryGet<int?> FillBinaryRecordTypes(
-            Region item,
+            IRegionInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,
@@ -3508,13 +3508,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         static partial void FillBinaryRegionAreaLogicCustom(
             MutagenFrame frame,
-            Region item,
+            IRegionInternal item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
 
         public static void FillBinaryRegionAreaLogicCustomPublic(
             MutagenFrame frame,
-            Region item,
+            IRegionInternal item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {

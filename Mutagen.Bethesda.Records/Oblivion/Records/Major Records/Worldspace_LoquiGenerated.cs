@@ -743,7 +743,7 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new Worldspace();
-            await UtilityAsyncTranslation.MajorRecordParse<Worldspace>(
+            await UtilityAsyncTranslation.MajorRecordParse<IWorldspaceInternal>(
                 record: ret,
                 frame: frame,
                 errorMask: errorMask,
@@ -771,7 +771,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected static void FillBinaryStructs(
-            Worldspace item,
+            IWorldspaceInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -784,7 +784,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         protected static async Task<TryGet<int?>> FillBinaryRecordTypes(
-            Worldspace item,
+            IWorldspaceInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,
@@ -4675,13 +4675,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         static partial void FillBinaryOffsetLengthCustom(
             MutagenFrame frame,
-            Worldspace item,
+            IWorldspaceInternal item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
 
         public static void FillBinaryOffsetLengthCustomPublic(
             MutagenFrame frame,
-            Worldspace item,
+            IWorldspaceInternal item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
@@ -4694,13 +4694,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         static partial void FillBinaryOffsetDataCustom(
             MutagenFrame frame,
-            Worldspace item,
+            IWorldspaceInternal item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
 
         public static void FillBinaryOffsetDataCustomPublic(
             MutagenFrame frame,
-            Worldspace item,
+            IWorldspaceInternal item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {

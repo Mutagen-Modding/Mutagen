@@ -381,7 +381,7 @@ namespace Mutagen.Bethesda.Skyrim
             ErrorMaskBuilder errorMask)
         {
             var ret = new GlobalShort();
-            UtilityTranslation.MajorRecordParse<GlobalShort>(
+            UtilityTranslation.MajorRecordParse<IGlobalShortInternal>(
                 record: ret,
                 frame: frame,
                 errorMask: errorMask,
@@ -396,7 +396,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         protected static void FillBinaryStructs(
-            GlobalShort item,
+            IGlobalShortInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -409,7 +409,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         protected static TryGet<int?> FillBinaryRecordTypes(
-            GlobalShort item,
+            IGlobalShortInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,
@@ -1851,13 +1851,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         static partial void FillBinaryDataCustom(
             MutagenFrame frame,
-            GlobalShort item,
+            IGlobalShortInternal item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
 
         public static void FillBinaryDataCustomPublic(
             MutagenFrame frame,
-            GlobalShort item,
+            IGlobalShortInternal item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {

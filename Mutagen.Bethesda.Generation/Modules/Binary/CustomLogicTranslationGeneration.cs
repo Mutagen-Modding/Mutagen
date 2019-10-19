@@ -92,7 +92,7 @@ namespace Mutagen.Bethesda.Generation
                 })
                 {
                     args.Add($"{nameof(MutagenFrame)} frame");
-                    args.Add($"{obj.ObjectName} item");
+                    args.Add($"{obj.Interface(getter: false, internalInterface: true)} item");
                     args.Add($"MasterReferences masterReferences");
                     if (DoErrorMasksStatic)
                     {
@@ -105,7 +105,7 @@ namespace Mutagen.Bethesda.Generation
                     $"public static void FillBinary{field.Name}CustomPublic"))
                 {
                     args.Add($"{nameof(MutagenFrame)} frame");
-                    args.Add($"{obj.ObjectName} item");
+                    args.Add($"{obj.Interface(getter: false, internalInterface: true)} item");
                     args.Add($"MasterReferences masterReferences");
                     if (DoErrorMasksStatic)
                     {

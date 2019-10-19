@@ -383,7 +383,7 @@ namespace Mutagen.Bethesda.Skyrim
             ErrorMaskBuilder errorMask)
         {
             var ret = new ActionRecord();
-            UtilityTranslation.MajorRecordParse<ActionRecord>(
+            UtilityTranslation.MajorRecordParse<IActionRecordInternal>(
                 record: ret,
                 frame: frame,
                 errorMask: errorMask,
@@ -398,7 +398,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         protected static void FillBinaryStructs(
-            ActionRecord item,
+            IActionRecordInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -411,7 +411,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         protected static TryGet<int?> FillBinaryRecordTypes(
-            ActionRecord item,
+            IActionRecordInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,

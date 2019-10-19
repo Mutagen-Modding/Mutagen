@@ -288,7 +288,7 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask);
         }
         protected static TryGet<int?> FillBinaryRecordTypes(
-            Global item,
+            IGlobalInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,
@@ -1496,13 +1496,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         static partial void FillBinaryTypeCharCustom(
             MutagenFrame frame,
-            Global item,
+            IGlobalInternal item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
 
         public static void FillBinaryTypeCharCustomPublic(
             MutagenFrame frame,
-            Global item,
+            IGlobalInternal item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {

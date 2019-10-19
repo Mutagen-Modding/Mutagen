@@ -343,7 +343,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected static void FillBinaryStructs(
-            ListGroup<T> item,
+            IListGroup<T> item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -367,7 +367,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         protected static async Task<TryGet<int?>> FillBinaryRecordTypes(
-            ListGroup<T> item,
+            IListGroup<T> item,
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,
@@ -2150,13 +2150,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         static partial void FillBinaryContainedRecordTypeCustom(
             MutagenFrame frame,
-            ListGroup<T> item,
+            IListGroup<T> item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
 
         public static void FillBinaryContainedRecordTypeCustomPublic(
             MutagenFrame frame,
-            ListGroup<T> item,
+            IListGroup<T> item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {

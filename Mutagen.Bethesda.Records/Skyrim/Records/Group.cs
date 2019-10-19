@@ -73,7 +73,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             static partial void FillBinaryContainedRecordTypeParseCustom(
                 MutagenFrame frame,
-                Group<T> item,
+                IGroup<T> item,
                 MasterReferences masterReferences,
                 ErrorMaskBuilder errorMask)
             {

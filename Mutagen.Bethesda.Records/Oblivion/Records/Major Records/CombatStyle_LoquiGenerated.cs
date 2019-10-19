@@ -907,7 +907,7 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new CombatStyle();
-            UtilityTranslation.MajorRecordParse<CombatStyle>(
+            UtilityTranslation.MajorRecordParse<ICombatStyleInternal>(
                 record: ret,
                 frame: frame,
                 errorMask: errorMask,
@@ -922,7 +922,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected static void FillBinaryStructs(
-            CombatStyle item,
+            ICombatStyleInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -935,7 +935,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         protected static TryGet<int?> FillBinaryRecordTypes(
-            CombatStyle item,
+            ICombatStyleInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,
@@ -6403,13 +6403,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         static partial void FillBinarySecondaryFlagsCustom(
             MutagenFrame frame,
-            CombatStyle item,
+            ICombatStyleInternal item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
 
         public static void FillBinarySecondaryFlagsCustomPublic(
             MutagenFrame frame,
-            CombatStyle item,
+            ICombatStyleInternal item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {

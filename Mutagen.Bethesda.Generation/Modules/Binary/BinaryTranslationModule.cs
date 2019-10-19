@@ -369,7 +369,7 @@ namespace Mutagen.Bethesda.Generation
                 using (var args = new FunctionWrapper(fg,
                     $"protected static {Loqui.Generation.Utility.TaskReturn(async)} Fill{ModuleNickname}Structs"))
                 {
-                    args.Add($"{obj.ObjectName} item");
+                    args.Add($"{obj.Interface(getter: false, internalInterface: true)} item");
                     args.Add("MutagenFrame frame");
                     args.Add($"MasterReferences masterReferences");
                     args.Add($"ErrorMaskBuilder errorMask");
@@ -416,7 +416,7 @@ namespace Mutagen.Bethesda.Generation
                 using (var args = new FunctionWrapper(fg,
                     $"protected static {Loqui.Generation.Utility.TaskWrap("TryGet<int?>", HasAsyncRecords(obj, self: true))} Fill{ModuleNickname}RecordTypes"))
                 {
-                    args.Add($"{obj.ObjectName} item");
+                    args.Add($"{obj.Interface(getter: false, internalInterface: true)} item");
                     args.Add("MutagenFrame frame");
                     if (typelessStruct)
                     {
@@ -991,7 +991,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 bool async = this.HasAsync(obj, self: true);
                 using (var args = new ArgsWrapper(fg,
-                    $"{Loqui.Generation.Utility.Await(async)}Utility{(async ? "Async" : null)}Translation.MajorRecordParse<{obj.Name}>"))
+                    $"{Loqui.Generation.Utility.Await(async)}Utility{(async ? "Async" : null)}Translation.MajorRecordParse<{obj.Interface(getter: false, internalInterface: true)}>"))
                 {
                     args.Add($"record: ret");
                     args.Add($"frame: frame");

@@ -479,7 +479,7 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new Birthsign();
-            UtilityTranslation.MajorRecordParse<Birthsign>(
+            UtilityTranslation.MajorRecordParse<IBirthsignInternal>(
                 record: ret,
                 frame: frame,
                 errorMask: errorMask,
@@ -494,7 +494,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected static void FillBinaryStructs(
-            Birthsign item,
+            IBirthsignInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -507,7 +507,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         protected static TryGet<int?> FillBinaryRecordTypes(
-            Birthsign item,
+            IBirthsignInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,

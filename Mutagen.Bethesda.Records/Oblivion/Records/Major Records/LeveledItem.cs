@@ -12,7 +12,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class LeveledItem
     {
-        static partial void SpecialParse_Vestigial(LeveledItem item, MutagenFrame frame, ErrorMaskBuilder errorMask)
+        static partial void SpecialParse_Vestigial(ILeveledItemInternal item, MutagenFrame frame, ErrorMaskBuilder errorMask)
         {
             var rec = HeaderTranslation.ReadNextSubRecordType(frame.Reader, out var length);
             if (length != 1)

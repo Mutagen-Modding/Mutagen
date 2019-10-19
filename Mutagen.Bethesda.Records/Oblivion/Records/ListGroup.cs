@@ -147,7 +147,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             static partial void FillBinaryContainedRecordTypeCustom(
                 MutagenFrame frame,
-                ListGroup<T> item,
+                IListGroup<T> item,
                 MasterReferences masterReferences,
                 ErrorMaskBuilder errorMask)
             {

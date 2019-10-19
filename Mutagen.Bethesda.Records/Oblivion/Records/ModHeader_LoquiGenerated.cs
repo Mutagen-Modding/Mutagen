@@ -531,7 +531,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected static void FillBinaryStructs(
-            ModHeader item,
+            IModHeader item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -551,7 +551,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         protected static TryGet<int?> FillBinaryRecordTypes(
-            ModHeader item,
+            IModHeader item,
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,

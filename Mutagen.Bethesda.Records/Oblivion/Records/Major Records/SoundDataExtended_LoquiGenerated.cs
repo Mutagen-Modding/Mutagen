@@ -347,7 +347,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected static void FillBinaryStructs(
-            SoundDataExtended item,
+            ISoundDataExtendedInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -1855,13 +1855,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         static partial void FillBinaryStaticAttenuationCustom(
             MutagenFrame frame,
-            SoundDataExtended item,
+            ISoundDataExtendedInternal item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
 
         public static void FillBinaryStaticAttenuationCustomPublic(
             MutagenFrame frame,
-            SoundDataExtended item,
+            ISoundDataExtendedInternal item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
@@ -1874,13 +1874,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         static partial void FillBinaryStopTimeCustom(
             MutagenFrame frame,
-            SoundDataExtended item,
+            ISoundDataExtendedInternal item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
 
         public static void FillBinaryStopTimeCustomPublic(
             MutagenFrame frame,
-            SoundDataExtended item,
+            ISoundDataExtendedInternal item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
@@ -1893,13 +1893,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         static partial void FillBinaryStartTimeCustom(
             MutagenFrame frame,
-            SoundDataExtended item,
+            ISoundDataExtendedInternal item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
 
         public static void FillBinaryStartTimeCustomPublic(
             MutagenFrame frame,
-            SoundDataExtended item,
+            ISoundDataExtendedInternal item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {

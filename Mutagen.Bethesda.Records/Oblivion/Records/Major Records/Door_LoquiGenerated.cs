@@ -528,7 +528,7 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new Door();
-            UtilityTranslation.MajorRecordParse<Door>(
+            UtilityTranslation.MajorRecordParse<IDoorInternal>(
                 record: ret,
                 frame: frame,
                 errorMask: errorMask,
@@ -543,7 +543,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected static void FillBinaryStructs(
-            Door item,
+            IDoorInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -556,7 +556,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         protected static TryGet<int?> FillBinaryRecordTypes(
-            Door item,
+            IDoorInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,

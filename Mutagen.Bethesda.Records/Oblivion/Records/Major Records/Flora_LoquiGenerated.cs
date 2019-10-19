@@ -517,7 +517,7 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new Flora();
-            UtilityTranslation.MajorRecordParse<Flora>(
+            UtilityTranslation.MajorRecordParse<IFloraInternal>(
                 record: ret,
                 frame: frame,
                 errorMask: errorMask,
@@ -532,7 +532,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected static void FillBinaryStructs(
-            Flora item,
+            IFloraInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -545,7 +545,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         protected static TryGet<int?> FillBinaryRecordTypes(
-            Flora item,
+            IFloraInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,

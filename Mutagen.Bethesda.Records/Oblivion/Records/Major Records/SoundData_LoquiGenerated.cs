@@ -346,7 +346,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected static void FillBinaryStructs(
-            SoundData item,
+            ISoundDataInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -2006,13 +2006,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         static partial void FillBinaryMinimumAttenuationDistanceCustom(
             MutagenFrame frame,
-            SoundData item,
+            ISoundDataInternal item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
 
         public static void FillBinaryMinimumAttenuationDistanceCustomPublic(
             MutagenFrame frame,
-            SoundData item,
+            ISoundDataInternal item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
@@ -2025,13 +2025,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         static partial void FillBinaryMaximumAttenuationDistanceCustom(
             MutagenFrame frame,
-            SoundData item,
+            ISoundDataInternal item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
 
         public static void FillBinaryMaximumAttenuationDistanceCustomPublic(
             MutagenFrame frame,
-            SoundData item,
+            ISoundDataInternal item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {

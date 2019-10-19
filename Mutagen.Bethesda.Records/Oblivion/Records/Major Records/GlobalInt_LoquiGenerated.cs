@@ -381,7 +381,7 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new GlobalInt();
-            UtilityTranslation.MajorRecordParse<GlobalInt>(
+            UtilityTranslation.MajorRecordParse<IGlobalIntInternal>(
                 record: ret,
                 frame: frame,
                 errorMask: errorMask,
@@ -396,7 +396,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected static void FillBinaryStructs(
-            GlobalInt item,
+            IGlobalIntInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -409,7 +409,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         protected static TryGet<int?> FillBinaryRecordTypes(
-            GlobalInt item,
+            IGlobalIntInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,
@@ -1841,13 +1841,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         static partial void FillBinaryDataCustom(
             MutagenFrame frame,
-            GlobalInt item,
+            IGlobalIntInternal item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
 
         public static void FillBinaryDataCustomPublic(
             MutagenFrame frame,
-            GlobalInt item,
+            IGlobalIntInternal item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {

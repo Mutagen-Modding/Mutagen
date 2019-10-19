@@ -364,7 +364,7 @@ namespace Mutagen.Bethesda
         #endregion
 
         protected static void FillBinaryStructs(
-            MasterReference item,
+            IMasterReference item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -372,7 +372,7 @@ namespace Mutagen.Bethesda
         }
 
         protected static TryGet<int?> FillBinaryRecordTypes(
-            MasterReference item,
+            IMasterReference item,
             MutagenFrame frame,
             int? lastParsed,
             RecordType nextRecordType,

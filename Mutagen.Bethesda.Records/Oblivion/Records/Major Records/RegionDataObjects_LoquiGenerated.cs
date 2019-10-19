@@ -39,7 +39,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class RegionDataObjects :
         RegionData,
-        IRegionDataObjects,
+        IRegionDataObjectsInternal,
         ILoquiObjectSetter<RegionDataObjects>,
         ILinkSubContainer,
         IEquatable<RegionDataObjects>,
@@ -385,7 +385,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected static void FillBinaryStructs(
-            RegionDataObjects item,
+            IRegionDataObjectsInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -398,7 +398,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         protected static TryGet<int?> FillBinaryRecordTypes(
-            RegionDataObjects item,
+            IRegionDataObjectsInternal item,
             MutagenFrame frame,
             int? lastParsed,
             RecordType nextRecordType,
@@ -454,9 +454,16 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IRegionDataObjects :
         IRegionDataObjectsGetter,
         IRegionData,
-        ILoquiObjectSetter<IRegionDataObjects>
+        ILoquiObjectSetter<IRegionDataObjectsInternal>
     {
         new ISetList<RegionDataObject> Objects { get; }
+    }
+
+    public partial interface IRegionDataObjectsInternal :
+        IRegionDataInternal,
+        IRegionDataObjects,
+        IRegionDataObjectsGetter
+    {
     }
 
     public partial interface IRegionDataObjectsGetter :
@@ -476,7 +483,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Common MixIn
     public static class RegionDataObjectsMixIn
     {
-        public static void Clear(this IRegionDataObjects item)
+        public static void Clear(this IRegionDataObjectsInternal item)
         {
             ((RegionDataObjectsSetterCommon)((IRegionDataObjectsGetter)item).CommonSetterInstance()).Clear(item: item);
         }
@@ -650,7 +657,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type SetterType = typeof(IRegionDataObjects);
 
-        public static readonly Type InternalSetterType = null;
+        public static readonly Type InternalSetterType = typeof(IRegionDataObjectsInternal);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.RegionDataObjects";
 
@@ -802,16 +809,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(IRegionDataObjects item)
+        public virtual void Clear(IRegionDataObjectsInternal item)
         {
             ClearPartial();
             item.Objects.Unset();
             base.Clear(item);
         }
         
-        public override void Clear(IRegionData item)
+        public override void Clear(IRegionDataInternal item)
         {
-            Clear(item: (IRegionDataObjects)item);
+            Clear(item: (IRegionDataObjectsInternal)item);
         }
         
         public RegionDataObjects GetNew()
@@ -1202,7 +1209,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public new readonly static RegionDataObjectsXmlCreateTranslation Instance = new RegionDataObjectsXmlCreateTranslation();
 
         public static void FillPublicXml(
-            IRegionDataObjects item,
+            IRegionDataObjectsInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1227,7 +1234,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElementXml(
-            IRegionDataObjects item,
+            IRegionDataObjectsInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,

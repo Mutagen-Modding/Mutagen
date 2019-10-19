@@ -385,7 +385,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected static void FillBinaryStructs(
-            CellSubBlock item,
+            ICellSubBlock item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -414,7 +414,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         protected static async Task<TryGet<int?>> FillBinaryRecordTypes(
-            CellSubBlock item,
+            ICellSubBlock item,
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,

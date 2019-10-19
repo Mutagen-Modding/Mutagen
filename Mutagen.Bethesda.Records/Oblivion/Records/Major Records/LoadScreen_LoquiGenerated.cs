@@ -450,7 +450,7 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new LoadScreen();
-            UtilityTranslation.MajorRecordParse<LoadScreen>(
+            UtilityTranslation.MajorRecordParse<ILoadScreenInternal>(
                 record: ret,
                 frame: frame,
                 errorMask: errorMask,
@@ -465,7 +465,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected static void FillBinaryStructs(
-            LoadScreen item,
+            ILoadScreenInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -478,7 +478,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         protected static TryGet<int?> FillBinaryRecordTypes(
-            LoadScreen item,
+            ILoadScreenInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,

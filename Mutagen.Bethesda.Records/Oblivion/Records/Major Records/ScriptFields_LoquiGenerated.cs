@@ -465,7 +465,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected static void FillBinaryStructs(
-            ScriptFields item,
+            IScriptFields item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -473,7 +473,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         protected static TryGet<int?> FillBinaryRecordTypes(
-            ScriptFields item,
+            IScriptFields item,
             MutagenFrame frame,
             int? lastParsed,
             RecordType nextRecordType,
@@ -2740,13 +2740,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         static partial void FillBinaryMetadataSummaryOldCustom(
             MutagenFrame frame,
-            ScriptFields item,
+            IScriptFields item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
 
         public static void FillBinaryMetadataSummaryOldCustomPublic(
             MutagenFrame frame,
-            ScriptFields item,
+            IScriptFields item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {

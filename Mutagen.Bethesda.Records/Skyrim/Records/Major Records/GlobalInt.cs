@@ -59,7 +59,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class GlobalIntBinaryCreateTranslation
         {
-            static partial void FillBinaryDataCustom(MutagenFrame frame, GlobalInt item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void FillBinaryDataCustom(MutagenFrame frame, IGlobalIntInternal item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
             }
         }

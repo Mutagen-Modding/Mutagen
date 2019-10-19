@@ -523,7 +523,7 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new AIPackage();
-            UtilityTranslation.MajorRecordParse<AIPackage>(
+            UtilityTranslation.MajorRecordParse<IAIPackageInternal>(
                 record: ret,
                 frame: frame,
                 errorMask: errorMask,
@@ -538,7 +538,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected static void FillBinaryStructs(
-            AIPackage item,
+            IAIPackageInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -551,7 +551,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         protected static TryGet<int?> FillBinaryRecordTypes(
-            AIPackage item,
+            IAIPackageInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,
@@ -3041,13 +3041,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         static partial void FillBinaryFlagsCustom(
             MutagenFrame frame,
-            AIPackage item,
+            IAIPackageInternal item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
 
         public static void FillBinaryFlagsCustomPublic(
             MutagenFrame frame,
-            AIPackage item,
+            IAIPackageInternal item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
@@ -3060,13 +3060,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         static partial void FillBinaryGeneralTypeCustom(
             MutagenFrame frame,
-            AIPackage item,
+            IAIPackageInternal item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
 
         public static void FillBinaryGeneralTypeCustomPublic(
             MutagenFrame frame,
-            AIPackage item,
+            IAIPackageInternal item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {

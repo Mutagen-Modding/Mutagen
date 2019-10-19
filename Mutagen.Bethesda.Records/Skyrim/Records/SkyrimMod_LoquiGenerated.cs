@@ -860,7 +860,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         protected static void FillBinaryStructs(
-            SkyrimMod item,
+            ISkyrimMod item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -868,7 +868,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         protected static async Task<TryGet<int?>> FillBinaryRecordTypes(
-            SkyrimMod item,
+            ISkyrimMod item,
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,

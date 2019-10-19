@@ -551,7 +551,7 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new Grass();
-            UtilityTranslation.MajorRecordParse<Grass>(
+            UtilityTranslation.MajorRecordParse<IGrassInternal>(
                 record: ret,
                 frame: frame,
                 errorMask: errorMask,
@@ -566,7 +566,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected static void FillBinaryStructs(
-            Grass item,
+            IGrassInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -579,7 +579,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         protected static TryGet<int?> FillBinaryRecordTypes(
-            Grass item,
+            IGrassInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,

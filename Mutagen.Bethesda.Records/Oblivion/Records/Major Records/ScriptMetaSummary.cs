@@ -22,7 +22,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public partial class ScriptMetaSummaryBinaryCreateTranslation
         {
-            static partial void FillBinaryCompiledSizeCustom(MutagenFrame frame, ScriptMetaSummary item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void FillBinaryCompiledSizeCustom(MutagenFrame frame, IScriptMetaSummary item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
                 frame.Position += 4;
             }

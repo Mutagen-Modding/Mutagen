@@ -384,7 +384,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected static void FillBinaryStructs(
-            Condition item,
+            ICondition item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -2418,13 +2418,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         static partial void FillBinaryInitialParserCustom(
             MutagenFrame frame,
-            Condition item,
+            ICondition item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
 
         public static void FillBinaryInitialParserCustomPublic(
             MutagenFrame frame,
-            Condition item,
+            ICondition item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {

@@ -539,7 +539,7 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new Quest();
-            UtilityTranslation.MajorRecordParse<Quest>(
+            UtilityTranslation.MajorRecordParse<IQuestInternal>(
                 record: ret,
                 frame: frame,
                 errorMask: errorMask,
@@ -554,7 +554,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected static void FillBinaryStructs(
-            Quest item,
+            IQuestInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -567,7 +567,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         protected static TryGet<int?> FillBinaryRecordTypes(
-            Quest item,
+            IQuestInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,

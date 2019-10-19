@@ -381,7 +381,7 @@ namespace Mutagen.Bethesda.Skyrim
             ErrorMaskBuilder errorMask)
         {
             var ret = new GameSettingFloat();
-            UtilityTranslation.MajorRecordParse<GameSettingFloat>(
+            UtilityTranslation.MajorRecordParse<IGameSettingFloatInternal>(
                 record: ret,
                 frame: frame,
                 errorMask: errorMask,
@@ -396,7 +396,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         protected static void FillBinaryStructs(
-            GameSettingFloat item,
+            IGameSettingFloatInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -409,7 +409,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         protected static TryGet<int?> FillBinaryRecordTypes(
-            GameSettingFloat item,
+            IGameSettingFloatInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,

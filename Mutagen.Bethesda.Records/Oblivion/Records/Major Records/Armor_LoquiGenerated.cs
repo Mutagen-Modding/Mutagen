@@ -417,7 +417,7 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new Armor();
-            UtilityTranslation.MajorRecordParse<Armor>(
+            UtilityTranslation.MajorRecordParse<IArmorInternal>(
                 record: ret,
                 frame: frame,
                 errorMask: errorMask,
@@ -432,7 +432,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected static void FillBinaryStructs(
-            Armor item,
+            IArmorInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -445,7 +445,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         protected static TryGet<int?> FillBinaryRecordTypes(
-            Armor item,
+            IArmorInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,
@@ -2381,13 +2381,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         static partial void FillBinaryArmorValueCustom(
             MutagenFrame frame,
-            Armor item,
+            IArmorInternal item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
 
         public static void FillBinaryArmorValueCustomPublic(
             MutagenFrame frame,
-            Armor item,
+            IArmorInternal item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {

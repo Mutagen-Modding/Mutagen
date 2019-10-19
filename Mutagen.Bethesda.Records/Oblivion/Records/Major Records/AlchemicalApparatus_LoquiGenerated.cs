@@ -534,7 +534,7 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new AlchemicalApparatus();
-            UtilityTranslation.MajorRecordParse<AlchemicalApparatus>(
+            UtilityTranslation.MajorRecordParse<IAlchemicalApparatusInternal>(
                 record: ret,
                 frame: frame,
                 errorMask: errorMask,
@@ -549,7 +549,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected static void FillBinaryStructs(
-            AlchemicalApparatus item,
+            IAlchemicalApparatusInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -562,7 +562,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         protected static TryGet<int?> FillBinaryRecordTypes(
-            AlchemicalApparatus item,
+            IAlchemicalApparatusInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,

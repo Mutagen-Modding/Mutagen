@@ -584,7 +584,7 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new Climate();
-            UtilityTranslation.MajorRecordParse<Climate>(
+            UtilityTranslation.MajorRecordParse<IClimateInternal>(
                 record: ret,
                 frame: frame,
                 errorMask: errorMask,
@@ -599,7 +599,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected static void FillBinaryStructs(
-            Climate item,
+            IClimateInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -612,7 +612,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         protected static TryGet<int?> FillBinaryRecordTypes(
-            Climate item,
+            IClimateInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,
@@ -3603,13 +3603,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         static partial void FillBinarySunriseBeginCustom(
             MutagenFrame frame,
-            Climate item,
+            IClimateInternal item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
 
         public static void FillBinarySunriseBeginCustomPublic(
             MutagenFrame frame,
-            Climate item,
+            IClimateInternal item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
@@ -3622,13 +3622,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         static partial void FillBinarySunriseEndCustom(
             MutagenFrame frame,
-            Climate item,
+            IClimateInternal item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
 
         public static void FillBinarySunriseEndCustomPublic(
             MutagenFrame frame,
-            Climate item,
+            IClimateInternal item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
@@ -3641,13 +3641,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         static partial void FillBinarySunsetBeginCustom(
             MutagenFrame frame,
-            Climate item,
+            IClimateInternal item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
 
         public static void FillBinarySunsetBeginCustomPublic(
             MutagenFrame frame,
-            Climate item,
+            IClimateInternal item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
@@ -3660,13 +3660,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         static partial void FillBinarySunsetEndCustom(
             MutagenFrame frame,
-            Climate item,
+            IClimateInternal item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
 
         public static void FillBinarySunsetEndCustomPublic(
             MutagenFrame frame,
-            Climate item,
+            IClimateInternal item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
@@ -3679,13 +3679,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         static partial void FillBinaryPhaseCustom(
             MutagenFrame frame,
-            Climate item,
+            IClimateInternal item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
 
         public static void FillBinaryPhaseCustomPublic(
             MutagenFrame frame,
-            Climate item,
+            IClimateInternal item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
@@ -3698,13 +3698,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         static partial void FillBinaryPhaseLengthCustom(
             MutagenFrame frame,
-            Climate item,
+            IClimateInternal item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
 
         public static void FillBinaryPhaseLengthCustomPublic(
             MutagenFrame frame,
-            Climate item,
+            IClimateInternal item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {

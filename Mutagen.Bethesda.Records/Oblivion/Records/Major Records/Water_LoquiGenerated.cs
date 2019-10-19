@@ -953,7 +953,7 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new Water();
-            UtilityTranslation.MajorRecordParse<Water>(
+            UtilityTranslation.MajorRecordParse<IWaterInternal>(
                 record: ret,
                 frame: frame,
                 errorMask: errorMask,
@@ -968,7 +968,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected static void FillBinaryStructs(
-            Water item,
+            IWaterInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -981,7 +981,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         protected static TryGet<int?> FillBinaryRecordTypes(
-            Water item,
+            IWaterInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,
@@ -6278,13 +6278,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         static partial void FillBinaryNothingCustomLogicCustom(
             MutagenFrame frame,
-            Water item,
+            IWaterInternal item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
 
         public static void FillBinaryNothingCustomLogicCustomPublic(
             MutagenFrame frame,
-            Water item,
+            IWaterInternal item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
@@ -6297,13 +6297,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         static partial void FillBinaryBloodCustomLogicCustom(
             MutagenFrame frame,
-            Water item,
+            IWaterInternal item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
 
         public static void FillBinaryBloodCustomLogicCustomPublic(
             MutagenFrame frame,
-            Water item,
+            IWaterInternal item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
@@ -6316,13 +6316,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         static partial void FillBinaryOilCustomLogicCustom(
             MutagenFrame frame,
-            Water item,
+            IWaterInternal item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
 
         public static void FillBinaryOilCustomLogicCustomPublic(
             MutagenFrame frame,
-            Water item,
+            IWaterInternal item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
@@ -6335,13 +6335,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         static partial void FillBinaryOddExtraBytesCustom(
             MutagenFrame frame,
-            Water item,
+            IWaterInternal item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
 
         public static void FillBinaryOddExtraBytesCustomPublic(
             MutagenFrame frame,
-            Water item,
+            IWaterInternal item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {

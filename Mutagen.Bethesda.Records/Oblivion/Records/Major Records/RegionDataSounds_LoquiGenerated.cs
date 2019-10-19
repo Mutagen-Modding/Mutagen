@@ -39,7 +39,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class RegionDataSounds :
         RegionData,
-        IRegionDataSounds,
+        IRegionDataSoundsInternal,
         ILoquiObjectSetter<RegionDataSounds>,
         ILinkSubContainer,
         IEquatable<RegionDataSounds>,
@@ -425,7 +425,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected static void FillBinaryStructs(
-            RegionDataSounds item,
+            IRegionDataSoundsInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -438,7 +438,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         protected static TryGet<int?> FillBinaryRecordTypes(
-            RegionDataSounds item,
+            IRegionDataSoundsInternal item,
             MutagenFrame frame,
             int? lastParsed,
             RecordType nextRecordType,
@@ -509,7 +509,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IRegionDataSounds :
         IRegionDataSoundsGetter,
         IRegionData,
-        ILoquiObjectSetter<IRegionDataSounds>
+        ILoquiObjectSetter<IRegionDataSoundsInternal>
     {
         new MusicType MusicType { get; set; }
         new bool MusicType_IsSet { get; set; }
@@ -517,6 +517,13 @@ namespace Mutagen.Bethesda.Oblivion
         void MusicType_Unset();
 
         new ISetList<RegionSound> Sounds { get; }
+    }
+
+    public partial interface IRegionDataSoundsInternal :
+        IRegionDataInternal,
+        IRegionDataSounds,
+        IRegionDataSoundsGetter
+    {
     }
 
     public partial interface IRegionDataSoundsGetter :
@@ -541,7 +548,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Common MixIn
     public static class RegionDataSoundsMixIn
     {
-        public static void Clear(this IRegionDataSounds item)
+        public static void Clear(this IRegionDataSoundsInternal item)
         {
             ((RegionDataSoundsSetterCommon)((IRegionDataSoundsGetter)item).CommonSetterInstance()).Clear(item: item);
         }
@@ -716,7 +723,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type SetterType = typeof(IRegionDataSounds);
 
-        public static readonly Type InternalSetterType = null;
+        public static readonly Type InternalSetterType = typeof(IRegionDataSoundsInternal);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.RegionDataSounds";
 
@@ -882,7 +889,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(IRegionDataSounds item)
+        public virtual void Clear(IRegionDataSoundsInternal item)
         {
             ClearPartial();
             item.MusicType_Unset();
@@ -890,9 +897,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             base.Clear(item);
         }
         
-        public override void Clear(IRegionData item)
+        public override void Clear(IRegionDataInternal item)
         {
-            Clear(item: (IRegionDataSounds)item);
+            Clear(item: (IRegionDataSoundsInternal)item);
         }
         
         public RegionDataSounds GetNew()
@@ -1339,7 +1346,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public new readonly static RegionDataSoundsXmlCreateTranslation Instance = new RegionDataSoundsXmlCreateTranslation();
 
         public static void FillPublicXml(
-            IRegionDataSounds item,
+            IRegionDataSoundsInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1364,7 +1371,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElementXml(
-            IRegionDataSounds item,
+            IRegionDataSoundsInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder errorMask,

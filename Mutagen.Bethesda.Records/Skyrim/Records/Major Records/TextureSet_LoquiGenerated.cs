@@ -468,7 +468,7 @@ namespace Mutagen.Bethesda.Skyrim
             ErrorMaskBuilder errorMask)
         {
             var ret = new TextureSet();
-            UtilityTranslation.MajorRecordParse<TextureSet>(
+            UtilityTranslation.MajorRecordParse<ITextureSetInternal>(
                 record: ret,
                 frame: frame,
                 errorMask: errorMask,
@@ -483,7 +483,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         protected static void FillBinaryStructs(
-            TextureSet item,
+            ITextureSetInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
@@ -496,7 +496,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         protected static TryGet<int?> FillBinaryRecordTypes(
-            TextureSet item,
+            ITextureSetInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,
